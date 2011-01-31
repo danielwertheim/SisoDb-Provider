@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{73C5C30B-36DE-4A5E-A64D-CD06A63A601C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SisoDb.Tests.UnitTests</RootNamespace>
+    <AssemblyName>SisoDb.Tests.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
+    <OutputPath>bin\Deploy\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\SisoDb.Tests.UnitTests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.5.8.10295, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\NUnit-bin\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="TypeMock, Version=6.0.6.0, Culture=neutral, PublicKeyToken=3dae460033b8d8e2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Typemock.ArrangeActAssert, Version=6.0.6.0, Culture=neutral, PublicKeyToken=3dae460033b8d8e2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConnectionStringTests.cs" />
+    <Compile Include="Cryptography\HashServiceTests.cs" />
+    <Compile Include="ElementsBatcherTests.cs" />
+    <Compile Include="HashMemberNameGeneratorTests.cs" />
+    <Compile Include="Lambdas\LamdaParserTests.cs" />
+    <Compile Include="Lambdas\ParsedLambdaSqlProcessorTests\ParsedLambdaSqlProcessorCombinedTests.cs" />
+    <Compile Include="Lambdas\ParsedLambdaSqlProcessorTests\ParsedLambdaSqlProcessorEnumerableTests.cs" />
+    <Compile Include="Lambdas\ParsedLambdaSqlProcessorTests\ParsedLambdaSqlProcessorFunctionInvocationTests.cs" />
+    <Compile Include="Lambdas\ParsedLambdaSqlProcessorTests\ParsedLambdaSqlProcessorHierarchyTests.cs" />
+    <Compile Include="Lambdas\ParsedLambdaSqlProcessorTests\ParsedLambdaSqlProcessorMemberComparisionTests.cs" />
+    <Compile Include="Lambdas\ParsedLambdaSqlProcessorTests\ParsedLambdaSqlProcessorTestBase.cs" />
+    <Compile Include="MemberNameGeneratorFake.cs" />
+    <Compile Include="Lambdas\ParsedLambdaSqlProcessorTests\ParsedLambdaSqlProcessorCommonDataTypeTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\SqlProvider\SqlQueryGeneratorTests.cs" />
+    <Compile Include="Serialization\JsonSerializationTests.cs" />
+    <Compile Include="SisoConnectionInfoTests.cs" />
+    <Compile Include="Providers\AzureProvider\DbSchema\AzureDbColumnGeneratorTests.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbColumnGeneratorTests.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
+    <Compile Include="Providers\SqlProvider\SqlDatabaseTests.cs" />
+    <Compile Include="Providers\SqlProvider\StructureSchemaExtensionsTests.cs" />
+    <Compile Include="StringConverterTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyGetValuesOnSubItemTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyTestHelper.cs" />
+    <Compile Include="Structures\StructureBuilderTests.cs" />
+    <Compile Include="Structures\StructureIdTests.cs" />
+    <Compile Include="Structures\Schemas\AutoSchemaBuilderTests.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessorTests.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IdAccessorTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyGetGuidValuesTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyGetIntValuesTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyGetStringValuesTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyPathBuilderTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyTests.cs" />
+    <Compile Include="Structures\Schemas\StructureSchemaTests.cs" />
+    <Compile Include="Structures\StructureIndexTests.cs" />
+    <Compile Include="Structures\StructureTests.cs" />
+    <Compile Include="TypeExtensionsEnumerableTests.cs" />
+    <Compile Include="TypeExtensionsIsByteTypeTests.cs" />
+    <Compile Include="TypeExtensionsIsEnumerableBytesTypeTests.cs" />
+    <Compile Include="TypeExtensionsIsEnumerableTypeTests.cs" />
+    <Compile Include="TypeExtensionsTests.cs" />
+    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoComplexIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoEnumerableIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoIdPropertyTests.cs" />
+    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoSimpleIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoUniquesPropertiesTests.cs" />
+    <Compile Include="UnitTestBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\SisoDb\SisoDb.csproj">
+      <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
+      <Name>SisoDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SisoDb.TestUtils\SisoDb.TestUtils.csproj">
+      <Project>{5CAC205F-5470-44A6-878F-F33768415D25}</Project>
+      <Name>SisoDb.TestUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Querying\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
