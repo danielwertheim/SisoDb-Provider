@@ -13,5 +13,6 @@ namespace SisoDb
         internal static readonly Encoding Encoding = Encoding.UTF8;
         internal static readonly IHashService HashService = new HashService();
         internal static readonly IMemberNameGenerator MemberNameGenerator = new HashMemberNameGenerator(HashService);
+        internal static IStringConverter StringConverter = new StringConverter();
     }
 }

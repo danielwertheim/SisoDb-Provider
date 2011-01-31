@@ -1,22 +1,21 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
-using TypeMock.ArrangeActAssert;
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
     [TestFixture]
-    public class StructureSchemaTests
+    public class StructureSchemaTests : UnitTestBase
     {
-        [Test, Isolated]
+        [Test]
         public void Ctor_WhenNameIsNull_ThrowsArgumentNullException()
         {
-            var idAccessor = Isolate.Fake.Instance<IIdAccessor>();
+            var idAccessorFake = new Mock<IIdAccessor>();
 
-            var ex = Assert.Throws<ArgumentNullException>(() => new StructureSchema(null, idAccessor));
+            var ex = Assert.Throws<ArgumentNullException>(() => new StructureSchema(null, idAccessorFake.Object));
 
             Assert.IsNotNull(ex);
         }
@@ -29,26 +28,27 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             Assert.IsNotNull(ex);
         }
 
-        [Test, Isolated]
+        [Test]
         public void Ctor_WhenUniqueIndexAccessorsInjected_ExistsInBothListOfIndexAccessors()
         {
-            var fakeIIdAccessor = Isolate.Fake.Instance<IIdAccessor>();
-            var plainIndexAccessor = Isolate.Fake.Instance<IIndexAccessor>();
-            Isolate.WhenCalled(() => plainIndexAccessor.Path).WillReturn("Plain");
-            Isolate.WhenCalled(() => plainIndexAccessor.IsUnique).WillReturn(false);
+            var idAccessorFake = new Mock<IIdAccessor>();
+            var indexAccessorFake = new Mock<IIndexAccessor>();
+
+            indexAccessorFake.Setup(x => x.Path).Returns("Plain");
+            indexAccessorFake.Setup(x => x.IsUnique).Returns(false);
             
-            var uniqueIndexAccessor = Isolate.Fake.Instance<IIndexAccessor>();
-            Isolate.WhenCalled(() => uniqueIndexAccessor.Path).WillReturn("Unique");
-            Isolate.WhenCalled(() => uniqueIndexAccessor.IsUnique).WillReturn(true);
+            var uniqueIndexAccessorFake = new Mock<IIndexAccessor>();
+            uniqueIndexAccessorFake.Setup(x => x.Path).Returns("Unique");
+            uniqueIndexAccessorFake.Setup(x => x.IsUnique).Returns(true);
 
             var schema = new StructureSchema("JustADummyName",
-                fakeIIdAccessor,
-                new[] {plainIndexAccessor, uniqueIndexAccessor});
+                idAccessorFake.Object,
+                new[] {indexAccessorFake.Object, uniqueIndexAccessorFake.Object});
 
-            Assert.IsTrue(schema.IndexAccessors.Any(iac => iac.Path == plainIndexAccessor.Path));
-            Assert.IsFalse(schema.UniqueIndexAccessors.Any(iac => iac.Path == plainIndexAccessor.Path));
-            Assert.IsTrue(schema.IndexAccessors.Any(iac => iac.Path == uniqueIndexAccessor.Path));
-            Assert.IsTrue(schema.UniqueIndexAccessors.Any(iac => iac.Path == uniqueIndexAccessor.Path));
+            Assert.IsTrue(schema.IndexAccessors.Any(iac => iac.Path == indexAccessorFake.Object.Path));
+            Assert.IsFalse(schema.UniqueIndexAccessors.Any(iac => iac.Path == indexAccessorFake.Object.Path));
+            Assert.IsTrue(schema.IndexAccessors.Any(iac => iac.Path == uniqueIndexAccessorFake.Object.Path));
+            Assert.IsTrue(schema.UniqueIndexAccessors.Any(iac => iac.Path == uniqueIndexAccessorFake.Object.Path));
         }
     }
 }

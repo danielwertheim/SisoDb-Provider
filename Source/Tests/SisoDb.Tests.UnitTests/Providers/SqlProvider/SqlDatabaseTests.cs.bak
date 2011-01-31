@@ -1,21 +1,21 @@
-using Moq;
 using NUnit.Framework;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Resources;
+using TypeMock.ArrangeActAssert;
 
 namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 {
     [TestFixture]
     public class SqlDatabaseTests : UnitTestBase
     {
-        [Test]
+        [Test, Isolated]
         public void CTor_ConnectionInfoWithNoDbName_ThrowsSisoDbException()
         {
-            var cnInfo = new Mock<ISisoConnectionInfo>();
-            cnInfo.Setup(x=>x.ConnectionString.PlainString)
-                .Returns("data source=localhost;integrated security=SSPI;");
+            var cnInfo = Isolate.Fake.Instance<ISisoConnectionInfo>();
+            Isolate.WhenCalled(() => cnInfo.ConnectionString.PlainString)
+                .WillReturn("data source=localhost;integrated security=SSPI;");
 
-            var ex = Assert.Throws<SisoDbException>(() => new SqlDatabase(cnInfo.Object));
+            var ex = Assert.Throws<SisoDbException>(() => new SqlDatabase(cnInfo));
 
             Assert.AreEqual(ExceptionMessages.SqlDatabase_ConnectionInfo_MissingName, ex.Message);
         }

@@ -3,9 +3,9 @@ using SisoDb.Resources;
 
 namespace SisoDb
 {
-    internal static class StringConverter
+    internal class StringConverter : IStringConverter
     {
-        internal static string AsString<T>(T value)
+        public string AsString<T>(T value)
         {
             if (ReferenceEquals(null, value) || DBNull.Value.Equals(value))
                 return null;

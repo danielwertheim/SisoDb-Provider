@@ -64,7 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ListExtensions.cs" />
-    <Compile Include="TypeMockExtensions\IsAny.cs" />
     <Compile Include="CustomAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

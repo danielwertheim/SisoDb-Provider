@@ -28,7 +28,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
                 return Enumerator.Current.Name;
 
             if (schemaField.Name == UniqueStorageSchema.Fields.Value.Name)
-                return StringConverter.AsString(Enumerator.Current.Value); //return Enumerator.Current.Value;
+                return SisoDbEnvironment.StringConverter.AsString(Enumerator.Current.Value); //return Enumerator.Current.Value;
 
             throw new NotSupportedException();
         }

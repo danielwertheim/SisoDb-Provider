@@ -2,41 +2,49 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
-using TypeMock.ArrangeActAssert;
 
 namespace SisoDb.Tests.UnitTests.Structures
 {
     [TestFixture]
     public class StructureBuilderTests : UnitTestBase
     {
-        [Test, Isolated]
+        protected override void OnTestFinalize()
+        {
+            SisoDbEnvironment.StringConverter = new StringConverter();
+        }
+
+        [Test]
         public void CreateStructure_WhenItemWithNoEnumerable_WillNotConsumeStringConverter()
         {
-            Isolate.Fake.StaticMethods(typeof(StringConverter));
+            var stringConverterFake = new Mock<IStringConverter>();
+            SisoDbEnvironment.StringConverter = stringConverterFake.Object;
             var schema = new AutoSchemaBuilder<WithNoArray>().CreateSchema();
             var item = new WithNoArray { Value = "A" };
 
             var builder = new StructureBuilder();
             builder.CreateStructure(item, schema);
 
-            Isolate.Verify.WasNotCalled(() => StringConverter.AsString<object>("A"));
+
+            stringConverterFake.Verify(s => s.AsString<object>("A"), Times.Never());
         }
 
-        [Test, Isolated]
+        [Test]
         public void CreateStructure_WhenItemWithEnumerable_WillConsumeStringConverter()
         {
-            Isolate.Fake.StaticMethods(typeof(StringConverter));
+            var stringConverterFake = new Mock<IStringConverter>();
+            SisoDbEnvironment.StringConverter = stringConverterFake.Object;
             var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
             var item = new WithArray { Values = new[] { "A", "B" } };
 
             var builder = new StructureBuilder();
             builder.CreateStructure(item, schema);
 
-            Isolate.Verify.WasCalledWithExactArguments(() => StringConverter.AsString<object>("A"));
-            Isolate.Verify.WasCalledWithExactArguments(() => StringConverter.AsString<object>("B"));
+            stringConverterFake.Verify(s => s.AsString<object>("A"), Times.Once());
+            stringConverterFake.Verify(s => s.AsString<object>("B"), Times.Once());
         }
 
         [Test]

@@ -6,6 +6,11 @@ namespace SisoDb.Tests.UnitTests
     [TestFixture]
     public class StringConverterTests : UnitTestBase
     {
+        private IStringConverter StringConverter
+        {
+            get { return SisoDbEnvironment.StringConverter; }
+        }
+
         [Test]
         public void AsString_ForInt_ReturnsIntAsString()
         {

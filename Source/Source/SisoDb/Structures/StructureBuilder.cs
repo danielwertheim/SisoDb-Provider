@@ -94,7 +94,7 @@ namespace SisoDb.Structures
                     foreach (var value in values.Distinct())
                     {
                         valueString.Append("<$");
-                        valueString.Append(StringConverter.AsString(value));
+                        valueString.Append(SisoDbEnvironment.StringConverter.AsString(value));
                         valueString.Append("$>");
                     }
                     var index = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.IsUnique);

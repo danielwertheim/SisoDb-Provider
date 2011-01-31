@@ -117,7 +117,7 @@ namespace SisoDb.Lambdas
             if (IsFlatteningMembers)
             {
                 if (!(value is string))
-                    value = StringConverter.AsString(value);
+                    value = SisoDbEnvironment.StringConverter.AsString(value);
 
                 value = "%<${0}$>%".Inject(value);
             }

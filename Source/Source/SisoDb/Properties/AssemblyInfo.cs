@@ -40,5 +40,5 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("SisoDb.TestUtils")]
 [assembly: InternalsVisibleTo("SisoDb.Tests.IntegrationTests")]
 [assembly: InternalsVisibleTo("SisoDb.Tests.UnitTests")]
-[assembly: InternalsVisibleTo("DynamicMockAssembly")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 #endif

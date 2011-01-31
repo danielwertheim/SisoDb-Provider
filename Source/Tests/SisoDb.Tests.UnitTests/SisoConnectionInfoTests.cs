@@ -1,38 +1,22 @@
 ﻿using System;
 using System.Configuration;
+using Moq;
 using NUnit.Framework;
 using SisoDb.TestUtils;
-using TypeMock.ArrangeActAssert;
 
 namespace SisoDb.Tests.UnitTests
 {
     [TestFixture]
     public class SisoConnectionInfoTests : UnitTestBase
     {
-        [Test, Isolated]
+        [Test]
         public void ProviderType_WhenProviderNameIsSql2008_ValueIsReflectedInProperty()
         {
-            const string connectionStringName = "Test";
-            Isolate.Fake.StaticMethods(typeof(ConfigurationManager));
-            Isolate.WhenCalled(() => ConfigurationManager.ConnectionStrings[connectionStringName])
-                .WillReturn(new ConnectionStringSettings(connectionStringName, "sisodb:provider=Sql2008||plain:TestKey1=TestValue1"));
-
-            var connectionInfo = new SisoConnectionInfo(connectionStringName);
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns("Sql2008");
+            var connectionInfo = new SisoConnectionInfo(connectionStringFake.Object);
 
             Assert.AreEqual(StorageProviders.Sql2008, connectionInfo.ProviderType);
-        }
-
-        [Test, Isolated]
-        public void ConnectionString_WhenValueForPlainIsProvided_ValueIsReflectedInProperty()
-        {
-            const string connectionStringName = "Test";
-            Isolate.Fake.StaticMethods(typeof(ConfigurationManager));
-            Isolate.WhenCalled(() => ConfigurationManager.ConnectionStrings[connectionStringName])
-                .WillReturn(new ConnectionStringSettings(connectionStringName, "sisodb:provider=Sql2008||plain:TestKey1=TestValue1"));
-
-            var connectionInfo = new SisoConnectionInfo(connectionStringName);
-
-            Assert.AreEqual("TestKey1=TestValue1", connectionInfo.ConnectionString.PlainString);
         }
 
         [Test]

@@ -1,17 +1,17 @@
 using System.Collections.Generic;
-using Moq;
+using TypeMock.ArrangeActAssert;
 using NUnit.Framework;
 using SisoDb.Structures;
 
 namespace SisoDb.Tests.UnitTests.Structures
 {
     [TestFixture]
-    public class StructureTests : UnitTestBase
+    public class StructureTests
     {
-        [Test]
+        [Test, Isolated]
         public void Ctor_WhenIndexesContainsNonUniqueUniqueIndex_ThrowsSisoDbException()
         {
-            var fakeStructureId = new Mock<IStructureId>().Object;
+            var fakeStructureId = Isolate.Fake.Instance<IStructureId>();
             var indexes = new List<IStructureIndex>
             {
                 new StructureIndex(fakeStructureId, "UniqueIndex1", "Value1", true),

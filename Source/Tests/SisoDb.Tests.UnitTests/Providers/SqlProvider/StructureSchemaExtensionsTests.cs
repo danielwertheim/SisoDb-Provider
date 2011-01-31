@@ -1,45 +1,42 @@
+using Moq;
 using NUnit.Framework;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Structures.Schemas;
-using TypeMock.ArrangeActAssert;
 
 namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 {
     [TestFixture]
-    public class StructureSchemaExtensionsTests
+    public class StructureSchemaExtensionsTests : UnitTestBase
     {
-        [Test, Isolated]
+        [Test]
         public void GetStructureTableName_ForStructure_ReturnsCorrectName()
         {
-            var schema = Isolate.Fake.Instance<IStructureSchema>();
-            Isolate.WhenCalled(() => schema.Name).WillReturn("Customer");
-            Isolate.WhenCalled(() => schema.GetStructureTableName()).CallOriginal();
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.Setup(s => s.Name).Returns("Customer");
 
-            var tableName = schema.GetStructureTableName();
+            var tableName = schemaFake.Object.GetStructureTableName();
 
             Assert.AreEqual("CustomerStructure", tableName);
         }
 
-        [Test, Isolated]
+        [Test]
         public void GetIndexesTableName_ForStructure_ReturnsCorrectName()
         {
-            var schema = Isolate.Fake.Instance<IStructureSchema>();
-            Isolate.WhenCalled(() => schema.Name).WillReturn("Customer");
-            Isolate.WhenCalled(() => schema.GetStructureTableName()).CallOriginal();
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.Setup(s => s.Name).Returns("Customer");
 
-            var tableName = schema.GetIndexesTableName();
+            var tableName = schemaFake.Object.GetIndexesTableName();
 
             Assert.AreEqual("CustomerIndexes", tableName);
         }
 
-        [Test, Isolated]
+        [Test]
         public void GetUniquesTableName_ForStructure_ReturnsCorrectName()
         {
-            var schema = Isolate.Fake.Instance<IStructureSchema>();
-            Isolate.WhenCalled(() => schema.Name).WillReturn("Customer");
-            Isolate.WhenCalled(() => schema.GetStructureTableName()).CallOriginal();
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.Setup(s => s.Name).Returns("Customer");
 
-            var tableName = schema.GetUniquesTableName();
+            var tableName = schemaFake.Object.GetUniquesTableName();
 
             Assert.AreEqual("CustomerUniques", tableName);
         }
