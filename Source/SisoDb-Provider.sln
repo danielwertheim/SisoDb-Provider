@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.TestUtils", "Tests\S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{09A45B8C-AD04-4E4A-9B5A-D33A886D5DAA}"
 	ProjectSection(SolutionItems) = preProject
-		Libs\Json.Net-bin\License-Newtonsoft.Json.txt = Libs\Json.Net-bin\License-Newtonsoft.Json.txt
+		Libs\ServiceStack.Text-bin\License-ServiceStack.txt = Libs\ServiceStack.Text-bin\License-ServiceStack.txt
 		License-SisoDb.txt = License-SisoDb.txt
 	EndProjectSection
 EndProject

@@ -1,0 +1,19 @@
+# Visual studio stuff
+[Oo]bj/
+[Bb]in/
+[D]ebug/
+[Dd]eploy/
+[Tt]est[Rr]esult/
+*.vspscc
+*.vssscc
+*.suo
+*.cache
+*.csproj.user
+*~
+_ReSharper.*
+*.resharper*
+*.[Rr]e[Ss]harper.user
+*.swp
+
+#windows stuff
+Thumbs.db

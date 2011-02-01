@@ -24,7 +24,8 @@ namespace SisoDb.Providers.SqlProvider
         private readonly IStructureSchemas _structureSchemas;
         private readonly IStructureBuilder _structureBuilder;
         private readonly ISqlQueryGenerator _sqlQueryGenerator;
-        
+        private readonly IBatchDeserializer _batchDeserializer;
+
         public SqlUnitOfWork(
             SqlDbClient dbClient, IIdentityGenerator identityGenerator,
             IDbSchemaManager dbSchemaManager,
@@ -38,6 +39,10 @@ namespace SisoDb.Providers.SqlProvider
             _sqlQueryGenerator = new SqlQueryGenerator(
                 new LambdaParser(),
                 new ParsedLambdaSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
+
+            //TODO: To use or not to use?!? Cuts's time but increases memoryconsumption.
+            _batchDeserializer = new ParallelJsonBatchDeserializer();
+            //_batchDeserializer = new SequentialJsonBatchDeserializer();
         }
 
         public void Dispose()
@@ -71,7 +76,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
             var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, items.Count) : null;
-            var structures = new IStructure[items.Count];
+            var structures = new IStructure[items.Count]; //TODO: Use Queue and Parallel task and batch to keep down memory consumption.
             Action<int> itteration = c =>
                                          {
                                              var item = items[c];
@@ -152,7 +157,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             return GetById<T>(StructureId.NewIdentityId(id));
         }
-        
+
         private T GetById<T>(IStructureId structureId) where T : class
         {
             var json = GetByIdAsJson<T>(structureId);
@@ -180,7 +185,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<T> GetAll<T>() where T : class
         {
-            return GetAllAsJson<T>().Select(JsonSerialization.ToItemOrNull<T>);
+            return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>());
+            //return GetAllAsJson<T>().Select(JsonSerialization.ToItemOrNull<T>);
         }
 
         public IEnumerable<string> GetAllAsJson<T>() where T : class
@@ -203,7 +209,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<T> NamedQuery<T>(INamedQuery query) where T : class
         {
-            return NamedQueryAsJson<T>(query).Select(JsonSerialization.ToItemOrNull<T>);
+            return _batchDeserializer.Deserialize<T>(NamedQueryAsJson<T>(query));
+            //return NamedQueryAsJson<T>(query).Select(JsonSerialization.ToItemOrNull<T>);
         }
 
         public IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
@@ -225,7 +232,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<T> Query<T>(Expression<Func<T, bool>> expression) where T : class
         {
-            return QueryAsJson(expression).Select(JsonSerialization.ToItemOrNull<T>);
+            return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(expression));
+            //return QueryAsJson(expression).Select(JsonSerialization.ToItemOrNull<T>);
         }
 
         public IEnumerable<string> QueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class
