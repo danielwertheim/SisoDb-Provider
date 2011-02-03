@@ -28,12 +28,7 @@ namespace SisoDbLab.Model
         public void Load(string path)
         {
             Name = Path.GetFileName(path);
-
-            _content = new MemoryStream();
-            using (var writer = new BinaryWriter(_content))
-            {
-                writer.Write(File.ReadAllBytes(path));
-            }
+            Buff = File.ReadAllBytes(path);
         }
     }
 }

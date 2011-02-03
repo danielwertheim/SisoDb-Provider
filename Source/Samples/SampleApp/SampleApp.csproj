@@ -78,8 +78,11 @@
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\Image.cs" />
+    <Compile Include="Model\IPhoto.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\OrderLine.cs" />
+    <Compile Include="Model\Photo.cs" />
+    <Compile Include="Model\PhotoInfo.cs" />
     <Compile Include="Model\ShoppingIndexes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

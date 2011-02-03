@@ -25,6 +25,14 @@ namespace SisoDb
 
         T GetById<T>(int id) where T : class;
 
+        TOut GetByIdAs<T, TOut>(Guid id)
+            where T : class
+            where TOut : class;
+
+        TOut GetByIdAs<T, TOut>(int id)
+            where T : class
+            where TOut : class;
+
         string GetByIdAsJson<T>(Guid id) where T : class;
 
         string GetByIdAsJson<T>(int id) where T : class;

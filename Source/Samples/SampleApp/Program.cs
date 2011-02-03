@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using SisoDb;
 using SisoDb.Querying;
@@ -14,10 +15,10 @@ namespace SisoDbLab
             Console.ReadKey();
             return;
 
-            var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDbLab;Integrated security=SSPI;");
-            var db = new SisoDatabase(cnInfo);
-            db.EnsureNewDatabase();
-
+            //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDbLab;Integrated security=SSPI;");
+            //var db = new SisoDatabase(cnInfo);
+            //db.EnsureNewDatabase();
+            
             //ShowSchemaInfo<Customer>(db);
             //ShowSchemaInfo<Order>(db);
             //DemoInsertAndUpdate(db);
@@ -25,6 +26,9 @@ namespace SisoDbLab
 
             //ShowSchemaInfo<Image>(db);
             //DemoImage(db);
+
+            //ShowSchemaInfo<IPhoto>(db);
+            //DemoInterface(db);
 
             Console.ReadKey();
         }
@@ -52,11 +56,32 @@ namespace SisoDbLab
             }
         }
 
+        private static void DemoInterface(ISisoDatabase db)
+        {
+            var photo = new Photo();
+            photo.Load(@"C:\Users\Public\Pictures\Sample Pictures\Penguins.jpg");
+
+            using (var uow = db.CreateUnitOfWork())
+            {
+                uow.Insert<IPhoto>(photo);
+                uow.Commit();
+                
+                var fetchedAsPhoto = uow.GetByIdAs<IPhoto, Photo>(photo.Id);
+                Console.Out.WriteLine("fetchedAsPhoto.Name = {0}", fetchedAsPhoto.Name);
+                Console.Out.WriteLine("fetchedAsPhoto.Path = {0}", fetchedAsPhoto.Path);
+                Console.Out.WriteLine("fetchedAsPhoto.Stream.Length = {0}", fetchedAsPhoto.Stream.Length);
+
+                var fetchedAsPhotoInfo = uow.GetByIdAs<IPhoto, PhotoInfo>(photo.Id);
+                Console.Out.WriteLine("fetchedAsPhotoInfo.Name = {0}", fetchedAsPhotoInfo.Name);
+                Console.Out.WriteLine("fetchedAsPhotoInfo.Path = {0}", fetchedAsPhotoInfo.Path);
+            }
+        }
+
         private static void DemoImage(ISisoDatabase db)
         {
             var image = new Image();
             image.Load(@"C:\Users\Public\Pictures\Sample Pictures\Penguins.jpg");
-            image.Tags = new[] {"penguin", "ice", "cold"};
+            image.Tags = new[] { "penguin", "ice", "cold" };
 
             using (var uow = db.CreateUnitOfWork())
             {

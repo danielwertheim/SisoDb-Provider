@@ -150,19 +150,29 @@ namespace SisoDb.Providers.SqlProvider
 
         public T GetById<T>(Guid id) where T : class
         {
-            return GetById<T>(StructureId.NewGuidId(id));
+            return GetById<T, T>(StructureId.NewGuidId(id));
         }
 
         public T GetById<T>(int id) where T : class
         {
-            return GetById<T>(StructureId.NewIdentityId(id));
+            return GetById<T, T>(StructureId.NewIdentityId(id));
         }
 
-        private T GetById<T>(IStructureId structureId) where T : class
+        public TOut GetByIdAs<T, TOut>(Guid id) where T : class where TOut : class 
+        {
+            return GetById<T, TOut>(StructureId.NewGuidId(id));
+        }
+
+        public TOut GetByIdAs<T, TOut>(int id) where T : class where TOut : class
+        {
+            return GetById<T, TOut>(StructureId.NewIdentityId(id));
+        }
+
+        private TOut GetById<T, TOut>(IStructureId structureId) where T : class where TOut : class
         {
             var json = GetByIdAsJson<T>(structureId);
 
-            return JsonSerialization.ToItemOrNull<T>(json);
+            return JsonSerialization.ToItemOrNull<TOut>(json);
         }
 
         public string GetByIdAsJson<T>(Guid id) where T : class

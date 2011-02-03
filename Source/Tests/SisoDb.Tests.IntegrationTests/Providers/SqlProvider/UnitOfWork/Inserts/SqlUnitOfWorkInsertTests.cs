@@ -18,7 +18,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
         {
             var entityGraph = CreateInitializedEntityGraph();
 
-            using(var unitOfWork = Database.CreateUnitOfWork())
+            using (var unitOfWork = Database.CreateUnitOfWork())
             {
                 unitOfWork.Insert(entityGraph);
                 unitOfWork.Commit();
@@ -61,7 +61,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 RootString1 = "Root string 1",
                 Nested = new Nested
                     {
-                        NestedInt1 = 2, 
+                        NestedInt1 = 2,
                         NestedString1 = "Nested string 1"
                     }
             };
