@@ -27,7 +27,8 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
                 var sql = _sqlStrings.GetSql("DropStructureTables").Inject(
                     structureSchema.GetIndexesTableName(),
-                    structureSchema.GetStructureTableName());
+                    structureSchema.GetStructureTableName(),
+                    structureSchema.GetUniquesTableName());
 
                 using (var client = new SqlDbClient(_connectionInfo, false))
                 {

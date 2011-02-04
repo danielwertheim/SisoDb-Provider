@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 {
     [TestFixture]
-    public class SqlUnitOfWorkGuidIdInsertTests : IntegrationTestBase
+    public class SqlUnitOfWorkGuidIdInsertTests : SqlIntegrationTestBase
     {
         protected override void OnTestFinalize()
         {

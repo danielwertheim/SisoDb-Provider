@@ -88,6 +88,7 @@
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaManagerTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlIntegrationTestBase.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfworkDeleteTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkBaseClassInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkGuidIdInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkIdentityInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertItemWithArraysTests.cs" />

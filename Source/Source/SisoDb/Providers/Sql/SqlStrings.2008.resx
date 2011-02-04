@@ -194,6 +194,7 @@ drop column {1};</value>
   <data name="DropStructureTables" xml:space="preserve">
     <value>if object_id(N'{0}', N'U') is not null drop table [dbo].[{0}];
 if object_id(N'{1}', N'U') is not null drop table [dbo].[{1}];
+if object_id(N'{2}', N'U') is not null drop table [dbo].[{2}];
 if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[SisoDbIdentities] where [EntityHash] = @entityHash;</value>
   </data>
   <data name="GetAll" xml:space="preserve">

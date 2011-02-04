@@ -10,9 +10,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
     public class SqlDbSchemaManagerTests : SqlIntegrationTestBase
     {
         private IStructureSchema _structureSchema;
-        private string _structureSetPrefix;
         private string _structureTableName;
         private string _indexesTableName;
+        private string _uniquesTableName;
         private ISqlDatabase _sqlDb;
 
         protected override void OnFixtureInitialize()
@@ -20,9 +20,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
             DropStructureSet<Class_53966417_B25D_49E1_966B_58754110781C>();
 
             _structureSchema = Database.StructureSchemas.GetSchema<Class_53966417_B25D_49E1_966B_58754110781C>();
-            _structureSetPrefix = typeof (Class_53966417_B25D_49E1_966B_58754110781C).Name;
-            _structureTableName = _structureSetPrefix + "Structure";
-            _indexesTableName = _structureSetPrefix + "Indexes";
+            _structureTableName = _structureSchema.GetStructureTableName();
+            _indexesTableName = _structureSchema.GetIndexesTableName();
+            _uniquesTableName = _structureSchema.GetUniquesTableName();
 
             _sqlDb = new SqlDatabase(Database.ConnectionInfo);
         }
@@ -42,9 +42,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
             var structureTableExists = DbHelper.TableExists(_structureTableName);
             var indexesTableExists = DbHelper.TableExists(_indexesTableName);
+            var uniquesTableExists = DbHelper.TableExists(_uniquesTableName);
 
             Assert.IsFalse(structureTableExists);
             Assert.IsFalse(indexesTableExists);
+            Assert.IsFalse(uniquesTableExists);
         }
 
         [Test]
@@ -55,9 +57,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
             var structureTableExists = DbHelper.TableExists(_structureTableName);
             var indexesTableExists = DbHelper.TableExists(_indexesTableName);
+            var uniquesTableExists = DbHelper.TableExists(_uniquesTableName);
 
             Assert.IsTrue(structureTableExists);
             Assert.IsTrue(indexesTableExists);
+            Assert.IsTrue(uniquesTableExists);
         }
 
         [Test]

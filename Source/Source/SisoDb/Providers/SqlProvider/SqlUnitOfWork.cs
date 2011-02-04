@@ -41,8 +41,8 @@ namespace SisoDb.Providers.SqlProvider
                 new ParsedLambdaSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
 
             //TODO: To use or not to use?!? Cuts's time but increases memoryconsumption.
-            _batchDeserializer = new ParallelJsonBatchDeserializer();
-            //_batchDeserializer = new SequentialJsonBatchDeserializer();
+            //_batchDeserializer = new ParallelJsonBatchDeserializer();
+            _batchDeserializer = new SequentialJsonBatchDeserializer();
         }
 
         public void Dispose()
@@ -196,7 +196,11 @@ namespace SisoDb.Providers.SqlProvider
         public IEnumerable<T> GetAll<T>() where T : class
         {
             return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>());
-            //return GetAllAsJson<T>().Select(JsonSerialization.ToItemOrNull<T>);
+        }
+
+        public IEnumerable<TOut> GetAllAs<T, TOut>() where T : class where TOut : class
+        {
+            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<T>());
         }
 
         public IEnumerable<string> GetAllAsJson<T>() where T : class
@@ -220,7 +224,11 @@ namespace SisoDb.Providers.SqlProvider
         public IEnumerable<T> NamedQuery<T>(INamedQuery query) where T : class
         {
             return _batchDeserializer.Deserialize<T>(NamedQueryAsJson<T>(query));
-            //return NamedQueryAsJson<T>(query).Select(JsonSerialization.ToItemOrNull<T>);
+        }
+
+        public IEnumerable<TOut> NamedQueryAs<T, TOut>(INamedQuery query) where T : class where TOut : class 
+        {
+            return _batchDeserializer.Deserialize<TOut>(NamedQueryAsJson<T>(query));
         }
 
         public IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
@@ -243,7 +251,11 @@ namespace SisoDb.Providers.SqlProvider
         public IEnumerable<T> Query<T>(Expression<Func<T, bool>> expression) where T : class
         {
             return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(expression));
-            //return QueryAsJson(expression).Select(JsonSerialization.ToItemOrNull<T>);
+        }
+
+        public IEnumerable<TOut> QueryAs<T, TOut>(Expression<Func<T, bool>> expression) where T : class where TOut : class 
+        {
+            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(expression));
         }
 
         public IEnumerable<string> QueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class

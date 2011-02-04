@@ -5,7 +5,7 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 {
     [TestFixture]
-    public class SqlUnitOfWorkInsertTests : IntegrationTestBase
+    public class SqlUnitOfWorkInsertTests : SqlIntegrationTestBase
     {
         protected override void OnTestFinalize()
         {

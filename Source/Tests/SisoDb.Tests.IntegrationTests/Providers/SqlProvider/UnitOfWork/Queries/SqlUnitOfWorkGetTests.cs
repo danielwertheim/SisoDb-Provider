@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 {
     [TestFixture]
-    public class SqlUnitOfWorkGetTests : IntegrationTestBase
+    public class SqlUnitOfWorkGetTests : SqlIntegrationTestBase
     {
         protected override void OnTestFinalize()
         {

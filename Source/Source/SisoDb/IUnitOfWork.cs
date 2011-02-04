@@ -39,13 +39,19 @@ namespace SisoDb
 
         IEnumerable<T> GetAll<T>() where T : class;
 
+        IEnumerable<TOut> GetAllAs<T, TOut>() where T : class where TOut : class;
+
         IEnumerable<string> GetAllAsJson<T>() where T : class;
 
         IEnumerable<T> NamedQuery<T>(INamedQuery query) where T : class;
 
+        IEnumerable<TOut> NamedQueryAs<T, TOut>(INamedQuery query) where T : class where TOut : class;
+
         IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class;
 
         IEnumerable<T> Query<T>(Expression<Func<T, bool>> expression) where T : class;
+
+        IEnumerable<TOut> QueryAs<T, TOut>(Expression<Func<T, bool>> expression) where T : class where TOut : class;
 
         IEnumerable<string> QueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class;
     }
