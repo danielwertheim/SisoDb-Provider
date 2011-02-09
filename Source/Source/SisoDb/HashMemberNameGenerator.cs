@@ -1,5 +1,4 @@
-﻿using System;
-using SisoDb.Cryptography;
+﻿using SisoDb.Cryptography;
 
 namespace SisoDb
 {
@@ -20,8 +19,10 @@ namespace SisoDb
 
         public string Generate(string memberPath)
         {
-            if(memberPath.IsNullOrWhiteSpace())
-                throw  new ArgumentNullException("memberPath");
+            memberPath.AssertNotNullOrWhiteSpace("memberPath");
+
+            if (memberPath == "StructureId")
+                return memberPath;
 
             var hash = _hashService.GenerateHash(memberPath);
             var memberPathSubstring = memberPath.Length < MemberPathSubstringLength ? 

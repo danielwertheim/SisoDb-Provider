@@ -1,0 +1,5 @@
+v0.6.3
+
+- Bug: You can now query Id'values using Lambdas.
+
+- Feature: Now able to specify sorting when querying using: Query, QueryAs, QueryAsJson, GetAll, GetAllAs, GetAllAsJson

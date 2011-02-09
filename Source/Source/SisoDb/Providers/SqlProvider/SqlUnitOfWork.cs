@@ -37,12 +37,13 @@ namespace SisoDb.Providers.SqlProvider
             _structureSchemas = structureSchemas;
             _structureBuilder = structureBuilder;
             _sqlQueryGenerator = new SqlQueryGenerator(
-                new LambdaParser(),
-                new ParsedLambdaSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
+                new SelectorParser(), new SortingParser(), //TODO: Remove???
+                new ParsedSelectorSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
+                new ParsedSortingSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
 
             //TODO: To use or not to use?!? Cuts's time but increases memoryconsumption.
-            //_batchDeserializer = new ParallelJsonBatchDeserializer();
-            _batchDeserializer = new SequentialJsonBatchDeserializer();
+            _batchDeserializer = new ParallelJsonBatchDeserializer();
+            //_batchDeserializer = new SequentialJsonBatchDeserializer();
         }
 
         public void Dispose()
@@ -76,7 +77,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
             var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, items.Count) : null;
-            var structures = new IStructure[items.Count]; //TODO: Use Queue and Parallel task and batch to keep down memory consumption.
+            var structures = new IStructure[items.Count];
             Action<int> itteration = c =>
                                          {
                                              var item = items[c];
@@ -195,7 +196,17 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<T> GetAll<T>() where T : class
         {
-            return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>());
+            var command = new GetCommand<T>();
+
+            return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>(command));
+        }
+
+        public IEnumerable<T> GetAll<T>(Action<IGetCommand<T>> commandInitializer) where T : class
+        {
+            var command = new GetCommand<T>();
+            commandInitializer(command);
+
+            return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>(command));
         }
 
         public IEnumerable<TOut> GetAllAs<T, TOut>() where T : class where TOut : class
@@ -203,12 +214,46 @@ namespace SisoDb.Providers.SqlProvider
             return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<T>());
         }
 
+        public IEnumerable<TOut> GetAllAs<T, TOut>(Action<IGetCommand<T>> commandInitializer) where T : class where TOut : class
+        {
+            var command = new GetCommand<T>();
+            commandInitializer(command);
+
+            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<T>(command));
+        }
+
         public IEnumerable<string> GetAllAsJson<T>() where T : class
         {
+            var command = new GetCommand<T>();
+
+            return GetAllAsJson<T>(command);
+        }
+
+        public IEnumerable<string> GetAllAsJson<T>(Action<IGetCommand<T>> commandInitializer) where T : class
+        {
+            var command = new GetCommand<T>();
+            commandInitializer(command);
+
+            return GetAllAsJson<T>(command);
+        }
+
+        private IEnumerable<string> GetAllAsJson<T>(IGetCommand<T> getCommand) where T : class
+        {
+            getCommand.AssertNotNull("getCommand");
+
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
-            var sql = _dbClient.SqlStrings.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
+            string sql;
+            if(getCommand.HasSortings)
+            {
+                var queryCommand = getCommand.HasSortings ? new QueryCommand<T>(getCommand.Sortings) : new QueryCommand<T>();
+                var query = _sqlQueryGenerator.Generate(queryCommand, structureSchema);
+                sql = query.Sql;
+            }
+            else
+                sql = _dbClient.SqlStrings.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
+
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
@@ -250,20 +295,57 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<T> Query<T>(Expression<Func<T, bool>> expression) where T : class
         {
-            return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(expression));
+            var command = new QueryCommand<T>().Where(expression);
+
+            return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
+        }
+
+        public IEnumerable<T> Query<T>(Action<IQueryCommand<T>> commandInitializer) where T : class
+        {
+            var command = new QueryCommand<T>();
+            commandInitializer(command);
+
+            return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
         }
 
         public IEnumerable<TOut> QueryAs<T, TOut>(Expression<Func<T, bool>> expression) where T : class where TOut : class 
         {
-            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(expression));
+            var command = new QueryCommand<T>().Where(expression);
+
+            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
+        }
+
+        public IEnumerable<TOut> QueryAs<T, TOut>(Action<IQueryCommand<T>> commandInitializer) where T : class where TOut : class
+        {
+            var command = new QueryCommand<T>();
+            commandInitializer(command);
+
+            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
         }
 
         public IEnumerable<string> QueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class
         {
+            var command = new QueryCommand<T>().Where(expression);
+
+            return QueryAsJson<T>(command);
+        }
+
+        public IEnumerable<string> QueryAsJson<T>(Action<IQueryCommand<T>> commandInitializer) where T : class
+        {
+            var command = new QueryCommand<T>();
+            commandInitializer(command);
+
+            return QueryAsJson<T>(command);
+        }
+
+        private IEnumerable<string> QueryAsJson<T>(IQueryCommand<T> queryCommand) where T : class
+        {
+            queryCommand.AssertNotNull("queryCommand");
+
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
-            var query = _sqlQueryGenerator.Generate(expression, structureSchema);
+            var query = _sqlQueryGenerator.Generate(queryCommand, structureSchema);
             var parameters = query.Parameters.Select(p => new QueryParameter(p.Name, p.Value)).ToArray();
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, query.Sql, parameters))

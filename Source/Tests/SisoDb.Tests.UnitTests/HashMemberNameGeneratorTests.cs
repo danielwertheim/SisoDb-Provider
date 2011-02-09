@@ -11,6 +11,18 @@ namespace SisoDb.Tests.UnitTests
         private const string FakedHash = "Hash";
 
         [Test]
+        public void Generate_WhenPassedValueIsStructureId_NoHashIsAppended()
+        {
+            var fakedHashService = GetFakedHashService();
+            var generator = new HashMemberNameGenerator(fakedHashService);
+
+            var inputValue = "StructureId";
+            var memberName = generator.Generate(inputValue);
+
+            Assert.AreEqual(inputValue, memberName);
+        }
+
+        [Test]
         public void MaxMemberNameLength_DoesNotExceedSqlServersMaxOf128()
         {
             Assert.AreEqual(128, HashMemberNameGenerator.MaxMemberNameLength);

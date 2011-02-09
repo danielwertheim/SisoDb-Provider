@@ -21,7 +21,17 @@ namespace SisoDb.Lambdas
                 return (MemberExpression)e;
 
             if (e is MethodCallExpression)
-                return GetRightMostMember(((MethodCallExpression)e).Object);
+            {
+                var callExpression = (MethodCallExpression) e;
+                var member = callExpression.Arguments.Count > 0 ? callExpression.Arguments[0] : callExpression.Object;
+                return GetRightMostMember(member);
+            }
+
+            if(e is UnaryExpression)
+            {
+                var unaryExpression = (UnaryExpression) e;
+                return GetRightMostMember(unaryExpression.Operand);
+            }
 
             throw new SisoDbException(ExceptionMessages.ExpressionUtils_GetRightMostMember_NoMemberFound
                 .Inject(e.ToString()));

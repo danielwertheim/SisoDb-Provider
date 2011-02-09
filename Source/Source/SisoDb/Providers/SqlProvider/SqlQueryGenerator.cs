@@ -1,5 +1,4 @@
-using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
 using SisoDb.Lambdas;
 using SisoDb.Lambdas.Processors;
 using SisoDb.Querying;
@@ -9,29 +8,49 @@ namespace SisoDb.Providers.SqlProvider
 {
     internal class SqlQueryGenerator : ISqlQueryGenerator
     {
-        private readonly ILambdaParser _lambdaParser;
-        private readonly IParsedLambdaProcessor<ISqlQuery> _parsedLambdaProcessor;
+        private readonly ISelectorParser _selectorParser;
+        private readonly ISortingParser _sortingParser;
+        private readonly IParsedLambdaProcessor<ISqlSelector> _parsedSelectorProcessor;
+        private readonly IParsedLambdaProcessor<ISqlSorting> _parsedSortingProcessor;
 
-        internal SqlQueryGenerator(ILambdaParser lambdaParser, IParsedLambdaProcessor<ISqlQuery> parsedLambdaProcessor)
+        internal SqlQueryGenerator(ISelectorParser selectorParser, ISortingParser sortingParser, IParsedLambdaProcessor<ISqlSelector> parsedSelectorProcessor, IParsedLambdaProcessor<ISqlSorting> parsedSortingProcessor)
         {
-            _lambdaParser = lambdaParser.AssertNotNull("lambdaParser");
-            _parsedLambdaProcessor = parsedLambdaProcessor.AssertNotNull("parsedLambdaProcessor");
+            _selectorParser = selectorParser.AssertNotNull("selectorParser");
+            _sortingParser = sortingParser;
+            _parsedSelectorProcessor = parsedSelectorProcessor.AssertNotNull("parsedSelectorProcessor");
+            _parsedSortingProcessor = parsedSortingProcessor.AssertNotNull("parsedSortingProcessor");
         }
 
-        public ISqlQuery Generate<T>(Expression<Func<T, bool>> e, IStructureSchema schema) where T : class
+        public ISqlQuery Generate<T>(IQueryCommand<T> queryCommand, IStructureSchema schema) where T : class
         {
-            var parsedLambda = _lambdaParser.Parse(e);
-            var whereQuery = _parsedLambdaProcessor.Process(parsedLambda);
+            var where = string.Empty;
+            var orderBy = string.Empty;
+            IList<IQueryParameter> queryParameters = new List<IQueryParameter>();
 
+            if (queryCommand.HasSelector)
+            {
+                var parsedSelectorLambda = _selectorParser.Parse(queryCommand.Selector);
+                var selector = _parsedSelectorProcessor.Process(parsedSelectorLambda);
+                where = !string.IsNullOrWhiteSpace(selector.Sql) ? " where " + selector.Sql : string.Empty;
+                queryParameters = selector.Parameters;
+            }
+
+            if(queryCommand.HasSortings)
+            {
+                var parsedSortingLambda = _sortingParser.Parse(queryCommand.Sortings);
+                var sorting = _parsedSortingProcessor.Process(parsedSortingLambda);
+                orderBy = !string.IsNullOrWhiteSpace(sorting.Sql) ? " order by " + sorting.Sql : string.Empty;
+            }
+            
             var structureTableName = schema.GetStructureTableName();
             var indexesTableName = schema.GetIndexesTableName();
-
+            
             var sql =
                 string.Format(
-                    "select s.Json from [dbo].[{0}] as s inner join [dbo].[{1}] as si on si.StructureId = s.Id where {2}",
-                    structureTableName, indexesTableName, whereQuery.Sql);
+                    "select s.Json from [dbo].[{0}] as s inner join [dbo].[{1}] as si on si.StructureId = s.Id{2}{3};",
+                    structureTableName, indexesTableName, where, orderBy);
 
-            return new SqlQuery(sql, whereQuery.Parameters);
+            return new SqlQuery(sql, queryParameters);
         }
     }
 }

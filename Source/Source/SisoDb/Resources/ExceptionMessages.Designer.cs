@@ -124,6 +124,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Sortings has allready been initialized..
+        /// </summary>
+        internal static string GetCommand_SortingsAllreadyInitialized {
+            get {
+                return ResourceManager.GetString("GetCommand_SortingsAllreadyInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must provide an unique guid to the GuidId..
         /// </summary>
         internal static string Id_GuidIsMissingValue {
@@ -215,6 +224,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The node of type: &apos;{0}&apos; is not supported!.
+        /// </summary>
+        internal static string ParsedSortingLambdaSqlProcessor_NotSupportedNodeType {
+            get {
+                return ResourceManager.GetString("ParsedSortingLambdaSqlProcessor_NotSupportedNodeType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc..
         /// </summary>
         internal static string Property_Ctor_UniqueOnNonSimpleType {
@@ -242,6 +260,24 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Sortings has allready been initialized..
+        /// </summary>
+        internal static string QueryCommand_SortingsAllreadyInitialized {
+            get {
+                return ResourceManager.GetString("QueryCommand_SortingsAllreadyInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Where expression has allready been initialized..
+        /// </summary>
+        internal static string QueryCommand_WhereAllreadyInitialized {
+            get {
+                return ResourceManager.GetString("QueryCommand_WhereAllreadyInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A connectionstring or connectionstring name needs to be passed to the constructor..
         /// </summary>
         internal static string SisoConnectionInfo_MissingConnectionStringOrNameArg {
@@ -256,6 +292,15 @@ namespace SisoDb.Resources {
         internal static string SisoDatabase_UnknownStorageProvider {
             get {
                 return ResourceManager.GetString("SisoDatabase_UnknownStorageProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The only supported methods for marking sortings are Asc() and Desc()..
+        /// </summary>
+        internal static string SortingParser_UnsupportedMethodForSortingDirection {
+            get {
+                return ResourceManager.GetString("SortingParser_UnsupportedMethodForSortingDirection", resourceCulture);
             }
         }
         

@@ -19,11 +19,8 @@ namespace SisoDb.Querying
 
         internal SqlQuery(string sql, IEnumerable<IQueryParameter> parameters)
         {
-            if(string.IsNullOrWhiteSpace(sql))
-                throw new ArgumentNullException("sql");
-
-            if(parameters == null)
-                throw new ArgumentNullException("parameters");
+            sql.AssertNotNullOrWhiteSpace("sql");
+            parameters.AssertNotNull("parameters");
 
             Sql = sql;
 

@@ -184,7 +184,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             using (var cmd = CreateCommand(commandType, sql, parameters))
             {
-                using (var reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
                 {
                     while (reader.Read())
                     {

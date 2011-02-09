@@ -226,4 +226,19 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="LambdaParser_MemberIsBytes" xml:space="preserve">
     <value>Byte arrays are not supported for member: '{0}'.</value>
   </data>
+  <data name="SortingParser_UnsupportedMethodForSortingDirection" xml:space="preserve">
+    <value>The only supported methods for marking sortings are Asc() and Desc().</value>
+  </data>
+  <data name="ParsedSortingLambdaSqlProcessor_NotSupportedNodeType" xml:space="preserve">
+    <value>The node of type: '{0}' is not supported!</value>
+  </data>
+  <data name="QueryCommand_SortingsAllreadyInitialized" xml:space="preserve">
+    <value>The Sortings has allready been initialized.</value>
+  </data>
+  <data name="QueryCommand_WhereAllreadyInitialized" xml:space="preserve">
+    <value>The Where expression has allready been initialized.</value>
+  </data>
+  <data name="GetCommand_SortingsAllreadyInitialized" xml:space="preserve">
+    <value>The Sortings has allready been initialized.</value>
+  </data>
 </root>

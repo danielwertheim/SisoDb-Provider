@@ -1,28 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SisoDb.Lambdas.Nodes
 {
-    internal class NodesContainer
+    internal class NodesContainer : IEnumerable<INode>
     {
         private readonly Queue<INode> _nodes;
 
-        public LambdaExpression Expression { get; private set; }
-
-        public IList<INode> Nodes
+        public NodesContainer()
         {
-            get { return _nodes.ToArray(); }
-        }
-
-        public NodesContainer(LambdaExpression e)
-        {
-            Expression = e;
             _nodes = new Queue<INode>();
         }
 
         public void AddNode(INode node)
         {
             _nodes.Enqueue(node);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<INode> GetEnumerator()
+        {
+            return _nodes.GetEnumerator();
         }
     }
 }

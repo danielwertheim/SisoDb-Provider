@@ -10,19 +10,19 @@ namespace SisoDb.Profiling
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
-            //Console.ReadKey();
-            //return;
+            Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
+            Console.ReadKey();
+            return;
 
-            var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
+            //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
 
-            var db = new SisoDatabase(cnInfo);
+            //var db = new SisoDatabase(cnInfo);
             //db.EnsureNewDatabase();
 
             //ProfilingInserts(db, 1000, 5);
 
             //InsertCustomers(1, 100000, db);
-            //ProfilingQueries(db, GetAllCustomersAsJson);
+            //ProfilingQueries(db, GetAllCustomers);
 
             Console.WriteLine("---- Done ----");
             Console.ReadKey();
@@ -30,7 +30,6 @@ namespace SisoDb.Profiling
 
         private static void ProfilingInserts(ISisoDatabase database, int numOfCustomers, int numOfItterations)
         {
-            var durations = new List<TimeSpan>();
             var stopWatch = new Stopwatch();
 
             for (var c = 0; c < numOfItterations; c++)
@@ -39,9 +38,7 @@ namespace SisoDb.Profiling
                 stopWatch.Start();
                 InsertCustomers(customers, database);
                 stopWatch.Stop();
-
-                durations.Add(stopWatch.Elapsed);
-
+                
                 Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
 
                 stopWatch.Reset();
@@ -57,15 +54,12 @@ namespace SisoDb.Profiling
 
         private static void ProfilingQueries<T>(ISisoDatabase database, Func<ISisoDatabase, IList<T>> queryAction)
         {
-            var durations = new List<TimeSpan>();
             var stopWatch = new Stopwatch();
             
             stopWatch.Start();
             var customers = queryAction(database);
             stopWatch.Stop();
-
-            durations.Add(stopWatch.Elapsed);
-
+            
             Console.WriteLine("customers.Count() = {0}", customers.Count());
             Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
         }

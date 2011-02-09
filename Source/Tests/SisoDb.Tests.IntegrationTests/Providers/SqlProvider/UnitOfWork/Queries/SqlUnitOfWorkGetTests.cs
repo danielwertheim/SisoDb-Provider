@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 {
@@ -174,11 +175,123 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             Assert.AreEqual("{\"Id\":\"8a2f9a21d2fa4eae82acace6aef34e7d\",\"SortOrder\":2}", itemJsonRefetched);
         }
 
+        [Test]
+        public void GetAll_InsertInOneOrderReturnedInAnother_SortingIsCorrect()
+        {
+            var items = new List<IdentityItemForGetQueries>
+                            {
+                                new IdentityItemForGetQueries {SortOrder = 1, StringValue = "A"},
+                                new IdentityItemForGetQueries {SortOrder = 5, StringValue = "E"},
+                                new IdentityItemForGetQueries {SortOrder = 2, StringValue = "B"},
+                                new IdentityItemForGetQueries {SortOrder = 4, StringValue = "D"},
+                                new IdentityItemForGetQueries {SortOrder = 3, StringValue = "C"}
+                            };
+
+            IList<IdentityItemForGetQueries> refetched = null;
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                refetched = uow.GetAll<IdentityItemForGetQueries>(q => q.SortBy(i => i.SortOrder)).ToList();
+            }
+
+            CustomAssert.AreValueEqual(items[0], refetched[0]);
+            CustomAssert.AreValueEqual(items[1], refetched[4]);
+            CustomAssert.AreValueEqual(items[2], refetched[1]);
+            CustomAssert.AreValueEqual(items[3], refetched[3]);
+            CustomAssert.AreValueEqual(items[4], refetched[2]);
+        }
+
+        [Test]
+        public void GetAllAs_InsertInOneOrderReturnedInAnother_SortingIsCorrect()
+        {
+            var items = new List<IdentityItemForGetQueries>
+                            {
+                                new IdentityItemForGetQueries {SortOrder = 1, StringValue = "A"},
+                                new IdentityItemForGetQueries {SortOrder = 5, StringValue = "E"},
+                                new IdentityItemForGetQueries {SortOrder = 2, StringValue = "B"},
+                                new IdentityItemForGetQueries {SortOrder = 4, StringValue = "D"},
+                                new IdentityItemForGetQueries {SortOrder = 3, StringValue = "C"}
+                            };
+
+            IList<ItemForQueriesInfo> refetched = null;
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                refetched = uow.GetAllAs<IdentityItemForGetQueries, ItemForQueriesInfo>(q => q.SortBy(i => i.StringValue)).ToList();
+            }
+
+            Assert.AreEqual(items[0].SortOrder, refetched[0].SortOrder);
+            Assert.AreEqual(items[1].SortOrder, refetched[4].SortOrder);
+            Assert.AreEqual(items[2].SortOrder, refetched[1].SortOrder);
+            Assert.AreEqual(items[3].SortOrder, refetched[3].SortOrder);
+            Assert.AreEqual(items[4].SortOrder, refetched[2].SortOrder);
+        }
+
+        [Test]
+        public void GetAllAsJson_InsertInOneOrderReturnedInAnother_SortingIsCorrect()
+        {
+            var items = new List<IdentityItemForGetQueries>
+                            {
+                                new IdentityItemForGetQueries {SortOrder = 1, StringValue = "A"},
+                                new IdentityItemForGetQueries {SortOrder = 5, StringValue = "E"},
+                                new IdentityItemForGetQueries {SortOrder = 2, StringValue = "B"},
+                                new IdentityItemForGetQueries {SortOrder = 4, StringValue = "D"},
+                                new IdentityItemForGetQueries {SortOrder = 3, StringValue = "C"}
+                            };
+
+            IList<string> refetched = null;
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                refetched = uow.GetAllAsJson<IdentityItemForGetQueries>(q => q.SortBy(i => i.SortOrder)).ToList();
+            }
+
+            Assert.AreEqual("{\"Id\":1,\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
+            Assert.AreEqual("{\"Id\":2,\"SortOrder\":5,\"StringValue\":\"E\"}", refetched[4]);
+            Assert.AreEqual("{\"Id\":3,\"SortOrder\":2,\"StringValue\":\"B\"}", refetched[1]);
+            Assert.AreEqual("{\"Id\":4,\"SortOrder\":4,\"StringValue\":\"D\"}", refetched[3]);
+            Assert.AreEqual("{\"Id\":5,\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[2]);
+        }
+
+        [Test]
+        public void GetAll_InsertInOneOrderReturnedInAnotherBySortingOnTwoMembers_SortingIsCorrect()
+        {
+            var items = new List<IdentityItemForGetQueries>
+                            {
+                                new IdentityItemForGetQueries {SortOrder = 2, StringValue = "B"},
+                                new IdentityItemForGetQueries {SortOrder = 2, StringValue = "A"},
+                                new IdentityItemForGetQueries {SortOrder = 1, StringValue = "B"},
+                                new IdentityItemForGetQueries {SortOrder = 1, StringValue = "A"}
+                            };
+
+            IList<IdentityItemForGetQueries> refetched = null;
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                refetched = uow.Query<IdentityItemForGetQueries>(q => q.SortBy(i => i.StringValue, i => i.SortOrder)).ToList();
+            }
+
+            CustomAssert.AreValueEqual(items[0], refetched[3]);
+            CustomAssert.AreValueEqual(items[1], refetched[1]);
+            CustomAssert.AreValueEqual(items[2], refetched[2]);
+            CustomAssert.AreValueEqual(items[3], refetched[0]);
+        }
+
         private class IdentityItemForGetQueries
         {
             public int Id { get; set; }
 
             public int SortOrder { get; set; }
+
+            public string StringValue { get; set; }
         }
 
         private class GuidItemForGetQueries
@@ -186,6 +299,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             public Guid Id { get; set; }
 
             public int SortOrder { get; set; }
+        }
+
+        private class ItemForQueriesInfo
+        {
+            public int SortOrder { get; set; }
+
+            public string StringValue { get; set; }
         }
     }
 }

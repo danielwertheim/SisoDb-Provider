@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.ObjectModel;
 using SisoDb.Lambdas.Nodes;
 
 namespace SisoDb.Lambdas
 {
     internal interface IParsedLambda
     {
-        LambdaExpression Expression { get; }
-        IList<INode> Nodes { get; }
+        ReadOnlyCollection<INode> Nodes { get; }
     }
 }

@@ -4,6 +4,8 @@ namespace SisoDb.Lambdas.Nodes
 {
     internal class MemberNode : INode
     {
+        private static readonly NameStrategy NameStrategy = new NameStrategy();
+
         public MemberNode Parent { get; private set; }
 
         public MemberExpression Expression { get; private set; }
@@ -18,7 +20,7 @@ namespace SisoDb.Lambdas.Nodes
         {
             Parent = parent;
             Expression = e;
-            Name = e.Member.Name;
+            Name = NameStrategy.Apply(e.Member.Name.AssertNotNull("name"));
             Path = Parent == null ? Name : Parent.Path + "." + Name;
             IsElementOfEnumerable = isElementOfEnumerable;
         }
