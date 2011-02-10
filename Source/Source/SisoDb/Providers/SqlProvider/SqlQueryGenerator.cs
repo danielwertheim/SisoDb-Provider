@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SisoDb.Lambdas;
 using SisoDb.Lambdas.Processors;
 using SisoDb.Querying;
+using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider
@@ -63,7 +64,7 @@ namespace SisoDb.Providers.SqlProvider
             schema.AssertNotNull("schema");
 
             if (!queryCommand.HasSelector)
-                throw new ArgumentException("A where clause can not be generated if the query command doesn't contain a selector."); //TODO: Resource
+                throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);
 
             var parsedSelectorLambda = _selectorParser.Parse(queryCommand.Selector);
             var selector = _parsedSelectorProcessor.Process(parsedSelectorLambda);

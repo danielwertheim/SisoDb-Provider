@@ -28,7 +28,6 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
                 refetched = unitOfWork.Query<ItemForQueries>(i => i.SortOrder >= 3 && i.SortOrder <= 6)
-                    .OrderBy(c => c.SortOrder)
                     .ToList();
             }
 

@@ -350,6 +350,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A where clause can not be generated if the query command doesn&apos;t contain a selector..
+        /// </summary>
+        internal static string SqlQueryGenerator_GenerateWhere {
+            get {
+                return ResourceManager.GetString("SqlQueryGenerator_GenerateWhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
         /// </summary>
         internal static string SqlUnitOfWork_DoIdentityInsert_RootItemsMissmatch {

@@ -241,4 +241,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="GetCommand_SortingsAllreadyInitialized" xml:space="preserve">
     <value>The Sortings has allready been initialized.</value>
   </data>
+  <data name="SqlQueryGenerator_GenerateWhere" xml:space="preserve">
+    <value>A where clause can not be generated if the query command doesn't contain a selector.</value>
+  </data>
 </root>
