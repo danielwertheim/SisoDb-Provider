@@ -1,5 +1,6 @@
-v0.6.3
+v0.x
 
 - Bug: You can now query Id'values using Lambdas.
-
+- Update: DeleteById doesn't return bool anymore.
+- Feature: DeleteByQuery - You can now delete other than single item by Id and instead pass a query and delete all items matching that query.
 - Feature: Now able to specify sorting when querying using: Query, QueryAs, QueryAsJson, GetAll, GetAllAs, GetAllAsJson

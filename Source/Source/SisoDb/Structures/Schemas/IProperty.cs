@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using SisoDb.Annotations;
 
 namespace SisoDb.Structures.Schemas
 {
     internal interface IProperty
     {
+        PropertyInfo Member { get; }
+
         string Name { get; }
 
         string Path { get; }
@@ -14,7 +17,7 @@ namespace SisoDb.Structures.Schemas
 
         int Level { get; }
 
-        Property Parent { get; }
+        IProperty Parent { get; }
         
         bool IsSimpleType { get; }
 

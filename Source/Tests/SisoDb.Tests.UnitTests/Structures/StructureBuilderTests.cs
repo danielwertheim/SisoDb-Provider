@@ -36,6 +36,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         public void CreateStructure_WhenItemWithEnumerable_WillConsumeStringConverter()
         {
             var stringConverterFake = new Mock<IStringConverter>();
+            
             SisoDbEnvironment.StringConverter = stringConverterFake.Object;
             var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
             var item = new WithArray { Values = new[] { "A", "B" } };

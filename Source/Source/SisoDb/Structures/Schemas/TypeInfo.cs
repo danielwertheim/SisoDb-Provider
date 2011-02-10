@@ -19,12 +19,12 @@ namespace SisoDb.Structures.Schemas
             TypeInfoState = new TypeInfo(typeof(T));
         }
 
-        internal static Property GetIdProperty(string name)
+        internal static IProperty GetIdProperty(string name)
         {
             return TypeInfoState.GetIdProperty(name);
         }
 
-        internal static IEnumerable<Property> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
+        internal static IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
         {
             return TypeInfoState.GetIndexableProperties(nonIndexableNames);
         }
@@ -75,7 +75,7 @@ namespace SisoDb.Structures.Schemas
             Name = _type.Name;
         }
 
-        internal Property GetIdProperty(string name)
+        internal IProperty GetIdProperty(string name)
         {
             var propertyInfo = _type.GetProperties(IdPropertyBindingFlags)
                 .Where(p => p.Name.Equals(name))
@@ -87,16 +87,16 @@ namespace SisoDb.Structures.Schemas
             return new Property(propertyInfo);
         }
 
-        internal IEnumerable<Property> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
+        internal IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
         {
             var indexableProperties = GetIndexableProperties(_type, 0, null, nonIndexableNames);
 
             return indexableProperties;
         }
 
-        private static IEnumerable<Property> GetIndexableProperties(Type type, int level, Property parent, IEnumerable<string> nonIndexableNames = null)
+        private static IEnumerable<IProperty> GetIndexableProperties(Type type, int level, IProperty parent, IEnumerable<string> nonIndexableNames = null)
         {
-            var properties = new List<Property>();
+            var properties = new List<IProperty>();
             var typeInfo = new TypeInfo(type);
 
             var simplePropertyInfos = typeInfo.GetSimpleIndexablePropertyInfos(nonIndexableNames);

@@ -15,7 +15,7 @@ namespace SisoDb.Structures.Schemas
 
         private List<PropertyInfo> Callstack { get; set; }
 
-        private PropertyInfo Member { get; set; }
+        public PropertyInfo Member { get; set; }
 
         public string Name
         {
@@ -31,7 +31,7 @@ namespace SisoDb.Structures.Schemas
 
         public int Level { get; private set; }
 
-        public Property Parent { get; private set; }
+        public IProperty Parent { get; private set; }
 
         public bool IsSimpleType { get; private set; }
 
@@ -54,7 +54,7 @@ namespace SisoDb.Structures.Schemas
             Member = member;
         }
 
-        public Property(int level, Property parent, PropertyInfo member)
+        public Property(int level, IProperty parent, PropertyInfo member)
         {
             Member = member;
             Level = level;
@@ -77,7 +77,7 @@ namespace SisoDb.Structures.Schemas
             Callstack.Reverse();
         }
 
-        private static List<PropertyInfo> GetCallstack(Property property)
+        private static List<PropertyInfo> GetCallstack(IProperty property)
         {
             if (property.Level == 0)
                 return new List<PropertyInfo> { property.Member };
@@ -171,7 +171,7 @@ namespace SisoDb.Structures.Schemas
             return null;
         }
 
-        private static IList<Object> ExtractValuesForEnumerableOfComplex(ICollection nodes, PropertyInfo propertyAccessor)
+        private static IList<object> ExtractValuesForEnumerableOfComplex(ICollection nodes, PropertyInfo propertyAccessor)
         {
             var values = new List<object>();
             foreach (var node in nodes)

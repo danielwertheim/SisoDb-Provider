@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SisoDb;
 using SisoDb.Resources;
 
 namespace SisoDb.Structures
@@ -54,7 +55,7 @@ namespace SisoDb.Structures
                             TypeName,
                             idValue,
                             firstUniqueNotBeingUnique.Name,
-                            uniqueValue));
+                            (string)uniqueValue));
                 }
             }
         }
