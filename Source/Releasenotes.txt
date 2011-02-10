@@ -1,6 +1,6 @@
-v0.x
+v0.7 - 2011-02-10
 
-- Bug: You can now query Id'values using Lambdas.
+- Bug: You can now query Id'values using Lambdas, since it's now translated to StructureId as the column is named in Indexes-table.
 - Update: DeleteById doesn't return bool anymore.
 - Feature: DeleteByQuery - You can now delete other than single item by Id and instead pass a query and delete all items matching that query.
 - Feature: Now able to specify sorting when querying using: Query, QueryAs, QueryAsJson, GetAll, GetAllAs, GetAllAsJson
