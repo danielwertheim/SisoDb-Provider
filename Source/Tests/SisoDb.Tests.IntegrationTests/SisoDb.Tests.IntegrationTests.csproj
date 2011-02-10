@@ -83,7 +83,7 @@
     <Compile Include="Providers\SqlProvider\DbHelper.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserterTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbIndexesSchemaSynchronizerTests.cs" />
-    <Compile Include="Providers\SqlProvider\SqlClientTests.cs" />
+    <Compile Include="Providers\SqlProvider\SqlDbClientTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlDatabaseTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaManagerTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlIntegrationTestBase.cs" />

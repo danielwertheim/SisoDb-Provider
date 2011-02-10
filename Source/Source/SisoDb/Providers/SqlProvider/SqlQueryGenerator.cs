@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SisoDb.Lambdas;
 using SisoDb.Lambdas.Processors;
@@ -21,8 +22,11 @@ namespace SisoDb.Providers.SqlProvider
             _parsedSortingProcessor = parsedSortingProcessor.AssertNotNull("parsedSortingProcessor");
         }
 
-        public ISqlQuery Generate<T>(IQueryCommand<T> queryCommand, IStructureSchema schema) where T : class
+        public ISqlCommandInfo Generate<T>(IQueryCommand<T> queryCommand, IStructureSchema schema) where T : class
         {
+            queryCommand.AssertNotNull("queryCommand");
+            schema.AssertNotNull("schema");
+
             var where = string.Empty;
             var orderBy = string.Empty;
             IList<IQueryParameter> queryParameters = new List<IQueryParameter>();
@@ -50,7 +54,22 @@ namespace SisoDb.Providers.SqlProvider
                     "select s.Json from [dbo].[{0}] as s inner join [dbo].[{1}] as si on si.StructureId = s.Id{2}{3};",
                     structureTableName, indexesTableName, where, orderBy);
 
-            return new SqlQuery(sql, queryParameters);
+            return new SqlCommandInfo(sql, queryParameters);
+        }
+
+        public ISqlCommandInfo GenerateWhere<T>(IQueryCommand<T> queryCommand, IStructureSchema schema) where T : class
+        {
+            queryCommand.AssertNotNull("queryCommand");
+            schema.AssertNotNull("schema");
+
+            if (!queryCommand.HasSelector)
+                throw new ArgumentException("A where clause can not be generated if the query command doesn't contain a selector."); //TODO: Resource
+
+            var parsedSelectorLambda = _selectorParser.Parse(queryCommand.Selector);
+            var selector = _parsedSelectorProcessor.Process(parsedSelectorLambda);
+            var queryParameters = selector.Parameters;
+
+            return new SqlCommandInfo(selector.Sql, queryParameters);
         }
     }
 }

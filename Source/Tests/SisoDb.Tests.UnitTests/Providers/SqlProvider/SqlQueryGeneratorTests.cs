@@ -26,7 +26,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42;";
-            Assert.AreEqual(expectedSql, sqlQuery.Sql);
+            Assert.AreEqual(expectedSql, sqlQuery.Value);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id order by si.[Int1] Asc;";
-            Assert.AreEqual(expectedSql, sqlQuery.Sql);
+            Assert.AreEqual(expectedSql, sqlQuery.Value);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42 order by si.[Int1] Desc;";
-            Assert.AreEqual(expectedSql, sqlQuery.Sql);
+            Assert.AreEqual(expectedSql, sqlQuery.Value);
         }
 
         private static IQueryCommand<T> GetQueryCommandStub<T>(bool hasSelector, bool hasSortings) where T : class

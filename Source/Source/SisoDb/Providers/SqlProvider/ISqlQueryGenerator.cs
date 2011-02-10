@@ -5,6 +5,8 @@ namespace SisoDb.Providers.SqlProvider
 {
     internal interface ISqlQueryGenerator
     {
-        ISqlQuery Generate<T>(IQueryCommand<T> queryCommand, IStructureSchema schema) where T : class;
+        ISqlCommandInfo Generate<T>(IQueryCommand<T> queryCommand, IStructureSchema schema) where T : class;
+
+        ISqlCommandInfo GenerateWhere<T>(IQueryCommand<T> queryCommand, IStructureSchema schema) where T : class;
     }
 }

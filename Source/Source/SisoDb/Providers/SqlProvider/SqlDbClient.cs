@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using SisoDb.Providers.Sql;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Querying;
@@ -15,6 +16,7 @@ namespace SisoDb.Providers.SqlProvider
     {
         private SqlConnection _connection;
         private SqlTransaction _transaction;
+        private SqlDbDataTypeTranslator _dataTypeTranslator;
 
         internal string DbName 
         {
@@ -29,6 +31,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             ProviderType = connectionInfo.ProviderType;
             SqlStrings = new SqlStrings(ProviderType);
+            _dataTypeTranslator = new SqlDbDataTypeTranslator();
             _connection = new SqlConnection(connectionInfo.ConnectionString.PlainString);
             _connection.Open();
 
@@ -151,12 +154,27 @@ namespace SisoDb.Providers.SqlProvider
                                                 new QueryParameter("numOfIds", numOfIds));
         }
 
-        internal int DeleteById(ValueType structureId, string structureTableName, string indexesTableName, string uniquesTableName)
+        internal void DeleteById(ValueType structureId, string structureTableName, string indexesTableName, string uniquesTableName)
         {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
+            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+
             var sql = SqlStrings.GetSql("DeleteById").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
-            return ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("id", structureId));
+            ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("id", structureId));
+        }
+
+        internal void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName)
+        {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
+            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+            var sqlDataType = _dataTypeTranslator.ToDbType(idType);
+            var sql = SqlStrings.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Value, sqlDataType);
+
+            ExecuteNonQuery(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
 
         internal string GetJsonById(ValueType structureId, string structureTableName)

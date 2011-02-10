@@ -117,28 +117,42 @@ namespace SisoDb.Providers.SqlProvider
             Insert(item);
         }
 
-        public bool DeleteById<T>(Guid id) where T : class
+        public void DeleteById<T>(Guid id) where T : class
         {
-            return DeleteById<T>(StructureId.NewGuidId(id));
+            DeleteById<T>(StructureId.NewGuidId(id));
         }
 
-        public bool DeleteById<T>(int id) where T : class
+        public void DeleteById<T>(int id) where T : class
         {
-            return DeleteById<T>(StructureId.NewIdentityId(id));
+            DeleteById<T>(StructureId.NewIdentityId(id));
         }
 
-        private bool DeleteById<T>(IStructureId structureId) where T : class
+        private void DeleteById<T>(IStructureId structureId) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
-            var affectedRowCount = _dbClient.DeleteById(
+            _dbClient.DeleteById(
                 structureId.Value,
                 structureSchema.GetStructureTableName(),
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName());
+        }
 
-            return affectedRowCount > 0;
+        public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
+        {
+            expression.AssertNotNull("expression");
+            
+            var structureSchema = _structureSchemas.GetSchema<T>();
+            UpsertStructureSet(structureSchema);
+
+            var queryCommand = new QueryCommand<T>().Where(expression);
+            var sql = _sqlQueryGenerator.GenerateWhere(queryCommand, structureSchema);
+            _dbClient.DeleteByQuery(sql,
+                structureSchema.IdAccessor.DataType,
+                structureSchema.GetStructureTableName(),
+                structureSchema.GetIndexesTableName(),
+                structureSchema.GetUniquesTableName());
         }
 
         public int Count<T>() where T : class
@@ -249,7 +263,7 @@ namespace SisoDb.Providers.SqlProvider
             {
                 var queryCommand = getCommand.HasSortings ? new QueryCommand<T>(getCommand.Sortings) : new QueryCommand<T>();
                 var query = _sqlQueryGenerator.Generate(queryCommand, structureSchema);
-                sql = query.Sql;
+                sql = query.Value;
             }
             else
                 sql = _dbClient.SqlStrings.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
@@ -348,7 +362,7 @@ namespace SisoDb.Providers.SqlProvider
             var query = _sqlQueryGenerator.Generate(queryCommand, structureSchema);
             var parameters = query.Parameters.Select(p => new QueryParameter(p.Name, p.Value)).ToArray();
 
-            using (var cmd = _dbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
+            using (var cmd = _dbClient.CreateCommand(CommandType.Text, query.Value, parameters))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
                 {

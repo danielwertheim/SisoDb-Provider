@@ -115,7 +115,7 @@
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
-    <Compile Include="Querying\ISqlQuery.cs" />
+    <Compile Include="Querying\ISqlCommandInfo.cs" />
     <Compile Include="Querying\ISqlSelector.cs" />
     <Compile Include="Lambdas\Processors\ParsedSelectorSqlProcessor.cs" />
     <Compile Include="Querying\IEnumerableQueryExtensions.cs" />
@@ -163,7 +163,7 @@
     <Compile Include="Providers\Sql\SqlStrings.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
     <Compile Include="Querying\SortingExtensions.cs" />
-    <Compile Include="Querying\SqlQuery.cs" />
+    <Compile Include="Querying\SqlCommandInfo.cs" />
     <Compile Include="Querying\SqlSorting.cs" />
     <Compile Include="Serialization\IBatchDeserializer.cs" />
     <Compile Include="Serialization\ParallelJsonBatchDeserializer.cs" />

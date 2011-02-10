@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using SisoDb.Annotations;
+using System.Collections.Generic;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
 {
@@ -14,63 +17,77 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
         }
 
         [Test]
-        public void DeleteByGuidId_WhenItemDoesNotExist_ReturnsFalse()
+        public void DeleteByQuery_WhenGuidIdAndTargettingTwoOutOfFourItems_TargetedTwoItemsGetsDeleted()
         {
-            bool wasDeleted;
-            using (var unitOfWork = Database.CreateUnitOfWork())
+            var items = new List<SimpleGuidItem>
             {
-                wasDeleted = unitOfWork.DeleteById<SimpleGuidItem>(Guid.NewGuid());
-                unitOfWork.Commit();
+                new SimpleGuidItem {Key = "A"},
+                new SimpleGuidItem {Key = "B"},
+                new SimpleGuidItem {Key = "C"},
+                new SimpleGuidItem {Key = "D"}
+            };
+
+            IList<SimpleGuidItem> refetched = null;
+            using(var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                uow.DeleteByQuery<SimpleGuidItem>(x => x.Key == "B" || x.Key == "C");
+                uow.Commit();
+
+                refetched = uow.GetAll<SimpleGuidItem>(q => q.SortBy(s => s.Key)).ToList();
             }
 
-            Assert.IsFalse(wasDeleted);
+            CustomAssert.AreValueEqual(items[0], refetched[0]);
+            CustomAssert.AreValueEqual(items[3], refetched[1]);
         }
 
         [Test]
-        public void DeleteByIdentityId_WhenItemDoesNotExist_ReturnsFalse()
+        public void DeleteByQuery_WhenIdentityIdAndTargettingTwoOutOfFourItems_TargetedTwoItemsGetsDeleted()
         {
-            bool wasDeleted;
-            using (var unitOfWork = Database.CreateUnitOfWork())
+            var items = new List<SimpleIdentityItem>
             {
-                wasDeleted = unitOfWork.DeleteById<SimpleIdentityItem>(1);
-                unitOfWork.Commit();
+                new SimpleIdentityItem {Key = "A"},
+                new SimpleIdentityItem {Key = "B"},
+                new SimpleIdentityItem {Key = "C"},
+                new SimpleIdentityItem {Key = "D"}
+            };
+
+            IList<SimpleIdentityItem> refetched = null;
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                uow.DeleteByQuery<SimpleIdentityItem>(x => x.Key == "B" || x.Key == "C");
+                uow.Commit();
+
+                refetched = uow.GetAll<SimpleIdentityItem>(q => q.SortBy(s => s.Key)).ToList();
             }
 
-            Assert.IsFalse(wasDeleted);
+            CustomAssert.AreValueEqual(items[0], refetched[0]);
+            CustomAssert.AreValueEqual(items[3], refetched[1]);
         }
 
         [Test]
-        public void DeleteByGuidId_WhenItemExists_ReturnsTrue()
+        public void DeleteByGuidId_WhenItemDoesNotExist_DoesNotFail()
         {
-            bool wasDeleted;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                var item = new SimpleGuidItem { Key = "A" };
-                unitOfWork.Insert(item);
-                unitOfWork.Commit();
-
-                wasDeleted = unitOfWork.DeleteById<SimpleGuidItem>(item.Id);
+                unitOfWork.DeleteById<SimpleGuidItem>(Guid.NewGuid());
                 unitOfWork.Commit();
             }
-
-            Assert.IsTrue(wasDeleted);
         }
 
         [Test]
-        public void DeleteByIdentityId_WhenItemExists_ReturnsTrue()
+        public void DeleteByIdentityId_WhenItemDoesNotExist_DoesNotFail()
         {
-            bool wasDeleted;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                var item = new SimpleIdentityItem { Key = "A" };
-                unitOfWork.Insert(item);
-                unitOfWork.Commit();
-
-                wasDeleted = unitOfWork.DeleteById<SimpleIdentityItem>(item.Id);
+                unitOfWork.DeleteById<SimpleIdentityItem>(1);
                 unitOfWork.Commit();
             }
-
-            Assert.IsTrue(wasDeleted);
         }
 
         [Test]

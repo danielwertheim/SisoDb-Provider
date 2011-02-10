@@ -184,6 +184,17 @@ create unique clustered index [UQ_{1}] on [{1}] ([StructureId], [Name], [Value])
 delete from [dbo].[{1}] where StructureId = @id;
 delete from [dbo].[{2}] where StructureId = @id;</value>
   </data>
+  <data name="DeleteByQuery" xml:space="preserve">
+    <value>declare @ids table (id {4});
+
+insert into @ids (id)
+select si.StructureId from [dbo].[{0}] as si
+where {3};
+
+delete from [dbo].[{0}] where StructureId in(select id from @ids);
+delete from [dbo].[{1}] where StructureId in(select id from @ids);
+delete from [dbo].[{2}] where Id in(select id from @ids);</value>
+  </data>
   <data name="DropColumns" xml:space="preserve">
     <value>alter table [dbo].[{0}]
 drop column {1};</value>

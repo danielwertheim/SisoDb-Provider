@@ -15,9 +15,11 @@ namespace SisoDb
 
         void Update<T>(T item) where T : class;
 
-        bool DeleteById<T>(Guid id) where T : class;
+        void DeleteById<T>(Guid id) where T : class;
 
-        bool DeleteById<T>(int id) where T : class;
+        void DeleteById<T>(int id) where T : class;
+
+        void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
 
         int Count<T>() where T : class;
 

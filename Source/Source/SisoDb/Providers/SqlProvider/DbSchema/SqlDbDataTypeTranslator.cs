@@ -18,7 +18,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             return ToDbType(indexAccessor.DataType);
         }
 
-        private static string ToDbType(Type dataType)
+        internal string ToDbType(Type dataType)
         {
             if (dataType.IsEnumerableType())
                 return ("[nvarchar](max)");
