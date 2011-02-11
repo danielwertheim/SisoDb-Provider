@@ -84,6 +84,7 @@
     <Compile Include="Lambdas\IParsedLambda.cs" />
     <Compile Include="Lambdas\ISortingParser.cs" />
     <Compile Include="Lambda.cs" />
+    <Compile Include="Lambdas\LambdaExpressionEvaluator.cs" />
     <Compile Include="Lambdas\Nodes\NameStrategy.cs" />
     <Compile Include="Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Lambdas\Processors\ParsedSortingSqlProcessor.cs" />

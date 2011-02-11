@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SisoDb.Querying;
 using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
@@ -12,6 +11,23 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         protected override void OnTestFinalize()
         {
             DropStructureSet<ItemForQueries>();
+        }
+
+        [Test]
+        public void Query_ByUsingInsertedItemInExpression_ReturnsMatchingItem()
+        {
+            var item = new ItemForQueries {SortOrder = 1, StringValue = "A"};
+            ItemForQueries refetched = null;
+
+            using(var uow = Database.CreateUnitOfWork())
+            {
+                uow.Insert(item);
+                uow.Commit();
+
+                refetched = uow.Query<ItemForQueries>(x => x.SortOrder == item.SortOrder).SingleOrDefault();
+            }
+
+            Assert.IsNotNull(refetched);
         }
 
         [Test]

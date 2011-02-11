@@ -32,7 +32,7 @@ namespace SisoDb.Lambdas
         public SelectorParser()
         {
             _lock = new object();
-            _expressionEvaluator = new ExpressionEvaluator();
+            _expressionEvaluator = new LambdaExpressionEvaluator();
             _virtualPrefixMembers = new Stack<MemberExpression>();
         }
 
@@ -129,18 +129,22 @@ namespace SisoDb.Lambdas
 
         protected override Expression VisitMember(MemberExpression e)
         {
-            var handleMemberAsValue = e.Expression == null || e.Expression is ConstantExpression;
-            if (!handleMemberAsValue)
-            {
-                var memberNode = CreateNewMemberNode(e);
-                _nodesContainer.AddNode(memberNode);
-            }
-            else
+            ConstantExpression constantExpression = null;
+
+            try
             {
                 var value = _expressionEvaluator.Evaluate(e);
-                var realConstantExpression = Expression.Constant(value);
-                Visit(realConstantExpression);
+                constantExpression = Expression.Constant(value);
             }
+            catch
+            {
+            }
+
+            if(constantExpression != null)
+                return Visit(constantExpression);
+
+            var memberNode = CreateNewMemberNode(e);
+            _nodesContainer.AddNode(memberNode);
 
             return e;
         }
