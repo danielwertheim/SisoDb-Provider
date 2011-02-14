@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Structures
 {
-    internal interface IStructureIndex
+    public interface IStructureIndex
     {
         IStructureId StructureId { get;  }
 

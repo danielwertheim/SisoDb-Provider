@@ -1,3 +1,4 @@
+using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb
@@ -10,7 +11,9 @@ namespace SisoDb
 
         ISisoConnectionInfo ConnectionInfo { get; }
 
-        IStructureSchemas StructureSchemas { get; }
+        IStructureSchemas StructureSchemas { get; set; }
+
+        IStructureBuilder StructureBuilder { get; set; }
 
         void EnsureNewDatabase();
 

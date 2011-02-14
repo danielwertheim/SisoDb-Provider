@@ -12,26 +12,27 @@ namespace SisoDb.Providers.SqlProvider
     /// <summary>
     /// Performs the ADO.Net communication for the Sql-provider.
     /// </summary>
-    internal class SqlDbClient : IDisposable
+    public class SqlDbClient : ISqlDbClient
     {
         private SqlConnection _connection;
         private SqlTransaction _transaction;
-        private SqlDbDataTypeTranslator _dataTypeTranslator;
 
-        internal string DbName 
+        public ISqlDbDataTypeTranslator DbDataTypeTranslator { get; set; }
+
+        public string DbName 
         {
             get { return _connection.Database; }
         }
 
-        internal StorageProviders ProviderType { get; private set; }
+        public StorageProviders ProviderType { get; private set; }
 
-        internal ISqlStrings SqlStrings { get; private set; }
+        public ISqlStrings SqlStrings { get; private set; }
 
-        internal SqlDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+        public SqlDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
             ProviderType = connectionInfo.ProviderType;
             SqlStrings = new SqlStrings(ProviderType);
-            _dataTypeTranslator = new SqlDbDataTypeTranslator();
+            DbDataTypeTranslator = new SqlDbDataTypeTranslator();
             _connection = new SqlConnection(connectionInfo.ConnectionString.PlainString);
             _connection.Open();
 
@@ -57,19 +58,19 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        internal void Flush()
+        public void Flush()
         {
             _transaction.Commit();
             _transaction.Dispose();
             _transaction = _connection.BeginTransaction();
         }
 
-        internal SqlBulkCopy GetBulkCopy()
+        public SqlBulkCopy GetBulkCopy()
         {
             return new SqlBulkCopy(_connection, SqlBulkCopyOptions.Default, _transaction);
         }
 
-        internal void CreateDatabase(string name)
+        public void CreateDatabase(string name)
         {
             var sql = SqlStrings.GetSql("CreateDatabase").Inject(name);
 
@@ -81,7 +82,7 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        internal void CreateSysTables(string name)
+        public void CreateSysTables(string name)
         {
             using (var cmd = CreateCommand(CommandType.Text, string.Empty))
             {
@@ -95,14 +96,14 @@ namespace SisoDb.Providers.SqlProvider
             cmd.ExecuteNonQuery();
         }
 
-        internal void DropDatabase(string name)
+        public void DropDatabase(string name)
         {
             var sql = SqlStrings.GetSql("DropDatabase").Inject(name);
 
             ExecuteNonQuery(CommandType.Text, sql);
         }
 
-        internal bool DatabaseExists(string name)
+        public bool DatabaseExists(string name)
         {
             var sql = SqlStrings.GetSql("DatabaseExists");
 
@@ -111,7 +112,7 @@ namespace SisoDb.Providers.SqlProvider
             return value > 0;
         }
 
-        internal bool TableExists(string name)
+        public bool TableExists(string name)
         {
             var sql = SqlStrings.GetSql("TableExists");
             var value = ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("tableName", name));
@@ -119,7 +120,7 @@ namespace SisoDb.Providers.SqlProvider
             return !string.IsNullOrWhiteSpace(value);
         }
 
-        internal IList<SqlDbColumn> GetColumns(string tableName, params string[] namesToSkip)
+        public IList<SqlDbColumn> GetColumns(string tableName, params string[] namesToSkip)
         {
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
             var dbColumns = new List<SqlDbColumn>();
@@ -138,14 +139,14 @@ namespace SisoDb.Providers.SqlProvider
             return dbColumns;
         }
 
-        internal int RowCount(string tableName)
+        public int RowCount(string tableName)
         {
             var sql = SqlStrings.GetSql("RowCount").Inject(tableName);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
-        internal int GetIdentity(string entityHash, int numOfIds)
+        public int GetIdentity(string entityHash, int numOfIds)
         {
             var sql = SqlStrings.GetSql("Sys_Identities_Get");
 
@@ -154,7 +155,7 @@ namespace SisoDb.Providers.SqlProvider
                                                 new QueryParameter("numOfIds", numOfIds));
         }
 
-        internal void DeleteById(ValueType structureId, string structureTableName, string indexesTableName, string uniquesTableName)
+        public void DeleteById(ValueType structureId, string structureTableName, string indexesTableName, string uniquesTableName)
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
@@ -166,25 +167,25 @@ namespace SisoDb.Providers.SqlProvider
             ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("id", structureId));
         }
 
-        internal void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName)
+        public void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName)
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
-            var sqlDataType = _dataTypeTranslator.ToDbType(idType);
+            var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
             var sql = SqlStrings.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Value, sqlDataType);
 
             ExecuteNonQuery(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
 
-        internal string GetJsonById(ValueType structureId, string structureTableName)
+        public string GetJsonById(ValueType structureId, string structureTableName)
         {
             var sql = SqlStrings.GetSql("GetById").Inject(structureTableName);
 
             return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", structureId));
         }
 
-        internal T ExecuteScalar<T>(CommandType commandType, string sql, params IQueryParameter[] parameters)
+        public T ExecuteScalar<T>(CommandType commandType, string sql, params IQueryParameter[] parameters)
         {
             using (var cmd = CreateCommand(commandType, sql, parameters))
             {
@@ -197,7 +198,7 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        internal void ExecuteSingleResultReader(CommandType commandType, string sql,
+        public void ExecuteSingleResultReader(CommandType commandType, string sql,
             Action<IDataRecord> callback, params IQueryParameter[] parameters)
         {
             using (var cmd = CreateCommand(commandType, sql, parameters))
@@ -213,7 +214,7 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        internal int ExecuteNonQuery(CommandType commandType, string sql, params IQueryParameter[] parameters)
+        public int ExecuteNonQuery(CommandType commandType, string sql, params IQueryParameter[] parameters)
         {
             int affectedRowsCount;
 
@@ -225,7 +226,7 @@ namespace SisoDb.Providers.SqlProvider
             return affectedRowsCount;
         }
 
-        internal IDbCommand CreateCommand(CommandType commandType, string sql, params IQueryParameter[] parameters)
+        public IDbCommand CreateCommand(CommandType commandType, string sql, params IQueryParameter[] parameters)
         {
             var cmd = _connection.CreateCommand();
             cmd.CommandType = commandType;

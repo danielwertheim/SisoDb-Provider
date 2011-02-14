@@ -2,17 +2,31 @@
 using System.Globalization;
 using System.Text;
 using SisoDb.Cryptography;
+using SisoDb.Serialization;
 
 namespace SisoDb
 {
-    internal static class SisoDbEnvironment
+    public static class SisoDbEnvironment
     {
-        internal static readonly IFormatProvider FormatProvider = CultureInfo.InvariantCulture;
-        internal static readonly IFormatProvider DateTimeFormatProvider = new CultureInfo("sv-SE");
-        internal static readonly string DateTimePattern = "yyyy-MM-dd HH:mm:ss.FFFFFFFK";
-        internal static readonly Encoding Encoding = Encoding.UTF8;
-        internal static readonly IHashService HashService = new HashService();
-        internal static readonly IMemberNameGenerator MemberNameGenerator = new HashMemberNameGenerator(HashService);
-        internal static IStringConverter StringConverter = new StringConverter();
+        public static readonly IFormatProvider FormatProvider;
+        public static readonly IFormatProvider DateTimeFormatProvider;
+        public static readonly string DateTimePattern;
+        public static readonly Encoding Encoding;
+        public static readonly IHashService HashService;
+        public static readonly IMemberNameGenerator MemberNameGenerator;
+        public static readonly IStringConverter StringConverter;
+        public static readonly IJsonSerializer JsonSerializer;
+
+        static SisoDbEnvironment()
+        {
+            FormatProvider = CultureInfo.InvariantCulture;
+            DateTimeFormatProvider = new CultureInfo("sv-SE");
+            DateTimePattern = "yyyy-MM-dd HH:mm:ss.FFFFFFFK";
+            Encoding = Encoding.UTF8;
+            HashService = new HashService();
+            MemberNameGenerator = new HashMemberNameGenerator(HashService);
+            StringConverter = new StringConverter(FormatProvider, DateTimeFormatProvider, DateTimePattern);
+            JsonSerializer = new ServiceStackJsonSerializer();
+        }
     }
 }

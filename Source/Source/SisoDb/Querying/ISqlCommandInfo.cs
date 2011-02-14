@@ -2,7 +2,7 @@
 
 namespace SisoDb.Querying
 {
-    internal interface ISqlCommandInfo
+    public interface ISqlCommandInfo
     {
         string Value { get; }
         IEnumerable<IQueryParameter> Parameters { get; }

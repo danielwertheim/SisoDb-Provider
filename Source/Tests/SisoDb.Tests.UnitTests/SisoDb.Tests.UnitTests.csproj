@@ -97,7 +97,8 @@
     <Compile Include="Lambdas\ParsedSelectorSqlProcessorTests\ParsedSelectorSqlProcessorCommonDataTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\SqlProvider\SqlQueryGeneratorTests.cs" />
-    <Compile Include="Serialization\JsonSerializationTests.cs" />
+    <Compile Include="Serialization\JsonSerializerTestBase.cs" />
+    <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="SisoConnectionInfoTests.cs" />
     <Compile Include="Providers\AzureProvider\DbSchema\AzureDbColumnGeneratorTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbColumnGeneratorTests.cs" />

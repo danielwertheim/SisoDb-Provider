@@ -11,11 +11,21 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
     public class StructureSchemaTests : UnitTestBase
     {
         [Test]
-        public void Ctor_WhenNameIsNull_ThrowsArgumentNullException()
+        public void Ctor_WhenNameIsWhiteSpaceEmpty_ThrowsArgumentNullException()
         {
             var idAccessorFake = new Mock<IIdAccessor>();
 
-            var ex = Assert.Throws<ArgumentNullException>(() => new StructureSchema(null, idAccessorFake.Object));
+            var ex = Assert.Throws<ArgumentNullException>(() => new StructureSchema(" ", "FakeHash", idAccessorFake.Object));
+
+            Assert.IsNotNull(ex);
+        }
+
+        [Test]
+        public void Ctor_WhenHashIsWhiteSpaceEmpty_ThrowsArgumentNullException()
+        {
+            var idAccessorFake = new Mock<IIdAccessor>();
+
+            var ex = Assert.Throws<ArgumentNullException>(() => new StructureSchema("FakeName", " ", idAccessorFake.Object));
 
             Assert.IsNotNull(ex);
         }
@@ -23,7 +33,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void Ctor_WhenIdAccessorIsNull_ThrowsArgumentNullException()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => new StructureSchema("The name", null));
+            var ex = Assert.Throws<ArgumentNullException>(() => new StructureSchema("FakeName", "FakeHash", null));
             
             Assert.IsNotNull(ex);
         }
@@ -41,7 +51,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             uniqueIndexAccessorFake.Setup(x => x.Path).Returns("Unique");
             uniqueIndexAccessorFake.Setup(x => x.IsUnique).Returns(true);
 
-            var schema = new StructureSchema("JustADummyName",
+            var schema = new StructureSchema("FakeName", "FakeHash",
                 idAccessorFake.Object,
                 new[] {indexAccessorFake.Object, uniqueIndexAccessorFake.Object});
 

@@ -1,6 +1,6 @@
 namespace SisoDb.Cryptography
 {
-    internal interface IHashService
+    public interface IHashService
     {
         int GetHashLength();
 

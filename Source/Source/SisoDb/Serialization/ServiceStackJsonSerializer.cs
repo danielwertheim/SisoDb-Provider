@@ -3,18 +3,18 @@
 namespace SisoDb.Serialization
 {
     /// <summary>
-    /// <![CDATA[http://www.servicestack.net, https://github.com/mythz/ServiceStack/, https://github.com/mythz/ServiceStack.Text]]>
+    /// <![CDATA[http://www.servicestack.net, https://github.com/mythz/ServiceStack.Text]]>
     /// </summary>
-    internal static class JsonSerialization
+    public class ServiceStackJsonSerializer : IJsonSerializer
     {
-        internal static string ToJsonOrEmptyString<T>(T item) where T : class
+        public string ToJsonOrEmptyString<T>(T item) where T : class
         {
             if (item == null)
                 return string.Empty;
             return JsonSerializer.SerializeToString<T>(item);
         }
 
-        internal static T ToItemOrNull<T>(string json) where T : class
+        public T ToItemOrNull<T>(string json) where T : class
         {
             if (string.IsNullOrWhiteSpace(json))
                 return null;

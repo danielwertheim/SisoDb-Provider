@@ -4,9 +4,9 @@ using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal class SqlDbDataTypeTranslator
+    public class SqlDbDataTypeTranslator : ISqlDbDataTypeTranslator
     {
-        internal string ToDbType(IIndexAccessor indexAccessor)
+        public string ToDbType(IIndexAccessor indexAccessor)
         {
             if(indexAccessor.IsEnumerable && indexAccessor.DataType.IsEnumerableBytesType())
                 throw new SisoDbException(
@@ -18,7 +18,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             return ToDbType(indexAccessor.DataType);
         }
 
-        internal string ToDbType(Type dataType)
+        public string ToDbType(Type dataType)
         {
             if (dataType.IsEnumerableType())
                 return ("[nvarchar](max)");

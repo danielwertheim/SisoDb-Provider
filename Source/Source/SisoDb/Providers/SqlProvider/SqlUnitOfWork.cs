@@ -4,8 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using SisoDb.Lambdas;
-using SisoDb.Lambdas.Processors;
 using SisoDb.Providers.SqlProvider.BulkInserts;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Querying;
@@ -16,33 +14,33 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider
 {
-    internal class SqlUnitOfWork : IUnitOfWork
+    public class SqlUnitOfWork : IUnitOfWork
     {
-        private readonly SqlDbClient _dbClient;
+        private readonly ISqlDbClient _dbClient;
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IDbSchemaManager _dbSchemaManager;
         private readonly IStructureSchemas _structureSchemas;
         private readonly IStructureBuilder _structureBuilder;
-        private readonly ISqlQueryGenerator _sqlQueryGenerator;
+        private readonly ISqlQueryGenerator _queryGenerator;
         private readonly IBatchDeserializer _batchDeserializer;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public SqlUnitOfWork(
-            SqlDbClient dbClient, IIdentityGenerator identityGenerator,
+        protected internal SqlUnitOfWork(
+            ISqlDbClient dbClient, IIdentityGenerator identityGenerator,
             IDbSchemaManager dbSchemaManager,
-            IStructureSchemas structureSchemas, IStructureBuilder structureBuilder)
+            IStructureSchemas structureSchemas, IStructureBuilder structureBuilder,
+            IJsonSerializer jsonSerializer, ISqlQueryGenerator queryGenerator)
         {
             _dbClient = dbClient;
             _identityGenerator = identityGenerator;
             _dbSchemaManager = dbSchemaManager;
             _structureSchemas = structureSchemas;
             _structureBuilder = structureBuilder;
-            _sqlQueryGenerator = new SqlQueryGenerator(
-                new SelectorParser(), new SortingParser(), //TODO: Remove???
-                new ParsedSelectorSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
-                new ParsedSortingSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
+            _jsonSerializer = jsonSerializer;
+            _queryGenerator = queryGenerator;
 
             //TODO: To use or not to use?!? Cuts's time but increases memoryconsumption.
-            _batchDeserializer = new ParallelJsonBatchDeserializer();
+            _batchDeserializer = new ParallelJsonBatchDeserializer(_jsonSerializer);
             //_batchDeserializer = new SequentialJsonBatchDeserializer();
         }
 
@@ -147,7 +145,7 @@ namespace SisoDb.Providers.SqlProvider
             UpsertStructureSet(structureSchema);
 
             var queryCommand = new QueryCommand<T>().Where(expression);
-            var sql = _sqlQueryGenerator.GenerateWhere(queryCommand, structureSchema);
+            var sql = _queryGenerator.GenerateWhere(queryCommand, structureSchema);
             _dbClient.DeleteByQuery(sql,
                 structureSchema.IdAccessor.DataType,
                 structureSchema.GetStructureTableName(),
@@ -187,7 +185,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             var json = GetByIdAsJson<T>(structureId);
 
-            return JsonSerialization.ToItemOrNull<TOut>(json);
+            return _jsonSerializer.ToItemOrNull<TOut>(json);
         }
 
         public string GetByIdAsJson<T>(Guid id) where T : class
@@ -262,7 +260,7 @@ namespace SisoDb.Providers.SqlProvider
             if(getCommand.HasSortings)
             {
                 var queryCommand = getCommand.HasSortings ? new QueryCommand<T>(getCommand.Sortings) : new QueryCommand<T>();
-                var query = _sqlQueryGenerator.Generate(queryCommand, structureSchema);
+                var query = _queryGenerator.Generate(queryCommand, structureSchema);
                 sql = query.Value;
             }
             else
@@ -359,7 +357,7 @@ namespace SisoDb.Providers.SqlProvider
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
-            var query = _sqlQueryGenerator.Generate(queryCommand, structureSchema);
+            var query = _queryGenerator.Generate(queryCommand, structureSchema);
             var parameters = query.Parameters.Select(p => new QueryParameter(p.Name, p.Value)).ToArray();
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, query.Value, parameters))

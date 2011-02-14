@@ -1,6 +1,6 @@
 ﻿namespace SisoDb
 {
-    internal interface IMemberNameGenerator
+    public interface IMemberNameGenerator
     {
         string Generate(string memberPath);
     }

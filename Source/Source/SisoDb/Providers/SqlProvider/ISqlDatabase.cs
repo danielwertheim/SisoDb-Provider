@@ -2,10 +2,10 @@
 
 namespace SisoDb.Providers.SqlProvider
 {
-    internal interface ISqlDatabase : ISisoDatabase
+    public interface ISqlDatabase : ISisoDatabase
     {
-        IDbSchemaManager DbSchemaManager { get; }
+        IDbSchemaManager DbSchemaManager { get; set; }
 
-        IIdentityGenerator IdentityGenerator { get; }
+        IIdentityGenerator IdentityGenerator { get; set; }
     }
 }

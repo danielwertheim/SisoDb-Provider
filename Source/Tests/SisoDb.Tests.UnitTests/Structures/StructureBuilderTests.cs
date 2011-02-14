@@ -12,22 +12,22 @@ namespace SisoDb.Tests.UnitTests.Structures
     [TestFixture]
     public class StructureBuilderTests : UnitTestBase
     {
-        protected override void OnTestFinalize()
+        private StructureBuilder _builder;
+
+        protected override void OnTestInitialize()
         {
-            SisoDbEnvironment.StringConverter = new StringConverter();
+            _builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.StringConverter);
         }
 
         [Test]
         public void CreateStructure_WhenItemWithNoEnumerable_WillNotConsumeStringConverter()
         {
             var stringConverterFake = new Mock<IStringConverter>();
-            SisoDbEnvironment.StringConverter = stringConverterFake.Object;
             var schema = new AutoSchemaBuilder<WithNoArray>().CreateSchema();
             var item = new WithNoArray { Value = "A" };
 
-            var builder = new StructureBuilder();
+            var builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, stringConverterFake.Object);
             builder.CreateStructure(item, schema);
-
 
             stringConverterFake.Verify(s => s.AsString<object>("A"), Times.Never());
         }
@@ -36,12 +36,10 @@ namespace SisoDb.Tests.UnitTests.Structures
         public void CreateStructure_WhenItemWithEnumerable_WillConsumeStringConverter()
         {
             var stringConverterFake = new Mock<IStringConverter>();
-            
-            SisoDbEnvironment.StringConverter = stringConverterFake.Object;
             var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
             var item = new WithArray { Values = new[] { "A", "B" } };
 
-            var builder = new StructureBuilder();
+            var builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, stringConverterFake.Object);
             builder.CreateStructure(item, schema);
 
             stringConverterFake.Verify(s => s.AsString<object>("A"), Times.Once());
@@ -54,8 +52,7 @@ namespace SisoDb.Tests.UnitTests.Structures
             var schema = new AutoSchemaBuilder<WithNoArray>().CreateSchema();
             var item = new WithNoArray { Value = "A" };
 
-            var builder = new StructureBuilder();
-            var structure = builder.CreateStructure(item, schema);
+            var structure = _builder.CreateStructure(item, schema);
 
             var indexes = structure.Indexes.ToList();
             Assert.AreEqual("A", indexes[0].Value);
@@ -67,8 +64,7 @@ namespace SisoDb.Tests.UnitTests.Structures
             var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
             var item = new WithArray { Values = new[] { "A" } };
 
-            var builder = new StructureBuilder();
-            var structure = builder.CreateStructure(item, schema);
+            var structure = _builder.CreateStructure(item, schema);
 
             var indexes = structure.Indexes.ToList();
             Assert.AreEqual("<$A$>", indexes[0].Value);
@@ -80,8 +76,7 @@ namespace SisoDb.Tests.UnitTests.Structures
             var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
             var item = new WithArray { Values = new[] { "A", "B" } };
 
-            var builder = new StructureBuilder();
-            var structure = builder.CreateStructure(item, schema);
+            var structure = _builder.CreateStructure(item, schema);
 
             var indexes = structure.Indexes.ToList();
             Assert.AreEqual("<$A$><$B$>", indexes[0].Value);
@@ -93,8 +88,7 @@ namespace SisoDb.Tests.UnitTests.Structures
             var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
             var item = new WithArray { Values = new[] { "A", "A" } };
 
-            var builder = new StructureBuilder();
-            var structure = builder.CreateStructure(item, schema);
+            var structure = _builder.CreateStructure(item, schema);
 
             var indexes = structure.Indexes.ToList();
             Assert.AreEqual("<$A$>", indexes[0].Value);
@@ -106,8 +100,7 @@ namespace SisoDb.Tests.UnitTests.Structures
             var schema = new AutoSchemaBuilder<WithBytes>().CreateSchema();
             var item = new WithBytes { Bytes1 = BitConverter.GetBytes(242) };
 
-            var builder = new StructureBuilder();
-            var structure = builder.CreateStructure(item, schema);
+            var structure = _builder.CreateStructure(item, schema);
 
             var indexes = structure.Indexes.ToList();
             Assert.AreEqual(1, indexes.Count);

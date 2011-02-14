@@ -1,4 +1,6 @@
 using System.Data.SqlClient;
+using SisoDb.Lambdas;
+using SisoDb.Lambdas.Processors;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Resources;
 using SisoDb.Structures;
@@ -6,23 +8,23 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider
 {
-    internal class SqlDatabase : ISqlDatabase
+    public class SqlDatabase : ISqlDatabase
     {
-        private readonly IStructureBuilder _structureBuilder;
-
         public string Name { get; private set; }
 
         public ISisoConnectionInfo ServerConnectionInfo { get; private set; }
 
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
 
-        public IDbSchemaManager DbSchemaManager { get; private set; }
+        public IDbSchemaManager DbSchemaManager { get; set; }
 
-        public IIdentityGenerator IdentityGenerator { get; private set; }
+        public IIdentityGenerator IdentityGenerator { get; set; }
 
-        public IStructureSchemas StructureSchemas { get; private set; }
+        public IStructureSchemas StructureSchemas { get; set; }
 
-        protected internal SqlDatabase(ISisoConnectionInfo connectionInfo)
+        public IStructureBuilder StructureBuilder { get; set; }
+
+        public SqlDatabase(ISisoConnectionInfo connectionInfo)
         {
             if (connectionInfo.ProviderType != StorageProviders.Sql2008)
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_UnsupportedProviderSpecified
@@ -33,7 +35,7 @@ namespace SisoDb.Providers.SqlProvider
             StructureSchemas = new StructureSchemas();
             DbSchemaManager = new SqlDbSchemaManager(ConnectionInfo);
             IdentityGenerator = new SqlIdentityGenerator(ConnectionInfo);
-            _structureBuilder = new StructureBuilder();
+            StructureBuilder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.StringConverter);
         }
 
         private void InitializeConnectionInfo(ISisoConnectionInfo connectionInfo)
@@ -113,10 +115,17 @@ namespace SisoDb.Providers.SqlProvider
 
         public IUnitOfWork CreateUnitOfWork()
         {
+            var queryGenerator = new SqlQueryGenerator(
+                new SelectorParser(), new SortingParser(),
+                new ParsedSelectorSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
+                new ParsedSortingSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
+
             var dbClient = new SqlDbClient(ConnectionInfo, true);
+            
             var unitOfWork = new SqlUnitOfWork(
-                dbClient, IdentityGenerator,
-                DbSchemaManager, StructureSchemas, _structureBuilder);
+                dbClient, IdentityGenerator, DbSchemaManager, 
+                StructureSchemas, StructureBuilder, 
+                SisoDbEnvironment.JsonSerializer, queryGenerator);
 
             return unitOfWork;
         }

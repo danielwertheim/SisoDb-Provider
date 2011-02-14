@@ -4,7 +4,7 @@ using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Structures.Schemas
 {
-    internal class AutoSchemaBuilder<T> : ISchemaBuilder<T>
+    public class AutoSchemaBuilder<T> : ISchemaBuilder<T>
         where T : class
     {
         private const string IdName = "Id";
@@ -28,7 +28,8 @@ namespace SisoDb.Structures.Schemas
                 throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers.Inject(TypeInfoState.Name));
 
             var schemaName = TypeInfoState.Name;
-            var schema = new StructureSchema(schemaName, idAccessor, indexAccessors);
+            var schemaHash = SisoDbEnvironment.HashService.GenerateHash(schemaName);
+            var schema = new StructureSchema(schemaName, schemaHash, idAccessor, indexAccessors);
 
             return schema;
         }

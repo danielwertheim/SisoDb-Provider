@@ -3,13 +3,13 @@
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
     [Serializable]
-    internal class SqlDbColumn
+    public class SqlDbColumn
     {
-        internal string Name { get; private set; }
+        public string Name { get; private set; }
 
-        internal string DbDataType { get; private set; }
+        public string DbDataType { get; private set; }
 
-        internal SqlDbColumn(string name, string dbDataType)
+        public SqlDbColumn(string name, string dbDataType)
         {
             Name = name;
             DbDataType = dbDataType;

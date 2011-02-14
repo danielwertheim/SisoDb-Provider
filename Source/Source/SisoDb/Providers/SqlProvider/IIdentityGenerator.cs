@@ -2,7 +2,7 @@
 
 namespace SisoDb.Providers.SqlProvider
 {
-    internal interface IIdentityGenerator
+    public interface IIdentityGenerator
     {
         int CheckOutAndGetSeed(IStructureSchema structureSchema, int numOfIds);
     }

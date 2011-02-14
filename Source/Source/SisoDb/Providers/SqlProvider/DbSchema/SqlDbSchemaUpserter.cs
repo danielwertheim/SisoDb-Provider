@@ -12,9 +12,9 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
         private readonly SqlDbIndexesSchemaSynchronizer _indexesDbSchemaSynchronizer;
         private readonly SqlDbUniquesSchemaSynchronizer _uniquesDbSchemaSynchronizer;
-        private readonly SqlDbClient _dbClient;
+        private readonly ISqlDbClient _dbClient;
 
-        public SqlDbSchemaUpserter(SqlDbClient dbClient)
+        public SqlDbSchemaUpserter(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
             _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(_dbClient.SqlStrings);

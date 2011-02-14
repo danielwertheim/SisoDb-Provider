@@ -13,12 +13,12 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     /// <remarks>The table must exist, otherwise an Exception is thrown!</remarks>
     internal class SqlDbIndexesSchemaSynchronizer : ISqlDbSchemaSynchronizer
     {
-        private readonly SqlDbClient _dbClient;
+        private readonly ISqlDbClient _dbClient;
         private readonly ISqlStrings _sqlStrings;
         private readonly ISqlDbColumnGenerator _columnGenerator;
         private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
 
-        internal SqlDbIndexesSchemaSynchronizer(SqlDbClient dbClient)
+        internal SqlDbIndexesSchemaSynchronizer(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
             _sqlStrings = dbClient.SqlStrings;

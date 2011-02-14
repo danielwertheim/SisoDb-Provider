@@ -15,8 +15,7 @@ namespace SisoDb.Profiling
             return;
 
             //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
-
-            //var db = new SisoDatabase(cnInfo);
+            //var db = new SisoDbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
 
             //ProfilingInserts(db, 1000, 5);
@@ -24,8 +23,8 @@ namespace SisoDb.Profiling
             //InsertCustomers(1, 100000, db);
             //ProfilingQueries(db, GetAllCustomers);
 
-            Console.WriteLine("---- Done ----");
-            Console.ReadKey();
+            //Console.WriteLine("---- Done ----");
+            //Console.ReadKey();
         }
 
         private static void ProfilingInserts(ISisoDatabase database, int numOfCustomers, int numOfItterations)

@@ -2,7 +2,7 @@
 
 namespace SisoDb.Structures
 {
-    internal interface IStructureId
+    public interface IStructureId
     {
         IdTypes IdType { get; }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
@@ -17,17 +16,11 @@ namespace SisoDb.Structures.Schemas
 
         public IList<IIndexAccessor> UniqueIndexAccessors { get; private set; }
         
-        public StructureSchema(string name, IIdAccessor idAccessor, IEnumerable<IIndexAccessor> indexAccessors = null)
+        public StructureSchema(string name, string hash, IIdAccessor idAccessor, IEnumerable<IIndexAccessor> indexAccessors = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
-
-            if(idAccessor == null)
-                throw new ArgumentNullException("idAccessor");
-
-            Name = name;
-            Hash = SisoDbEnvironment.HashService.GenerateHash(name);
-            IdAccessor = idAccessor;
+            Name = name.AssertNotNullOrWhiteSpace("name");
+            Hash = hash.AssertNotNullOrWhiteSpace("hash");
+            IdAccessor = idAccessor.AssertNotNull("idAccessor");
             IndexAccessors = indexAccessors != null ? new List<IIndexAccessor>(indexAccessors) 
                 : new List<IIndexAccessor>();
             UniqueIndexAccessors = indexAccessors != null ? new List<IIndexAccessor>(indexAccessors.Where(iac => iac.IsUnique))

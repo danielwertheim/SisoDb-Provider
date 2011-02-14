@@ -3,13 +3,14 @@ using SisoDb.Serialization;
 
 namespace SisoDb.Tests.UnitTests.Serialization
 {
-    [TestFixture]
-    public class JsonSerializationTests
+    public abstract class JsonSerializerTestBase
     {
+        protected abstract IJsonSerializer JsonSerializer { get; }
+
         [Test]
         public void ToJsonOrEmptyString_WhenNullEntity_ReturnsEmptyString()
         {
-            var json = JsonSerialization.ToJsonOrEmptyString<JsonEntity>(null);
+            var json = JsonSerializer.ToJsonOrEmptyString<JsonEntity>(null);
 
             Assert.AreEqual(string.Empty, json);
         }
@@ -19,7 +20,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         {
             var entity = new JsonEntityWithPrivateGetter { Name = "Daniel" };
 
-            var json = JsonSerialization.ToJsonOrEmptyString(entity);
+            var json = JsonSerializer.ToJsonOrEmptyString(entity);
 
             Assert.AreEqual("{}", json);
         }
@@ -30,7 +31,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
             var entity = new JsonEntity();
             entity.SetName("Daniel");
 
-            var json = JsonSerialization.ToJsonOrEmptyString(entity);
+            var json = JsonSerializer.ToJsonOrEmptyString(entity);
 
             Assert.AreEqual("{\"Name\":\"Daniel\"}", json);
         }
@@ -40,7 +41,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         {
             var json = @"{""Name"":""Daniel""}";
 
-            var entity = JsonSerialization.ToItemOrNull<JsonEntity>(json);
+            var entity = JsonSerializer.ToItemOrNull<JsonEntity>(json);
 
             Assert.AreEqual("Daniel", entity.Name);
         }

@@ -289,9 +289,9 @@ namespace SisoDb.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The provided StorageProvider &apos;{0}&apos; is not supported..
         /// </summary>
-        internal static string SisoDatabase_UnknownStorageProvider {
+        internal static string SisoDbFactory_UnknownStorageProvider {
             get {
-                return ResourceManager.GetString("SisoDatabase_UnknownStorageProvider", resourceCulture);
+                return ResourceManager.GetString("SisoDbFactory_UnknownStorageProvider", resourceCulture);
             }
         }
         

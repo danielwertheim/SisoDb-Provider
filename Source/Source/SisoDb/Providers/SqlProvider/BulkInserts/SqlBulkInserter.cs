@@ -8,10 +8,10 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
     internal class SqlBulkInserter
     {
-        private readonly SqlDbClient _dbClient;
+        private readonly ISqlDbClient _dbClient;
         private readonly IElementBatcher _elementsBatcher;
 
-        internal SqlBulkInserter(SqlDbClient dbClient)
+        internal SqlBulkInserter(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
             _elementsBatcher = new ElementBatcher(1000);

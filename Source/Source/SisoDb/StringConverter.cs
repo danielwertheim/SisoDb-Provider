@@ -3,8 +3,19 @@ using SisoDb.Resources;
 
 namespace SisoDb
 {
-    internal class StringConverter : IStringConverter
+    public class StringConverter : IStringConverter
     {
+        private readonly IFormatProvider _formatProvider;
+        private readonly IFormatProvider _dateTimeFormatProvider;
+        private readonly string _dateTimePattern;
+
+        public StringConverter(IFormatProvider formatProvider, IFormatProvider dateTimeFormatProvider, string dateTimePattern)
+        {
+            _formatProvider = formatProvider;
+            _dateTimeFormatProvider = dateTimeFormatProvider;
+            _dateTimePattern = dateTimePattern;
+        }
+
         public string AsString<T>(T value)
         {
             if (ReferenceEquals(null, value) || DBNull.Value.Equals(value))
@@ -28,14 +39,14 @@ namespace SisoDb
             throw new NotSupportedException(ExceptionMessages.StringConverter_AsString_TypeOfValueIsNotSupported);
         }
 
-        private static string GetAsString(IConvertible value)
+        private string GetAsString(IConvertible value)
         {
-            return Convert.ToString(value, SisoDbEnvironment.FormatProvider);
+            return Convert.ToString(value, _formatProvider);
         }
 
-        private static string GetAsString(DateTime value)
+        private string GetAsString(DateTime value)
         {
-            return value.ToString(SisoDbEnvironment.DateTimePattern, SisoDbEnvironment.DateTimeFormatProvider);
+            return value.ToString(_dateTimePattern, _dateTimeFormatProvider);
         }
     }
 }

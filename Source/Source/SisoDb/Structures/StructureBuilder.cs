@@ -8,8 +8,18 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures
 {
-    internal class StructureBuilder : IStructureBuilder
+    public class StructureBuilder : IStructureBuilder
     {
+        public IJsonSerializer JsonSerializer { private get; set; }
+
+        public IStringConverter StringConverter { private get; set; }
+
+        public StructureBuilder(IJsonSerializer jsonSerializer, IStringConverter stringConverter)
+        {
+            JsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
+            StringConverter = stringConverter.AssertNotNull("stringConverter");
+        }
+
         public IList<IStructure> CreateStructures<T>(IEnumerable<T> items, IStructureSchema structureSchema)
             where T : class
         {
@@ -22,7 +32,7 @@ namespace SisoDb.Structures
             var name = structureSchema.Name;
             var id = GetId(structureSchema, item);
             var indexes = GetIndexes(structureSchema, item, id);
-            var json = JsonSerialization.ToJsonOrEmptyString(item);
+            var json = JsonSerializer.ToJsonOrEmptyString(item);
 
             return new Structure(name, id, indexes, json);
         }
@@ -45,7 +55,7 @@ namespace SisoDb.Structures
             return id;
         }
 
-        private static Guid EnsureGuidIdValueExists<T>(T item, IStructureSchema structureSchema) 
+        private static Guid EnsureGuidIdValueExists<T>(T item, IStructureSchema structureSchema)
             where T : class
         {
             var idValue = structureSchema.IdAccessor.GetValue<T, Guid>(item);
@@ -61,7 +71,7 @@ namespace SisoDb.Structures
         }
 
         private static int EnsureIdentityValueExists<T>(T item, IStructureSchema structureSchema)
-            where T : class 
+            where T : class
         {
             var idValue = structureSchema.IdAccessor.GetValue<T, int>(item);
             if (!idValue.HasValue || idValue < 1)
@@ -70,8 +80,8 @@ namespace SisoDb.Structures
             return idValue.Value;
         }
 
-        private static IEnumerable<IStructureIndex> GetIndexes<T>(IStructureSchema structureSchema, T item, IStructureId id)
-            where T : class 
+        private IEnumerable<IStructureIndex> GetIndexes<T>(IStructureSchema structureSchema, T item, IStructureId id)
+            where T : class
         {
             var indexes = new IStructureIndex[structureSchema.IndexAccessors.Count];
             for (var c = 0; c < indexes.Length; c++)
@@ -94,7 +104,7 @@ namespace SisoDb.Structures
                     foreach (var value in values.Distinct())
                     {
                         valueString.Append("<$");
-                        valueString.Append(SisoDbEnvironment.StringConverter.AsString(value));
+                        valueString.Append(StringConverter.AsString(value));
                         valueString.Append("$>");
                     }
                     var index = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.IsUnique);

@@ -3,7 +3,7 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures
 {
-    internal interface IStructureBuilder
+    public interface IStructureBuilder
     {
         IStructure CreateStructure<T>(T item, IStructureSchema structureSchema) where T : class;
 

@@ -9,7 +9,7 @@ namespace SisoDb.Tests.IntegrationTests
         public void Initialize()
         {
             var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringName);
-            var database = new SisoDatabase(connectionInfo);
+            var database = new SisoDbFactory().CreateDatabase(connectionInfo);
             database.EnsureNewDatabase();
         }
     }

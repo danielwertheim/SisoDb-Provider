@@ -15,7 +15,7 @@ namespace SisoDbLab
             return;
 
             //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDbLab;Integrated security=SSPI;");
-            //var db = new SisoDatabase(cnInfo);
+            //var db = new SisoDbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
             
             //ShowSchemaInfo<Customer>(db);
@@ -29,7 +29,7 @@ namespace SisoDbLab
             //ShowSchemaInfo<IPhoto>(db);
             //DemoInterface(db);
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         static void ShowSchemaInfo<T>(ISisoDatabase database) where T : class
@@ -142,7 +142,7 @@ namespace SisoDbLab
             }
         }
 
-        private static void DemoOrder(SisoDatabase db)
+        private static void DemoOrder(ISisoDatabase db)
         {
             var customer = new Customer
             {

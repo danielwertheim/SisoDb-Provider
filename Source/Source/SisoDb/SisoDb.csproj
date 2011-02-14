@@ -42,9 +42,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
     <OutputPath>bin\Deploy\</OutputPath>
-    <DefineConstants>TRACE;DEPLOY</DefineConstants>
+    <DefineConstants>DEPLOY</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Release\SisoDb.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -58,6 +58,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Libs\Json.Net-bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\..\Libs\ServiceStack.Text-bin\ServiceStack.Text.dll</HintPath>
     </Reference>
@@ -76,6 +79,7 @@
     <Compile Include="Cryptography\IHashService.cs" />
     <Compile Include="IConnectionString.cs" />
     <Compile Include="IMemberNameGenerator.cs" />
+    <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="IStringConverter.cs" />
     <Compile Include="Lambdas\ExpressionEvaluator.cs" />
     <Compile Include="Expressions.cs" />
@@ -115,6 +119,8 @@
     <Compile Include="Lambdas\Processors\IParsedLambdaProcessor.cs" />
     <Compile Include="Lambdas\SortDirections.cs" />
     <Compile Include="Lambdas\SortingParser.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbDataTypeTranslator.cs" />
+    <Compile Include="Providers\SqlProvider\ISqlDbClient.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
@@ -169,8 +175,11 @@
     <Compile Include="Querying\SqlCommandInfo.cs" />
     <Compile Include="Querying\SqlSorting.cs" />
     <Compile Include="Serialization\IBatchDeserializer.cs" />
+    <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="Serialization\ParallelJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\SequentialJsonBatchDeserializer.cs" />
+    <Compile Include="Serialization\SisoJsonDefaultContractResolver.cs" />
+    <Compile Include="SisoDbFactory.cs" />
     <Compile Include="Structures\IdTypes.cs" />
     <Compile Include="Structures\Schemas\IProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
@@ -213,9 +222,8 @@
     <Compile Include="Structures\Schemas\StructureSchema.cs" />
     <Compile Include="Structures\Schemas\StructureSchemas.cs" />
     <Compile Include="Structures\Schemas\TypeInfo.cs" />
-    <Compile Include="Serialization\JsonSerialization.cs" />
+    <Compile Include="Serialization\ServiceStackJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
-    <Compile Include="SisoDatabase.cs" />
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
     <Compile Include="StringExtensions.cs" />

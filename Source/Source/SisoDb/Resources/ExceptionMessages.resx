@@ -123,7 +123,7 @@
   <data name="Id_GuidIsMissingValue" xml:space="preserve">
     <value>You must provide an unique guid to the GuidId.</value>
   </data>
-  <data name="SisoDatabase_UnknownStorageProvider" xml:space="preserve">
+  <data name="SisoDbFactory_UnknownStorageProvider" xml:space="preserve">
     <value>The provided StorageProvider '{0}' is not supported.</value>
   </data>
   <data name="AutoSchemaBuilder_MissingIndexableMembers" xml:space="preserve">

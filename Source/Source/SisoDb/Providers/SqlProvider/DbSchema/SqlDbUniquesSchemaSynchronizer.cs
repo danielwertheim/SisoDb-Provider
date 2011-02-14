@@ -11,10 +11,10 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     /// </summary>
     internal class SqlDbUniquesSchemaSynchronizer : ISqlDbSchemaSynchronizer
     {
-        private readonly SqlDbClient _dbClient;
+        private readonly ISqlDbClient _dbClient;
         private readonly ISqlStrings _sqlStrings;
 
-        internal SqlDbUniquesSchemaSynchronizer(SqlDbClient dbClient)
+        internal SqlDbUniquesSchemaSynchronizer(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
             _sqlStrings = dbClient.SqlStrings;

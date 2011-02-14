@@ -10,7 +10,7 @@ namespace SisoDb.Tests.IntegrationTests
         protected IntegrationTestBase()
         {
             var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringName);
-            Database = new SisoDatabase(connectionInfo);
+            Database = new SisoDbFactory().CreateDatabase(connectionInfo);
         }
 
         [TestFixtureSetUp]

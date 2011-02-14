@@ -6,6 +6,13 @@ namespace SisoDb.Serialization
 {
     public class ParallelJsonBatchDeserializer : IBatchDeserializer
     {
+        public IJsonSerializer JsonSerializer { private get; set; }
+
+        public ParallelJsonBatchDeserializer(IJsonSerializer jsonSerializer)
+        {
+            JsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
+        }
+
         public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class
         {
             var q = new ConcurrentQueue<string>();
@@ -21,7 +28,7 @@ namespace SisoDb.Serialization
             {
                 string json;
                 if (q.TryDequeue(out json))
-                    yield return JsonSerialization.ToItemOrNull<T>(json);
+                    yield return JsonSerializer.ToItemOrNull<T>(json);
             }
 
             Task.WaitAll(task);
@@ -31,7 +38,7 @@ namespace SisoDb.Serialization
             string json2;
             while (q.TryDequeue(out json2))
             {
-                yield return JsonSerialization.ToItemOrNull<T>(json2);
+                yield return JsonSerializer.ToItemOrNull<T>(json2);
             }
         }
     }

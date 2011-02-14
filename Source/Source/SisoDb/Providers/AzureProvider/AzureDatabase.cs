@@ -4,9 +4,9 @@ using SisoDb.Resources;
 
 namespace SisoDb.Providers.AzureProvider
 {
-    internal class AzureDatabase : SqlDatabase
+    public class AzureDatabase : SqlDatabase
     {
-        protected internal AzureDatabase(ISisoConnectionInfo connectionInfo) : base(connectionInfo)
+        public AzureDatabase(ISisoConnectionInfo connectionInfo) : base(connectionInfo)
         {
             if(connectionInfo.ProviderType != StorageProviders.SqlAzure)
                 throw new SisoDbException(ExceptionMessages.AzureDatabase_UnsupportedProviderSpecified
