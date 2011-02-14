@@ -58,9 +58,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\Libs\Json.Net-bin\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\..\Libs\ServiceStack.Text-bin\ServiceStack.Text.dll</HintPath>
     </Reference>
@@ -178,7 +175,6 @@
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="Serialization\ParallelJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\SequentialJsonBatchDeserializer.cs" />
-    <Compile Include="Serialization\SisoJsonDefaultContractResolver.cs" />
     <Compile Include="SisoDbFactory.cs" />
     <Compile Include="Structures\IdTypes.cs" />
     <Compile Include="Structures\Schemas\IProperty.cs" />
