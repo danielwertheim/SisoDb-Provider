@@ -26,7 +26,8 @@ namespace SisoDb
             HashService = new HashService();
             MemberNameGenerator = new HashMemberNameGenerator(HashService);
             StringConverter = new StringConverter(FormatProvider, DateTimeFormatProvider, DateTimePattern);
-            JsonSerializer = new ServiceStackJsonSerializer();
+            JsonSerializer = new NewtonsoftJsonSerializer();
+            //JsonSerializer = new ServiceStackJsonSerializer();
         }
     }
 }

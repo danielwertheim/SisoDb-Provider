@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using NUnit.Framework;
 using SisoDb.Serialization;
 
@@ -46,6 +48,17 @@ namespace SisoDb.Tests.UnitTests.Serialization
             Assert.AreEqual("Daniel", entity.Name);
         }
 
+        [Test]
+        public void ToJsonOrEmptyString_WhenItemIsYButSerializedAsX_OnlyXMembersAreSerialized()
+        {
+            var y = new JsonEntityY
+                        {Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333))};
+
+            var json = JsonSerializer.ToJsonOrEmptyString<JsonEntityX>(y);
+
+            Assert.AreEqual("{\"String1\":\"The String1\",\"Int1\":42}", json);
+        }
+
         private class JsonEntity
         {
             public string Name { get; private set; }
@@ -59,6 +72,18 @@ namespace SisoDb.Tests.UnitTests.Serialization
         private class JsonEntityWithPrivateGetter
         {
             public string Name { private get; set; }
+        }
+
+        private class JsonEntityX
+        {
+            public string String1 { get; set; }
+
+            public int Int1 { get; set; }
+        }
+
+        private class JsonEntityY : JsonEntityX
+        {
+            public Stream Data { get; set; }
         }
     }
 }
