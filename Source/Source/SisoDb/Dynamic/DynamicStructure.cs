@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 
 namespace SisoDb.Dynamic
 {
     [Serializable]
-    public class DynamicStructure : DynamicObject
+    public class DynamicStructure : DynamicObject, IEnumerable<KeyValuePair<string, object>>
     {
         private readonly Dictionary<string, dynamic> _memberStates;
         
@@ -77,6 +78,26 @@ namespace SisoDb.Dynamic
             //}
 
             return value;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<KeyValuePair<string, dynamic>> GetEnumerator()
+        {
+            return _memberStates.GetEnumerator();
+        }
+
+        public Dictionary<string, dynamic> ToDictionary()
+        {
+            return _memberStates;
+        }
+
+        public static implicit operator Dictionary<string, dynamic>(DynamicStructure ds)
+        {
+            return ds.ToDictionary();
         }
     }
 }

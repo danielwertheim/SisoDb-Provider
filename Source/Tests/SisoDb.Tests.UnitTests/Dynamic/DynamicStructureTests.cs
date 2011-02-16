@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using SisoDb.Dynamic;
+using SisoDb.Serialization;
 
 namespace SisoDb.Tests.UnitTests.Dynamic
 {
-    //TODO: Split tests...
+    //TODO: Json tests of complex nested types.
     [TestFixture]
     public class DynamicStructureTests
     {
         [Test]
-        public void AccessPropertes_AfterInjectedKeyValues_CanRetrieveAsCorrectTypes()
+        public void AccessProperties_AfterInjectedKeyValues_CanRetrieveAsCorrectTypes()
         {
             var kv = new Dictionary<string, object>
             {
@@ -99,7 +100,7 @@ namespace SisoDb.Tests.UnitTests.Dynamic
         }
 
         [Test]
-        public void TryGet_AfterDynamicAssignment_ValuesCanBeRetrieved()
+        public void GetValues_AfterDynamicAssignment_ValuesCanBeRetrieved()
         {
             var kv = new Dictionary<string, object>
             {
@@ -114,6 +115,74 @@ namespace SisoDb.Tests.UnitTests.Dynamic
             Assert.AreEqual(kv["String1"], ds.String1);
             Assert.AreEqual(kv["Int1"], ds.Int1);
             Assert.AreEqual(kv["DateTime1"], ds.DateTime1);
+        }
+
+        [Test]
+        public void ToDictionary_AfterInjectedKeyValues_InputDictionaryElementsEqualsOutputDictionaryElements()
+        {
+            var kvIn = new Dictionary<string, object>
+            {
+                {"String1", "String1 value"}, {"Int1", 42}, {"DateTime1", new DateTime(2011, 01, 01, 23, 59, 00)}
+            };
+
+            var ds = new DynamicStructure(kvIn);
+            var kvOut = ds.ToDictionary();
+
+            Assert.IsFalse(kvIn.Equals(kvOut), "Should not be same reference!");
+            CollectionAssert.AreEqual(kvIn, kvOut);
+        }
+
+        [Test]
+        public void ToDictionary_AfterInjectedKeyValuesWithComplex_InputDictionaryElementsEqualsOutputDictionaryElements()
+        {
+            var kvIn = new Dictionary<string, object>
+            {
+                {"Simple", "The simple string."}, {"Item", new Item{Int1 = 42}}
+            };
+
+            var ds = new DynamicStructure(kvIn);
+            var kvOut = ds.ToDictionary();
+
+            Assert.IsFalse(kvIn.Equals(kvOut), "Should not be same reference!");
+            CollectionAssert.AreEqual(kvIn, kvOut);
+        }
+
+        [Test]
+        public void ToDictionary_AfterAssignedValuesWithComplex_InputDictionaryElementsEqualsOutputDictionaryElements()
+        {
+            var kvIn = new Dictionary<string, object>
+            {
+                {"Simple", "The simple string."}, {"Item", new Item{Int1 = 42}}
+            };
+
+            dynamic ds = new DynamicStructure();
+            ds.Simple = kvIn["Simple"];
+            ds.Item = kvIn["Item"];
+            var kvOut = ds.ToDictionary();
+
+            Assert.IsFalse(kvIn.Equals(kvOut), "Should not be same reference!");
+            CollectionAssert.AreEqual(kvIn, kvOut);
+        }
+
+        [Test]
+        public void SerializeWithServiceStackJsonSerializer_WhenConvertedToDictionary_JsonIsCorrect()
+        {
+            dynamic ds = new DynamicStructure();
+            ds.Name = "Daniel";
+
+            var kv = (Dictionary<string, dynamic>) ds;
+            var json = new ServiceStackJsonSerializer().ToJsonOrEmptyString(kv);
+
+            Assert.AreEqual("{\"Name\":\"Daniel\"}", json);
+        }
+
+        private class Item
+        {
+            public string String1 { get; set; }
+
+            public int Int1 { get; set; }
+
+            public DateTime DateTime1 { get; set; }
         }
     }
 }
