@@ -77,6 +77,9 @@
     <Compile Include="Cryptography\Crc32Algorithm.cs" />
     <Compile Include="Cryptography\HashService.cs" />
     <Compile Include="Cryptography\IHashService.cs" />
+    <Compile Include="Dynamic\DynamicStructure.cs" />
+    <Compile Include="Dynamic\TypeDescriptor.cs" />
+    <Compile Include="Dynamic\TypeMember.cs" />
     <Compile Include="IConnectionString.cs" />
     <Compile Include="IMemberNameGenerator.cs" />
     <Compile Include="ISisoDbFactory.cs" />

@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="ConnectionStringTests.cs" />
     <Compile Include="Cryptography\HashServiceTests.cs" />
+    <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="ElementsBatcherTests.cs" />
     <Compile Include="HashMemberNameGeneratorTests.cs" />
     <Compile Include="Lambdas\Nodes\NameStrategyTests.cs" />
