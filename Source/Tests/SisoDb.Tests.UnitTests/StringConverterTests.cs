@@ -8,7 +8,7 @@ namespace SisoDb.Tests.UnitTests
     {
         private IStringConverter StringConverter
         {
-            get { return SisoDbEnvironment.StringConverter; }
+            get { return SisoDbEnvironment.Formatting.StringConverter; }
         }
 
         [Test]

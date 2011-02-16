@@ -184,6 +184,7 @@
     <Compile Include="Serialization\SequentialJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\SisoJsonDefaultContractResolver.cs" />
     <Compile Include="SisoDbFactory.cs" />
+    <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="Structures\IdTypes.cs" />
     <Compile Include="Structures\Schemas\IProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />

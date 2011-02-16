@@ -35,7 +35,7 @@ namespace SisoDb.Providers.SqlProvider
             StructureSchemas = new StructureSchemas();
             DbSchemaManager = new SqlDbSchemaManager(ConnectionInfo);
             IdentityGenerator = new SqlIdentityGenerator(ConnectionInfo);
-            StructureBuilder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.StringConverter);
+            StructureBuilder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.Formatting.StringConverter);
         }
 
         private void InitializeConnectionInfo(ISisoConnectionInfo connectionInfo)

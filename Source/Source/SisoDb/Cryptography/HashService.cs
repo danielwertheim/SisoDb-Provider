@@ -5,7 +5,7 @@ namespace SisoDb.Cryptography
     public class HashService : IHashService
     {
         private readonly Crc32Algorithm _hasher = new Crc32Algorithm();
-        private readonly Encoding _encoding = SisoDbEnvironment.Encoding;
+        private readonly Encoding _encoding = SisoDbEnvironment.Formatting.Encoding;
 
         public int GetHashLength()
         {

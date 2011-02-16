@@ -16,7 +16,7 @@ namespace SisoDb.Tests.UnitTests.Structures
 
         protected override void OnTestInitialize()
         {
-            _builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.StringConverter);
+            _builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.Formatting.StringConverter);
         }
 
         [Test]
