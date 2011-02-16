@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System.Globalization;
+using System.IO;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace SisoDb.Serialization
 {
@@ -23,18 +26,18 @@ namespace SisoDb.Serialization
             //};
 
             SerializerSettings = new JsonSerializerSettings
-                                     {
-                                         ContractResolver = new SisoJsonDefaultContractResolver(),
-                                         NullValueHandling = NullValueHandling.Ignore
-                                     };
+            {
+                ContractResolver = new SisoJsonDefaultContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore
+            };
             //SerializerSettings.Converters.Add(DateTimeConverter);
 
             DeserializerSettings = new JsonSerializerSettings
-                                       {
-                                           ContractResolver = new SisoJsonDefaultContractResolver(),
-                                           NullValueHandling = NullValueHandling.Ignore,
-                                           MissingMemberHandling = MissingMemberHandling.Ignore
-                                       };
+            {
+                ContractResolver = new SisoJsonDefaultContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
             //DeserializerSettings.Converters.Add(DateTimeConverter);
         }
 
@@ -43,7 +46,17 @@ namespace SisoDb.Serialization
             if (item == null)
                 return string.Empty;
 
-            return JsonConvert.SerializeObjectAs<T, T>(item, Formatting.None, SerializerSettings);
+            var jsonSerializer = JsonSerializer.Create(SerializerSettings);
+            var json = new StringBuilder(128);
+            using (var writer = new StringWriter(json, CultureInfo.InvariantCulture))
+            {
+                using (var jsonWriter = new JsonTextWriter(writer))
+                {
+                    jsonWriter.Formatting = Formatting.None;
+                    jsonSerializer.SerializeAs<T, T>(jsonWriter, item);
+                }
+            }
+            return json.ToString();
         }
 
         public T ToItemOrNull<T>(string json) where T : class
@@ -51,7 +64,13 @@ namespace SisoDb.Serialization
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            return JsonConvert.DeserializeObject<T>(json, DeserializerSettings);
+            var sr = new StringReader(json);
+            var jsonSerializer = JsonSerializer.Create(DeserializerSettings);
+
+            using (var jsonReader = new JsonTextReader(sr))
+            {
+                return jsonSerializer.Deserialize(jsonReader, typeof(T)) as T;
+            }
         }
     }
 }
