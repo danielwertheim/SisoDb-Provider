@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Lambdas.Operators
 {
-    internal class EqualOperator : Operator
+    public class EqualOperator : Operator
     {
         public EqualOperator()
             : base("=")

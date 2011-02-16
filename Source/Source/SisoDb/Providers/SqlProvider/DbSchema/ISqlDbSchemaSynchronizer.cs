@@ -2,7 +2,7 @@
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal interface ISqlDbSchemaSynchronizer
+    public interface ISqlDbSchemaSynchronizer
     {
         void Synchronize(IStructureSchema structureSchema);
     }

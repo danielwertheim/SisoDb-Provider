@@ -2,11 +2,11 @@
 
 namespace SisoDb.Providers.SqlProvider
 {
-    internal class SqlIdentityGenerator : IIdentityGenerator
+    public class SqlIdentityGenerator : IIdentityGenerator
     {
         private readonly ISisoConnectionInfo _connectionInfo;
 
-        internal SqlIdentityGenerator(ISisoConnectionInfo connectionInfo)
+        public SqlIdentityGenerator(ISisoConnectionInfo connectionInfo)
         {
             _connectionInfo = connectionInfo;
         }

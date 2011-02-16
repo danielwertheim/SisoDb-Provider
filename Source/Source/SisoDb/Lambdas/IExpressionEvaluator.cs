@@ -2,7 +2,7 @@
 
 namespace SisoDb.Lambdas
 {
-    internal interface IExpressionEvaluator
+    public interface IExpressionEvaluator
     {
         object Evaluate(MethodCallExpression methodExpression);
         object Evaluate(MemberExpression memberExpression);

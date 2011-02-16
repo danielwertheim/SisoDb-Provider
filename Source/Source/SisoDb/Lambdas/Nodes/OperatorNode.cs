@@ -2,7 +2,7 @@
 
 namespace SisoDb.Lambdas.Nodes
 {
-    internal class OperatorNode : INode
+    public class OperatorNode : INode
     {
         public Operator Operator { get; private set; }
 

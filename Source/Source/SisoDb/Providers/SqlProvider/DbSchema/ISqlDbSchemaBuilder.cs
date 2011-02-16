@@ -2,7 +2,7 @@
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal interface ISqlDbSchemaBuilder
+    public interface ISqlDbSchemaBuilder
     {
         string GenerateSql(IStructureSchema structureSchema);
     }

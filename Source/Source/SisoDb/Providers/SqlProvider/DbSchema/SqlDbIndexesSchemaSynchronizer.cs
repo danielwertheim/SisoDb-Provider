@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using SisoDb.Providers.AzureProvider.DbSchema;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
@@ -11,22 +11,19 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     /// Adds missing columns and Drops obsolete columns; to Indexes-table.
     /// </summary>
     /// <remarks>The table must exist, otherwise an Exception is thrown!</remarks>
-    internal class SqlDbIndexesSchemaSynchronizer : ISqlDbSchemaSynchronizer
+    public class SqlDbIndexesSchemaSynchronizer : ISqlDbSchemaSynchronizer
     {
         private readonly ISqlDbClient _dbClient;
         private readonly ISqlStrings _sqlStrings;
-        private readonly ISqlDbColumnGenerator _columnGenerator;
+        private readonly IDbColumnGenerator _columnGenerator;
         private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
 
-        internal SqlDbIndexesSchemaSynchronizer(ISqlDbClient dbClient)
+        public SqlDbIndexesSchemaSynchronizer(ISqlDbClient dbClient, IDbColumnGenerator columnGenerator)
         {
-            _dbClient = dbClient;
+            _dbClient = dbClient.AssertNotNull("dbClient");
             _sqlStrings = dbClient.SqlStrings;
+            _columnGenerator = columnGenerator.AssertNotNull("columnGenerator");
             _dataTypeTranslator = new SqlDbDataTypeTranslator();
-
-            //TODO: IoC or Factory
-            _columnGenerator = dbClient.ProviderType == StorageProviders.Sql2008 ? 
-                (ISqlDbColumnGenerator)new SqlDbColumnGenerator() : new AzureDbColumnGenerator();
         }
 
         public void Synchronize(IStructureSchema structureSchema)

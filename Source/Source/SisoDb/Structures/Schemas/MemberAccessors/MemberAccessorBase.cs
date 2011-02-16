@@ -2,7 +2,7 @@
 
 namespace SisoDb.Structures.Schemas.MemberAccessors
 {
-    internal abstract class MemberAccessorBase : IMemberAccessor
+    public abstract class MemberAccessorBase : IMemberAccessor
     {
         protected IProperty Property { get; private set; }
 

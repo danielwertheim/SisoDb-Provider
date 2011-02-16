@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Lambdas.Nodes
 {
-    internal class ValueNode : INode
+    public class ValueNode : INode
     {
         public object Value { get; private set; }
 

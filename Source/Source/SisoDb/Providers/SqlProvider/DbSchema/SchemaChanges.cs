@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal enum SchemaChanges
+    public enum SchemaChanges
     {
         /// <summary>
         /// Exists in the structure-schema but not in db,

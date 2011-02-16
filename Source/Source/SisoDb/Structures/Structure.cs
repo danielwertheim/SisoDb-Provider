@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SisoDb;
 using SisoDb.Resources;
 
 namespace SisoDb.Structures
 {
     [Serializable]
-    internal class Structure : IStructure, IEquatable<IStructure>
+    public class Structure : IStructure, IEquatable<IStructure>
     {
         public IStructureId Id { get; private set; }
 

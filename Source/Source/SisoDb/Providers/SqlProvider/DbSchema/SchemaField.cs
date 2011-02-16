@@ -3,12 +3,12 @@
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
     [Serializable]
-    internal class SchemaField
+    public class SchemaField
     {
-        internal readonly int Ordinal;
-        internal readonly string Name;
+        public readonly int Ordinal;
+        public readonly string Name;
 
-        internal SchemaField(int ordinal, string name)
+        public SchemaField(int ordinal, string name)
         {
             Ordinal = ordinal;
             Name = name;

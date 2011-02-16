@@ -4,7 +4,7 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal class SqlDbSchemaUpserter
+    public class SqlDbSchemaUpserter
     {
         private readonly SqlDbStructuresSchemaBuilder _structuresDbSchemaBuilder;
         private readonly SqlDbIndexesSchemaBuilder _indexesDbSchemaBuilder;
@@ -16,12 +16,16 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
         public SqlDbSchemaUpserter(ISqlDbClient dbClient)
         {
-            _dbClient = dbClient;
+            _dbClient = dbClient.AssertNotNull("dbClient");
+
+            var columnGenerator =
+                SisoDbEnvironment.GetProviderFactory(dbClient.ProviderType).GetDbColumnGenerator();
+
             _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(_dbClient.SqlStrings);
-            _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStrings, _dbClient.ProviderType);
+            _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStrings, columnGenerator);
             _uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(_dbClient.SqlStrings);
 
-            _indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(_dbClient);
+            _indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(_dbClient, columnGenerator);
             _uniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(_dbClient);
         }
 

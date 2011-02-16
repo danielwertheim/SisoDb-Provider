@@ -4,7 +4,7 @@ using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Structures.Schemas
 {
-    internal class StructureSchema : IStructureSchema
+    public class StructureSchema : IStructureSchema
     {
         public string Name { get; private set; }
 

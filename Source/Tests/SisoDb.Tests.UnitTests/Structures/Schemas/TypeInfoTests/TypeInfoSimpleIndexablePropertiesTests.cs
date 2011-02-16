@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using SisoDb.Annotations;
+using SisoDb.Reflections;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests

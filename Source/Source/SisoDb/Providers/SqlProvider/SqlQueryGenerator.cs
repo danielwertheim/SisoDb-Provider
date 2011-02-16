@@ -8,14 +8,14 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider
 {
-    internal class SqlQueryGenerator : ISqlQueryGenerator
+    public class SqlQueryGenerator : ISqlQueryGenerator
     {
         private readonly ISelectorParser _selectorParser;
         private readonly ISortingParser _sortingParser;
         private readonly IParsedLambdaProcessor<ISqlSelector> _parsedSelectorProcessor;
         private readonly IParsedLambdaProcessor<ISqlSorting> _parsedSortingProcessor;
 
-        internal SqlQueryGenerator(ISelectorParser selectorParser, ISortingParser sortingParser, IParsedLambdaProcessor<ISqlSelector> parsedSelectorProcessor, IParsedLambdaProcessor<ISqlSorting> parsedSortingProcessor)
+        public SqlQueryGenerator(ISelectorParser selectorParser, ISortingParser sortingParser, IParsedLambdaProcessor<ISqlSelector> parsedSelectorProcessor, IParsedLambdaProcessor<ISqlSorting> parsedSortingProcessor)
         {
             _selectorParser = selectorParser.AssertNotNull("selectorParser");
             _sortingParser = sortingParser;

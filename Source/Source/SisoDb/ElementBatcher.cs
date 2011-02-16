@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SisoDb
 {
-    internal class ElementBatcher : IElementBatcher
+    public class ElementBatcher : IElementBatcher
     {
         public int MaxBatchSize { get; set; }
 

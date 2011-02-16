@@ -4,7 +4,7 @@ using SisoDb.Providers.SqlProvider;
 
 namespace SisoDb.Providers.Sql
 {
-    internal class SqlStrings : ISqlStrings
+    public class SqlStrings : ISqlStrings
     {
         private static readonly Type ThisType = typeof (SqlStrings);
         private static readonly ResourceManager Sql2008Strings;
@@ -23,7 +23,7 @@ namespace SisoDb.Providers.Sql
             AzureStrings = new ResourceManager(sqlAzureResx, ThisType.Assembly);
         }
 
-        internal SqlStrings(StorageProviders storageProvider)
+        public SqlStrings(StorageProviders storageProvider)
         {
             //switch (storageProvider)
             //{

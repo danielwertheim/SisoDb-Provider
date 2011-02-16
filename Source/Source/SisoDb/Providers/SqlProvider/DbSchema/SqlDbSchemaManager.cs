@@ -6,13 +6,13 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal class SqlDbSchemaManager : IDbSchemaManager
+    public class SqlDbSchemaManager : IDbSchemaManager
     {
         private readonly ISisoConnectionInfo _connectionInfo;
         private readonly ISet<string> _upsertedSchemas;
         private readonly ISqlStrings _sqlStrings;
 
-        internal SqlDbSchemaManager(ISisoConnectionInfo connectionInfo)
+        public SqlDbSchemaManager(ISisoConnectionInfo connectionInfo)
         {
             _connectionInfo = connectionInfo;
             _upsertedSchemas = new HashSet<string>();

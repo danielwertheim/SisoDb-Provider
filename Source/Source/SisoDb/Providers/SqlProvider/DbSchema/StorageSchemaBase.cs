@@ -5,12 +5,12 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
     [Serializable]
-    internal abstract class StorageSchemaBase
+    public abstract class StorageSchemaBase
     {
         internal readonly Dictionary<int, SchemaField> FieldsByIndex;
         internal readonly Dictionary<string, SchemaField> FieldsByName;
 
-        internal string Name { get; private set; }
+        public string Name { get; private set; }
 
         protected StorageSchemaBase(IStructureSchema structureSchema, string storageSchemaName)
         {
@@ -34,7 +34,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
         protected abstract SchemaField[] GetSchemaFields(IStructureSchema structureSchema);
 
-        internal int FieldCount()
+        public int FieldCount()
         {
             return FieldsByIndex.Count;
         }

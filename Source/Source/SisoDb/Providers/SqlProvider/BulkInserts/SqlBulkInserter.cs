@@ -6,18 +6,18 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
-    internal class SqlBulkInserter
+    public class SqlBulkInserter
     {
         private readonly ISqlDbClient _dbClient;
         private readonly IElementBatcher _elementsBatcher;
 
-        internal SqlBulkInserter(ISqlDbClient dbClient)
+        public SqlBulkInserter(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
             _elementsBatcher = new ElementBatcher(1000);
         }
 
-        internal void Insert(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
+        public void Insert(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
             var structureStorageSchema = new StructureStorageSchema(structureSchema);
             var indexesStorageSchema = new IndexStorageSchema(structureSchema);

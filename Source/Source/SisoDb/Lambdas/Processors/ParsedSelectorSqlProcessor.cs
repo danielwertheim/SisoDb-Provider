@@ -6,7 +6,7 @@ using SisoDb.Querying;
 
 namespace SisoDb.Lambdas.Processors
 {
-    internal class ParsedSelectorSqlProcessor : IParsedLambdaProcessor<ISqlSelector>
+    public class ParsedSelectorSqlProcessor : IParsedLambdaProcessor<ISqlSelector>
     {
         private readonly IMemberNameGenerator _memberNameGenerator;
 

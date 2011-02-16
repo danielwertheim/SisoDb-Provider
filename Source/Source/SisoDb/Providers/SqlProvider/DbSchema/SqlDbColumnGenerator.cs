@@ -1,6 +1,8 @@
-﻿namespace SisoDb.Providers.SqlProvider.DbSchema
+﻿using SisoDb.Providers.Shared.DbSchema;
+
+namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal class SqlDbColumnGenerator : ISqlDbColumnGenerator
+    public class SqlDbColumnGenerator : IDbColumnGenerator
     {
         public string ToSql(string name, string dbType)
         {

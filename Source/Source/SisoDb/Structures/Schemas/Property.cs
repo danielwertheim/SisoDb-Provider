@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SisoDb.Annotations;
+using SisoDb.Reflections;
 using SisoDb.Resources;
 
 namespace SisoDb.Structures.Schemas
 {
     [Serializable]
-    internal class Property : IProperty
+    public class Property : IProperty
     {
         private static readonly Type UniqueAttributeType = typeof(UniqueAttribute);
 

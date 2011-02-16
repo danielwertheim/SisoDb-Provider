@@ -2,7 +2,7 @@
 
 namespace SisoDb.Structures.Schemas
 {
-    internal class StructureSchemas : IStructureSchemas
+    public class StructureSchemas : IStructureSchemas
     {
         private readonly Dictionary<string, IStructureSchema> _schemas;
 

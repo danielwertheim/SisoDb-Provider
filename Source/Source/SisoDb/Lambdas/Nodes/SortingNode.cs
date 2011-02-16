@@ -1,6 +1,6 @@
 namespace SisoDb.Lambdas.Nodes
 {
-    internal class SortingNode : INode
+    public class SortingNode : INode
     {
         private static readonly NameStrategy NameStrategy = new NameStrategy();
 

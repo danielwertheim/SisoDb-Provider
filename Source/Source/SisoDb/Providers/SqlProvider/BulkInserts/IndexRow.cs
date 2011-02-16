@@ -2,19 +2,19 @@
 
 namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
-    internal class IndexRow
+    public class IndexRow
     {
-        internal IStructureId StructureId { get; private set; }
+        public IStructureId StructureId { get; private set; }
 
-        internal IStructureIndex[] Indexes { get; private set; }
+        public IStructureIndex[] Indexes { get; private set; }
 
-        internal IndexRow(IStructureId structureId, IStructureIndex[] indexes)
+        public IndexRow(IStructureId structureId, IStructureIndex[] indexes)
         {
             StructureId = structureId;
             Indexes = indexes;
         }
 
-        internal object GetValue(int index)
+        public object GetValue(int index)
         {
             return index == 0 ? StructureId.Value : Indexes[index-1].Value;
         }

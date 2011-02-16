@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Lambdas.Operators
 {
-    internal class NotEqualOperator : Operator
+    public class NotEqualOperator : Operator
     {
         public NotEqualOperator()
             : base("<>")

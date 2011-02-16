@@ -2,10 +2,10 @@
 
 namespace SisoDb
 {
-    internal class HashMemberNameGenerator : IMemberNameGenerator
+    public class HashMemberNameGenerator : IMemberNameGenerator
     {
-        internal const int MaxMemberNameLength = 128;
-        internal readonly int MemberPathSubstringLength;
+        public const int MaxMemberNameLength = 128;
+        public readonly int MemberPathSubstringLength;
 
         private readonly IHashService _hashService;
 

@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SisoDb.Cryptography
 {
-    internal class HashService : IHashService
+    public class HashService : IHashService
     {
         private readonly Crc32Algorithm _hasher = new Crc32Algorithm();
         private readonly Encoding _encoding = SisoDbEnvironment.Encoding;

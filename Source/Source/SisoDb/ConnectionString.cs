@@ -5,7 +5,7 @@ using System.Linq;
 namespace SisoDb
 {
     [Serializable]
-    internal class ConnectionString : IConnectionString
+    public class ConnectionString : IConnectionString
     {
         private const string SisoDbMarker = "sisodb:";
         private const string PlainMarker = "plain:";
@@ -22,7 +22,7 @@ namespace SisoDb
             get { return _sisoDbKeyValues["provider"]; }
         }
 
-        internal ConnectionString(string value)
+        public ConnectionString(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentNullException("value");

@@ -5,7 +5,7 @@ using SisoDb.Annotations;
 
 namespace SisoDb.Structures.Schemas
 {
-    internal interface IProperty
+    public interface IProperty
     {
         PropertyInfo Member { get; }
 

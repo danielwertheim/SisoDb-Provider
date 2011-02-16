@@ -5,11 +5,11 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal class SqlDbStructuresSchemaBuilder : ISqlDbSchemaBuilder
+    public class SqlDbStructuresSchemaBuilder : ISqlDbSchemaBuilder
     {
         private readonly ISqlStrings _sqlStrings;
 
-        internal SqlDbStructuresSchemaBuilder(ISqlStrings sqlStrings)
+        public SqlDbStructuresSchemaBuilder(ISqlStrings sqlStrings)
         {
             _sqlStrings = sqlStrings;
         }

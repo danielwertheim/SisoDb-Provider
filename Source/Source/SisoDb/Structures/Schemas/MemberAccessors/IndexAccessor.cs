@@ -3,7 +3,7 @@ using SisoDb.Annotations;
 
 namespace SisoDb.Structures.Schemas.MemberAccessors
 {
-    internal class IndexAccessor : MemberAccessorBase, IIndexAccessor
+    public class IndexAccessor : MemberAccessorBase, IIndexAccessor
     {
         public int Level
         {

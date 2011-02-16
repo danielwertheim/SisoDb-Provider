@@ -6,7 +6,7 @@ namespace SisoDb.Cryptography
     /// <summary>
     /// <![CDATA[http://damieng.com/blog/2006/08/08/calculating_crc32_in_c_and_net]]>
     /// </summary>
-    internal class Crc32Algorithm : HashAlgorithm
+    public class Crc32Algorithm : HashAlgorithm
     {
         public const UInt32 DefaultPolynomial = 0xedb88320;
         public const UInt32 DefaultSeed = 0xffffffff;
@@ -16,14 +16,14 @@ namespace SisoDb.Cryptography
         private readonly UInt32[] _table;
         private static UInt32[] _defaultTable;
 
-        internal Crc32Algorithm()
+        public Crc32Algorithm()
         {
             _table = InitializeTable(DefaultPolynomial);
             _seed = DefaultSeed;
             Initialize();
         }
 
-        internal Crc32Algorithm(UInt32 polynomial, UInt32 seed)
+        public Crc32Algorithm(UInt32 polynomial, UInt32 seed)
         {
             _table = InitializeTable(polynomial);
             _seed = seed;
@@ -52,7 +52,7 @@ namespace SisoDb.Cryptography
             get { return 32; }
         }
 
-        internal static UInt32 Compute(byte[] buffer)
+        public static UInt32 Compute(byte[] buffer)
         {
             return ~CalculateHash(InitializeTable(DefaultPolynomial), DefaultSeed, buffer, 0, buffer.Length);
         }

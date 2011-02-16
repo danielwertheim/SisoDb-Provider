@@ -9,12 +9,12 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     /// Delete records that represents an unique for a column that
     /// has been dropped in the key-value table for Uniques.
     /// </summary>
-    internal class SqlDbUniquesSchemaSynchronizer : ISqlDbSchemaSynchronizer
+    public class SqlDbUniquesSchemaSynchronizer : ISqlDbSchemaSynchronizer
     {
         private readonly ISqlDbClient _dbClient;
         private readonly ISqlStrings _sqlStrings;
 
-        internal SqlDbUniquesSchemaSynchronizer(ISqlDbClient dbClient)
+        public SqlDbUniquesSchemaSynchronizer(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
             _sqlStrings = dbClient.SqlStrings;

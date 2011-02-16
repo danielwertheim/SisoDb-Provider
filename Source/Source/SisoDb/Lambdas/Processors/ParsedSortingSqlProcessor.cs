@@ -6,7 +6,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.Lambdas.Processors
 {
-    internal class ParsedSortingSqlProcessor : IParsedLambdaProcessor<ISqlSorting>
+    public class ParsedSortingSqlProcessor : IParsedLambdaProcessor<ISqlSorting>
     {
         private readonly IMemberNameGenerator _memberNameGenerator;
 

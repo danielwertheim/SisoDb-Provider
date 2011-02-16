@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Lambdas.Operators
 {
-    internal class LikeOperator : Operator
+    public class LikeOperator : Operator
     {
         public LikeOperator()
             : base("like")

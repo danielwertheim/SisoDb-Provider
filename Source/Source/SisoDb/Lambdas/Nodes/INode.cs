@@ -1,4 +1,4 @@
 ﻿namespace SisoDb.Lambdas.Nodes
 {
-    internal interface INode {}
+    public interface INode {}
 }

@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Lambdas.Nodes
 {
-    internal class NameStrategy
+    public class NameStrategy
     {
         public string Apply(string value)
         {

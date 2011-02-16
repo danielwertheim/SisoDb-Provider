@@ -1,9 +1,10 @@
 using System;
+using SisoDb.Reflections;
 using SisoDb.Resources;
 
 namespace SisoDb.Structures.Schemas.MemberAccessors
 {
-    internal class IdAccessor : MemberAccessorBase, IIdAccessor
+    public class IdAccessor : MemberAccessorBase, IIdAccessor
     {
         public IdTypes IdType { get; private set; }
 

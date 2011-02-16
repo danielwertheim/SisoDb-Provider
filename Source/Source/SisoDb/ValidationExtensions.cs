@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SisoDb
 {
-    internal static class ValidationExtensions
+    public static class ValidationExtensions
     {
-        internal static IEnumerable<T> AssertHasItems<T>(this IEnumerable<T> items, string name)
+        public static IEnumerable<T> AssertHasItems<T>(this IEnumerable<T> items, string name)
         {
             if(items == null || items.Count() < 1)
                 throw new ArgumentNullException(name);
@@ -14,7 +14,7 @@ namespace SisoDb
             return items;
         }
 
-        internal static IList<T> AssertHasItems<T>(this IList<T> items, string name)
+        public static IList<T> AssertHasItems<T>(this IList<T> items, string name)
         {
             if (items == null || items.Count < 1)
                 throw new ArgumentNullException(name);
@@ -22,7 +22,7 @@ namespace SisoDb
             return items;
         }
 
-        internal static T AssertNotNull<T>(this T item, string name) where T : class
+        public static T AssertNotNull<T>(this T item, string name) where T : class
         {
             if (item == null)
                 throw new ArgumentNullException(name);
@@ -30,7 +30,7 @@ namespace SisoDb
             return item;
         }
 
-        internal static string AssertNotNullOrWhiteSpace(this string item, string name)
+        public static string AssertNotNullOrWhiteSpace(this string item, string name)
         {
             if (string.IsNullOrWhiteSpace(item))
                 throw new ArgumentNullException(name);

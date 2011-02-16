@@ -5,7 +5,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.Lambdas.Operators
 {
-    internal class Operator
+    public class Operator
     {
         private static readonly Dictionary<ExpressionType, Func<Operator>> OperatorMap;
 

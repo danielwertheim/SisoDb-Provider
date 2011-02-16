@@ -11,13 +11,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         private readonly string _connectionString;
         private readonly DbProviderFactory _factory;
 
-        internal DbHelper(string connectionString)
+        public DbHelper(string connectionString)
         {
             _connectionString = connectionString;
             _factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
         }
 
-        internal void DropDatabase(string name)
+        public void DropDatabase(string name)
         {
             var sql = @"if (select DB_ID('{0}')) is not null begin
                  alter database [{0}] set offline with rollback immediate;
@@ -27,7 +27,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             ExecuteSql(CommandType.Text, sql);
         }
 
-        internal void EnsureDbExists(string name)
+        public void EnsureDbExists(string name)
         {
             var sql = @"if (select DB_ID('{0}')) is null begin 
                 create database [{0}]; 
@@ -36,31 +36,31 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             ExecuteSql(CommandType.Text, sql);
         }
 
-        internal bool DatabaseExists(string name)
+        public bool DatabaseExists(string name)
         {
             var sql = "select DB_ID('{0}');".Inject(name);
 
             return ExecuteScalar<int>(CommandType.Text, sql) > 0;
         }
 
-        internal bool TableExists(string name)
+        public bool TableExists(string name)
         {
             var sql = "select OBJECT_ID('[{0}]', 'U');".Inject(name);
 
             return !ExecuteScalar<string>(CommandType.Text, sql).IsNullOrWhiteSpace();
         }
 
-        internal void CreateProcedure(string spSql)
+        public void CreateProcedure(string spSql)
         {
             ExecuteSql(CommandType.Text, spSql);
         }
 
-        internal void DropProcedure(string spName)
+        public void DropProcedure(string spName)
         {
             ExecuteSql(CommandType.Text, "drop procedure {0};".Inject(spName));
         }
 
-        internal void AddColumns(string tableName, params string[] columns)
+        public void AddColumns(string tableName, params string[] columns)
         {
             var columnString = string.Join(",", columns);
             var sql = "alter table [{0}] add {1};".Inject(tableName, columnString);
@@ -68,7 +68,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             ExecuteSql(CommandType.Text, sql);
         }
 
-        internal void DropColumns(string tableName, params string[] columnNames)
+        public void DropColumns(string tableName, params string[] columnNames)
         {
             var columnString = string.Join(",", columnNames.Select(c => "[" + c + "]"));
             var sql = "alter table [{0}] drop column {1};".Inject(tableName, columnString);
@@ -76,7 +76,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             ExecuteSql(CommandType.Text, sql);
         }
 
-        internal bool ColumnsExist(string tableName, params string[] columnNames)
+        public bool ColumnsExist(string tableName, params string[] columnNames)
         {
             var sql = "select Column_Name from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '{0}';".Inject(tableName);
             var existingColums = new HashSet<string>();
@@ -89,7 +89,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             return notExisting < 1;
         }
 
-        internal DataTable GetTableBySql(string sql)
+        public DataTable GetTableBySql(string sql)
         {
             var table = new DataTable();
 
@@ -140,7 +140,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
         }
 
-        internal void ExecuteSql(CommandType commandType, string sql)
+        public void ExecuteSql(CommandType commandType, string sql)
         {
             using (var cn = CreateConnection())
             {
@@ -156,7 +156,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
         }
 
-        internal T ExecuteScalar<T>(CommandType commandType, string sql)
+        public T ExecuteScalar<T>(CommandType commandType, string sql)
         {
             T retVal;
 
@@ -189,7 +189,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             return cn;
         }
 
-        internal bool IndexExists(string tableName, string indexName)
+        public bool IndexExists(string tableName, string indexName)
         {
             var sql =
                 @"
@@ -208,7 +208,7 @@ select case when @count > 0 then 1 else 0 end;".Inject(tableName, indexName);
             return ExecuteScalar<bool>(CommandType.Text, sql);
         }
 
-        internal int RowCount(string tableName, string where = null)
+        public int RowCount(string tableName, string where = null)
         {
             where = where ?? "1 = 1";
             var sql = "select count(*) from dbo.[{0}] where {1};".Inject(tableName, where);

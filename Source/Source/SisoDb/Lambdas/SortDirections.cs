@@ -3,7 +3,7 @@
 namespace SisoDb.Lambdas
 {
     [Serializable]
-    internal enum SortDirections
+    public enum SortDirections
     {
         Asc,
         Desc

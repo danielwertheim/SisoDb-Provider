@@ -87,7 +87,10 @@
     <Compile Include="Lambdas\ISelectorParser.cs" />
     <Compile Include="Lambdas\IParsedLambda.cs" />
     <Compile Include="Lambdas\ISortingParser.cs" />
-    <Compile Include="Lambda.cs" />
+    <Compile Include="Providers\SqlAzureProviderFactory.cs" />
+    <Compile Include="Providers\IProviderFactory.cs" />
+    <Compile Include="Providers\Sql2008ProviderFactory.cs" />
+    <Compile Include="Reflections\Type.cs" />
     <Compile Include="Lambdas\LambdaExpressionEvaluator.cs" />
     <Compile Include="Lambdas\Nodes\NameStrategy.cs" />
     <Compile Include="Lambdas\Nodes\SortingNode.cs" />
@@ -140,7 +143,7 @@
     <Compile Include="Providers\SqlProvider\BulkInserts\IndexRow.cs" />
     <Compile Include="Providers\SqlProvider\BulkInserts\UniquesReader.cs" />
     <Compile Include="Providers\AzureProvider\DbSchema\AzureDbColumnGenerator.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbColumnGenerator.cs" />
+    <Compile Include="Providers\Shared\DbSchema\IDbColumnGenerator.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbSchemaBuilder.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbSchemaSynchronizer.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbColumn.cs" />
@@ -185,7 +188,7 @@
     <Compile Include="Structures\Schemas\IProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
-    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Reflections\TypeExtensions.cs" />
     <Compile Include="Providers\SqlProvider\BulkInserts\SqlBulkInserter.cs" />
     <Compile Include="Providers\SqlProvider\SqlDbClient.cs" />
     <Compile Include="Providers\SqlProvider\StructureSchemaExtensions.cs" />

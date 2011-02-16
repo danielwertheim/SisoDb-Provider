@@ -3,15 +3,15 @@
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
     [Serializable]
-    internal class SchemaChange
+    public class SchemaChange
     {
-        internal SchemaChanges Change { get; private set; }
+        public SchemaChanges Change { get; private set; }
 
-        internal string Name { get; private set; }
+        public string Name { get; private set; }
 
-        internal string DbDataType { get; private set; }
+        public string DbDataType { get; private set; }
 
-        internal SchemaChange(SchemaChanges change, string name, string dbDataType)
+        public SchemaChange(SchemaChanges change, string name, string dbDataType)
         {
             Change = change;
             Name = name;

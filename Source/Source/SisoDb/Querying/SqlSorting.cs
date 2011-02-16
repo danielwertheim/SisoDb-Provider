@@ -3,11 +3,11 @@
 namespace SisoDb.Querying
 {
     [Serializable]
-    internal class SqlSorting : ISqlSorting
+    public class SqlSorting : ISqlSorting
     {
         public string Sql { get; private set; }
 
-        internal SqlSorting(string sql)
+        public SqlSorting(string sql)
         {
             Sql = sql.AssertNotNullOrWhiteSpace("sql");
         }

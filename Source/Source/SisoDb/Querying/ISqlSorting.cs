@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Querying
 {
-    internal interface ISqlSorting
+    public interface ISqlSorting
     {
         string Sql { get; }
     }

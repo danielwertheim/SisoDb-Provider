@@ -4,7 +4,7 @@ using SisoDb.Resources;
 namespace SisoDb.Structures
 {
     [Serializable]
-    internal class StructureIndex : IStructureIndex, IEquatable<StructureIndex>
+    public class StructureIndex : IStructureIndex, IEquatable<StructureIndex>
     {
         public IStructureId StructureId { get; private set; }
 
@@ -14,7 +14,7 @@ namespace SisoDb.Structures
 
         public bool IsUnique { get; private set; }
 
-        internal StructureIndex(IStructureId structureId, string name, object value, bool isUnique)
+        public StructureIndex(IStructureId structureId, string name, object value, bool isUnique)
         {
             if(structureId == null)
                 throw  new ArgumentNullException("structureId");

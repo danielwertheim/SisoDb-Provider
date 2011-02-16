@@ -5,11 +5,12 @@ using System.Linq.Expressions;
 using SisoDb.Lambdas.Nodes;
 using SisoDb.Lambdas.Operators;
 using SisoDb.Querying;
+using SisoDb.Reflections;
 using SisoDb.Resources;
 
 namespace SisoDb.Lambdas
 {
-    internal class SelectorParser : ExpressionVisitor, ISelectorParser
+    public class SelectorParser : ExpressionVisitor, ISelectorParser
     {
         private readonly object _lock;
         private readonly IExpressionEvaluator _expressionEvaluator;

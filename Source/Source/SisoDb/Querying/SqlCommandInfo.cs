@@ -6,7 +6,7 @@ using System.Linq;
 namespace SisoDb.Querying
 {
     [Serializable]
-    internal class SqlCommandInfo : ISqlCommandInfo
+    public class SqlCommandInfo : ISqlCommandInfo
     {
         private readonly ReadOnlyCollection<IQueryParameter> _parameters;
 
@@ -17,7 +17,7 @@ namespace SisoDb.Querying
             get { return _parameters; }
         }
 
-        internal SqlCommandInfo(string sql, IEnumerable<IQueryParameter> parameters)
+        public SqlCommandInfo(string sql, IEnumerable<IQueryParameter> parameters)
         {
             sql.AssertNotNullOrWhiteSpace("sql");
             parameters.AssertNotNull("parameters");

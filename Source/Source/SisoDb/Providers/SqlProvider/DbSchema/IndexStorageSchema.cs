@@ -5,19 +5,19 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
     [Serializable]
-    internal class IndexStorageSchema : StorageSchemaBase
+    public class IndexStorageSchema : StorageSchemaBase
     {
-        internal static class Fields
+        public static class Fields
         {
-            internal static SchemaField StructureId = new SchemaField(0, "StructureId");
+            public static SchemaField StructureId = new SchemaField(0, "StructureId");
 
-            internal static SchemaField[] GetOrderedFields()
+            public static SchemaField[] GetOrderedFields()
             {
                 return new[] { StructureId };
             }
         }
 
-        internal IndexStorageSchema(IStructureSchema structureSchema)
+        public IndexStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetIndexesTableName())
         {
         }

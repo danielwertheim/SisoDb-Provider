@@ -5,7 +5,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.Lambdas
 {
-    internal class SortingParser : ISortingParser
+    public class SortingParser : ISortingParser
     {
         public IParsedLambda Parse(IEnumerable<LambdaExpression> sortingExpressions)
         {

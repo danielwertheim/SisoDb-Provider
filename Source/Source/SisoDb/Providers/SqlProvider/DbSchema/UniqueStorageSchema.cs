@@ -4,21 +4,21 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
     [Serializable]
-    internal class UniqueStorageSchema : StorageSchemaBase
+    public class UniqueStorageSchema : StorageSchemaBase
     {
-        internal static class Fields
+        public static class Fields
         {
-            internal static SchemaField StructureId = new SchemaField(0, "StructureId");
-            internal static SchemaField Name = new SchemaField(1, "Name");
-            internal static SchemaField Value = new SchemaField(2, "Value");
+            public static SchemaField StructureId = new SchemaField(0, "StructureId");
+            public static SchemaField Name = new SchemaField(1, "Name");
+            public static SchemaField Value = new SchemaField(2, "Value");
 
-            internal static SchemaField[] GetOrderedFields()
+            public static SchemaField[] GetOrderedFields()
             {
                 return new[] { StructureId, Name, Value };
             }
         }
 
-        internal UniqueStorageSchema(IStructureSchema structureSchema)
+        public UniqueStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetUniquesTableName())
         {
         }

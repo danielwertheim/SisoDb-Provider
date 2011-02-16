@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 
 namespace SisoDb.Lambdas
 {
-    internal static class MemberExpressionExtensions
+    public static class MemberExpressionExtensions
     {
-        internal static string Path(this MemberExpression e)
+        public static string Path(this MemberExpression e)
         {
             var path = "";
             var parent = e.Expression as MemberExpression;
@@ -16,7 +16,7 @@ namespace SisoDb.Lambdas
             return path + e.Member.Name;
         }
 
-        internal static IList<MemberExpression> ExtractGraphLineFirstToLast(this MemberExpression e)
+        public static IList<MemberExpression> ExtractGraphLineFirstToLast(this MemberExpression e)
         {
             var nodes = new List<MemberExpression>();
             

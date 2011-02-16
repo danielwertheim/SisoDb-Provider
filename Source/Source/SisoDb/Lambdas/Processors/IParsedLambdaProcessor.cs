@@ -1,11 +1,11 @@
 namespace SisoDb.Lambdas.Processors
 {
-    internal interface IParsedLambdaProcessor
+    public interface IParsedLambdaProcessor
     {
         void Process(IParsedLambda lambda);
     }
 
-    internal interface IParsedLambdaProcessor<out T>
+    public interface IParsedLambdaProcessor<out T>
     {
         T Process(IParsedLambda lambda);
     }

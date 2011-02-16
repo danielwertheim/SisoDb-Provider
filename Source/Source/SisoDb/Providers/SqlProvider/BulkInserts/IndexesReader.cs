@@ -3,9 +3,9 @@ using SisoDb.Providers.SqlProvider.DbSchema;
 
 namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
-    internal class IndexesReader : SingleResultReaderBase<IndexRow>
+    public class IndexesReader : SingleResultReaderBase<IndexRow>
     {
-        internal IndexesReader(IndexStorageSchema storageSchema, IEnumerable<IndexRow> items)
+        public IndexesReader(IndexStorageSchema storageSchema, IEnumerable<IndexRow> items)
             : base(storageSchema, items)
         {
         }

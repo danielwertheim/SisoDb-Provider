@@ -4,7 +4,7 @@ using SisoDb.Resources;
 namespace SisoDb.Structures
 {
     [Serializable]
-    internal class StructureId : IStructureId, IEquatable<StructureId>
+    public class StructureId : IStructureId, IEquatable<StructureId>
     {
         public IdTypes IdType { get; private set; }
 

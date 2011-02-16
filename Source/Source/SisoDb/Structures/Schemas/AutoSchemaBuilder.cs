@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas.MemberAccessors;
 

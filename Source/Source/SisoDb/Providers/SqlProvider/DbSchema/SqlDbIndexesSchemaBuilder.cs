@@ -1,25 +1,22 @@
 ﻿using System.Linq;
-using SisoDb.Providers.AzureProvider.DbSchema;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal class SqlDbIndexesSchemaBuilder : ISqlDbSchemaBuilder
+    public class SqlDbIndexesSchemaBuilder : ISqlDbSchemaBuilder
     {
         private readonly ISqlStrings _sqlStrings;
         private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
-        private readonly ISqlDbColumnGenerator _columnGenerator;
+        private readonly IDbColumnGenerator _columnGenerator;
 
-        internal SqlDbIndexesSchemaBuilder(ISqlStrings sqlStrings, StorageProviders providerType)
+        public SqlDbIndexesSchemaBuilder(ISqlStrings sqlStrings, IDbColumnGenerator columnGenerator)
         {
-            _sqlStrings = sqlStrings;
+            _sqlStrings = sqlStrings.AssertNotNull("sqlStrings");
+            _columnGenerator = columnGenerator.AssertNotNull("columnGenerator");
             _dataTypeTranslator = new SqlDbDataTypeTranslator();
-
-            //TODO: IoC or Factory
-            _columnGenerator = providerType == StorageProviders.Sql2008 ?
-                (ISqlDbColumnGenerator)new SqlDbColumnGenerator() : new AzureDbColumnGenerator();
         }
 
         public string GenerateSql(IStructureSchema structureSchema)

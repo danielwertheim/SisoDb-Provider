@@ -4,9 +4,9 @@ using SisoDb.Resources;
 
 namespace SisoDb.Lambdas
 {
-    internal static class ExpressionTreeUtils
+    public static class ExpressionTreeUtils
     {
-        internal static string ExtractRootObjectName(Expression e)
+        public static string ExtractRootObjectName(Expression e)
         {
             if (e.NodeType == ExpressionType.Lambda)
                 return ((LambdaExpression)e).Parameters[0].Name;
@@ -15,7 +15,7 @@ namespace SisoDb.Lambdas
             return new string(path.TakeWhile(c => char.IsLetterOrDigit(c)).ToArray());
         }
 
-        internal static MemberExpression GetRightMostMember(Expression e)
+        public static MemberExpression GetRightMostMember(Expression e)
         {
             if (e is MemberExpression)
                 return (MemberExpression)e;

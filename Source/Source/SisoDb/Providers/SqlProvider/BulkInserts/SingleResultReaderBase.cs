@@ -8,9 +8,9 @@ using SisoDb.Providers.SqlProvider.DbSchema;
 
 namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
-    internal abstract class SingleResultReaderBase<T> : DbDataReader where T : class 
+    public abstract class SingleResultReaderBase<T> : DbDataReader where T : class 
     {
-        protected internal StorageSchemaBase StorageSchema { get; private set; }
+        public StorageSchemaBase StorageSchema { get; private set; }
 
         protected IEnumerable<T> Items { get; private set; }
 

@@ -6,7 +6,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.Lambdas
 {
-    internal class ExpressionEvaluator : IExpressionEvaluator
+    public class ExpressionEvaluator : IExpressionEvaluator
     {
         public object Evaluate(MethodCallExpression methodExpression)
         {

@@ -2,7 +2,7 @@
 
 namespace SisoDb.Lambdas.Nodes
 {
-    internal class MemberNode : INode
+    public class MemberNode : INode
     {
         private static readonly NameStrategy NameStrategy = new NameStrategy();
 

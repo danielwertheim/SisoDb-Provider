@@ -1,8 +1,8 @@
 ﻿namespace SisoDb.Structures.Schemas
 {
-    internal static class PropertyPathBuilder
+    public static class PropertyPathBuilder
     {
-        internal static string BuildPath(IProperty property)
+        public static string BuildPath(IProperty property)
         {
             if (property.Level == 0)
                 return property.Name;

@@ -5,9 +5,9 @@ using SisoDb.Structures;
 
 namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
-    internal class UniquesReader : SingleResultReaderBase<IStructureIndex>
+    public class UniquesReader : SingleResultReaderBase<IStructureIndex>
     {
-        internal UniquesReader(UniqueStorageSchema storageSchema, IEnumerable<IStructureIndex> items)
+        public UniquesReader(UniqueStorageSchema storageSchema, IEnumerable<IStructureIndex> items)
             : base(storageSchema, items)
         {
         }

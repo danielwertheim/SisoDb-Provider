@@ -5,7 +5,7 @@ using SisoDb.Lambdas.Nodes;
 
 namespace SisoDb.Lambdas
 {
-    internal class ParsedLambda : IParsedLambda
+    public class ParsedLambda : IParsedLambda
     {
         public ReadOnlyCollection<INode> Nodes { get; private set; }
 

@@ -3,11 +3,11 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    internal class SqlDbUniquesSchemaBuilder : ISqlDbSchemaBuilder
+    public class SqlDbUniquesSchemaBuilder : ISqlDbSchemaBuilder
     {
         private readonly ISqlStrings _sqlStrings;
 
-        internal SqlDbUniquesSchemaBuilder(ISqlStrings sqlStrings)
+        public SqlDbUniquesSchemaBuilder(ISqlStrings sqlStrings)
         {
             _sqlStrings = sqlStrings;
         }

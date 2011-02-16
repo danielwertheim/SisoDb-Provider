@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace SisoDb.Lambdas
 {
-    internal interface ISortingParser
+    public interface ISortingParser
     {
         IParsedLambda Parse(IEnumerable<LambdaExpression> sortingExpressions);
     }

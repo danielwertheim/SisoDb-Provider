@@ -7,7 +7,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.Querying
 {
-    internal class QueryCommand<T> : IQueryCommand<T> where T : class
+    public class QueryCommand<T> : IQueryCommand<T> where T : class
     {
         private ReadOnlyCollection<LambdaExpression> _sortings;
 

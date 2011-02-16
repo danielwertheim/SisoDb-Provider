@@ -2,7 +2,7 @@
 
 namespace SisoDb
 {
-    internal interface IElementBatcher
+    public interface IElementBatcher
     {
         int MaxBatchSize { get; set; }
 

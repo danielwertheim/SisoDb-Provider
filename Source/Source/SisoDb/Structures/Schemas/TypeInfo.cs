@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SisoDb.Reflections;
 
 namespace SisoDb.Structures.Schemas
 {
-    internal static class TypeInfo<T>
+    public static class TypeInfo<T>
     {
         private static readonly TypeInfo TypeInfoState;
 
-        internal static string Name
+        public static string Name
         {
             get { return TypeInfoState.Name; }
         }
@@ -19,33 +20,33 @@ namespace SisoDb.Structures.Schemas
             TypeInfoState = new TypeInfo(typeof(T));
         }
 
-        internal static IProperty GetIdProperty(string name)
+        public static IProperty GetIdProperty(string name)
         {
             return TypeInfoState.GetIdProperty(name);
         }
 
-        internal static IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
+        public static IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
         {
             return TypeInfoState.GetIndexableProperties(nonIndexableNames);
         }
 
-        internal static IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
+        public static IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
             return TypeInfoState.GetSimpleIndexablePropertyInfos(nonIndexableNames);
         }
 
-        internal static IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
+        public static IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
             return TypeInfoState.GetComplexIndexablePropertyInfos(nonIndexableNames);
         }
 
-        internal static IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
+        public static IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
             return TypeInfoState.GetEnumerableIndexablePropertyInfos(nonIndexableNames);
         }
     }
 
-    internal class TypeInfo
+    public class TypeInfo
     {
         private readonly Type _type;
 
@@ -55,11 +56,11 @@ namespace SisoDb.Structures.Schemas
         private const BindingFlags PropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
-        internal string Name { get; private set; }
+        public string Name { get; private set; }
 
-        internal string FullName { get; private set; }
+        public string FullName { get; private set; }
 
-        internal TypeInfo(Type type)
+        public TypeInfo(Type type)
         {
             if (type == null)
                 throw new ArgumentNullException("type");
@@ -75,7 +76,7 @@ namespace SisoDb.Structures.Schemas
             Name = _type.Name;
         }
 
-        internal IProperty GetIdProperty(string name)
+        public IProperty GetIdProperty(string name)
         {
             var propertyInfo = _type.GetProperties(IdPropertyBindingFlags)
                 .Where(p => p.Name.Equals(name))
@@ -87,7 +88,7 @@ namespace SisoDb.Structures.Schemas
             return new Property(propertyInfo);
         }
 
-        internal IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
+        public IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
         {
             var indexableProperties = GetIndexableProperties(_type, 0, null, nonIndexableNames);
 
@@ -131,7 +132,7 @@ namespace SisoDb.Structures.Schemas
             return properties;
         }
 
-        internal IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
+        public IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
             var properties = _type.GetProperties(PropertyBindingFlags)
                 .Where(p => p.PropertyType.IsSimpleType());
@@ -142,7 +143,7 @@ namespace SisoDb.Structures.Schemas
             return properties.ToArray();
         }
 
-        internal IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
+        public IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
             var properties = _type.GetProperties(PropertyBindingFlags)
                 .Where(p => !p.PropertyType.IsSimpleType() && !p.PropertyType.IsEnumerableType());
@@ -153,7 +154,7 @@ namespace SisoDb.Structures.Schemas
             return properties.ToArray();
         }
 
-        internal IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
+        public IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
             var properties = _type.GetProperties(PropertyBindingFlags)
                 .Where(p => !p.PropertyType.IsSimpleType() && p.PropertyType.IsEnumerableType() && !p.PropertyType.IsEnumerableBytesType());
