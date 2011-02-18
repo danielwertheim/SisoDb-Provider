@@ -63,13 +63,13 @@ namespace SisoDb
 
         IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class;
 
-        IEnumerable<T> SimpleQuery<T>(Expression<Func<T, bool>> expression) where T : class;
+        IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression) where T : class;
 
-        IEnumerable<TOut> SimpleQueryAs<T, TOut>(Expression<Func<T, bool>> expression)
+        IEnumerable<TOut> WhereAs<T, TOut>(Expression<Func<T, bool>> expression)
             where T : class
             where TOut : class;
 
-        IEnumerable<string> SimpleQueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class;
+        IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) where T : class;
 
         IEnumerable<T> Query<T>(Action<IQueryCommand<T>> commandInitializer) where T : class;
         

@@ -305,14 +305,14 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        public IEnumerable<T> SimpleQuery<T>(Expression<Func<T, bool>> expression) where T : class
+        public IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression) where T : class
         {
             var command = new QueryCommand<T>().Where(expression);
 
             return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
         }
 
-        public IEnumerable<TOut> SimpleQueryAs<T, TOut>(Expression<Func<T, bool>> expression)
+        public IEnumerable<TOut> WhereAs<T, TOut>(Expression<Func<T, bool>> expression)
             where T : class
             where TOut : class
         {
@@ -321,7 +321,7 @@ namespace SisoDb.Providers.SqlProvider
             return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
         }
 
-        public IEnumerable<string> SimpleQueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class
+        public IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) where T : class
         {
             var command = new QueryCommand<T>().Where(expression);
 

@@ -1,5 +1,5 @@
 v0.7.1
-[Update]:   The UnitOfWork.Query, QueryAs, QueryAsJson methods, taking an ordinary expression is now called SimpleQuery, SimpleQueryAs, SimpleQueryAsJson, since the Query overload taking an IQueryCommand got blured/tangled with the one taking an expression.
+[Update]:   The UnitOfWork.Query, QueryAs, QueryAsJson methods, taking an ordinary expression is now called Where, WhereAs, WhereAsJson, since the Query overload taking an IQueryCommand got blured/tangled with the one taking an expression.
 [New]:      InsertAs, InsertManyAs - You can use this to have an entity X and store it as Y, where Y can be an interface or class which doesn't have to be implemented in X, it is just used to define the contract.
 
 v0.7.0.1 - 2011-02-11

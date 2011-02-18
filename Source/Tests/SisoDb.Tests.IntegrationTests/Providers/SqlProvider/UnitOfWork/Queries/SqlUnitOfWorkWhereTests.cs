@@ -6,7 +6,7 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 {
     [TestFixture]
-    public class SqlUnitOfWorkSimpleQueryTests : SqlIntegrationTestBase
+    public class SqlUnitOfWorkWhereTests : SqlIntegrationTestBase
     {
         protected override void OnTestFinalize()
         {
@@ -24,7 +24,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
                 uow.Insert(item);
                 uow.Commit();
 
-                refetched = uow.SimpleQuery<SimpleItemForQueries>(x => x.SortOrder == item.SortOrder).SingleOrDefault();
+                refetched = uow.Where<SimpleItemForQueries>(x => x.SortOrder == item.SortOrder).SingleOrDefault();
             }
 
             Assert.IsNotNull(refetched);
@@ -43,7 +43,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             IList<SimpleItemForQueries> refetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                refetched = unitOfWork.SimpleQuery<SimpleItemForQueries>(i => i.SortOrder >= 3 && i.SortOrder <= 6)
+                refetched = unitOfWork.Where<SimpleItemForQueries>(i => i.SortOrder >= 3 && i.SortOrder <= 6)
                     .ToList();
             }
 
@@ -58,7 +58,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             IList<SimpleItemForQueries> refetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                refetched = unitOfWork.SimpleQuery<SimpleItemForQueries>(i => i.SortOrder < 1)
+                refetched = unitOfWork.Where<SimpleItemForQueries>(i => i.SortOrder < 1)
                     .ToList();
             }
 
@@ -79,7 +79,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             IList<string> refetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                refetched = unitOfWork.SimpleQueryAsJson<SimpleItemForQueries>(i => i.SortOrder >= 3 && i.SortOrder <= 6)
+                refetched = unitOfWork.WhereAsJson<SimpleItemForQueries>(i => i.SortOrder >= 3 && i.SortOrder <= 6)
                     .ToList();
             }
 
@@ -94,7 +94,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             IList<string> refetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                refetched = unitOfWork.SimpleQueryAsJson<SimpleItemForQueries>(i => i.SortOrder < 1)
+                refetched = unitOfWork.WhereAsJson<SimpleItemForQueries>(i => i.SortOrder < 1)
                     .ToList();
             }
 
@@ -115,7 +115,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             IList<SimpleItemForQueriesInfo> refetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                refetched = unitOfWork.SimpleQueryAs<SimpleItemForQueries, SimpleItemForQueriesInfo>
+                refetched = unitOfWork.WhereAs<SimpleItemForQueries, SimpleItemForQueriesInfo>
                     (i => i.Id != 0).OrderBy(c => c.SortOrder).ToList();
             }
 
