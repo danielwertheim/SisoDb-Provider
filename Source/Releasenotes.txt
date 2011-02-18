@@ -1,5 +1,6 @@
 v0.7.1
 [Update]:   The UnitOfWork.Query, QueryAs, QueryAsJson methods, taking an ordinary expression is now called Where, WhereAs, WhereAsJson, since the Query overload taking an IQueryCommand got blured/tangled with the one taking an expression.
+[Update]:   SisoDatabase has been replaced with SisoDbFactory.CreateDatabase
 
 v0.7.0.1 - 2011-02-11
 [Fixed]:    bug of not being able to use lambdas with complex types.
