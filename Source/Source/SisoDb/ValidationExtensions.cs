@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SisoDb
 {
-    public static class ValidationExtensions
+    internal static class ValidationExtensions
     {
         public static IEnumerable<T> AssertHasItems<T>(this IEnumerable<T> items, string name)
         {
