@@ -8,7 +8,7 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries.QxExtensions
 {
     [TestFixture]
-    public class SqlUnitOfWorkQueryEnumerableWithQxAnyTests : IntegrationTestBase
+    public class SqlUnitOfWorkSimpleQueryEnumerableWithQxAnyTests : IntegrationTestBase
     {
         protected override void OnTestFinalize()
         {
@@ -28,7 +28,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.Strings.QxAny(e => e == "Alpha")).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.Strings.QxAny(e => e == "Alpha")).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.Strings, refetched.Strings);
@@ -47,7 +47,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.Strings.QxAny(e => e == "Temp" || e == "Bravo")).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.Strings.QxAny(e => e == "Temp" || e == "Bravo")).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.Strings, refetched.Strings);
@@ -66,7 +66,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.Integers.QxAny(e => e == 1)).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.Integers.QxAny(e => e == 1)).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.Integers, refetched.Integers);
@@ -85,7 +85,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.Integers.QxAny(e => e == -1 || e == 2)).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.Integers.QxAny(e => e == -1 || e == 2)).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.Integers, refetched.Integers);
@@ -104,7 +104,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.StringList.QxAny(e => e == "Alpha")).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.StringList.QxAny(e => e == "Alpha")).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.StringList, refetched.StringList);
@@ -123,7 +123,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.StringList.QxAny(e => e == "Temp" || e == "Bravo")).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.StringList.QxAny(e => e == "Temp" || e == "Bravo")).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.StringList, refetched.StringList);
@@ -142,7 +142,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.DecimalList.QxAny(e => e == 0.13M)).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.DecimalList.QxAny(e => e == 0.13M)).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.DecimalList, refetched.DecimalList);
@@ -161,7 +161,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.DecimalList.QxAny(e => e == -100 || e == 0.13M)).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.DecimalList.QxAny(e => e == -100 || e == 0.13M)).SingleOrDefault();
             }
 
             CollectionAssert.AreEqual(item.DecimalList, refetched.DecimalList);
@@ -186,7 +186,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.Int == -42)).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.Int == -42)).SingleOrDefault();
             }
 
             CustomAssert.AreEqual(item.ChildItemList, refetched.ChildItemList, (x, y) => x.Int.Equals(y.Int));
@@ -211,7 +211,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.Int == 0 || e.Int == 42)).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.Int == 0 || e.Int == 42)).SingleOrDefault();
             }
 
             CustomAssert.AreEqual(item.ChildItemList, refetched.ChildItemList, (x, y) => x.Int.Equals(y.Int));
@@ -235,7 +235,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(e2 => e2 == -1))).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(e2 => e2 == -1))).SingleOrDefault();
             }
 
             CustomAssert.AreEqual(item.ChildItemList, refetched.ChildItemList, (x, y) => x.Int.Equals(y.Int));
@@ -259,7 +259,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(e2 => e2 == -100 || e2 == 1))).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(e2 => e2 == -100 || e2 == 1))).SingleOrDefault();
             }
 
             CustomAssert.AreEqual(item.ChildItemList, refetched.ChildItemList, (x, y) => x.Int.Equals(y.Int));
@@ -290,7 +290,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(e2 => e2.Int == -1))).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(e2 => e2.Int == -1))).SingleOrDefault();
             }
 
             CustomAssert.AreEqual(
@@ -324,7 +324,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(e2 => e2.Int == -100 || e2.Int == 1))).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(e2 => e2.Int == -100 || e2.Int == 1))).SingleOrDefault();
             }
 
             CustomAssert.AreEqual(

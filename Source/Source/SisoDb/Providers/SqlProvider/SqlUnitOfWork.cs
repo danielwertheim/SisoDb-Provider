@@ -305,11 +305,27 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        public IEnumerable<T> Query<T>(Expression<Func<T, bool>> expression) where T : class
+        public IEnumerable<T> SimpleQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
             var command = new QueryCommand<T>().Where(expression);
 
             return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
+        }
+
+        public IEnumerable<TOut> SimpleQueryAs<T, TOut>(Expression<Func<T, bool>> expression)
+            where T : class
+            where TOut : class
+        {
+            var command = new QueryCommand<T>().Where(expression);
+
+            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
+        }
+
+        public IEnumerable<string> SimpleQueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class
+        {
+            var command = new QueryCommand<T>().Where(expression);
+
+            return QueryAsJson<T>(command);
         }
 
         public IEnumerable<T> Query<T>(Action<IQueryCommand<T>> commandInitializer) where T : class
@@ -319,27 +335,13 @@ namespace SisoDb.Providers.SqlProvider
 
             return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
         }
-
-        public IEnumerable<TOut> QueryAs<T, TOut>(Expression<Func<T, bool>> expression) where T : class where TOut : class 
-        {
-            var command = new QueryCommand<T>().Where(expression);
-
-            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
-        }
-
+        
         public IEnumerable<TOut> QueryAs<T, TOut>(Action<IQueryCommand<T>> commandInitializer) where T : class where TOut : class
         {
             var command = new QueryCommand<T>();
             commandInitializer(command);
 
             return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
-        }
-
-        public IEnumerable<string> QueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class
-        {
-            var command = new QueryCommand<T>().Where(expression);
-
-            return QueryAsJson<T>(command);
         }
 
         public IEnumerable<string> QueryAsJson<T>(Action<IQueryCommand<T>> commandInitializer) where T : class

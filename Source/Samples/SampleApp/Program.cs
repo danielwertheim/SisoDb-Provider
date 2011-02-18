@@ -87,11 +87,11 @@ namespace SisoDbLab
                 uow.Insert(image);
                 uow.Commit();
 
-                var fetched = uow.Query<Image>(i => i.Name == "Penguins.jpg").Single();
+                var fetched = uow.SimpleQuery<Image>(i => i.Name == "Penguins.jpg").Single();
                 Console.Out.WriteLine("fetched.Name = {0}", fetched.Name);
                 Console.Out.WriteLine("fetched.Buff.Length = {0}", fetched.Buff.Length);
 
-                var fetchedByTags = uow.Query<Image>(i => i.Tags.QxAny(t => t == "ice")).Single();
+                var fetchedByTags = uow.SimpleQuery<Image>(i => i.Tags.QxAny(t => t == "ice")).Single();
                 Console.Out.WriteLine("fetchedByTags.Name = {0}", fetchedByTags.Name);
                 Console.Out.WriteLine("fetchedByTags.Buff.Length = {0}", fetchedByTags.Buff.Length);
             }

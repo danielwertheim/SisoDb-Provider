@@ -63,19 +63,19 @@ namespace SisoDb
 
         IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class;
 
-        IEnumerable<T> Query<T>(Expression<Func<T, bool>> expression) where T : class;
+        IEnumerable<T> SimpleQuery<T>(Expression<Func<T, bool>> expression) where T : class;
 
-        IEnumerable<T> Query<T>(Action<IQueryCommand<T>> commandInitializer) where T : class;
-
-        IEnumerable<TOut> QueryAs<T, TOut>(Expression<Func<T, bool>> expression)
+        IEnumerable<TOut> SimpleQueryAs<T, TOut>(Expression<Func<T, bool>> expression)
             where T : class
             where TOut : class;
 
+        IEnumerable<string> SimpleQueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class;
+
+        IEnumerable<T> Query<T>(Action<IQueryCommand<T>> commandInitializer) where T : class;
+        
         IEnumerable<TOut> QueryAs<T, TOut>(Action<IQueryCommand<T>> commandInitializer)
             where T : class
             where TOut : class;
-
-        IEnumerable<string> QueryAsJson<T>(Expression<Func<T, bool>> expression) where T : class;
 
         IEnumerable<string> QueryAsJson<T>(Action<IQueryCommand<T>> commandInitializer) where T : class;
     }

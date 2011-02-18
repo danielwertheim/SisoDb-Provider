@@ -6,7 +6,7 @@ using SisoDb.Querying;
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries.QxExtensions
 {
     [TestFixture]
-    public class SqlUnitOfWorkQueryStringUsingQxLikeTests : IntegrationTestBase
+    public class SqlUnitOfWorkSimpleQueryStringUsingQxEndsWithTests : IntegrationTestBase
     {
         protected override void OnTestFinalize()
         {
@@ -21,7 +21,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         }
 
         [Test]
-        public void QueryStringUsingQxLike_NoMatch_NullIsReturned()
+        public void QueryStringUsingQxEndsWith_NoMatch_NullIsReturned()
         {
             var item = new QxItemForQueries { StringValue = "ABC" };
             using (var uow = Database.CreateUnitOfWork())
@@ -33,14 +33,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.StringValue.QxLike("%A")).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.StringValue.QxEndsWith("A")).SingleOrDefault();
             }
 
             Assert.IsNull(refetched);
         }
 
         [Test]
-        public void QueryStringUsingQxLike_MatchStart_ItemIsReturned()
+        public void QueryStringUsingQxEndsWith_MatchingEnd_ItemIsReturned()
         {
             var item = new QxItemForQueries { StringValue = "ABC" };
             using (var uow = Database.CreateUnitOfWork())
@@ -52,14 +52,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.StringValue.QxLike("A%")).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.StringValue.QxEndsWith("BC")).SingleOrDefault();
             }
 
             Assert.AreEqual("ABC", refetched.StringValue);
         }
 
         [Test]
-        public void QueryStringUsingQxLike_MatchEnd_ItemIsReturned()
+        public void QueryStringUsingQxEndsWith_CompleteMatch_ItemIsReturned()
         {
             var item = new QxItemForQueries { StringValue = "ABC" };
             using (var uow = Database.CreateUnitOfWork())
@@ -71,26 +71,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             QxItemForQueries refetched;
             using (var uow = Database.CreateUnitOfWork())
             {
-                refetched = uow.Query<QxItemForQueries>(i => i.StringValue.QxLike("%C")).SingleOrDefault();
-            }
-
-            Assert.AreEqual("ABC", refetched.StringValue);
-        }
-
-        [Test]
-        public void QueryStringUsingQxLike_MatchMiddle_ItemIsReturned()
-        {
-            var item = new QxItemForQueries { StringValue = "ABC" };
-            using (var uow = Database.CreateUnitOfWork())
-            {
-                uow.Insert(item);
-                uow.Commit();
-            }
-
-            QxItemForQueries refetched;
-            using (var uow = Database.CreateUnitOfWork())
-            {
-                refetched = uow.Query<QxItemForQueries>(i => i.StringValue.QxLike("%B%")).SingleOrDefault();
+                refetched = uow.SimpleQuery<QxItemForQueries>(i => i.StringValue.QxEndsWith("ABC")).SingleOrDefault();
             }
 
             Assert.AreEqual("ABC", refetched.StringValue);
