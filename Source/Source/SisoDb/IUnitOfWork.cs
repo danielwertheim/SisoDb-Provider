@@ -27,12 +27,12 @@ namespace SisoDb
 
         T GetById<T>(int id) where T : class;
 
-        TOut GetByIdAs<T, TOut>(Guid id)
-            where T : class
+        TOut GetByIdAs<TContract, TOut>(Guid id)
+            where TContract : class
             where TOut : class;
 
-        TOut GetByIdAs<T, TOut>(int id)
-            where T : class
+        TOut GetByIdAs<TContract, TOut>(int id)
+            where TContract : class
             where TOut : class;
 
         string GetByIdAsJson<T>(Guid id) where T : class;
@@ -43,12 +43,12 @@ namespace SisoDb
 
         IEnumerable<T> GetAll<T>(Action<IGetCommand<T>> commandInitializer) where T : class;
 
-        IEnumerable<TOut> GetAllAs<T, TOut>()
-            where T : class
+        IEnumerable<TOut> GetAllAs<TContract, TOut>()
+            where TContract : class
             where TOut : class;
 
-        IEnumerable<TOut> GetAllAs<T, TOut>(Action<IGetCommand<T>> commandInitializer)
-            where T : class
+        IEnumerable<TOut> GetAllAs<TContract, TOut>(Action<IGetCommand<TContract>> commandInitializer)
+            where TContract : class
             where TOut : class;
 
         IEnumerable<string> GetAllAsJson<T>() where T : class;
@@ -57,24 +57,24 @@ namespace SisoDb
 
         IEnumerable<T> NamedQuery<T>(INamedQuery query) where T : class;
 
-        IEnumerable<TOut> NamedQueryAs<T, TOut>(INamedQuery query)
-            where T : class
+        IEnumerable<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query)
+            where TContract : class
             where TOut : class;
 
         IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class;
 
         IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression) where T : class;
 
-        IEnumerable<TOut> WhereAs<T, TOut>(Expression<Func<T, bool>> expression)
-            where T : class
+        IEnumerable<TOut> WhereAs<TContract, TOut>(Expression<Func<TContract, bool>> expression)
+            where TContract : class
             where TOut : class;
 
         IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) where T : class;
 
         IEnumerable<T> Query<T>(Action<IQueryCommand<T>> commandInitializer) where T : class;
         
-        IEnumerable<TOut> QueryAs<T, TOut>(Action<IQueryCommand<T>> commandInitializer)
-            where T : class
+        IEnumerable<TOut> QueryAs<TContract, TOut>(Action<IQueryCommand<TContract>> commandInitializer)
+            where TContract : class
             where TOut : class;
 
         IEnumerable<string> QueryAsJson<T>(Action<IQueryCommand<T>> commandInitializer) where T : class;

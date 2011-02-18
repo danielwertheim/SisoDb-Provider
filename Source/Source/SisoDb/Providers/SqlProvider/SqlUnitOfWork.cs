@@ -171,19 +171,19 @@ namespace SisoDb.Providers.SqlProvider
             return GetById<T, T>(StructureId.NewIdentityId(id));
         }
 
-        public TOut GetByIdAs<T, TOut>(Guid id) where T : class where TOut : class 
+        public TOut GetByIdAs<TContract, TOut>(Guid id) where TContract : class where TOut : class 
         {
-            return GetById<T, TOut>(StructureId.NewGuidId(id));
+            return GetById<TContract, TOut>(StructureId.NewGuidId(id));
         }
 
-        public TOut GetByIdAs<T, TOut>(int id) where T : class where TOut : class
+        public TOut GetByIdAs<TContract, TOut>(int id) where TContract : class where TOut : class
         {
-            return GetById<T, TOut>(StructureId.NewIdentityId(id));
+            return GetById<TContract, TOut>(StructureId.NewIdentityId(id));
         }
 
-        private TOut GetById<T, TOut>(IStructureId structureId) where T : class where TOut : class
+        private TOut GetById<TContract, TOut>(IStructureId structureId) where TContract : class where TOut : class
         {
-            var json = GetByIdAsJson<T>(structureId);
+            var json = GetByIdAsJson<TContract>(structureId);
 
             return _jsonSerializer.ToItemOrNull<TOut>(json);
         }
@@ -221,17 +221,17 @@ namespace SisoDb.Providers.SqlProvider
             return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>(command));
         }
 
-        public IEnumerable<TOut> GetAllAs<T, TOut>() where T : class where TOut : class
+        public IEnumerable<TOut> GetAllAs<TContract, TOut>() where TContract : class where TOut : class
         {
-            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<T>());
+            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<TContract>());
         }
 
-        public IEnumerable<TOut> GetAllAs<T, TOut>(Action<IGetCommand<T>> commandInitializer) where T : class where TOut : class
+        public IEnumerable<TOut> GetAllAs<TContract, TOut>(Action<IGetCommand<TContract>> commandInitializer) where TContract : class where TOut : class
         {
-            var command = new GetCommand<T>();
+            var command = new GetCommand<TContract>();
             commandInitializer(command);
 
-            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<T>(command));
+            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<TContract>(command));
         }
 
         public IEnumerable<string> GetAllAsJson<T>() where T : class
@@ -283,9 +283,9 @@ namespace SisoDb.Providers.SqlProvider
             return _batchDeserializer.Deserialize<T>(NamedQueryAsJson<T>(query));
         }
 
-        public IEnumerable<TOut> NamedQueryAs<T, TOut>(INamedQuery query) where T : class where TOut : class 
+        public IEnumerable<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class 
         {
-            return _batchDeserializer.Deserialize<TOut>(NamedQueryAsJson<T>(query));
+            return _batchDeserializer.Deserialize<TOut>(NamedQueryAsJson<TContract>(query));
         }
 
         public IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
@@ -312,13 +312,13 @@ namespace SisoDb.Providers.SqlProvider
             return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
         }
 
-        public IEnumerable<TOut> WhereAs<T, TOut>(Expression<Func<T, bool>> expression)
-            where T : class
+        public IEnumerable<TOut> WhereAs<TContract, TOut>(Expression<Func<TContract, bool>> expression)
+            where TContract : class
             where TOut : class
         {
-            var command = new QueryCommand<T>().Where(expression);
+            var command = new QueryCommand<TContract>().Where(expression);
 
-            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
+            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<TContract>(command));
         }
 
         public IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) where T : class
@@ -336,12 +336,12 @@ namespace SisoDb.Providers.SqlProvider
             return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
         }
         
-        public IEnumerable<TOut> QueryAs<T, TOut>(Action<IQueryCommand<T>> commandInitializer) where T : class where TOut : class
+        public IEnumerable<TOut> QueryAs<TContract, TOut>(Action<IQueryCommand<TContract>> commandInitializer) where TContract : class where TOut : class
         {
-            var command = new QueryCommand<T>();
+            var command = new QueryCommand<TContract>();
             commandInitializer(command);
 
-            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<T>(command));
+            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<TContract>(command));
         }
 
         public IEnumerable<string> QueryAsJson<T>(Action<IQueryCommand<T>> commandInitializer) where T : class
