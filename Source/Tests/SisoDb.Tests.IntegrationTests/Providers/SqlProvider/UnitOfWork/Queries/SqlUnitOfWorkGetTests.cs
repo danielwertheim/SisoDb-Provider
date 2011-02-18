@@ -173,10 +173,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
                 itemJsonRefetched = unitOfWork.GetByIdAsJson<GuidItemForGetQueries>(item2.Id);
             }
 
-            if (SisoDbEnvironment.JsonSerializer is ServiceStackJsonSerializer)
-                Assert.AreEqual("{\"Id\":\"8a2f9a21d2fa4eae82acace6aef34e7d\",\"SortOrder\":2}", itemJsonRefetched);
-            else if (SisoDbEnvironment.JsonSerializer is NewtonsoftJsonSerializer)
-                Assert.AreEqual("{\"Id\":\"8a2f9a21-d2fa-4eae-82ac-ace6aef34e7d\",\"SortOrder\":2}", itemJsonRefetched);
+            Assert.AreEqual("{\"Id\":\"8a2f9a21d2fa4eae82acace6aef34e7d\",\"SortOrder\":2}", itemJsonRefetched);
         }
 
         [Test]

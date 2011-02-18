@@ -58,9 +58,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\Libs\Json.Net-bin\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\..\Libs\ServiceStack.Text-bin\ServiceStack.Text.dll</HintPath>
     </Reference>
@@ -182,10 +179,8 @@
     <Compile Include="Querying\SqlSorting.cs" />
     <Compile Include="Serialization\IBatchDeserializer.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
-    <Compile Include="Serialization\NewtonsoftJsonSerializer.cs" />
     <Compile Include="Serialization\ParallelJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\SequentialJsonBatchDeserializer.cs" />
-    <Compile Include="Serialization\SisoJsonDefaultContractResolver.cs" />
     <Compile Include="SisoDbFactory.cs" />
     <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="Structures\IdTypes.cs" />
@@ -252,10 +247,6 @@
     <EmbeddedResource Include="Providers\Sql\SqlStrings.Azure.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Libs\Json.Net-bin\License-Newtonsoft-Json.txt">
-      <Link>License-Newtonsoft-Json.txt</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\..\Libs\ServiceStack.Text-bin\License-ServiceStack.txt">
       <Link>License-ServiceStack.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

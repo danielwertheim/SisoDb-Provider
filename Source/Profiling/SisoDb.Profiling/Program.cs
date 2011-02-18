@@ -10,9 +10,9 @@ namespace SisoDb.Profiling
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
-            //Console.ReadKey();
-            //return;
+            Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
+            Console.ReadKey();
+            return;
 
             //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
             //var db = new SisoDbFactory().CreateDatabase(cnInfo);
