@@ -58,6 +58,32 @@ namespace SisoDb.Tests.UnitTests.Lambdas.ParsedSelectorSqlProcessorTests
         }
 
         [Test]
+        public void Process_WhenNullableValueTypeComparedAgainstVariable_GeneratesCorrectSqlQuery()
+        {
+            var value = 42;
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.NullableInt == value);
+
+            var processor = new ParsedSelectorSqlProcessor(new MemberNameGeneratorFake());
+            var query = processor.Process(parsedLambda);
+
+            const string expectedSql = "si.[NullableInt] = @p0";
+            Assert.AreEqual(expectedSql, query.Sql);
+        }
+
+        [Test]
+        public void Process_WhenNullableValueTypeComparedAgainstVariable_ExtractsCorrectParameters()
+        {
+            var value = 42;
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.NullableInt == value);
+
+            var processor = new ParsedSelectorSqlProcessor(new MemberNameGeneratorFake());
+            var query = processor.Process(parsedLambda);
+
+            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            AssertQueryParameters(expectedParameters, query.Parameters);
+        }
+
+        [Test]
         public void Process_WhenNegativeInt_GeneratesCorrectSqlQuery()
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == -42);

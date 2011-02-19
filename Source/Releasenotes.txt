@@ -1,12 +1,14 @@
-v0.7.1
+v0.7.1.1	- 2011-02-19
+[New]:		Lambda expressions for querying now supports nullable types.
+
+v0.7.1		- 2011-02-18
 [Update]:   The UnitOfWork.Query, QueryAs, QueryAsJson methods, taking an ordinary expression is now called Where, WhereAs, WhereAsJson, since the Query overload taking an IQueryCommand got blured/tangled with the one taking an expression.
 [Update]:   SisoDatabase has been replaced with SisoDbFactory.CreateDatabase
 
-v0.7.0.1 - 2011-02-11
+v0.7.0.1	- 2011-02-11
 [Fixed]:    bug of not being able to use lambdas with complex types.
 
-v0.7 - 2011-02-10
-
+v0.7		- 2011-02-10
 [Fixed]:    You can now query Id'values using Lambdas, since it's now translated to StructureId as the column is named in Indexes-table.
 [Update]:   DeleteById doesn't return bool anymore.
 [New]:      DeleteByQuery - You can now delete other than single item by Id and instead pass a query and delete all items matching that query.

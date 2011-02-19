@@ -69,6 +69,11 @@ namespace SisoDb.Lambdas
                     _nodesContainer.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
                     Visit(e.Operand);
                     break;
+                case ExpressionType.Convert:
+                    if (!e.Type.IsNullableValueType())
+                        throw new NotSupportedException(ExceptionMessages.LambdaParser_VisitUnary_InvalidConvert);
+                    Visit(e.Operand);
+                    break;
                 default:
                     throw new NotSupportedException(
                         ExceptionMessages.LambdaParser_VisitUnary_NotSupported

@@ -31,6 +31,9 @@ namespace SisoDb.Tests.UnitTests.Lambdas.ParsedSelectorSqlProcessorTests
         protected class MyItem
         {
             public int Id { get; set; }
+            
+            public int? NullableInt { get; set; }
+
             public int Int1 { get; set; }
             public int Int2 { get; set; }
             public decimal Decimal1 { get; set; }

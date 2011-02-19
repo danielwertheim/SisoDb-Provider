@@ -149,6 +149,11 @@ namespace SisoDb.Reflections
             return t == CharType;
         }
 
+        public static bool IsNullableValueType(this Type t)
+        {
+            return (t.IsValueType && t.IsGenericType && t.GetGenericTypeDefinition() == NullableType);
+        }
+
         public static bool IsNullableDateTimeType(this Type t)
         {
             return t == NullableDateTimeType;

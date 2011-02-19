@@ -81,7 +81,6 @@
     <Compile Include="IMemberNameGenerator.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="IStringConverter.cs" />
-    <Compile Include="Lambdas\ExpressionEvaluator.cs" />
     <Compile Include="Expressions.cs" />
     <Compile Include="Lambdas\IExpressionEvaluator.cs" />
     <Compile Include="Lambdas\ISelectorParser.cs" />
