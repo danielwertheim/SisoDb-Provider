@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace SisoDb.Lambdas.Nodes
 {
+    [Serializable]
     public class NodesContainer : IEnumerable<INode>
     {
         private readonly Queue<INode> _nodes;

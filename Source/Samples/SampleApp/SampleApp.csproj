@@ -77,7 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\Album.cs" />
+    <Compile Include="Model\Artist.cs" />
     <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\Genre.cs" />
+    <Compile Include="Model\IAlbumData.cs" />
     <Compile Include="Model\Image.cs" />
     <Compile Include="Model\IPhoto.cs" />
     <Compile Include="Model\Order.cs" />

@@ -8,7 +8,7 @@ namespace SisoDb.Structures
 
         //byte[] Version { get; }
 
-        string TypeName { get; }
+        string Name { get; }
         
         string Json { get; }
         

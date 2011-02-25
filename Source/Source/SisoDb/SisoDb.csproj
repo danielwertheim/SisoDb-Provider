@@ -55,6 +55,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <DocumentationFile>bin\Deploy\SisoDb.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -80,22 +81,35 @@
     <Compile Include="IConnectionString.cs" />
     <Compile Include="IMemberNameGenerator.cs" />
     <Compile Include="ISisoDbFactory.cs" />
+    <Compile Include="ISisoDbFormatting.cs" />
     <Compile Include="IStringConverter.cs" />
-    <Compile Include="Expressions.cs" />
     <Compile Include="Lambdas\IExpressionEvaluator.cs" />
-    <Compile Include="Lambdas\ISelectorParser.cs" />
+    <Compile Include="Lambdas\Nodes\IncludeNode.cs" />
+    <Compile Include="Lambdas\Parsers\IIncludeParser.cs" />
+    <Compile Include="Lambdas\Parsers\IncludeParser.cs" />
+    <Compile Include="Lambdas\Parsers\ISelectorParser.cs" />
     <Compile Include="Lambdas\IParsedLambda.cs" />
-    <Compile Include="Lambdas\ISortingParser.cs" />
+    <Compile Include="Lambdas\Parsers\ISortingParser.cs" />
+    <Compile Include="Lambdas\Processors\INameStrategy.cs" />
+    <Compile Include="Querying\CommandBuilderFactory.cs" />
+    <Compile Include="Querying\GetCommandBuilder.cs" />
+    <Compile Include="Querying\ICommandBuilderFactory.cs" />
+    <Compile Include="Querying\IGetCommandBuilder.cs" />
+    <Compile Include="Querying\IQueryCommandBuilder.cs" />
+    <Compile Include="Querying\ISqlInclude.cs" />
+    <Compile Include="Lambdas\Processors\ParsedIncludeSqlProcessor.cs" />
     <Compile Include="Providers\SqlAzureProviderFactory.cs" />
     <Compile Include="Providers\IProviderFactory.cs" />
     <Compile Include="Providers\Sql2008ProviderFactory.cs" />
-    <Compile Include="Reflections\Type.cs" />
+    <Compile Include="Querying\QueryCommandBuilder.cs" />
+    <Compile Include="Querying\SqlInclude.cs" />
+    <Compile Include="Reflections\Reflect.cs" />
     <Compile Include="Lambdas\LambdaExpressionEvaluator.cs" />
-    <Compile Include="Lambdas\Nodes\NameStrategy.cs" />
+    <Compile Include="Lambdas\Processors\NameStrategy.cs" />
     <Compile Include="Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Lambdas\Processors\ParsedSortingSqlProcessor.cs" />
-    <Compile Include="Lambdas\SelectorParser.cs" />
-    <Compile Include="Lambdas\MemberExpressionExtensions.cs" />
+    <Compile Include="Lambdas\Parsers\SelectorParser.cs" />
+    <Compile Include="Lambdas\ExpressionExtensions.cs" />
     <Compile Include="Lambdas\Nodes\EndGroupNode.cs" />
     <Compile Include="Lambdas\Nodes\INode.cs" />
     <Compile Include="Lambdas\Nodes\MemberNode.cs" />
@@ -119,8 +133,8 @@
     <Compile Include="Lambdas\Operators\OrOperator.cs" />
     <Compile Include="Lambdas\ParsedLambda.cs" />
     <Compile Include="Lambdas\Processors\IParsedLambdaProcessor.cs" />
-    <Compile Include="Lambdas\SortDirections.cs" />
-    <Compile Include="Lambdas\SortingParser.cs" />
+    <Compile Include="Lambdas\Nodes\SortDirections.cs" />
+    <Compile Include="Lambdas\Parsers\SortingParser.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbDataTypeTranslator.cs" />
     <Compile Include="Providers\SqlProvider\ISqlDbClient.cs" />
     <Compile Include="Querying\GetCommand.cs" />
@@ -162,7 +176,7 @@
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserter.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\UniqueStorageSchema.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\IDbSchemaManager.cs" />
-    <Compile Include="Lambdas\ExpressionTreeUtils.cs" />
+    <Compile Include="Lambdas\Expressions.cs" />
     <Compile Include="Providers\SqlProvider\IIdentityGenerator.cs" />
     <Compile Include="Providers\SqlProvider\ISqlDatabase.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SchemaChanges.cs" />

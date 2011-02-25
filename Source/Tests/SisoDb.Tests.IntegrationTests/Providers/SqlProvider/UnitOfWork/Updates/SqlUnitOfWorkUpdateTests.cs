@@ -16,6 +16,52 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
         }
 
         [Test]
+        public void Update_WhenItemExists_EnsureIdIsNotChanged()
+        {
+            var item = new SimpleItem {Value = "Test"};
+
+            using (var unitOfWork = Database.CreateUnitOfWork())
+            {
+                unitOfWork.Insert(item);
+                unitOfWork.Commit();
+
+                var refetchedA = unitOfWork.GetById<SimpleItem>(item.Id);
+                Assert.AreEqual(item.Id, refetchedA.Id);
+
+                refetchedA.Value = "Come on!";
+                unitOfWork.Update(refetchedA);
+                unitOfWork.Commit();
+
+                var refetchedB = unitOfWork.GetById<SimpleItem>(item.Id);
+                Assert.AreEqual(item.Id, refetchedA.Id);
+                Assert.AreEqual(item.Id, refetchedB.Id);
+            }
+        }
+
+        [Test]
+        public void Update_WhenItemExists_EnsureValueOnItemsAreCorrect()
+        {
+            var item = new SimpleItem { Value = "Test" };
+
+            using (var unitOfWork = Database.CreateUnitOfWork())
+            {
+                unitOfWork.Insert(item);
+                unitOfWork.Commit();
+
+                var refetchedA = unitOfWork.GetById<SimpleItem>(item.Id);
+                refetchedA.Value = "Come on!";
+
+                unitOfWork.Update(refetchedA);
+                unitOfWork.Commit();
+
+                var refetchedB = unitOfWork.GetById<SimpleItem>(item.Id);
+                Assert.AreEqual("Test", item.Value);
+                Assert.AreEqual("Come on!", refetchedA.Value);
+                Assert.AreEqual("Come on!", refetchedB.Value);
+            }
+        }
+
+        [Test]
         public void Update_WhenSameItem_ValueIsUpdated()
         {
             var item = new SimpleItem { Value = "A" };

@@ -1,7 +1,9 @@
-﻿using SisoDb.Lambdas.Operators;
+﻿using System;
+using SisoDb.Lambdas.Operators;
 
 namespace SisoDb.Lambdas.Nodes
 {
+    [Serializable]
     public class OperatorNode : INode
     {
         public Operator Operator { get; private set; }

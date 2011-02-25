@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using SisoDb.Annotations;
 
 namespace SisoDb.Structures.Schemas
 {
@@ -22,8 +21,6 @@ namespace SisoDb.Structures.Schemas
         bool IsSimpleType { get; }
 
         bool IsUnique { get; }
-
-        UniqueModes? UniqueMode { get; }
        
         bool IsEnumerable { get; }
 

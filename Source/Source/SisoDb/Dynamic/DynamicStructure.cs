@@ -49,35 +49,8 @@ namespace SisoDb.Dynamic
 
         private void SetValue<T>(string member, T value)
         {
-            var parsedValue = ParseValue(value);
-            _memberStates[member] = parsedValue;
-            TypeDescriptor.Set(member, parsedValue.GetType());
-        }
-
-        private static dynamic ParseValue(dynamic value)
-        {
-            if (value == null)
-                return null;
-
-            //if (value is JToken)
-            //{
-            //    if (value is JValue)
-            //        value = ((JValue)value).Value;
-            //    else if (value is JObject)
-            //    {
-            //        var kv = new Dictionary<string, object>();
-            //        var jObj = value as JObject;
-            //        foreach (var x in jObj)
-            //        {
-            //            var v = ParseValue(x.Value);
-            //            kv.Add(x.Key, v);
-            //        }
-            //        dynamic d = new DynamicStructure(kv);
-            //        value = d;
-            //    }
-            //}
-
-            return value;
+            _memberStates[member] = value;
+            TypeDescriptor.Add(member, value.GetType());
         }
 
         IEnumerator IEnumerable.GetEnumerator()

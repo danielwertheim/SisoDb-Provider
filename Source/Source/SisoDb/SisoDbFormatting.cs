@@ -4,13 +4,13 @@ using System.Text;
 
 namespace SisoDb
 {
-    public class SisoDbFormatting
+    public class SisoDbFormatting : ISisoDbFormatting
     {
-        public readonly IFormatProvider FormatProvider;
-        public readonly IFormatProvider DateTimeFormatProvider;
-        public readonly string DateTimePattern;
-        public readonly Encoding Encoding;
-        public readonly IStringConverter StringConverter;
+        public IFormatProvider FormatProvider { get; private set; }
+        public IFormatProvider DateTimeFormatProvider { get; private set; }
+        public string DateTimePattern { get; private set; }
+        public Encoding Encoding { get; private set; }
+        public IStringConverter StringConverter { get; private set; }
 
         public SisoDbFormatting()
         {

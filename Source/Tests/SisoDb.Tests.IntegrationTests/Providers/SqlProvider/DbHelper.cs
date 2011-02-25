@@ -57,7 +57,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 
         public void DropProcedure(string spName)
         {
-            ExecuteSql(CommandType.Text, "drop procedure {0};".Inject(spName));
+            ExecuteSql(CommandType.Text, "if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end".Inject(spName));
         }
 
         public void AddColumns(string tableName, params string[] columns)

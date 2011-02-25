@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Moq;
 using NUnit.Framework;
 using SisoDb.Lambdas;
+using SisoDb.Lambdas.Parsers;
 using SisoDb.Lambdas.Processors;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Querying;
@@ -19,7 +20,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub<MyClass>(hasSelector: true, hasSortings: false);
+            var queryCommand = GetQueryCommandStub(hasSelector: true, hasSortings: false);
             var generator = GetIsolatedQueryGenerator(fakeSelector: "si.[Int1] = 42", fakeSorting: string.Empty);
 
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
@@ -34,7 +35,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub<MyClass>(hasSelector: false, hasSortings: true);
+            var queryCommand = GetQueryCommandStub(hasSelector: false, hasSortings: true);
             var generator = GetIsolatedQueryGenerator(fakeSelector: string.Empty, fakeSorting: "si.[Int1] Asc");
 
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
@@ -49,7 +50,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub<MyClass>(hasSelector: true, hasSortings: true);
+            var queryCommand = GetQueryCommandStub(hasSelector: true, hasSortings: true);
             var generator = GetIsolatedQueryGenerator(fakeSelector: "si.[Int1] = 42", fakeSorting: "si.[Int1] Desc");
 
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
@@ -59,25 +60,17 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             Assert.AreEqual(expectedSql, sqlQuery.Value);
         }
 
-        private static IQueryCommand<T> GetQueryCommandStub<T>(bool hasSelector, bool hasSortings) where T : class
+        private static IQueryCommand GetQueryCommandStub(bool hasSelector, bool hasSortings)
         {
-            var stub = new Mock<IQueryCommand<T>>();
+            var stub = new Mock<IQueryCommand>();
             stub.Setup(s => s.HasSelector).Returns(hasSelector);
             stub.Setup(s => s.HasSortings).Returns(hasSortings);
 
             return stub.Object;
         }
 
-        private static SqlQueryGenerator GetIsolatedQueryGenerator(string fakeSelector, string fakeSorting)
+        private static SqlQueryGenerator GetIsolatedQueryGenerator(string fakeSelector, string fakeSorting) 
         {
-            var parsedLambdaFake = new Mock<IParsedLambda>();
-            
-            var selectorParserFake = new Mock<ISelectorParser>();
-            selectorParserFake.Setup(x => x.Parse(It.IsAny<Expression<Func<MyClass, bool>>>())).Returns(parsedLambdaFake.Object);
-
-            var sortingParserFake = new Mock<ISortingParser>();
-            sortingParserFake.Setup(x => x.Parse(It.IsAny<Expression<Func<MyClass, bool>>[]>())).Returns(parsedLambdaFake.Object);
-
             var sqlSelectorFake = new Mock<ISqlSelector>();
             sqlSelectorFake.Setup(x => x.Sql).Returns(fakeSelector);
             sqlSelectorFake.Setup(x => x.Parameters).Returns(new List<IQueryParameter>());
@@ -85,19 +78,32 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             var sqlSortingFake = new Mock<ISqlSorting>();
             sqlSortingFake.Setup(x => x.Sql).Returns(fakeSorting);
 
+            var sqlIncludeFake = new Mock<ISqlInclude>();
+            sqlIncludeFake.Setup(x => x.Sql).Returns("");
+
             var parsedSelectorProcessorFake = new Mock<IParsedLambdaProcessor<ISqlSelector>>();
             parsedSelectorProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(sqlSelectorFake.Object);
 
             var parsedSortingProcessorFake = new Mock<IParsedLambdaProcessor<ISqlSorting>>();
             parsedSortingProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(sqlSortingFake.Object);
 
-            return new SqlQueryGenerator(selectorParserFake.Object, sortingParserFake.Object,
-                                         parsedSelectorProcessorFake.Object, parsedSortingProcessorFake.Object);
+            var parsedIncludeProcessorFake = new Mock<IParsedLambdaProcessor<IList<ISqlInclude>>>();
+            parsedIncludeProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(new []{sqlIncludeFake.Object});
+
+            return new SqlQueryGenerator(
+                                         parsedSelectorProcessorFake.Object, 
+                                         parsedSortingProcessorFake.Object, 
+                                         parsedIncludeProcessorFake.Object);
         }
 
         public class MyClass
         {
             public int Int1 { get; set; }
+        }
+
+        public class ChildClass
+        {
+            
         }
     }
 }

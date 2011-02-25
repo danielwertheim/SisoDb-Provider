@@ -18,7 +18,7 @@ namespace SisoDb.Tests.UnitTests.Structures
                 new StructureIndex(fakeStructureId, "UniqueIndex1", "Value1", true)
             };
             
-            Assert.Throws<SisoDbException>(() => new Structure("TypeName", fakeStructureId, indexes, "{Value : \"Test\"}"));
+            Assert.Throws<SisoDbException>(() => new Structure("Name", fakeStructureId, indexes, "{Value : \"Test\"}"));
         }
     }
 }

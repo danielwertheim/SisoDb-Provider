@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using SisoDb.Dynamic;
-using SisoDb.Serialization;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Dynamic
 {
-    //TODO: Json tests of complex nested types.
     [TestFixture]
-    public class DynamicStructureTests
+    public class DynamicStructureTests : UnitTestBase
     {
         [Test]
         public void AccessProperties_AfterInjectedKeyValues_CanRetrieveAsCorrectTypes()
@@ -39,7 +38,8 @@ namespace SisoDb.Tests.UnitTests.Dynamic
             ds.Int1 = kv["Int1"];
             ds.DateTime1 = kv["DateTime1"];
 
-            var memberNames = ((DynamicStructure) ds).GetDynamicMemberNames();
+            var ds2 = (DynamicStructure)ds;
+            var memberNames = ds2.GetDynamicMemberNames();
             CollectionAssert.AreEquivalent(kv.Keys, memberNames);
         }
 
@@ -70,7 +70,8 @@ namespace SisoDb.Tests.UnitTests.Dynamic
             ds.Int1 = kv["Int1"];
             ds.DateTime1 = kv["DateTime1"];
 
-            var descriptor = ((DynamicStructure) ds).TypeDescriptor;
+            var ds2 = (DynamicStructure) ds;
+            var descriptor = ds2.TypeDescriptor;
             var members = descriptor.OrderBy(m => m.Name).ToList();
             Assert.AreEqual("DateTime1", members[0].Name);
             Assert.AreEqual(typeof(DateTime), members[0].Type);
@@ -100,7 +101,7 @@ namespace SisoDb.Tests.UnitTests.Dynamic
         }
 
         [Test]
-        public void GetValues_AfterDynamicAssignment_ValuesCanBeRetrieved()
+        public void GetValues_AfterDynamicAssignment_TypedValuesCanBeRetrieved()
         {
             var kv = new Dictionary<string, object>
             {
@@ -129,7 +130,7 @@ namespace SisoDb.Tests.UnitTests.Dynamic
             var kvOut = ds.ToDictionary();
 
             Assert.IsFalse(kvIn.Equals(kvOut), "Should not be same reference!");
-            CollectionAssert.AreEqual(kvIn, kvOut);
+            CustomAssert.KeyValueEquality(kvIn, kvOut);
         }
 
         [Test]
@@ -137,14 +138,31 @@ namespace SisoDb.Tests.UnitTests.Dynamic
         {
             var kvIn = new Dictionary<string, object>
             {
-                {"Simple", "The simple string."}, {"Item", new Item{Int1 = 42}}
+                {"Simple", "The simple string."}, {"Item", new Item{Int1 = 42, Nested = new Item2{Int1 = 142}}}
             };
 
             var ds = new DynamicStructure(kvIn);
             var kvOut = ds.ToDictionary();
 
             Assert.IsFalse(kvIn.Equals(kvOut), "Should not be same reference!");
-            CollectionAssert.AreEqual(kvIn, kvOut);
+            CustomAssert.KeyValueEquality(kvIn, kvOut);
+        }
+
+        [Test]
+        public void ToDictionary_AfterInjectedKeyValuesWithComplexAndManualUpate_InputDictionaryElementsEqualsOutputDictionaryElements()
+        {
+            var kvIn = new Dictionary<string, object>
+            {
+                {"Simple", "The simple string."}, {"Item", new Item{Int1 = 42}}
+            };
+
+            dynamic ds = new DynamicStructure(kvIn);
+            ds.Item.Int1 = 33;
+            
+            var kvOut = ds.ToDictionary();
+
+            Assert.IsFalse(kvIn.Equals(kvOut), "Should not be same reference!");
+            CustomAssert.KeyValueEquality(kvIn, kvOut);
         }
 
         [Test]
@@ -161,19 +179,7 @@ namespace SisoDb.Tests.UnitTests.Dynamic
             var kvOut = ds.ToDictionary();
 
             Assert.IsFalse(kvIn.Equals(kvOut), "Should not be same reference!");
-            CollectionAssert.AreEqual(kvIn, kvOut);
-        }
-
-        [Test]
-        public void SerializeWithServiceStackJsonSerializer_WhenConvertedToDictionary_JsonIsCorrect()
-        {
-            dynamic ds = new DynamicStructure();
-            ds.Name = "Daniel";
-
-            var kv = (Dictionary<string, dynamic>) ds;
-            var json = new ServiceStackJsonSerializer().ToJsonOrEmptyString(kv);
-
-            Assert.AreEqual("{\"Name\":\"Daniel\"}", json);
+            CustomAssert.KeyValueEquality(kvIn, kvOut);
         }
 
         private class Item
@@ -183,6 +189,13 @@ namespace SisoDb.Tests.UnitTests.Dynamic
             public int Int1 { get; set; }
 
             public DateTime DateTime1 { get; set; }
+
+            public Item2 Nested { get; set; }
+        }
+
+        private class Item2
+        {
+            public int Int1 { get; set; }
         }
     }
 }

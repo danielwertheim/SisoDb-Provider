@@ -5,6 +5,7 @@ using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.MemberAccessors;
 using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
@@ -30,7 +31,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var schema = builder.CreateSchema();
 
-            var hasSecondLevelAccessors = schema.IndexAccessors.Any(iac => iac.Level == 1);
+            var hasSecondLevelAccessors = schema.IndexAccessors.Any(iac => HasLevel(iac, 1));
             Assert.IsTrue(hasSecondLevelAccessors);
         }
 
@@ -41,7 +42,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var schema = builder.CreateSchema();
 
-            var secondLevelItems = schema.IndexAccessors.Where(iac => iac.Level == 1);
+            var secondLevelItems = schema.IndexAccessors.Where(iac => HasLevel(iac, 1));
             CustomAssert.ForAll(secondLevelItems, iac => iac.Path.StartsWith("SecondLevelItem."));
         }
 
@@ -52,7 +53,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var schema = builder.CreateSchema();
 
-            var hasThirdLevelAccessors = schema.IndexAccessors.Any(iac => iac.Level == 2);
+            var hasThirdLevelAccessors = schema.IndexAccessors.Any(iac => HasLevel(iac, 2));
             Assert.IsTrue(hasThirdLevelAccessors);
         }
 
@@ -63,7 +64,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var schema = builder.CreateSchema();
 
-            var thirdLevelItems = schema.IndexAccessors.Where(iac => iac.Level == 2);
+            var thirdLevelItems = schema.IndexAccessors.Where(iac => HasLevel(iac, 2));
             CustomAssert.ForAll(thirdLevelItems, iac => iac.Path.StartsWith("SecondLevelItem.ThirdLevelItem."));
         }
 
@@ -178,6 +179,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             Assert.AreEqual(
                 ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers.Inject("WithBytes"),
                 ex.Message);
+        }
+
+        private static bool HasLevel(IIndexAccessor iac, int level)
+        {
+            var count = iac.Path.Count(ch => ch == '.');
+
+            return count == level;
         }
 
         private class WithNoId

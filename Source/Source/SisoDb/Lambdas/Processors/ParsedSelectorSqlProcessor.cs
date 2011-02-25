@@ -8,11 +8,13 @@ namespace SisoDb.Lambdas.Processors
 {
     public class ParsedSelectorSqlProcessor : IParsedLambdaProcessor<ISqlSelector>
     {
-        private readonly IMemberNameGenerator _memberNameGenerator;
+        private static readonly INameStrategy NameStrategy = new NameStrategy();
+
+        public IMemberNameGenerator MemberNameGenerator { private get; set; }
 
         public ParsedSelectorSqlProcessor(IMemberNameGenerator memberNameGenerator)
         {
-            _memberNameGenerator = memberNameGenerator;
+            MemberNameGenerator = memberNameGenerator;
         }
 
         public ISqlSelector Process(IParsedLambda lambda)
@@ -25,7 +27,8 @@ namespace SisoDb.Lambdas.Processors
                 if (node is MemberNode)
                 {
                     var memNode = (MemberNode)node;
-                    sql.AppendFormat("si.[{0}]", _memberNameGenerator.Generate(memNode.Path));
+                    var memPath = NameStrategy.Apply(memNode.Path);
+                    sql.AppendFormat("si.[{0}]", MemberNameGenerator.Generate(memPath));
                 }
                 else if (node is OperatorNode)
                 {

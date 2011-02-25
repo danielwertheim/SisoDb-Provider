@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 using SisoDb.Providers.SqlProvider.BulkInserts;
 using SisoDb.Providers.SqlProvider.DbSchema;
@@ -24,20 +25,23 @@ namespace SisoDb.Providers.SqlProvider
         private readonly ISqlQueryGenerator _queryGenerator;
         private readonly IBatchDeserializer _batchDeserializer;
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly ICommandBuilderFactory _commandBuilderFactory;
 
         protected internal SqlUnitOfWork(
             ISqlDbClient dbClient, IIdentityGenerator identityGenerator,
             IDbSchemaManager dbSchemaManager,
             IStructureSchemas structureSchemas, IStructureBuilder structureBuilder,
-            IJsonSerializer jsonSerializer, ISqlQueryGenerator queryGenerator)
+            IJsonSerializer jsonSerializer, ISqlQueryGenerator queryGenerator,
+            ICommandBuilderFactory commandBuilderFactory)
         {
-            _dbClient = dbClient;
-            _identityGenerator = identityGenerator;
-            _dbSchemaManager = dbSchemaManager;
-            _structureSchemas = structureSchemas;
-            _structureBuilder = structureBuilder;
-            _jsonSerializer = jsonSerializer;
-            _queryGenerator = queryGenerator;
+            _dbClient = dbClient.AssertNotNull("dbClient");
+            _identityGenerator = identityGenerator.AssertNotNull("identityGenerator");
+            _dbSchemaManager = dbSchemaManager.AssertNotNull("dbSchemaManager");
+            _structureSchemas = structureSchemas.AssertNotNull("structureSchemas");
+            _structureBuilder = structureBuilder.AssertNotNull("structureBuilder");
+            _jsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
+            _queryGenerator = queryGenerator.AssertNotNull("queryGenerator");
+            _commandBuilderFactory = commandBuilderFactory.AssertNotNull("commandBuilderFactory");
 
             //TODO: To use or not to use?!? Cuts's time but increases memoryconsumption.
             _batchDeserializer = new ParallelJsonBatchDeserializer(_jsonSerializer);
@@ -103,16 +107,19 @@ namespace SisoDb.Providers.SqlProvider
         public void Update<T>(T item) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema<T>();
+            UpsertStructureSet(structureSchema);
+
             var updatedStructure = _structureBuilder.CreateStructure(item, structureSchema);
 
             var existingItem = GetByIdAsJson<T>(updatedStructure.Id);
             if (string.IsNullOrWhiteSpace(existingItem))
                 throw new SisoDbException(
-                    ExceptionMessages.SqlUnitOfWork_NoItemExistsForUpdate.Inject(updatedStructure.TypeName, updatedStructure.Id));
+                    ExceptionMessages.SqlUnitOfWork_NoItemExistsForUpdate.Inject(updatedStructure.Name, updatedStructure.Id));
 
             DeleteById<T>(updatedStructure.Id);
 
-            Insert(item);
+            var bulkInserter = new SqlBulkInserter(_dbClient);
+            bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 
         public void DeleteById<T>(Guid id) where T : class
@@ -140,11 +147,12 @@ namespace SisoDb.Providers.SqlProvider
         public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
             expression.AssertNotNull("expression");
-            
+
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
-            var queryCommand = new QueryCommand<T>().Where(expression);
+            var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
+            var queryCommand = commandBuilder.Where(expression).Command;
             var sql = _queryGenerator.GenerateWhere(queryCommand, structureSchema);
             _dbClient.DeleteByQuery(sql,
                 structureSchema.IdAccessor.DataType,
@@ -171,17 +179,23 @@ namespace SisoDb.Providers.SqlProvider
             return GetById<T, T>(StructureId.NewIdentityId(id));
         }
 
-        public TOut GetByIdAs<TContract, TOut>(Guid id) where TContract : class where TOut : class 
+        public TOut GetByIdAs<TContract, TOut>(Guid id)
+            where TContract : class
+            where TOut : class
         {
             return GetById<TContract, TOut>(StructureId.NewGuidId(id));
         }
 
-        public TOut GetByIdAs<TContract, TOut>(int id) where TContract : class where TOut : class
+        public TOut GetByIdAs<TContract, TOut>(int id)
+            where TContract : class
+            where TOut : class
         {
             return GetById<TContract, TOut>(StructureId.NewIdentityId(id));
         }
 
-        private TOut GetById<TContract, TOut>(IStructureId structureId) where TContract : class where TOut : class
+        private TOut GetById<TContract, TOut>(IStructureId structureId)
+            where TContract : class
+            where TOut : class
         {
             var json = GetByIdAsJson<TContract>(structureId);
 
@@ -208,48 +222,56 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<T> GetAll<T>() where T : class
         {
-            var command = new GetCommand<T>();
+            var command = new GetCommand();
 
-            return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>(command));
+            return _batchDeserializer.Deserialize<T>(
+                GetAllAsJson<T>(command));
         }
 
-        public IEnumerable<T> GetAll<T>(Action<IGetCommand<T>> commandInitializer) where T : class
+        public IEnumerable<T> GetAll<T>(Action<IGetCommandBuilder<T>> commandInitializer) where T : class
         {
-            var command = new GetCommand<T>();
-            commandInitializer(command);
+            var commandBuilder = _commandBuilderFactory.CreateGetCommandBuilder<T>();
+            commandInitializer(commandBuilder);
 
-            return _batchDeserializer.Deserialize<T>(GetAllAsJson<T>(command));
+            return _batchDeserializer.Deserialize<T>(
+                GetAllAsJson<T>(commandBuilder.Command));
         }
 
-        public IEnumerable<TOut> GetAllAs<TContract, TOut>() where TContract : class where TOut : class
+        public IEnumerable<TOut> GetAllAs<TContract, TOut>()
+            where TContract : class
+            where TOut : class
         {
-            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<TContract>());
+            return _batchDeserializer.Deserialize<TOut>(
+                GetAllAsJson<TContract>());
         }
 
-        public IEnumerable<TOut> GetAllAs<TContract, TOut>(Action<IGetCommand<TContract>> commandInitializer) where TContract : class where TOut : class
+        public IEnumerable<TOut> GetAllAs<TContract, TOut>(Action<IGetCommandBuilder<TContract>> commandInitializer)
+            where TContract : class
+            where TOut : class
         {
-            var command = new GetCommand<TContract>();
-            commandInitializer(command);
+            var commandBuilder = _commandBuilderFactory.CreateGetCommandBuilder<TContract>();
+            commandInitializer(commandBuilder);
 
-            return _batchDeserializer.Deserialize<TOut>(GetAllAsJson<TContract>(command));
+            return _batchDeserializer.Deserialize<TOut>(
+                GetAllAsJson<TContract>(commandBuilder.Command));
         }
 
         public IEnumerable<string> GetAllAsJson<T>() where T : class
         {
-            var command = new GetCommand<T>();
+            var commandBuilder = _commandBuilderFactory.CreateGetCommandBuilder<T>();
 
-            return GetAllAsJson<T>(command);
+            return GetAllAsJson<T>(commandBuilder.Command);
         }
 
-        public IEnumerable<string> GetAllAsJson<T>(Action<IGetCommand<T>> commandInitializer) where T : class
+        public IEnumerable<string> GetAllAsJson<T>(Action<IGetCommandBuilder<T>> commandInitializer) where T : class
         {
-            var command = new GetCommand<T>();
-            commandInitializer(command);
+            var commandBuilder = _commandBuilderFactory.CreateGetCommandBuilder<T>();
+            commandInitializer(commandBuilder);
 
-            return GetAllAsJson<T>(command);
+            return GetAllAsJson<T>(commandBuilder.Command);
         }
 
-        private IEnumerable<string> GetAllAsJson<T>(IGetCommand<T> getCommand) where T : class
+        private IEnumerable<string> GetAllAsJson<T>(IGetCommand getCommand) where T : class
         {
             getCommand.AssertNotNull("getCommand");
 
@@ -257,9 +279,9 @@ namespace SisoDb.Providers.SqlProvider
             UpsertStructureSet(structureSchema);
 
             string sql;
-            if(getCommand.HasSortings)
+            if (getCommand.HasSortings || getCommand.HasIncludes)
             {
-                var queryCommand = getCommand.HasSortings ? new QueryCommand<T>(getCommand.Sortings) : new QueryCommand<T>();
+                var queryCommand = new QueryCommand(getCommand.Includes) { Sortings = getCommand.Sortings };
                 var query = _queryGenerator.Generate(queryCommand, structureSchema);
                 sql = query.Value;
             }
@@ -272,7 +294,7 @@ namespace SisoDb.Providers.SqlProvider
                 {
                     while (reader.Read())
                     {
-                        yield return reader.GetString(0);
+                        yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
                     }
                 }
             }
@@ -280,12 +302,16 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<T> NamedQuery<T>(INamedQuery query) where T : class
         {
-            return _batchDeserializer.Deserialize<T>(NamedQueryAsJson<T>(query));
+            return _batchDeserializer.Deserialize<T>(
+                NamedQueryAsJson<T>(query));
         }
 
-        public IEnumerable<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class 
+        public IEnumerable<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query)
+            where TContract : class
+            where TOut : class
         {
-            return _batchDeserializer.Deserialize<TOut>(NamedQueryAsJson<TContract>(query));
+            return _batchDeserializer.Deserialize<TOut>(
+                NamedQueryAsJson<TContract>(query));
         }
 
         public IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
@@ -299,60 +325,41 @@ namespace SisoDb.Providers.SqlProvider
                 {
                     while (reader.Read())
                     {
-                        yield return reader.GetString(0);
+                        yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
                     }
                 }
             }
         }
 
-        public IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression) where T : class
+        public IEnumerable<T> Query<T>(Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
         {
-            var command = new QueryCommand<T>().Where(expression);
+            var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
+            commandInitializer(commandBuilder);
 
-            return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
+            return _batchDeserializer.Deserialize<T>(
+                QueryAsJson<T>(commandBuilder.Command));
         }
 
-        public IEnumerable<TOut> WhereAs<TContract, TOut>(Expression<Func<TContract, bool>> expression)
+        public IEnumerable<TOut> QueryAs<TContract, TOut>(Action<IQueryCommandBuilder<TContract>> commandInitializer)
             where TContract : class
             where TOut : class
         {
-            var command = new QueryCommand<TContract>().Where(expression);
+            var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<TContract>();
+            commandInitializer(commandBuilder);
 
-            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<TContract>(command));
+            return _batchDeserializer.Deserialize<TOut>(
+                QueryAsJson<TContract>(commandBuilder.Command));
         }
 
-        public IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) where T : class
+        public IEnumerable<string> QueryAsJson<T>(Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
         {
-            var command = new QueryCommand<T>().Where(expression);
+            var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
+            commandInitializer(commandBuilder);
 
-            return QueryAsJson<T>(command);
+            return QueryAsJson<T>(commandBuilder.Command);
         }
 
-        public IEnumerable<T> Query<T>(Action<IQueryCommand<T>> commandInitializer) where T : class
-        {
-            var command = new QueryCommand<T>();
-            commandInitializer(command);
-
-            return _batchDeserializer.Deserialize<T>(QueryAsJson<T>(command));
-        }
-        
-        public IEnumerable<TOut> QueryAs<TContract, TOut>(Action<IQueryCommand<TContract>> commandInitializer) where TContract : class where TOut : class
-        {
-            var command = new QueryCommand<TContract>();
-            commandInitializer(command);
-
-            return _batchDeserializer.Deserialize<TOut>(QueryAsJson<TContract>(command));
-        }
-
-        public IEnumerable<string> QueryAsJson<T>(Action<IQueryCommand<T>> commandInitializer) where T : class
-        {
-            var command = new QueryCommand<T>();
-            commandInitializer(command);
-
-            return QueryAsJson<T>(command);
-        }
-
-        private IEnumerable<string> QueryAsJson<T>(IQueryCommand<T> queryCommand) where T : class
+        private IEnumerable<string> QueryAsJson<T>(IQueryCommand queryCommand) where T : class
         {
             queryCommand.AssertNotNull("queryCommand");
 
@@ -368,10 +375,35 @@ namespace SisoDb.Providers.SqlProvider
                 {
                     while (reader.Read())
                     {
-                        yield return reader.GetString(0);
+                        yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
                     }
                 }
             }
+        }
+
+        private static string GetMergedJsonStructure(IDataRecord dataRecord)
+        {
+            var sb = new StringBuilder();
+            sb.Append(dataRecord.GetString(0));
+            sb.Remove(sb.Length - 1, 1);
+            sb.Append(",");
+
+            foreach (var childJson in ReadChildJson(dataRecord))
+                sb.Append(childJson);
+
+            sb.Append("}");
+
+            return sb.ToString();
+        }
+
+        private static IEnumerable<string> ReadChildJson(IDataRecord dataRecord)
+        {
+            var lastIndex = dataRecord.FieldCount - 1;
+            for (var c = 1; c <= lastIndex; c++)
+                yield return string.Format("\"{0}\":{1}{2}",
+                    dataRecord.GetName(c),
+                    dataRecord.GetString(c),
+                    (c < lastIndex) ? "," : "");
         }
 
         private void UpsertStructureSet(IStructureSchema structureSchema)

@@ -2,6 +2,7 @@
 using System.Linq;
 using SisoDb;
 using SisoDb.Querying;
+using SisoDb.Serialization;
 using SisoDbLab.Model;
 
 namespace SisoDbLab
@@ -28,6 +29,8 @@ namespace SisoDbLab
 
             //ShowSchemaInfo<IPhoto>(db);
             //DemoInterface(db);
+
+            //DemoIncludes(db);
 
             //Console.ReadKey();
         }
@@ -87,11 +90,15 @@ namespace SisoDbLab
                 uow.Insert(image);
                 uow.Commit();
 
-                var fetched = uow.Where<Image>(i => i.Name == "Penguins.jpg").Single();
+                var fetched = uow.Query<Image>(
+                    q => q.Where(i => i.Name == "Penguins.jpg")).Single();
+                
                 Console.Out.WriteLine("fetched.Name = {0}", fetched.Name);
                 Console.Out.WriteLine("fetched.Buff.Length = {0}", fetched.Buff.Length);
 
-                var fetchedByTags = uow.Where<Image>(i => i.Tags.QxAny(t => t == "ice")).Single();
+                var fetchedByTags = uow.Query<Image>(
+                    q => q.Where(i => i.Tags.QxAny(t => t == "ice"))).Single();
+                
                 Console.Out.WriteLine("fetchedByTags.Name = {0}", fetchedByTags.Name);
                 Console.Out.WriteLine("fetchedByTags.Buff.Length = {0}", fetchedByTags.Buff.Length);
             }
@@ -173,6 +180,44 @@ namespace SisoDbLab
                 unitOfWork.Insert(order);
                 unitOfWork.Commit();
             }
+        }
+
+        private static void DemoIncludes(ISisoDatabase db)
+        {
+            var genre = new Genre {Name = "Rock"};
+            var artist = new Artist {Name = "Bruce"};
+            var album = new Album {Name = "Born to run", Genre = genre, Artist = artist};
+
+            using(var uow = db.CreateUnitOfWork())
+            {
+                uow.Insert(genre);
+                uow.Insert(artist);
+                uow.Insert<IAlbumData>(album);
+                uow.Commit();
+
+                album = uow.GetByIdAs<IAlbumData, Album>(album.Id);
+                DumpAlbum("Without include", album);
+
+                album = uow.QueryAs<IAlbumData, Album>(q => q
+                    .Include<Genre>(a => a.GenreId)
+                    .Include<Artist>(a => a.ArtistId)).Single();
+
+                DumpAlbum("With include", album);
+            }
+        }
+
+        private static void DumpAlbum(string title, Album album)
+        {
+            Console.WriteLine(title);
+            Console.Out.WriteLine("album.Id = {0}", album.Id);
+            Console.Out.WriteLine("album.Name = {0}", album.Name);
+            
+            Console.Out.WriteLine("album.GenreId = {0}", album.GenreId);
+            Console.Out.WriteLine("album.Genre.Name = {0}", album.Genre.Name ?? "<null>");
+
+            Console.Out.WriteLine("album.ArtistId = {0}", album.ArtistId);
+            Console.Out.WriteLine("album.Artist.Name = {0}", album.Artist.Name ?? "<null>");
+            Console.WriteLine();
         }
     }
 }

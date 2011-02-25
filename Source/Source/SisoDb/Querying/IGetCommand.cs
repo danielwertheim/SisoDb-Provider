@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using SisoDb.Lambdas;
 
 namespace SisoDb.Querying
 {
-    public interface IGetCommand<T> where T : class
+    public interface IGetCommand
     {
-        IEnumerable<LambdaExpression> Sortings { get; }
+        IParsedLambda Sortings { get; set; }
+
+        IList<IParsedLambda> Includes { get; }
 
         bool HasSortings { get; }
 
-        IGetCommand<T> SortBy(params Expression<Func<T, object>>[] sortings);
+        bool HasIncludes { get; }
     }
 }

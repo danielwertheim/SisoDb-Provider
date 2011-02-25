@@ -65,9 +65,11 @@ namespace SisoDb.Providers.SqlProvider
             _transaction = _connection.BeginTransaction();
         }
 
-        public SqlBulkCopy GetBulkCopy()
+        public SqlBulkCopy GetBulkCopy(bool keepIdentities)
         {
-            return new SqlBulkCopy(_connection, SqlBulkCopyOptions.Default, _transaction);
+            SqlBulkCopyOptions options = keepIdentities ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
+
+            return new SqlBulkCopy(_connection, options, _transaction);
         }
 
         public void CreateDatabase(string name)

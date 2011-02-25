@@ -1,22 +1,23 @@
+using System;
+
 namespace SisoDb.Lambdas.Nodes
 {
+    [Serializable]
     public class SortingNode : INode
     {
-        private static readonly NameStrategy NameStrategy = new NameStrategy();
-
-        public string Name { get; private set; }
+        public string MemberPath { get; private set; }
 
         public SortDirections Direction { get; private set; }
 
-        public SortingNode(string name, SortDirections direction = SortDirections.Asc)
+        public SortingNode(string memberPath, SortDirections direction = SortDirections.Asc)
         {
-            Name = NameStrategy.Apply(name.AssertNotNull("name"));
+            MemberPath = memberPath.AssertNotNull("memberPath");
             Direction = direction;
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", Name, Direction);
+            return string.Format("{0} {1}", MemberPath, Direction);
         }
     }
 }

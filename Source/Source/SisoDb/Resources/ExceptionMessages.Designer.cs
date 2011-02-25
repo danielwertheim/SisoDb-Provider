@@ -271,18 +271,18 @@ namespace SisoDb.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The Sortings has allready been initialized..
         /// </summary>
-        internal static string QueryCommand_SortingsAllreadyInitialized {
+        internal static string QueryCommandBuilder_SortingsAllreadyInitialized {
             get {
-                return ResourceManager.GetString("QueryCommand_SortingsAllreadyInitialized", resourceCulture);
+                return ResourceManager.GetString("QueryCommandBuilder_SortingsAllreadyInitialized", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The Where expression has allready been initialized..
         /// </summary>
-        internal static string QueryCommand_WhereAllreadyInitialized {
+        internal static string QueryCommandBuilder_WhereAllreadyInitialized {
             get {
-                return ResourceManager.GetString("QueryCommand_WhereAllreadyInitialized", resourceCulture);
+                return ResourceManager.GetString("QueryCommandBuilder_WhereAllreadyInitialized", resourceCulture);
             }
         }
         

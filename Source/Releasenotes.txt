@@ -1,7 +1,19 @@
+From v0.8.0.0 the following is used for versioning:
+vA.B.C.D
+A=Will see when I get there
+B=When major changes of API and especially changes breaking backward compatibility.
+C=New features
+D=Fixes
+
+v0.8.0.0	- 2011-02-24
+[Fixed]:	IMPORTANT! Identities where not being preserved when issuing an update.
+[Removed]:	IMPORTANT! The UnitOfWork Where methods has been removed. You will have to use the Query API instead. E.g uow.Where<T>(expression) now becomes uow.Query<T>(q => q.Where(expression))
+[New]:		You can now Include firstlevel single child structures in the same resultset from the database so that you don't have to do multiple queries/roundtrips. You can do this via the GetAll and Query methods using the command builder's IncludeMethod. NamedQueries works to. Return several fields with Json, where the first one should be named "Json". After that, alias should be the name of the property in the root structure.
+
 v0.7.1.1	- 2011-02-19
 [New]:		Lambda expressions for querying now supports nullable types.
 
-v0.7.1		- 2011-02-18
+v0.7.1.0	- 2011-02-18
 [Update]:   The UnitOfWork.Query, QueryAs, QueryAsJson methods, taking an ordinary expression is now called Where, WhereAs, WhereAsJson, since the Query overload taking an IQueryCommand got blured/tangled with the one taking an expression.
 [Update]:   SisoDatabase has been replaced with SisoDbFactory.CreateDatabase
 

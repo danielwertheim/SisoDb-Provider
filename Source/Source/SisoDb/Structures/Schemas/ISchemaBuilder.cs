@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Structures.Schemas
 {
-    public interface ISchemaBuilder<T> where T : class 
+    public interface ISchemaBuilder
     {
         IStructureSchema CreateSchema();
     }

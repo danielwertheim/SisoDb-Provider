@@ -18,7 +18,7 @@ namespace SisoDb.Profiling
             //var db = new SisoDbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 1000, 5);
+            //ProfilingInserts(db, 10000, 5);
 
             //InsertCustomers(1, 100000, db);
             //ProfilingQueries(db, GetAllCustomers);

@@ -58,21 +58,9 @@ namespace SisoDb.Structures.Schemas
 
         public string Name { get; private set; }
 
-        public string FullName { get; private set; }
-
         public TypeInfo(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException("type");
-
-            _type = type;
-
-            var typeFullName = (_type.FullName ?? "")
-                .Replace("+", ".")
-                .Replace("-", ".");
-
-            FullName = typeFullName;
-
+            _type = type.AssertNotNull("type");
             Name = _type.Name;
         }
 

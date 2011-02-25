@@ -1,7 +1,7 @@
 using System.Data.SqlClient;
-using SisoDb.Lambdas;
 using SisoDb.Lambdas.Processors;
 using SisoDb.Providers.SqlProvider.DbSchema;
+using SisoDb.Querying;
 using SisoDb.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
@@ -10,6 +10,8 @@ namespace SisoDb.Providers.SqlProvider
 {
     public class SqlDatabase : ISqlDatabase
     {
+        private readonly IProviderFactory _providerFactory;
+
         public string Name { get; private set; }
 
         public ISisoConnectionInfo ServerConnectionInfo { get; private set; }
@@ -31,6 +33,8 @@ namespace SisoDb.Providers.SqlProvider
                     .Inject(connectionInfo.ProviderType, StorageProviders.Sql2008));
 
             InitializeConnectionInfo(connectionInfo);
+
+            _providerFactory = SisoDbEnvironment.GetProviderFactory(ConnectionInfo.ProviderType);
 
             StructureSchemas = new StructureSchemas();
             DbSchemaManager = new SqlDbSchemaManager(ConnectionInfo);
@@ -115,17 +119,20 @@ namespace SisoDb.Providers.SqlProvider
 
         public IUnitOfWork CreateUnitOfWork()
         {
-            var queryGenerator = new SqlQueryGenerator(
-                new SelectorParser(), new SortingParser(),
-                new ParsedSelectorSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
-                new ParsedSortingSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
-
             var dbClient = new SqlDbClient(ConnectionInfo, true);
+
+            var queryGenerator = new SqlQueryGenerator(
+                new ParsedSelectorSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
+                new ParsedSortingSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
+                new ParsedIncludeSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
+
+            var commandBuilderFactory = new CommandBuilderFactory();
             
             var unitOfWork = new SqlUnitOfWork(
                 dbClient, IdentityGenerator, DbSchemaManager, 
                 StructureSchemas, StructureBuilder, 
-                SisoDbEnvironment.JsonSerializer, queryGenerator);
+                SisoDbEnvironment.JsonSerializer, queryGenerator,
+                commandBuilderFactory);
 
             return unitOfWork;
         }

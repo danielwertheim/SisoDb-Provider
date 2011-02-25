@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Expressions;
-using SisoDb.Resources;
+using SisoDb.Lambdas;
 
 namespace SisoDb.Querying
 {
-    public class QueryCommand<T> : IQueryCommand<T> where T : class
+    [Serializable]
+    public class QueryCommand : IQueryCommand
     {
-        private ReadOnlyCollection<LambdaExpression> _sortings;
+        public IParsedLambda Selector { get; set; }
 
-        public Expression<Func<T, bool>> Selector { get; private set; }
+        public IParsedLambda Sortings { get; set; }
 
-        public IEnumerable<LambdaExpression> Sortings
-        {
-            get { return _sortings; }
-        }
+        public IList<IParsedLambda> Includes { get; private set; }
 
         public bool HasSelector
         {
@@ -25,36 +20,17 @@ namespace SisoDb.Querying
 
         public bool HasSortings
         {
-            get { return _sortings != null && _sortings.Count > 0; }
+            get { return Sortings != null && Sortings.Nodes.Count > 0; }
         }
 
-        public QueryCommand()
+        public bool HasIncludes
         {
+            get { return Includes != null && Includes.Count > 0; }
         }
 
-        public QueryCommand(IEnumerable<LambdaExpression> sortings)
+        public QueryCommand(IEnumerable<IParsedLambda> includes = null)
         {
-            _sortings = new ReadOnlyCollection<LambdaExpression>(sortings.AssertNotNull("sortings").ToArray());
-        }
-
-        public IQueryCommand<T> Where(Expression<Func<T, bool>> selector)
-        {
-            if(Selector != null)
-                throw new SisoDbException(ExceptionMessages.QueryCommand_WhereAllreadyInitialized);
-
-            Selector = selector.AssertNotNull("selector");
-
-            return this;
-        }
-
-        public IQueryCommand<T> SortBy(params Expression<Func<T, dynamic>>[] sortings)
-        {
-            if (Sortings != null)
-                throw new SisoDbException(ExceptionMessages.QueryCommand_SortingsAllreadyInitialized);
-
-            _sortings = new ReadOnlyCollection<LambdaExpression>(sortings.AssertNotNull("sortings").Cast<LambdaExpression>().ToArray());
-
-            return this;
+            Includes = includes == null ? new List<IParsedLambda>() : new List<IParsedLambda>(includes);
         }
     }
 }

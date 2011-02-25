@@ -81,8 +81,35 @@ namespace SisoDb.TestUtils
             AreValueEqual(typeof(T), expected, actual);
         }
 
+        public static void KeyValueEquality(IDictionary<string, object> expected, IDictionary<string, object > actual)
+        {
+            foreach (var expectedKV in expected)
+            {
+                var expectedKey = expectedKV.Key;
+                Assert.IsTrue(actual.ContainsKey(expectedKey), "Expected key '{0}' is missing.".Inject(expectedKey));
+
+                var actualValue = actual[expectedKey];
+                AreValueEqual(expectedKV.Value.GetType(), expectedKV.Value, actualValue);
+            }
+        }
+
         private static void AreValueEqual(Type type, object a, object b)
         {
+            if(ReferenceEquals(a, b))
+                return;
+
+            if(a == null && b == null)
+                return;
+
+            if(type == typeof(object))
+                throw new Exception("You need to specify type to do the value equality comparision.");
+
+            if (type.IsSimpleType())
+            {
+                Assert.AreEqual(a, b);
+                return;
+            }
+
             foreach (var propertyInfo in type.GetProperties())
             {
                 var propertyType = propertyInfo.PropertyType;

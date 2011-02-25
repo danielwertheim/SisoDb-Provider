@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SisoDb.Serialization;
 using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
@@ -14,6 +13,16 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         {
             DropStructureSet<IdentityItemForGetQueries>();
             DropStructureSet<GuidItemForGetQueries>();
+        }
+
+        [Test]
+        public void GetAll_WhenNoStructuresExists_ReturnsNull()
+        {
+            using(var unitOfWork = Database.CreateUnitOfWork())
+            {
+                var result = unitOfWork.GetAll<IdentityItemForGetQueries>();
+                Assert.AreEqual(0, result.Count());
+            }
         }
 
         [Test]

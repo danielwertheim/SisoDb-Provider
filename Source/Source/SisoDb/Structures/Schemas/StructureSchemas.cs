@@ -11,19 +11,6 @@ namespace SisoDb.Structures.Schemas
             _schemas = new Dictionary<string, IStructureSchema>();
         }
 
-        public void Register<T>() where T : class
-        {
-            var builder = new AutoSchemaBuilder<T>();
-            var schema = builder.CreateSchema();
-
-            Add(schema);
-        }
-
-        private void Add(IStructureSchema structureSchema)
-        {
-            _schemas.Add(structureSchema.Name, structureSchema);
-        }
-
         public IStructureSchema GetSchema<T>() where T : class
         {
             var key = TypeInfo<T>.Name;
@@ -32,6 +19,13 @@ namespace SisoDb.Structures.Schemas
                 Register<T>();
 
             return _schemas[TypeInfo<T>.Name];
+        }
+
+        private void Register<T>() where T : class
+        {
+            var schema = new AutoSchemaBuilder<T>().CreateSchema();
+
+            _schemas.Add(schema.Name, schema);
         }
     }
 }

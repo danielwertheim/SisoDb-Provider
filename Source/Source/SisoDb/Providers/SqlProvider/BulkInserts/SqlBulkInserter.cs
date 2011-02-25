@@ -43,7 +43,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
 
         private void InsertStructures(StructuresReader structures)
         {
-            using (var bulkInserter = _dbClient.GetBulkCopy())
+            using (var bulkInserter = _dbClient.GetBulkCopy(true))
             {
                 bulkInserter.BatchSize = structures.RecordsAffected;
                 bulkInserter.DestinationTableName = structures.StorageSchema.Name;
@@ -59,7 +59,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
 
         private void InsertIndexes(IndexesReader indexes)
         {
-            using (var bulkInserter = _dbClient.GetBulkCopy())
+            using (var bulkInserter = _dbClient.GetBulkCopy(false))
             {
                 bulkInserter.BatchSize = indexes.RecordsAffected;
                 bulkInserter.DestinationTableName = indexes.StorageSchema.Name;
@@ -75,7 +75,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
 
         private void InsertUniques(UniquesReader uniques)
         {
-            using (var bulkInserter = _dbClient.GetBulkCopy())
+            using (var bulkInserter = _dbClient.GetBulkCopy(false))
             {
                 bulkInserter.BatchSize = uniques.RecordsAffected;
                 bulkInserter.DestinationTableName = uniques.StorageSchema.Name;

@@ -5,7 +5,7 @@ using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Structures.Schemas
 {
-    public class AutoSchemaBuilder<T> : ISchemaBuilder<T>
+    public class AutoSchemaBuilder<T> : ISchemaBuilder
         where T : class
     {
         private const string IdName = "Id";

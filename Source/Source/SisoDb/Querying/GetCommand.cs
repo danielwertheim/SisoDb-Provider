@@ -1,34 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Expressions;
-using SisoDb.Resources;
+using SisoDb.Lambdas;
 
 namespace SisoDb.Querying
 {
-    public class GetCommand<T> : IGetCommand<T> where T : class
+    [Serializable]
+    public class GetCommand : IGetCommand
     {
-        private ReadOnlyCollection<LambdaExpression> _sortings;
+        public IParsedLambda Sortings { get; set; }
 
-        public IEnumerable<LambdaExpression> Sortings
-        {
-            get { return _sortings; }
-        }
+        public IList<IParsedLambda> Includes { get; private set; }
 
         public bool HasSortings
         {
-            get { return _sortings != null && _sortings.Count > 0; }
+            get { return Sortings != null && Sortings.Nodes.Count > 0; }
         }
 
-        public IGetCommand<T> SortBy(params Expression<Func<T, object>>[] sortings)
+        public bool HasIncludes
         {
-            if (Sortings != null)
-                throw new SisoDbException(ExceptionMessages.GetCommand_SortingsAllreadyInitialized);
+            get { return Includes != null && Includes.Count > 0; }
+        }
 
-            _sortings = new ReadOnlyCollection<LambdaExpression>(sortings.AssertNotNull("sortings").Cast<LambdaExpression>().ToArray());
-
-            return this;
+        public GetCommand()
+        {
+            Includes = new List<IParsedLambda>();
         }
     }
 }

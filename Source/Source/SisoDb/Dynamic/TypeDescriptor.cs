@@ -14,7 +14,12 @@ namespace SisoDb.Dynamic
             _state = new Dictionary<string, TypeMember>();
         }
 
-        public void Set(string name, Type type)
+        public TypeMember Get(string name)
+        {
+            return _state.ContainsKey(name) ? _state[name] : null;
+        }
+
+        public void Add(string name, Type type)
         {
             _state[name] = new TypeMember(name, type);
         }

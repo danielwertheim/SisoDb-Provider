@@ -20,12 +20,6 @@ namespace SisoDb.Structures
             StringConverter = stringConverter.AssertNotNull("stringConverter");
         }
 
-        public IList<IStructure> CreateStructures<T>(IEnumerable<T> items, IStructureSchema structureSchema)
-            where T : class
-        {
-            return items.Select(item => CreateStructure(item, structureSchema)).ToList();
-        }
-
         public IStructure CreateStructure<T>(T item, IStructureSchema structureSchema)
             where T : class
         {
@@ -52,6 +46,7 @@ namespace SisoDb.Structures
             }
             else
                 throw new SisoDbException(ExceptionMessages.StructureBuilder_UnSupportedIdentityType.Inject(structureSchema.IdAccessor.IdType));
+
             return id;
         }
 

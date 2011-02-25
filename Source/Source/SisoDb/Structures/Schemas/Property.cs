@@ -36,12 +36,7 @@ namespace SisoDb.Structures.Schemas
 
         public bool IsSimpleType { get; private set; }
 
-        public bool IsUnique
-        {
-            get { return UniqueMode.HasValue; }
-        }
-
-        public UniqueModes? UniqueMode { get; private set; }
+        public bool IsUnique { get; private set; }
 
         public bool IsEnumerable { get; private set; }
 
@@ -70,7 +65,7 @@ namespace SisoDb.Structures.Schemas
             if (uniqueAttribute != null && !IsSimpleType)
                 throw new SisoDbException(ExceptionMessages.Property_Ctor_UniqueOnNonSimpleType);
 
-            UniqueMode = uniqueAttribute == null ? (UniqueModes?)null : uniqueAttribute.Mode;
+            IsUnique = uniqueAttribute == null ? false : true;
 
             Path = PropertyPathBuilder.BuildPath(this);
 

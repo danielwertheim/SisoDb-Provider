@@ -14,11 +14,20 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         private const string ProcedureName = "NamedQueryTest";
         private IList<ItemForNamedQueries> _items;
 
-        protected override void OnTestInitialize()
+        protected override void OnFixtureInitialize()
         {
             CreateStoredProcedure();
+        }
 
+        protected override void OnFixtureFinalize()
+        {
+            DeleteProcedure();
+        }
+
+        protected override void OnTestInitialize()
+        {
             _items = new List<ItemForNamedQueries>();
+
             for (var c = 0; c < 10; c++)
                 _items.Add(new ItemForNamedQueries {SortOrder = c + 1});
 
@@ -32,7 +41,6 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         protected override void OnTestFinalize()
         {
             DropStructureSet<ItemForNamedQueries>();
-            DeleteProcedure();
         }
 
         private void CreateStoredProcedure()

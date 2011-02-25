@@ -9,7 +9,7 @@ namespace SisoDb
     {
         private static readonly Dictionary<StorageProviders, IProviderFactory> ProviderFactories;
 
-        public static readonly SisoDbFormatting Formatting;
+        public static readonly ISisoDbFormatting Formatting;
         public static readonly IHashService HashService;
         public static readonly IMemberNameGenerator MemberNameGenerator;
         public static readonly IJsonSerializer JsonSerializer;
@@ -20,7 +20,6 @@ namespace SisoDb
             HashService = new HashService();
             MemberNameGenerator = new HashMemberNameGenerator(HashService);
             
-            //JsonSerializer = new NewtonsoftJsonSerializer(); //TODO: Experimental
             JsonSerializer = new ServiceStackJsonSerializer();
             
             ProviderFactories = new Dictionary<StorageProviders, IProviderFactory>();

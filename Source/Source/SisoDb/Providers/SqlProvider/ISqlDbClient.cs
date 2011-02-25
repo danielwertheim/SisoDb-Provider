@@ -14,7 +14,7 @@ namespace SisoDb.Providers.SqlProvider
         StorageProviders ProviderType { get; }
         ISqlStrings SqlStrings { get; }
         void Flush();
-        SqlBulkCopy GetBulkCopy();
+        SqlBulkCopy GetBulkCopy(bool keepIdentities);
         void CreateDatabase(string name);
         void CreateSysTables(string name);
         void DropDatabase(string name);

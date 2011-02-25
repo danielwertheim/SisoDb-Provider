@@ -12,7 +12,7 @@ namespace SisoDb.Structures
 
         //public byte[] Version { get; private set; }
 
-        public string TypeName { get; private set; }
+        public string Name { get; private set; }
 
         public string Json { get; private set; }
 
@@ -34,7 +34,7 @@ namespace SisoDb.Structures
             if (id == null)
                 throw new ArgumentNullException("id");
 
-            TypeName = typeName;
+            Name = typeName;
             Id = id;
             Json = json;
 
@@ -51,7 +51,7 @@ namespace SisoDb.Structures
                     var uniqueValue = SisoDbEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.Value);
                     throw new SisoDbException(
                         ExceptionMessages.Structure_DuplicateUniques.Inject(
-                            TypeName,
+                            Name,
                             idValue,
                             firstUniqueNotBeingUnique.Name,
                             (string)uniqueValue));
@@ -68,14 +68,14 @@ namespace SisoDb.Structures
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.Id, Id) && Equals(other.TypeName, TypeName);
+            return Equals(other.Id, Id) && Equals(other.Name, Name);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (TypeName != null ? TypeName.GetHashCode() : 0);
+                return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
             }
         }
     }

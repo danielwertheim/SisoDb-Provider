@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using SisoDb.Lambdas;
 
 namespace SisoDb.Querying
 {
-    public interface IQueryCommand<T> where T : class
+    public interface IQueryCommand
     {
-        Expression<Func<T, bool>> Selector { get; }
+        IParsedLambda Selector { get; set; }
 
-        IEnumerable<LambdaExpression> Sortings { get; }
+        IParsedLambda Sortings { get; set; }
+
+        IList<IParsedLambda> Includes { get; }
 
         bool HasSelector { get; }
 
         bool HasSortings { get; }
-        
-        IQueryCommand<T> Where(Expression<Func<T, bool>> selector);
 
-        IQueryCommand<T> SortBy(params Expression<Func<T, dynamic>>[] sortings);
+        bool HasIncludes { get; }
     }
 }
