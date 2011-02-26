@@ -57,6 +57,9 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\Libs\Moq-bin\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.8.10295, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\NUnit-bin\nunit.framework.dll</HintPath>
@@ -81,11 +84,12 @@
     <Compile Include="LocalConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\SqlProvider\DbHelper.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropperTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserterTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbIndexesSchemaSynchronizerTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlDbClientTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlDatabaseTests.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaManagerTests.cs" />
+    <Compile Include="Providers\Shared\DbSchemaManagerTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlIntegrationTestBase.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfworkDeleteTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkBaseClassInsertTests.cs" />

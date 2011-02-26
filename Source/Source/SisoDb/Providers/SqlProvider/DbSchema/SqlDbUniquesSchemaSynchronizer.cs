@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
@@ -9,15 +11,15 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     /// Delete records that represents an unique for a column that
     /// has been dropped in the key-value table for Uniques.
     /// </summary>
-    public class SqlDbUniquesSchemaSynchronizer : ISqlDbSchemaSynchronizer
+    public class SqlDbUniquesSchemaSynchronizer : IDbSchemaSynchronizer
     {
         private readonly ISqlDbClient _dbClient;
-        private readonly ISqlStrings _sqlStrings;
+        private readonly ISqlStringsRepository _sqlStringsRepository;
 
         public SqlDbUniquesSchemaSynchronizer(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
-            _sqlStrings = dbClient.SqlStrings;
+            _sqlStringsRepository = dbClient.SqlStringsRepository;
         }
 
         public void Synchronize(IStructureSchema structureSchema)
@@ -31,7 +33,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
         private void DeleteRecordsMatchingKeyNames(IStructureSchema structureSchema, IEnumerable<string> names)
         {
             var inString = string.Join(",", names.Select(n => "'" + n + "'"));
-            var sql = _sqlStrings.GetSql("UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
+            var sql = _sqlStringsRepository.GetSql("UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
                 .Inject(structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.Name.Name, inString);
 
             _dbClient.ExecuteNonQuery(CommandType.Text, sql);
@@ -50,7 +52,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             var dbColumns = new List<string>();
 
             _dbClient.ExecuteSingleResultReader(CommandType.Text,
-                                                _sqlStrings.GetSql("UniquesSchemaSynchronizer_GetKeyNames")
+                                                _sqlStringsRepository.GetSql("UniquesSchemaSynchronizer_GetKeyNames")
                                                 .Inject(
                                                     UniqueStorageSchema.Fields.Name.Name, structureSchema.GetUniquesTableName()),
                                                     dr => dbColumns.Add(dr.GetString(0)));

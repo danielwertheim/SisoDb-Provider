@@ -247,4 +247,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="LambdaParser_VisitUnary_InvalidConvert" xml:space="preserve">
     <value>Conversion of values in expression is only allowed for nullable valuetypes.</value>
   </data>
+  <data name="SqlDbClient_Flus_NonTransactional" xml:space="preserve">
+    <value>You can not flush a non transational DbClient.</value>
+  </data>
 </root>

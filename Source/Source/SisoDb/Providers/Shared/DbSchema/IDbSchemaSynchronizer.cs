@@ -1,8 +1,8 @@
 ﻿using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.SqlProvider.DbSchema
+namespace SisoDb.Providers.Shared.DbSchema
 {
-    public interface ISqlDbSchemaSynchronizer
+    public interface IDbSchemaSynchronizer
     {
         void Synchronize(IStructureSchema structureSchema);
     }

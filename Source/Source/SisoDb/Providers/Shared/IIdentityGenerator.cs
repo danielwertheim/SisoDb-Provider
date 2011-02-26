@@ -1,6 +1,6 @@
 ﻿using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.SqlProvider
+namespace SisoDb.Providers.Shared
 {
     public interface IIdentityGenerator
     {

@@ -13,6 +13,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         private string _structureSetPrefix;
         private string _structureTableName;
         private string _indexesTableName;
+        private string _uniquesTableName;
         private ISqlDatabase _sqlDb;
 
         protected override void OnFixtureInitialize()
@@ -23,6 +24,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
             _structureSetPrefix = typeof(Class_12E6E3A7_482C_4E1A_88BE_393D29253203).Name;
             _structureTableName = _structureSetPrefix + "Structure";
             _indexesTableName = _structureSetPrefix + "Indexes";
+            _uniquesTableName = _structureSetPrefix + "Uniques";
 
             _sqlDb = new SqlDatabase(Database.ConnectionInfo);
         }
@@ -52,9 +54,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
             var structureTableExists = DbHelper.TableExists(_structureTableName);
             var indexesTableExists = DbHelper.TableExists(_indexesTableName);
+            var uniquesTableExists = DbHelper.TableExists(_uniquesTableName);
 
             Assert.IsTrue(structureTableExists);
             Assert.IsTrue(indexesTableExists);
+            Assert.IsTrue(uniquesTableExists);
         }
 
         [Test]

@@ -1,22 +1,20 @@
-﻿using SisoDb.Structures.Schemas;
+﻿using SisoDb.Providers.Shared;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider
 {
     public class SqlIdentityGenerator : IIdentityGenerator
     {
-        private readonly ISisoConnectionInfo _connectionInfo;
+        private readonly ISqlDbClient _dbClient;
 
-        public SqlIdentityGenerator(ISisoConnectionInfo connectionInfo)
+        public SqlIdentityGenerator(ISqlDbClient dbClient)
         {
-            _connectionInfo = connectionInfo;
+            _dbClient = dbClient.AssertNotNull("dbClient");
         }
 
         public int CheckOutAndGetSeed(IStructureSchema structureSchema, int numOfIds)
         {
-            using(var dbClient = new SqlDbClient(_connectionInfo, false))
-            {
-                return dbClient.GetIdentity(structureSchema.Hash, numOfIds);    
-            }
+            return _dbClient.GetIdentity(structureSchema.Hash, numOfIds);
         }
     }
 }

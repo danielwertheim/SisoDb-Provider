@@ -1,8 +1,8 @@
 ﻿using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.SqlProvider.DbSchema
+namespace SisoDb.Providers.Shared.DbSchema
 {
-    public interface ISqlDbSchemaBuilder
+    public interface IDbSchemaBuilder
     {
         string GenerateSql(IStructureSchema structureSchema);
     }

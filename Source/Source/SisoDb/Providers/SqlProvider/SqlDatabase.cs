@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
 using SisoDb.Lambdas.Processors;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Resources;
@@ -10,7 +11,7 @@ namespace SisoDb.Providers.SqlProvider
 {
     public class SqlDatabase : ISqlDatabase
     {
-        private readonly IProviderFactory _providerFactory;
+        //private readonly IProviderFactory _providerFactory;
 
         public string Name { get; private set; }
 
@@ -19,8 +20,6 @@ namespace SisoDb.Providers.SqlProvider
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
 
         public IDbSchemaManager DbSchemaManager { get; set; }
-
-        public IIdentityGenerator IdentityGenerator { get; set; }
 
         public IStructureSchemas StructureSchemas { get; set; }
 
@@ -34,11 +33,10 @@ namespace SisoDb.Providers.SqlProvider
 
             InitializeConnectionInfo(connectionInfo);
 
-            _providerFactory = SisoDbEnvironment.GetProviderFactory(ConnectionInfo.ProviderType);
+            //_providerFactory = SisoDbEnvironment.GetProviderFactory(ConnectionInfo.ProviderType);
 
             StructureSchemas = new StructureSchemas();
-            DbSchemaManager = new SqlDbSchemaManager(ConnectionInfo);
-            IdentityGenerator = new SqlIdentityGenerator(ConnectionInfo);
+            DbSchemaManager = new DbSchemaManager();
             StructureBuilder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.Formatting.StringConverter);
         }
 
@@ -107,19 +105,28 @@ namespace SisoDb.Providers.SqlProvider
 
         public void DropStructureSet<T>() where T : class
         {
-            var structureSchema = StructureSchemas.GetSchema<T>();
-            DbSchemaManager.DropStructureSet(structureSchema);
+            using (var client = new SqlDbClient(ConnectionInfo, false))
+            {
+                var dropper = new SqlDbSchemaDropper(client);
+                var structureSchema = StructureSchemas.GetSchema<T>();
+                DbSchemaManager.DropStructureSet(structureSchema, dropper);
+            }
         }
 
         public void UpsertStructureSet<T>() where T : class
         {
-            var structureSchema = StructureSchemas.GetSchema<T>();
-            DbSchemaManager.UpsertStructureSet(structureSchema);
+            using (var client = new SqlDbClient(ConnectionInfo, false))
+            {
+                var upserter = new SqlDbSchemaUpserter(client);
+                var structureSchema = StructureSchemas.GetSchema<T>();
+                DbSchemaManager.UpsertStructureSet(structureSchema, upserter);
+            }
         }
 
         public IUnitOfWork CreateUnitOfWork()
         {
             var dbClient = new SqlDbClient(ConnectionInfo, true);
+            var dbClientNonTrans = new SqlDbClient(ConnectionInfo, false);
 
             var queryGenerator = new SqlQueryGenerator(
                 new ParsedSelectorSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
@@ -127,9 +134,12 @@ namespace SisoDb.Providers.SqlProvider
                 new ParsedIncludeSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
 
             var commandBuilderFactory = new CommandBuilderFactory();
-            
+            var dbSchemaUpserter = new SqlDbSchemaUpserter(dbClientNonTrans);
+            var identityGenerator = new SqlIdentityGenerator(dbClientNonTrans);
+
             var unitOfWork = new SqlUnitOfWork(
-                dbClient, IdentityGenerator, DbSchemaManager, 
+                dbClient, dbClientNonTrans, identityGenerator, 
+                DbSchemaManager, dbSchemaUpserter,
                 StructureSchemas, StructureBuilder, 
                 SisoDbEnvironment.JsonSerializer, queryGenerator,
                 commandBuilderFactory);

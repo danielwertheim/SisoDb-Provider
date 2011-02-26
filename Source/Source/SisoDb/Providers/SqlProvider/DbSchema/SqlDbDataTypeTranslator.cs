@@ -1,11 +1,12 @@
 ﻿using System;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    public class SqlDbDataTypeTranslator : ISqlDbDataTypeTranslator
+    public class SqlDbDataTypeTranslator : IDbDataTypeTranslator
     {
         public string ToDbType(IIndexAccessor indexAccessor)
         {

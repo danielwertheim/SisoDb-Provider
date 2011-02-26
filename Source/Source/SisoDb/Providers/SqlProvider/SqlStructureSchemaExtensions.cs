@@ -2,7 +2,7 @@
 
 namespace SisoDb.Providers.SqlProvider
 {
-    public static class StructureSchemaExtensions
+    public static class SqlStructureSchemaExtensions
     {
         public static string GetStructureTableName(this IStructureSchema structureSchema)
         {

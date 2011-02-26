@@ -5,6 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using SisoDb.Providers.Shared;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Providers.SqlProvider.BulkInserts;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Querying;
@@ -15,11 +17,14 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider
 {
-    public class SqlUnitOfWork : IUnitOfWork
+    public class 
+        SqlUnitOfWork : IUnitOfWork
     {
         private readonly ISqlDbClient _dbClient;
+        private readonly ISqlDbClient _dbClientNonTransactional;
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IDbSchemaManager _dbSchemaManager;
+        private readonly IDbSchemaUpserter _dbSchemaUpserter;
         private readonly IStructureSchemas _structureSchemas;
         private readonly IStructureBuilder _structureBuilder;
         private readonly ISqlQueryGenerator _queryGenerator;
@@ -28,15 +33,18 @@ namespace SisoDb.Providers.SqlProvider
         private readonly ICommandBuilderFactory _commandBuilderFactory;
 
         protected internal SqlUnitOfWork(
-            ISqlDbClient dbClient, IIdentityGenerator identityGenerator,
-            IDbSchemaManager dbSchemaManager,
+            ISqlDbClient dbClient, ISqlDbClient dbClientNonTransactional,
+            IIdentityGenerator identityGenerator,
+            IDbSchemaManager dbSchemaManager, IDbSchemaUpserter dbSchemaUpserter,
             IStructureSchemas structureSchemas, IStructureBuilder structureBuilder,
             IJsonSerializer jsonSerializer, ISqlQueryGenerator queryGenerator,
             ICommandBuilderFactory commandBuilderFactory)
         {
             _dbClient = dbClient.AssertNotNull("dbClient");
+            _dbClientNonTransactional = dbClientNonTransactional.AssertNotNull("dbClientNonTransactional");
             _identityGenerator = identityGenerator.AssertNotNull("identityGenerator");
             _dbSchemaManager = dbSchemaManager.AssertNotNull("dbSchemaManager");
+            _dbSchemaUpserter = dbSchemaUpserter.AssertNotNull("dbSchemaUpserter");
             _structureSchemas = structureSchemas.AssertNotNull("structureSchemas");
             _structureBuilder = structureBuilder.AssertNotNull("structureBuilder");
             _jsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
@@ -51,6 +59,7 @@ namespace SisoDb.Providers.SqlProvider
         public void Dispose()
         {
             _dbClient.Dispose();
+            _dbClientNonTransactional.Dispose();
         }
 
         public void Commit()
@@ -286,7 +295,7 @@ namespace SisoDb.Providers.SqlProvider
                 sql = query.Value;
             }
             else
-                sql = _dbClient.SqlStrings.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
+                sql = _dbClient.SqlStringsRepository.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
             {
@@ -408,7 +417,7 @@ namespace SisoDb.Providers.SqlProvider
 
         private void UpsertStructureSet(IStructureSchema structureSchema)
         {
-            _dbSchemaManager.UpsertStructureSet(structureSchema);
+            _dbSchemaManager.UpsertStructureSet(structureSchema, _dbSchemaUpserter);
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System.Data;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    public class SqlDbSchemaUpserter
+    public class SqlDbSchemaUpserter : IDbSchemaUpserter
     {
         private readonly SqlDbStructuresSchemaBuilder _structuresDbSchemaBuilder;
         private readonly SqlDbIndexesSchemaBuilder _indexesDbSchemaBuilder;
@@ -21,9 +22,9 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             var columnGenerator =
                 SisoDbEnvironment.GetProviderFactory(dbClient.ProviderType).GetDbColumnGenerator();
 
-            _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(_dbClient.SqlStrings);
-            _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStrings, columnGenerator);
-            _uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(_dbClient.SqlStrings);
+            _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(_dbClient.SqlStringsRepository);
+            _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStringsRepository, columnGenerator);
+            _uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(_dbClient.SqlStringsRepository);
 
             _indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(_dbClient, columnGenerator);
             _uniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(_dbClient);
@@ -34,7 +35,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             var structuresTableName = structureSchema.GetStructureTableName();
             var indexesTableName = structureSchema.GetIndexesTableName();
             var uniquesTableName = structureSchema.GetUniquesTableName();
-            
+
             var structuresTableExists = _dbClient.TableExists(structuresTableName);
             var indexesTableExists = _dbClient.TableExists(indexesTableName);
             var uniquesTableExists = _dbClient.TableExists(uniquesTableName);

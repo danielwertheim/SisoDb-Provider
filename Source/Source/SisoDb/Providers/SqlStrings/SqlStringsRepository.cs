@@ -1,21 +1,20 @@
 using System;
 using System.Resources;
-using SisoDb.Providers.SqlProvider;
 
-namespace SisoDb.Providers.Sql
+namespace SisoDb.Providers.SqlStrings
 {
-    public class SqlStrings : ISqlStrings
+    public class SqlStringsRepository : ISqlStringsRepository
     {
-        private static readonly Type ThisType = typeof (SqlStrings);
+        private static readonly Type ThisType = typeof (SqlStringsRepository);
         private static readonly ResourceManager Sql2008Strings;
         private static readonly ResourceManager AzureStrings;
 
         private readonly ResourceManager _primary;
         private readonly ResourceManager _secondary;
 
-        static SqlStrings()
+        static SqlStringsRepository()
         {
-            var prefix = ThisType.FullName + ".";
+            var prefix = ThisType.Namespace + ".SqlStrings.";
             var sql2008Resx = prefix + "2008";
             var sqlAzureResx = prefix + "Azure";    
 
@@ -23,7 +22,7 @@ namespace SisoDb.Providers.Sql
             AzureStrings = new ResourceManager(sqlAzureResx, ThisType.Assembly);
         }
 
-        public SqlStrings(StorageProviders storageProvider)
+        public SqlStringsRepository(StorageProviders storageProvider)
         {
             //switch (storageProvider)
             //{

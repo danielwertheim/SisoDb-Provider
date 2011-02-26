@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using SisoDb.Providers.Sql;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
+using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
+using SisoDb.Resources;
 
 namespace SisoDb.Providers.SqlProvider
 {
@@ -17,23 +19,28 @@ namespace SisoDb.Providers.SqlProvider
         private SqlConnection _connection;
         private SqlTransaction _transaction;
 
-        public ISqlDbDataTypeTranslator DbDataTypeTranslator { get; set; }
+        public IDbDataTypeTranslator DbDataTypeTranslator { get; set; }
 
         public string DbName 
         {
             get { return _connection.Database; }
         }
 
-        public StorageProviders ProviderType { get; private set; }
+        public ISisoConnectionInfo ConnectionInfo { get; private set; }
 
-        public ISqlStrings SqlStrings { get; private set; }
+        public StorageProviders ProviderType 
+        {
+            get { return ConnectionInfo.ProviderType; }
+        }
+
+        public ISqlStringsRepository SqlStringsRepository { get; private set; }
 
         public SqlDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
-            ProviderType = connectionInfo.ProviderType;
-            SqlStrings = new SqlStrings(ProviderType);
+            ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
+            SqlStringsRepository = new SqlStringsRepository(ProviderType);
             DbDataTypeTranslator = new SqlDbDataTypeTranslator();
-            _connection = new SqlConnection(connectionInfo.ConnectionString.PlainString);
+            _connection = new SqlConnection(ConnectionInfo.ConnectionString.PlainString);
             _connection.Open();
 
             _transaction = transactional ?
@@ -60,6 +67,9 @@ namespace SisoDb.Providers.SqlProvider
 
         public void Flush()
         {
+            if(_transaction == null)
+                throw new NotSupportedException(ExceptionMessages.SqlDbClient_Flus_NonTransactional);
+
             _transaction.Commit();
             _transaction.Dispose();
             _transaction = _connection.BeginTransaction();
@@ -74,7 +84,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public void CreateDatabase(string name)
         {
-            var sql = SqlStrings.GetSql("CreateDatabase").Inject(name);
+            var sql = SqlStringsRepository.GetSql("CreateDatabase").Inject(name);
 
             using (var cmd = CreateCommand(CommandType.Text, sql))
             {
@@ -94,20 +104,20 @@ namespace SisoDb.Providers.SqlProvider
 
         private void ExecuteCreateSysTables(string name, IDbCommand cmd)
         {
-            cmd.CommandText = SqlStrings.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
+            cmd.CommandText = SqlStringsRepository.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
             cmd.ExecuteNonQuery();
         }
 
         public void DropDatabase(string name)
         {
-            var sql = SqlStrings.GetSql("DropDatabase").Inject(name);
+            var sql = SqlStringsRepository.GetSql("DropDatabase").Inject(name);
 
             ExecuteNonQuery(CommandType.Text, sql);
         }
 
         public bool DatabaseExists(string name)
         {
-            var sql = SqlStrings.GetSql("DatabaseExists");
+            var sql = SqlStringsRepository.GetSql("DatabaseExists");
 
             var value = ExecuteScalar<int>(CommandType.Text, sql, new QueryParameter("dbName", name));
 
@@ -116,7 +126,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public bool TableExists(string name)
         {
-            var sql = SqlStrings.GetSql("TableExists");
+            var sql = SqlStringsRepository.GetSql("TableExists");
             var value = ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("tableName", name));
 
             return !string.IsNullOrWhiteSpace(value);
@@ -127,7 +137,7 @@ namespace SisoDb.Providers.SqlProvider
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
             var dbColumns = new List<SqlDbColumn>();
 
-            var sql = SqlStrings.GetSql("GetColumns");
+            var sql = SqlStringsRepository.GetSql("GetColumns");
 
             ExecuteSingleResultReader(CommandType.Text, sql,
                 dr =>
@@ -143,14 +153,14 @@ namespace SisoDb.Providers.SqlProvider
 
         public int RowCount(string tableName)
         {
-            var sql = SqlStrings.GetSql("RowCount").Inject(tableName);
+            var sql = SqlStringsRepository.GetSql("RowCount").Inject(tableName);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
         public int GetIdentity(string entityHash, int numOfIds)
         {
-            var sql = SqlStrings.GetSql("Sys_Identities_Get");
+            var sql = SqlStringsRepository.GetSql("Sys_Identities_Get");
 
             return ExecuteScalar<int>(CommandType.Text, sql,
                                                 new QueryParameter("entityHash", entityHash),
@@ -163,7 +173,7 @@ namespace SisoDb.Providers.SqlProvider
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
-            var sql = SqlStrings.GetSql("DeleteById").Inject(
+            var sql = SqlStringsRepository.GetSql("DeleteById").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
             ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("id", structureId));
@@ -175,14 +185,14 @@ namespace SisoDb.Providers.SqlProvider
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
             var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
-            var sql = SqlStrings.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Value, sqlDataType);
+            var sql = SqlStringsRepository.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Value, sqlDataType);
 
             ExecuteNonQuery(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
 
         public string GetJsonById(ValueType structureId, string structureTableName)
         {
-            var sql = SqlStrings.GetSql("GetById").Inject(structureTableName);
+            var sql = SqlStringsRepository.GetSql("GetById").Inject(structureTableName);
 
             return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", structureId));
         }

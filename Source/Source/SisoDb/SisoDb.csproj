@@ -91,6 +91,10 @@
     <Compile Include="Lambdas\IParsedLambda.cs" />
     <Compile Include="Lambdas\Parsers\ISortingParser.cs" />
     <Compile Include="Lambdas\Processors\INameStrategy.cs" />
+    <Compile Include="Providers\Shared\DbSchema\IDbSchemaDropper.cs" />
+    <Compile Include="Providers\Shared\DbSchema\IDbSchemaUpserter.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropper.cs" />
+    <Compile Include="Providers\SqlProvider\SqlStructureSetProcessor.cs" />
     <Compile Include="Querying\CommandBuilderFactory.cs" />
     <Compile Include="Querying\GetCommandBuilder.cs" />
     <Compile Include="Querying\ICommandBuilderFactory.cs" />
@@ -135,7 +139,7 @@
     <Compile Include="Lambdas\Processors\IParsedLambdaProcessor.cs" />
     <Compile Include="Lambdas\Nodes\SortDirections.cs" />
     <Compile Include="Lambdas\Parsers\SortingParser.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbDataTypeTranslator.cs" />
+    <Compile Include="Providers\Shared\DbSchema\IDbDataTypeTranslator.cs" />
     <Compile Include="Providers\SqlProvider\ISqlDbClient.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
@@ -157,8 +161,8 @@
     <Compile Include="Providers\SqlProvider\BulkInserts\UniquesReader.cs" />
     <Compile Include="Providers\AzureProvider\DbSchema\AzureDbColumnGenerator.cs" />
     <Compile Include="Providers\Shared\DbSchema\IDbColumnGenerator.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbSchemaBuilder.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\ISqlDbSchemaSynchronizer.cs" />
+    <Compile Include="Providers\Shared\DbSchema\IDbSchemaBuilder.cs" />
+    <Compile Include="Providers\Shared\DbSchema\IDbSchemaSynchronizer.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbColumn.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\IndexStorageSchema.cs" />
     <Compile Include="Providers\SqlProvider\BulkInserts\SingleResultReaderBase.cs" />
@@ -175,17 +179,17 @@
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserter.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\UniqueStorageSchema.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\IDbSchemaManager.cs" />
+    <Compile Include="Providers\Shared\DbSchema\IDbSchemaManager.cs" />
     <Compile Include="Lambdas\Expressions.cs" />
-    <Compile Include="Providers\SqlProvider\IIdentityGenerator.cs" />
+    <Compile Include="Providers\Shared\IIdentityGenerator.cs" />
     <Compile Include="Providers\SqlProvider\ISqlDatabase.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SchemaChanges.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SchemaChange.cs" />
     <Compile Include="Providers\SqlProvider\ISqlQueryGenerator.cs" />
-    <Compile Include="Providers\SqlProvider\ISqlStrings.cs" />
+    <Compile Include="Providers\SqlStrings\ISqlStringsRepository.cs" />
     <Compile Include="Providers\SqlProvider\SqlQueryGenerator.cs" />
     <Compile Include="Providers\SqlProvider\SqlIdentityGenerator.cs" />
-    <Compile Include="Providers\Sql\SqlStrings.cs" />
+    <Compile Include="Providers\SqlStrings\SqlStringsRepository.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
     <Compile Include="Querying\SortingExtensions.cs" />
     <Compile Include="Querying\SqlCommandInfo.cs" />
@@ -203,8 +207,8 @@
     <Compile Include="Reflections\TypeExtensions.cs" />
     <Compile Include="Providers\SqlProvider\BulkInserts\SqlBulkInserter.cs" />
     <Compile Include="Providers\SqlProvider\SqlDbClient.cs" />
-    <Compile Include="Providers\SqlProvider\StructureSchemaExtensions.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaManager.cs" />
+    <Compile Include="Providers\SqlProvider\SqlStructureSchemaExtensions.cs" />
+    <Compile Include="Providers\Shared\DbSchema\DbSchemaManager.cs" />
     <Compile Include="Querying\QueryParameter.cs" />
     <Compile Include="Providers\SqlProvider\SqlDatabase.cs" />
     <Compile Include="Querying\SqlSelector.cs" />
@@ -250,14 +254,14 @@
     <Compile Include="ValidationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Providers\Sql\SqlStrings.2008.resx">
+    <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.2008.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Providers\Sql\SqlStrings.Azure.resx" />
+    <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.Azure.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\Libs\ServiceStack.Text-bin\License-ServiceStack.txt">

@@ -1,17 +1,19 @@
 ﻿using System;
+using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Providers.SqlStrings;
 using SisoDb.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider.DbSchema
 {
-    public class SqlDbStructuresSchemaBuilder : ISqlDbSchemaBuilder
+    public class SqlDbStructuresSchemaBuilder : IDbSchemaBuilder
     {
-        private readonly ISqlStrings _sqlStrings;
+        private readonly ISqlStringsRepository _sqlStringsRepository;
 
-        public SqlDbStructuresSchemaBuilder(ISqlStrings sqlStrings)
+        public SqlDbStructuresSchemaBuilder(ISqlStringsRepository sqlStringsRepository)
         {
-            _sqlStrings = sqlStrings;
+            _sqlStringsRepository = sqlStringsRepository;
         }
 
         public string GenerateSql(IStructureSchema structureSchema)
@@ -23,8 +25,8 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
             var tableName = structureSchema.GetStructureTableName();
             var sql = structureSchema.IdAccessor.IdType == IdTypes.Guid
-                          ? _sqlStrings.GetSql("CreateStructuresGuid")
-                          : _sqlStrings.GetSql("CreateStructuresIdentity");
+                          ? _sqlStringsRepository.GetSql("CreateStructuresGuid")
+                          : _sqlStringsRepository.GetSql("CreateStructuresIdentity");
 
             return sql.Inject(tableName);
         }

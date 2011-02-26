@@ -78,8 +78,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
         private void CreateStructureSet()
         {
-            var manager = new SqlDbSchemaManager(_sqlDb.ConnectionInfo);
-            manager.UpsertStructureSet(_structureSchema);
+            using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
+            {
+                var upserter = new SqlDbSchemaUpserter(dbClient);
+                upserter.Upsert(_structureSchema);
+            }
         }
     }
 }

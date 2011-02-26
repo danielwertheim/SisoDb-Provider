@@ -2,17 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
+using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 
 namespace SisoDb.Providers.SqlProvider
 {
     public interface ISqlDbClient : IDisposable
     {
-        ISqlDbDataTypeTranslator DbDataTypeTranslator { get; set; }
+        ISisoConnectionInfo ConnectionInfo { get; }
+        IDbDataTypeTranslator DbDataTypeTranslator { get; set; }
         string DbName { get; }
         StorageProviders ProviderType { get; }
-        ISqlStrings SqlStrings { get; }
+        ISqlStringsRepository SqlStringsRepository { get; }
         void Flush();
         SqlBulkCopy GetBulkCopy(bool keepIdentities);
         void CreateDatabase(string name);

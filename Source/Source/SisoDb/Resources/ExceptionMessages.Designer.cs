@@ -341,6 +341,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can not flush a non transational DbClient..
+        /// </summary>
+        internal static string SqlDbClient_Flus_NonTransactional {
+            get {
+                return ResourceManager.GetString("SqlDbClient_Flus_NonTransactional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Byte arrays are not supported for storage in the Indexes-table since they should not be queryable. Index name: &apos;{0}&apos;..
         /// </summary>
         internal static string SqlDbDataTypeTranslator_ByteArraysAreNotSupported {

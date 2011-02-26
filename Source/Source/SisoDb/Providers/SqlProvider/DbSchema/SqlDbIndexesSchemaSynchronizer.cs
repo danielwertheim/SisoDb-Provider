@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
@@ -11,17 +12,17 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     /// Adds missing columns and Drops obsolete columns; to Indexes-table.
     /// </summary>
     /// <remarks>The table must exist, otherwise an Exception is thrown!</remarks>
-    public class SqlDbIndexesSchemaSynchronizer : ISqlDbSchemaSynchronizer
+    public class SqlDbIndexesSchemaSynchronizer : IDbSchemaSynchronizer
     {
         private readonly ISqlDbClient _dbClient;
-        private readonly ISqlStrings _sqlStrings;
+        private readonly ISqlStringsRepository _sqlStringsRepository;
         private readonly IDbColumnGenerator _columnGenerator;
         private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
 
         public SqlDbIndexesSchemaSynchronizer(ISqlDbClient dbClient, IDbColumnGenerator columnGenerator)
         {
             _dbClient = dbClient.AssertNotNull("dbClient");
-            _sqlStrings = dbClient.SqlStrings;
+            _sqlStringsRepository = dbClient.SqlStringsRepository;
             _columnGenerator = columnGenerator.AssertNotNull("columnGenerator");
             _dataTypeTranslator = new SqlDbDataTypeTranslator();
         }
@@ -52,7 +53,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
             var columnsDdl = columns.Select(sc => _columnGenerator.ToSql(sc.Name, sc.DbDataType));
             var columnsDdlCombined = string.Join(",", columnsDdl);
-            var sql = _sqlStrings.GetSql("AddColumns")
+            var sql = _sqlStringsRepository.GetSql("AddColumns")
                 .Inject(tableName, columnsDdlCombined);
 
             _dbClient.ExecuteNonQuery(CommandType.Text, sql);
@@ -65,7 +66,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
             var columnNames = columns.Select(sc => "[" + sc.Name + "]");
             var namesCombined = string.Join(",", columnNames);
-            var sql = _sqlStrings.GetSql("DropColumns")
+            var sql = _sqlStringsRepository.GetSql("DropColumns")
                 .Inject(tableName, namesCombined);
 
             _dbClient.ExecuteNonQuery(CommandType.Text, sql);
