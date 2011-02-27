@@ -5,6 +5,13 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v0.8.3		- 2011-02-27
+[New]: Now uses Sequential GUIDs to boost performance.
+
+v0.8.2		- 2011-02-27
+[New]:		UnitOfWork now offers the simplified Where methods again.
+[Update]:	UpdateStructureSet - Better performance by deleting by id-range and not per id. [Update]: set nocount on.
+
 v0.8.1.0	- 2011-02-27
 [New]:		Database.UpdateStructureSet (uses SqlStructureSetUpdater under the hood), which lets you pass in oldmodeldefinition and a new modeldefinition and then you can map new propertynames etc. Changes are performed within a transaction.
 
