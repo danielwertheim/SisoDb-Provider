@@ -33,7 +33,7 @@ namespace SisoDb.Structures
 
             if (!keyIsAssigned)
             {
-                idValue = Guid.NewGuid();
+                idValue = SequentialGuid.NewSqlCompatibleGuid(); //Guid.NewGuid();
                 structureSchema.IdAccessor.SetValue(item, idValue.Value);
             }
 

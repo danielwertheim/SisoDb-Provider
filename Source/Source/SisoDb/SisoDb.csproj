@@ -95,6 +95,7 @@
     <Compile Include="Providers\Shared\DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropper.cs" />
     <Compile Include="Providers\SqlProvider\SqlStructureSetUpdater.cs" />
+    <Compile Include="SequentialGuid.cs" />
     <Compile Include="StructureSetUpdaterStatuses.cs" />
     <Compile Include="Querying\CommandBuilderFactory.cs" />
     <Compile Include="Querying\GetCommandBuilder.cs" />
