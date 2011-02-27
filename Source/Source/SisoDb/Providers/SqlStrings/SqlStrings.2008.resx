@@ -180,12 +180,14 @@ create unique clustered index [UQ_{1}] on [{1}] ([StructureId], [Name], [Value])
     <value>select DB_ID(@dbName);</value>
   </data>
   <data name="DeleteById" xml:space="preserve">
-    <value>delete from [dbo].[{0}] where Id = @id;
+    <value>set nocount on;
+delete from [dbo].[{0}] where Id = @id;
 delete from [dbo].[{1}] where StructureId = @id;
 delete from [dbo].[{2}] where StructureId = @id;</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
-    <value>declare @ids table (id {4});
+    <value>set nocount on;
+declare @ids table (id {4});
 
 insert into @ids (id)
 select si.StructureId from [dbo].[{0}] as si
@@ -194,6 +196,12 @@ where {3};
 delete from [dbo].[{0}] where StructureId in(select id from @ids);
 delete from [dbo].[{1}] where StructureId in(select id from @ids);
 delete from [dbo].[{2}] where Id in(select id from @ids);</value>
+  </data>
+  <data name="DeleteWhereIdIsBetween" xml:space="preserve">
+    <value>set nocount on;
+delete from [dbo].[{0}] where Id &gt;= @idFrom and Id &lt;= @idTo;
+delete from [dbo].[{1}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;
+delete from [dbo].[{2}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
   </data>
   <data name="DropColumns" xml:space="preserve">
     <value>alter table [dbo].[{0}]
@@ -209,13 +217,20 @@ if object_id(N'{2}', N'U') is not null drop table [dbo].[{2}];
 if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[SisoDbIdentities] where [EntityHash] = @entityHash;</value>
   </data>
   <data name="GetAll" xml:space="preserve">
-    <value>select json from [dbo].[{0}];</value>
+    <value>set nocount on;
+select json from [dbo].[{0}];</value>
+  </data>
+  <data name="GetAllById" xml:space="preserve">
+    <value>set nocount on;
+select json from [dbo].[{0}] order by [Id];</value>
   </data>
   <data name="GetById" xml:space="preserve">
-    <value>select json from [dbo].[{0}] where Id =@id;</value>
+    <value>set nocount on;
+select json from [dbo].[{0}] where Id =@id;</value>
   </data>
   <data name="GetColumns" xml:space="preserve">
-    <value>if (select OBJECT_ID(@tableName, 'U')) is not null
+    <value>set nocount on;
+if (select OBJECT_ID(@tableName, 'U')) is not null
 begin
 select
 COLUMN_NAME,
@@ -225,7 +240,8 @@ where TABLE_NAME = @tableName;
 end</value>
   </data>
   <data name="RowCount" xml:space="preserve">
-    <value>select count(*) from [dbo].[{0}];</value>
+    <value>set nocount on;
+select count(*) from [dbo].[{0}];</value>
   </data>
   <data name="Sys_Identities_CreateIfNotExists" xml:space="preserve">
     <value>if object_id(N'[{0}].[dbo].[SisoDbIdentities]', N'U') is null
@@ -240,17 +256,21 @@ begin
 end</value>
   </data>
   <data name="Sys_Identities_Get" xml:space="preserve">
-    <value>declare @id int;
+    <value>set nocount on;
+declare @id int;
 update [dbo].[SisoDbIdentities] set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityHash] = @entityHash;
 select @id as Id;</value>
   </data>
   <data name="TableExists" xml:space="preserve">
-    <value>select OBJECT_ID(@tableName, 'U');</value>
+    <value>set nocount on;
+select OBJECT_ID(@tableName, 'U');</value>
   </data>
   <data name="UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
-    <value>delete from [dbo].[{0}] where [{1}] in({2});</value>
+    <value>set nocount on;
+delete from [dbo].[{0}] where [{1}] in({2});</value>
   </data>
   <data name="UniquesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
-    <value>select distinct [{0}] from [dbo].[{1}];</value>
+    <value>set nocount on;
+select distinct [{0}] from [dbo].[{1}];</value>
   </data>
 </root>

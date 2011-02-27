@@ -20,10 +20,10 @@ namespace SisoDb.Profiling
 
             //ProfilingInserts(db, 1000, 5);
 
-            //InsertCustomers(1, 100000, db);
+            //InsertCustomers(1, 120000, db);
             //ProfilingQueries(db, GetAllCustomers);
             //ProfilingQueries(db, GetAllCustomersAsJson);
-            
+
             //ProfilingUpdateStructureSet(db);
 
             //Console.WriteLine("---- Done ----");

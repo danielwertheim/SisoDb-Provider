@@ -14,11 +14,8 @@ namespace SisoDb.Providers.SqlProvider
         where TNew : class
     {
         protected const int MaxKeepQueueSize = 500;
-        protected const int MaxTrashQueueSize = 10000;
 
         protected Queue<TNew> KeepQueue { get; private set; }
-
-        protected Queue<IStructureId> TrashQueue { get; private set; }
 
         protected IProperty IdPropertyOld { get; private set; }
 
@@ -42,7 +39,6 @@ namespace SisoDb.Providers.SqlProvider
             IdPropertyNew = TypeInfo<TNew>.GetIdProperty("Id");
 
             KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
-            TrashQueue = new Queue<IStructureId>(MaxTrashQueueSize);
         }
 
         public void Process(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
@@ -94,9 +90,6 @@ namespace SisoDb.Providers.SqlProvider
                         return false;
                 }
 
-                if (TrashQueue.Count == MaxTrashQueueSize)
-                    DequeueStructuresToTrash(dbClient);
-
                 if (KeepQueue.Count == MaxKeepQueueSize)
                 {
                     DequeueStructuresToTrash(dbClient);
@@ -114,7 +107,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             using (var dbClient = new SqlDbClient(ConnectionInfo, false))
             {
-                var sql = dbClient.SqlStringsRepository.GetSql("GetAll").Inject(StructureSchema.GetStructureTableName());
+                var sql = dbClient.SqlStringsRepository.GetSql("GetAllById").Inject(StructureSchema.GetStructureTableName());
                 using (var cmd = dbClient.CreateCommand(CommandType.Text, sql))
                 {
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
@@ -172,21 +165,26 @@ namespace SisoDb.Providers.SqlProvider
 
         protected virtual void OnTrash(IStructureId structureId)
         {
-            TrashQueue.Enqueue(structureId);
+            _deleteStructureIdFrom = _deleteStructureIdFrom ?? structureId;
+            _deleteStructureIdTo = structureId;
         }
+
+        private IStructureId _deleteStructureIdFrom;
+        private IStructureId _deleteStructureIdTo;
 
         protected virtual void DequeueStructuresToTrash(ISqlDbClient dbClient)
         {
-            while (TrashQueue.Count > 0)
-            {
-                var structureId = TrashQueue.Dequeue();
+            if (_deleteStructureIdFrom == null)
+                return;
+            
+            dbClient.DeleteWhereIdIsBetween(
+              _deleteStructureIdFrom.Value, _deleteStructureIdTo.Value,
+              StructureSchema.GetStructureTableName(),
+              StructureSchema.GetIndexesTableName(),
+              StructureSchema.GetUniquesTableName());
 
-                dbClient.DeleteById(
-                   structureId.Value,
-                   StructureSchema.GetStructureTableName(),
-                   StructureSchema.GetIndexesTableName(),
-                   StructureSchema.GetUniquesTableName());
-            }
+            _deleteStructureIdFrom = null;
+            _deleteStructureIdTo = null;
         }
     }
 }

@@ -190,6 +190,18 @@ namespace SisoDb.Providers.SqlProvider
             ExecuteNonQuery(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
 
+        public void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, string structureTableName, string indexesTableName, string uniquesTableName)
+        {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
+            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+
+            var sql = SqlStringsRepository.GetSql("DeleteWhereIdIsBetween").Inject(
+                structureTableName, indexesTableName, uniquesTableName);
+
+            ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("idFrom", structureIdFrom), new QueryParameter("idTo", structureIdTo));
+        }
+
         public string GetJsonById(ValueType structureId, string structureTableName)
         {
             var sql = SqlStringsRepository.GetSql("GetById").Inject(structureTableName);
