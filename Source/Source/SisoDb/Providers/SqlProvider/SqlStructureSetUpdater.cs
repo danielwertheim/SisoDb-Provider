@@ -15,7 +15,7 @@ namespace SisoDb.Providers.SqlProvider
     {
         protected const int MaxKeepQueueSize = 500;
         protected const int MaxTrashQueueSize = 10000;
-        
+
         protected Queue<TNew> KeepQueue { get; private set; }
 
         protected Queue<IStructureId> TrashQueue { get; private set; }
@@ -31,7 +31,7 @@ namespace SisoDb.Providers.SqlProvider
         protected IStructureBuilder StructureBuilder { get; private set; }
 
         public SqlStructureSetUpdater(
-            ISisoConnectionInfo connectionInfo, IStructureSchema structureSchema, 
+            ISisoConnectionInfo connectionInfo, IStructureSchema structureSchema,
             IStructureBuilder structureBuilder)
         {
             ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
@@ -49,19 +49,17 @@ namespace SisoDb.Providers.SqlProvider
         {
             using (var dbClient = new SqlDbClient(ConnectionInfo, true))
             {
-                UpsertSchema();
+                UpsertSchema(dbClient);
+
                 if (ItterateStructures(dbClient, onProcess))
                     dbClient.Flush();
             }
         }
 
-        private void UpsertSchema()
+        private void UpsertSchema(ISqlDbClient dbClient)
         {
-            using (var dbClient = new SqlDbClient(ConnectionInfo, false))
-            {
-                var upserter = new SqlDbSchemaUpserter(dbClient);
-                upserter.Upsert(StructureSchema);
-            }
+            var upserter = new SqlDbSchemaUpserter(dbClient);
+            upserter.Upsert(StructureSchema);
         }
 
         private bool ItterateStructures(ISqlDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
@@ -71,7 +69,7 @@ namespace SisoDb.Providers.SqlProvider
                 var oldStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TOld>(json);
                 var newStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TNew>(json);
                 var oldId = GetStructureId(oldStructure);
-                if(oldId == null)
+                if (oldId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_OldIdDoesNotExist);
 
                 var status = onProcess(oldStructure, newStructure);
@@ -79,7 +77,7 @@ namespace SisoDb.Providers.SqlProvider
                 var newId = GetStructureId(newStructure);
                 if (newId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotExist);
-                if(!newId.Value.Equals(oldId.Value))
+                if (!newId.Value.Equals(oldId.Value))
                     throw new SisoDbException(
                         ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(newId.Value, oldId.Value));
 
@@ -95,7 +93,7 @@ namespace SisoDb.Providers.SqlProvider
                     case StructureSetUpdaterStatuses.Abort:
                         return false;
                 }
-                
+
                 if (TrashQueue.Count == MaxTrashQueueSize)
                     DequeueStructuresToTrash(dbClient);
 
@@ -158,7 +156,7 @@ namespace SisoDb.Providers.SqlProvider
 
         protected virtual void DequeueStructuresToKeep(ISqlDbClient dbClient)
         {
-            if(KeepQueue.Count < 1)
+            if (KeepQueue.Count < 1)
                 return;
 
             var structures = new List<IStructure>();
@@ -166,7 +164,7 @@ namespace SisoDb.Providers.SqlProvider
             {
                 var structureToKeep = KeepQueue.Dequeue();
                 var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchema);
-                structures.Add(structureItem);   
+                structures.Add(structureItem);
             }
             var bulkInserter = new SqlBulkInserter(dbClient);
             bulkInserter.Insert(StructureSchema, structures);
@@ -179,7 +177,7 @@ namespace SisoDb.Providers.SqlProvider
 
         protected virtual void DequeueStructuresToTrash(ISqlDbClient dbClient)
         {
-            while(TrashQueue.Count > 0)
+            while (TrashQueue.Count > 0)
             {
                 var structureId = TrashQueue.Dequeue();
 
@@ -187,7 +185,7 @@ namespace SisoDb.Providers.SqlProvider
                    structureId.Value,
                    StructureSchema.GetStructureTableName(),
                    StructureSchema.GetIndexesTableName(),
-                   StructureSchema.GetUniquesTableName());   
+                   StructureSchema.GetUniquesTableName());
             }
         }
     }

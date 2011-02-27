@@ -214,10 +214,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         [Test]
         public void Process_WhenTwoStructuresExistsAndTrashIsMadeOnSecond_OnlyTheFirstItemRemains()
         {
-            var id1 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
-            var id2 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
-            var orgItem1 = new ModelOld.GuidItemForPropChange { Id = id1 };
-            var orgItem2 = new ModelOld.GuidItemForPropChange { Id = id2 };
+            var id1 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
+            var id2 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
+            var orgItem1 = new ModelOld.GuidItemForPropChange { Id = id1, Int1 = 10};
+            var orgItem2 = new ModelOld.GuidItemForPropChange { Id = id2, Int1 = 20};
             using (var uow = Database.CreateUnitOfWork())
             {
                 uow.InsertMany(new[] { orgItem1, orgItem2 });
@@ -245,9 +245,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         [Test]
         public void Process_WhenThreeStructuresExistsAndTrashIsMadeOnSecond_OnlyFirstAndThirdItemsRemains()
         {
-            var id1 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
+            var id1 = new Guid("CC72BF41-C161-4267-9E3C-421D4BB7B37D");
             var id2 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
-            var id3 = new Guid("CC72BF41-C161-4267-9E3C-421D4BB7B37D");
+            var id3 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
             var orgItem1 = new ModelOld.GuidItemForPropChange { Id = id1, String1 = "A"};
             var orgItem2 = new ModelOld.GuidItemForPropChange { Id = id2, String1 = "B"};
             var orgItem3 = new ModelOld.GuidItemForPropChange { Id = id3, String1 = "C"};
@@ -331,8 +331,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         [Test]
         public void Process_WhenTwoStructuresExistsAndAbortIsMadeOnSecond_StructureCanBeReadBack()
         {
-            var id1 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
-            var id2 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
+            var id1 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
+            var id2 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
             var orgItem1 = new ModelOld.GuidItemForPropChange { Id = id1, Int1 = 10, String1 = "Arbitrary string1"};
             var orgItem2 = new ModelOld.GuidItemForPropChange { Id = id2, Int1 = 20, String1 = "Arbitrary string2" };
             using (var uow = Database.CreateUnitOfWork())

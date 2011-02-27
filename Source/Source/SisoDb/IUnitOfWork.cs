@@ -37,7 +37,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="items"></param>
-        void InsertMany<T>(IEnumerable<T> items) 
+        void InsertMany<T>(IList<T> items) 
             where T : class;
 
         /// <summary>

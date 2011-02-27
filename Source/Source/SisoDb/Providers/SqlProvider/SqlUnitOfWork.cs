@@ -16,8 +16,7 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider
 {
-    public class 
-        SqlUnitOfWork : IUnitOfWork
+    public class SqlUnitOfWork : IUnitOfWork
     {
         private readonly ISqlDbClient _dbClient;
         private readonly ISqlDbClient _dbClientNonTransactional;
@@ -71,23 +70,23 @@ namespace SisoDb.Providers.SqlProvider
             InsertMany(new[] { item });
         }
 
-        public void InsertMany<T>(IEnumerable<T> items) where T : class
+        public void InsertMany<T>(IList<T> items) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
-            var itemsList = items.ToList();
-            if (itemsList.Count < 1)
-                return;
-
-            DoInsert(structureSchema, itemsList);
+            DoInsert(structureSchema, items);
         }
 
         private void DoInsert<T>(IStructureSchema structureSchema, IList<T> items) where T : class
         {
+            var numOfItems = items.Count;
+            if(numOfItems < 1)
+                return;
+
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
-            var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, items.Count) : null;
-            var structures = new IStructure[items.Count];
+            var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, numOfItems) : null;
+            var structures = new IStructure[numOfItems];
             Action<int> itteration = c =>
                                          {
                                              var item = items[c];

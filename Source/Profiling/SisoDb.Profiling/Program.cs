@@ -18,13 +18,32 @@ namespace SisoDb.Profiling
             //var db = new SisoDbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 10000, 5);
+            //ProfilingInserts(db, 1000, 5);
 
             //InsertCustomers(1, 100000, db);
             //ProfilingQueries(db, GetAllCustomers);
+            //ProfilingQueries(db, GetAllCustomersAsJson);
+            
+            //ProfilingUpdateStructureSet(db);
 
             //Console.WriteLine("---- Done ----");
             //Console.ReadKey();
+        }
+
+        private static void ProfilingUpdateStructureSet(ISisoDatabase database)
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            database.UpdateStructureSet<Customer, Customer>((oldCustomer, newCustomer) => StructureSetUpdaterStatuses.Keep);
+            stopWatch.Stop();
+            Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
+
+            using (var unitOfWork = database.CreateUnitOfWork())
+            {
+                var rowCount = unitOfWork.Count<Customer>();
+
+                Console.WriteLine("Total rows = {0}", rowCount);
+            }
         }
 
         private static void ProfilingInserts(ISisoDatabase database, int numOfCustomers, int numOfItterations)
@@ -72,7 +91,7 @@ namespace SisoDb.Profiling
             }
         }
 
-        private static void InsertCustomers(IEnumerable<Customer> customers, ISisoDatabase database)
+        private static void InsertCustomers(IList<Customer> customers, ISisoDatabase database)
         {
             using (var unitOfWork = database.CreateUnitOfWork())
             {
