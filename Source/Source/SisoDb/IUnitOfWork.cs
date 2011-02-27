@@ -282,9 +282,50 @@ namespace SisoDb
             where T : class;
 
         /// <summary>
+        /// Lets you invoke queries by passing in a simple where expression.
+        /// <see cref="Query&lt;T&gt;"/> for more options like sorting and including referenced structures.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="expression"></param>
+        /// <returns>Empty or populated IEnumerable of <typeparamref name="T"/>.</returns>
+        IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression) 
+            where T : class;
+
+        /// <summary>
+        /// Lets you invoke queries by passing in a simple where expression.
+        /// <see cref="QueryAs&lt;TContract, TOut&gt;"/> for more options like sorting and including referenced structures.
+        /// Returns structures for the defined structure <typeparamref name="TContract"/>
+        /// deserialized as <typeparamref name="TOut"/>. 
+        /// </summary>
+        /// <typeparam name="TContract">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <typeparam name="TOut">
+        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <param name="expression"></param>
+        /// <returns>Empty or populated IEnumerable of <typeparamref name="TOut"/>.</returns>
+        IEnumerable<TOut> WhereAs<TContract, TOut>(Expression<Func<TContract, bool>> expression)
+            where TContract : class
+            where TOut : class;
+
+        /// <summary>
+        /// Lets you invoke queries by passing in a simple where expression.
+        /// <see cref="QueryAsJson&lt;T&gt;"/> for more options like sorting and including referenced structures.
+        /// Returns structures for the defined structure <typeparamref name="T"/> as Json.
+        /// This is the most effective return type, since the Json is stored in the database,
+        /// no deserialization will take place.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns>Json representation of all structures (<typeparamref name="T"/>)
+        /// or empty IEnumerable of <see cref="string"/>.</returns>
+        IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) 
+            where T : class;
+
+        /// <summary>
         /// Lets you invoke queries using the query command builder, which lets
         /// you specify where expressions, sorting expressions and include expressions.
-        /// Returns all structures for the defined structure <typeparamref name="T"/>.
+        /// Returns structures for the defined structure <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
@@ -296,7 +337,7 @@ namespace SisoDb
         /// <summary>
         /// Lets you invoke queries using the query command builder, which lets
         /// you specify where expressions, sorting expressions and include expressions.
-        /// Returns all structures for the defined structure <typeparamref name="TContract"/>
+        /// Returns structures for the defined structure <typeparamref name="TContract"/>
         /// deserialized as <typeparamref name="TOut"/>. 
         /// </summary>
         /// <typeparam name="TContract">
@@ -312,7 +353,7 @@ namespace SisoDb
         /// <summary>
         /// Lets you invoke queries using the query command builder, which lets
         /// you specify where expressions, sorting expressions and include expressions.
-        /// Returns all structures for the defined structure <typeparamref name="T"/> as Json.
+        /// Returns structures for the defined structure <typeparamref name="T"/> as Json.
         /// This is the most effective return type, since the Json is stored in the database,
         /// no deserialization will take place.
         /// </summary>

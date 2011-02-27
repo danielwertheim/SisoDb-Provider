@@ -338,7 +338,26 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        public IEnumerable<T> Query<T>(Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
+        public IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression) 
+            where T : class
+        {
+            return Query<T>(q => q.Where(expression));
+        }
+
+        public IEnumerable<TOut> WhereAs<TContract, TOut>(Expression<Func<TContract, bool>> expression) 
+            where TContract : class where TOut : class 
+        {
+            return QueryAs<TContract, TOut>(q => q.Where(expression));
+        }
+
+        public IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) 
+            where T : class
+        {
+            return QueryAsJson<T>(q => q.Where(expression));
+        }
+
+        public IEnumerable<T> Query<T>(Action<IQueryCommandBuilder<T>> commandInitializer) 
+            where T : class
         {
             var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
             commandInitializer(commandBuilder);
