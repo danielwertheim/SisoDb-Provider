@@ -94,7 +94,8 @@
     <Compile Include="Providers\Shared\DbSchema\IDbSchemaDropper.cs" />
     <Compile Include="Providers\Shared\DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropper.cs" />
-    <Compile Include="Providers\SqlProvider\SqlStructureSetProcessor.cs" />
+    <Compile Include="Providers\SqlProvider\SqlStructureSetUpdater.cs" />
+    <Compile Include="StructureSetUpdaterStatuses.cs" />
     <Compile Include="Querying\CommandBuilderFactory.cs" />
     <Compile Include="Querying\GetCommandBuilder.cs" />
     <Compile Include="Querying\ICommandBuilderFactory.cs" />
@@ -201,6 +202,8 @@
     <Compile Include="SisoDbFactory.cs" />
     <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="Structures\IdTypes.cs" />
+    <Compile Include="Structures\IStructureIdFactory.cs" />
+    <Compile Include="Structures\IStructureIndexesFactory.cs" />
     <Compile Include="Structures\Schemas\IProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
@@ -249,8 +252,10 @@
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Structures\StructureBuilder.cs" />
+    <Compile Include="Structures\StructureIdFactory.cs" />
     <Compile Include="Structures\StructureIndex.cs" />
     <Compile Include="SisoDbEnvironment.cs" />
+    <Compile Include="Structures\StructureIndexesFactory.cs" />
     <Compile Include="ValidationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

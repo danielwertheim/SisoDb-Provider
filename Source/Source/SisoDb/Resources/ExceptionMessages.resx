@@ -168,10 +168,10 @@
   <data name="ExpressionEvaluator_EvaluateMemberExpression_NotSupported" xml:space="preserve">
     <value>Direct memberaccess of node: '{0}'; with with membertype: '{1}'; is not supported!</value>
   </data>
-  <data name="StructureBuilder_MissingIdentityValue" xml:space="preserve">
+  <data name="StructureIdFactory_MissingIdentityValue" xml:space="preserve">
     <value>When using identities the Id-property of the entity must be assigned before structure is created.</value>
   </data>
-  <data name="StructureBuilder_UnSupportedIdentityType" xml:space="preserve">
+  <data name="StructureIdFactory_UnSupportedIdentityType" xml:space="preserve">
     <value>The identity type: '{0}' is not supported.</value>
   </data>
   <data name="IdAccessor_UnsupportedPropertyType" xml:space="preserve">
@@ -192,7 +192,7 @@
   <data name="Property_Ctor_UniqueOnNonSimpleType" xml:space="preserve">
     <value>You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc.</value>
   </data>
-  <data name="StructureBuilder_UniqueIndex_IsNull" xml:space="preserve">
+  <data name="StructureIndexesFactory_UniqueIndex_IsNull" xml:space="preserve">
     <value>The Unique index '{0}':'{1}' is evaluated to Null. This is not alowed.</value>
   </data>
   <data name="SqlDatabase_InitializeExisting_DbDoesNotExist" xml:space="preserve">
@@ -249,5 +249,14 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="SqlDbClient_Flus_NonTransactional" xml:space="preserve">
     <value>You can not flush a non transational DbClient.</value>
+  </data>
+  <data name="SqlStructureSetUpdater_NewIdDoesNotExist" xml:space="preserve">
+    <value>No Id could be extracted from the new structure.</value>
+  </data>
+  <data name="SqlStructureSetUpdater_OldIdDoesNotExist" xml:space="preserve">
+    <value>No Id could be extracted from the old structure.</value>
+  </data>
+  <data name="SqlStructureSetUpdater_NewIdDoesNotMatchOldId" xml:space="preserve">
+    <value>The Id of the new structure '{0}' does not match the Id of the old structure '{1}'.</value>
   </data>
 </root>

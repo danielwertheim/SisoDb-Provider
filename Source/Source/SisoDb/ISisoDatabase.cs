@@ -1,3 +1,4 @@
+using System;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
@@ -28,6 +29,10 @@ namespace SisoDb
         void DropStructureSet<T>() where T : class;
 
         void UpsertStructureSet<T>() where T : class;
+
+        void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
+            where TOld : class
+            where TNew : class;
         
         IUnitOfWork CreateUnitOfWork();
     }

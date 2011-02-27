@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using SisoDb.Providers.Shared;
 using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Providers.SqlProvider.BulkInserts;
-using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Resources;
 using SisoDb.Serialization;

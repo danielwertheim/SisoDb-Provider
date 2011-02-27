@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Moq;
 using NUnit.Framework;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
@@ -16,34 +15,10 @@ namespace SisoDb.Tests.UnitTests.Structures
 
         protected override void OnTestInitialize()
         {
-            _builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.Formatting.StringConverter);
-        }
-
-        [Test]
-        public void CreateStructure_WhenItemWithNoEnumerable_WillNotConsumeStringConverter()
-        {
-            var stringConverterFake = new Mock<IStringConverter>();
-            var schema = new AutoSchemaBuilder<WithNoArray>().CreateSchema();
-            var item = new WithNoArray { Value = "A" };
-
-            var builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, stringConverterFake.Object);
-            builder.CreateStructure(item, schema);
-
-            stringConverterFake.Verify(s => s.AsString<object>("A"), Times.Never());
-        }
-
-        [Test]
-        public void CreateStructure_WhenItemWithEnumerable_WillConsumeStringConverter()
-        {
-            var stringConverterFake = new Mock<IStringConverter>();
-            var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
-            var item = new WithArray { Values = new[] { "A", "B" } };
-
-            var builder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, stringConverterFake.Object);
-            builder.CreateStructure(item, schema);
-
-            stringConverterFake.Verify(s => s.AsString<object>("A"), Times.Once());
-            stringConverterFake.Verify(s => s.AsString<object>("B"), Times.Once());
+            _builder = new StructureBuilder(
+                SisoDbEnvironment.JsonSerializer,
+                new StructureIdFactory(),
+                new StructureIndexesFactory(SisoDbEnvironment.Formatting.StringConverter));
         }
 
         [Test]

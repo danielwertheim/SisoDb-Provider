@@ -377,6 +377,33 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Id could be extracted from the new structure..
+        /// </summary>
+        internal static string SqlStructureSetUpdater_NewIdDoesNotExist {
+            get {
+                return ResourceManager.GetString("SqlStructureSetUpdater_NewIdDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Id of the new structure &apos;{0}&apos; does not match the Id of the old structure &apos;{1}&apos;..
+        /// </summary>
+        internal static string SqlStructureSetUpdater_NewIdDoesNotMatchOldId {
+            get {
+                return ResourceManager.GetString("SqlStructureSetUpdater_NewIdDoesNotMatchOldId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Id could be extracted from the old structure..
+        /// </summary>
+        internal static string SqlStructureSetUpdater_OldIdDoesNotExist {
+            get {
+                return ResourceManager.GetString("SqlStructureSetUpdater_OldIdDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
         /// </summary>
         internal static string SqlUnitOfWork_DoIdentityInsert_RootItemsMissmatch {
@@ -415,27 +442,18 @@ namespace SisoDb.Resources {
         /// <summary>
         ///   Looks up a localized string similar to When using identities the Id-property of the entity must be assigned before structure is created..
         /// </summary>
-        internal static string StructureBuilder_MissingIdentityValue {
+        internal static string StructureIdFactory_MissingIdentityValue {
             get {
-                return ResourceManager.GetString("StructureBuilder_MissingIdentityValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Unique index &apos;{0}&apos;:&apos;{1}&apos; is evaluated to Null. This is not alowed..
-        /// </summary>
-        internal static string StructureBuilder_UniqueIndex_IsNull {
-            get {
-                return ResourceManager.GetString("StructureBuilder_UniqueIndex_IsNull", resourceCulture);
+                return ResourceManager.GetString("StructureIdFactory_MissingIdentityValue", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The identity type: &apos;{0}&apos; is not supported..
         /// </summary>
-        internal static string StructureBuilder_UnSupportedIdentityType {
+        internal static string StructureIdFactory_UnSupportedIdentityType {
             get {
-                return ResourceManager.GetString("StructureBuilder_UnSupportedIdentityType", resourceCulture);
+                return ResourceManager.GetString("StructureIdFactory_UnSupportedIdentityType", resourceCulture);
             }
         }
         
@@ -445,6 +463,15 @@ namespace SisoDb.Resources {
         internal static string StructureIndex_ValueArgument_IncorrectType {
             get {
                 return ResourceManager.GetString("StructureIndex_ValueArgument_IncorrectType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Unique index &apos;{0}&apos;:&apos;{1}&apos; is evaluated to Null. This is not alowed..
+        /// </summary>
+        internal static string StructureIndexesFactory_UniqueIndex_IsNull {
+            get {
+                return ResourceManager.GetString("StructureIndexesFactory_UniqueIndex_IsNull", resourceCulture);
             }
         }
         

@@ -18,7 +18,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             var expected = Guid.Parse("4217F3B7-6DEB-4DFA-B195-D111C1297988");
             var item = new Dummy2 { Id = expected };
 
-            var actual = guidProperty.GetIdValue<Dummy2, Guid>(item);
+            var actual = guidProperty.GetIdValue<Guid>(item);
 
             Assert.AreEqual(expected, actual);
         }
@@ -32,7 +32,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             var expected = Guid.Parse("4217F3B7-6DEB-4DFA-B195-D111C1297988");
             var item = new Dummy2 { NullableId = expected };
 
-            var actual = intProperty.GetIdValue<Dummy2, Guid>(item);
+            var actual = intProperty.GetIdValue<Guid>(item);
 
             Assert.AreEqual(expected, actual);
         }
@@ -45,7 +45,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var item = new Dummy2 { NullableId = null };
 
-            var actual = intProperty.GetIdValue<Dummy2, Guid>(item);
+            var actual = intProperty.GetIdValue<Guid>(item);
 
             Assert.IsNull(actual);
         }
@@ -61,7 +61,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var item = new Dummy1 { Item1 = new Dummy2 { Id = Guid.NewGuid() } };
 
-            var ex = CustomAssert.Throws<SisoDbException>(() => guidProperty.GetIdValue<Dummy1, Guid>(item));
+            var ex = CustomAssert.Throws<SisoDbException>(() => guidProperty.GetIdValue<Guid>(item));
 
             Assert.AreEqual(ExceptionMessages.Property_GetIdValue_InvalidLevel, ex.Message);
         }

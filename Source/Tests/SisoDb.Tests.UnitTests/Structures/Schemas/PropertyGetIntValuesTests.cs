@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 
@@ -17,7 +16,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             const int expected = 42;
             var item = new Dummy2 { Id = expected };
 
-            var actual = intProperty.GetIdValue<Dummy2, int>(item);
+            var actual = intProperty.GetIdValue<int>(item);
 
             Assert.AreEqual(expected, actual);
         }
@@ -31,7 +30,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             const int expectedInt = 42;
             var item = new Dummy2 { NullableId = expectedInt };
 
-            var actual = intProperty.GetIdValue<Dummy2, int>(item);
+            var actual = intProperty.GetIdValue<int>(item);
 
             Assert.AreEqual(expectedInt, actual);
         }
@@ -44,7 +43,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var item = new Dummy2 { NullableId = null };
 
-            var actual = intProperty.GetIdValue<Dummy2, int>(item);
+            var actual = intProperty.GetIdValue<int>(item);
 
             Assert.IsNull(actual);
         }
@@ -60,7 +59,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var item = new Dummy1 { Item = new Dummy2 { Id = 42 } };
 
-            var ex = Assert.Throws<SisoDbException>(() => intProperty.GetIdValue<Dummy1, int>(item));
+            var ex = Assert.Throws<SisoDbException>(() => intProperty.GetIdValue<int>(item));
 
             Assert.AreEqual(ExceptionMessages.Property_GetIdValue_InvalidLevel, ex.Message);
         }

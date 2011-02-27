@@ -85,8 +85,7 @@ namespace SisoDb.Structures.Schemas
             return props;
         }
 
-        public TReturn? GetIdValue<T, TReturn>(T item)
-            where T : class
+        public TReturn? GetIdValue<TReturn>(object item)
             where TReturn : struct
         {
             if (Level != 0)
@@ -105,7 +104,7 @@ namespace SisoDb.Structures.Schemas
             throw new SisoDbException(ExceptionMessages.Property_GetIdValue_UnsupportedIdDataType);
         }
 
-        public IList<object> GetValues<T>(T item) where T : class
+        public IList<object> GetValues(object item)
         {
             if (Level == 0)
             {
@@ -190,7 +189,7 @@ namespace SisoDb.Structures.Schemas
             return values;
         }
 
-        public void SetValue<TItem, TValue>(TItem item, TValue value) where TItem : class
+        public void SetValue<TValue>(object item, TValue value)
         {
             if (Level == 0)
             {

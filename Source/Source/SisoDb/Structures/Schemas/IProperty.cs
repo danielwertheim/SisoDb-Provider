@@ -28,12 +28,11 @@ namespace SisoDb.Structures.Schemas
         
         Type ElementType { get; }
 
-        TReturn? GetIdValue<T, TReturn>(T item)
-            where T : class
-            where TReturn : struct; 
+        TReturn? GetIdValue<TReturn>(object item)
+            where TReturn : struct;
 
-        IList<object> GetValues<T>(T item) where T : class;
+        IList<object> GetValues(object item);
 
-        void SetValue<TItem, TValue>(TItem item, TValue value) where TItem : class;
+        void SetValue<TValue>(object item, TValue value);
     }
 }

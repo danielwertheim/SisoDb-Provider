@@ -16,7 +16,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var property = TypeInfo<GuidDummy>.GetIdProperty("Id");
             
             var idAccessor = new IdAccessor(property);
-            var idViaAccessor = idAccessor.GetValue<GuidDummy, Guid>(item);
+            var idViaAccessor = idAccessor.GetValue<Guid>(item);
 
             Assert.AreEqual(id, idViaAccessor);
         }
@@ -29,7 +29,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var property = TypeInfo<GuidDummy>.GetIdProperty("NullableId");
             
             var idAccessor = new IdAccessor(property);
-            var idViaAccessor = idAccessor.GetValue<GuidDummy, Guid>(item);
+            var idViaAccessor = idAccessor.GetValue<Guid>(item);
 
             Assert.AreEqual(id, idViaAccessor);
         }
@@ -41,7 +41,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var property = TypeInfo<GuidDummy>.GetIdProperty("NullableId");
             
             var idAccessor = new IdAccessor(property);
-            var idViaAccessor = idAccessor.GetValue<GuidDummy, Guid>(item);
+            var idViaAccessor = idAccessor.GetValue<Guid>(item);
 
             Assert.IsNull(idViaAccessor);
         }
@@ -54,7 +54,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var property = TypeInfo<IdentityDummy>.GetIdProperty("Id");
 
             var idAccessor = new IdAccessor(property);
-            var idViaAccessor = idAccessor.GetValue<IdentityDummy, int>(item);
+            var idViaAccessor = idAccessor.GetValue<int>(item);
 
             Assert.AreEqual(id, idViaAccessor);
         }
@@ -67,7 +67,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var property = TypeInfo<IdentityDummy>.GetIdProperty("NullableId");
 
             var idAccessor = new IdAccessor(property);
-            var idViaAccessor = idAccessor.GetValue<IdentityDummy, int>(item);
+            var idViaAccessor = idAccessor.GetValue<int>(item);
 
             Assert.AreEqual(id, idViaAccessor);
         }
@@ -79,7 +79,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var property = TypeInfo<IdentityDummy>.GetIdProperty("NullableId");
 
             var idAccessor = new IdAccessor(property);
-            var idViaAccessor = idAccessor.GetValue<IdentityDummy, int>(item);
+            var idViaAccessor = idAccessor.GetValue<int>(item);
 
             Assert.IsNull(idViaAccessor);
         }

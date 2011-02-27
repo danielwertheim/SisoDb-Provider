@@ -115,6 +115,7 @@
     <Compile Include="Structures\Schemas\PropertyGetValuesOnSubItemTests.cs" />
     <Compile Include="Structures\Schemas\PropertyTestHelper.cs" />
     <Compile Include="Structures\StructureBuilderTests.cs" />
+    <Compile Include="Structures\StructureIdFactoryTests.cs" />
     <Compile Include="Structures\StructureIdTests.cs" />
     <Compile Include="Structures\Schemas\AutoSchemaBuilderTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessorTests.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Structures\Schemas\PropertyPathBuilderTests.cs" />
     <Compile Include="Structures\Schemas\PropertyTests.cs" />
     <Compile Include="Structures\Schemas\StructureSchemaTests.cs" />
+    <Compile Include="Structures\StructureIndexesFactoryTests.cs" />
     <Compile Include="Structures\StructureIndexTests.cs" />
     <Compile Include="Structures\StructureTests.cs" />
     <Compile Include="TypeExtensionsEnumerableTests.cs" />

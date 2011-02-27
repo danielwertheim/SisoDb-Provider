@@ -47,6 +47,7 @@ namespace SisoDb.Tests.IntegrationTests
         public void TestFinalizer()
         {
             OnTestFinalize();
+            Database.StructureSchemas.Clear();
         }
 
         protected virtual void OnTestFinalize()

@@ -8,41 +8,41 @@ namespace SisoDb.Structures.Schemas
 {
     public static class TypeInfo<T>
     {
-        private static readonly TypeInfo TypeInfoState;
+        private static readonly TypeInfo State;
 
         public static string Name
         {
-            get { return TypeInfoState.Name; }
+            get { return State.Name; }
         }
 
         static TypeInfo()
         {
-            TypeInfoState = new TypeInfo(typeof(T));
+            State = new TypeInfo(typeof(T));
         }
 
         public static IProperty GetIdProperty(string name)
         {
-            return TypeInfoState.GetIdProperty(name);
+            return State.GetIdProperty(name);
         }
 
         public static IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
         {
-            return TypeInfoState.GetIndexableProperties(nonIndexableNames);
+            return State.GetIndexableProperties(nonIndexableNames);
         }
 
         public static IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
-            return TypeInfoState.GetSimpleIndexablePropertyInfos(nonIndexableNames);
+            return State.GetSimpleIndexablePropertyInfos(nonIndexableNames);
         }
 
         public static IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
-            return TypeInfoState.GetComplexIndexablePropertyInfos(nonIndexableNames);
+            return State.GetComplexIndexablePropertyInfos(nonIndexableNames);
         }
 
         public static IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
-            return TypeInfoState.GetEnumerableIndexablePropertyInfos(nonIndexableNames);
+            return State.GetEnumerableIndexablePropertyInfos(nonIndexableNames);
         }
     }
 

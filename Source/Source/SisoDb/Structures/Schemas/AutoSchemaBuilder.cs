@@ -21,9 +21,6 @@ namespace SisoDb.Structures.Schemas
         public IStructureSchema CreateSchema()
         {
             var idAccessor = GetIdAccessor();
-            if (idAccessor == null)
-                throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIdMember.Inject(TypeInfoState.Name));
-
             var indexAccessors = GetIndexAccessors();
             if (indexAccessors == null || indexAccessors.Length < 1)
                 throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers.Inject(TypeInfoState.Name));
@@ -39,12 +36,12 @@ namespace SisoDb.Structures.Schemas
         {
             var property = TypeInfoState.GetIdProperty(IdName);
             if (property == null)
-                return null;
+                throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIdMember.Inject(TypeInfoState.Name));
 
-            if (property.PropertyType.IsGuidType() || property.PropertyType.IsNullableGuidType() 
+            if (property.PropertyType.IsGuidType() || property.PropertyType.IsNullableGuidType()
                 || (property.PropertyType.IsIntType() || property.PropertyType.IsNullableIntType()))
                 return new IdAccessor(property);
-            
+
             throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_UnsupportedIdAccessorType.Inject(property.Name));
         }
 

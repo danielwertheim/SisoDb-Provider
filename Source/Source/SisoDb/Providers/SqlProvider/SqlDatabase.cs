@@ -1,3 +1,4 @@
+using System;
 using System.Data.SqlClient;
 using SisoDb.Lambdas.Processors;
 using SisoDb.Providers.Shared.DbSchema;
@@ -37,7 +38,10 @@ namespace SisoDb.Providers.SqlProvider
 
             StructureSchemas = new StructureSchemas();
             DbSchemaManager = new DbSchemaManager();
-            StructureBuilder = new StructureBuilder(SisoDbEnvironment.JsonSerializer, SisoDbEnvironment.Formatting.StringConverter);
+            StructureBuilder = new StructureBuilder(
+                SisoDbEnvironment.JsonSerializer, 
+                new StructureIdFactory(), 
+                new StructureIndexesFactory(SisoDbEnvironment.Formatting.StringConverter));
         }
 
         private void InitializeConnectionInfo(ISisoConnectionInfo connectionInfo)
@@ -110,6 +114,7 @@ namespace SisoDb.Providers.SqlProvider
                 var dropper = new SqlDbSchemaDropper(client);
                 var structureSchema = StructureSchemas.GetSchema<T>();
                 DbSchemaManager.DropStructureSet(structureSchema, dropper);
+                StructureSchemas.RemoveSchema<T>();
             }
         }
 
@@ -121,6 +126,16 @@ namespace SisoDb.Providers.SqlProvider
                 var structureSchema = StructureSchemas.GetSchema<T>();
                 DbSchemaManager.UpsertStructureSet(structureSchema, upserter);
             }
+        }
+
+        public void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
+            where TOld : class 
+            where TNew : class
+        {
+            var structureSchema = StructureSchemas.GetSchema<TNew>();
+            var updater = new SqlStructureSetUpdater<TOld, TNew>(ConnectionInfo, structureSchema, StructureBuilder);
+            
+            updater.Process(onProcess);
         }
 
         public IUnitOfWork CreateUnitOfWork()

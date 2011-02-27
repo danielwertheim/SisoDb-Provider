@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SisoDb.Structures.Schemas
 {
@@ -16,16 +17,27 @@ namespace SisoDb.Structures.Schemas
             var key = TypeInfo<T>.Name;
 
             if (!_schemas.ContainsKey(key))
-                Register<T>();
+                Register<T>(key);
 
-            return _schemas[TypeInfo<T>.Name];
+            return _schemas[key];
         }
 
-        private void Register<T>() where T : class
+        public void RemoveSchema<T>() where T : class
+        {
+            var key = TypeInfo<T>.Name;
+            _schemas.Remove(key);
+        }
+
+        public void Clear()
+        {
+            _schemas.Clear();
+        }
+
+        private void Register<T>(string key) where T : class
         {
             var schema = new AutoSchemaBuilder<T>().CreateSchema();
 
-            _schemas.Add(schema.Name, schema);
+            _schemas.Add(key, schema);
         }
     }
 }
