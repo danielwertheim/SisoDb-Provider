@@ -132,8 +132,11 @@ namespace SisoDb.Providers.SqlProvider
             where TOld : class 
             where TNew : class
         {
-            var structureSchema = StructureSchemas.GetSchema<TNew>();
-            var updater = new SqlStructureSetUpdater<TOld, TNew>(ConnectionInfo, structureSchema, StructureBuilder);
+            var structureSchemaOld = StructureSchemas.GetSchema<TOld>();
+            StructureSchemas.RemoveSchema<TOld>();
+            var structureSchemaNew = StructureSchemas.GetSchema<TNew>();
+            
+            var updater = new SqlStructureSetUpdater<TOld, TNew>(ConnectionInfo, structureSchemaOld, structureSchemaNew, StructureBuilder);
             
             updater.Process(onProcess);
         }

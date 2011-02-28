@@ -23,16 +23,20 @@ namespace SisoDb.Providers.SqlProvider
 
         protected ISisoConnectionInfo ConnectionInfo { get; private set; }
 
-        protected IStructureSchema StructureSchema { get; private set; }
+        protected IStructureSchema StructureSchemaOld { get; private set; }
+
+        protected IStructureSchema StructureSchemaNew { get; private set; }
 
         protected IStructureBuilder StructureBuilder { get; private set; }
 
         public SqlStructureSetUpdater(
-            ISisoConnectionInfo connectionInfo, IStructureSchema structureSchema,
+            ISisoConnectionInfo connectionInfo, 
+            IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew,
             IStructureBuilder structureBuilder)
         {
             ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
-            StructureSchema = structureSchema.AssertNotNull("structureSchema");
+            StructureSchemaOld = structureSchemaOld.AssertNotNull("structureSchemaOld");
+            StructureSchemaNew = structureSchemaNew.AssertNotNull("structureSchemaNew");
             StructureBuilder = structureBuilder.AssertNotNull("structureBuilder");
 
             IdPropertyOld = TypeInfo<TOld>.GetIdProperty("Id");
@@ -55,7 +59,7 @@ namespace SisoDb.Providers.SqlProvider
         private void UpsertSchema(ISqlDbClient dbClient)
         {
             var upserter = new SqlDbSchemaUpserter(dbClient);
-            upserter.Upsert(StructureSchema);
+            upserter.Upsert(StructureSchemaNew);
         }
 
         private bool ItterateStructures(ISqlDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
@@ -107,7 +111,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             using (var dbClient = new SqlDbClient(ConnectionInfo, false))
             {
-                var sql = dbClient.SqlStringsRepository.GetSql("GetAllById").Inject(StructureSchema.GetStructureTableName());
+                var sql = dbClient.SqlStringsRepository.GetSql("GetAllById").Inject(StructureSchemaOld.GetStructureTableName());
                 using (var cmd = dbClient.CreateCommand(CommandType.Text, sql))
                 {
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
@@ -124,15 +128,16 @@ namespace SisoDb.Providers.SqlProvider
         private IStructureId GetStructureId(object item)
         {
             var idProperty = item is TOld ? IdPropertyOld : IdPropertyNew;
+            var structureSchema = item is TOld ? StructureSchemaOld : StructureSchemaNew;
 
-            if (StructureSchema.IdAccessor.IdType == IdTypes.Identity)
+            if (structureSchema.IdAccessor.IdType == IdTypes.Identity)
             {
                 var idValue = idProperty.GetIdValue<int>(item);
 
                 return idValue.HasValue ? StructureId.NewIdentityId(idValue.Value) : null;
             }
 
-            if (StructureSchema.IdAccessor.IdType == IdTypes.Guid)
+            if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
             {
                 var idValue = idProperty.GetIdValue<Guid>(item);
 
@@ -152,15 +157,15 @@ namespace SisoDb.Providers.SqlProvider
             if (KeepQueue.Count < 1)
                 return;
 
-            var structures = new List<IStructure>();
+            var structures = new List<IStructure>(KeepQueue.Count);
             while (KeepQueue.Count > 0)
             {
                 var structureToKeep = KeepQueue.Dequeue();
-                var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchema);
+                var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew);
                 structures.Add(structureItem);
             }
             var bulkInserter = new SqlBulkInserter(dbClient);
-            bulkInserter.Insert(StructureSchema, structures);
+            bulkInserter.Insert(StructureSchemaNew, structures);
         }
 
         protected virtual void OnTrash(IStructureId structureId)
@@ -179,9 +184,9 @@ namespace SisoDb.Providers.SqlProvider
             
             dbClient.DeleteWhereIdIsBetween(
               _deleteStructureIdFrom.Value, _deleteStructureIdTo.Value,
-              StructureSchema.GetStructureTableName(),
-              StructureSchema.GetIndexesTableName(),
-              StructureSchema.GetUniquesTableName());
+              StructureSchemaOld.GetStructureTableName(),
+              StructureSchemaOld.GetIndexesTableName(),
+              StructureSchemaOld.GetUniquesTableName());
 
             _deleteStructureIdFrom = null;
             _deleteStructureIdTo = null;

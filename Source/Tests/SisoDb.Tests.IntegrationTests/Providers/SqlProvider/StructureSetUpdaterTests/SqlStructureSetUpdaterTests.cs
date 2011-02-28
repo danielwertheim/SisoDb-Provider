@@ -3,10 +3,10 @@ using NUnit.Framework;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Resources;
 
-namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
+namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdaterTests
 {
     [TestFixture]
-    public class SqlStructureSetUpdaterTests : SqlIntegrationTestBase
+    public class SqlStructureSetUpdaterTestsForSameModelNames : SqlIntegrationTestBase
     {
         protected override void OnTestFinalize()
         {
@@ -27,10 +27,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.ItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.ItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
             updater.Process((oldItem, newItem) =>
             {
                 Assert.AreEqual(orgItem.Id, oldItem.Id);
@@ -60,10 +57,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.ItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.ItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
             updater.Process((oldItem, newItem) => StructureSetUpdaterStatuses.Keep);
 
             using (var uow = Database.CreateUnitOfWork())
@@ -85,10 +79,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.GuidItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.GuidItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem) => StructureSetUpdaterStatuses.Keep);
 
             using (var uow = Database.CreateUnitOfWork())
@@ -109,10 +100,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.ItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.ItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
@@ -134,10 +122,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.GuidItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.GuidItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
@@ -159,12 +144,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.ItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.ItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
             var oldIdForAssert = 0;
             var newIdForAssert = 0;
+
+            var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
             var ex = Assert.Throws<SisoDbException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
@@ -194,10 +177,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.ItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.GuidItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             var ex = Assert.Throws<SisoDbException>(
                 () => updater.Process((oldItem, newItem) =>
                                           {
@@ -225,10 +205,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.GuidItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.GuidItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem) 
                 => oldItem.Id.Equals(id1) ? StructureSetUpdaterStatuses.Keep : StructureSetUpdaterStatuses.Trash);
 
@@ -258,10 +235,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.GuidItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.GuidItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem) =>
             {
                 newItem.NewString1 = oldItem.String1;
@@ -298,13 +272,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.ItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.ItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
             var id1 = orgItem1.Id;
             var id2 = orgItem2.Id;
             var id3 = orgItem3.Id;
+
+            var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
             updater.Process((oldItem, newItem) =>
             {
                 newItem.NewString1 = oldItem.String1;
@@ -342,10 +314,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<ModelOld.GuidItemForPropChange>();
 
-            var structureSchema = Database.StructureSchemas.GetSchema<ModelNew.GuidItemForPropChange>();
-            var updater = new SqlStructureSetUpdater<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
-                Database.ConnectionInfo, structureSchema, Database.StructureBuilder);
-
+            var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem)
                             => oldItem.Id.Equals(id1) ? StructureSetUpdaterStatuses.Keep : StructureSetUpdaterStatuses.Abort);
 
@@ -362,6 +331,20 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
                 Assert.AreEqual(20, refetchedOrgItem2.Int1);
                 Assert.AreEqual("Arbitrary string2", refetchedOrgItem2.String1);
             }
+        }
+
+        private SqlStructureSetUpdater<TOld, TNew> CreateUpserterFor<TOld, TNew>()
+            where TOld : class
+            where TNew : class
+        {
+            var structureSchemaOld = Database.StructureSchemas.GetSchema<TOld>();
+            Database.StructureSchemas.RemoveSchema<TOld>();
+
+            var structureSchemaNew = Database.StructureSchemas.GetSchema<TNew>();
+            var updater = new SqlStructureSetUpdater<TOld, TNew>(
+                Database.ConnectionInfo, structureSchemaOld, structureSchemaNew, Database.StructureBuilder);
+
+            return updater;
         }
     }
 

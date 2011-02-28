@@ -12,8 +12,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         {
             DbHelper.DropDatabase(LocalConstants.TempDbName);
             Database.DropStructureSet<ItemForUpsertStructureSet>();
-            Database.DropStructureSet<ModelOld.ItemForPropChange>();
-            Database.DropStructureSet<ModelNew.ItemForPropChange>();
+            Database.DropStructureSet<StructureSetUpdaterTests.ModelOld.ItemForPropChange>();
+            Database.DropStructureSet<StructureSetUpdaterTests.ModelNew.ItemForPropChange>();
         }
 
         [Test]
@@ -107,20 +107,20 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         [Test]
         public void UpdateStructureSet_WhenThreeStructuresWithIdentitiesExistsAndTrashIsMadeOnSecond_OnlyFirstAndThirdItemsRemains()
         {
-            var orgItem1 = new ModelOld.ItemForPropChange { String1 = "A" };
-            var orgItem2 = new ModelOld.ItemForPropChange { String1 = "B" };
-            var orgItem3 = new ModelOld.ItemForPropChange { String1 = "C" };
+            var orgItem1 = new StructureSetUpdaterTests.ModelOld.ItemForPropChange { String1 = "A" };
+            var orgItem2 = new StructureSetUpdaterTests.ModelOld.ItemForPropChange { String1 = "B" };
+            var orgItem3 = new StructureSetUpdaterTests.ModelOld.ItemForPropChange { String1 = "C" };
             using (var uow = Database.CreateUnitOfWork())
             {
                 uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
                 uow.Commit();
             }
-            Database.StructureSchemas.RemoveSchema<ModelOld.ItemForPropChange>();
+            Database.StructureSchemas.RemoveSchema<StructureSetUpdaterTests.ModelOld.ItemForPropChange>();
 
             var id1 = orgItem1.Id;
             var id2 = orgItem2.Id;
             var id3 = orgItem3.Id;
-            Database.UpdateStructureSet<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
+            Database.UpdateStructureSet<StructureSetUpdaterTests.ModelOld.ItemForPropChange, StructureSetUpdaterTests.ModelNew.ItemForPropChange>(
             (oldItem, newItem) =>
             {
                 newItem.NewString1 = oldItem.String1;
@@ -131,14 +131,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem1 = uow.GetById<ModelNew.ItemForPropChange>(id1);
+                var newItem1 = uow.GetById<StructureSetUpdaterTests.ModelNew.ItemForPropChange>(id1);
                 Assert.IsNotNull(newItem1);
                 Assert.AreEqual("A", newItem1.NewString1);
 
-                var newItem2 = uow.GetById<ModelNew.ItemForPropChange>(id2);
+                var newItem2 = uow.GetById<StructureSetUpdaterTests.ModelNew.ItemForPropChange>(id2);
                 Assert.IsNull(newItem2);
 
-                var newItem3 = uow.GetById<ModelNew.ItemForPropChange>(id3);
+                var newItem3 = uow.GetById<StructureSetUpdaterTests.ModelNew.ItemForPropChange>(id3);
                 Assert.IsNotNull(newItem3);
                 Assert.AreEqual("C", newItem3.NewString1);
             }
