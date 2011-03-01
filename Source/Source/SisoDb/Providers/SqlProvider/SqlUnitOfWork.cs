@@ -70,12 +70,22 @@ namespace SisoDb.Providers.SqlProvider
             InsertMany(new[] { item });
         }
 
+        public void InsertJson<T>(string json) where T : class
+        {
+            Insert(_jsonSerializer.ToItemOrNull<T>(json));
+        }
+
         public void InsertMany<T>(IList<T> items) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
             DoInsert(structureSchema, items);
+        }
+
+        public void InsertManyJson<T>(IList<string> json) where T : class
+        {
+            InsertMany<T>(_batchDeserializer.Deserialize<T>(json).ToList());
         }
 
         private void DoInsert<T>(IStructureSchema structureSchema, IList<T> items) where T : class
@@ -88,18 +98,18 @@ namespace SisoDb.Providers.SqlProvider
             var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, numOfItems) : null;
             var structures = new IStructure[numOfItems];
             Action<int> itteration = c =>
-                                         {
-                                             var item = items[c];
+            {
+                var item = items[c];
 
-                                             if (seed.HasValue)
-                                             {
-                                                 var id = seed.Value + c;
-                                                 structureSchema.IdAccessor.SetValue(item, id);
-                                             }
+                if (seed.HasValue)
+                {
+                    var id = seed.Value + c;
+                    structureSchema.IdAccessor.SetValue(item, id);
+                }
 
-                                             var structure = _structureBuilder.CreateStructure(item, structureSchema);
-                                             structures[c] = structure;
-                                         };
+                var structure = _structureBuilder.CreateStructure(item, structureSchema);
+                structures[c] = structure;
+            };
 
             if (structures.Length > 10)
                 Parallel.For(0, structures.Length, itteration);

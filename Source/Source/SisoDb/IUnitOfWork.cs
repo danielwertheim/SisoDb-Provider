@@ -31,6 +31,16 @@ namespace SisoDb
             where T : class;
 
         /// <summary>
+        /// Inserts Json strcutures using the <typeparamref name="T"/> as
+        /// the contract for the structure being inserted.
+        /// </summary>
+        /// <remarks>Deserialization of the Json structure will take place, 
+        /// so If you do have the instace pass that instead using other overload!</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        void InsertJson<T>(string json) where T : class;
+
+        /// <summary>
         /// Inserts multiple structures using the <typeparamref name="T"/> as
         /// the contract for the structures being inserted. 
         /// </summary>
@@ -39,6 +49,16 @@ namespace SisoDb
         /// <param name="items"></param>
         void InsertMany<T>(IList<T> items) 
             where T : class;
+
+        /// <summary>
+        /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
+        /// the contract for the structures being inserted.
+        /// </summary>
+        /// <remarks>Deserialization of the Json structures will take place, 
+        /// so If you do have the instace pass that instead using other overload!</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        void InsertManyJson<T>(IList<string> json) where T : class;
 
         /// <summary>
         /// Updates the sent structure. If it

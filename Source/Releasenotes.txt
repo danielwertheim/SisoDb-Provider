@@ -5,6 +5,9 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v0.8.5		- 2011-03-01
+[New]:		UnitOfWork now supports Json inserts via: InsertJson, InsertManyJson. NOTE! If you have instances of an entity, it's more effective to pass it in instead of raw json.
+
 v0.8.4		- 2011-02-28
 [New]:		You can now use Database.UpdateStructureSet<TOld, TNew> with completly different types to go from lets say, SalesPerson to SalesMen and a also remap properties.
 
