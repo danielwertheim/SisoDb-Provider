@@ -26,7 +26,7 @@ namespace SisoDb.TestUtils
         {
             var isEmpty = source.Count() < 1;
 
-            if(!isEmpty)
+            if (!isEmpty)
                 throw new AssertionException("The enumerable was not empty");
         }
 
@@ -81,7 +81,7 @@ namespace SisoDb.TestUtils
             AreValueEqual(typeof(T), expected, actual);
         }
 
-        public static void KeyValueEquality(IDictionary<string, object> expected, IDictionary<string, object > actual)
+        public static void KeyValueEquality(IDictionary<string, object> expected, IDictionary<string, object> actual)
         {
             foreach (var expectedKV in expected)
             {
@@ -95,13 +95,16 @@ namespace SisoDb.TestUtils
 
         private static void AreValueEqual(Type type, object a, object b)
         {
-            if(ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
                 return;
 
-            if(a == null && b == null)
+            if (a == null && b == null)
                 return;
 
-            if(type == typeof(object))
+            if (a == null || b == null)
+                Assert.AreEqual(a, b); //Force exception
+
+            if (type == typeof(object))
                 throw new Exception("You need to specify type to do the value equality comparision.");
 
             if (type.IsSimpleType())
