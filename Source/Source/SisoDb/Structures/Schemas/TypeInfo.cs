@@ -20,9 +20,9 @@ namespace SisoDb.Structures.Schemas
             State = new TypeInfo(typeof(T));
         }
 
-        public static IProperty GetIdProperty(string name)
+        public static IProperty GetIdProperty()
         {
-            return State.GetIdProperty(name);
+            return State.GetIdProperty();
         }
 
         public static IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
@@ -56,6 +56,8 @@ namespace SisoDb.Structures.Schemas
         private const BindingFlags PropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
+        public const string IdName = "Id";
+
         public string Name { get; private set; }
 
         public TypeInfo(Type type)
@@ -64,16 +66,9 @@ namespace SisoDb.Structures.Schemas
             Name = _type.Name;
         }
 
-        public IProperty GetIdProperty(string name)
+        public IProperty GetIdProperty()
         {
-            var propertyInfo = _type.GetProperties(IdPropertyBindingFlags)
-                .Where(p => p.Name.Equals(name))
-                .SingleOrDefault();
-
-            if (propertyInfo == null)
-                return null;
-
-            return new Property(propertyInfo);
+            return GetIdProperty(_type);
         }
 
         public IEnumerable<IProperty> GetIndexableProperties(IEnumerable<string> nonIndexableNames = null)
@@ -134,12 +129,27 @@ namespace SisoDb.Structures.Schemas
         public IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)
         {
             var properties = _type.GetProperties(PropertyBindingFlags)
-                .Where(p => !p.PropertyType.IsSimpleType() && !p.PropertyType.IsEnumerableType());
+                .Where(p => 
+                    !p.PropertyType.IsSimpleType() && 
+                    !p.PropertyType.IsEnumerableType() &&
+                    GetIdProperty(p.PropertyType) == null);
 
             if (nonIndexableNames != null)
                 properties = properties.Where(p => !nonIndexableNames.Contains(p.Name));
 
             return properties.ToArray();
+        }
+
+        private static IProperty GetIdProperty(Type type)
+        {
+            var propertyInfo = type.GetProperties(IdPropertyBindingFlags)
+               .Where(p => p.Name.Equals(IdName))
+               .SingleOrDefault();
+
+            if (propertyInfo == null)
+                return null;
+
+            return new Property(propertyInfo);
         }
 
         public IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IEnumerable<string> nonIndexableNames = null)

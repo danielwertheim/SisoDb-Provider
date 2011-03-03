@@ -10,7 +10,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPublicGuidIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithGuidId>.GetIdProperty("Id");
+            var property = TypeInfo<WithGuidId>.GetIdProperty();
 
             Assert.IsNotNull(property);
         }
@@ -18,7 +18,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPublicNullableGuidIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithNullableGuidId>.GetIdProperty("Id");
+            var property = TypeInfo<WithNullableGuidId>.GetIdProperty();
 
             Assert.IsNotNull(property);
         }
@@ -26,7 +26,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPrivateGuidIdProperty_ReturnsNull()
         {
-            var property = TypeInfo<WithPrivateGuidId>.GetIdProperty("Id");
+            var property = TypeInfo<WithPrivateGuidId>.GetIdProperty();
 
             Assert.IsNull(property);
         }
@@ -34,7 +34,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPublicIntIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithIntId>.GetIdProperty("Id");
+            var property = TypeInfo<WithIntId>.GetIdProperty();
 
             Assert.IsNotNull(property);
         }
@@ -42,7 +42,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPublicNullableIntIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithNullableIntId>.GetIdProperty("Id");
+            var property = TypeInfo<WithNullableIntId>.GetIdProperty();
 
             Assert.IsNotNull(property);
         }
@@ -50,7 +50,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPrivateIntIdProperty_ReturnsNull()
         {
-            var property = TypeInfo<WithPrivateIntId>.GetIdProperty("Id");
+            var property = TypeInfo<WithPrivateIntId>.GetIdProperty();
 
             Assert.IsNull(property);
         }

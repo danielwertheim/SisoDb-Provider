@@ -33,6 +33,14 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
             Assert.AreEqual(0, properties.Count());
         }
 
+        [Test]
+        public void GetComplexProperties_WhenItIsContainedStructure_NotExtracted()
+        {
+            var properties = TypeInfo<WithContainedStructure>.GetComplexIndexablePropertyInfos();
+
+            Assert.AreEqual(0, properties.Count());
+        }
+
         private class Item
         {}
 
@@ -56,6 +64,18 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         private class WithEnumerable
         {
             public IEnumerable<Item> Dummies { get; set; }
+        }
+
+        private class WithContainedStructure
+        {
+            public int Id { get; set; }
+
+            public Structure ContainedStructure { get; set; }
+        }
+
+        private class Structure
+        {
+            public int Id { get; set; }
         }
     }
 }
