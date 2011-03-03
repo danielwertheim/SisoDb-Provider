@@ -11,6 +11,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
         {
             DropStructureSet<ItemForIdentityInserts>();
             DropStructureSet<ItemForIdentityInsertsWithPrivateSetter>();
+            DropStructureSet<ItemForNullableIdentityInsertsWithPrivateSetter>();
         }
 
         [Test]

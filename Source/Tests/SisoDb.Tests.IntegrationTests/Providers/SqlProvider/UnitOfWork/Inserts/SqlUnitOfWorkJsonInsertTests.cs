@@ -10,6 +10,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
         protected override void OnTestFinalize()
         {
             DropStructureSet<MyClass>();
+            DropStructureSet<MyGuidClass>();
         }
 
         [Test]
