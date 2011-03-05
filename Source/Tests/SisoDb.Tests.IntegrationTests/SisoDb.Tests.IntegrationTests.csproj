@@ -99,6 +99,7 @@
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkIdentityInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertItemWithArraysTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithNestedStructuresTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInterfaceInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkJsonInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkWhereTests.cs" />
