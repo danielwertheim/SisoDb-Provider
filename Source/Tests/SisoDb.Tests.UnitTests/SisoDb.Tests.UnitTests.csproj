@@ -136,12 +136,12 @@
     <Compile Include="TypeExtensionsIsEnumerableBytesTypeTests.cs" />
     <Compile Include="TypeExtensionsIsEnumerableTypeTests.cs" />
     <Compile Include="TypeExtensionsTests.cs" />
-    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoComplexIndexablePropertiesTests.cs" />
-    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoEnumerableIndexablePropertiesTests.cs" />
-    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoIndexablePropertiesTests.cs" />
-    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoIdPropertyTests.cs" />
-    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoSimpleIndexablePropertiesTests.cs" />
-    <Compile Include="Structures\Schemas\TypeInfoTests\TypeInfoUniquesPropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterComplexIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterEnumerableIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterIdPropertyTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterSimpleIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterUniquesPropertiesTests.cs" />
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>

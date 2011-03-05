@@ -8,13 +8,11 @@ namespace SisoDb.Structures.Schemas
     public class AutoSchemaBuilder<T> : ISchemaBuilder
         where T : class
     {
-        private static readonly TypeInfo TypeInfoState;
-        private static readonly string[] NonIndexableNames;
+        private static readonly StructureTypeInfo TypeInfoState;
 
         static AutoSchemaBuilder()
         {
-            TypeInfoState = new TypeInfo(typeof(T));
-            NonIndexableNames = new[] { TypeInfo.IdName };
+            TypeInfoState = new StructureTypeInfo(typeof(T));
         }
 
         public IStructureSchema CreateSchema()
@@ -33,7 +31,7 @@ namespace SisoDb.Structures.Schemas
 
         private static IIdAccessor GetIdAccessor()
         {
-            var property = TypeInfoState.GetIdProperty();
+            var property = TypeInfoState.IdProperty;
             if (property == null)
                 throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIdMember.Inject(TypeInfoState.Name));
 
@@ -46,7 +44,7 @@ namespace SisoDb.Structures.Schemas
 
         private static IIndexAccessor[] GetIndexAccessors()
         {
-            var indexableProperties = TypeInfoState.GetIndexableProperties(NonIndexableNames);
+            var indexableProperties = TypeInfoState.IndexableProperties;
             var indexAccessors = indexableProperties.Select(CreateIndexAccessor);
 
             return indexAccessors.ToArray();

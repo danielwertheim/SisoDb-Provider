@@ -39,8 +39,8 @@ namespace SisoDb.Providers.SqlProvider
             StructureSchemaNew = structureSchemaNew.AssertNotNull("structureSchemaNew");
             StructureBuilder = structureBuilder.AssertNotNull("structureBuilder");
 
-            IdPropertyOld = TypeInfo<TOld>.GetIdProperty();
-            IdPropertyNew = TypeInfo<TNew>.GetIdProperty();
+            IdPropertyOld = StructureTypeInfo<TOld>.IdProperty;
+            IdPropertyNew = StructureTypeInfo<TNew>.IdProperty;
 
             KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
         }

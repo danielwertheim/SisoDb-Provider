@@ -4,15 +4,17 @@ using NUnit.Framework;
 using SisoDb.Annotations;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 {
     [TestFixture]
-    public class TypeInfoComplexIndexablePropertiesTests : UnitTestBase
+    public class StructureTypeReflecterComplexIndexablePropertiesTests : UnitTestBase
     {
+        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+
         [Test]
         public void GetComplexIndexableProperties_WhenRootWithSimpleAndComplexProperties_ReturnsOnlyComplexProperties()
         {
-            var properties = TypeInfo<WithSimpleAndComplexProperties>.GetComplexIndexablePropertyInfos();
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithSimpleAndComplexProperties));
 
             Assert.AreEqual(1, properties.Count());
         }
@@ -20,7 +22,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetComplexProperties_WhenRootWithUniqeAndNonUniqueComplexProperties_ReturnsComplexUniqueProperties()
         {
-            var properties = TypeInfo<WithUniqueAndNonUniqueComplexProperties>.GetComplexIndexablePropertyInfos();
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithUniqueAndNonUniqueComplexProperties));
 
             Assert.AreEqual(2, properties.Count());
         }
@@ -28,7 +30,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetComplexProperties_WhenRootWithEnumerable_EnumerableMemberIsNotReturnedAsComplex()
         {
-            var properties = TypeInfo<WithEnumerable>.GetComplexIndexablePropertyInfos();
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithEnumerable));
 
             Assert.AreEqual(0, properties.Count());
         }
@@ -36,7 +38,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetComplexProperties_WhenItIsContainedStructure_NotExtracted()
         {
-            var properties = TypeInfo<WithContainedStructure>.GetComplexIndexablePropertyInfos();
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithContainedStructure));
 
             Assert.AreEqual(0, properties.Count());
         }

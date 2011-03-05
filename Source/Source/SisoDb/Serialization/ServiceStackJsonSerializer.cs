@@ -2,7 +2,6 @@
 using System.Linq;
 using ServiceStack.Text;
 using SisoDb.Dynamic;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
@@ -47,7 +46,7 @@ namespace SisoDb.Serialization
         static ServiceStackJsonSerializer()
         {
             TypeConfig<T>.Properties = TypeConfig<T>.Properties
-                .Where(p => !TypeInfo.HasIdProperty(p.PropertyType)).ToArray();
+                .Where(p => !SisoDbEnvironment.StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
         }
 
         public static string ToJsonOrEmptyString(T item)

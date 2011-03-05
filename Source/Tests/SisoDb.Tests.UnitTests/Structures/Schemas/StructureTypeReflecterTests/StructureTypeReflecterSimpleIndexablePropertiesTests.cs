@@ -8,12 +8,14 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
 {
     [TestFixture]
-    public class TypeInfoSimpleIndexablePropertiesTests : UnitTestBase
+    public class StructureTypeReflecterSimpleIndexablePropertiesTests : UnitTestBase
     {
+        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+
         [Test]
         public void GetSimpleIndexableProperties_WhenMultiplePublicSimplePropertiesExistsAndNoExclusions_ReturnsAllPublicSimpleProperties()
         {
-            var properties = TypeInfo<WithSimpleProperties>.GetSimpleIndexablePropertyInfos();
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties));
 
             var names = properties.Select(p => p.Name).ToArray();
             Assert.AreEqual(6, properties.Count());
@@ -28,7 +30,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetSimpleIndexableProperties_WhenByteArray_NotReturned()
         {
-            var properties = TypeInfo<WithNonSimpleProperties>.GetSimpleIndexablePropertyInfos();
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithNonSimpleProperties));
 
             Assert.AreEqual(0, properties.Count());
         }
@@ -36,7 +38,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetSimpleIndexableProperties_WhenExclusionIsPassed_DoesNotReturnExcludedProperties()
         {
-            var properties = TypeInfo<WithSimpleProperties>.GetSimpleIndexablePropertyInfos(new[] { "Id", "Name" });
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "Id", "Name" });
 
             var names = properties.Select(p => p.Name).ToArray();
             CollectionAssert.DoesNotContain(names, "Id");
@@ -46,7 +48,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetSimpleIndexableProperties_WhenExclusionIsPassed_DoesReturnNonExcludedProperties()
         {
-            var properties = TypeInfo<WithSimpleProperties>.GetSimpleIndexablePropertyInfos(new[] { "Id", "Name" });
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "Id", "Name" });
 
             var names = properties.Select(p => p.Name).ToArray();
             CollectionAssert.Contains(names, "Age");
@@ -57,7 +59,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetSimpleIndexableProperties_WhenSimplePrivatePropertyExists_PrivatePropertyIsNotReturned()
         {
-            var properties = TypeInfo<WithPrivateProperty>.GetSimpleIndexablePropertyInfos();
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithPrivateProperty));
 
             Assert.AreEqual(0, properties.Count());
         }
@@ -65,7 +67,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetSimpleIndexableProperties_WhenSimpleAndComplexPropertiesExists_ReturnsOnlySimpleProperties()
         {
-            var properties = TypeInfo<WithSimpleAndComplexProperties>.GetSimpleIndexablePropertyInfos();
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleAndComplexProperties));
 
             var complex = properties.Where(p => !p.PropertyType.IsSimpleType());
             var names = properties.Select(p => p.Name).ToArray();
@@ -78,7 +80,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetSimpleIndexableProperties_WhenUniquesExists_ReturnsSimpleUniqueProperties()
         {
-            var properties = TypeInfo<WithUniqueIndexes>.GetSimpleIndexablePropertyInfos();
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithUniqueIndexes));
 
             var names = properties.Select(p => p.Name).ToArray();
             Assert.AreEqual(2, properties.Count());

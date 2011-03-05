@@ -30,7 +30,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
         private static IProperty GetPropertyByPath(string path)
         {
-            return TypeInfo<Dummy1>.GetIndexableProperties().Where(p => p.Path == path).Single();
+            return StructureTypeInfo<Dummy1>.IndexableProperties.Where(p => p.Path == path).Single();
         }
 
         private class Dummy1

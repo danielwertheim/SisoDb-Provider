@@ -8,12 +8,14 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
 {
     [TestFixture]
-    public class TypeInfoEnumerableIndexablePropertiesTests : UnitTestBase
+    public class StructureTypeReflecterEnumerableIndexablePropertiesTests : UnitTestBase
     {
+        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenNoEnumerableIndexesExists_ReturnsEmptyList()
         {
-            var properties = TypeInfo<WithNoEnumerableMembers>.GetEnumerableIndexablePropertyInfos();
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithNoEnumerableMembers));
 
             CustomAssert.IsEmpty(properties);
         }
@@ -21,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenIListOfTIndexesExists_ReturnsTheMember()
         {
-            var properties = TypeInfo<WithCollectionIndexes>.GetEnumerableIndexablePropertyInfos()
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithCollectionIndexes))
                 .Where(p => p.Name == "IList1")
                 .SingleOrDefault();
 
@@ -31,7 +33,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenIEnumerableOfTIndexesExists_ReturnsTheMember()
         {
-            var properties = TypeInfo<WithCollectionIndexes>.GetEnumerableIndexablePropertyInfos()
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithCollectionIndexes))
                 .Where(p => p.Name == "IEnumerable1")
                 .SingleOrDefault();
 
@@ -41,7 +43,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenIEnumerableOfTIndexesExists_DoesNotReturnTheElementMembers()
         {
-            var properties = TypeInfo<WithCollectionIndexes>.GetEnumerableIndexablePropertyInfos()
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithCollectionIndexes))
                 .Where(p => p.Name == "ElementInt1")
                 .SingleOrDefault();
 
@@ -51,7 +53,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenEnumerableOfBytes_NoPropertiesAreReturned()
         {
-            var properties = TypeInfo<WithEnumarbleBytes>.GetEnumerableIndexablePropertyInfos();
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithEnumarbleBytes));
 
             Assert.AreEqual(0, properties.Count());
         }

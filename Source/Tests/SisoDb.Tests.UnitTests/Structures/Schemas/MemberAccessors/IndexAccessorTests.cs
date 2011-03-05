@@ -122,7 +122,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
 
         private static IProperty GetProperty(string name)
         {
-            return TypeInfo<Dummy>.GetIndexableProperties().Where(p => p.Name == name).Single();
+            return StructureTypeInfo<Dummy>.IndexableProperties.Where(p => p.Name == name).Single();
         }
 
         private class Dummy

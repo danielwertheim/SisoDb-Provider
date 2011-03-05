@@ -15,7 +15,7 @@ namespace SisoDb.Lambdas.Parsers
 
             foreach (var includeExpression in includeExpressions)
             {
-                var childStructureName = TypeInfo<TInclude>.Name;
+                var childStructureName = StructureTypeInfo<TInclude>.Name;
                 var memberExpression = Expressions.GetRightMostMember(includeExpression);
                 var idReferencePath = memberExpression.Path();
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
@@ -29,7 +29,7 @@ namespace SisoDb.Lambdas.Parsers
 
         private static string BuildObjectReferencePath(string idReferencePath)
         {
-            return !idReferencePath.EndsWith("Id") 
+            return !idReferencePath.EndsWith(StructureSchema.IdMemberName) 
                 ? idReferencePath 
                 : idReferencePath.Substring(0, idReferencePath.Length - 2);
         }

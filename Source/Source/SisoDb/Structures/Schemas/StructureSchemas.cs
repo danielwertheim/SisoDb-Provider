@@ -14,7 +14,7 @@ namespace SisoDb.Structures.Schemas
 
         public IStructureSchema GetSchema<T>() where T : class
         {
-            var key = TypeInfo<T>.Name;
+            var key = StructureTypeInfo<T>.Name;
 
             if (!_schemas.ContainsKey(key))
                 Register<T>(key);
@@ -24,7 +24,7 @@ namespace SisoDb.Structures.Schemas
 
         public void RemoveSchema<T>() where T : class
         {
-            var key = TypeInfo<T>.Name;
+            var key = StructureTypeInfo<T>.Name;
             _schemas.Remove(key);
         }
 

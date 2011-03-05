@@ -13,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         {
             var id = Guid.Parse("fc47a673-5a5b-419b-9a40-a756591aa7bf");
             var item = new GuidDummy { Id = id };
-            var property = TypeInfo<GuidDummy>.GetIdProperty();
+            var property = StructureTypeInfo<GuidDummy>.IdProperty;
             
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue<Guid>(item);
@@ -26,7 +26,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         {
             var id = Guid.Parse("fc47a673-5a5b-419b-9a40-a756591aa7bf");
             var item = new NullableGuidDummy { Id = id };
-            var property = TypeInfo<NullableGuidDummy>.GetIdProperty();
+            var property = StructureTypeInfo<NullableGuidDummy>.IdProperty;
             
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue<Guid>(item);
@@ -38,7 +38,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         public void GetValue_FromUnAssignedNullableGuidProperty_ReturnsNull()
         {
             var item = new NullableGuidDummy();
-            var property = TypeInfo<NullableGuidDummy>.GetIdProperty();
+            var property = StructureTypeInfo<NullableGuidDummy>.IdProperty;
             
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue<Guid>(item);
@@ -51,7 +51,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         {
             const int id = 42;
             var item = new IdentityDummy { Id = id };
-            var property = TypeInfo<IdentityDummy>.GetIdProperty();
+            var property = StructureTypeInfo<IdentityDummy>.IdProperty;
 
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue<int>(item);
@@ -64,7 +64,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         {
             const int id = 42;
             var item = new NullableIdentityDummy { Id = id };
-            var property = TypeInfo<NullableIdentityDummy>.GetIdProperty();
+            var property = StructureTypeInfo<NullableIdentityDummy>.IdProperty;
 
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue<int>(item);
@@ -76,7 +76,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         public void GetValue_FromUnAssignedNullableIdentityProperty_ReturnsAssignedInt()
         {
             var item = new NullableIdentityDummy();
-            var property = TypeInfo<NullableIdentityDummy>.GetIdProperty();
+            var property = StructureTypeInfo<NullableIdentityDummy>.IdProperty;
 
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue<int>(item);
@@ -90,7 +90,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var id = Guid.Parse("fc47a673-5a5b-419b-9a40-a756591aa7bf");
             var item = new GuidDummy();
 
-            var property = TypeInfo<GuidDummy>.GetIdProperty();
+            var property = StructureTypeInfo<GuidDummy>.IdProperty;
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 
@@ -103,7 +103,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             const int id = 42;
             var item = new IdentityDummy();
 
-            var property = TypeInfo<IdentityDummy>.GetIdProperty();
+            var property = StructureTypeInfo<IdentityDummy>.IdProperty;
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 
@@ -116,7 +116,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var id = Guid.Parse("fc47a673-5a5b-419b-9a40-a756591aa7bf");
             var item = new NullableGuidDummy();
 
-            var property = TypeInfo<NullableGuidDummy>.GetIdProperty();
+            var property = StructureTypeInfo<NullableGuidDummy>.IdProperty;
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 
@@ -129,7 +129,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             const int id = 42;
             var item = new NullableIdentityDummy();
 
-            var property = TypeInfo<NullableIdentityDummy>.GetIdProperty();
+            var property = StructureTypeInfo<NullableIdentityDummy>.IdProperty;
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 

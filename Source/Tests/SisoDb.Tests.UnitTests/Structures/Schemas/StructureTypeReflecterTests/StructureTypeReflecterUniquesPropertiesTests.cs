@@ -8,12 +8,14 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
 {
     [TestFixture]
-    public class TypeInfoUniquesPropertiesTests : UnitTestBase
+    public class StructureTypeReflecterUniquesPropertiesTests : UnitTestBase
     {
+        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+
         [Test]
         public void GetIndexableProperties_WhenSimpleUniquesExistsOnRoot_ReturnsSimpleUniques()
         {
-            var properties = TypeInfo<WithSimpleUniques>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithSimpleUniques));
 
             CustomAssert.Count(2, properties);
             CustomAssert.Exists(properties, p => p.Name == "UqIntOnLevel1");
@@ -24,20 +26,20 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         public void GetIndexableProperties_WhenRootWithExplicitUniqueOnChildWithNoUniques_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => TypeInfo<WithExplicitUniqueOnChildWithoutUniques>.GetIndexableProperties());
+                () => _reflecter.GetIndexableProperties(typeof(WithExplicitUniqueOnChildWithoutUniques)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithExplicitUniqueOnChildWithUniques_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => TypeInfo<WithExplicitUniqueOnChildWithUniques>.GetIndexableProperties());
+                () => _reflecter.GetIndexableProperties(typeof(WithExplicitUniqueOnChildWithUniques)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithImplicitUniqueOnChildWithUniques_ChildUniquesAreExtracted()
         {
-            var properties = TypeInfo<WithImplicitUniqueOnChildWithUniques>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithImplicitUniqueOnChildWithUniques));
 
             var uniques = properties.Where(p => p.IsUnique).ToList();
             CustomAssert.Count(1, uniques);
@@ -48,20 +50,20 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         public void GetIndexableProperties_WhenRootWithUniqueEnumerableOfSimple_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => TypeInfo<WithUniqueEnumerableOfSimple>.GetIndexableProperties());
+                () => _reflecter.GetIndexableProperties(typeof(WithUniqueEnumerableOfSimple)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithUniqueEnumerableOfComplexWithUnique_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => TypeInfo<WithUniqueEnumerableOfComplexWithUnique>.GetIndexableProperties());
+                () => _reflecter.GetIndexableProperties(typeof(WithUniqueEnumerableOfComplexWithUnique)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithEnumerableOfComplexWithUnique_UniqueIsExtracted()
         {
-            var properties = TypeInfo<WithEnumerableOfComplexWithUnique>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithEnumerableOfComplexWithUnique));
 
             var uniques = properties.Where(p => p.IsUnique).ToList();
             CustomAssert.Count(1, uniques);

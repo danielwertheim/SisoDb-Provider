@@ -208,6 +208,7 @@
     <Compile Include="Structures\IStructureIndexesFactory.cs" />
     <Compile Include="Structures\Schemas\IProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
+    <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
     <Compile Include="Reflections\TypeExtensions.cs" />
     <Compile Include="Providers\SqlProvider\BulkInserts\SqlBulkInserter.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="Structures\IStructureBuilder.cs" />
     <Compile Include="Structures\IStructureIndex.cs" />
     <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
     <Compile Include="Structures\StructureId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
@@ -246,7 +248,7 @@
     <Compile Include="Structures\Schemas\PropertyPathBuilder.cs" />
     <Compile Include="Structures\Schemas\StructureSchema.cs" />
     <Compile Include="Structures\Schemas\StructureSchemas.cs" />
-    <Compile Include="Structures\Schemas\TypeInfo.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeInfo.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
     <Compile Include="SisoDbException.cs" />

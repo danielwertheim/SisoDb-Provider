@@ -2,15 +2,17 @@
 using NUnit.Framework;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 {
     [TestFixture]
-    public class TypeInfoIdPropertyTests : UnitTestBase
+    public class StructureTypeReflecterIdPropertyTests : UnitTestBase
     {
+        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+
         [Test]
         public void GetIdProperty_WhenPublicGuidIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithGuidId>.GetIdProperty();
+            var property = _reflecter.GetIdProperty(typeof (WithGuidId));
 
             Assert.IsNotNull(property);
         }
@@ -18,7 +20,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPublicNullableGuidIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithNullableGuidId>.GetIdProperty();
+            var property = _reflecter.GetIdProperty(typeof (WithNullableGuidId));
 
             Assert.IsNotNull(property);
         }
@@ -26,7 +28,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPrivateGuidIdProperty_ReturnsNull()
         {
-            var property = TypeInfo<WithPrivateGuidId>.GetIdProperty();
+            var property = _reflecter.GetIdProperty(typeof (WithPrivateGuidId));
 
             Assert.IsNull(property);
         }
@@ -34,7 +36,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPublicIntIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithIntId>.GetIdProperty();
+            var property = _reflecter.GetIdProperty(typeof (WithIntId));
 
             Assert.IsNotNull(property);
         }
@@ -42,7 +44,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPublicNullableIntIdProperty_ReturnsProperty()
         {
-            var property = TypeInfo<WithNullableIntId>.GetIdProperty();
+            var property = _reflecter.GetIdProperty(typeof (WithNullableIntId));
 
             Assert.IsNotNull(property);
         }
@@ -50,7 +52,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIdProperty_WhenPrivateIntIdProperty_ReturnsNull()
         {
-            var property = TypeInfo<WithPrivateIntId>.GetIdProperty();
+            var property = _reflecter.GetIdProperty(typeof(WithPrivateIntId));
 
             Assert.IsNull(property);
         }

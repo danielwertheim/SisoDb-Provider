@@ -4,15 +4,17 @@ using System.Linq;
 using NUnit.Framework;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 {
     [TestFixture]
-    public class TypeInfoIndexablePropertiesTests : UnitTestBase
+    public class StructureTypeReflecterIndexablePropertiesTests : UnitTestBase
     {
+        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+
         [Test]
         public void GetIndexableProperties_WhenIEnumerableOfTIndexes_DoesNotReturnTheEnumerableMember()
         {
-            var properties = TypeInfo<WithCollectionIndexes>.GetIndexableProperties()
+            var properties = _reflecter.GetIndexableProperties(typeof(WithCollectionIndexes))
                 .SingleOrDefault(p => p.Path == "IEnumerable1");
 
             Assert.IsNull(properties);
@@ -21,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIndexableProperties_WhenIEnumerableOfTIndexes_ReturnsTheElementMembers()
         {
-            var properties = TypeInfo<WithCollectionIndexes>.GetIndexableProperties()
+            var properties = _reflecter.GetIndexableProperties(typeof(WithCollectionIndexes))
                 .SingleOrDefault(p => p.Path == "IEnumerable1.Int2");
 
             Assert.IsNotNull(properties);
@@ -30,7 +32,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIndexableProperties_WhenIListOfTIndexes_ReturnsTheElementMembers()
         {
-            var properties = TypeInfo<WithCollectionIndexes>.GetIndexableProperties()
+            var properties = _reflecter.GetIndexableProperties(typeof(WithCollectionIndexes))
                 .SingleOrDefault(p => p.Path == "IList1.Int2");
 
             Assert.IsNotNull(properties);
@@ -39,7 +41,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIndexableProperties_WhenArrayOfStrings_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = TypeInfo<WithArrayOfStrings>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithArrayOfStrings));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Values");
 
             Assert.AreEqual(1, properties.Count());
@@ -49,7 +51,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIndexableProperties_WhenArrayOfIntegers_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = TypeInfo<WithArrayOfIntegers>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithArrayOfIntegers));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Values");
 
             Assert.AreEqual(1, properties.Count());
@@ -59,7 +61,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIndexableProperties_WhenWithNestedArrayOfStrings_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = TypeInfo<WithNestedArrayOfStrings>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithNestedArrayOfStrings));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Item.Values");
 
             Assert.AreEqual(1, properties.Count());
@@ -69,7 +71,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIndexableProperties_WhenWithArrayOfNestedArrayOfStrings_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = TypeInfo<WithArrayOfNestedArrayOfStrings>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithArrayOfNestedArrayOfStrings));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Items.Values");
 
             Assert.AreEqual(1, properties.Count());
@@ -79,7 +81,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
         [Test]
         public void GetIndexableProperties_WhenEnumerableByteMembers_NoPropertiesAreReturned()
         {
-            var properties = TypeInfo<WithEnumarbleBytes>.GetIndexableProperties();
+            var properties = _reflecter.GetIndexableProperties(typeof(WithEnumarbleBytes));
 
             Assert.AreEqual(0, properties.Count());
         }
