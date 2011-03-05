@@ -2,26 +2,20 @@
 using System.Linq;
 using ServiceStack.Text;
 using SisoDb.Dynamic;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
-    /// <summary>
-    /// <![CDATA[http://www.servicestack.net, https://github.com/ServiceStack.ServiceStack.Text]]>
-    /// </summary>
     public class ServiceStackJsonSerializer : IJsonSerializer
     {
         public string ToJsonOrEmptyString<T>(T item) where T : class
         {
-            if (item == null)
-                return string.Empty;
-            return JsonSerializer.SerializeToString<T>(item);
+            return ServiceStackJsonSerializer<T>.ToJsonOrEmptyString(item);
         }
 
         public T ToItemOrNull<T>(string json) where T : class
         {
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-            return JsonSerializer.DeserializeFromString<T>(json);
+            return ServiceStackJsonSerializer<T>.ToItemOrNull(json);
         }
 
         public IDictionary<string, object> ToTypedKeyValueOrNull(TypeDescriptor typeDescriptor, string json)
@@ -45,6 +39,30 @@ namespace SisoDb.Serialization
             }
 
             return kvRepresentation;
+        }
+    }
+
+    public static class ServiceStackJsonSerializer<T> where T : class
+    {
+        static ServiceStackJsonSerializer()
+        {
+            TypeConfig<T>.Properties = TypeConfig<T>.Properties
+                .Where(p => !TypeInfo.HasIdProperty(p.PropertyType)).ToArray();
+        }
+
+        public static string ToJsonOrEmptyString(T item)
+        {
+            if (item == null)
+                return string.Empty;
+
+            return JsonSerializer.SerializeToString(item);
+        }
+
+        public static T ToItemOrNull(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+            return JsonSerializer.DeserializeFromString<T>(json);
         }
     }
 }

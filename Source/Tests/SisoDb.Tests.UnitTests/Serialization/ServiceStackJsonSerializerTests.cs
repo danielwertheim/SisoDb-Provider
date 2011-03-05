@@ -82,6 +82,22 @@ namespace SisoDb.Tests.UnitTests.Serialization
             CustomAssert.KeyValueEquality(expectedKv, kv);
         }
 
+        [Test]
+        public void ToJsonOrEmptyString_WhenReferencingOtherStructure_ReferencedStructureIsNotRepresentedInJson()
+        {
+            var structure = new Structure
+            {
+                ReferencedStructureId = 999,
+                ReferencedStructure = {OtherStructureString = "Not to be included"},
+                Item = {String1 = "To be included"}
+            };
+
+            var json = _jsonSerializer.ToJsonOrEmptyString(structure);
+
+            const string expectedJson = "{\"Id\":0,\"ReferencedStructureId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
+            Assert.AreEqual(expectedJson, json);
+        }
+
         private class JsonEntity
         {
             public string Name { get; private set; }
@@ -116,6 +132,34 @@ namespace SisoDb.Tests.UnitTests.Serialization
             public int Int1 { get; set; }
 
             public DateTime? DateTime1 { get; set; }
+        }
+
+        private class Structure
+        {
+            public int Id { get; set; }
+
+            public int ReferencedStructureId 
+            {
+                get { return ReferencedStructure.Id; }
+                set { ReferencedStructure.Id = value; }
+            }
+
+            public OtherStructure ReferencedStructure { get; set; }
+
+            public Item Item { get; set; }
+
+            public Structure()
+            {
+                ReferencedStructure = new OtherStructure();
+                Item = new Item();
+            }
+        }
+
+        private class OtherStructure
+        {
+            public int Id { get; set; }
+
+            public string OtherStructureString { get; set; }
         }
     }
 }

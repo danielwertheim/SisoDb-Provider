@@ -50,10 +50,10 @@ namespace SisoDb.Structures.Schemas
     {
         private readonly Type _type;
 
-        private const BindingFlags IdPropertyBindingFlags =
+        public const BindingFlags IdPropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
-        private const BindingFlags PropertyBindingFlags =
+        public const BindingFlags PropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
         public const string IdName = "Id";
@@ -138,6 +138,11 @@ namespace SisoDb.Structures.Schemas
                 properties = properties.Where(p => !nonIndexableNames.Contains(p.Name));
 
             return properties.ToArray();
+        }
+
+        public static bool HasIdProperty(Type type)
+        {
+            return GetIdProperty(type) != null;
         }
 
         private static IProperty GetIdProperty(Type type)
