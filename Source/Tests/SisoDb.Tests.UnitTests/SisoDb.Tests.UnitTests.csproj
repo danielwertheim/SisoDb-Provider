@@ -112,7 +112,7 @@
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbColumnGeneratorTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlDatabaseTests.cs" />
-    <Compile Include="Providers\SqlProvider\StructureSchemaExtensionsTests.cs" />
+    <Compile Include="Providers\SqlProvider\SqlStructureSchemaExtensionsTests.cs" />
     <Compile Include="StringConverterTests.cs" />
     <Compile Include="Structures\Schemas\PropertyGetValuesOnSubItemTests.cs" />
     <Compile Include="Structures\Schemas\PropertyTestHelper.cs" />

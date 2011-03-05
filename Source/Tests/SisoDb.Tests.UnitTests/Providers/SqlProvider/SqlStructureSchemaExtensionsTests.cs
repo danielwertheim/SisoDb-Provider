@@ -6,7 +6,7 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 {
     [TestFixture]
-    public class StructureSchemaExtensionsTests : UnitTestBase
+    public class SqlStructureSchemaExtensionsTests : UnitTestBase
     {
         [Test]
         public void GetStructureTableName_ForStructure_ReturnsCorrectName()
