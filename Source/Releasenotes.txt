@@ -5,6 +5,9 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v0.9.0.0	- 2011-03-06
+[New]:		If a Structure contains another Structure (one with an Id) it will not be serialized and indexed since this structure should be stored on it's own.
+
 v0.8.5		- 2011-03-01
 [New]:		UnitOfWork now supports Json inserts via: InsertJson, InsertManyJson. NOTE! If you have instances of an entity, it's more effective to pass it in instead of raw json.
 
