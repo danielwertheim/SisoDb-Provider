@@ -10,15 +10,15 @@ namespace SisoDb.Profiling
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
-            //Console.ReadKey();
-            //return;
+            Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
+            Console.ReadKey();
+            return;
 
-            var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
-            var db = new SisoDbFactory().CreateDatabase(cnInfo);
+            //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
+            //var db = new SisoDbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
 
-            ProfilingInserts(db, 1000, 5);
+            //ProfilingInserts(db, 1000, 5);
 
             //InsertCustomers(1, 100000, db);
             //ProfilingQueries(db, GetAllCustomers);
@@ -26,8 +26,8 @@ namespace SisoDb.Profiling
 
             //ProfilingUpdateStructureSet(db);
 
-            Console.WriteLine("---- Done ----");
-            Console.ReadKey();
+            //Console.WriteLine("---- Done ----");
+            //Console.ReadKey();
         }
 
         private static void ProfilingUpdateStructureSet(ISisoDatabase database)
