@@ -113,6 +113,22 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             Assert.IsFalse(property.IsEnumerable);
         }
 
+        [Test]
+        public void IsNullableValueType_WhenNotNullableValueType_ReturnsFalse()
+        {
+            var property = GetProperty<Dummy>("Guid1");
+
+            Assert.IsFalse(property.IsNullableValueType);
+        }
+
+        [Test]
+        public void IsNullableValueType_WhenNullableValueType_ReturnsFalse()
+        {
+            var property = GetProperty<Dummy>("NullableGuid1");
+
+            Assert.IsTrue(property.IsNullableValueType);
+        }
+
         private static Property GetProperty<T>(string name)
         {
             return PropertyTestHelper.GetProperty<T>(name);
@@ -137,6 +153,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             public string String1 { get; set; }
 
             public Guid Guid1 { get; set; }
+
+            public Guid? NullableGuid1 { get; set; }
 
             public SomeValues Enum1 { get; set; }
 

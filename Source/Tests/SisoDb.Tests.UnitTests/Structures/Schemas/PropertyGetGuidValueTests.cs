@@ -7,7 +7,7 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
     [TestFixture]
-    public class PropertyGetGuidValuesTests : UnitTestBase
+    public class PropertyGetGuidValueTests : UnitTestBase
     {
         [Test]
         public void GetIdValue_WhenGuidOnFirstLevel_ReturnsGuid()

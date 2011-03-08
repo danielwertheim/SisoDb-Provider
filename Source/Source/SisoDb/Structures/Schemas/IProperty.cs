@@ -21,6 +21,8 @@ namespace SisoDb.Structures.Schemas
         bool IsSimpleType { get; }
 
         bool IsUnique { get; }
+
+        bool IsNullableValueType { get; }
        
         bool IsEnumerable { get; }
 
@@ -37,7 +39,5 @@ namespace SisoDb.Structures.Schemas
             where TIn : struct;
 
         IList<object> GetValues(object item);
-
-        //void SetValue<TValue>(object item, TValue value);
     }
 }

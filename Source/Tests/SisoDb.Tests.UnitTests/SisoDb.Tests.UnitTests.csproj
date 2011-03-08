@@ -123,8 +123,8 @@
     <Compile Include="Structures\Schemas\AutoSchemaBuilderTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessorTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IdAccessorTests.cs" />
-    <Compile Include="Structures\Schemas\PropertyGetGuidValuesTests.cs" />
-    <Compile Include="Structures\Schemas\PropertyGetIntValuesTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyGetGuidValueTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyGetIdentityValueTests.cs" />
     <Compile Include="Structures\Schemas\PropertyGetStringValuesTests.cs" />
     <Compile Include="Structures\Schemas\PropertyPathBuilderTests.cs" />
     <Compile Include="Structures\Schemas\PropertyTests.cs" />

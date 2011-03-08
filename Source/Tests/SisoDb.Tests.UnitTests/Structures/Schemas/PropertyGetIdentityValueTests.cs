@@ -5,23 +5,8 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
     [TestFixture]
-    public class PropertyGetIntValuesTests : UnitTestBase
+    public class PropertyGetIdentityValueTests : UnitTestBase
     {
-        [Test]
-        public void What_When_Expect()
-        {
-            var intPropertyInfo = typeof(Dummy2).GetProperty("Id");
-            var intProperty = new Property(intPropertyInfo);
-
-            const int expected = 42;
-            var item = new Dummy2 { Id = expected };
-
-            var actual = intProperty.GetIdValue<Dummy2, int>(item);
-            intProperty.SetIdValue(item, 33);
-
-            Assert.AreEqual(expected, actual);
-        }
-
         [Test]
         public void GetIdValue_WhenIntOnFirstLevel_ReturnsInt()
         {

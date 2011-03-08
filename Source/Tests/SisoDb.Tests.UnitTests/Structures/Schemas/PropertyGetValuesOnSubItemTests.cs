@@ -50,14 +50,29 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp, 1);
 
             var subItems = new[] { null, new SubItem { Value = "A" } };
-            var item = new Item { SubItems = subItems};
+            var item = new Item { SubItems = subItems };
             var values = valueProp.GetValues(item);
 
             Assert.AreEqual(new object[] { null, "A" }, values);
         }
 
+        [Test]
+        public void GetValues_WhenStringOnSingleSubItem_ReturnsValue()
+        {
+            var subItemProp = PropertyTestHelper.GetProperty<Item>("SingleSubItem");
+            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemProp, 1);
+
+            var subItem = new SubItem { Value = "The value" };
+            var item = new Item { SingleSubItem = subItem };
+            var values = valueProp.GetValues(item);
+
+            Assert.AreEqual(new object[]{"The value"}, values);
+        }
+
         private class Item
         {
+            public SubItem SingleSubItem { get; set; }
+
             public SubItem[] SubItems { get; set; }
         }
 

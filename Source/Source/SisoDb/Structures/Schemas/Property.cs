@@ -41,6 +41,8 @@ namespace SisoDb.Structures.Schemas
 
         public bool IsUnique { get; private set; }
 
+        public bool IsNullableValueType { get; private set; }
+
         public bool IsEnumerable { get; private set; }
 
         public bool IsElement { get; private set; }
@@ -59,10 +61,11 @@ namespace SisoDb.Structures.Schemas
             Parent = parent;
 
             IsSimpleType = Member.PropertyType.IsSimpleType();
+            IsNullableValueType = Member.PropertyType.IsNullableValueType();
             IsEnumerable = Member.PropertyType.IsEnumerableType();
             ElementType = IsEnumerable ? Member.PropertyType.GetEnumerableElementType() : null;
             IsElement = Parent != null && (Parent.IsElement || Parent.IsEnumerable);
-
+            
             var uniqueAttribute = (UniqueAttribute)Member.GetCustomAttributes(UniqueAttributeType, true).FirstOrDefault();
             if (uniqueAttribute != null && !IsSimpleType)
                 throw new SisoDbException(ExceptionMessages.Property_Ctor_UniqueOnNonSimpleType);
@@ -85,7 +88,7 @@ namespace SisoDb.Structures.Schemas
             var type = Member.DeclaringType;
             var factoryClassType = typeof (X);
 
-            if(!Member.PropertyType.IsNullableValueType())
+            if(!IsNullableValueType)
             {
                 var getterFactory = factoryClassType.GetMethod("GetterFor").MakeGenericMethod(type, Member.PropertyType);
                 _getter = (Delegate)getterFactory.Invoke(null, new object[] { Member });    
@@ -105,7 +108,7 @@ namespace SisoDb.Structures.Schemas
             var type = Member.DeclaringType;
             var factoryClassType = typeof(X);
 
-            if (!Member.PropertyType.IsNullableValueType())
+            if (!IsNullableValueType)
             {
                 var setterFactory = factoryClassType.GetMethod("SetterFor").MakeGenericMethod(type, Member.PropertyType);
                 _setter = (Delegate)setterFactory.Invoke(null, new object[] { Member });
