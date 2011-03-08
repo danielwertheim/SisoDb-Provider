@@ -177,9 +177,6 @@
   <data name="IdAccessor_UnsupportedPropertyType" xml:space="preserve">
     <value>The Property.PropertyType '{0}' is not supported by the IdAccessor.</value>
   </data>
-  <data name="Property_GetIdValue_UnsupportedIdDataType" xml:space="preserve">
-    <value>Unknown datatype for Id-value.</value>
-  </data>
   <data name="StructureIndex_ValueArgument_IncorrectType" xml:space="preserve">
     <value>Only strings and valuetypes can be stored as indexes.</value>
   </data>
@@ -258,5 +255,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="SqlStructureSetUpdater_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id of the new structure '{0}' does not match the Id of the old structure '{1}'.</value>
+  </data>
+  <data name="Property_SetIdValue_InvalidLevel" xml:space="preserve">
+    <value>Id values must lie on the root object.</value>
   </data>
 </root>

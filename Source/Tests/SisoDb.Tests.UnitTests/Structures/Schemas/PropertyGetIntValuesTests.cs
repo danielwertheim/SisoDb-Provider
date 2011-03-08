@@ -8,6 +8,21 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
     public class PropertyGetIntValuesTests : UnitTestBase
     {
         [Test]
+        public void What_When_Expect()
+        {
+            var intPropertyInfo = typeof(Dummy2).GetProperty("Id");
+            var intProperty = new Property(intPropertyInfo);
+
+            const int expected = 42;
+            var item = new Dummy2 { Id = expected };
+
+            var actual = intProperty.GetIdValue<Dummy2, int>(item);
+            intProperty.SetIdValue(item, 33);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void GetIdValue_WhenIntOnFirstLevel_ReturnsInt()
         {
             var intPropertyInfo = typeof(Dummy2).GetProperty("Id");
@@ -16,7 +31,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             const int expected = 42;
             var item = new Dummy2 { Id = expected };
 
-            var actual = intProperty.GetIdValue<int>(item);
+            var actual = intProperty.GetIdValue<Dummy2, int>(item);
 
             Assert.AreEqual(expected, actual);
         }
@@ -30,7 +45,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             const int expectedInt = 42;
             var item = new Dummy2 { NullableId = expectedInt };
 
-            var actual = intProperty.GetIdValue<int>(item);
+            var actual = intProperty.GetIdValue<Dummy2, int>(item);
 
             Assert.AreEqual(expectedInt, actual);
         }
@@ -43,7 +58,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var item = new Dummy2 { NullableId = null };
 
-            var actual = intProperty.GetIdValue<int>(item);
+            var actual = intProperty.GetIdValue<Dummy2, int>(item);
 
             Assert.IsNull(actual);
         }
@@ -59,7 +74,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
             var item = new Dummy1 { Item = new Dummy2 { Id = 42 } };
 
-            var ex = Assert.Throws<SisoDbException>(() => intProperty.GetIdValue<int>(item));
+            var ex = Assert.Throws<SisoDbException>(() => intProperty.GetIdValue<Dummy1, int>(item));
 
             Assert.AreEqual(ExceptionMessages.Property_GetIdValue_InvalidLevel, ex.Message);
         }

@@ -6,9 +6,12 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
     {
         IdTypes IdType { get; }
 
-        TReturn? GetValue<TReturn>(object item)
-            where TReturn : struct;
+        TOut? GetValue<T, TOut>(T item)
+            where T : class
+            where TOut : struct;
 
-        void SetValue(object item, ValueType value);
+        void SetValue<T, TIn>(T item, TIn value)
+            where T : class
+            where TIn : struct;
     }
 }

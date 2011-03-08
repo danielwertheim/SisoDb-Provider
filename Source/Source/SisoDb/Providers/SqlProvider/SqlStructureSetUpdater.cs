@@ -39,8 +39,8 @@ namespace SisoDb.Providers.SqlProvider
             StructureSchemaNew = structureSchemaNew.AssertNotNull("structureSchemaNew");
             StructureBuilder = structureBuilder.AssertNotNull("structureBuilder");
 
-            IdPropertyOld = StructureTypeInfo<TOld>.IdProperty;
-            IdPropertyNew = StructureTypeInfo<TNew>.IdProperty;
+            IdPropertyOld = StructureType<TOld>.IdProperty;
+            IdPropertyNew = StructureType<TNew>.IdProperty;
 
             KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
         }
@@ -125,21 +125,22 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        private IStructureId GetStructureId(object item)
+        private IStructureId GetStructureId<T>(T item)
+            where T : class 
         {
             var idProperty = item is TOld ? IdPropertyOld : IdPropertyNew;
             var structureSchema = item is TOld ? StructureSchemaOld : StructureSchemaNew;
 
             if (structureSchema.IdAccessor.IdType == IdTypes.Identity)
             {
-                var idValue = idProperty.GetIdValue<int>(item);
+                var idValue = idProperty.GetIdValue<T, int>(item);
 
                 return idValue.HasValue ? StructureId.NewIdentityId(idValue.Value) : null;
             }
 
             if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
             {
-                var idValue = idProperty.GetIdValue<Guid>(item);
+                var idValue = idProperty.GetIdValue<T, Guid>(item);
 
                 return idValue.HasValue ? StructureId.NewGuidId(idValue.Value) : null;
             }

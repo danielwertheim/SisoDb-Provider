@@ -28,7 +28,7 @@ namespace SisoDb.Structures
         private static Guid EnsureGuidIdValueExists<T>(T item, IStructureSchema structureSchema)
             where T : class
         {
-            var idValue = structureSchema.IdAccessor.GetValue<Guid>(item);
+            var idValue = structureSchema.IdAccessor.GetValue<T, Guid>(item);
             var keyIsAssigned = idValue.HasValue && !Guid.Empty.Equals(idValue.Value);
 
             if (!keyIsAssigned)
@@ -43,7 +43,7 @@ namespace SisoDb.Structures
         private static int EnsureIdentityValueExists<T>(T item, IStructureSchema structureSchema)
             where T : class
         {
-            var idValue = structureSchema.IdAccessor.GetValue<int>(item);
+            var idValue = structureSchema.IdAccessor.GetValue<T, int>(item);
             if (!idValue.HasValue || idValue < 1)
                 throw new SisoDbException(ExceptionMessages.StructureIdFactory_MissingIdentityValue);
 

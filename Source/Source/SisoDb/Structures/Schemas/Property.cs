@@ -12,6 +12,9 @@ namespace SisoDb.Structures.Schemas
     [Serializable]
     public class Property : IProperty
     {
+        private Delegate _getter;
+        private Delegate _setter;
+
         private static readonly Type UniqueAttributeType = typeof(UniqueAttribute);
 
         private List<PropertyInfo> Callstack { get; set; }
@@ -47,7 +50,6 @@ namespace SisoDb.Structures.Schemas
         public Property(PropertyInfo member)
             : this(0, null, member)
         {
-            Member = member;
         }
 
         public Property(int level, IProperty parent, PropertyInfo member)
@@ -71,6 +73,48 @@ namespace SisoDb.Structures.Schemas
 
             Callstack = GetCallstack(this);
             Callstack.Reverse();
+
+
+
+            InitializeGetters();
+            InitializeSetters();
+        }
+
+        private void InitializeGetters()
+        {
+            var type = Member.DeclaringType;
+            var factoryClassType = typeof (X);
+
+            if(!Member.PropertyType.IsNullableValueType())
+            {
+                var getterFactory = factoryClassType.GetMethod("GetterFor").MakeGenericMethod(type, Member.PropertyType);
+                _getter = (Delegate)getterFactory.Invoke(null, new object[] { Member });    
+            }
+            else
+            {
+                var getterFactory = factoryClassType.GetMethod("GetterForNullable").MakeGenericMethod(type, Member.PropertyType.GetGenericArguments()[0]);
+                _getter = (Delegate)getterFactory.Invoke(null, new object[] { Member });   
+            }
+        }
+
+        private void InitializeSetters()
+        {
+            if (Member.Name !=  StructureSchema.IdMemberName)
+                return;
+
+            var type = Member.DeclaringType;
+            var factoryClassType = typeof(X);
+
+            if (!Member.PropertyType.IsNullableValueType())
+            {
+                var setterFactory = factoryClassType.GetMethod("SetterFor").MakeGenericMethod(type, Member.PropertyType);
+                _setter = (Delegate)setterFactory.Invoke(null, new object[] { Member });
+            }
+            else
+            {
+                var setterFactory = factoryClassType.GetMethod("SetterForNullable").MakeGenericMethod(type, Member.PropertyType.GetGenericArguments()[0]);
+                _setter = (Delegate)setterFactory.Invoke(null, new object[] { Member });
+            }
         }
 
         private static List<PropertyInfo> GetCallstack(IProperty property)
@@ -85,23 +129,29 @@ namespace SisoDb.Structures.Schemas
             return props;
         }
 
-        public TReturn? GetIdValue<TReturn>(object item)
-            where TReturn : struct
+        public TOut? GetIdValue<T, TOut>(T item)
+            where T : class
+            where TOut : struct
         {
             if (Level != 0)
                 throw new SisoDbException(ExceptionMessages.Property_GetIdValue_InvalidLevel);
 
-            var value = Member.GetValue(item, null);
-            if (value == null)
-                return null;
+            return !Member.PropertyType.IsNullableValueType()
+                       ? ((Func<T, TOut>) _getter).Invoke(item)
+                       : ((Func<T, TOut?>)_getter).Invoke(item);
+        }
 
-            if (value is Guid || value is Guid?)
-                return (TReturn)value;
+        public void SetIdValue<T, TIn>(T item, TIn value)
+            where T : class
+            where TIn : struct
+        {
+            if (Level != 0)
+                throw new SisoDbException(ExceptionMessages.Property_SetIdValue_InvalidLevel);
 
-            if (value is int || value is int?)
-                return (TReturn)value;
-
-            throw new SisoDbException(ExceptionMessages.Property_GetIdValue_UnsupportedIdDataType);
+            if (!Member.PropertyType.IsNullableValueType())
+                ((Action<T, TIn>)_setter).Invoke(item, value);
+            else
+                ((Action<T, TIn?>)_setter).Invoke(item, value);
         }
 
         public IList<object> GetValues(object item)
@@ -179,34 +229,14 @@ namespace SisoDb.Structures.Schemas
 
                 var nodeValue = propertyAccessor.GetValue(node, null);
 
-                if(nodeValue == null ||  !(nodeValue is ICollection))
+                if (nodeValue == null || !(nodeValue is ICollection))
                     values.Add(nodeValue);
                 else
-                    foreach (var nodeValueElement in (ICollection) nodeValue)
+                    foreach (var nodeValueElement in (ICollection)nodeValue)
                         values.Add(nodeValueElement);
             }
 
             return values;
-        }
-
-        public void SetValue<TValue>(object item, TValue value)
-        {
-            if (Level == 0)
-            {
-                Member.SetValue(item, value, null);
-                return;
-            }
-
-            object v = item;
-            for (var c = 0; c < Callstack.Count; c++)
-            {
-                var property = Callstack[c];
-                var isLastItem = c == Callstack.Count - 1;
-                if (isLastItem)
-                    property.SetValue(v, value, null);
-
-                v = property.GetValue(v, null);
-            }
         }
     }
 }

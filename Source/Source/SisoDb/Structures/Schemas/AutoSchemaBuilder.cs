@@ -8,21 +8,14 @@ namespace SisoDb.Structures.Schemas
     public class AutoSchemaBuilder<T> : ISchemaBuilder
         where T : class
     {
-        private static readonly StructureTypeInfo TypeInfoState;
-
-        static AutoSchemaBuilder()
-        {
-            TypeInfoState = new StructureTypeInfo(typeof(T));
-        }
-
         public IStructureSchema CreateSchema()
         {
             var idAccessor = GetIdAccessor();
             var indexAccessors = GetIndexAccessors();
             if (indexAccessors == null || indexAccessors.Length < 1)
-                throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers.Inject(TypeInfoState.Name));
+                throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers.Inject(StructureType<T>.Name));
 
-            var schemaName = TypeInfoState.Name;
+            var schemaName = StructureType<T>.Name;
             var schemaHash = SisoDbEnvironment.HashService.GenerateHash(schemaName);
             var schema = new StructureSchema(schemaName, schemaHash, idAccessor, indexAccessors);
 
@@ -31,9 +24,9 @@ namespace SisoDb.Structures.Schemas
 
         private static IIdAccessor GetIdAccessor()
         {
-            var property = TypeInfoState.IdProperty;
+            var property = StructureType<T>.IdProperty;
             if (property == null)
-                throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIdMember.Inject(TypeInfoState.Name));
+                throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIdMember.Inject(StructureType<T>.Name));
 
             if (property.PropertyType.IsGuidType() || property.PropertyType.IsNullableGuidType()
                 || (property.PropertyType.IsIntType() || property.PropertyType.IsNullableIntType()))
@@ -44,7 +37,7 @@ namespace SisoDb.Structures.Schemas
 
         private static IIndexAccessor[] GetIndexAccessors()
         {
-            var indexableProperties = TypeInfoState.IndexableProperties;
+            var indexableProperties = StructureType<T>.IndexableProperties;
             var indexAccessors = indexableProperties.Select(CreateIndexAccessor);
 
             return indexAccessors.ToArray();

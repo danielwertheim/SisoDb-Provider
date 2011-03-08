@@ -8,14 +8,18 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
     {
         public IdTypes IdType { get; private set; }
 
-        public TReturn? GetValue<TReturn>(object item) where TReturn : struct 
+        public TOut? GetValue<T, TOut>(T item)
+            where T : class
+            where TOut : struct
         {
-            return Property.GetIdValue<TReturn>(item);
+            return Property.GetIdValue<T, TOut>(item);
         }
-
-        public void SetValue(object item, ValueType value)
+        
+        public void SetValue<T, TIn>(T item, TIn value)
+            where T : class
+            where TIn : struct
         {
-            Property.SetValue(item, value);
+            Property.SetIdValue(item, value);
         }
 
         public IdAccessor(IProperty property)

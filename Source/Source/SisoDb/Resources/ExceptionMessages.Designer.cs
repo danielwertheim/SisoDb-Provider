@@ -260,11 +260,11 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown datatype for Id-value..
+        ///   Looks up a localized string similar to Id values must lie on the root object..
         /// </summary>
-        internal static string Property_GetIdValue_UnsupportedIdDataType {
+        internal static string Property_SetIdValue_InvalidLevel {
             get {
-                return ResourceManager.GetString("Property_GetIdValue_UnsupportedIdDataType", resourceCulture);
+                return ResourceManager.GetString("Property_SetIdValue_InvalidLevel", resourceCulture);
             }
         }
         

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace SisoDb.Structures.Schemas
 {
-    public static class StructureTypeInfo<T>
+    public static class StructureType<T>
     {
-        private static readonly StructureTypeInfo State;
+        private static readonly StructureType State;
 
         public static string Name
         {
@@ -22,13 +22,13 @@ namespace SisoDb.Structures.Schemas
             get { return State.IndexableProperties; }
         }
 
-        static StructureTypeInfo()
+        static StructureType()
         {
-            State = new StructureTypeInfo(typeof(T));
+            State = new StructureType(typeof(T));
         }
     }
 
-    public class StructureTypeInfo
+    public class StructureType
     {
         private readonly Type _type;
 
@@ -38,7 +38,7 @@ namespace SisoDb.Structures.Schemas
 
         public IEnumerable<IProperty> IndexableProperties { get; private set; }
 
-        public StructureTypeInfo(Type type)
+        public StructureType(Type type)
         {
             _type = type.AssertNotNull("type");
             Name = _type.Name;
