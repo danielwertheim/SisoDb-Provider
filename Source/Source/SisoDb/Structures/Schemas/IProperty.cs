@@ -22,6 +22,8 @@ namespace SisoDb.Structures.Schemas
 
         bool IsUnique { get; }
 
+        bool IsValueType { get; }
+
         bool IsNullableValueType { get; }
        
         bool IsEnumerable { get; }
@@ -30,14 +32,15 @@ namespace SisoDb.Structures.Schemas
         
         Type ElementType { get; }
 
-        TReturn? GetIdValue<T, TReturn>(T item)
-            where T : class 
-            where TReturn : struct;
+        TOut? GetIdValue<TRoot, TOut>(TRoot root)
+            where TRoot : class 
+            where TOut : struct;
 
-        void SetIdValue<T, TIn>(T item, TIn value)
-            where T : class
+        void SetIdValue<TRoot, TIn>(TRoot root, TIn value)
+            where TRoot : class
             where TIn : struct;
 
-        IList<object> GetValues(object item);
+        IList<object> GetValues<TRoot>(TRoot root)
+            where TRoot : class;
     }
 }

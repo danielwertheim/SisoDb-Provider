@@ -10,13 +10,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenIntOnFirstLevel_ReturnsInt()
         {
-            var intPropertyInfo = typeof(Dummy2).GetProperty("Id");
+            var intPropertyInfo = typeof(IdentityOnRoot).GetProperty("Id");
             var intProperty = new Property(intPropertyInfo);
 
             const int expected = 42;
-            var item = new Dummy2 { Id = expected };
+            var item = new IdentityOnRoot { Id = expected };
 
-            var actual = intProperty.GetIdValue<Dummy2, int>(item);
+            var actual = intProperty.GetIdValue<IdentityOnRoot, int>(item);
 
             Assert.AreEqual(expected, actual);
         }
@@ -24,13 +24,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenNullableIntOnFirstLevel_ReturnsInt()
         {
-            var intPropertyInfo = typeof(Dummy2).GetProperty("NullableId");
+            var intPropertyInfo = typeof(NullableIdentityOnRoot).GetProperty("Id");
             var intProperty = new Property(intPropertyInfo);
 
             const int expectedInt = 42;
-            var item = new Dummy2 { NullableId = expectedInt };
+            var item = new NullableIdentityOnRoot { Id = expectedInt };
 
-            var actual = intProperty.GetIdValue<Dummy2, int>(item);
+            var actual = intProperty.GetIdValue<NullableIdentityOnRoot, int>(item);
 
             Assert.AreEqual(expectedInt, actual);
         }
@@ -38,12 +38,12 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenNullAssignedNullableIntOnFirstLevel_ReturnsInt()
         {
-            var intPropertyInfo = typeof(Dummy2).GetProperty("NullableId");
+            var intPropertyInfo = typeof(NullableIdentityOnRoot).GetProperty("Id");
             var intProperty = new Property(intPropertyInfo);
 
-            var item = new Dummy2 { NullableId = null };
+            var item = new NullableIdentityOnRoot { Id = null };
 
-            var actual = intProperty.GetIdValue<Dummy2, int>(item);
+            var actual = intProperty.GetIdValue<NullableIdentityOnRoot, int>(item);
 
             Assert.IsNull(actual);
         }
@@ -51,29 +51,32 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenIntNotOnFirstLevel_ThrowsSisoDbException()
         {
-            var dummy2PropertyInfo = typeof(Dummy1).GetProperty("Item");
-            var dummy2Property = new Property(dummy2PropertyInfo);
+            var itemPropertyInfo = typeof(Container).GetProperty("IdentityOnRootItem");
+            var itemProperty = new Property(itemPropertyInfo);
 
-            var intPropertyInfo = typeof(Dummy2).GetProperty("Id");
-            var intProperty = new Property(1, dummy2Property, intPropertyInfo);
+            var intPropertyInfo = typeof(IdentityOnRoot).GetProperty("Id");
+            var intProperty = new Property(1, itemProperty, intPropertyInfo);
 
-            var item = new Dummy1 { Item = new Dummy2 { Id = 42 } };
+            var item = new Container { IdentityOnRootItem = new IdentityOnRoot { Id = 42 } };
 
-            var ex = Assert.Throws<SisoDbException>(() => intProperty.GetIdValue<Dummy1, int>(item));
+            var ex = Assert.Throws<SisoDbException>(() => intProperty.GetIdValue<Container, int>(item));
 
             Assert.AreEqual(ExceptionMessages.Property_GetIdValue_InvalidLevel, ex.Message);
         }
 
-        public class Dummy1
-        {
-            public Dummy2 Item { get; set; }
-        }
-
-        public class Dummy2
+        private class IdentityOnRoot
         {
             public int Id { get; set; }
+        }
 
-            public int? NullableId { get; set; }
+        private class NullableIdentityOnRoot
+        {
+            public int? Id { get; set; }
+        }
+
+        private class Container
+        {
+            public IdentityOnRoot IdentityOnRootItem { get; set; }
         }
     }
 }

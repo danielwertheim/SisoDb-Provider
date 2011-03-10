@@ -12,13 +12,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenGuidOnFirstLevel_ReturnsGuid()
         {
-            var guidPropertyInfo = typeof(Dummy2).GetProperty("Id");
+            var guidPropertyInfo = typeof(GuidOnRoot).GetProperty("Id");
             var guidProperty = new Property(guidPropertyInfo);
 
             var expected = Guid.Parse("4217F3B7-6DEB-4DFA-B195-D111C1297988");
-            var item = new Dummy2 { Id = expected };
+            var item = new GuidOnRoot { Id = expected };
 
-            var actual = guidProperty.GetIdValue<Dummy2, Guid>(item);
+            var actual = guidProperty.GetIdValue<GuidOnRoot, Guid>(item);
 
             Assert.AreEqual(expected, actual);
         }
@@ -26,13 +26,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenNullableGuidOnFirstLevel_ReturnsGuid()
         {
-            var intPropertyInfo = typeof(Dummy2).GetProperty("NullableId");
+            var intPropertyInfo = typeof(NullableGuidOnRoot).GetProperty("Id");
             var intProperty = new Property(intPropertyInfo);
 
             var expected = Guid.Parse("4217F3B7-6DEB-4DFA-B195-D111C1297988");
-            var item = new Dummy2 { NullableId = expected };
+            var item = new NullableGuidOnRoot { Id = expected };
 
-            var actual = intProperty.GetIdValue<Dummy2, Guid>(item);
+            var actual = intProperty.GetIdValue<NullableGuidOnRoot, Guid>(item);
 
             Assert.AreEqual(expected, actual);
         }
@@ -40,12 +40,12 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenNullAssignedNullableGuidOnFirstLevel_ReturnsNull()
         {
-            var intPropertyInfo = typeof(Dummy2).GetProperty("NullableId");
+            var intPropertyInfo = typeof(NullableGuidOnRoot).GetProperty("Id");
             var intProperty = new Property(intPropertyInfo);
 
-            var item = new Dummy2 { NullableId = null };
+            var item = new NullableGuidOnRoot { Id = null };
 
-            var actual = intProperty.GetIdValue<Dummy2, Guid>(item);
+            var actual = intProperty.GetIdValue<NullableGuidOnRoot, Guid>(item);
 
             Assert.IsNull(actual);
         }
@@ -53,29 +53,32 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void GetIdValue_WhenGuidNotOnFirstLevel_ThrowsSisoDbException()
         {
-            var dummy2PropertyInfo = typeof (Dummy1).GetProperty("Item1");
-            var dummy2Property = new Property(dummy2PropertyInfo);
+            var itemPropertyInfo = typeof(Container).GetProperty("GuidOnRootItem");
+            var itemProperty = new Property(itemPropertyInfo);
 
-            var guidPropertyInfo = typeof(Dummy2).GetProperty("Id");
-            var guidProperty = new Property(1, dummy2Property,guidPropertyInfo);
+            var guidPropertyInfo = typeof(GuidOnRoot).GetProperty("Id");
+            var guidProperty = new Property(1, itemProperty, guidPropertyInfo);
 
-            var item = new Dummy1 { Item1 = new Dummy2 { Id = Guid.NewGuid() } };
+            var item = new Container { GuidOnRootItem = new GuidOnRoot { Id = Guid.NewGuid() } };
 
-            var ex = CustomAssert.Throws<SisoDbException>(() => guidProperty.GetIdValue<Dummy1, Guid>(item));
+            var ex = CustomAssert.Throws<SisoDbException>(() => guidProperty.GetIdValue<Container, Guid>(item));
 
             Assert.AreEqual(ExceptionMessages.Property_GetIdValue_InvalidLevel, ex.Message);
         }
 
-        public class Dummy1
-        {
-            public Dummy2 Item1 { get; set; }
-        }
-
-        public class Dummy2
+        private class GuidOnRoot
         {
             public Guid Id { get; set; }
+        }
 
-            public Guid? NullableId { get; set; }
+        private class NullableGuidOnRoot
+        {
+            public Guid? Id { get; set; }
+        }
+
+        private class Container
+        {
+            public GuidOnRoot GuidOnRootItem { get; set; }
         }
     }
 }

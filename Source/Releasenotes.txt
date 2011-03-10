@@ -5,6 +5,10 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v0.9.0.1,
+v0.9.0.2	- 2011-03-10
+[Update]:	Minor update for not relying on reflection but instead use Func's to extract and set Id's.
+
 v0.9.0.0	- 2011-03-06
 [New]:		If a Structure contains another Structure (one with an Id) it will not be serialized and indexed since this structure should be stored on it's own.
 

@@ -129,6 +129,19 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             Assert.IsTrue(property.IsNullableValueType);
         }
 
+        [Test]
+        public void GetValues_WhenIntOnFirstLevel_ReturnsInt()
+        {
+            var propertyInfo = typeof(Dummy).GetProperty("Int1");
+            var property = new Property(propertyInfo);
+
+            const int expected = 33;
+            var item = new Dummy { Int1 = expected };
+            var actual = property.GetValues(item);
+            
+            Assert.AreEqual(new []{expected}, actual);
+        }
+
         private static Property GetProperty<T>(string name)
         {
             return PropertyTestHelper.GetProperty<T>(name);
