@@ -2,7 +2,7 @@
 
 namespace SisoDb.Querying
 {
-    public interface ISqlSelector
+    public interface ISqlWhere
     {
         string Sql { get; }
         IList<IQueryParameter> Parameters { get; }

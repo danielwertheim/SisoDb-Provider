@@ -7,29 +7,38 @@ namespace SisoDb.Querying
 {
     public class QueryCommandBuilder<T> : IQueryCommandBuilder<T> where T : class
     {
-        public ISelectorParser SelectorParser { private get; set; }
+        public IWhereParser WhereParser { private get; set; }
         public ISortingParser SortingParser { private get; set; }
         public IIncludeParser IncludeParser { private get; set; }
 
         public IQueryCommand Command { get; private set; }
 
-        public QueryCommandBuilder(ISelectorParser selectorParser, ISortingParser sortingParser, IIncludeParser includeParser)
+        public QueryCommandBuilder(IWhereParser whereParser, ISortingParser sortingParser, IIncludeParser includeParser)
         {
-            SelectorParser = selectorParser.AssertNotNull("selectorParser");
+            WhereParser = whereParser.AssertNotNull("whereParser");
             SortingParser = sortingParser.AssertNotNull("sortingParser");
             IncludeParser = includeParser.AssertNotNull("includeParser");
 
             Command = new QueryCommand();
         }
 
-        public IQueryCommandBuilder<T> Where(Expression<Func<T, bool>> selector)
+        public IQueryCommandBuilder<T> Take(int numOfStructures)
         {
-            selector.AssertNotNull("selector");
+            numOfStructures.AssertGt(0, "numOfStructures");
 
-            if (Command.Selector != null)
+            Command.TakeNumOfStructures = numOfStructures;
+
+            return this;
+        }
+
+        public IQueryCommandBuilder<T> Where(Expression<Func<T, bool>> predicate)
+        {
+            predicate.AssertNotNull("predicate");
+
+            if (Command.Where != null)
                 throw new SisoDbException(ExceptionMessages.QueryCommandBuilder_WhereAllreadyInitialized);
 
-            Command.Selector = SelectorParser.Parse(selector);
+            Command.Where = WhereParser.Parse(predicate);
 
             return this;
         }

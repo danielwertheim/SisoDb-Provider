@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using SisoDb.Lambdas.Processors;
+using SisoDb.Lambdas.Processors.Sql;
 using SisoDb.Querying;
 
-namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedSortingSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Lambdas.Processors.Sql.ParsedSortingSqlProcessorTests
 {
     [TestFixture]
     public class ParsedSortingSqlProcessorTests : ParsedSortingSqlProcessorTestBase

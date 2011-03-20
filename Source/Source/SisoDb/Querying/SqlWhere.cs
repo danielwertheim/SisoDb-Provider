@@ -6,7 +6,7 @@ using System.Linq;
 namespace SisoDb.Querying
 {
     [Serializable]
-    public class SqlSelector : ISqlSelector
+    public class SqlWhere : ISqlWhere
     {
         private readonly ReadOnlyCollection<IQueryParameter> _parameters;
 
@@ -17,7 +17,7 @@ namespace SisoDb.Querying
             get { return _parameters; }
         }
 
-        public SqlSelector(string sql, IEnumerable<IQueryParameter> parameters)
+        public SqlWhere(string sql, IEnumerable<IQueryParameter> parameters)
         {
             sql.AssertNotNullOrWhiteSpace("sql");
             parameters.AssertNotNull("parameters");

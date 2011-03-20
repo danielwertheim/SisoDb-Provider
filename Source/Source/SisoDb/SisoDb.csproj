@@ -88,7 +88,7 @@
     <Compile Include="Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Lambdas\Parsers\IIncludeParser.cs" />
     <Compile Include="Lambdas\Parsers\IncludeParser.cs" />
-    <Compile Include="Lambdas\Parsers\ISelectorParser.cs" />
+    <Compile Include="Lambdas\Parsers\IWhereParser.cs" />
     <Compile Include="Lambdas\IParsedLambda.cs" />
     <Compile Include="Lambdas\Parsers\ISortingParser.cs" />
     <Compile Include="Lambdas\Processors\INameStrategy.cs" />
@@ -104,7 +104,7 @@
     <Compile Include="Querying\IGetCommandBuilder.cs" />
     <Compile Include="Querying\IQueryCommandBuilder.cs" />
     <Compile Include="Querying\ISqlInclude.cs" />
-    <Compile Include="Lambdas\Processors\ParsedIncludeSqlProcessor.cs" />
+    <Compile Include="Lambdas\Processors\Sql\ParsedIncludeSqlProcessor.cs" />
     <Compile Include="Providers\SqlAzureProviderFactory.cs" />
     <Compile Include="Providers\IProviderFactory.cs" />
     <Compile Include="Providers\Sql2008ProviderFactory.cs" />
@@ -114,8 +114,8 @@
     <Compile Include="Lambdas\LambdaExpressionEvaluator.cs" />
     <Compile Include="Lambdas\Processors\NameStrategy.cs" />
     <Compile Include="Lambdas\Nodes\SortingNode.cs" />
-    <Compile Include="Lambdas\Processors\ParsedSortingSqlProcessor.cs" />
-    <Compile Include="Lambdas\Parsers\SelectorParser.cs" />
+    <Compile Include="Lambdas\Processors\Sql\ParsedSortingSqlProcessor.cs" />
+    <Compile Include="Lambdas\Parsers\WhereParser.cs" />
     <Compile Include="Lambdas\ExpressionExtensions.cs" />
     <Compile Include="Lambdas\Nodes\EndGroupNode.cs" />
     <Compile Include="Lambdas\Nodes\INode.cs" />
@@ -148,8 +148,8 @@
     <Compile Include="Querying\IQueryCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
     <Compile Include="Querying\ISqlCommandInfo.cs" />
-    <Compile Include="Querying\ISqlSelector.cs" />
-    <Compile Include="Lambdas\Processors\ParsedSelectorSqlProcessor.cs" />
+    <Compile Include="Querying\ISqlWhere.cs" />
+    <Compile Include="Lambdas\Processors\Sql\ParsedWhereSqlProcessor.cs" />
     <Compile Include="Querying\IEnumerableQueryExtensions.cs" />
     <Compile Include="Querying\ISqlSorting.cs" />
     <Compile Include="Querying\IStringQueryExtensions.cs" />
@@ -217,7 +217,7 @@
     <Compile Include="Providers\Shared\DbSchema\DbSchemaManager.cs" />
     <Compile Include="Querying\QueryParameter.cs" />
     <Compile Include="Providers\SqlProvider\SqlDatabase.cs" />
-    <Compile Include="Querying\SqlSelector.cs" />
+    <Compile Include="Querying\SqlWhere.cs" />
     <Compile Include="Providers\SqlProvider\SqlUnitOfWork.cs" />
     <Compile Include="StringConverter.cs" />
     <Compile Include="Structures\IStructureId.cs" />
@@ -269,6 +269,7 @@
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.Azure.resx" />
   </ItemGroup>

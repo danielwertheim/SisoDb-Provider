@@ -5,13 +5,17 @@ namespace SisoDb.Querying
 {
     public interface IQueryCommand
     {
-        IParsedLambda Selector { get; set; }
+        int TakeNumOfStructures { get; set; }
+
+        IParsedLambda Where { get; set; }
 
         IParsedLambda Sortings { get; set; }
 
         IList<IParsedLambda> Includes { get; }
 
-        bool HasSelector { get; }
+        bool HasTakeNumOfStructures { get; }
+
+        bool HasWhere { get; }
 
         bool HasSortings { get; }
 

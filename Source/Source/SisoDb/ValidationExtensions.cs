@@ -30,6 +30,26 @@ namespace SisoDb
             return item;
         }
 
+        internal static int AssertGt(this int value, int limit, string name)
+        {
+            if(value <= limit)
+                throw new ArgumentOutOfRangeException(name, "value '{0}' <= limit '{1}'.");
+
+            return value;
+        }
+
+        internal static int AssertInRange(this int value, int min, int max, string name)
+        {
+            if(value < min)
+                throw new ArgumentOutOfRangeException(name, "value '{0}' < min '{1}'.");
+
+
+            if(value > max)
+                throw new ArgumentOutOfRangeException(name, "value '{0}' > max '{1}'.");
+
+            return value;
+        }
+
         internal static string AssertNotNullOrWhiteSpace(this string item, string name)
         {
             if (string.IsNullOrWhiteSpace(item))

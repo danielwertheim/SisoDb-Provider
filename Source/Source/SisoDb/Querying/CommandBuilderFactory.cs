@@ -14,7 +14,7 @@ namespace SisoDb.Querying
         public IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>() where T : class
         {
             return new QueryCommandBuilder<T>(
-                new SelectorParser(),
+                new WhereParser(),
                 new SortingParser(),
                 new IncludeParser());
         }

@@ -113,6 +113,16 @@ namespace SisoDb.Reflections
             return compiled;
         }
 
+        public static Expression<Func<T, bool>> BoolExpressionFrom(Expression<Func<T, bool>> e)
+        {
+            return e;
+        }
+
+        public static Expression<Func<T, TProp>> ExpressionFrom<TProp>(Expression<Func<T, TProp>> e)
+        {
+            return e;
+        }
+
         public static LambdaExpression LambdaFrom(Expression<Action<T>> e)
         {
             return e;

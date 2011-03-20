@@ -7,15 +7,29 @@ namespace SisoDb.Querying
     [Serializable]
     public class QueryCommand : IQueryCommand
     {
-        public IParsedLambda Selector { get; set; }
+        public IParsedLambda Select { get; set; }
+
+        public int TakeNumOfStructures { get; set; }
+
+        public IParsedLambda Where { get; set; }
 
         public IParsedLambda Sortings { get; set; }
 
-        public IList<IParsedLambda> Includes { get; private set; }
+        public IList<IParsedLambda> Includes { get; set; }
 
-        public bool HasSelector
+        public bool HasTakeNumOfStructures
         {
-            get { return Selector != null; }
+            get { return TakeNumOfStructures > 0; }
+        }
+
+        public bool HasSelect
+        {
+            get { return Select != null && Select.Nodes.Count > 0; }
+        }
+
+        public bool HasWhere
+        {
+            get { return Where != null && Where.Nodes.Count > 0; }
         }
 
         public bool HasSortings

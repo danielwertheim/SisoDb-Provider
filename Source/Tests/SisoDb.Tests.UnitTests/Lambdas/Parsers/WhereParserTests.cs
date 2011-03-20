@@ -1,20 +1,22 @@
 using System;
 using NUnit.Framework;
 using SisoDb.Lambdas.Parsers;
+using SisoDb.Reflections;
 using SisoDb.Resources;
 
 namespace SisoDb.Tests.UnitTests.Lambdas.Parsers
 {
     [TestFixture]
-    public class SelectorParserTests : UnitTestBase
+    public class WhereParserTests : UnitTestBase
     {
         [Test]
         public void Parse_WhenOnlyMemberIsPassed_ThrowsException()
         {
-            var parser = new SelectorParser();
+            var parser = new WhereParser();
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1);
 
             var ex = Assert.Throws<SisoDbException>(
-                () => parser.Parse<MyClass>(i => i.Bool1));
+                () => parser.Parse(expression));
 
             Assert.AreEqual(ExceptionMessages.LambdaParser_NoMemberExpressions, ex.Message);
         }
@@ -22,23 +24,25 @@ namespace SisoDb.Tests.UnitTests.Lambdas.Parsers
         [Test]
         public void Parse_WhenUnsupportedMethodInvocation_NotSupportedException()
         {
-            var parser = new SelectorParser();
+            var parser = new WhereParser();
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == Convert.ToString(m.Int1));
 
             var ex = Assert.Throws<NotSupportedException>(
-                () => parser.Parse<MyClass>(i => i.String1 == Convert.ToString(i.Int1)));
+                () => parser.Parse(expression));
 
             Assert.AreEqual(
-                ExceptionMessages.LambdaParser_UnsupportedMethodCall.Inject("ToString(i.Int1)"),
+                ExceptionMessages.LambdaParser_UnsupportedMethodCall.Inject("ToString(m.Int1)"),
                 ex.Message);
         }
 
         [Test]
         public void Parse_WhenByteArray_NotSupportedException()
         {
-            var parser = new SelectorParser();
+            var parser = new WhereParser();
+            var expression = Reflect<MyClass>.LambdaFrom(i => i.Bytes1 == new byte[] {1, 2});
 
             var ex = Assert.Throws<NotSupportedException>(
-                () => parser.Parse<MyClass>(i => i.Bytes1 == new byte[] { 1, 2 }));
+                () => parser.Parse(expression));
 
             Assert.AreEqual(ExceptionMessages.LambdaParser_MemberIsBytes.Inject("Bytes1"), ex.Message);
         }

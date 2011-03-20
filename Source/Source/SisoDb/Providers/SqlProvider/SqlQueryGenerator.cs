@@ -11,16 +11,16 @@ namespace SisoDb.Providers.SqlProvider
 {
     public class SqlQueryGenerator : ISqlQueryGenerator
     {
-        private readonly IParsedLambdaProcessor<ISqlSelector> _parsedSelectorProcessor;
+        private readonly IParsedLambdaProcessor<ISqlWhere> _parsedWhereProcessor;
         private readonly IParsedLambdaProcessor<ISqlSorting> _parsedSortingProcessor;
         private readonly IParsedLambdaProcessor<IList<ISqlInclude>> _parsedIncludeProcessor;
 
         public SqlQueryGenerator(
-            IParsedLambdaProcessor<ISqlSelector> parsedSelectorProcessor,
+            IParsedLambdaProcessor<ISqlWhere> parsedWhereProcessor,
             IParsedLambdaProcessor<ISqlSorting> parsedSortingProcessor,
             IParsedLambdaProcessor<IList<ISqlInclude>> parsedIncludeProcessor)
         {
-            _parsedSelectorProcessor = parsedSelectorProcessor.AssertNotNull("parsedSelectorProcessor");
+            _parsedWhereProcessor = parsedWhereProcessor.AssertNotNull("parsedWhereProcessor");
             _parsedSortingProcessor = parsedSortingProcessor.AssertNotNull("parsedSortingProcessor");
             _parsedIncludeProcessor = parsedIncludeProcessor.AssertNotNull("parsedIncludeProcessor");
         }
@@ -30,34 +30,43 @@ namespace SisoDb.Providers.SqlProvider
             queryCommand.AssertNotNull("queryCommand");
             schema.AssertNotNull("schema");
 
-            var selector = GenerateSelectorStringAndParams(queryCommand);
-            var where = selector.Item1;
-            var queryParameters = selector.Item2;
-            var orderBy = GenerateSortingString(queryCommand);
-            var includes = GenerateIncludesString(queryCommand);
+            var takeSql = GenerateTakeString(queryCommand);
+            var whereTuple = GenerateWhereStringAndParams(queryCommand);
+            var whereSql = whereTuple.Item1;
+            var whereParams = whereTuple.Item2;
+            var orderBySql = GenerateSortingString(queryCommand);
+            var includesSql = GenerateIncludesString(queryCommand);
             
             var structureTableName = schema.GetStructureTableName();
             var indexesTableName = schema.GetIndexesTableName();
             
             var sql =
                 string.Format(
-                    "select s.Json{4} from [dbo].[{0}] as s inner join [dbo].[{1}] as si on si.StructureId = s.Id{2}{3};",
-                    structureTableName, indexesTableName, where, orderBy, includes);
+                    "select {2}s.Json{3} from [dbo].[{0}] as s inner join [dbo].[{1}] as si on si.StructureId = s.Id{4}{5};",
+                    structureTableName, indexesTableName, takeSql, includesSql, whereSql, orderBySql);
 
-            return new SqlCommandInfo(sql, queryParameters);
+            return new SqlCommandInfo(sql, whereParams);
         }
 
-        private Tuple<string, IList<IQueryParameter>> GenerateSelectorStringAndParams(IQueryCommand queryCommand)
+        private static string GenerateTakeString(IQueryCommand queryCommand)
         {
-            if (!queryCommand.HasSelector)
+            if (!queryCommand.HasTakeNumOfStructures)
+                return string.Empty;
+
+            return string.Format("top({0}) ", queryCommand.TakeNumOfStructures);
+        }
+
+        private Tuple<string, IList<IQueryParameter>> GenerateWhereStringAndParams(IQueryCommand queryCommand)
+        {
+            if (!queryCommand.HasWhere)
                 return new Tuple<string, IList<IQueryParameter>>(string.Empty, new List<IQueryParameter>());
 
-            var selector = _parsedSelectorProcessor.Process(queryCommand.Selector);
-            var sql = string.IsNullOrWhiteSpace(selector.Sql) 
+            var where = _parsedWhereProcessor.Process(queryCommand.Where);
+            var sql = string.IsNullOrWhiteSpace(where.Sql) 
                 ? string.Empty 
-                : " where " + selector.Sql;
+                : " where " + where.Sql;
 
-            return new Tuple<string, IList<IQueryParameter>>(sql, selector.Parameters);
+            return new Tuple<string, IList<IQueryParameter>>(sql, where.Parameters);
         }
 
         private string GenerateSortingString(IQueryCommand queryCommand)
@@ -96,13 +105,13 @@ namespace SisoDb.Providers.SqlProvider
             queryCommand.AssertNotNull("queryCommand");
             schema.AssertNotNull("schema");
 
-            if (!queryCommand.HasSelector)
+            if (!queryCommand.HasWhere)
                 throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);
 
-            var selector = _parsedSelectorProcessor.Process(queryCommand.Selector);
-            var queryParameters = selector.Parameters;
+            var where = _parsedWhereProcessor.Process(queryCommand.Where);
+            var queryParameters = where.Parameters;
 
-            return new SqlCommandInfo(selector.Sql, queryParameters);
+            return new SqlCommandInfo(where.Sql, queryParameters);
         }
     }
 }

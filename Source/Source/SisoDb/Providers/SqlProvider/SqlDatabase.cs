@@ -1,6 +1,6 @@
 using System;
 using System.Data.SqlClient;
-using SisoDb.Lambdas.Processors;
+using SisoDb.Lambdas.Processors.Sql;
 using SisoDb.Providers.Shared.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Querying;
@@ -147,7 +147,7 @@ namespace SisoDb.Providers.SqlProvider
             var dbClientNonTrans = new SqlDbClient(ConnectionInfo, false);
 
             var queryGenerator = new SqlQueryGenerator(
-                new ParsedSelectorSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
+                new ParsedWhereSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
                 new ParsedSortingSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
                 new ParsedIncludeSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
 

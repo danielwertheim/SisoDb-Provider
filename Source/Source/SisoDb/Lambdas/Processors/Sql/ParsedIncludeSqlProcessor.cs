@@ -3,7 +3,7 @@ using System.Linq;
 using SisoDb.Lambdas.Nodes;
 using SisoDb.Querying;
 
-namespace SisoDb.Lambdas.Processors
+namespace SisoDb.Lambdas.Processors.Sql
 {
     public class ParsedIncludeSqlProcessor : IParsedLambdaProcessor<IList<ISqlInclude>>
     {

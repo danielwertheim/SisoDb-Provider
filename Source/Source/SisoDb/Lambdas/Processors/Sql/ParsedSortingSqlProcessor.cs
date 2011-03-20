@@ -4,7 +4,7 @@ using SisoDb.Lambdas.Nodes;
 using SisoDb.Querying;
 using SisoDb.Resources;
 
-namespace SisoDb.Lambdas.Processors
+namespace SisoDb.Lambdas.Processors.Sql
 {
     public class ParsedSortingSqlProcessor : IParsedLambdaProcessor<ISqlSorting>
     {
@@ -14,7 +14,7 @@ namespace SisoDb.Lambdas.Processors
 
         public ParsedSortingSqlProcessor(IMemberNameGenerator memberNameGenerator)
         {
-            MemberNameGenerator = memberNameGenerator;
+            MemberNameGenerator = memberNameGenerator.AssertNotNull("memberNameGenerator");
         }
 
         public ISqlSorting Process(IParsedLambda lambda)

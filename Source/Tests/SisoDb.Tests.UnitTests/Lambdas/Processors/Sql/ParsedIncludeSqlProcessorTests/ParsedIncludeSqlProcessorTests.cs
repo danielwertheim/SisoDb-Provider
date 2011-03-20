@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using SisoDb.Lambdas.Processors;
+using SisoDb.Lambdas.Processors.Sql;
 using SisoDb.Reflections;
 
-namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedIncludeSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
 {
     [TestFixture]
     public class ParsedIncludeSqlProcessorTests : ParsedIncludeSqlProcessorTestBase

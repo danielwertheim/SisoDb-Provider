@@ -7,21 +7,21 @@ using SisoDb.Lambdas.Parsers;
 using SisoDb.Querying;
 using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedSelectorSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
 {
     [TestFixture]
-    public abstract class ParsedSelectorSqlProcessorTestBase : UnitTestBase
+    public abstract class ParsedWhereSqlProcessorTestBase : UnitTestBase
     {
-        private readonly ISelectorParser _selectorParser;
+        private readonly IWhereParser _whereParser;
 
-        protected ParsedSelectorSqlProcessorTestBase()
+        protected ParsedWhereSqlProcessorTestBase()
         {
-            _selectorParser = new SelectorParser();
+            _whereParser = new WhereParser();
         }
 
         internal IParsedLambda CreateParsedLambda<T>(Expression<Func<T, bool>> e) where T : class 
         {
-            return _selectorParser.Parse(e);
+            return _whereParser.Parse(e);
         }
 
         protected void AssertQueryParameters(IEnumerable<IQueryParameter> expected, IEnumerable<IQueryParameter> actual)

@@ -4,20 +4,20 @@ using SisoDb.Lambdas.Nodes;
 using SisoDb.Lambdas.Operators;
 using SisoDb.Querying;
 
-namespace SisoDb.Lambdas.Processors
+namespace SisoDb.Lambdas.Processors.Sql
 {
-    public class ParsedSelectorSqlProcessor : IParsedLambdaProcessor<ISqlSelector>
+    public class ParsedWhereSqlProcessor : IParsedLambdaProcessor<ISqlWhere>
     {
         private static readonly INameStrategy NameStrategy = new NameStrategy();
 
         public IMemberNameGenerator MemberNameGenerator { private get; set; }
 
-        public ParsedSelectorSqlProcessor(IMemberNameGenerator memberNameGenerator)
+        public ParsedWhereSqlProcessor(IMemberNameGenerator memberNameGenerator)
         {
             MemberNameGenerator = memberNameGenerator;
         }
 
-        public ISqlSelector Process(IParsedLambda lambda)
+        public ISqlWhere Process(IParsedLambda lambda)
         {
             var queryParams = new HashSet<QueryParameter>();
             var sql = new StringBuilder();
@@ -50,7 +50,7 @@ namespace SisoDb.Lambdas.Processors
                     sql.AppendFormat("{0}", node);
             }
 
-            return new SqlSelector(sql.ToString(), queryParams);
+            return new SqlWhere(sql.ToString(), queryParams);
         }
     }
 }

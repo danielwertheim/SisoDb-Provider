@@ -10,7 +10,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.Lambdas.Parsers
 {
-    public class SelectorParser : ExpressionVisitor, ISelectorParser
+    public class WhereParser : ExpressionVisitor, IWhereParser
     {
         private readonly object _lock;
         private readonly IExpressionEvaluator _expressionEvaluator;
@@ -30,14 +30,14 @@ namespace SisoDb.Lambdas.Parsers
             get { return _virtualPrefixMembers.Count > 0; }
         }
 
-        public SelectorParser()
+        public WhereParser()
         {
             _lock = new object();
             _expressionEvaluator = new LambdaExpressionEvaluator();
             _virtualPrefixMembers = new Stack<MemberExpression>();
         }
 
-        public IParsedLambda Parse<T>(Expression<Func<T, bool>> e) where T : class 
+        public IParsedLambda Parse(LambdaExpression e)
         {
             if (e.Body.NodeType == ExpressionType.MemberAccess)
                 throw new SisoDbException(ExceptionMessages.LambdaParser_NoMemberExpressions);

@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SisoDb.Lambdas;
 using SisoDb.Lambdas.Parsers;
 
-namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedIncludeSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
 {
     [TestFixture]
     public abstract class ParsedIncludeSqlProcessorTestBase : UnitTestBase

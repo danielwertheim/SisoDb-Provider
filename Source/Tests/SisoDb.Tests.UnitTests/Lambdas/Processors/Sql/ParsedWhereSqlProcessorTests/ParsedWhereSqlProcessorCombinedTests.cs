@@ -1,11 +1,11 @@
 ﻿using NUnit.Framework;
-using SisoDb.Lambdas.Processors;
+using SisoDb.Lambdas.Processors.Sql;
 using SisoDb.Querying;
 
-namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedSelectorSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
 {
     [TestFixture]
-    public class ParsedSelectorSqlProcessorCombinedTests : ParsedSelectorSqlProcessorTestBase
+    public class ParsedWhereSqlProcessorCombinedTests : ParsedWhereSqlProcessorTestBase
     {
         [Test]
         public void Process_WhenCombinedMembers_GeneratesCorrectSqlQuery()
@@ -15,7 +15,7 @@ namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedSelectorSqlProcessorTe
                 (i.Int1 == 11 && i.String1 == "AA") ||
                 i.Int1 == 99);
 
-            var processor = new ParsedSelectorSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "(((si.[Int1] = @p0 and si.[String1] = @p1) or (si.[Int1] = @p2 and si.[String1] = @p3)) or si.[Int1] = @p4)";
@@ -30,7 +30,7 @@ namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedSelectorSqlProcessorTe
                 (i.Int1 == 11 && i.String1 == "AA") ||
                 i.Int1 == 99);
 
-            var processor = new ParsedSelectorSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[]

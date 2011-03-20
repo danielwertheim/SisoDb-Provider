@@ -13,13 +13,17 @@ namespace SisoDb.TestUtils
             try
             {
                 action.Invoke();
-
-                throw new AssertionException("Expected exception was not thrown!");
             }
             catch (T ex)
             {
                 return ex;
             }
+            catch (Exception ex)
+            {
+                throw new AssertionException("Expected exception was not thrown!", ex);
+            }
+
+            throw new AssertionException("Expected exception was not thrown!");
         }
 
         public static void IsEmpty<T>(IEnumerable<T> source)

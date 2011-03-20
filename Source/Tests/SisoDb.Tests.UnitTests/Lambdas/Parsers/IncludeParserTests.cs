@@ -11,6 +11,17 @@ namespace SisoDb.Tests.UnitTests.Lambdas.Parsers
     public class IncludeParserTests : UnitTestBase
     {
         [Test]
+        public void Parse_WhenNonMemberExpression_ThrowsSisoDbException()
+        {
+            var parser = new IncludeParser();
+            var nonMemberExpression = Reflect<Master>.BoolExpressionFrom(m => m.Int1 == 32);
+
+            var ex = Assert.Throws<SisoDbException>(() => parser.Parse<Child>(new[] { nonMemberExpression }));
+
+            Assert.AreEqual("No MemberExpression found in expression: '(m.Int1 == 32)'.", ex.Message);
+        }
+
+        [Test]
         public void Parse_WhenNullExpressions_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(
@@ -84,6 +95,8 @@ namespace SisoDb.Tests.UnitTests.Lambdas.Parsers
         private class Master
         {
             public Guid Id { get; set; }
+
+            public int Int1 { get; set; }
 
             public Guid ChildId { get; set; }
 

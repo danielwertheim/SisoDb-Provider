@@ -1,17 +1,17 @@
 ﻿using NUnit.Framework;
-using SisoDb.Lambdas.Processors;
+using SisoDb.Lambdas.Processors.Sql;
 
-namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedSelectorSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
 {
     [TestFixture]
-    public class ParsedSelectorSqlProcessorMemberComparisionTests : ParsedSelectorSqlProcessorTestBase
+    public class ParsedWhereSqlProcessorMemberComparisionTests : ParsedWhereSqlProcessorTestBase
     {
         [Test]
         public void Process_WhenMemberOfSameType_GeneratesCorrectSqlQuery()
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == i.Int2);
 
-            var processor = new ParsedSelectorSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] = si.[Int2]";
@@ -23,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Lambdas.Processors.ParsedSelectorSqlProcessorTe
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == i.Int2);
 
-            var processor = new ParsedSelectorSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             Assert.AreEqual(0, query.Parameters.Count);

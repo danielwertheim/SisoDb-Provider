@@ -5,6 +5,10 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v0.9.1		- 2011-03-20
+[New]:		Query API now supports Take number of structures. Eg. uow.Query<Customer>(q => q.Take(10).Where(c => c.CustomerNo == "12345"))
+[Update]:	Latest version of ServiceStack for Json serialization.
+
 v0.9.0.1,
 v0.9.0.2	- 2011-03-10
 [Update]:	Minor update for not relying on reflection but instead use Func's to extract and set Id's.

@@ -14,6 +14,17 @@ namespace SisoDb.Tests.UnitTests.Lambdas.Parsers
     public class SortingParserTests : UnitTestBase
     {
         [Test]
+        public void Parse_WhenNonMemberExpression_ThrowsSisoDbException()
+        {
+            var parser = new SortingParser();
+            var nonMemberExpression = Reflect<MyClass>.BoolExpressionFrom(m => m.Int1 == 32);
+
+            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(new []{nonMemberExpression}));
+
+            Assert.AreEqual("No MemberExpression found in expression: '(m.Int1 == 32)'.", ex.Message);
+        }
+
+        [Test]
         public void Parse_WhenNullExpressions_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(
