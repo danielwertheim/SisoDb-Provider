@@ -24,9 +24,16 @@ namespace SisoDb.Querying
 
         public IQueryCommandBuilder<T> Take(int numOfStructures)
         {
-            numOfStructures.AssertGt(0, "numOfStructures");
+            Command.TakeNumOfStructures = numOfStructures.AssertGt(0, "numOfStructures");
 
-            Command.TakeNumOfStructures = numOfStructures;
+            return this;
+        }
+
+        public IQueryCommandBuilder<T> Page(int pageIndex, int pageSize)
+        {
+            Command.Paging = new Paging(
+                pageIndex.AssertGte(0, "pageIndex"), 
+                pageSize.AssertGt(0, "pageSize"));
 
             return this;
         }

@@ -8,7 +8,7 @@ namespace SisoDb
     {
         internal static IEnumerable<T> AssertHasItems<T>(this IEnumerable<T> items, string name)
         {
-            if(items == null || items.Count() < 1)
+            if (items == null || items.Count() < 1)
                 throw new ArgumentNullException(name);
 
             return items;
@@ -32,20 +32,28 @@ namespace SisoDb
 
         internal static int AssertGt(this int value, int limit, string name)
         {
-            if(value <= limit)
-                throw new ArgumentOutOfRangeException(name, "value '{0}' <= limit '{1}'.");
+            if (value <= limit)
+                throw new ArgumentOutOfRangeException(name, "value '{0}' is <= limit '{1}'.".Inject(value, limit));
+
+            return value;
+        }
+
+        internal static int AssertGte(this int value, int limit, string name)
+        {
+            if (!(value >= limit))
+                throw new ArgumentOutOfRangeException(name, "value '{0}' is not >= limit '{1}'.".Inject(value, limit));
 
             return value;
         }
 
         internal static int AssertInRange(this int value, int min, int max, string name)
         {
-            if(value < min)
-                throw new ArgumentOutOfRangeException(name, "value '{0}' < min '{1}'.");
+            if (value < min)
+                throw new ArgumentOutOfRangeException(name, "value '{0}' is < min '{1}'.".Inject(value, min));
 
 
-            if(value > max)
-                throw new ArgumentOutOfRangeException(name, "value '{0}' > max '{1}'.");
+            if (value > max)
+                throw new ArgumentOutOfRangeException(name, "value '{0}' is > max '{1}'.".Inject(value, max));
 
             return value;
         }

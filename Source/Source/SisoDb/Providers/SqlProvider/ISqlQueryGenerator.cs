@@ -7,6 +7,6 @@ namespace SisoDb.Providers.SqlProvider
     {
         ISqlCommandInfo Generate(IQueryCommand queryCommand, IStructureSchema schema);
 
-        ISqlCommandInfo GenerateWhere(IQueryCommand queryCommand, IStructureSchema schema);
+        ISqlCommandInfo GenerateWhere(IQueryCommand queryCommand);
     }
 }

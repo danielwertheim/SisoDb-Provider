@@ -5,6 +5,6 @@ namespace SisoDb.Querying
     public interface ISqlCommandInfo
     {
         string Value { get; }
-        IEnumerable<IQueryParameter> Parameters { get; }
+        IList<IQueryParameter> Parameters { get; }
     }
 }

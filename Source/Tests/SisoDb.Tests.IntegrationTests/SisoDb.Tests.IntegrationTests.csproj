@@ -102,6 +102,7 @@
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithNestedStructuresTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInterfaceInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkJsonInsertTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithPagingTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithTakeTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkWhereTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkNamedQueryIncludeTests.cs" />

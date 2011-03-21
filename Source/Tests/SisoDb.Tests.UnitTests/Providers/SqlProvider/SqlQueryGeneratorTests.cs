@@ -13,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
     public class SqlQueryGeneratorTests : UnitTestBase
     {
         [Test]
-        public void Generate_WhenOnlyWhere_GeneratesSelectJoinAndWhereButNoSorting()
+        public void Generate_WithWhere_GeneratesCorrectSql()
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
@@ -28,7 +28,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         }
 
         [Test]
-        public void Generate_WhenOnlySorting_GeneratesSelectJoinAndSortingButNoWhere()
+        public void Generate_WithSorting_GeneratesCorrectSql()
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
@@ -43,7 +43,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         }
 
         [Test]
-        public void Generate_WhenWhereAndSorting_GeneratesSelectJoinWhereAndSorting()
+        public void Generate_WithWhereAndSorting_GeneratesCorrectSql()
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
@@ -58,7 +58,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         }
 
         [Test]
-        public void Generate_WhenTakeWithOutWhereAndSorting_TopWithOutOrderByIsRepresented()
+        public void Generate_WhenTakeWithOutWhereAndSorting_GeneratesCorrectSql()
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
@@ -73,7 +73,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         }
 
         [Test]
-        public void Generate_WhenTakeAndSorting_TopWithOrderByIsRepresented()
+        public void Generate_WithTakeAndSorting_GeneratesCorrectSql()
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
@@ -88,7 +88,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
         }
 
         [Test]
-        public void Generate_WhenTakeAndWhereAndSorting_TopWithWhereAndOrderByIsRepresented()
+        public void Generate_WithTakeAndWhereAndSorting_GeneratesCorrectSql()
         {
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(x => x.Name).Returns("MyClass");
@@ -102,11 +102,37 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             Assert.AreEqual(expectedSql, sqlQuery.Value);
         }
 
-        private static IQueryCommand GetQueryCommandStub(bool hasWhere, bool hasSortings, int? takeNumOfStructures = null)
+        [Test]
+        public void Generate_WithPagingAndWhereAndSorting_GeneratesCorrectSql()
+        {
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.Setup(x => x.Name).Returns("MyClass");
+            var queryCommand = GetQueryCommandStub(hasWhere: true, hasSortings: true, paging: new Paging(0, 10));
+            var generator = GetIsolatedQueryGenerator(fakeWhere: "si.[Int1] = 42", fakeSorting: "si.[Int1] Desc");
+
+            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+
+            const string expectedSql =
+                "with pagedRs as (select s.Json,row_number() over ( order by si.[Int1] Desc) RowNum "
+                + "from [dbo].[MyClassStructure] as s inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id "
+                + "where si.[Int1] = 42)select Json from pagedRs where RowNum between @pagingFrom and @pagingTo;";
+                
+            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual("@pagingFrom", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual(1, sqlQuery.Parameters[0].Value);
+            Assert.AreEqual("@pagingTo", sqlQuery.Parameters[1].Name);
+            Assert.AreEqual(10, sqlQuery.Parameters[1].Value);
+        }
+
+        private static IQueryCommand GetQueryCommandStub(bool hasWhere, bool hasSortings, Paging paging = null, int? takeNumOfStructures = null)
         {
             var stub = new Mock<IQueryCommand>();
             stub.Setup(s => s.HasWhere).Returns(hasWhere);
             stub.Setup(s => s.HasSortings).Returns(hasSortings);
+            stub.Setup(s => s.HasPaging).Returns(paging != null);
+
+            if (paging != null)
+                stub.Setup(s => s.Paging).Returns(paging);
 
             if (takeNumOfStructures.HasValue)
             {
@@ -128,7 +154,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             var sqlIncludeFake = new Mock<ISqlInclude>();
             sqlIncludeFake.Setup(x => x.Sql).Returns("");
-            
+
             var whereProcessorFake = new Mock<IParsedLambdaProcessor<ISqlWhere>>();
             whereProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(sqlWhereFake.Object);
 
@@ -136,11 +162,11 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             sortingsProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(sqlSortingFake.Object);
 
             var includesProcessorFake = new Mock<IParsedLambdaProcessor<IList<ISqlInclude>>>();
-            includesProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(new []{sqlIncludeFake.Object});
+            includesProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(new[] { sqlIncludeFake.Object });
 
             return new SqlQueryGenerator(
-                                         whereProcessorFake.Object, 
-                                         sortingsProcessorFake.Object, 
+                                         whereProcessorFake.Object,
+                                         sortingsProcessorFake.Object,
                                          includesProcessorFake.Object);
         }
 
@@ -151,7 +177,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
         private class ChildClass
         {
-            
+
         }
     }
 }

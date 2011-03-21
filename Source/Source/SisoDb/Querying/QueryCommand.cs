@@ -7,9 +7,9 @@ namespace SisoDb.Querying
     [Serializable]
     public class QueryCommand : IQueryCommand
     {
-        public IParsedLambda Select { get; set; }
-
         public int TakeNumOfStructures { get; set; }
+
+        public Paging Paging { get; set; }
 
         public IParsedLambda Where { get; set; }
 
@@ -22,9 +22,9 @@ namespace SisoDb.Querying
             get { return TakeNumOfStructures > 0; }
         }
 
-        public bool HasSelect
+        public bool HasPaging
         {
-            get { return Select != null && Select.Nodes.Count > 0; }
+            get { return Paging != null; }
         }
 
         public bool HasWhere

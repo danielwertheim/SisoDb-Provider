@@ -12,33 +12,19 @@ namespace SisoDb.Tests.UnitTests.Querying
     public class QueryCommandTests : UnitTestBase
     {
         [Test]
-        public void HasSelect_WhenNullSelectExists_ReturnsFalse()
+        public void HasPaging_WhenNullPagingExists_ReturnsFalse()
         {
-            var cmd = new QueryCommand { Select = null };
+            var cmd = new QueryCommand { Paging = null };
 
-            Assert.IsFalse(cmd.HasSelect);
+            Assert.IsFalse(cmd.HasPaging);
         }
 
         [Test]
-        public void HasSelect_WhenEmptySelectExists_ReturnsFalse()
+        public void HasPaging_WhenPagingExists_ReturnsTrue()
         {
-            var selectFake = new Mock<IParsedLambda>();
-            selectFake.Setup(f => f.Nodes).Returns(GetFakeNodes(0));
+            var cmd = new QueryCommand { Paging = new Paging(0, 1)};
 
-            var cmd = new QueryCommand { Select = selectFake.Object };
-
-            Assert.IsFalse(cmd.HasSelect);
-        }
-
-        [Test]
-        public void HasSelect_WhenSelectExists_ReturnsTrue()
-        {
-            var selectFake = new Mock<IParsedLambda>();
-            selectFake.Setup(f => f.Nodes).Returns(GetFakeNodes(1));
-
-            var cmd = new QueryCommand { Select = selectFake.Object };
-
-            Assert.IsTrue(cmd.HasSelect);
+            Assert.IsTrue(cmd.HasPaging);
         }
 
         [Test]

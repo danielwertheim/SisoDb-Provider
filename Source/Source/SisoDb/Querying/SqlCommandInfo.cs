@@ -12,7 +12,7 @@ namespace SisoDb.Querying
 
         public string Value { get; private set; }
 
-        public IEnumerable<IQueryParameter> Parameters
+        public IList<IQueryParameter> Parameters
         {
             get { return _parameters; }
         }

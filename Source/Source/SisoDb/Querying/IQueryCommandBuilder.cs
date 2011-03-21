@@ -9,6 +9,8 @@ namespace SisoDb.Querying
 
         IQueryCommandBuilder<T> Take(int numOfStructures);
 
+        IQueryCommandBuilder<T> Page(int pageIndex, int pageSize);
+
         IQueryCommandBuilder<T> Where(Expression<Func<T, bool>> predicate);
 
         IQueryCommandBuilder<T> SortBy(params Expression<Func<T, object>>[] sortings);

@@ -52,6 +52,26 @@ namespace SisoDb.Tests.UnitTests.Querying
             Assert.Throws<ArgumentOutOfRangeException>(() => builder.Take(0));
         }
 
+        [Test]
+        public void Take_WhenPositiveValueIsPassedForNumOfStructures_ValueIsReflectedOnCommand()
+        {
+            var builder = CreateBuilderWithFakes();
+
+            builder.Take(11);
+
+            Assert.AreEqual(11, builder.Command.TakeNumOfStructures);
+        }
+
+        [Test]
+        public void Paging_WhenPagingIsSet_PagingValuesAreReflectedInCommand()
+        {
+            var builder = CreateBuilderWithFakes();
+
+            builder.Page(0, 10);
+
+            Assert.AreEqual(new Paging(0, 10), builder.Command.Paging);
+        }
+
         private QueryCommandBuilder<MyClass> CreateBuilderWithFakes()
         {
             var whereParserFake = new Mock<IWhereParser>();

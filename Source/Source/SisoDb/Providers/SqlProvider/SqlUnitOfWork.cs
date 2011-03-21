@@ -170,7 +170,7 @@ namespace SisoDb.Providers.SqlProvider
 
             var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
             var queryCommand = commandBuilder.Where(expression).Command;
-            var sql = _queryGenerator.GenerateWhere(queryCommand, structureSchema);
+            var sql = _queryGenerator.GenerateWhere(queryCommand);
             _dbClient.DeleteByQuery(sql,
                 structureSchema.IdAccessor.DataType,
                 structureSchema.GetStructureTableName(),

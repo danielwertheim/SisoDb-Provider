@@ -30,24 +30,63 @@ namespace SisoDb.Providers.SqlProvider
             queryCommand.AssertNotNull("queryCommand");
             schema.AssertNotNull("schema");
 
-            var takeSql = GenerateTakeString(queryCommand);
             var whereTuple = GenerateWhereStringAndParams(queryCommand);
-            var whereSql = whereTuple.Item1;
-            var whereParams = whereTuple.Item2;
-            var orderBySql = GenerateSortingString(queryCommand);
-            var includesSql = GenerateIncludesString(queryCommand);
-            
-            var structureTableName = schema.GetStructureTableName();
-            var indexesTableName = schema.GetIndexesTableName();
-            
-            var sql =
-                string.Format(
-                    "select {2}s.Json{3} from [dbo].[{0}] as s inner join [dbo].[{1}] as si on si.StructureId = s.Id{4}{5};",
-                    structureTableName, indexesTableName, takeSql, includesSql, whereSql, orderBySql);
+            var buildInfo = new SqlCommandBuildInfo
+            {
+                StructureTableName = schema.GetStructureTableName(),
+                IndexesTableName = schema.GetIndexesTableName(),
+                TakeSql = GenerateTakeString(queryCommand),
+                IncludesSql = GenerateIncludesString(queryCommand),
+                OrderBySql = GenerateSortingString(queryCommand),
+                WhereSql = whereTuple.Item1,
+                WhereParams = whereTuple.Item2
+            };
 
-            return new SqlCommandInfo(sql, whereParams);
+            return queryCommand.HasPaging 
+                ? CreateSqlCommandInfoForPaging(buildInfo, queryCommand.Paging) 
+                : CreateSqlCommandInfo(buildInfo);
         }
 
+        private static ISqlCommandInfo CreateSqlCommandInfo(SqlCommandBuildInfo sqlCommandBuildInfo)
+        {
+            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.StructureId = s.Id{4}{5};",
+                sqlCommandBuildInfo.TakeSql,
+                sqlCommandBuildInfo.IncludesSql,
+                sqlCommandBuildInfo.StructureTableName, 
+                sqlCommandBuildInfo.IndexesTableName, 
+                sqlCommandBuildInfo.WhereSql, 
+                sqlCommandBuildInfo.OrderBySql);
+
+            return new SqlCommandInfo(sql, sqlCommandBuildInfo.WhereParams);
+        }
+
+        private static ISqlCommandInfo CreateSqlCommandInfoForPaging(SqlCommandBuildInfo sqlCommandBuildInfo, Paging paging)
+        {
+            var orderBySql = string.IsNullOrWhiteSpace(sqlCommandBuildInfo.OrderBySql)
+                                 ? "order by id"
+                                 : sqlCommandBuildInfo.OrderBySql;
+            const string sqlFormat = "with pagedRs as ({0}){1};";
+            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.StructureId = s.Id{5}",
+                sqlCommandBuildInfo.TakeSql,
+                sqlCommandBuildInfo.IncludesSql,
+                orderBySql,
+                sqlCommandBuildInfo.StructureTableName,
+                sqlCommandBuildInfo.IndexesTableName,
+                sqlCommandBuildInfo.WhereSql);
+            var outerSelect = string.Format("select Json{0} from pagedRs where RowNum between @pagingFrom and @pagingTo", sqlCommandBuildInfo.IncludesSql);
+            var sql = string.Format(sqlFormat, innerSelect, outerSelect);
+
+            var takeFromRowNum = (paging.PageIndex * paging.PageSize) + 1;
+            var takeToRowNum = (takeFromRowNum + paging.PageSize) - 1;
+            var queryParams = new List<IQueryParameter>(sqlCommandBuildInfo.WhereParams)
+            {
+                new QueryParameter("@pagingFrom", takeFromRowNum),
+                new QueryParameter("@pagingTo", takeToRowNum)
+            };
+
+            return new SqlCommandInfo(sql, queryParams);
+        }
+        
         private static string GenerateTakeString(IQueryCommand queryCommand)
         {
             if (!queryCommand.HasTakeNumOfStructures)
@@ -62,8 +101,8 @@ namespace SisoDb.Providers.SqlProvider
                 return new Tuple<string, IList<IQueryParameter>>(string.Empty, new List<IQueryParameter>());
 
             var where = _parsedWhereProcessor.Process(queryCommand.Where);
-            var sql = string.IsNullOrWhiteSpace(where.Sql) 
-                ? string.Empty 
+            var sql = string.IsNullOrWhiteSpace(where.Sql)
+                ? string.Empty
                 : " where " + where.Sql;
 
             return new Tuple<string, IList<IQueryParameter>>(sql, where.Parameters);
@@ -73,16 +112,16 @@ namespace SisoDb.Providers.SqlProvider
         {
             if (!queryCommand.HasSortings)
                 return string.Empty;
-            
-                var sorting = _parsedSortingProcessor.Process(queryCommand.Sortings);
-                return string.IsNullOrWhiteSpace(sorting.Sql) 
-                    ? string.Empty 
-                    : " order by " + sorting.Sql;
+
+            var sorting = _parsedSortingProcessor.Process(queryCommand.Sortings);
+            return string.IsNullOrWhiteSpace(sorting.Sql)
+                ? string.Empty
+                : " order by " + sorting.Sql;
         }
 
         private string GenerateIncludesString(IQueryCommand queryCommand)
         {
-            if(!queryCommand.HasIncludes)
+            if (!queryCommand.HasIncludes)
                 return string.Empty;
 
             var sb = new StringBuilder();
@@ -100,10 +139,9 @@ namespace SisoDb.Providers.SqlProvider
             return sb.Length > 0 ? ", " + sb : string.Empty;
         }
 
-        public ISqlCommandInfo GenerateWhere(IQueryCommand queryCommand, IStructureSchema schema)
+        public ISqlCommandInfo GenerateWhere(IQueryCommand queryCommand)
         {
             queryCommand.AssertNotNull("queryCommand");
-            schema.AssertNotNull("schema");
 
             if (!queryCommand.HasWhere)
                 throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);

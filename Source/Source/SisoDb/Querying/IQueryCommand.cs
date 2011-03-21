@@ -7,6 +7,8 @@ namespace SisoDb.Querying
     {
         int TakeNumOfStructures { get; set; }
 
+        Paging Paging { get; set; }
+
         IParsedLambda Where { get; set; }
 
         IParsedLambda Sortings { get; set; }
@@ -14,6 +16,8 @@ namespace SisoDb.Querying
         IList<IParsedLambda> Includes { get; }
 
         bool HasTakeNumOfStructures { get; }
+
+        bool HasPaging { get; }
 
         bool HasWhere { get; }
 
