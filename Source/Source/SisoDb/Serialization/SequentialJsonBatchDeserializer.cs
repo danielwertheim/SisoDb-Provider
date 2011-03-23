@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SisoDb.Core;
 
 namespace SisoDb.Serialization
 {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using SisoDb.Lambdas;
+using SisoDb.Querying.Lambdas;
 
 namespace SisoDb.Reflections
 {

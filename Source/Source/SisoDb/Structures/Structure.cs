@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SisoDb.Core;
 using SisoDb.Resources;
 
 namespace SisoDb.Structures
@@ -28,11 +29,8 @@ namespace SisoDb.Structures
 
         public Structure(string typeName, IStructureId id, IEnumerable<IStructureIndex> indexes, string json)
         {
-            if (typeName.IsNullOrWhiteSpace())
-                throw new ArgumentNullException("typeName");
-
-            if (id == null)
-                throw new ArgumentNullException("id");
+            typeName.AssertNotNullOrWhiteSpace("typeName");
+            id.AssertNotNull("id");
 
             Name = typeName;
             Id = id;

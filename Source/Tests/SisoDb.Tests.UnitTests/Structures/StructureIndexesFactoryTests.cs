@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using SisoDb.Core;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 

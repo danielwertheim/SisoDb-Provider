@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
-using SisoDb.Lambdas.Parsers;
+using SisoDb.Core;
+using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
 
 namespace SisoDb.Querying

@@ -2,9 +2,9 @@ using System;
 using System.Linq.Expressions;
 using Moq;
 using NUnit.Framework;
-using SisoDb.Lambdas;
-using SisoDb.Lambdas.Parsers;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas;
+using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Reflections;
 
 namespace SisoDb.Tests.UnitTests.Querying

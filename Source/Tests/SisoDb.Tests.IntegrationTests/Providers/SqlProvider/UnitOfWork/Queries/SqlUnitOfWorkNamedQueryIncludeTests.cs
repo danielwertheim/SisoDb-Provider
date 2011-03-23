@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using SisoDb.Core;
 using SisoDb.Querying;
 using SisoDb.TestUtils;
 

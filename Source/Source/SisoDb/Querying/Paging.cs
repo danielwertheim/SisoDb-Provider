@@ -1,4 +1,5 @@
 ﻿using System;
+using SisoDb.Core;
 
 namespace SisoDb.Querying
 {

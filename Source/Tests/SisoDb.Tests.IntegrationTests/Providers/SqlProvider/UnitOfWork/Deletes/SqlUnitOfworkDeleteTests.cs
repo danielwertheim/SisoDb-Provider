@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using SisoDb.Annotations;
 using System.Collections.Generic;
+using SisoDb.Core;
 using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes

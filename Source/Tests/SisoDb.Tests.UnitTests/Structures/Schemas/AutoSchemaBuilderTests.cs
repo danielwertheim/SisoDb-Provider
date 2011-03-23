@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using SisoDb.Core;
 using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures;

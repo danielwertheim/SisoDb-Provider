@@ -1,5 +1,6 @@
 ﻿using System;
-using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Core;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas.MemberAccessors;

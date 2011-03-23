@@ -5,10 +5,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using SisoDb.Providers.Shared;
-using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Core;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlProvider.BulkInserts;
 using SisoDb.Querying;
+using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Serialization;
 using SisoDb.Structures;
@@ -49,9 +50,7 @@ namespace SisoDb.Providers.SqlProvider
             _queryGenerator = queryGenerator.AssertNotNull("queryGenerator");
             _commandBuilderFactory = commandBuilderFactory.AssertNotNull("commandBuilderFactory");
 
-            //TODO: To use or not to use?!? Cuts's time but increases memoryconsumption.
             _batchDeserializer = new ParallelJsonBatchDeserializer(_jsonSerializer);
-            //_batchDeserializer = new SequentialJsonBatchDeserializer();
         }
 
         public void Dispose()
@@ -85,7 +84,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public void InsertManyJson<T>(IList<string> json) where T : class
         {
-            InsertMany<T>(_batchDeserializer.Deserialize<T>(json).ToList());
+            InsertMany(_batchDeserializer.Deserialize<T>(json).ToList());
         }
 
         private void DoInsert<T>(IStructureSchema structureSchema, IList<T> items) where T : class
@@ -300,7 +299,7 @@ namespace SisoDb.Providers.SqlProvider
             {
                 var queryCommand = new QueryCommand(getCommand.Includes) { Sortings = getCommand.Sortings };
                 var query = _queryGenerator.Generate(queryCommand, structureSchema);
-                sql = query.Value;
+                sql = query.Sql;
             }
             else
                 sql = _dbClient.SqlStringsRepository.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
@@ -405,7 +404,7 @@ namespace SisoDb.Providers.SqlProvider
             var query = _queryGenerator.Generate(queryCommand, structureSchema);
             var parameters = query.Parameters.Select(p => new QueryParameter(p.Name, p.Value)).ToArray();
 
-            using (var cmd = _dbClient.CreateCommand(CommandType.Text, query.Value, parameters))
+            using (var cmd = _dbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
                 {

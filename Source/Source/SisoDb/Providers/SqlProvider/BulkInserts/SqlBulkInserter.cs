@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SisoDb.Core;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;

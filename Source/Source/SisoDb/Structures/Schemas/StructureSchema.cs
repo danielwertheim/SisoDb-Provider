@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SisoDb.Core;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Structures.Schemas

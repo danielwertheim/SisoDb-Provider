@@ -1,4 +1,5 @@
-﻿using SisoDb.Providers.AzureProvider;
+﻿using SisoDb.Core;
+using SisoDb.Providers.AzureProvider;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Resources;
 

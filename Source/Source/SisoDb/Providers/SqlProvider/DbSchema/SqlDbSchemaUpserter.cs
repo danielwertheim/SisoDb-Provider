@@ -1,5 +1,6 @@
 ﻿using System.Data;
-using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Core;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Structures.Schemas;
 

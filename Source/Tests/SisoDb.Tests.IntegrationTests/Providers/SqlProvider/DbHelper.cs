@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using SisoDb.Core;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 {
@@ -47,7 +48,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         {
             var sql = "select OBJECT_ID('[{0}]', 'U');".Inject(name);
 
-            return !ExecuteScalar<string>(CommandType.Text, sql).IsNullOrWhiteSpace();
+            return !string.IsNullOrWhiteSpace(ExecuteScalar<string>(CommandType.Text, sql));
         }
 
         public void CreateProcedure(string spSql)

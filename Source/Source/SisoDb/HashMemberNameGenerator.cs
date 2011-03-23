@@ -1,4 +1,5 @@
-﻿using SisoDb.Cryptography;
+﻿using SisoDb.Core;
+using SisoDb.Cryptography;
 
 namespace SisoDb
 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using SisoDb.Core;
 using SisoDb.Reflections;
 
 namespace SisoDb.TestUtils

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;

@@ -5,7 +5,7 @@ using NUnit.Framework;
 using SisoDb.Structures.Schemas;
 using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 {
     [TestFixture]
     public class StructureTypeReflecterEnumerableIndexablePropertiesTests : UnitTestBase

@@ -1,9 +1,10 @@
 using System;
 using System.Data.SqlClient;
-using SisoDb.Lambdas.Processors.Sql;
-using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Core;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas.Processors.Sql;
 using SisoDb.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
@@ -51,7 +52,7 @@ namespace SisoDb.Providers.SqlProvider
             var cnStringBuilder = new SqlConnectionStringBuilder(ConnectionInfo.ConnectionString.PlainString);
             
             Name = cnStringBuilder.InitialCatalog;
-            if(Name.IsNullOrWhiteSpace())
+            if(string.IsNullOrWhiteSpace(Name))
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_ConnectionInfo_MissingName);
 
             cnStringBuilder.InitialCatalog = string.Empty;

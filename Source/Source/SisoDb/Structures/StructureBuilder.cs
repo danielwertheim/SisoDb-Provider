@@ -1,4 +1,5 @@
-﻿using SisoDb.Serialization;
+﻿using SisoDb.Core;
+using SisoDb.Serialization;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures

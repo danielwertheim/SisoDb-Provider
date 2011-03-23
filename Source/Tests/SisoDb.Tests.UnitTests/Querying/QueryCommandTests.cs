@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using Moq;
 using NUnit.Framework;
-using SisoDb.Lambdas;
-using SisoDb.Lambdas.Nodes;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas;
+using SisoDb.Querying.Lambdas.Nodes;
 
 namespace SisoDb.Tests.UnitTests.Querying
 {

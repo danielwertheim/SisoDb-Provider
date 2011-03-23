@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using SisoDb.Core;
 using SisoDb.Providers.SqlProvider.BulkInserts;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Resources;

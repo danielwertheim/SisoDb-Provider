@@ -1,4 +1,4 @@
-﻿using SisoDb.Providers.Shared.DbSchema;
+﻿using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
 
 namespace SisoDb.Providers

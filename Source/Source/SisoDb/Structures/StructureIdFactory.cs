@@ -1,4 +1,5 @@
 ﻿using System;
+using SisoDb.Core;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 

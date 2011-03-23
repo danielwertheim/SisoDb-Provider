@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SisoDb.Lambdas;
+using SisoDb.Querying.Lambdas;
 
 namespace SisoDb.Querying
 {

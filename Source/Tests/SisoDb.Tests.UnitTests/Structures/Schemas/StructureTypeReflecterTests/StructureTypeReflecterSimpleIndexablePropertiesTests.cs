@@ -5,7 +5,7 @@ using SisoDb.Annotations;
 using SisoDb.Reflections;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas.TypeInfoTests
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 {
     [TestFixture]
     public class StructureTypeReflecterSimpleIndexablePropertiesTests : UnitTestBase

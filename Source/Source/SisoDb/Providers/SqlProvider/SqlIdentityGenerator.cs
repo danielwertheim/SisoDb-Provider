@@ -1,4 +1,4 @@
-﻿using SisoDb.Providers.Shared;
+﻿using SisoDb.Core;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlProvider

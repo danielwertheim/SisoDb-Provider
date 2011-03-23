@@ -1,5 +1,5 @@
 ﻿using SisoDb.Providers.AzureProvider.DbSchema;
-using SisoDb.Providers.Shared.DbSchema;
+using SisoDb.Providers.DbSchema;
 
 namespace SisoDb.Providers
 {

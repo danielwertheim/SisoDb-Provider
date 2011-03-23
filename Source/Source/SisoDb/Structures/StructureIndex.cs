@@ -1,4 +1,5 @@
 ﻿using System;
+using SisoDb.Core;
 using SisoDb.Resources;
 
 namespace SisoDb.Structures
@@ -16,11 +17,8 @@ namespace SisoDb.Structures
 
         public StructureIndex(IStructureId structureId, string name, object value, bool isUnique)
         {
-            if(structureId == null)
-                throw  new ArgumentNullException("structureId");
-
-            if(name.IsNullOrWhiteSpace())
-                throw new ArgumentNullException("name");
+            structureId.AssertNotNull("structureId");
+            name.AssertNotNullOrWhiteSpace("name");
 
             if((value != null) && !(value is string) && !(value is ValueType))
                 throw new ArgumentException(ExceptionMessages.StructureIndex_ValueArgument_IncorrectType);

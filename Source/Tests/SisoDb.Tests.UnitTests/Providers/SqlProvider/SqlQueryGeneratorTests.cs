@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using SisoDb.Lambdas;
-using SisoDb.Lambdas.Processors;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas;
+using SisoDb.Querying.Lambdas.Processors;
+using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Sql;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
@@ -24,7 +26,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42;";
-            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
         [Test]
@@ -39,7 +41,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id order by si.[Int1] Asc;";
-            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
         [Test]
@@ -54,7 +56,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42 order by si.[Int1] Desc;";
-            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
         [Test]
@@ -69,7 +71,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id;";
-            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
         [Test]
@@ -84,7 +86,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id order by si.[Int1] Desc;";
-            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
         [Test]
@@ -99,7 +101,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42 order by si.[Int1] Desc;";
-            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
         [Test]
@@ -117,7 +119,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
                 + "from [dbo].[MyClassStructure] as s inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id "
                 + "where si.[Int1] = 42)select Json from pagedRs where RowNum between @pagingFrom and @pagingTo;";
                 
-            Assert.AreEqual(expectedSql, sqlQuery.Value);
+            Assert.AreEqual(expectedSql, sqlQuery.Sql);
             Assert.AreEqual("@pagingFrom", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(1, sqlQuery.Parameters[0].Value);
             Assert.AreEqual("@pagingTo", sqlQuery.Parameters[1].Name);

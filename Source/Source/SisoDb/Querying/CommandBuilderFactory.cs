@@ -1,4 +1,4 @@
-using SisoDb.Lambdas.Parsers;
+using SisoDb.Querying.Lambdas.Parsers;
 
 namespace SisoDb.Querying
 {

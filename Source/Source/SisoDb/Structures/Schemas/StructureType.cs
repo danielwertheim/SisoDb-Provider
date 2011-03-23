@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SisoDb.Core;
 
 namespace SisoDb.Structures.Schemas
 {

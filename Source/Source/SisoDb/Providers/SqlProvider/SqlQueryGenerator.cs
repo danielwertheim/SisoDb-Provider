@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SisoDb.Lambdas.Processors;
+using SisoDb.Core;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas.Processors;
+using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 

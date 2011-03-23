@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SisoDb.Core;
 using SisoDb.Cryptography;
 using SisoDb.Providers;
 using SisoDb.Serialization;
