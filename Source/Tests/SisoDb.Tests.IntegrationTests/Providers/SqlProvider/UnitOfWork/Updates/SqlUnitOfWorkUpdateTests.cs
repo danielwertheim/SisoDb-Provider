@@ -26,16 +26,16 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
                 unitOfWork.Insert(item);
                 unitOfWork.Commit();
 
-                var refetchedA = unitOfWork.GetById<SimpleItem>(item.Id);
-                Assert.AreEqual(item.Id, refetchedA.Id);
+                var refetchedA = unitOfWork.GetById<SimpleItem>(item.SisoId);
+                Assert.AreEqual(item.SisoId, refetchedA.SisoId);
 
                 refetchedA.Value = "Come on!";
                 unitOfWork.Update(refetchedA);
                 unitOfWork.Commit();
 
-                var refetchedB = unitOfWork.GetById<SimpleItem>(item.Id);
-                Assert.AreEqual(item.Id, refetchedA.Id);
-                Assert.AreEqual(item.Id, refetchedB.Id);
+                var refetchedB = unitOfWork.GetById<SimpleItem>(item.SisoId);
+                Assert.AreEqual(item.SisoId, refetchedA.SisoId);
+                Assert.AreEqual(item.SisoId, refetchedB.SisoId);
             }
         }
 
@@ -49,13 +49,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
                 unitOfWork.Insert(item);
                 unitOfWork.Commit();
 
-                var refetchedA = unitOfWork.GetById<SimpleItem>(item.Id);
+                var refetchedA = unitOfWork.GetById<SimpleItem>(item.SisoId);
                 refetchedA.Value = "Come on!";
 
                 unitOfWork.Update(refetchedA);
                 unitOfWork.Commit();
 
-                var refetchedB = unitOfWork.GetById<SimpleItem>(item.Id);
+                var refetchedB = unitOfWork.GetById<SimpleItem>(item.SisoId);
                 Assert.AreEqual("Test", item.Value);
                 Assert.AreEqual("Come on!", refetchedA.Value);
                 Assert.AreEqual("Come on!", refetchedB.Value);
@@ -85,7 +85,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
                 Database.StructureSchemas.GetSchema<SimpleItem>().IndexAccessors
                 .Single(iac => iac.Name.StartsWith("Value")).Name;
             var table = DbHelper.GetTableBySql(
-                "select [{0}] from dbo.SimpleItemIndexes where StructureId = '{1}'".Inject(propertyHash, item.Id));
+                "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));
             Assert.AreEqual(1, table.Rows.Count);
             Assert.AreEqual("B", table.AsEnumerable().First()[0]);
         }
@@ -103,7 +103,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
 
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                var refetched = unitOfWork.GetById<SimpleItem>(item.Id);
+                var refetched = unitOfWork.GetById<SimpleItem>(item.SisoId);
                 refetched.Value = "B";
 
                 unitOfWork.Update(refetched);
@@ -114,7 +114,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
                 Database.StructureSchemas.GetSchema<SimpleItem>().IndexAccessors
                 .Single(iac => iac.Name.StartsWith("Value")).Name;
             var table = DbHelper.GetTableBySql(
-                "select [{0}] from dbo.SimpleItemIndexes where StructureId = '{1}'".Inject(propertyHash, item.Id));
+                "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));
             Assert.AreEqual(1, table.Rows.Count);
             Assert.AreEqual("B", table.AsEnumerable().First()[0]);
         }
@@ -132,7 +132,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
 
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                var refetched = unitOfWork.GetById<TestItem>(item.Id);
+                var refetched = unitOfWork.GetById<TestItem>(item.SisoId);
                 refetched.Key = "B";
 
                 unitOfWork.Update(refetched);
@@ -140,21 +140,21 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
             }
 
             var table = DbHelper.GetTableBySql(
-                "select Value from dbo.TestItemUniques where StructureId = '{0}'".Inject(item.Id));
+                "select Value from dbo.TestItemUniques where SisoId = '{0}'".Inject(item.SisoId));
             Assert.AreEqual(1, table.Rows.Count);
             Assert.AreEqual("B", table.AsEnumerable().First()["Value"]);
         }
 
         private class SimpleItem
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string Value { get; set; }
         }
 
         private class TestItem
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             [Unique(UniqueModes.PerType)]
             public string Key { get; set; }

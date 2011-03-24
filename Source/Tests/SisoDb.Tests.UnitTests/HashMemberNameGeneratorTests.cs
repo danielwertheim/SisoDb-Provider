@@ -11,12 +11,12 @@ namespace SisoDb.Tests.UnitTests
         private const string FakedHash = "Hash";
 
         [Test]
-        public void Generate_WhenPassedValueIsStructureId_NoHashIsAppended()
+        public void Generate_WhenPassedValueIsSisoId_NoHashIsAppended()
         {
             var fakedHashService = GetFakedHashService();
             var generator = new HashMemberNameGenerator(fakedHashService);
 
-            var inputValue = "StructureId";
+            var inputValue = "SisoId";
             var memberName = generator.Generate(inputValue);
 
             Assert.AreEqual(inputValue, memberName);

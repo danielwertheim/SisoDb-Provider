@@ -4,7 +4,7 @@ using SisoDb.Resources;
 namespace SisoDb.Structures
 {
     [Serializable]
-    public class StructureId : IStructureId, IEquatable<StructureId>
+    public class SisoId : ISisoId, IEquatable<SisoId>
     {
         public IdTypes IdType { get; private set; }
 
@@ -12,13 +12,13 @@ namespace SisoDb.Structures
 
         public ValueType Value { get; private set; }
 
-        private StructureId()
+        private SisoId()
         {
         }
 
-        public static StructureId NewIdentityId(int value)
+        public static SisoId NewIdentityId(int value)
         {
-            var id = new StructureId
+            var id = new SisoId
                          {
                              IdType = IdTypes.Identity, 
                              DataType = typeof (int)
@@ -28,12 +28,12 @@ namespace SisoDb.Structures
             return id;
         }
 
-        public static StructureId NewGuidId(Guid value)
+        public static SisoId NewGuidId(Guid value)
         {
             if (Guid.Empty.Equals(value))
                 throw new ArgumentOutOfRangeException("value", ExceptionMessages.Id_GuidIsMissingValue);
 
-            var id = new StructureId
+            var id = new SisoId
                          {
                              IdType = IdTypes.Guid, 
                              DataType = typeof(Guid), 
@@ -53,10 +53,10 @@ namespace SisoDb.Structures
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as StructureId);
+            return Equals(obj as SisoId);
         }
 
-        public bool Equals(StructureId other)
+        public bool Equals(SisoId other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;

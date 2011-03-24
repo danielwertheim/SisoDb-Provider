@@ -32,7 +32,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
         private class Class_2579AF20_51A0_475A_A24D_8056828DB1DC
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string IndexableMember1 { get; set; }
 

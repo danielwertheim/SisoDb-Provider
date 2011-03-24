@@ -4,7 +4,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.TestMod
 {
     internal class TheBase
     {
-        public Guid Id { get; set; }
+        public Guid SisoId { get; set; }
 
         public string BaseString1 { get; set; }
 

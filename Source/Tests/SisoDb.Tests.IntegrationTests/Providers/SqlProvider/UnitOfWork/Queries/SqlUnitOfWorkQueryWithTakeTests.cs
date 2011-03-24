@@ -61,7 +61,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private class ItemForQueries
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public int SortOrder { get; set; }
 

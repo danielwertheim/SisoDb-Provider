@@ -59,32 +59,32 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 
         private class WithGuidId
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
         }
 
         private class WithNullableGuidId
         {
-            public Guid? Id { get; set; }
+            public Guid? SisoId { get; set; }
         }
 
         private class WithPrivateGuidId
         {
-            private Guid Id { get; set; }
+            private Guid SisoId { get; set; }
         }
 
         private class WithIntId
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
         }
 
         private class WithNullableIntId
         {
-            public int? Id { get; set; }
+            public int? SisoId { get; set; }
         }
 
         private class WithPrivateIntId
         {
-            private int Id { get; set; }
+            private int SisoId { get; set; }
         }
     }
 }

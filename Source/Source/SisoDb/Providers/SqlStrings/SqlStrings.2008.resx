@@ -127,18 +127,18 @@ alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{1}] (
-[StructureId] [uniqueidentifier] not null primary key clustered rowguidcol,
+[SisoId] [uniqueidentifier] not null primary key clustered rowguidcol,
 {2});</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{1}] (
-[StructureId] [int] not null primary key clustered,
+[SisoId] [int] not null primary key clustered,
 {2});</value>
   </data>
   <data name="CreatePerInstanceUniqueIndex" xml:space="preserve">
     <value>CREATE UNIQUE NONCLUSTERED INDEX [IX_{0}_PerInstance_{1}] ON [dbo].[{0}] 
 (
-[StructureId] ASC,
+[SisoId] ASC,
 [{1}] ASC
 );</value>
   </data>
@@ -150,58 +150,58 @@ alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[Id] [uniqueidentifier] not null primary key clustered rowguidcol,
+[SisoId] [uniqueidentifier] not null primary key clustered rowguidcol,
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[Id] [int] identity(1,1) not null primary key clustered,
+[SisoId] [int] identity(1,1) not null primary key clustered,
 [Json] [nvarchar](max) not null);
 
 insert into [dbo].[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table [dbo].[{1}] (
-[StructureId] [uniqueidentifier] null,
+[SisoId] [uniqueidentifier] null,
 [Name] [varchar](250) not null,
 [Value] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{1}] on [{1}] ([StructureId], [Name], [Value]);</value>
+create unique clustered index [UQ_{1}] on [{1}] ([SisoId], [Name], [Value]);</value>
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table [dbo].[{1}] (
-[StructureId] [int] null,
+[SisoId] [int] null,
 [Name] [varchar](250) not null,
 [Value] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{1}] on [{1}] ([StructureId], [Name], [Value]);</value>
+create unique clustered index [UQ_{1}] on [{1}] ([SisoId], [Name], [Value]);</value>
   </data>
   <data name="DatabaseExists" xml:space="preserve">
     <value>select DB_ID(@dbName);</value>
   </data>
   <data name="DeleteById" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where Id = @id;
-delete from [dbo].[{1}] where StructureId = @id;
-delete from [dbo].[{2}] where StructureId = @id;</value>
+delete from [dbo].[{0}] where SisoId = @id;
+delete from [dbo].[{1}] where SisoId = @id;
+delete from [dbo].[{2}] where SisoId = @id;</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
 declare @ids table (id {4});
 
 insert into @ids (id)
-select si.StructureId from [dbo].[{0}] as si
+select si.SisoId from [dbo].[{0}] as si
 where {3};
 
-delete from [dbo].[{0}] where StructureId in(select id from @ids);
-delete from [dbo].[{1}] where StructureId in(select id from @ids);
-delete from [dbo].[{2}] where Id in(select id from @ids);</value>
+delete from [dbo].[{0}] where SisoId in(select id from @ids);
+delete from [dbo].[{1}] where SisoId in(select id from @ids);
+delete from [dbo].[{2}] where SisoId in(select id from @ids);</value>
   </data>
   <data name="DeleteWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where Id &gt;= @idFrom and Id &lt;= @idTo;
-delete from [dbo].[{1}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;
-delete from [dbo].[{2}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
+delete from [dbo].[{0}] where SisoId &gt;= @idFrom and SisoId &lt;= @idTo;
+delete from [dbo].[{1}] where SisoId &gt;= @idFrom and SisoId &lt;= @idTo;
+delete from [dbo].[{2}] where SisoId &gt;= @idFrom and SisoId &lt;= @idTo;</value>
   </data>
   <data name="DropColumns" xml:space="preserve">
     <value>alter table [dbo].[{0}]
@@ -222,11 +222,11 @@ select json from [dbo].[{0}];</value>
   </data>
   <data name="GetAllById" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] order by [Id];</value>
+select json from [dbo].[{0}] order by [SisoId];</value>
   </data>
   <data name="GetById" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] where Id =@id;</value>
+select json from [dbo].[{0}] where SisoId =@id;</value>
   </data>
   <data name="GetColumns" xml:space="preserve">
     <value>set nocount on;
@@ -259,7 +259,7 @@ end</value>
     <value>set nocount on;
 declare @id int;
 update [dbo].[SisoDbIdentities] set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityHash] = @entityHash;
-select @id as Id;</value>
+select @id as SisoId;</value>
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>set nocount on;

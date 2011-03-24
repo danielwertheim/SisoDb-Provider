@@ -48,7 +48,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 item = uow.GetById<ItemForIdentityInsertsWithPrivateSetter>(assignedId);
             }
 
-            Assert.AreEqual(assignedId, item.Id);
+            Assert.AreEqual(assignedId, item.SisoId);
         }
 
         [Test]
@@ -64,16 +64,16 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                item = uow.GetById<ItemForNullableIdentityInsertsWithPrivateSetter>(item.Id.Value);
+                item = uow.GetById<ItemForNullableIdentityInsertsWithPrivateSetter>(item.SisoId.Value);
             }
 
-            Assert.IsNotNull(item.Id);
-            Assert.AreEqual(1, item.Id);
+            Assert.IsNotNull(item.SisoId);
+            Assert.AreEqual(1, item.SisoId);
         }
 
         private class ItemForIdentityInserts
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public string Temp
             {
@@ -83,7 +83,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         private class ItemForIdentityInsertsWithPrivateSetter
         {
-            public int Id { get; private set; }
+            public int SisoId { get; private set; }
 
             public string Temp
             {
@@ -93,7 +93,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         private class ItemForNullableIdentityInsertsWithPrivateSetter
         {
-            public int? Id { get; private set; }
+            public int? SisoId { get; private set; }
 
             public string Temp
             {

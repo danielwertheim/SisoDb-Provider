@@ -5,7 +5,6 @@ using SisoDb.Providers.SqlProvider;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Processors;
-using SisoDb.Querying.Lambdas.Processors.Sql;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures.Schemas;
 
@@ -25,7 +24,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId where si.[Int1] = 42;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -40,7 +39,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id order by si.[Int1] Asc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId order by si.[Int1] Asc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -55,7 +54,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42 order by si.[Int1] Desc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId where si.[Int1] = 42 order by si.[Int1] Desc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -70,7 +69,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -85,7 +84,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id order by si.[Int1] Desc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId order by si.[Int1] Desc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -100,7 +99,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id where si.[Int1] = 42 order by si.[Int1] Desc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId where si.[Int1] = 42 order by si.[Int1] Desc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -116,7 +115,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider
 
             const string expectedSql =
                 "with pagedRs as (select s.Json,row_number() over ( order by si.[Int1] Desc) RowNum "
-                + "from [dbo].[MyClassStructure] as s inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.Id "
+                + "from [dbo].[MyClassStructure] as s inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId "
                 + "where si.[Int1] = 42)select Json from pagedRs where RowNum between @pagingFrom and @pagingTo;";
                 
             Assert.AreEqual(expectedSql, sqlQuery.Sql);

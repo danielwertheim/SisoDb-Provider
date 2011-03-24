@@ -41,7 +41,7 @@ namespace SisoDb.Providers.SqlProvider
             DbSchemaManager = new DbSchemaManager();
             StructureBuilder = new StructureBuilder(
                 SisoDbEnvironment.JsonSerializer, 
-                new StructureIdFactory(), 
+                new SisoIdFactory(), 
                 new StructureIndexesFactory(SisoDbEnvironment.Formatting.StringConverter));
         }
 

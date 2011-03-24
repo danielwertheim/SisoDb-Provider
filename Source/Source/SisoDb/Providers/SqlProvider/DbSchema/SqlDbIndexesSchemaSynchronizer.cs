@@ -100,7 +100,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
         private IList<SqlDbColumn> GetIndexesColumns(IStructureSchema structureSchema)
         {
-            var dbColumns = _dbClient.GetColumns(structureSchema.GetIndexesTableName(), IndexStorageSchema.Fields.StructureId.Name);
+            var dbColumns = _dbClient.GetColumns(structureSchema.GetIndexesTableName(), IndexStorageSchema.Fields.SisoId.Name);
 
             return dbColumns ?? new List<SqlDbColumn>();
         }

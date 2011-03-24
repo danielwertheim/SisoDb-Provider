@@ -17,7 +17,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         {
             _builder = new StructureBuilder(
                 SisoDbEnvironment.JsonSerializer,
-                new StructureIdFactory(),
+                new SisoIdFactory(),
                 new StructureIndexesFactory(SisoDbEnvironment.Formatting.StringConverter));
         }
 
@@ -84,7 +84,7 @@ namespace SisoDb.Tests.UnitTests.Structures
 
         private class WithBytes
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public int DummyMember { get; set; }
 
@@ -103,21 +103,21 @@ namespace SisoDb.Tests.UnitTests.Structures
 
         private class WithByte
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public byte Byte { get; set; }
         }
 
         private class WithArray
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string[] Values { get; set; }
         }
 
         private class WithNoArray
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string Value { get; set; }
         }

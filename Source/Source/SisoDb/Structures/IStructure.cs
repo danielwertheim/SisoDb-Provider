@@ -4,7 +4,7 @@ namespace SisoDb.Structures
 {
     public interface IStructure
     {
-        IStructureId Id { get; }
+        ISisoId Id { get; }
 
         //byte[] Version { get; }
 

@@ -72,21 +72,21 @@ namespace SisoDb
             where T : class;
 
         /// <summary>
-        /// Deletes structure by Id using a guid.
+        /// Deletes structure by SisoId using a guid.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
-        void DeleteById<T>(Guid id) 
+        /// <param name="sisoId"></param>
+        void DeleteById<T>(Guid sisoId) 
             where T : class;
 
         /// <summary>
-        /// Deletes structure by Id using an integer.
+        /// Deletes structure by SisoId using an integer.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
-        void DeleteById<T>(int id) 
+        /// <param name="sisoId"></param>
+        void DeleteById<T>(int sisoId) 
             where T : class;
 
         /// <summary>
@@ -111,80 +111,80 @@ namespace SisoDb
 
         /// <summary>
         /// Returns one single structure identified
-        /// by a guid id.
+        /// by a guid sisoId.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
+        /// <param name="sisoId"></param>
         /// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
-        T GetById<T>(Guid id) 
+        T GetById<T>(Guid sisoId) 
             where T : class;
 
         /// <summary>
         /// Returns one single structure identified
-        /// by an integer id. 
+        /// by an integer sisoId. 
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
+        /// <param name="sisoId"></param>
         /// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
-        T GetById<T>(int id) 
+        T GetById<T>(int sisoId) 
             where T : class;
 
         /// <summary>
         /// Returns one single structure identified
-        /// by a guid id. 
+        /// by a guid sisoId. 
         /// </summary>
         /// <typeparam name="TContract">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <typeparam name="TOut">
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
-        /// <param name="id"></param>
+        /// <param name="sisoId"></param>
         /// <returns>Structure (<typeparamref name="TOut"/>) or null.</returns>
-        TOut GetByIdAs<TContract, TOut>(Guid id)
+        TOut GetByIdAs<TContract, TOut>(Guid sisoId)
             where TContract : class
             where TOut : class;
 
         /// <summary>
         /// Returns one single structure identified
-        /// by an integer id.  
+        /// by an integer sisoId.  
         /// </summary>
         /// <typeparam name="TContract">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <typeparam name="TOut">
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
-        /// <param name="id"></param>
+        /// <param name="sisoId"></param>
         /// <returns>Structure (<typeparamref name="TOut"/>) or null.</returns>
-        TOut GetByIdAs<TContract, TOut>(int id)
+        TOut GetByIdAs<TContract, TOut>(int sisoId)
             where TContract : class
             where TOut : class;
 
         /// <summary>
         /// Returns one single structure identified
-        /// by a guid id as Json. This is the most
+        /// by a guid sisoId as Json. This is the most
         /// effective return type, since the Json
         /// is stored in the database, no deserialization
         /// will take place.  
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
+        /// <param name="sisoId"></param>
         /// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
-        string GetByIdAsJson<T>(Guid id) 
+        string GetByIdAsJson<T>(Guid sisoId) 
             where T : class;
 
         /// <summary>
         /// Returns one single structure identified
-        /// by an integer id as Json. This is the most
+        /// by an integer sisoId as Json. This is the most
         /// effective return type, since the Json
         /// is stored in the database, no deserialization
         /// will take place.  
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
+        /// <param name="sisoId"></param>
         /// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
-        string GetByIdAsJson<T>(int id) 
+        string GetByIdAsJson<T>(int sisoId) 
             where T : class;
 
         /// <summary>

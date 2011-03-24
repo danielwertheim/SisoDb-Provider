@@ -5,7 +5,7 @@ namespace SisoDb.Structures
 {
     public interface IStructureIndexesFactory
     {
-        IEnumerable<IStructureIndex> GetIndexes<T>(IStructureSchema structureSchema, T item, IStructureId id)
+        IEnumerable<IStructureIndex> GetIndexes<T>(IStructureSchema structureSchema, T item, ISisoId id)
             where T : class;
     }
 }

@@ -96,9 +96,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             Database.UpsertStructureSet<ItemForUpsertStructureSet>();
 
             var structureTableHasRowGuidCol = DbHelper.ExecuteScalar<bool>(CommandType.Text,
-                "select columnproperty(object_id('ItemForUpsertStructureSetStructure'), 'Id', 'IsRowGuidCol');");
+                "select columnproperty(object_id('ItemForUpsertStructureSetStructure'), 'SisoId', 'IsRowGuidCol');");
             var indexesTableHasRowGuidCol = DbHelper.ExecuteScalar<bool>(CommandType.Text,
-                "select columnproperty(object_id('ItemForUpsertStructureSetIndexes'), 'StructureId', 'IsRowGuidCol');");
+                "select columnproperty(object_id('ItemForUpsertStructureSetIndexes'), 'SisoId', 'IsRowGuidCol');");
 
             Assert.IsTrue(structureTableHasRowGuidCol, "Structure table");
             Assert.IsTrue(indexesTableHasRowGuidCol, "Indexes table");
@@ -117,14 +117,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             }
             Database.StructureSchemas.RemoveSchema<StructureSetUpdaterTests.ModelOld.ItemForPropChange>();
 
-            var id1 = orgItem1.Id;
-            var id2 = orgItem2.Id;
-            var id3 = orgItem3.Id;
+            var id1 = orgItem1.SisoId;
+            var id2 = orgItem2.SisoId;
+            var id3 = orgItem3.SisoId;
             Database.UpdateStructureSet<StructureSetUpdaterTests.ModelOld.ItemForPropChange, StructureSetUpdaterTests.ModelNew.ItemForPropChange>(
             (oldItem, newItem) =>
             {
                 newItem.NewString1 = oldItem.String1;
-                return oldItem.Id.Equals(id2)
+                return oldItem.SisoId.Equals(id2)
                             ? StructureSetUpdaterStatuses.Trash
                             : StructureSetUpdaterStatuses.Keep;
             });
@@ -146,7 +146,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 
         private class ItemForUpsertStructureSet
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string Temp
             {

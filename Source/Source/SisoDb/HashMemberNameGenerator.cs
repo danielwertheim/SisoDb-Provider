@@ -22,7 +22,7 @@ namespace SisoDb
         {
             memberPath.AssertNotNullOrWhiteSpace("memberPath");
 
-            if (memberPath == "StructureId")
+            if (memberPath == "SisoId")
                 return memberPath;
 
             var hash = _hashService.GenerateHash(memberPath);

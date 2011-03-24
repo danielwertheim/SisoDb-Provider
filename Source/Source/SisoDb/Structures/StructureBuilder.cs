@@ -8,14 +8,14 @@ namespace SisoDb.Structures
     {
         public IJsonSerializer JsonSerializer { get; private set; }
 
-        public IStructureIdFactory IdFactory { get; private set; }
+        public ISisoIdFactory IdFactory { get; private set; }
 
         public IStructureIndexesFactory IndexesFactory { get; private set; }
 
-        public StructureBuilder(IJsonSerializer jsonSerializer, IStructureIdFactory structureIdFactory, IStructureIndexesFactory structureIndexesFactory)
+        public StructureBuilder(IJsonSerializer jsonSerializer, ISisoIdFactory sisoIdFactory, IStructureIndexesFactory structureIndexesFactory)
         {
             JsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
-            IdFactory = structureIdFactory.AssertNotNull("structureIdFactory");
+            IdFactory = sisoIdFactory.AssertNotNull("sisoIdFactory");
             IndexesFactory = structureIndexesFactory.AssertNotNull("structureIndexesFactory");
         }
 

@@ -12,19 +12,19 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         [Test]
         public void Process_WhenMemberNameIsId_SqlQueryHasTranslatedId()
         {
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Id == 42);
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.SisoId == 42);
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            const string expectedSql = "si.[StructureId] = @p0";
+            const string expectedSql = "si.[SisoId] = @p0";
             Assert.AreEqual(expectedSql, query.Sql);
         }
 
         [Test]
         public void Process_WhenMemberNameIsId_ExtractsCorrectParameters()
         {
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Id == 42);
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.SisoId == 42);
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
@@ -36,19 +36,19 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         [Test]
         public void Process_WhenNestedMemberNameIsId_SqlQueryDoesNotTranslateId()
         {
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.Id == 42);
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.SisoId == 42);
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            const string expectedSql = "si.[NestedItem.Id] = @p0";
+            const string expectedSql = "si.[NestedItem.SisoId] = @p0";
             Assert.AreEqual(expectedSql, query.Sql);
         }
 
         [Test]
         public void Process_WhenNestedMemberNameIsId_ExtractsCorrectParameters()
         {
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.Id == 42);
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.SisoId == 42);
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);

@@ -8,7 +8,7 @@ namespace SisoDbLab.Model
     {
         private MemoryStream _content;
 
-        public Guid Id { get; set; }
+        public Guid SisoId { get; set; }
 
         public string Name { get; private set; }
 

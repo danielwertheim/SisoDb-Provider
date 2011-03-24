@@ -48,8 +48,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
         [Test]
         public void Insert_WhenIdentityMemberHasValue_ValueIsNotInjectedToMember()
         {
-            var id = 123;
-            var json = string.Format("{{\"Id\":{0}}}", id);
+            var sisoId = 123;
+            var json = string.Format("{{\"SisoId\":{0}}}", sisoId);
 
             using (var uow = Database.CreateUnitOfWork())
             {
@@ -57,15 +57,15 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Commit();
 
                 var item = uow.GetAll<MyClass>().Single();
-                Assert.AreNotEqual(id, item.Id);
+                Assert.AreNotEqual(sisoId, item.SisoId);
             }
         }
 
         [Test]
         public void Insert_WhenGuidIdMemberHasValue_ValueIsInjectedToMember()
         {
-            var id = SequentialGuid.NewSqlCompatibleGuid();
-            var json = string.Format("{{\"Id\":{0}}}", id);
+            var sisoId = SequentialGuid.NewSqlCompatibleGuid();
+            var json = string.Format("{{\"SisoId\":{0}}}", sisoId);
 
             using (var uow = Database.CreateUnitOfWork())
             {
@@ -73,13 +73,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Commit();
 
                 var item = uow.GetAll<MyGuidClass>().Single();
-                Assert.AreEqual(id, item.Id);
+                Assert.AreEqual(sisoId, item.SisoId);
             }
         }
 
         private class MyClass
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public string String1 { get; set; }
 
@@ -90,7 +90,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         private class MyGuidClass
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string String1 { get; set; }
 

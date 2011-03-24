@@ -7,7 +7,7 @@ namespace SisoDb.Structures
     {
         IJsonSerializer JsonSerializer { get; }
 
-        IStructureIdFactory IdFactory { get; }
+        ISisoIdFactory IdFactory { get; }
         
         IStructureIndexesFactory IndexesFactory { get; }
 

@@ -49,8 +49,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             var hashForSortOrder = SisoDbEnvironment.MemberNameGenerator.Generate("SortOrder");
             var sql =
                 string.Format("create procedure [dbo].[{0}] @minId int, @maxId int as begin "
-                + "select Json from dbo.ItemForNamedQueriesStructure as S inner join dbo.ItemForNamedQueriesIndexes as I on I.StructureId = S.Id "
-                + "where I.[StructureId] between @minId and @maxId "
+                + "select Json from dbo.ItemForNamedQueriesStructure as S inner join dbo.ItemForNamedQueriesIndexes as I on I.SisoId = S.SisoId "
+                + "where I.[SisoId] between @minId and @maxId "
                 + "order by I.[{1}];"
                 + "end", ProcedureName, hashForSortOrder);
 
@@ -126,13 +126,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             }
 
             Assert.AreEqual(4, refetchedJson.Count());
-            Assert.AreEqual("{\"Id\":3,\"SortOrder\":3}", refetchedJson[0]);
-            Assert.AreEqual("{\"Id\":6,\"SortOrder\":6}", refetchedJson[3]);
+            Assert.AreEqual("{\"SisoId\":3,\"SortOrder\":3}", refetchedJson[0]);
+            Assert.AreEqual("{\"SisoId\":6,\"SortOrder\":6}", refetchedJson[3]);
         }
 
         private class ItemForNamedQueries
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public int SortOrder { get; set; }
         }

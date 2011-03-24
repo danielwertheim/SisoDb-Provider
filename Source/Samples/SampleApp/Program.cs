@@ -67,13 +67,13 @@ namespace SisoDbLab
             {
                 uow.Insert<IPhoto>(photo);
                 uow.Commit();
-                
-                var fetchedAsPhoto = uow.GetByIdAs<IPhoto, Photo>(photo.Id);
+
+                var fetchedAsPhoto = uow.GetByIdAs<IPhoto, Photo>(photo.SisoId);
                 Console.Out.WriteLine("fetchedAsPhoto.Name = {0}", fetchedAsPhoto.Name);
                 Console.Out.WriteLine("fetchedAsPhoto.Path = {0}", fetchedAsPhoto.Path);
                 Console.Out.WriteLine("fetchedAsPhoto.Stream.Length = {0}", fetchedAsPhoto.Stream.Length);
 
-                var fetchedAsPhotoInfo = uow.GetByIdAs<IPhoto, PhotoInfo>(photo.Id);
+                var fetchedAsPhotoInfo = uow.GetByIdAs<IPhoto, PhotoInfo>(photo.SisoId);
                 Console.Out.WriteLine("fetchedAsPhotoInfo.Name = {0}", fetchedAsPhotoInfo.Name);
                 Console.Out.WriteLine("fetchedAsPhotoInfo.Path = {0}", fetchedAsPhotoInfo.Path);
             }
@@ -131,7 +131,7 @@ namespace SisoDbLab
 
             using (var unitOfWork = db.CreateUnitOfWork())
             {
-                customer = unitOfWork.GetById<Customer>(customer.Id);
+                customer = unitOfWork.GetById<Customer>(customer.SisoId);
             }
 
             customer.DeliveryAddress = new Address
@@ -153,7 +153,7 @@ namespace SisoDbLab
         {
             var customer = new Customer
             {
-                Id = Guid.NewGuid(),
+                SisoId = Guid.NewGuid(),
                 PersonalNo = "800101-5555",
                 Firstname = "Daniel",
                 Lastname = "Wertheim",
@@ -169,7 +169,7 @@ namespace SisoDbLab
                 }
             };
 
-            var order = new Order { CustomerId = customer.Id, OrderNo = "2010-10-15-1" };
+            var order = new Order { CustomerId = customer.SisoId, OrderNo = "2010-10-15-1" };
             order.AddNewProduct("1", 2);
             order.AddNewProduct("2", 1);
             //order.AddNewProduct("1", 1); //Will cause an exception cause of unique index
@@ -195,7 +195,7 @@ namespace SisoDbLab
                 uow.Insert<IAlbumData>(album);
                 uow.Commit();
 
-                album = uow.GetByIdAs<IAlbumData, Album>(album.Id);
+                album = uow.GetByIdAs<IAlbumData, Album>(album.SisoId);
                 DumpAlbum("Without include", album);
 
                 album = uow.QueryAs<IAlbumData, Album>(q => q
@@ -209,7 +209,7 @@ namespace SisoDbLab
         private static void DumpAlbum(string title, Album album)
         {
             Console.WriteLine(title);
-            Console.Out.WriteLine("album.Id = {0}", album.Id);
+            Console.Out.WriteLine("album.SisoId = {0}", album.SisoId);
             Console.Out.WriteLine("album.Name = {0}", album.Name);
             
             Console.Out.WriteLine("album.GenreId = {0}", album.GenreId);

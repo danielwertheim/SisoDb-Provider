@@ -91,7 +91,6 @@
     <Compile Include="Querying\Lambdas\Parsers\IWhereParser.cs" />
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
     <Compile Include="Querying\Lambdas\Parsers\ISortingParser.cs" />
-    <Compile Include="Querying\Lambdas\Processors\INameStrategy.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaDropper.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropper.cs" />
@@ -114,7 +113,6 @@
     <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Reflections\Reflect.cs" />
     <Compile Include="Querying\Lambdas\LambdaExpressionEvaluator.cs" />
-    <Compile Include="Querying\Lambdas\Processors\NameStrategy.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedSortingSqlProcessor.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParser.cs" />
@@ -206,7 +204,7 @@
     <Compile Include="SisoDbFactory.cs" />
     <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="Structures\IdTypes.cs" />
-    <Compile Include="Structures\IStructureIdFactory.cs" />
+    <Compile Include="Structures\ISisoIdFactory.cs" />
     <Compile Include="Structures\IStructureIndexesFactory.cs" />
     <Compile Include="Structures\Schemas\IProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
@@ -222,7 +220,7 @@
     <Compile Include="Querying\Sql\SqlWhere.cs" />
     <Compile Include="Providers\SqlProvider\SqlUnitOfWork.cs" />
     <Compile Include="Core\StringConverter.cs" />
-    <Compile Include="Structures\IStructureId.cs" />
+    <Compile Include="Structures\ISisoId.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
     <Compile Include="Structures\IStructure.cs" />
@@ -230,7 +228,7 @@
     <Compile Include="Structures\IStructureIndex.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
-    <Compile Include="Structures\StructureId.cs" />
+    <Compile Include="Structures\SisoId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -258,7 +256,7 @@
     <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Structures\StructureBuilder.cs" />
-    <Compile Include="Structures\StructureIdFactory.cs" />
+    <Compile Include="Structures\SisoIdFactory.cs" />
     <Compile Include="Structures\StructureIndex.cs" />
     <Compile Include="SisoDbEnvironment.cs" />
     <Compile Include="Structures\StructureIndexesFactory.cs" />

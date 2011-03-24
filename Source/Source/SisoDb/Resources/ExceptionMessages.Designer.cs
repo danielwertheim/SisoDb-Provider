@@ -305,6 +305,24 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When using identities the Id-property of the entity must be assigned before structure is created..
+        /// </summary>
+        internal static string SisoIdFactory_MissingIdentityValue {
+            get {
+                return ResourceManager.GetString("SisoIdFactory_MissingIdentityValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The identity type: &apos;{0}&apos; is not supported..
+        /// </summary>
+        internal static string SisoIdFactory_UnSupportedIdentityType {
+            get {
+                return ResourceManager.GetString("SisoIdFactory_UnSupportedIdentityType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The only supported methods for marking sortings are Asc() and Desc()..
         /// </summary>
         internal static string SortingParser_UnsupportedMethodForSortingDirection {
@@ -431,29 +449,11 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate Unique-index found for &apos;{0}&apos;.\r\nStructureId: &apos;{1}&apos;;Name: &apos;{2}&apos;;Value: &apos;{3}&apos;;.
+        ///   Looks up a localized string similar to Duplicate Unique-index found for &apos;{0}&apos;.\r\nSisoId: &apos;{1}&apos;;Name: &apos;{2}&apos;;Value: &apos;{3}&apos;;.
         /// </summary>
         internal static string Structure_DuplicateUniques {
             get {
                 return ResourceManager.GetString("Structure_DuplicateUniques", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to When using identities the Id-property of the entity must be assigned before structure is created..
-        /// </summary>
-        internal static string StructureIdFactory_MissingIdentityValue {
-            get {
-                return ResourceManager.GetString("StructureIdFactory_MissingIdentityValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The identity type: &apos;{0}&apos; is not supported..
-        /// </summary>
-        internal static string StructureIdFactory_UnSupportedIdentityType {
-            get {
-                return ResourceManager.GetString("StructureIdFactory_UnSupportedIdentityType", resourceCulture);
             }
         }
         

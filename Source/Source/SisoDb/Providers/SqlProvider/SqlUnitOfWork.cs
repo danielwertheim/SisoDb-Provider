@@ -138,23 +138,23 @@ namespace SisoDb.Providers.SqlProvider
             bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 
-        public void DeleteById<T>(Guid id) where T : class
+        public void DeleteById<T>(Guid sisoId) where T : class
         {
-            DeleteById<T>(StructureId.NewGuidId(id));
+            DeleteById<T>(SisoId.NewGuidId(sisoId));
         }
 
-        public void DeleteById<T>(int id) where T : class
+        public void DeleteById<T>(int sisoId) where T : class
         {
-            DeleteById<T>(StructureId.NewIdentityId(id));
+            DeleteById<T>(SisoId.NewIdentityId(sisoId));
         }
 
-        private void DeleteById<T>(IStructureId structureId) where T : class
+        private void DeleteById<T>(ISisoId sisoId) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
             _dbClient.DeleteById(
-                structureId.Value,
+                sisoId.Value,
                 structureSchema.GetStructureTableName(),
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName());
@@ -185,55 +185,55 @@ namespace SisoDb.Providers.SqlProvider
             return _dbClient.RowCount(structureSchema.GetStructureTableName());
         }
 
-        public T GetById<T>(Guid id) where T : class
+        public T GetById<T>(Guid sisoId) where T : class
         {
-            return GetById<T, T>(StructureId.NewGuidId(id));
+            return GetById<T, T>(SisoId.NewGuidId(sisoId));
         }
 
-        public T GetById<T>(int id) where T : class
+        public T GetById<T>(int sisoId) where T : class
         {
-            return GetById<T, T>(StructureId.NewIdentityId(id));
+            return GetById<T, T>(SisoId.NewIdentityId(sisoId));
         }
 
-        public TOut GetByIdAs<TContract, TOut>(Guid id)
+        public TOut GetByIdAs<TContract, TOut>(Guid sisoId)
             where TContract : class
             where TOut : class
         {
-            return GetById<TContract, TOut>(StructureId.NewGuidId(id));
+            return GetById<TContract, TOut>(SisoId.NewGuidId(sisoId));
         }
 
-        public TOut GetByIdAs<TContract, TOut>(int id)
+        public TOut GetByIdAs<TContract, TOut>(int sisoId)
             where TContract : class
             where TOut : class
         {
-            return GetById<TContract, TOut>(StructureId.NewIdentityId(id));
+            return GetById<TContract, TOut>(SisoId.NewIdentityId(sisoId));
         }
 
-        private TOut GetById<TContract, TOut>(IStructureId structureId)
+        private TOut GetById<TContract, TOut>(ISisoId sisoId)
             where TContract : class
             where TOut : class
         {
-            var json = GetByIdAsJson<TContract>(structureId);
+            var json = GetByIdAsJson<TContract>(sisoId);
 
             return _jsonSerializer.ToItemOrNull<TOut>(json);
         }
 
-        public string GetByIdAsJson<T>(Guid id) where T : class
+        public string GetByIdAsJson<T>(Guid sisoId) where T : class
         {
-            return GetByIdAsJson<T>(StructureId.NewGuidId(id));
+            return GetByIdAsJson<T>(SisoId.NewGuidId(sisoId));
         }
 
-        public string GetByIdAsJson<T>(int id) where T : class
+        public string GetByIdAsJson<T>(int sisoId) where T : class
         {
-            return GetByIdAsJson<T>(StructureId.NewIdentityId(id));
+            return GetByIdAsJson<T>(SisoId.NewIdentityId(sisoId));
         }
 
-        private string GetByIdAsJson<T>(IStructureId structureId) where T : class
+        private string GetByIdAsJson<T>(ISisoId sisoId) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema<T>();
             UpsertStructureSet(structureSchema);
 
-            return _dbClient.GetJsonById(structureId.Value, structureSchema.GetStructureTableName());
+            return _dbClient.GetJsonById(sisoId.Value, structureSchema.GetStructureTableName());
         }
 
         public IEnumerable<T> GetAll<T>() where T : class

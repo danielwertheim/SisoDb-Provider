@@ -4,7 +4,7 @@ namespace SisoDbLab.Model
 {
     public class Artist
     {
-        public Guid Id { get; set; }
+        public Guid SisoId { get; set; }
 
         public string Name { get; set; }
     }

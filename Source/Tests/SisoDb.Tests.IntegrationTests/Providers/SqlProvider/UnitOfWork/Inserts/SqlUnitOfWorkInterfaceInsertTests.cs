@@ -26,7 +26,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert<IMyItem>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.Id);
+                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.SisoId);
             }
 
             Assert.AreNotEqual(item.Stream.Length, fetched.Stream.Length);
@@ -48,7 +48,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert<IMyItem>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.Id);
+                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.SisoId);
             }
 
             Assert.AreEqual(item.Name, fetched.Name);
@@ -66,7 +66,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert<IMyItem>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<IMyItem, MyItemInfo>(item.Id);
+                fetched = uow.GetByIdAs<IMyItem, MyItemInfo>(item.SisoId);
             }
 
             Assert.AreEqual(item.Name, fetched.Name);
@@ -121,14 +121,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         public interface IMyItem
         {
-            int Id { get; set; }
+            int SisoId { get; set; }
 
             string Name { get; }
         }
 
         public class MyItem : IMyItem
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public string Name { get; set; }
 
@@ -142,9 +142,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         public class MyItemInfo : IMyItem
         {
-            int IMyItem.Id { get; set; }
+            int IMyItem.SisoId { get; set; }
 
-            public int Id { get; private set; }
+            public int SisoId { get; private set; }
 
             public string Name { get; private set; }
         }

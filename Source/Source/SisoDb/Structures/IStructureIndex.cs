@@ -2,7 +2,7 @@
 {
     public interface IStructureIndex
     {
-        IStructureId StructureId { get;  }
+        ISisoId SisoId { get;  }
 
         string Name { get;  }
         

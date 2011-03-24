@@ -7,7 +7,7 @@ namespace SisoDb.Structures.Schemas
 {
     public class StructureSchema : IStructureSchema
     {
-        public const string IdMemberName = "Id";
+        public const string IdMemberName = "SisoId";
 
         public string Name { get; private set; }
 

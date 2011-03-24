@@ -27,11 +27,11 @@ namespace SisoDb.Providers.SqlProvider
         int RowCount(string tableName);
         int GetIdentity(string entityHash, int numOfIds);
         
-        void DeleteById(ValueType structureId, string structureTableName, string indexesTableName, string uniquesTableName);
+        void DeleteById(ValueType sisoId, string structureTableName, string indexesTableName, string uniquesTableName);
         void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName);
-        void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, string structureTableName, string indexesTableName, string uniquesTableName);
+        void DeleteWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName, string indexesTableName, string uniquesTableName);
         
-        string GetJsonById(ValueType structureId, string structureTableName);
+        string GetJsonById(ValueType sisoId, string structureTableName);
         
         T ExecuteScalar<T>(CommandType commandType, string sql, params IQueryParameter[] parameters);
 

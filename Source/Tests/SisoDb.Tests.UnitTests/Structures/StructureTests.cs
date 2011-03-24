@@ -11,14 +11,14 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void Ctor_WhenIndexesContainsNonUniqueUniqueIndex_ThrowsSisoDbException()
         {
-            var fakeStructureId = new Mock<IStructureId>().Object;
+            var fakeSisoId = new Mock<ISisoId>().Object;
             var indexes = new List<IStructureIndex>
             {
-                new StructureIndex(fakeStructureId, "UniqueIndex1", "Value1", true),
-                new StructureIndex(fakeStructureId, "UniqueIndex1", "Value1", true)
+                new StructureIndex(fakeSisoId, "UniqueIndex1", "Value1", true),
+                new StructureIndex(fakeSisoId, "UniqueIndex1", "Value1", true)
             };
             
-            Assert.Throws<SisoDbException>(() => new Structure("Name", fakeStructureId, indexes, "{Value : \"Test\"}"));
+            Assert.Throws<SisoDbException>(() => new Structure("Name", fakeSisoId, indexes, "{Value : \"Test\"}"));
         }
     }
 }

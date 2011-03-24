@@ -4,7 +4,7 @@ namespace SisoDbLab.Model
 {
     public interface IPhoto
     {
-        Guid Id { get; set; }
+        Guid SisoId { get; set; }
 
         string Name { get; }
 

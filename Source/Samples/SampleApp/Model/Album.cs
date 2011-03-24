@@ -4,18 +4,18 @@ namespace SisoDbLab.Model
 {
     public class Album : IAlbumData
     {
-        public Guid Id { get; set; }
+        public Guid SisoId { get; set; }
 
         public Guid GenreId
         {
-            get { return Genre.Id; }
-            set { Genre.Id = value; }
+            get { return Genre.SisoId; }
+            set { Genre.SisoId = value; }
         }
 
         public Guid ArtistId
         {
-            get { return Artist.Id; }
-            set { Artist.Id = value; }
+            get { return Artist.SisoId; }
+            set { Artist.SisoId = value; }
         }
 
         public string Name { get; set; }

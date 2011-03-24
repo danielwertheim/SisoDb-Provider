@@ -30,7 +30,8 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         private static string BuildObjectReferencePath(string idReferencePath)
         {
-            return !idReferencePath.EndsWith(StructureSchema.IdMemberName) 
+            //TODO: Hmmm SisoId
+            return !idReferencePath.EndsWith("Id") 
                 ? idReferencePath 
                 : idReferencePath.Substring(0, idReferencePath.Length - 2);
         }

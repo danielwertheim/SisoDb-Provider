@@ -8,8 +8,6 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
 {
     public class ParsedWhereSqlProcessor : IParsedLambdaProcessor<ISqlWhere>
     {
-        private static readonly INameStrategy NameStrategy = new NameStrategy();
-
         public IMemberNameGenerator MemberNameGenerator { private get; set; }
 
         public ParsedWhereSqlProcessor(IMemberNameGenerator memberNameGenerator)
@@ -26,8 +24,7 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
             {
                 if (node is MemberNode)
                 {
-                    var memNode = (MemberNode)node;
-                    var memPath = NameStrategy.Apply(memNode.Path);
+                    var memPath = ((MemberNode)node).Path;
                     sql.AppendFormat("si.[{0}]", MemberNameGenerator.Generate(memPath));
                 }
                 else if (node is OperatorNode)

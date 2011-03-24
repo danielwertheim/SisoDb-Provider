@@ -154,7 +154,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private interface IAlbumData
         {
-            int Id { get; set; }
+            int SisoId { get; set; }
             int? GenreId { get; }
             int? ArtistId { get; }
             int? SecondArtistId { get; }
@@ -163,38 +163,38 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private interface IGenreData
         {
-            int Id { get; set; }
+            int SisoId { get; set; }
 
             string Name { get; }
         }
 
         private interface IArtistData
         {
-            int Id { get; set; }
+            int SisoId { get; set; }
 
             string Name { get; }
         }
 
         private class Album : IAlbumData
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public int? GenreId
             {
-                get { return Genre != null ? (int?)Genre.Id : null; }
-                set { Genre.Id = value.Value; }
+                get { return Genre != null ? (int?)Genre.SisoId : null; }
+                set { Genre.SisoId = value.Value; }
             }
 
             public int? ArtistId
             {
-                get { return Artist != null ? (int?)Artist.Id : null; }
-                set { Artist.Id = value.Value; }
+                get { return Artist != null ? (int?)Artist.SisoId : null; }
+                set { Artist.SisoId = value.Value; }
             }
 
             public int? SecondArtistId
             {
-                get { return SecondArtist != null ? (int?)SecondArtist.Id : null; }
-                set { SecondArtist.Id = value.Value; }
+                get { return SecondArtist != null ? (int?)SecondArtist.SisoId : null; }
+                set { SecondArtist.SisoId = value.Value; }
             }
 
             public string Name { get; set; }
@@ -215,14 +215,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private class Genre : IGenreData
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public string Name { get; set; }
         }
 
         private class Artist : IArtistData
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public string Name { get; set; }
         }

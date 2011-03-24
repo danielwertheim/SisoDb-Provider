@@ -168,7 +168,7 @@ namespace SisoDb.Providers.SqlProvider
                                                 new QueryParameter("numOfIds", numOfIds));
         }
 
-        public void DeleteById(ValueType structureId, string structureTableName, string indexesTableName, string uniquesTableName)
+        public void DeleteById(ValueType sisoId, string structureTableName, string indexesTableName, string uniquesTableName)
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
@@ -177,7 +177,7 @@ namespace SisoDb.Providers.SqlProvider
             var sql = SqlStringsRepository.GetSql("DeleteById").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
-            ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("id", structureId));
+            ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("id", sisoId));
         }
 
         public void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName)
@@ -191,7 +191,7 @@ namespace SisoDb.Providers.SqlProvider
             ExecuteNonQuery(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
 
-        public void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, string structureTableName, string indexesTableName, string uniquesTableName)
+        public void DeleteWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName, string indexesTableName, string uniquesTableName)
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
@@ -200,14 +200,14 @@ namespace SisoDb.Providers.SqlProvider
             var sql = SqlStringsRepository.GetSql("DeleteWhereIdIsBetween").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
-            ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("idFrom", structureIdFrom), new QueryParameter("idTo", structureIdTo));
+            ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("idFrom", sisoIdFrom), new QueryParameter("idTo", sisoIdTo));
         }
 
-        public string GetJsonById(ValueType structureId, string structureTableName)
+        public string GetJsonById(ValueType sisoId, string structureTableName)
         {
             var sql = SqlStringsRepository.GetSql("GetById").Inject(structureTableName);
 
-            return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", structureId));
+            return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", sisoId));
         }
 
         public T ExecuteScalar<T>(CommandType commandType, string sql, params IQueryParameter[] parameters)

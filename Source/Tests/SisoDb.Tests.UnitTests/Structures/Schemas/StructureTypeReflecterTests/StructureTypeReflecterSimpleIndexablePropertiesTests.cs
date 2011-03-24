@@ -19,7 +19,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 
             var names = properties.Select(p => p.Name).ToArray();
             Assert.AreEqual(6, properties.Count());
-            CollectionAssert.Contains(names, "Id");
+            CollectionAssert.Contains(names, "SisoId");
             CollectionAssert.Contains(names, "Age");
             CollectionAssert.Contains(names, "Name");
             CollectionAssert.Contains(names, "DateOfBirth");
@@ -38,17 +38,17 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetSimpleIndexableProperties_WhenExclusionIsPassed_DoesNotReturnExcludedProperties()
         {
-            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "Id", "Name" });
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "SisoId", "Name" });
 
             var names = properties.Select(p => p.Name).ToArray();
-            CollectionAssert.DoesNotContain(names, "Id");
+            CollectionAssert.DoesNotContain(names, "SisoId");
             CollectionAssert.DoesNotContain(names, "Name");
         }
 
         [Test]
         public void GetSimpleIndexableProperties_WhenExclusionIsPassed_DoesReturnNonExcludedProperties()
         {
-            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "Id", "Name" });
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "SisoId", "Name" });
 
             var names = properties.Select(p => p.Name).ToArray();
             CollectionAssert.Contains(names, "Age");
@@ -90,7 +90,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 
         private class WithSimpleProperties
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public int Age { get; set; }
 

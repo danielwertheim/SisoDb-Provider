@@ -15,11 +15,11 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
         public override object GetValue(int ordinal)
         {
             var schemaField = StorageSchema.FieldsByIndex[ordinal];
-            if (schemaField.Name == UniqueStorageSchema.Fields.StructureId.Name)
+            if (schemaField.Name == UniqueStorageSchema.Fields.SisoId.Name)
             {
-                var structureId = Enumerator.Current.StructureId;
-                if (structureId != null && structureId.Value != null)
-                    return structureId.Value;
+                var sisoId = Enumerator.Current.SisoId;
+                if (sisoId != null && sisoId.Value != null)
+                    return sisoId.Value;
 
                 return DBNull.Value;
             }

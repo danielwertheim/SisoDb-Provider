@@ -5,23 +5,23 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures
 {
-    public class StructureIdFactory : IStructureIdFactory
+    public class SisoIdFactory : ISisoIdFactory
     {
-        public IStructureId GetId<T>(IStructureSchema structureSchema, T item) where T : class
+        public ISisoId GetId<T>(IStructureSchema structureSchema, T item) where T : class
         {
-            IStructureId id;
+            ISisoId id;
             if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
             {
                 var idValue = EnsureGuidIdValueExists(item, structureSchema);
-                id = StructureId.NewGuidId(idValue);
+                id = SisoId.NewGuidId(idValue);
             }
             else if (structureSchema.IdAccessor.IdType == IdTypes.Identity)
             {
                 var idValue = EnsureIdentityValueExists(item, structureSchema);
-                id = StructureId.NewIdentityId(idValue);
+                id = SisoId.NewIdentityId(idValue);
             }
             else
-                throw new SisoDbException(ExceptionMessages.StructureIdFactory_UnSupportedIdentityType.Inject(structureSchema.IdAccessor.IdType));
+                throw new SisoDbException(ExceptionMessages.SisoIdFactory_UnSupportedIdentityType.Inject(structureSchema.IdAccessor.IdType));
 
             return id;
         }
@@ -46,7 +46,7 @@ namespace SisoDb.Structures
         {
             var idValue = structureSchema.IdAccessor.GetValue<T, int>(item);
             if (!idValue.HasValue || idValue < 1)
-                throw new SisoDbException(ExceptionMessages.StructureIdFactory_MissingIdentityValue);
+                throw new SisoDbException(ExceptionMessages.SisoIdFactory_MissingIdentityValue);
 
             return idValue.Value;
         }

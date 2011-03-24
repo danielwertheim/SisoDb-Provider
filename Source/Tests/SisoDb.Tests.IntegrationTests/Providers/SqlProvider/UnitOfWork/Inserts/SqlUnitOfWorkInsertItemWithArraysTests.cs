@@ -67,7 +67,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         public class Level1
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public Level2[] Level2Items { get; set; }
 

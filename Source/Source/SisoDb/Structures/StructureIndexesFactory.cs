@@ -16,7 +16,7 @@ namespace SisoDb.Structures
             StringConverter = stringConverter.AssertNotNull("stringConverter");
         }
 
-        public IEnumerable<IStructureIndex> GetIndexes<T>(IStructureSchema structureSchema, T item, IStructureId id)
+        public IEnumerable<IStructureIndex> GetIndexes<T>(IStructureSchema structureSchema, T item, ISisoId id)
             where T : class
         {
             var indexes = new IStructureIndex[structureSchema.IndexAccessors.Count];

@@ -8,7 +8,7 @@ namespace SisoDbLab.Model
     [Serializable]
     public class Order
     {
-        public int Id { get; set; }
+        public int SisoId { get; set; }
 
         public Guid CustomerId { get; set; }
 

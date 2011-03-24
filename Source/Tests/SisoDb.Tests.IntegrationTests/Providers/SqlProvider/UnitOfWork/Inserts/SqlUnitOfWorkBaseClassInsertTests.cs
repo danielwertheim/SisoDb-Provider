@@ -26,7 +26,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert<MyItemBase>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<MyItemBase, MyItem>(item.Id);
+                fetched = uow.GetByIdAs<MyItemBase, MyItem>(item.SisoId);
             }
 
             Assert.AreNotEqual(item.Stream.Length, fetched.Stream.Length);
@@ -48,7 +48,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert<MyItemBase>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<MyItemBase, MyItem>(item.Id);
+                fetched = uow.GetByIdAs<MyItemBase, MyItem>(item.SisoId);
             }
 
             Assert.AreEqual(item.Name, fetched.Name);
@@ -82,7 +82,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         public abstract class MyItemBase
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public string Name { get; set; }
         }

@@ -195,59 +195,59 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
         private class WithOnlyId
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
         }
 
         private class WithOnlyIdentity
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
         }
 
         private class WithIdentity
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public int Int1 { get; set; }
         }
 
         private class WithGuid
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public int Int1 { get; set; }
         }
 
         private class WithByte
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public byte Byte { get; set; }
         }
 
         private class WithNullableByte
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public byte? Byte { get; set; }
         }
 
         private class WithBytes
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public byte[] Bytes { get; set; }
         }
 
         private class WithIdAndIndexableFirstLevelMembers
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
             public string Name { get; set; }
             public int Age { get; set; }
         }
 
         private class WithFirstSecondAndThirdLevelMembers
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
             public string Name { get; set; }
             public int Age { get; set; }
 

@@ -8,7 +8,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     {
         public static class Fields
         {
-            public static readonly SchemaField Id = new SchemaField(0, "Id");
+            public static readonly SchemaField Id = new SchemaField(0, "SisoId");
             public static readonly SchemaField Json = new SchemaField(1, "Json");
 
             public static SchemaField[] GetOrderedFields()

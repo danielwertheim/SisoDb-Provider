@@ -87,14 +87,14 @@ namespace SisoDb.Tests.UnitTests.Serialization
         {
             var structure = new Structure
             {
-                ReferencedStructureId = 999,
+                ReferencedSisoId = 999,
                 ReferencedStructure = {OtherStructureString = "Not to be included"},
                 Item = {String1 = "To be included"}
             };
 
             var json = _jsonSerializer.ToJsonOrEmptyString(structure);
 
-            const string expectedJson = "{\"Id\":0,\"ReferencedStructureId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
+            const string expectedJson = "{\"SisoId\":0,\"ReferencedSisoId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);
         }
 
@@ -136,12 +136,12 @@ namespace SisoDb.Tests.UnitTests.Serialization
 
         private class Structure
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
-            public int ReferencedStructureId 
+            public int ReferencedSisoId 
             {
-                get { return ReferencedStructure.Id; }
-                set { ReferencedStructure.Id = value; }
+                get { return ReferencedStructure.SisoId; }
+                set { ReferencedStructure.SisoId = value; }
             }
 
             public OtherStructure ReferencedStructure { get; set; }
@@ -157,7 +157,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
 
         private class OtherStructure
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public string OtherStructureString { get; set; }
         }

@@ -7,7 +7,7 @@ namespace SisoDb.Structures
     [Serializable]
     public class StructureIndex : IStructureIndex, IEquatable<StructureIndex>
     {
-        public IStructureId StructureId { get; private set; }
+        public ISisoId SisoId { get; private set; }
 
         public string Name { get; private set; }
 
@@ -15,15 +15,15 @@ namespace SisoDb.Structures
 
         public bool IsUnique { get; private set; }
 
-        public StructureIndex(IStructureId structureId, string name, object value, bool isUnique)
+        public StructureIndex(ISisoId sisoId, string name, object value, bool isUnique)
         {
-            structureId.AssertNotNull("structureId");
+            sisoId.AssertNotNull("sisoId");
             name.AssertNotNullOrWhiteSpace("name");
 
             if((value != null) && !(value is string) && !(value is ValueType))
                 throw new ArgumentException(ExceptionMessages.StructureIndex_ValueArgument_IncorrectType);
 
-            StructureId = structureId;
+            SisoId = sisoId;
             Name = name;
             Value = value;
             IsUnique = isUnique;
@@ -38,14 +38,14 @@ namespace SisoDb.Structures
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.StructureId, StructureId) && Equals(other.Name, Name) && Equals(other.Value, Value);
+            return Equals(other.SisoId, SisoId) && Equals(other.Name, Name) && Equals(other.Value, Value);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                int result = (StructureId != null ? StructureId.GetHashCode() : 0);
+                int result = (SisoId != null ? SisoId.GetHashCode() : 0);
                 result = (result*397) ^ (Name != null ? Name.GetHashCode() : 0);
                 result = (result*397) ^ (Value != null ? Value.GetHashCode() : 0);
                 return result;

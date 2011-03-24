@@ -9,11 +9,11 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     {
         public static class Fields
         {
-            public static SchemaField StructureId = new SchemaField(0, "StructureId");
+            public static SchemaField SisoId = new SchemaField(0, "SisoId");
 
             public static SchemaField[] GetOrderedFields()
             {
-                return new[] { StructureId };
+                return new[] { SisoId };
             }
         }
 

@@ -90,11 +90,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
                 refetched = uow.QueryAsJson<ItemForQueries>(q => q.SortBy(i => i.SortOrder)).ToList();
             }
 
-            Assert.AreEqual("{\"Id\":1,\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
-            Assert.AreEqual("{\"Id\":2,\"SortOrder\":5,\"StringValue\":\"E\"}", refetched[4]);
-            Assert.AreEqual("{\"Id\":3,\"SortOrder\":2,\"StringValue\":\"B\"}", refetched[1]);
-            Assert.AreEqual("{\"Id\":4,\"SortOrder\":4,\"StringValue\":\"D\"}", refetched[3]);
-            Assert.AreEqual("{\"Id\":5,\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[2]);
+            Assert.AreEqual("{\"SisoId\":1,\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
+            Assert.AreEqual("{\"SisoId\":2,\"SortOrder\":5,\"StringValue\":\"E\"}", refetched[4]);
+            Assert.AreEqual("{\"SisoId\":3,\"SortOrder\":2,\"StringValue\":\"B\"}", refetched[1]);
+            Assert.AreEqual("{\"SisoId\":4,\"SortOrder\":4,\"StringValue\":\"D\"}", refetched[3]);
+            Assert.AreEqual("{\"SisoId\":5,\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[2]);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private class ItemForQueries
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public int SortOrder { get; set; }
 

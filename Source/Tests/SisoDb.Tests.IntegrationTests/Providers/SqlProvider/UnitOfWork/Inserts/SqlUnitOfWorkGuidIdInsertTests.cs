@@ -29,7 +29,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 item = uow.GetById<ItemForGuidIdInsertsWithPrivateSetter>(id);
             }
 
-            Assert.AreEqual(id, item.Id);
+            Assert.AreEqual(id, item.SisoId);
         }
 
         [Test]
@@ -45,10 +45,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                item = uow.GetById<ItemForGuidIdInsertsWithPrivateSetter>(item.Id);
+                item = uow.GetById<ItemForGuidIdInsertsWithPrivateSetter>(item.SisoId);
             }
 
-            Assert.AreNotEqual(Guid.Empty, item.Id);
+            Assert.AreNotEqual(Guid.Empty, item.SisoId);
         }
 
         [Test]
@@ -64,16 +64,16 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                item = uow.GetById<ItemForNullableGuidIdInsertsWithPrivateSetter>(item.Id.Value);
+                item = uow.GetById<ItemForNullableGuidIdInsertsWithPrivateSetter>(item.SisoId.Value);
             }
 
-            Assert.IsNotNull(item.Id);
-            Assert.AreNotEqual(Guid.Empty, item.Id);
+            Assert.IsNotNull(item.SisoId);
+            Assert.AreNotEqual(Guid.Empty, item.SisoId);
         }
 
         private class ItemForGuidIdInsertsWithPrivateSetter
         {
-            public Guid Id { get; private set; }
+            public Guid SisoId { get; private set; }
 
             public string Temp
             {
@@ -87,13 +87,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
             internal ItemForGuidIdInsertsWithPrivateSetter(Guid id)
             {
-                Id = id;
+                SisoId = id;
             }
         }
 
         private class ItemForNullableGuidIdInsertsWithPrivateSetter
         {
-            public Guid? Id { get; private set; }
+            public Guid? SisoId { get; private set; }
 
             public string Temp
             {

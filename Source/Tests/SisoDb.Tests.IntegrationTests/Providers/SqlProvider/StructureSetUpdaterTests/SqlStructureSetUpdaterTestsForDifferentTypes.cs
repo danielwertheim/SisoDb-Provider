@@ -39,10 +39,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
 
             using(var uow = Database.CreateUnitOfWork())
             {
-                var refetchedPerson = uow.GetById<Person>(orgItem.Id);
+                var refetchedPerson = uow.GetById<Person>(orgItem.SisoId);
                 Assert.IsNull(refetchedPerson);
 
-                var refetchedSalesPerson = uow.GetById<SalesPerson>(orgItem.Id);
+                var refetchedSalesPerson = uow.GetById<SalesPerson>(orgItem.SisoId);
                 Assert.AreEqual("Daniel", refetchedSalesPerson.Firstname);
                 Assert.AreEqual("Wertheim", refetchedSalesPerson.Lastname);
                 Assert.AreEqual("The Street 1", refetchedSalesPerson.Office.Street);
@@ -53,7 +53,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
 
         private class Person
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string Name { get; set; }
 
@@ -62,7 +62,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
 
         private class SalesPerson
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string Firstname { get; set; }
 

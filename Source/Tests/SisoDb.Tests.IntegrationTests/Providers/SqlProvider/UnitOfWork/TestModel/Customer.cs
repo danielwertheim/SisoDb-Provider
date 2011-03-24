@@ -5,7 +5,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.TestMod
     [Serializable]
     public class Customer
     {
-        public int Id { get; set; }
+        public int SisoId { get; set; }
 
         public int CustomerNo { get; set; }
 

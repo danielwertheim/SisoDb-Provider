@@ -36,7 +36,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
         private class Class_12E6E3A7_482C_4E1A_88BE_393D29253203
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string IndexableMember1 { get; set; }
 

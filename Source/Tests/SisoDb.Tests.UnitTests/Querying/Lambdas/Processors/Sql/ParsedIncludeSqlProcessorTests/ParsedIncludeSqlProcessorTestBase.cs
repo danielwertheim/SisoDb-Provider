@@ -23,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
 
         protected class Master
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public Guid ChildOneId { get; set; }
 
@@ -39,12 +39,12 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
 
         protected class ChildTypeA
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
         }
 
         protected class ChildTypeB
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
         }
     }
 }

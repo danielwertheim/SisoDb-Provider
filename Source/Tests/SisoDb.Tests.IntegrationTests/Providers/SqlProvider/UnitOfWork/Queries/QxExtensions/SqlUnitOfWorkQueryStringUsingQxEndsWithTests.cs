@@ -15,7 +15,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private class QxItemForQueries
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string StringValue { get; set; }
         }

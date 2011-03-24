@@ -69,13 +69,13 @@ namespace SisoDb.Providers.SqlProvider
             {
                 var oldStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TOld>(json);
                 var newStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TNew>(json);
-                var oldId = GetStructureId(oldStructure);
+                var oldId = GetSisoId(oldStructure);
                 if (oldId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_OldIdDoesNotExist);
 
                 var status = onProcess(oldStructure, newStructure);
 
-                var newId = GetStructureId(newStructure);
+                var newId = GetSisoId(newStructure);
                 if (newId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotExist);
                 if (!newId.Value.Equals(oldId.Value))
@@ -126,7 +126,7 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        private IStructureId GetStructureId<T>(T item)
+        private ISisoId GetSisoId<T>(T item)
             where T : class 
         {
             var idProperty = item is TOld ? IdPropertyOld : IdPropertyNew;
@@ -136,14 +136,14 @@ namespace SisoDb.Providers.SqlProvider
             {
                 var idValue = idProperty.GetIdValue<T, int>(item);
 
-                return idValue.HasValue ? StructureId.NewIdentityId(idValue.Value) : null;
+                return idValue.HasValue ? SisoId.NewIdentityId(idValue.Value) : null;
             }
 
             if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
             {
                 var idValue = idProperty.GetIdValue<T, Guid>(item);
 
-                return idValue.HasValue ? StructureId.NewGuidId(idValue.Value) : null;
+                return idValue.HasValue ? SisoId.NewGuidId(idValue.Value) : null;
             }
 
             return null;
@@ -170,28 +170,28 @@ namespace SisoDb.Providers.SqlProvider
             bulkInserter.Insert(StructureSchemaNew, structures);
         }
 
-        protected virtual void OnTrash(IStructureId structureId)
+        protected virtual void OnTrash(ISisoId sisoId)
         {
-            _deleteStructureIdFrom = _deleteStructureIdFrom ?? structureId;
-            _deleteStructureIdTo = structureId;
+            _deleteSisoIdFrom = _deleteSisoIdFrom ?? sisoId;
+            _deleteSisoIdTo = sisoId;
         }
 
-        private IStructureId _deleteStructureIdFrom;
-        private IStructureId _deleteStructureIdTo;
+        private ISisoId _deleteSisoIdFrom;
+        private ISisoId _deleteSisoIdTo;
 
         protected virtual void DequeueStructuresToTrash(ISqlDbClient dbClient)
         {
-            if (_deleteStructureIdFrom == null)
+            if (_deleteSisoIdFrom == null)
                 return;
             
             dbClient.DeleteWhereIdIsBetween(
-              _deleteStructureIdFrom.Value, _deleteStructureIdTo.Value,
+              _deleteSisoIdFrom.Value, _deleteSisoIdTo.Value,
               StructureSchemaOld.GetStructureTableName(),
               StructureSchemaOld.GetIndexesTableName(),
               StructureSchemaOld.GetUniquesTableName());
 
-            _deleteStructureIdFrom = null;
-            _deleteStructureIdTo = null;
+            _deleteSisoIdFrom = null;
+            _deleteSisoIdTo = null;
         }
     }
 }

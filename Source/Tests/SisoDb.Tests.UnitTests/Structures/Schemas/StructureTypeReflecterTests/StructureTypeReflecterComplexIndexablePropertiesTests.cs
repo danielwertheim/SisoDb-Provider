@@ -70,14 +70,14 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 
         private class WithContainedStructure
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public Structure ContainedStructure { get; set; }
         }
 
         private class Structure
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
         }
     }
 }

@@ -5,6 +5,10 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v1.0        - 2011-03-25
+[New]:      IMPORTANT! Demand of property Id of type int or guid has now become "SisoId".
+[Update]:   Moved some namespaces but the ordinary consumer should not be affected about this.
+
 v0.9.2		- 2011-03-21
 [New]:		Query API now supports Paging. Eg. uow.Query<Customer>(q => q.Page(pageIndex: 0, pageSize: 10))
 

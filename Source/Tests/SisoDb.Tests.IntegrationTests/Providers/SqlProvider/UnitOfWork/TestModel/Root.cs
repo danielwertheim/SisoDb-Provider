@@ -4,7 +4,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.TestMod
 {
     internal class Root
     {
-        public Guid Id { get; set; }
+        public Guid SisoId { get; set; }
 
         public string RootString1 { get; set; }
 

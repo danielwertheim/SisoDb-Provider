@@ -9,7 +9,7 @@ namespace SisoDb.Structures
     [Serializable]
     public class Structure : IStructure, IEquatable<IStructure>
     {
-        public IStructureId Id { get; private set; }
+        public ISisoId Id { get; private set; }
 
         //public byte[] Version { get; private set; }
 
@@ -27,7 +27,7 @@ namespace SisoDb.Structures
             Uniques = new HashSet<IStructureIndex>();
         }
 
-        public Structure(string typeName, IStructureId id, IEnumerable<IStructureIndex> indexes, string json)
+        public Structure(string typeName, ISisoId id, IEnumerable<IStructureIndex> indexes, string json)
         {
             typeName.AssertNotNullOrWhiteSpace("typeName");
             id.AssertNotNull("id");
@@ -45,7 +45,7 @@ namespace SisoDb.Structures
                     Uniques.FirstOrDefault(u => indexes.Count(i => i.Name.Equals(u.Name)) > 1);
                 if (firstUniqueNotBeingUnique != null)
                 {
-                    var idValue = SisoDbEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.StructureId.Value);
+                    var idValue = SisoDbEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.SisoId.Value);
                     var uniqueValue = SisoDbEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.Value);
                     throw new SisoDbException(
                         ExceptionMessages.Structure_DuplicateUniques.Inject(

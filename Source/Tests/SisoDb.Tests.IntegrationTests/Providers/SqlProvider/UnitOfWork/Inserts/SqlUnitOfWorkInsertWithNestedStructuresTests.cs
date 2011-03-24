@@ -20,11 +20,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
             var idForNested = new Guid("6244FB01-EECA-4EBC-806E-61A22D74D454");
             var rootStructure = new MyFirstStructure
                                 {
-                                    Id = idForRoot,
+                                    SisoId = idForRoot,
                                     Value = "My first structure.",
                                     NestedStructure = new MySecondStructure
                                                       {
-                                                          Id = idForNested,
+                                                          SisoId = idForNested,
                                                           Value = "My second structure."
                                                       },
                                     NestedObject =  new MyValueObject{Value = "My value object."}
@@ -36,7 +36,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Commit();
 
                 var json = uow.GetByIdAsJson<MyFirstStructure>(idForRoot);
-                Assert.AreEqual("{\"Id\":\"fc424bfd1c5046158492bc2ef53acab3\",\"Value\":\"My first structure.\",\"NestedObject\":{\"Value\":\"My value object.\"}}", json);
+                Assert.AreEqual("{\"SisoId\":\"fc424bfd1c5046158492bc2ef53acab3\",\"Value\":\"My first structure.\",\"NestedObject\":{\"Value\":\"My value object.\"}}", json);
             }
         }
 
@@ -47,11 +47,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
             var idForNested = new Guid("6244FB01-EECA-4EBC-806E-61A22D74D454");
             var rootStructure = new MyFirstStructure
                                 {
-                                    Id = idForRoot,
+                                    SisoId = idForRoot,
                                     Value = "My first structure.",
                                     NestedStructure = new MySecondStructure
                                                       {
-                                                          Id = idForNested,
+                                                          SisoId = idForNested,
                                                           Value = "My second structure."
                                                       },
                                     NestedObject =  new MyValueObject{Value = "My value object."}
@@ -78,11 +78,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
             var idForNested = new Guid("6244FB01-EECA-4EBC-806E-61A22D74D454");
             var rootStructure = new MyFirstStructure
                                 {
-                                    Id = idForRoot,
+                                    SisoId = idForRoot,
                                     Value = "My first structure.",
                                     NestedStructure = new MySecondStructure
                                                       {
-                                                          Id = idForNested,
+                                                          SisoId = idForNested,
                                                           Value = "My second structure."
                                                       },
                                     NestedObject = new MyValueObject { Value = "My value object." }
@@ -100,7 +100,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         private class MyFirstStructure
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string Value { get; set; }
 
@@ -111,7 +111,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
         private class MySecondStructure
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             public string Value { get; set; }
         }

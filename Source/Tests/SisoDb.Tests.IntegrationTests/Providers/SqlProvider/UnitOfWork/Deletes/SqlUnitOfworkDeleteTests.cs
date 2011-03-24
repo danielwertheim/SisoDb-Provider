@@ -95,7 +95,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
         public void DeleteByGuidId_WhenItemExists_ItemIsDeletedFromAllTables()
         {
             var id = new Guid("35F3060A-DE6F-4BED-BFB9-D523EA98C49E");
-            var item = new SimpleGuidItem { Id = id, Key = "A" };
+            var item = new SimpleGuidItem { SisoId = id, Key = "A" };
 
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
@@ -110,15 +110,15 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
             }
 
             var structureTable = GetStructureTableName<SimpleGuidItem>();
-            var structureRowCount = DbHelper.RowCount(structureTable, "Id = '{0}'".Inject(id));
+            var structureRowCount = DbHelper.RowCount(structureTable, "SisoId = '{0}'".Inject(id));
             Assert.AreEqual(0, structureRowCount);
 
             var indexesTable = GetIndexesTableName<SimpleGuidItem>();
-            var indexesRowCount = DbHelper.RowCount(indexesTable, "StructureId = '{0}'".Inject(id));
+            var indexesRowCount = DbHelper.RowCount(indexesTable, "SisoId = '{0}'".Inject(id));
             Assert.AreEqual(0, indexesRowCount);
 
             var uniquesTable = GetUniquesTableName<SimpleGuidItem>();
-            var uniquesRowCount = DbHelper.RowCount(uniquesTable, "StructureId = '{0}'".Inject(id));
+            var uniquesRowCount = DbHelper.RowCount(uniquesTable, "SisoId = '{0}'".Inject(id));
             Assert.AreEqual(0, uniquesRowCount);
         }
 
@@ -126,7 +126,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
         public void DeleteByIdentityId_WhenItemExists_ItemIsDeletedFromAllTables()
         {
             var id = 1;
-            var item = new SimpleIdentityItem { Id = 1, Key = "A" };
+            var item = new SimpleIdentityItem { SisoId = 1, Key = "A" };
 
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
@@ -141,21 +141,21 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
             }
 
             var structureTable = GetStructureTableName<SimpleIdentityItem>();
-            var structureRowCount = DbHelper.RowCount(structureTable, "Id = '{0}'".Inject(id));
+            var structureRowCount = DbHelper.RowCount(structureTable, "SisoId = '{0}'".Inject(id));
             Assert.AreEqual(0, structureRowCount);
 
             var indexesTable = GetIndexesTableName<SimpleIdentityItem>();
-            var indexesRowCount = DbHelper.RowCount(indexesTable, "StructureId = '{0}'".Inject(id));
+            var indexesRowCount = DbHelper.RowCount(indexesTable, "SisoId = '{0}'".Inject(id));
             Assert.AreEqual(0, indexesRowCount);
 
             var uniquesTable = GetUniquesTableName<SimpleIdentityItem>();
-            var uniquesRowCount = DbHelper.RowCount(uniquesTable, "StructureId = '{0}'".Inject(id));
+            var uniquesRowCount = DbHelper.RowCount(uniquesTable, "SisoId = '{0}'".Inject(id));
             Assert.AreEqual(0, uniquesRowCount);
         }
 
         private class SimpleGuidItem
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
 
             [Unique(UniqueModes.PerType)]
             public string Key { get; set; }
@@ -163,7 +163,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
 
         private class SimpleIdentityItem
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             [Unique(UniqueModes.PerType)]
             public string Key { get; set; }

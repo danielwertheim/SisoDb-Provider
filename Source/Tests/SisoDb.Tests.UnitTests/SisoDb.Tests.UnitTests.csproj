@@ -89,7 +89,6 @@
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
-    <Compile Include="Querying\Lambdas\Processors\NameStrategyTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNodeTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeTests.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedIncludeSqlProcessorTests\ParsedIncludeSqlProcessorTestBase.cs" />
@@ -121,8 +120,8 @@
     <Compile Include="Structures\Schemas\PropertyGetValuesOnSubItemTests.cs" />
     <Compile Include="Structures\Schemas\PropertyTestHelper.cs" />
     <Compile Include="Structures\StructureBuilderTests.cs" />
-    <Compile Include="Structures\StructureIdFactoryTests.cs" />
-    <Compile Include="Structures\StructureIdTests.cs" />
+    <Compile Include="Structures\SisoIdFactoryTests.cs" />
+    <Compile Include="Structures\SisoIdTests.cs" />
     <Compile Include="Structures\Schemas\AutoSchemaBuilderTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessorTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IdAccessorTests.cs" />

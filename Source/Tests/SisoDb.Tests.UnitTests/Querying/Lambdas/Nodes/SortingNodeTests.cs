@@ -7,6 +7,14 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
     public class SortingNodeTests
     {
         [Test]
+        public void CTor_WhenMemberPathIsSisoId_MemberNameIsNotTranslated()
+        {
+            var node = new SortingNode("SisoId");
+
+            Assert.AreEqual("SisoId", node.MemberPath);
+        }
+
+        [Test]
         public void CTor_WhenMemberPathIsId_MemberNameIsNotTranslated()
         {
             var node = new SortingNode("Id");

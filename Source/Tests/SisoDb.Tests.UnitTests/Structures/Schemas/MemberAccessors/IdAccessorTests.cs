@@ -12,7 +12,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         public void GetValue_FromAssignedGuidProperty_ReturnsAssignedGuid()
         {
             var id = Guid.Parse("fc47a673-5a5b-419b-9a40-a756591aa7bf");
-            var item = new GuidDummy { Id = id };
+            var item = new GuidDummy { SisoId = id };
             var property = StructureType<GuidDummy>.IdProperty;
             
             var idAccessor = new IdAccessor(property);
@@ -25,7 +25,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         public void GetValue_FromAssignedNullableGuidProperty_ReturnsAssignedGuid()
         {
             var id = Guid.Parse("fc47a673-5a5b-419b-9a40-a756591aa7bf");
-            var item = new NullableGuidDummy { Id = id };
+            var item = new NullableGuidDummy { SisoId = id };
             var property = StructureType<NullableGuidDummy>.IdProperty;
             
             var idAccessor = new IdAccessor(property);
@@ -50,7 +50,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         public void GetValue_FromAssignedIdentityProperty_ReturnsAssignedInt()
         {
             const int id = 42;
-            var item = new IdentityDummy { Id = id };
+            var item = new IdentityDummy { SisoId = id };
             var property = StructureType<IdentityDummy>.IdProperty;
 
             var idAccessor = new IdAccessor(property);
@@ -63,7 +63,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         public void GetValue_FromAssignedNullableIdentityProperty_ReturnsAssignedInt()
         {
             const int id = 42;
-            var item = new NullableIdentityDummy { Id = id };
+            var item = new NullableIdentityDummy { SisoId = id };
             var property = StructureType<NullableIdentityDummy>.IdProperty;
 
             var idAccessor = new IdAccessor(property);
@@ -94,7 +94,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 
-            Assert.AreEqual(id, item.Id);
+            Assert.AreEqual(id, item.SisoId);
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 
-            Assert.AreEqual(id, item.Id);
+            Assert.AreEqual(id, item.SisoId);
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 
-            Assert.AreEqual(id, item.Id);
+            Assert.AreEqual(id, item.SisoId);
         }
 
         [Test]
@@ -133,27 +133,27 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             var idAccessor = new IdAccessor(property);
             idAccessor.SetValue(item, id);
 
-            Assert.AreEqual(id, item.Id);
+            Assert.AreEqual(id, item.SisoId);
         }
 
         private class GuidDummy
         {
-            public Guid Id { get; set; }
+            public Guid SisoId { get; set; }
         }
 
         private class NullableGuidDummy
         {
-            public Guid? Id { get; set; }
+            public Guid? SisoId { get; set; }
         }
 
         private class IdentityDummy
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
         }
 
         private class NullableIdentityDummy
         {
-            public int? Id { get; set; }
+            public int? SisoId { get; set; }
         }
     }
 }

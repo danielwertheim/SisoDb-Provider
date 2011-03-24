@@ -10,45 +10,45 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         [Test]
         public void CTor_WhenMemberNameIsId_MemberNameIsNotTranslated()
         {
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Id);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.SisoId);
 
             var node = new MemberNode(null, false, memberExpression);
 
-            Assert.AreEqual("Id", node.Name);
+            Assert.AreEqual("SisoId", node.Name);
         }
 
         [Test]
         public void CTor_WhenMemberNameIsId_MemberPathIsNotTranslated()
         {
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Id);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.SisoId);
 
             var node = new MemberNode(null, false, memberExpression);
 
-            Assert.AreEqual("Id", node.Path);
+            Assert.AreEqual("SisoId", node.Path);
         }
 
         [Test]
         public void CTor_WhenNestedMemberNameIsId_MemberNameIsNotTranslated()
         {
             var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.Id);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.SisoId);
 
             var parentNode = new MemberNode(null, false, parentExpression);
             var node = new MemberNode(parentNode, false, memberExpression);
 
-            Assert.AreEqual("Id", node.Name);
+            Assert.AreEqual("SisoId", node.Name);
         }
 
         [Test]
         public void CTor_WhenNestedMemberNameIsId_MemberPathIsNotTranslated()
         {
             var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.Id);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.SisoId);
 
             var parentNode = new MemberNode(null, false, parentExpression);
             var node = new MemberNode(parentNode, false, memberExpression);
 
-            Assert.AreEqual("Child.Id", node.Path);
+            Assert.AreEqual("Child.SisoId", node.Path);
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
 
         private class MyClass
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public int TmpId { get; set; }
 
@@ -132,7 +132,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
 
         private class MyChildClass
         {
-            public int Id { get; set; }
+            public int SisoId { get; set; }
 
             public int TmpId { get; set; }
 

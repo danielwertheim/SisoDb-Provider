@@ -16,7 +16,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var processor = new ParsedIncludeSqlProcessor(new MemberNameGeneratorFake());
             var includes = processor.Process(parsedLambda);
 
-            const string expectedSql = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.Id) as [ChildOne]";
+            const string expectedSql = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.SisoId) as [ChildOne]";
             Assert.AreEqual(expectedSql, includes[0].Sql);
         }
 
@@ -30,8 +30,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var processor = new ParsedIncludeSqlProcessor(new MemberNameGeneratorFake());
             var includes = processor.Process(parsedLambda);
 
-            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.Id) as [ChildOne]";
-            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[ChildTwoId] = cs1.Id) as [ChildTwo]";
+            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.SisoId) as [ChildOne]";
+            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[ChildTwoId] = cs1.SisoId) as [ChildTwo]";
             Assert.AreEqual(expectedSql1, includes[0].Sql);
             Assert.AreEqual(expectedSql2, includes[1].Sql);
         }
@@ -46,8 +46,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var processor = new ParsedIncludeSqlProcessor(new MemberNameGeneratorFake());
             var includes = processor.Process(parsedLambda);
 
-            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.Id) as [ChildOne]";
-            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.Id) as [NestedItem.UnknownChild]";
+            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.SisoId) as [ChildOne]";
+            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.SisoId) as [NestedItem.UnknownChild]";
             Assert.AreEqual(expectedSql1, includes[0].Sql);
             Assert.AreEqual(expectedSql2, includes[1].Sql);
         }
@@ -64,8 +64,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var processor = new ParsedIncludeSqlProcessor(new MemberNameGeneratorFake());
             var includes = processor.Process(parsedLambda);
 
-            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.Id) as [ChildOne]";
-            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeBStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.Id) as [NestedItem.UnknownChild]";
+            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.SisoId) as [ChildOne]";
+            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeBStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.SisoId) as [NestedItem.UnknownChild]";
             Assert.AreEqual(expectedSql1, includes[0].Sql);
             Assert.AreEqual(expectedSql2, includes[1].Sql);
         }

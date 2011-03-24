@@ -6,7 +6,7 @@ namespace SisoDbLab.Model
     [Serializable]
     public class Customer
     {
-        public Guid Id { get; set; }
+        public Guid SisoId { get; set; }
 
         [Unique(UniqueModes.PerType)]
         public string PersonalNo { get; set; }
