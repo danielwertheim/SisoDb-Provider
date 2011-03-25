@@ -13,17 +13,6 @@ Follow [@danielwertheim](http://twitter.com/danielwertheim) and [@sisodb](http:/
 
 For documentation, news etc, goto: <http://www.sisodb.com>
 
-## Example
-<img src="http://www.sisodb.com/Content/images/slideshows/frontpage/slide1-sisodb-customer.png" "Define model" />
-
-<img src="http://www.sisodb.com/Content/images/slideshows/frontpage/slide2-sisodb-setupDatabase.png "Create database" />
-
-<img src="http://www.sisodb.com/Content/images/slideshows/frontpage/slide3-sisodb-insertAndGet.png "Insert" />
-
-<img src="http://www.sisodb.com/Content/images/slideshows/frontpage/slide4-sisodb-queryWithLambdas.png "Query" />
-
-<img src="http://www.sisodb.com/Content/images/slideshows/frontpage/slide5-sisodb-sqlTables.png "Tables are created on the fly" />
-
 ## License
 Valid since version 0.4.2.0 - 2010-10-15
 
