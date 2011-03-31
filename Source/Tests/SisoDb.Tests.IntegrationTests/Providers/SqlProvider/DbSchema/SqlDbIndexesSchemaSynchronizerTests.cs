@@ -18,7 +18,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         {
             DropStructureSet<Class_2579AF20_51A0_475A_A24D_8056828DB1DC>();
 
-            _structureSchema = Database.StructureSchemas.GetSchema<Class_2579AF20_51A0_475A_A24D_8056828DB1DC>();
+            _structureSchema = Database.StructureSchemas.GetSchema(
+                StructureType<Class_2579AF20_51A0_475A_A24D_8056828DB1DC>.Instance);
             _structureSetPrefix = typeof(Class_2579AF20_51A0_475A_A24D_8056828DB1DC).Name;
             _indexesTableName = _structureSetPrefix + "Indexes";
 

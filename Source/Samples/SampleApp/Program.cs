@@ -3,6 +3,7 @@ using System.Linq;
 using SisoDb;
 using SisoDb.Querying;
 using SisoDb.Serialization;
+using SisoDb.Structures.Schemas;
 using SisoDbLab.Model;
 
 namespace SisoDbLab
@@ -39,7 +40,7 @@ namespace SisoDbLab
         {
             Console.Out.WriteLine("Generating schedule for: '{0}'.", typeof(T).Name);
 
-            var schema = database.StructureSchemas.GetSchema<T>();
+            var schema = database.StructureSchemas.GetSchema(StructureType<T>.Instance);
 
             Console.Out.WriteLine("IdAccessor.IdType \t=\t {0}", schema.IdAccessor.IdType);
             Console.Out.WriteLine("IdAccessor.Name \t=\t {0}", schema.IdAccessor.Name);

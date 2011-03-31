@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using ServiceStack.Text;
 using SisoDb.Dynamic;
 
@@ -41,27 +42,31 @@ namespace SisoDb.Serialization
         }
     }
 
-    public static class ServiceStackJsonSerializer<T> where T : class
+    internal static class ServiceStackJsonSerializer<T> where T : class
     {
         static ServiceStackJsonSerializer()
         {
-            TypeConfig<T>.Properties = TypeConfig<T>.Properties
-                .Where(p => !SisoDbEnvironment.StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+            TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 
-        public static string ToJsonOrEmptyString(T item)
+        private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
         {
-            if (item == null)
-                return string.Empty;
-
-            return JsonSerializer.SerializeToString(item);
+            return properties.Where(p => 
+                !SisoDbEnvironment.StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
         }
 
-        public static T ToItemOrNull(string json)
+        internal static string ToJsonOrEmptyString(T item)
         {
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-            return JsonSerializer.DeserializeFromString<T>(json);
+            return item == null 
+                ? string.Empty 
+                : JsonSerializer.SerializeToString(item);
+        }
+
+        internal static T ToItemOrNull(string json)
+        {
+            return string.IsNullOrWhiteSpace(json) 
+                ? null 
+                : JsonSerializer.DeserializeFromString<T>(json);
         }
     }
 }

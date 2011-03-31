@@ -11,20 +11,17 @@ namespace SisoDb.Structures.Schemas
             _schemas = new Dictionary<string, IStructureSchema>();
         }
 
-        public IStructureSchema GetSchema<T>() where T : class
+        public IStructureSchema GetSchema(StructureType structureType)
         {
-            var key = StructureType<T>.Name;
+            if (!_schemas.ContainsKey(structureType.Name))
+                Register(structureType);
 
-            if (!_schemas.ContainsKey(key))
-                Register<T>(key);
-
-            return _schemas[key];
+            return _schemas[structureType.Name];
         }
 
-        public void RemoveSchema<T>() where T : class
+        public void RemoveSchema(StructureType structureType)
         {
-            var key = StructureType<T>.Name;
-            _schemas.Remove(key);
+            _schemas.Remove(structureType.Name);
         }
 
         public void Clear()
@@ -32,11 +29,11 @@ namespace SisoDb.Structures.Schemas
             _schemas.Clear();
         }
 
-        private void Register<T>(string key) where T : class
+        private void Register(StructureType structureType)
         {
-            var schema = new AutoSchemaBuilder<T>().CreateSchema();
-
-            _schemas.Add(key, schema);
+            _schemas.Add(
+                structureType.Name,
+                new AutoSchemaBuilder(structureType).CreateSchema());
         }
     }
 }

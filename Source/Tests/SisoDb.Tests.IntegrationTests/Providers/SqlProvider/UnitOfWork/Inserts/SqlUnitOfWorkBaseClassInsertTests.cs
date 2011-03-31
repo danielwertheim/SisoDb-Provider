@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using SisoDb.Providers.SqlProvider;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 {
@@ -31,7 +32,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
             Assert.AreNotEqual(item.Stream.Length, fetched.Stream.Length);
 
-            var indexesTableName = Database.StructureSchemas.GetSchema<MyItemBase>().GetIndexesTableName();
+            var indexesTableName = Database.StructureSchemas.GetSchema(StructureType<MyItemBase>.Instance).GetIndexesTableName();
             var columnName = SisoDbEnvironment.MemberNameGenerator.Generate("Stream");
             var hasColumnForStream = DbHelper.ColumnsExist(indexesTableName, columnName);
             Assert.IsFalse(hasColumnForStream);

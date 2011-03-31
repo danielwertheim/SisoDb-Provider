@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using SisoDb.Annotations;
 using SisoDb.Core;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
 {
@@ -82,7 +83,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
             }
 
             var propertyHash =
-                Database.StructureSchemas.GetSchema<SimpleItem>().IndexAccessors
+                Database.StructureSchemas.GetSchema(StructureType<SimpleItem>.Instance).IndexAccessors
                 .Single(iac => iac.Name.StartsWith("Value")).Name;
             var table = DbHelper.GetTableBySql(
                 "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));
@@ -111,7 +112,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
             }
 
             var propertyHash =
-                Database.StructureSchemas.GetSchema<SimpleItem>().IndexAccessors
+                Database.StructureSchemas.GetSchema(StructureType<SimpleItem>.Instance).IndexAccessors
                 .Single(iac => iac.Name.StartsWith("Value")).Name;
             var table = DbHelper.GetTableBySql(
                 "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));

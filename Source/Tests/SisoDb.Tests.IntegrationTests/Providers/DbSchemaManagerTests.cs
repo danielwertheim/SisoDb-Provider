@@ -16,7 +16,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers
         {
             DropStructureSet<Class_53966417_B25D_49E1_966B_58754110781C>();
 
-            _structureSchema = Database.StructureSchemas.GetSchema<Class_53966417_B25D_49E1_966B_58754110781C>();
+            _structureSchema = Database.StructureSchemas.GetSchema(
+                StructureType<Class_53966417_B25D_49E1_966B_58754110781C>.Instance);
         }
 
         protected override void OnTestFinalize()

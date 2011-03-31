@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using SisoDb.Providers.SqlProvider;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 {
@@ -62,7 +63,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert(rootStructure);
                 uow.Commit();
 
-                var schema = Database.StructureSchemas.GetSchema<MyFirstStructure>();
+                var schema = Database.StructureSchemas.GetSchema(StructureType<MyFirstStructure>.Instance);
                 var valueColumnExistsForNestedInFirstStructure = DbHelper.ColumnsExist(
                     schema.GetIndexesTableName(),
                     SisoDbEnvironment.MemberNameGenerator.Generate("NestedStructure.Value"));

@@ -6,26 +6,11 @@ namespace SisoDb.Structures.Schemas
 {
     public static class StructureType<T>
     {
-        private static readonly StructureType State;
-
-        public static string Name
-        {
-            get { return State.Name; }
-        }
-
-        public static IProperty IdProperty
-        {
-            get { return State.IdProperty; }
-        }
-
-        public static IEnumerable<IProperty> IndexableProperties
-        {
-            get { return State.IndexableProperties; }
-        }
-
+        public static readonly StructureType Instance;
+        
         static StructureType()
         {
-            State = new StructureType(typeof(T));
+            Instance = new StructureType(typeof(T));
         }
     }
 

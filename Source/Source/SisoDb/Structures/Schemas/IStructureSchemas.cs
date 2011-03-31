@@ -2,9 +2,9 @@
 {
     public interface IStructureSchemas
     {
-        IStructureSchema GetSchema<T>() where T : class;
+        IStructureSchema GetSchema(StructureType structureType);
 
-        void RemoveSchema<T>() where T : class;
+        void RemoveSchema(StructureType structureType);
         
         void Clear();
     }

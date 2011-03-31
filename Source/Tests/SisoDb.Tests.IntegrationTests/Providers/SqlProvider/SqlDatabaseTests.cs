@@ -2,6 +2,7 @@
 using System.Data;
 using NUnit.Framework;
 using SisoDb.Providers.SqlProvider;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 {
@@ -115,7 +116,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
                 uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
                 uow.Commit();
             }
-            Database.StructureSchemas.RemoveSchema<StructureSetUpdaterTests.ModelOld.ItemForPropChange>();
+            Database.StructureSchemas.RemoveSchema(StructureType<StructureSetUpdaterTests.ModelOld.ItemForPropChange>.Instance);
 
             var id1 = orgItem1.SisoId;
             var id2 = orgItem2.SisoId;
