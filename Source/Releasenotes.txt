@@ -5,6 +5,10 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v1.0.0.1    - 2011-04-03
+[Update]:   Started to push demand of generics upwards the stack.
+[Added]:    NuGet spec file.
+
 v1.0        - 2011-03-25
 [New]:      IMPORTANT! Demand of property Id of type int or guid has now become "SisoId".
 [Update]:   Moved some namespaces but the ordinary consumer should not be affected about this.
