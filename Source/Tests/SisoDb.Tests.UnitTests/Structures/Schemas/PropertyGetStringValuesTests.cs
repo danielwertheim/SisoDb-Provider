@@ -11,7 +11,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenSingleStringMember_SingleValueIsReturned()
         {
             var propertyInfo = typeof(TestCustomer).GetProperty("CustomerNo");
-            var property = new Property(propertyInfo);
+            var property = new StructureProperty(propertyInfo);
 
             var customer = new TestCustomer { CustomerNo = "1234" };
             var customerNos = property.GetValues(customer);
@@ -23,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenArrayOfInt_ReturnsAValueArray()
         {
             var propertyInfo = typeof(TestCustomer).GetProperty("Points");
-            var property = new Property(propertyInfo);
+            var property = new StructureProperty(propertyInfo);
 
             var container = new TestCustomer { Points = new[] { 5, 4, 3, 2, 1 } };
             var values = property.GetValues(container);
@@ -35,13 +35,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenDeepGraphWithEnumerables_CanExtractValues()
         {
             var ordersPropertyInfo = typeof(TestCustomer).GetProperty("Orders");
-            var ordersProperty = new Property(ordersPropertyInfo);
+            var ordersProperty = new StructureProperty(ordersPropertyInfo);
 
             var linesPropertyInfo = typeof(TestOrder).GetProperty("Lines");
-            var linesProperty = new Property(1, ordersProperty, linesPropertyInfo);
+            var linesProperty = new StructureProperty(ordersProperty, linesPropertyInfo);
 
             var prodNoPropertyInfo = typeof(TestOrderLine).GetProperty("ProductNo");
-            var prodNoProperty = new Property(2, linesProperty, prodNoPropertyInfo);
+            var prodNoProperty = new StructureProperty(linesProperty, prodNoPropertyInfo);
 
             var graph = new TestCustomer
                             {

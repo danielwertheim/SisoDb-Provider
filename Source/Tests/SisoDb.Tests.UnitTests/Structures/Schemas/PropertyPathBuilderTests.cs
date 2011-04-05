@@ -28,7 +28,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             Assert.AreEqual("Dummy2.Bool1", path);
         }
 
-        private static IProperty GetPropertyByPath(string path)
+        private static IStructureProperty GetPropertyByPath(string path)
         {
             return StructureType<Dummy1>.Instance.IndexableProperties.Where(p => p.Path == path).Single();
         }

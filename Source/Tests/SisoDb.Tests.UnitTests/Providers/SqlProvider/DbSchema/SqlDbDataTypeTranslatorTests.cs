@@ -32,7 +32,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider.DbSchema
         [Test]
         public void ToSql_ForByteArray_ThrowsException()
         {
-            var propertyFake = new Mock<IProperty>();
+            var propertyFake = new Mock<IStructureProperty>();
             propertyFake.Setup(x => x.Path).Returns("Bytes");
             propertyFake.Setup(x => x.IsEnumerable).Returns(true);
             propertyFake.Setup(x => x.ElementType).Returns(typeof (byte));

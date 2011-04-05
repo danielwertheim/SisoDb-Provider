@@ -120,7 +120,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             CollectionAssert.AreEqual(new[] { initialValue }, retrievedValues);
         }
 
-        private static IProperty GetProperty(string name)
+        private static IStructureProperty GetProperty(string name)
         {
             return StructureType<Dummy>.Instance.IndexableProperties.Where(p => p.Name == name).Single();
         }

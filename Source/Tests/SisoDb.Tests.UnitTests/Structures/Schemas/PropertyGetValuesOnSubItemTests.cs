@@ -9,7 +9,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenSubItemsArrayHasElementsWithValues_ReturnsTheValues()
         {
             var subItemsProp = PropertyTestHelper.GetProperty<Item>("SubItems");
-            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp, 1);
+            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp);
 
             var subItems = new[] { new SubItem { Value = "A" }, new SubItem { Value = "B" } };
             var item = new Item { SubItems = subItems };
@@ -22,7 +22,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenSubItemsArrayHasElementsWithNullValues_ReturnsTheNullValues()
         {
             var subItemsProp = PropertyTestHelper.GetProperty<Item>("SubItems");
-            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp, 1);
+            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp);
 
             var subItems = new[] { new SubItem { Value = null }, new SubItem { Value = null } };
             var item = new Item { SubItems = subItems };
@@ -35,7 +35,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenSubItemsArrayIsNull_ReturnsNull()
         {
             var subItemsProp = PropertyTestHelper.GetProperty<Item>("SubItems");
-            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp, 1);
+            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp);
 
             var item = new Item { SubItems = null };
             var values = valueProp.GetValues(item);
@@ -47,7 +47,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenSubItemsArrayHasBothNullAndNonNullItems_ReturnsNonNullAndNullItems()
         {
             var subItemsProp = PropertyTestHelper.GetProperty<Item>("SubItems");
-            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp, 1);
+            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemsProp);
 
             var subItems = new[] { null, new SubItem { Value = "A" } };
             var item = new Item { SubItems = subItems };
@@ -60,7 +60,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetValues_WhenStringOnSingleSubItem_ReturnsValue()
         {
             var subItemProp = PropertyTestHelper.GetProperty<Item>("SingleSubItem");
-            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemProp, 1);
+            var valueProp = PropertyTestHelper.GetProperty<SubItem>("Value", subItemProp);
 
             var subItem = new SubItem { Value = "The value" };
             var item = new Item { SingleSubItem = subItem };

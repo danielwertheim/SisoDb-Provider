@@ -206,7 +206,7 @@
     <Compile Include="Structures\IdTypes.cs" />
     <Compile Include="Structures\ISisoIdFactory.cs" />
     <Compile Include="Structures\IStructureIndexesFactory.cs" />
-    <Compile Include="Structures\Schemas\IProperty.cs" />
+    <Compile Include="Structures\Schemas\IStructureProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
     <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
@@ -244,7 +244,7 @@
     <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessor.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IdAccessor.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\MemberAccessorBase.cs" />
-    <Compile Include="Structures\Schemas\Property.cs" />
+    <Compile Include="Structures\Schemas\StructureProperty.cs" />
     <Compile Include="Structures\Schemas\PropertyPathBuilder.cs" />
     <Compile Include="Structures\Schemas\StructureSchema.cs" />
     <Compile Include="Structures\Schemas\StructureSchemas.cs" />

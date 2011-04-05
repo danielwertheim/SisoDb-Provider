@@ -23,7 +23,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             Property.SetIdValue(item, value);
         }
 
-        public IdAccessor(IProperty property)
+        public IdAccessor(IStructureProperty property)
             : base(property)
         {
             if (Property.PropertyType.IsGuidType() || Property.PropertyType.IsNullableGuidType())

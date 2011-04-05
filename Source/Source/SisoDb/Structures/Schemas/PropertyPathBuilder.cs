@@ -2,9 +2,9 @@
 {
     public static class PropertyPathBuilder
     {
-        public static string BuildPath(IProperty property)
+        public static string BuildPath(IStructureProperty property)
         {
-            if (property.Level == 0)
+            if (property.IsRootMember)
                 return property.Name;
 
             var parentPath = BuildPath(property.Parent);

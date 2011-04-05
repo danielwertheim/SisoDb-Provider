@@ -19,7 +19,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             get { return Property.IsUnique; }
         }
 
-        public IndexAccessor(IProperty property) : base(property)
+        public IndexAccessor(IStructureProperty property) : base(property)
         {
         }
 

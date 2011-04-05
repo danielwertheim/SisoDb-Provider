@@ -4,22 +4,22 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
     public class PropertyTestHelper
     {
-        internal static Property GetProperty<T>(string name)
+        internal static StructureProperty GetProperty<T>(string name)
         {
             var type = typeof(T);
             var propertyInfo = type.GetProperty(name);
 
-            var property = new Property(propertyInfo);
+            var property = new StructureProperty(propertyInfo);
 
             return property;
         }
 
-        internal static Property GetProperty<T>(string name, Property parent, int level)
+        internal static StructureProperty GetProperty<T>(string name, StructureProperty parent)
         {
             var type = typeof(T);
             var propertyInfo = type.GetProperty(name);
 
-            var property = new Property(level, parent, propertyInfo);
+            var property = new StructureProperty(parent, propertyInfo);
 
             return property;
         }

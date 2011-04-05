@@ -18,7 +18,7 @@ namespace SisoDb.Structures.Schemas
             return GetIdProperty(type) != null;
         }
 
-        public IProperty GetIdProperty(IReflect type)
+        public IStructureProperty GetIdProperty(IReflect type)
         {
             var propertyInfo = type.GetProperties(IdPropertyBindingFlags)
                 .Where(p => p.Name.Equals(StructureSchema.IdMemberName))
@@ -27,35 +27,35 @@ namespace SisoDb.Structures.Schemas
             if (propertyInfo == null)
                 return null;
 
-            return new Property(propertyInfo);
+            return new StructureProperty(propertyInfo);
         }
 
-        public IEnumerable<IProperty> GetIndexableProperties(IReflect type, IEnumerable<string> nonIndexableNames = null)
+        public IEnumerable<IStructureProperty> GetIndexableProperties(IReflect type, IEnumerable<string> nonIndexableNames = null)
         {
-            return GetIndexableProperties(type, 0, null, nonIndexableNames);
+            return GetIndexableProperties(type, null, nonIndexableNames);
         }
 
-        private IEnumerable<IProperty> GetIndexableProperties(IReflect type, int level, IProperty parent, IEnumerable<string> nonIndexableNames = null)
+        private IEnumerable<IStructureProperty> GetIndexableProperties(IReflect type, IStructureProperty parent, IEnumerable<string> nonIndexableNames = null)
         {
-            var properties = new List<IProperty>();
+            var properties = new List<IStructureProperty>();
 
             var simplePropertyInfos = GetSimpleIndexablePropertyInfos(type, nonIndexableNames);
-            var simpleProperties = simplePropertyInfos.Select(spi => new Property(level, parent, spi));
+            var simpleProperties = simplePropertyInfos.Select(spi => new StructureProperty(parent, spi));
             properties.AddRange(simpleProperties);
 
             var complexPropertyInfos = GetComplexIndexablePropertyInfos(type, nonIndexableNames);
             foreach (var complexPropertyInfo in complexPropertyInfos)
             {
-                var complexProperty = new Property(level, parent, complexPropertyInfo);
+                var complexProperty = new StructureProperty(parent, complexPropertyInfo);
                 var simpleComplexProps = GetIndexableProperties(
-                    complexProperty.PropertyType, complexProperty.Level + 1, complexProperty, nonIndexableNames);
+                    complexProperty.PropertyType, complexProperty, nonIndexableNames);
                 properties.AddRange(simpleComplexProps);
             }
 
             var enumerablePropertyInfos = GetEnumerableIndexablePropertyInfos(type, nonIndexableNames);
             foreach (var enumerablePropertyInfo in enumerablePropertyInfos)
             {
-                var enumerableProperty = new Property(level, parent, enumerablePropertyInfo);
+                var enumerableProperty = new StructureProperty(parent, enumerablePropertyInfo);
                 if (enumerableProperty.ElementType.IsSimpleType())
                 {
                     properties.Add(enumerableProperty);
@@ -63,7 +63,7 @@ namespace SisoDb.Structures.Schemas
                 }
 
                 var elementProperties = GetIndexableProperties(enumerableProperty.ElementType,
-                                                               enumerableProperty.Level + 1, enumerableProperty,
+                                                               enumerableProperty,
                                                                nonIndexableNames);
                 properties.AddRange(elementProperties);
             }

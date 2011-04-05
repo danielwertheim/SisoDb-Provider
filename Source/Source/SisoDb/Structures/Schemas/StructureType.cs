@@ -20,9 +20,9 @@ namespace SisoDb.Structures.Schemas
 
         public string Name { get; private set; }
 
-        public IProperty IdProperty { get; private set; }
+        public IStructureProperty IdProperty { get; private set; }
 
-        public IEnumerable<IProperty> IndexableProperties { get; private set; }
+        public IEnumerable<IStructureProperty> IndexableProperties { get; private set; }
 
         public StructureType(Type type)
         {

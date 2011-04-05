@@ -62,7 +62,7 @@ namespace SisoDb.Structures.Schemas
             return indexAccessors.ToArray();
         }
 
-        private static IIndexAccessor CreateIndexAccessor(IProperty property)
+        private static IIndexAccessor CreateIndexAccessor(IStructureProperty property)
         {
             var indexAccessor = new IndexAccessor(property);
 

@@ -13,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenGuidOnFirstLevel_ReturnsGuid()
         {
             var guidPropertyInfo = typeof(GuidOnRoot).GetProperty("SisoId");
-            var guidProperty = new Property(guidPropertyInfo);
+            var guidProperty = new StructureProperty(guidPropertyInfo);
 
             var expected = Guid.Parse("4217F3B7-6DEB-4DFA-B195-D111C1297988");
             var item = new GuidOnRoot { SisoId = expected };
@@ -27,7 +27,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenNullableGuidOnFirstLevel_ReturnsGuid()
         {
             var intPropertyInfo = typeof(NullableGuidOnRoot).GetProperty("SisoId");
-            var intProperty = new Property(intPropertyInfo);
+            var intProperty = new StructureProperty(intPropertyInfo);
 
             var expected = Guid.Parse("4217F3B7-6DEB-4DFA-B195-D111C1297988");
             var item = new NullableGuidOnRoot { SisoId = expected };
@@ -41,7 +41,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenNullAssignedNullableGuidOnFirstLevel_ReturnsNull()
         {
             var intPropertyInfo = typeof(NullableGuidOnRoot).GetProperty("SisoId");
-            var intProperty = new Property(intPropertyInfo);
+            var intProperty = new StructureProperty(intPropertyInfo);
 
             var item = new NullableGuidOnRoot { SisoId = null };
 
@@ -54,10 +54,10 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenGuidNotOnFirstLevel_ThrowsSisoDbException()
         {
             var itemPropertyInfo = typeof(Container).GetProperty("GuidOnRootItem");
-            var itemProperty = new Property(itemPropertyInfo);
+            var itemProperty = new StructureProperty(itemPropertyInfo);
 
             var guidPropertyInfo = typeof(GuidOnRoot).GetProperty("SisoId");
-            var guidProperty = new Property(1, itemProperty, guidPropertyInfo);
+            var guidProperty = new StructureProperty(itemProperty, guidPropertyInfo);
 
             var item = new Container { GuidOnRootItem = new GuidOnRoot { SisoId = Guid.NewGuid() } };
 

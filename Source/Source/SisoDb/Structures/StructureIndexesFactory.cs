@@ -20,6 +20,7 @@ namespace SisoDb.Structures
             where T : class
         {
             var indexes = new IStructureIndex[structureSchema.IndexAccessors.Count];
+            //TODO: Parallel
             for (var c = 0; c < indexes.Length; c++)
             {
                 var indexAccessor = structureSchema.IndexAccessors[c];
@@ -29,8 +30,7 @@ namespace SisoDb.Structures
                     if (indexAccessor.IsUnique)
                         throw new SisoDbException(ExceptionMessages.StructureIndexesFactory_UniqueIndex_IsNull.Inject(indexAccessor.Path, indexAccessor.Name));
 
-                    var index = new StructureIndex(id, indexAccessor.Name, null, indexAccessor.IsUnique);
-                    indexes[c] = index;
+                    indexes[c] = new StructureIndex(id, indexAccessor.Name, null, indexAccessor.IsUnique);
                     continue;
                 }
 
@@ -43,14 +43,10 @@ namespace SisoDb.Structures
                         valueString.Append(StringConverter.AsString(value));
                         valueString.Append("$>");
                     }
-                    var index = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.IsUnique);
-                    indexes[c] = index;
+                    indexes[c] = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.IsUnique);
                 }
                 else
-                {
-                    var index = new StructureIndex(id, indexAccessor.Name, values[0], indexAccessor.IsUnique);
-                    indexes[c] = index;
-                }
+                    indexes[c] = new StructureIndex(id, indexAccessor.Name, values[0], indexAccessor.IsUnique);
             }
 
             return indexes;

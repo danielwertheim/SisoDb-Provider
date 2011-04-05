@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace SisoDb.Structures.Schemas
 {
-    public interface IProperty
+    public interface IStructureProperty
     {
         PropertyInfo Member { get; }
 
@@ -14,9 +14,9 @@ namespace SisoDb.Structures.Schemas
 
         Type PropertyType { get; }
 
-        int Level { get; }
+        IStructureProperty Parent { get; }
 
-        IProperty Parent { get; }
+        bool IsRootMember { get; }
         
         bool IsSimpleType { get; }
 

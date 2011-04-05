@@ -57,6 +57,7 @@ namespace SisoDb.Reflections
 
             return compiled;
         }
+
         public static Func<T, TOut?> GetterForNullable<TOut>(PropertyInfo prop)
             where TOut : struct
         {

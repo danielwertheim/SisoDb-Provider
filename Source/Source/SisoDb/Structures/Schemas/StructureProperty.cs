@@ -10,7 +10,7 @@ using SisoDb.Resources;
 namespace SisoDb.Structures.Schemas
 {
     [Serializable]
-    public class Property : IProperty
+    public class StructureProperty : IStructureProperty
     {
         private Delegate _idGetter;
         private Delegate _idSetter;
@@ -33,9 +33,9 @@ namespace SisoDb.Structures.Schemas
             get { return Member.PropertyType; }
         }
 
-        public int Level { get; private set; }
+        public IStructureProperty Parent { get; private set; }
 
-        public IProperty Parent { get; private set; }
+        public bool IsRootMember { get; private set; }
 
         public bool IsSimpleType { get; private set; }
 
@@ -51,29 +51,29 @@ namespace SisoDb.Structures.Schemas
 
         public Type ElementType { get; private set; }
 
-        public Property(PropertyInfo member)
-            : this(0, null, member)
+        public StructureProperty(PropertyInfo member)
+            : this(null, member)
         {
         }
 
-        public Property(int level, IProperty parent, PropertyInfo member)
+        public StructureProperty(IStructureProperty parent, PropertyInfo member)
         {
             Member = member;
-            Level = level;
             Parent = parent;
 
+            IsRootMember = parent == null;
             IsSimpleType = Member.PropertyType.IsSimpleType();
             IsValueType = Member.PropertyType.IsValueType;
             IsNullableValueType = IsValueType && Member.PropertyType.IsNullableValueType();
             IsEnumerable = !IsSimpleType && Member.PropertyType.IsEnumerableType();
             ElementType = IsEnumerable ? Member.PropertyType.GetEnumerableElementType() : null;
             IsElement = Parent != null && (Parent.IsElement || Parent.IsEnumerable);
-            
+
             var uniqueAttribute = (UniqueAttribute)Member.GetCustomAttributes(UniqueAttributeType, true).FirstOrDefault();
             if (uniqueAttribute != null && !IsSimpleType)
                 throw new SisoDbException(ExceptionMessages.Property_Ctor_UniqueOnNonSimpleType);
-
-            IsUnique = uniqueAttribute == null ? false : true;
+            
+            IsUnique = uniqueAttribute != null ? true : false;
 
             Path = PropertyPathBuilder.BuildPath(this);
 
@@ -89,49 +89,59 @@ namespace SisoDb.Structures.Schemas
             if (Member.Name != StructureSchema.IdMemberName)
                 return;
 
-            var type = Member.DeclaringType;
-            var factoryClassType = typeof (Reflect);
+            var factoryClassType = typeof(Reflect);
 
-            if(!IsNullableValueType)
+            if (!IsNullableValueType)
             {
-                var getterFactory = factoryClassType.GetMethod("GetterFor").MakeGenericMethod(type, Member.PropertyType);
-                _idGetter = (Delegate)getterFactory.Invoke(null, new object[] { Member });    
+                var getterFactory = factoryClassType
+                    .GetMethod("GetterFor")
+                    .MakeGenericMethod(Member.DeclaringType, Member.PropertyType);
+
+                _idGetter = (Delegate)getterFactory.Invoke(null, new object[] { Member });
             }
             else
             {
-                var getterFactory = factoryClassType.GetMethod("GetterForNullable").MakeGenericMethod(type, Member.PropertyType.GetGenericArguments()[0]);
-                _idGetter = (Delegate)getterFactory.Invoke(null, new object[] { Member });   
+                var getterFactory = factoryClassType
+                    .GetMethod("GetterForNullable")
+                    .MakeGenericMethod(Member.DeclaringType, Member.PropertyType.GetGenericArguments()[0]);
+
+                _idGetter = (Delegate)getterFactory.Invoke(null, new object[] { Member });
             }
         }
 
         private void InitializeIdSetter()
         {
-            if (Member.Name !=  StructureSchema.IdMemberName)
+            if (Member.Name != StructureSchema.IdMemberName)
                 return;
 
-            var type = Member.DeclaringType;
             var factoryClassType = typeof(Reflect);
 
             if (!IsNullableValueType)
             {
-                var setterFactory = factoryClassType.GetMethod("SetterFor").MakeGenericMethod(type, Member.PropertyType);
+                var setterFactory = factoryClassType
+                    .GetMethod("SetterFor")
+                    .MakeGenericMethod(Member.DeclaringType, Member.PropertyType);
+
                 _idSetter = (Delegate)setterFactory.Invoke(null, new object[] { Member });
             }
             else
             {
-                var setterFactory = factoryClassType.GetMethod("SetterForNullable").MakeGenericMethod(type, Member.PropertyType.GetGenericArguments()[0]);
+                var setterFactory = factoryClassType
+                    .GetMethod("SetterForNullable")
+                    .MakeGenericMethod(Member.DeclaringType, Member.PropertyType.GetGenericArguments()[0]);
+
                 _idSetter = (Delegate)setterFactory.Invoke(null, new object[] { Member });
             }
         }
 
-        private static List<PropertyInfo> GetCallstack(IProperty property)
+        private static List<PropertyInfo> GetCallstack(IStructureProperty property)
         {
-            if (property.Level == 0)
+            if (property.IsRootMember)
                 return new List<PropertyInfo> { property.Member };
 
             var props = new List<PropertyInfo> { property.Member };
-            var tmp = GetCallstack(property.Parent);
-            props.AddRange(tmp);
+            props.AddRange(
+                GetCallstack(property.Parent));
 
             return props;
         }
@@ -140,7 +150,7 @@ namespace SisoDb.Structures.Schemas
             where TRoot : class
             where TOut : struct
         {
-            if (Level != 0)
+            if (!IsRootMember)
                 throw new SisoDbException(ExceptionMessages.Property_GetIdValue_InvalidLevel);
 
             return !Member.PropertyType.IsNullableValueType()
@@ -152,7 +162,7 @@ namespace SisoDb.Structures.Schemas
             where TRoot : class
             where TIn : struct
         {
-            if (Level != 0)
+            if (!IsRootMember)
                 throw new SisoDbException(ExceptionMessages.Property_SetIdValue_InvalidLevel);
 
             if (!Member.PropertyType.IsNullableValueType())
@@ -162,27 +172,25 @@ namespace SisoDb.Structures.Schemas
         }
 
         public IList<object> GetValues<TRoot>(TRoot item)
-            where TRoot : class 
+            where TRoot : class
         {
-            if (Level == 0)
-            {
-                var firstLevelPropValue = Member.GetValue(item, null);
-                if (firstLevelPropValue == null)
-                    return null;
+            if (!IsRootMember)
+                return TraverseCallstack(item, 0);
+            
+            var firstLevelPropValue = Member.GetValue(item, null);
+            if (firstLevelPropValue == null)
+                return null;
 
-                if (!IsEnumerable)
-                    return new List<object> { firstLevelPropValue };
+            if (!IsEnumerable)
+                return new List<object> { firstLevelPropValue };
 
-                var values = new List<object>();
-                foreach (var value in (ICollection)firstLevelPropValue)
-                    values.Add(value);
+            var values = new List<object>();
+            foreach (var value in (ICollection)firstLevelPropValue)
+                values.Add(value);
 
-                return values;
-            }
-
-            return TraverseCallstack(item, 0);
+            return values;
         }
-        
+
         private IList<object> TraverseCallstack<T>(T startNode, int startIndex)
         {
             object currentNode = startNode;
@@ -214,8 +222,8 @@ namespace SisoDb.Structures.Schemas
                     foreach (var node in currentNodes)
                     {
                         var nodeValue = currentPropertyInfo.GetValue(node, null);
-                        var tmp = TraverseCallstack(nodeValue, c + 1);
-                        values.AddRange(tmp);
+                        values.AddRange(
+                            TraverseCallstack(nodeValue, c + 1));
                     }
                     return values;
                 }

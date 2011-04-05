@@ -18,9 +18,9 @@ namespace SisoDb.Providers.SqlProvider
 
         protected Queue<TNew> KeepQueue { get; private set; }
 
-        protected IProperty IdPropertyOld { get; private set; }
+        protected IStructureProperty IdPropertyOld { get; private set; }
 
-        protected IProperty IdPropertyNew { get; private set; }
+        protected IStructureProperty IdPropertyNew { get; private set; }
 
         protected ISisoConnectionInfo ConnectionInfo { get; private set; }
 

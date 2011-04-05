@@ -11,7 +11,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenIntOnFirstLevel_ReturnsInt()
         {
             var intPropertyInfo = typeof(IdentityOnRoot).GetProperty("SisoId");
-            var intProperty = new Property(intPropertyInfo);
+            var intProperty = new StructureProperty(intPropertyInfo);
 
             const int expected = 42;
             var item = new IdentityOnRoot { SisoId = expected };
@@ -25,7 +25,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenNullableIntOnFirstLevel_ReturnsInt()
         {
             var intPropertyInfo = typeof(NullableIdentityOnRoot).GetProperty("SisoId");
-            var intProperty = new Property(intPropertyInfo);
+            var intProperty = new StructureProperty(intPropertyInfo);
 
             const int expectedInt = 42;
             var item = new NullableIdentityOnRoot { SisoId = expectedInt };
@@ -39,7 +39,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenNullAssignedNullableIntOnFirstLevel_ReturnsInt()
         {
             var intPropertyInfo = typeof(NullableIdentityOnRoot).GetProperty("SisoId");
-            var intProperty = new Property(intPropertyInfo);
+            var intProperty = new StructureProperty(intPropertyInfo);
 
             var item = new NullableIdentityOnRoot { SisoId = null };
 
@@ -52,10 +52,10 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void GetIdValue_WhenIntNotOnFirstLevel_ThrowsSisoDbException()
         {
             var itemPropertyInfo = typeof(Container).GetProperty("IdentityOnRootItem");
-            var itemProperty = new Property(itemPropertyInfo);
+            var itemProperty = new StructureProperty(itemPropertyInfo);
 
             var intPropertyInfo = typeof(IdentityOnRoot).GetProperty("SisoId");
-            var intProperty = new Property(1, itemProperty, intPropertyInfo);
+            var intProperty = new StructureProperty(itemProperty, intPropertyInfo);
 
             var item = new Container { IdentityOnRootItem = new IdentityOnRoot { SisoId = 42 } };
 

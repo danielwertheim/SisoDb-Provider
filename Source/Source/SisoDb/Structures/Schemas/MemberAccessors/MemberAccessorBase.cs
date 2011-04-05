@@ -4,7 +4,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
 {
     public abstract class MemberAccessorBase : IMemberAccessor
     {
-        protected IProperty Property { get; private set; }
+        protected IStructureProperty Property { get; private set; }
 
         public string Name { get; private set; }
 
@@ -18,7 +18,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             get { return Property.PropertyType; }
         }
 
-        protected MemberAccessorBase(IProperty property)
+        protected MemberAccessorBase(IStructureProperty property)
         {
             Property = property;
             Name = SisoDbEnvironment.MemberNameGenerator.Generate(property.Path);
