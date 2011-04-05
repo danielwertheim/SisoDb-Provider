@@ -169,13 +169,13 @@ namespace SisoDb.Structures.Schemas
         {
             if (!IsRootMember)
                 return TraverseCallstack(item, 0);
-            
+
             var firstLevelPropValue = Member.GetValue(item, null);
             if (firstLevelPropValue == null)
                 return null;
 
             if (!IsEnumerable)
-                return new List<object> { firstLevelPropValue };
+                return new [] { firstLevelPropValue };
 
             var values = new List<object>();
             foreach (var value in (ICollection)firstLevelPropValue)

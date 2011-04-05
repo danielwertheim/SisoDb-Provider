@@ -27,6 +27,7 @@ namespace SisoDb.Structures.Schemas
         public StructureType(Type type)
         {
             _type = type.AssertNotNull("type");
+
             Name = _type.Name;
             IdProperty = SisoDbEnvironment.StructureTypeReflecter.GetIdProperty(_type);
             IndexableProperties = SisoDbEnvironment.StructureTypeReflecter.GetIndexableProperties(_type, new[] { StructureSchema.IdMemberName });

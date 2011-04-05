@@ -42,7 +42,6 @@ namespace SisoDb.Querying
             get { return Includes != null && Includes.Count > 0; }
         }
 
-        //TODO: Why includes in constructor???
         public QueryCommand(IEnumerable<IParsedLambda> includes = null)
         {
             Includes = includes == null ? new List<IParsedLambda>() : new List<IParsedLambda>(includes);
