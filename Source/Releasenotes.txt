@@ -5,6 +5,9 @@ B=When major changes of API and especially changes breaking backward compatibili
 C=New features
 D=Fixes
 
+v1.0.0.2    - 2011-04-xx
+[Update]:   Reworked the Property (new name StructureProperty) extranction and value accessing.
+
 v1.0.0.1    - 2011-04-03
 [Update]:   Started to push demand of generics upwards the stack.
 [Added]:    NuGet spec file.

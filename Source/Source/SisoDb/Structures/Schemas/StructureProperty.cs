@@ -37,13 +37,7 @@ namespace SisoDb.Structures.Schemas
 
         public bool IsRootMember { get; private set; }
 
-        public bool IsSimpleType { get; private set; }
-
         public bool IsUnique { get; private set; }
-
-        public bool IsValueType { get; private set; }
-
-        public bool IsNullableValueType { get; private set; }
 
         public bool IsEnumerable { get; private set; }
 
@@ -61,16 +55,15 @@ namespace SisoDb.Structures.Schemas
             Member = member;
             Parent = parent;
 
+            var isSimpleType = Member.PropertyType.IsSimpleType();
+
             IsRootMember = parent == null;
-            IsSimpleType = Member.PropertyType.IsSimpleType();
-            IsValueType = Member.PropertyType.IsValueType;
-            IsNullableValueType = IsValueType && Member.PropertyType.IsNullableValueType();
-            IsEnumerable = !IsSimpleType && Member.PropertyType.IsEnumerableType();
+            IsEnumerable = !isSimpleType && Member.PropertyType.IsEnumerableType();
             ElementType = IsEnumerable ? Member.PropertyType.GetEnumerableElementType() : null;
             IsElement = Parent != null && (Parent.IsElement || Parent.IsEnumerable);
 
             var uniqueAttribute = (UniqueAttribute)Member.GetCustomAttributes(UniqueAttributeType, true).FirstOrDefault();
-            if (uniqueAttribute != null && !IsSimpleType)
+            if (uniqueAttribute != null && !isSimpleType)
                 throw new SisoDbException(ExceptionMessages.Property_Ctor_UniqueOnNonSimpleType);
             
             IsUnique = uniqueAttribute != null ? true : false;
@@ -91,7 +84,7 @@ namespace SisoDb.Structures.Schemas
 
             var factoryClassType = typeof(Reflect);
 
-            if (!IsNullableValueType)
+            if (!Member.PropertyType.IsNullableValueType())
             {
                 var getterFactory = factoryClassType
                     .GetMethod("GetterFor")
@@ -116,7 +109,7 @@ namespace SisoDb.Structures.Schemas
 
             var factoryClassType = typeof(Reflect);
 
-            if (!IsNullableValueType)
+            if (!Member.PropertyType.IsNullableValueType())
             {
                 var setterFactory = factoryClassType
                     .GetMethod("SetterFor")

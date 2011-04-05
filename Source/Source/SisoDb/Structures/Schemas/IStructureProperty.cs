@@ -17,15 +17,9 @@ namespace SisoDb.Structures.Schemas
         IStructureProperty Parent { get; }
 
         bool IsRootMember { get; }
-        
-        bool IsSimpleType { get; }
 
         bool IsUnique { get; }
-
-        bool IsValueType { get; }
-
-        bool IsNullableValueType { get; }
-       
+        
         bool IsEnumerable { get; }
 
         bool IsElement { get; }

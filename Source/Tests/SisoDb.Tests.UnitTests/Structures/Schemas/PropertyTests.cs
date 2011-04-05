@@ -10,86 +10,6 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
     public class PropertyTests : UnitTestBase
     {
         [Test]
-        public void IsSimpleType_WhenRootPropertyWithInt_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Int1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithByte_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Byte1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithString_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("String1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithGuid_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Guid1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithDecimal_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Decimal1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithDouble_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Double1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithDateTime_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("DateTime1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithBool_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Bool1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithFloat_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Float1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
-        public void IsSimpleType_WhenRootPropertyWithEnum_ReturnsTrue()
-        {
-            var property = GetProperty<Dummy>("Enum1");
-
-            Assert.IsTrue(property.IsSimpleType);
-        }
-
-        [Test]
         public void IsUnique_WhenRootPropertyWithUniqueInt_ReturnsTrue()
         {
             var property = GetProperty<Dummy>("Uq1");
@@ -111,22 +31,6 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             var property = GetProperty<Dummy>("Int1");
 
             Assert.IsFalse(property.IsEnumerable);
-        }
-
-        [Test]
-        public void IsNullableValueType_WhenNotNullableValueType_ReturnsFalse()
-        {
-            var property = GetProperty<Dummy>("Guid1");
-
-            Assert.IsFalse(property.IsNullableValueType);
-        }
-
-        [Test]
-        public void IsNullableValueType_WhenNullableValueType_ReturnsFalse()
-        {
-            var property = GetProperty<Dummy>("NullableGuid1");
-
-            Assert.IsTrue(property.IsNullableValueType);
         }
 
         [Test]
