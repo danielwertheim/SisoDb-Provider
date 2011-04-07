@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace SisoDb.Structures.Schemas
 {
     public interface IStructureProperty
     {
-        PropertyInfo Member { get; }
-
         string Name { get; }
 
         string Path { get; }
@@ -36,5 +33,7 @@ namespace SisoDb.Structures.Schemas
 
         IList<object> GetValues<TRoot>(TRoot root)
             where TRoot : class;
+
+        object ReflectValue(object item);
     }
 }
