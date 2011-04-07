@@ -82,20 +82,16 @@ namespace SisoDb.Structures.Schemas
             if (Member.Name != StructureSchema.IdMemberName)
                 return;
 
-            var factoryClassType = typeof(Reflect);
-
             if (!Member.PropertyType.IsNullableValueType())
             {
-                var getterFactory = factoryClassType
-                    .GetMethod("GetterFor")
+                var getterFactory = Reflect.GetterForMethod
                     .MakeGenericMethod(Member.DeclaringType, Member.PropertyType);
 
                 _idGetter = (Delegate)getterFactory.Invoke(null, new object[] { Member });
             }
             else
             {
-                var getterFactory = factoryClassType
-                    .GetMethod("GetterForNullable")
+                var getterFactory = Reflect.GetterForNullableMethod
                     .MakeGenericMethod(Member.DeclaringType, Member.PropertyType.GetGenericArguments()[0]);
 
                 _idGetter = (Delegate)getterFactory.Invoke(null, new object[] { Member });
@@ -107,20 +103,16 @@ namespace SisoDb.Structures.Schemas
             if (Member.Name != StructureSchema.IdMemberName)
                 return;
 
-            var factoryClassType = typeof(Reflect);
-
             if (!Member.PropertyType.IsNullableValueType())
             {
-                var setterFactory = factoryClassType
-                    .GetMethod("SetterFor")
+                var setterFactory = Reflect.SetterForMethod
                     .MakeGenericMethod(Member.DeclaringType, Member.PropertyType);
 
                 _idSetter = (Delegate)setterFactory.Invoke(null, new object[] { Member });
             }
             else
             {
-                var setterFactory = factoryClassType
-                    .GetMethod("SetterForNullable")
+                var setterFactory = Reflect.SetterForNullableMethod
                     .MakeGenericMethod(Member.DeclaringType, Member.PropertyType.GetGenericArguments()[0]);
 
                 _idSetter = (Delegate)setterFactory.Invoke(null, new object[] { Member });
@@ -197,26 +189,24 @@ namespace SisoDb.Structures.Schemas
                 if (isLastPropertyInfo)
                 {
                     if (!(currentNode is ICollection))
-                    {
-                        var currentValue = currentPropertyInfo.GetValue(currentNode, null);
-                        return new[] { currentValue };
-                    }
+                        return new[] { currentPropertyInfo.GetValue(currentNode, null) };
 
-                    var currentNodes = (ICollection)currentNode;
-                    return ExtractValuesForEnumerableOfComplex(currentNodes, currentPropertyInfo);
+                    return ExtractValuesForEnumerableOfComplex(
+                        (ICollection)currentNode, 
+                        currentPropertyInfo);
                 }
 
                 if (!(currentNode is ICollection))
                     currentNode = currentPropertyInfo.GetValue(currentNode, null);
                 else
                 {
-                    var currentNodes = (ICollection)currentNode;
                     var values = new List<object>();
-                    foreach (var node in currentNodes)
+                    foreach (var node in (ICollection)currentNode)
                     {
-                        var nodeValue = currentPropertyInfo.GetValue(node, null);
                         values.AddRange(
-                            TraverseCallstack(nodeValue, c + 1));
+                            TraverseCallstack(
+                            currentPropertyInfo.GetValue(node, null),
+                            startIndex: c + 1));
                     }
                     return values;
                 }

@@ -8,6 +8,12 @@ namespace SisoDb.Reflections
 {
     public static class Reflect
     {
+        public static readonly Type ThisType = typeof (Reflect);
+        public static readonly MethodInfo GetterForMethod = ThisType.GetMethod("GetterFor");
+        public static readonly MethodInfo GetterForNullableMethod = ThisType.GetMethod("GetterForNullable");
+        public static readonly MethodInfo SetterForMethod = ThisType.GetMethod("SetterFor");
+        public static readonly MethodInfo SetterForNullableMethod = ThisType.GetMethod("SetterForNullable");
+
         public static Func<T, TOut> GetterFor<T, TOut>(PropertyInfo prop)
             where T : class
         {

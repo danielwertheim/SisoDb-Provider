@@ -89,13 +89,12 @@ namespace SisoDb.Providers.SqlProvider
 
         private void DoInsert<T>(IStructureSchema structureSchema, IList<T> items) where T : class
         {
-            var numOfItems = items.Count;
-            if(numOfItems < 1)
+            if (items.Count < 1)
                 return;
 
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
-            var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, numOfItems) : null;
-            var structures = new IStructure[numOfItems];
+            var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, items.Count) : null;
+            var structures = new IStructure[items.Count];
             Action<int> itteration = c =>
             {
                 var item = items[c];
