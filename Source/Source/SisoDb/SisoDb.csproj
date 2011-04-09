@@ -227,6 +227,9 @@
     <Compile Include="Structures\IStructureBuilder.cs" />
     <Compile Include="Structures\IStructureIndex.cs" />
     <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Structures\Schemas\Prop.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
     <Compile Include="Structures\SisoId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
