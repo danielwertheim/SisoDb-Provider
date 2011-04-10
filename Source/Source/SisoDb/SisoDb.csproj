@@ -227,7 +227,7 @@
     <Compile Include="Structures\IStructureBuilder.cs" />
     <Compile Include="Structures\IStructureIndex.cs" />
     <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="Structures\Schemas\Prop.cs">
+    <Compile Include="Structures\Schemas\DynamicPropertyFactory.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />

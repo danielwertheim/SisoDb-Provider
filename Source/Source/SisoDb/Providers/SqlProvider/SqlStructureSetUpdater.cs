@@ -16,11 +16,10 @@ namespace SisoDb.Providers.SqlProvider
     {
         protected const int MaxKeepQueueSize = 500;
 
+        private ISisoId _deleteSisoIdFrom;
+        private ISisoId _deleteSisoIdTo;
+
         protected Queue<TNew> KeepQueue { get; private set; }
-
-        protected IStructureProperty IdPropertyOld { get; private set; }
-
-        protected IStructureProperty IdPropertyNew { get; private set; }
 
         protected ISisoConnectionInfo ConnectionInfo { get; private set; }
 
@@ -39,9 +38,6 @@ namespace SisoDb.Providers.SqlProvider
             StructureSchemaOld = structureSchemaOld.AssertNotNull("structureSchemaOld");
             StructureSchemaNew = structureSchemaNew.AssertNotNull("structureSchemaNew");
             StructureBuilder = structureBuilder.AssertNotNull("structureBuilder");
-
-            IdPropertyOld = StructureType<TOld>.Instance.IdProperty;
-            IdPropertyNew = StructureType<TNew>.Instance.IdProperty;
 
             KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
         }
@@ -129,19 +125,18 @@ namespace SisoDb.Providers.SqlProvider
         private ISisoId GetSisoId<T>(T item)
             where T : class 
         {
-            var idProperty = item is TOld ? IdPropertyOld : IdPropertyNew;
             var structureSchema = item is TOld ? StructureSchemaOld : StructureSchemaNew;
 
             if (structureSchema.IdAccessor.IdType == IdTypes.Identity)
             {
-                var idValue = idProperty.GetIdValue<T, int>(item);
+                var idValue = structureSchema.IdAccessor.GetValue<T, int>(item);
 
                 return idValue.HasValue ? SisoId.NewIdentityId(idValue.Value) : null;
             }
 
             if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
             {
-                var idValue = idProperty.GetIdValue<T, Guid>(item);
+                var idValue = structureSchema.IdAccessor.GetValue<T, Guid>(item);
 
                 return idValue.HasValue ? SisoId.NewGuidId(idValue.Value) : null;
             }
@@ -175,9 +170,6 @@ namespace SisoDb.Providers.SqlProvider
             _deleteSisoIdFrom = _deleteSisoIdFrom ?? sisoId;
             _deleteSisoIdTo = sisoId;
         }
-
-        private ISisoId _deleteSisoIdFrom;
-        private ISisoId _deleteSisoIdTo;
 
         protected virtual void DequeueStructuresToTrash(ISqlDbClient dbClient)
         {

@@ -9,7 +9,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
     [TestFixture]
     public class StructureTypeReflecterComplexIndexablePropertiesTests : UnitTestBase
     {
-        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+        private readonly StructureTypeReflecter _reflecter = new StructureTypeReflecter();
 
         [Test]
         public void GetComplexIndexableProperties_WhenRootWithSimpleAndComplexProperties_ReturnsOnlyComplexProperties()

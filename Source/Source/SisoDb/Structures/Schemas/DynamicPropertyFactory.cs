@@ -4,26 +4,18 @@ using System.Reflection.Emit;
 
 namespace SisoDb.Structures.Schemas
 {
-    public class Prop
-    {
-        public delegate object DynamicGetter(object target);
-        public delegate void DynamicSetter(object target, object value);
+    public delegate object DynamicGetter(object target);
+    
+    public delegate void DynamicSetter(object target, object value);
 
+    public static class DynamicPropertyFactory
+    {
         private static readonly Type ObjectType = typeof(object);
         private static readonly Type VoidType = typeof(void);
         private static readonly Type DynamicGetterType = typeof(DynamicGetter);
         private static readonly Type DynamicSetterType = typeof(DynamicSetter);
 
-        public readonly DynamicGetter Getter;
-        public readonly DynamicSetter Setter;
-
-        public Prop(PropertyInfo propertyInfo)
-        {
-            Getter = CreateGetter(propertyInfo);
-            Setter = CreateSetter(propertyInfo);
-        }
-
-        private static DynamicGetter CreateGetter(PropertyInfo propertyInfo)
+        public static DynamicGetter CreateGetter(PropertyInfo propertyInfo)
         {
             var propGetMethod = propertyInfo.GetGetMethod(true);
             if (propGetMethod == null)
@@ -45,7 +37,7 @@ namespace SisoDb.Structures.Schemas
             return (DynamicGetter)getter.CreateDelegate(DynamicGetterType);
         }
 
-        private static DynamicSetter CreateSetter(PropertyInfo propertyInfo)
+        public static DynamicSetter CreateSetter(PropertyInfo propertyInfo)
         {
             var propSetMethod = propertyInfo.GetSetMethod(true);
             if (propSetMethod == null)

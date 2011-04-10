@@ -1,12 +1,11 @@
 using System.Linq;
 using NUnit.Framework;
-using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
     [TestFixture]
-    public class PropertyPathBuilderTests : UnitTestBase
+    public class StructurePropertyPathBuilderTests : UnitTestBase
     {
         [Test]
         public void BuildPath_ForFirstLevelScalar_NoRootButPathWithNoDelimitor()

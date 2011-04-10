@@ -147,9 +147,6 @@
   <data name="TypeExtensions_ExtractGenericType" xml:space="preserve">
     <value>Supported generic collections on model are: implementations of either IEnumerable&lt;T&gt; or IList&lt;T&gt;.</value>
   </data>
-  <data name="Property_GetIdValue_InvalidLevel" xml:space="preserve">
-    <value>Id values must lie on the root object.</value>
-  </data>
   <data name="Structure_DuplicateUniques" xml:space="preserve">
     <value>Duplicate Unique-index found for '{0}'.\r\nSisoId: '{1}';Name: '{2}';Value: '{3}';</value>
   </data>
@@ -256,7 +253,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SqlStructureSetUpdater_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id of the new structure '{0}' does not match the Id of the old structure '{1}'.</value>
   </data>
-  <data name="Property_SetIdValue_InvalidLevel" xml:space="preserve">
+  <data name="IdAccessor_GetIdValue_InvalidLevel" xml:space="preserve">
     <value>Id values must lie on the root object.</value>
   </data>
 </root>

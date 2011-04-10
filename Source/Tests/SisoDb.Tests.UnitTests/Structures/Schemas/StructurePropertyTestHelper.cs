@@ -2,7 +2,7 @@
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
-    public class PropertyTestHelper
+    public class StructurePropertyTestHelper
     {
         internal static StructureProperty GetProperty<T>(string name)
         {

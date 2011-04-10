@@ -151,6 +151,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id values must lie on the root object..
+        /// </summary>
+        internal static string IdAccessor_GetIdValue_InvalidLevel {
+            get {
+                return ResourceManager.GetString("IdAccessor_GetIdValue_InvalidLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Property.PropertyType &apos;{0}&apos; is not supported by the IdAccessor..
         /// </summary>
         internal static string IdAccessor_UnsupportedPropertyType {
@@ -247,24 +256,6 @@ namespace SisoDb.Resources {
         internal static string Property_Ctor_UniqueOnNonSimpleType {
             get {
                 return ResourceManager.GetString("Property_Ctor_UniqueOnNonSimpleType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Id values must lie on the root object..
-        /// </summary>
-        internal static string Property_GetIdValue_InvalidLevel {
-            get {
-                return ResourceManager.GetString("Property_GetIdValue_InvalidLevel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Id values must lie on the root object..
-        /// </summary>
-        internal static string Property_SetIdValue_InvalidLevel {
-            get {
-                return ResourceManager.GetString("Property_SetIdValue_InvalidLevel", resourceCulture);
             }
         }
         

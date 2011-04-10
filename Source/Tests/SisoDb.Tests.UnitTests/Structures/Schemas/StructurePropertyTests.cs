@@ -7,7 +7,7 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
     [TestFixture]
-    public class PropertyTests : UnitTestBase
+    public class StructurePropertyTests : UnitTestBase
     {
         [Test]
         public void IsUnique_WhenRootPropertyWithUniqueInt_ReturnsTrue()
@@ -34,21 +34,21 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         }
 
         [Test]
-        public void GetValues_WhenIntOnFirstLevel_ReturnsInt()
+        public void GetValue_WhenIntOnFirstLevel_ReturnsInt()
         {
             var propertyInfo = typeof(Dummy).GetProperty("Int1");
             var property = new StructureProperty(propertyInfo);
 
             const int expected = 33;
             var item = new Dummy { Int1 = expected };
-            var actual = property.GetValues(item);
+            var actual = property.GetValue(item);
             
-            Assert.AreEqual(new []{expected}, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         private static StructureProperty GetProperty<T>(string name)
         {
-            return PropertyTestHelper.GetProperty<T>(name);
+            return StructurePropertyTestHelper.GetProperty<T>(name);
         }
 
         private class Dummy

@@ -1,7 +1,9 @@
 using System;
 using NUnit.Framework;
+using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
 {
@@ -85,6 +87,34 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
         }
 
         [Test]
+        public void Ctor_WhenIntNotOnFirstLevel_ThrowsSisoDbException()
+        {
+            var itemPropertyInfo = typeof(Container).GetProperty("NestedWithIdentity");
+            var itemProperty = new StructureProperty(itemPropertyInfo);
+
+            var intPropertyInfo = typeof(IdentityDummy).GetProperty("SisoId");
+            var intProperty = new StructureProperty(itemProperty, intPropertyInfo);
+
+            var ex = Assert.Throws<SisoDbException>(() => new IdAccessor(intProperty));
+
+            Assert.AreEqual(ExceptionMessages.IdAccessor_GetIdValue_InvalidLevel, ex.Message);
+        }
+
+        [Test]
+        public void Ctor_WhenGuidNotOnFirstLevel_ThrowsSisoDbException()
+        {
+            var itemPropertyInfo = typeof(Container).GetProperty("NestedWithGuid");
+            var itemProperty = new StructureProperty(itemPropertyInfo);
+
+            var guidPropertyInfo = typeof(GuidDummy).GetProperty("SisoId");
+            var guidProperty = new StructureProperty(itemProperty, guidPropertyInfo);
+
+            var ex = CustomAssert.Throws<SisoDbException>(() => new IdAccessor(guidProperty));
+
+            Assert.AreEqual(ExceptionMessages.IdAccessor_GetIdValue_InvalidLevel, ex.Message);
+        }
+
+        [Test]
         public void SetValue_ToGuidProperty_ValueIsAssigned()
         {
             var id = Guid.Parse("fc47a673-5a5b-419b-9a40-a756591aa7bf");
@@ -134,6 +164,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
             idAccessor.SetValue(item, id);
 
             Assert.AreEqual(id, item.SisoId);
+        }
+
+        private class Container
+        {
+            public IdentityDummy NestedWithIdentity { get; set; }
+
+            public GuidDummy NestedWithGuid { get; set; }
         }
 
         private class GuidDummy

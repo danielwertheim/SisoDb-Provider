@@ -10,7 +10,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
     [TestFixture]
     public class StructureTypeReflecterSimpleIndexablePropertiesTests : UnitTestBase
     {
-        private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+        private readonly StructureTypeReflecter _reflecter = new StructureTypeReflecter();
 
         [Test]
         public void GetSimpleIndexableProperties_WhenMultiplePublicSimplePropertiesExistsAndNoExclusions_ReturnsAllPublicSimpleProperties()

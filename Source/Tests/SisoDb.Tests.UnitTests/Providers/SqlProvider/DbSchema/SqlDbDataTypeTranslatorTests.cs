@@ -37,6 +37,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider.DbSchema
             propertyFake.Setup(x => x.IsEnumerable).Returns(true);
             propertyFake.Setup(x => x.ElementType).Returns(typeof (byte));
             propertyFake.Setup(x => x.PropertyType).Returns(typeof (byte[]));
+            propertyFake.Setup(x => x.IsRootMember).Returns(true);
 
             var iac = new IndexAccessor(propertyFake.Object);
 

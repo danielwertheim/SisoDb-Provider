@@ -1,4 +1,3 @@
-using System;
 using SisoDb.Core;
 using SisoDb.Reflections;
 using SisoDb.Resources;
@@ -13,19 +12,22 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             where T : class
             where TOut : struct
         {
-            return Property.GetIdValue<T, TOut>(item);
+            return (TOut?)Property.GetValue(item);
         }
         
         public void SetValue<T, TIn>(T item, TIn value)
             where T : class
             where TIn : struct
         {
-            Property.SetIdValue(item, value);
+            Property.SetValue(item, value);
         }
 
         public IdAccessor(IStructureProperty property)
             : base(property)
         {
+            if (!property.IsRootMember)
+                throw new SisoDbException(ExceptionMessages.IdAccessor_GetIdValue_InvalidLevel);
+
             if (Property.PropertyType.IsGuidType() || Property.PropertyType.IsNullableGuidType())
                 IdType = IdTypes.Guid;
             else if (Property.PropertyType.IsIntType() || Property.PropertyType.IsNullableIntType())
