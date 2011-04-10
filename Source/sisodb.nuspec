@@ -3,7 +3,7 @@
   <metadata>
     <id>SisoDb</id>    
     <title>SisoDb - Simple Structure Oriented Db</title>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 	<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
 	<summary>SisoDb is a document oriented nosql'ish provider over SQL-Server.</summary>
@@ -11,7 +11,10 @@
 	<projectUrl>http://www.sisodb.com</projectUrl>
 	<licenseUrl>http://github.com/sedanwer/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 	<requireLicenseAcceptance>true</requireLicenseAcceptance>
-	<tags>sisodb, sql, json, nosql, document database</tags>
+	<tags>sisodb, sql, json, nosql, document-oriented database</tags>
+	<dependencies>
+	  <dependency id="ServiceStack.Text" version="2.9" />
+	</dependencies>
     </metadata>
   <files>
       <file src="SisoDb-bin\*.*" target="lib" /> 
