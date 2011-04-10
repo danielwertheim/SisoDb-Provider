@@ -17,6 +17,6 @@
 	</dependencies>
     </metadata>
   <files>
-      <file src="SisoDb-bin\*.*" target="lib" /> 
+      <file src="Source\SisoDb\bin\Deploy\*.*" target="lib" /> 
   </files>
 </package>
