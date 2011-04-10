@@ -1,12 +1,16 @@
 From v0.8.0.0 the following is used for versioning:
 vA.B.C.D
 A=Will see when I get there
-B=When major changes of API and especially changes breaking backward compatibility.
-C=New features
-D=Fixes
+B=Major changes of API and especially changes breaking backward compatibility.
+C=Minor changes
+D=Bug fixes
+
+v1.0.1      - 2011-04-10
+[Update]    Performance optimazation, not using Reflection to extract values for indexing anymore. Now using ILGeneration instead.
+[Update]    Using NuGet to resolve ServiceStack.Text dependency.
 
 v1.0.0.2    - 2011-04-xx
-[Update]:   Reworked the Property (new name StructureProperty) extranction and value accessing.
+[Update]:   Reworked the Property (new name StructureProperty) extraction and value accessing.
 
 v1.0.0.1    - 2011-04-03
 [Update]:   Started to push demand of generics upwards the stack.
