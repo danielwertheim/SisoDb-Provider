@@ -9,7 +9,7 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
 {
     [TestFixture]
-    public class SqlUnitOfworkDeleteTests : SqlIntegrationTestBase
+    public class SqlUnitOfWorkDeleteTests : SqlIntegrationTestBase
     {
         protected override void OnTestFinalize()
         {

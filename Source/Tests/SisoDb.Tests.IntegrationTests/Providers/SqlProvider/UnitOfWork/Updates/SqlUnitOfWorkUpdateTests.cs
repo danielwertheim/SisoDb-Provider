@@ -141,9 +141,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
             }
 
             var table = DbHelper.GetTableBySql(
-                "select Value from dbo.TestItemUniques where SisoId is null;");
+                "select UqValue from dbo.TestItemUniques where UqSisoId is null;");
             Assert.AreEqual(1, table.Rows.Count);
-            Assert.AreEqual("B", table.AsEnumerable().First()["Value"]);
+            Assert.AreEqual("B", table.AsEnumerable().First()["UqValue"]);
         }
 
         private class SimpleItem

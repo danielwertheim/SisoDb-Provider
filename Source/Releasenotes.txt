@@ -5,6 +5,19 @@ B=Major changes of API and especially changes breaking backward compatibility.
 C=Minor changes
 D=Bug fixes
 
+v1.0.1.1    - 2011-04-12
+[Fixed]     There was an bug in how the Unique constraints where handled. This have been fixed but you need to update all Uniques table.
+
+            You should be able to do this with the db.UpdateStructureSet method (http://sisodb.com/docs/doc13) You can also do this via T-Sql
+
+            All tables [x]Uniques should now have four columns:
+
+            1) SisoId       int|uniqueidentifier    not null
+            2) UqSisoId     int|uniqueidentifier    null
+            3) UqName       [nvarchar](250)          not null
+            4) UqValue      [varchar](100)          not null
+
+
 v1.0.1      - 2011-04-10
 [Update]    Performance optimazation, not using Reflection to extract values for indexing anymore. Now using ILGeneration instead.
 [Update]    Using NuGet to resolve ServiceStack.Text dependency.

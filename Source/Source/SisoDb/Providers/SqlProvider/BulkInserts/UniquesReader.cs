@@ -16,25 +16,24 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
         {
             var schemaField = StorageSchema.FieldsByIndex[ordinal];
 
-            if (schemaField.Name == UniqueStorageSchema.Fields.SisoIdRef.Name)
+            if (schemaField.Name == UniqueStorageSchema.Fields.SisoId.Name)
                 return Enumerator.Current.SisoId.Value;
 
-            if (schemaField.Name == UniqueStorageSchema.Fields.SisoId.Name)
+            if (schemaField.Name == UniqueStorageSchema.Fields.UqSisoId.Name)
             {
                 if (Enumerator.Current.Uniqueness == StructureIndexUniques.PerType)
                     return DBNull.Value;
 
-                var sisoId = Enumerator.Current.SisoId;
-                if (sisoId != null && sisoId.Value != null)
-                    return sisoId.Value;
+                if (Enumerator.Current.SisoId != null && Enumerator.Current.SisoId.Value != null)
+                    return Enumerator.Current.SisoId.Value;
 
                 return DBNull.Value;
             }
 
-            if (schemaField.Name == UniqueStorageSchema.Fields.Name.Name)
+            if (schemaField.Name == UniqueStorageSchema.Fields.UqName.Name)
                 return Enumerator.Current.Name;
 
-            if (schemaField.Name == UniqueStorageSchema.Fields.Value.Name)
+            if (schemaField.Name == UniqueStorageSchema.Fields.UqValue.Name)
                 return SisoDbEnvironment.Formatting.StringConverter.AsString(Enumerator.Current.Value);
             
             throw new NotSupportedException();

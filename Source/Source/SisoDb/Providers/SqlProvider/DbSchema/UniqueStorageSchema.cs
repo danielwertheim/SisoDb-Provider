@@ -8,11 +8,11 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
     {
         public static class Fields
         {
-            public static readonly SchemaField SisoIdRef = new SchemaField(0, "SisoIdRef");
-            public static readonly SchemaField SisoId = new SchemaField(1, "SisoId");
-            public static readonly SchemaField Name = new SchemaField(2, "Name");
-            public static readonly SchemaField Value = new SchemaField(3, "Value");
-            private static readonly SchemaField[] OrderedFields = new[] { SisoIdRef, SisoId, Name, Value };
+            public static readonly SchemaField SisoId = new SchemaField(0, "SisoId");
+            public static readonly SchemaField UqSisoId = new SchemaField(1, "UqSisoId");
+            public static readonly SchemaField UqName = new SchemaField(2, "UqName");
+            public static readonly SchemaField UqValue = new SchemaField(3, "UqValue");
+            private static readonly SchemaField[] OrderedFields = new[] { SisoId, UqSisoId, UqName, UqValue };
 
             public static SchemaField[] GetOrderedFields()
             {

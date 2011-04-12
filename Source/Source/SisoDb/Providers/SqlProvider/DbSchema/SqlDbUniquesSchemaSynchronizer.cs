@@ -35,7 +35,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
         {
             var inString = string.Join(",", names.Select(n => "'" + n + "'"));
             var sql = _sqlStringsRepository.GetSql("UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
-                .Inject(structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.Name.Name, inString);
+                .Inject(structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.UqName.Name, inString);
 
             _dbClient.ExecuteNonQuery(CommandType.Text, sql);
         }
@@ -55,7 +55,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             _dbClient.ExecuteSingleResultReader(CommandType.Text,
                                                 _sqlStringsRepository.GetSql("UniquesSchemaSynchronizer_GetKeyNames")
                                                 .Inject(
-                                                    UniqueStorageSchema.Fields.Name.Name, structureSchema.GetUniquesTableName()),
+                                                    UniqueStorageSchema.Fields.UqName.Name, structureSchema.GetUniquesTableName()),
                                                     dr => dbColumns.Add(dr.GetString(0)));
 
             return dbColumns;

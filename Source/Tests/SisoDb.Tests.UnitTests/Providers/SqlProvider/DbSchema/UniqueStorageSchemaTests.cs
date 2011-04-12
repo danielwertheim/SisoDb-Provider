@@ -11,26 +11,10 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider.DbSchema
         {
             var fields = UniqueStorageSchema.Fields.GetOrderedFields();
 
-            Assert.AreEqual(UniqueStorageSchema.Fields.SisoIdRef, fields[0]);
-            Assert.AreEqual(UniqueStorageSchema.Fields.SisoId, fields[1]);
-            Assert.AreEqual(UniqueStorageSchema.Fields.Name, fields[2]);
-            Assert.AreEqual(UniqueStorageSchema.Fields.Value, fields[3]);
-        }
-
-        [Test]
-        public void SchemaField_SisoIdRef_HasCorrectName()
-        {
-            var field = UniqueStorageSchema.Fields.SisoIdRef;
-
-            Assert.AreEqual("SisoIdRef", field.Name);
-        }
-
-        [Test]
-        public void SchemaField_SisoIdRef_HasCorrectOrdinal()
-        {
-            var field = UniqueStorageSchema.Fields.SisoIdRef;
-
-            Assert.AreEqual(0, field.Ordinal);
+            Assert.AreEqual(UniqueStorageSchema.Fields.SisoId, fields[0]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqSisoId, fields[1]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqName, fields[2]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqValue, fields[3]);
         }
 
         [Test]
@@ -46,37 +30,53 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider.DbSchema
         {
             var field = UniqueStorageSchema.Fields.SisoId;
 
+            Assert.AreEqual(0, field.Ordinal);
+        }
+
+        [Test]
+        public void SchemaField_UqSisoId_HasCorrectName()
+        {
+            var field = UniqueStorageSchema.Fields.UqSisoId;
+
+            Assert.AreEqual("UqSisoId", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_UqSisoId_HasCorrectOrdinal()
+        {
+            var field = UniqueStorageSchema.Fields.UqSisoId;
+
             Assert.AreEqual(1, field.Ordinal);
         }
 
         [Test]
-        public void SchemaField_Name_HasCorrectName()
+        public void SchemaField_UqName_HasCorrectName()
         {
-            var field = UniqueStorageSchema.Fields.Name;
+            var field = UniqueStorageSchema.Fields.UqName;
 
-            Assert.AreEqual("Name", field.Name);
+            Assert.AreEqual("UqName", field.Name);
         }
 
         [Test]
-        public void SchemaField_Name_HasCorrectOrdinal()
+        public void SchemaField_UqName_HasCorrectOrdinal()
         {
-            var field = UniqueStorageSchema.Fields.Name;
+            var field = UniqueStorageSchema.Fields.UqName;
 
             Assert.AreEqual(2, field.Ordinal);
         }
 
         [Test]
-        public void SchemaField_Value_HasCorrectName()
+        public void SchemaField_UqValue_HasCorrectName()
         {
-            var field = UniqueStorageSchema.Fields.Value;
+            var field = UniqueStorageSchema.Fields.UqValue;
 
-            Assert.AreEqual("Value", field.Name);
+            Assert.AreEqual("UqValue", field.Name);
         }
 
         [Test]
-        public void SchemaField_Value_HasCorrectOrdinal()
+        public void SchemaField_UqValue_HasCorrectOrdinal()
         {
-            var field = UniqueStorageSchema.Fields.Value;
+            var field = UniqueStorageSchema.Fields.UqValue;
 
             Assert.AreEqual(3, field.Ordinal);
         }

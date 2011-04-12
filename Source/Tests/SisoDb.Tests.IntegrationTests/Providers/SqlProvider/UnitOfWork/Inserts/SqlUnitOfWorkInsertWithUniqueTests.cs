@@ -66,10 +66,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select Name, Value from dbo.UniqueOrderUniques where SisoId is null;");
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId is null;");
             Assert.AreEqual(1, table.Rows.Count);
-            Assert.IsTrue(table.AsEnumerable().First()["Name"].ToString().StartsWith("OrderNo_"));
-            Assert.AreEqual("O123", table.AsEnumerable().First()["Value"]);
+            Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("OrderNo_"));
+            Assert.AreEqual("O123", table.AsEnumerable().First()["UqValue"]);
         }
 
         [Test]
@@ -89,10 +89,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select Name, Value from dbo.UniqueOrderUniques where SisoId = '{0}';".Inject(order.SisoId));
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.SisoId));
             Assert.AreEqual(1, table.Rows.Count);
-            Assert.IsTrue(table.AsEnumerable().First()["Name"].ToString().StartsWith("Lines.ProductNo_"));
-            Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["Value"]);
+            Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
+            Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);
         }
 
         [Test]
@@ -128,10 +128,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select Name, Value from dbo.UniqueOrderUniques where SisoId = '{0}';".Inject(order.SisoId));
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.SisoId));
             Assert.AreEqual(1, table.Rows.Count);
-            Assert.IsTrue(table.AsEnumerable().First()["Name"].ToString().StartsWith("Lines.ProductNo_"));
-            Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["Value"]);
+            Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
+            Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);
         }
 
         [Test]
