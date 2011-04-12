@@ -28,10 +28,14 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
             {
                 using (var structuresReader = new StructuresReader(structureStorageSchema, batch))
                 {
-                    var indexRows = batch.Select(s => new IndexRow(s.Id, s.Indexes.ToArray()));
-                    using (var indexesReader = new IndexesReader(indexesStorageSchema, indexRows))
+                    using (var indexesReader = new IndexesReader(
+                        indexesStorageSchema,
+                        batch.Select(s => new IndexRow(s.Id, s.Indexes.ToArray()))))
                     {
-                        using (var uniquesReader = new UniquesReader(uniquesStorageSchema, batch.SelectMany(s => s.Uniques).ToList()))
+                        //TODO: Not needed if no data
+                        using (var uniquesReader = new UniquesReader(
+                            uniquesStorageSchema, 
+                            batch.SelectMany(s => s.Uniques).ToList()))
                         {
                             InsertStructures(structuresReader);
                             InsertIndexes(indexesReader);

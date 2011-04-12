@@ -31,7 +31,6 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
                           : _sqlStringsRepository.GetSql("CreateIndexesIdentity");
 
             return sql.Inject(
-                structureSchema.GetStructureTableName(),
                 structureSchema.GetIndexesTableName(),
                 columnsString);
         }

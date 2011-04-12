@@ -27,6 +27,8 @@ namespace SisoDb.Structures.Schemas
 
         public bool IsUnique { get; private set; }
 
+        public StructureIndexUniques Uniqueness { get; private set; }
+
         public bool IsEnumerable { get; private set; }
 
         public bool IsElement { get; private set; }
@@ -54,8 +56,11 @@ namespace SisoDb.Structures.Schemas
             var uniqueAttribute = (UniqueAttribute)propertyInfo.GetCustomAttributes(UniqueAttributeType, true).FirstOrDefault();
             if (uniqueAttribute != null && !isSimpleType)
                 throw new SisoDbException(ExceptionMessages.Property_Ctor_UniqueOnNonSimpleType);
-            
-            IsUnique = uniqueAttribute != null ? true : false;
+
+            Uniqueness = uniqueAttribute == null ? 
+                StructureIndexUniques.None : 
+                uniqueAttribute.Mode.ToStructureIndexUniques();
+            IsUnique = Uniqueness != StructureIndexUniques.None;
 
             Path = PropertyPathBuilder.BuildPath(this);
 

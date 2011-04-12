@@ -15,8 +15,15 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
         public override object GetValue(int ordinal)
         {
             var schemaField = StorageSchema.FieldsByIndex[ordinal];
+
+            if (schemaField.Name == UniqueStorageSchema.Fields.SisoIdRef.Name)
+                return Enumerator.Current.SisoId.Value;
+
             if (schemaField.Name == UniqueStorageSchema.Fields.SisoId.Name)
             {
+                if (Enumerator.Current.Uniqueness == StructureIndexUniques.PerType)
+                    return DBNull.Value;
+
                 var sisoId = Enumerator.Current.SisoId;
                 if (sisoId != null && sisoId.Value != null)
                     return sisoId.Value;
@@ -28,8 +35,8 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
                 return Enumerator.Current.Name;
 
             if (schemaField.Name == UniqueStorageSchema.Fields.Value.Name)
-                return SisoDbEnvironment.Formatting.StringConverter.AsString(Enumerator.Current.Value); //return Enumerator.Current.Value;
-
+                return SisoDbEnvironment.Formatting.StringConverter.AsString(Enumerator.Current.Value);
+            
             throw new NotSupportedException();
         }
     }

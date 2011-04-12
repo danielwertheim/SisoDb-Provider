@@ -9,5 +9,7 @@
         object Value { get; }
 
         bool IsUnique { get; }
+
+        StructureIndexUniques Uniqueness { get; }
     }
 }

@@ -22,6 +22,11 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             get { return Property.IsUnique; }
         }
 
+        public StructureIndexUniques Uniqueness
+        {
+            get { return Property.Uniqueness; }
+        }
+
         public IndexAccessor(IStructureProperty property) 
             : base(property)
         {

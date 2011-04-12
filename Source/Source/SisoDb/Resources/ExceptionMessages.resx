@@ -256,4 +256,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="IdAccessor_GetIdValue_InvalidLevel" xml:space="preserve">
     <value>Id values must lie on the root object.</value>
   </data>
+  <data name="UniqueModesCantBeMapped" xml:space="preserve">
+    <value>The UniqueModes '{0}' is unknow and cant be mapped.</value>
+  </data>
 </root>

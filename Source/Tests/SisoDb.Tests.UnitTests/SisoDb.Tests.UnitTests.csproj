@@ -85,6 +85,7 @@
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="Core\ElementsBatcherTests.cs" />
     <Compile Include="HashMemberNameGeneratorTests.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\UniqueStorageSchemaTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />

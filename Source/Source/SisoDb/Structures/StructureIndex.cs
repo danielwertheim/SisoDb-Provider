@@ -5,7 +5,7 @@ using SisoDb.Resources;
 namespace SisoDb.Structures
 {
     [Serializable]
-    public class StructureIndex : IStructureIndex, IEquatable<StructureIndex>
+    public class StructureIndex : IStructureIndex, IEquatable<IStructureIndex>
     {
         public ISisoId SisoId { get; private set; }
 
@@ -15,7 +15,9 @@ namespace SisoDb.Structures
 
         public bool IsUnique { get; private set; }
 
-        public StructureIndex(ISisoId sisoId, string name, object value, bool isUnique)
+        public StructureIndexUniques Uniqueness { get; private set; }
+
+        public StructureIndex(ISisoId sisoId, string name, object value, StructureIndexUniques uniqueness)
         {
             sisoId.AssertNotNull("sisoId");
             name.AssertNotNullOrWhiteSpace("name");
@@ -26,15 +28,16 @@ namespace SisoDb.Structures
             SisoId = sisoId;
             Name = name;
             Value = value;
-            IsUnique = isUnique;
+            Uniqueness = uniqueness;
+            IsUnique = Uniqueness != StructureIndexUniques.None;
         }
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as StructureIndex);
+            return Equals(obj as IStructureIndex);
         }
 
-        public bool Equals(StructureIndex other)
+        public bool Equals(IStructureIndex other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;

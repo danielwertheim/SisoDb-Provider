@@ -474,5 +474,14 @@ namespace SisoDb.Resources {
                 return ResourceManager.GetString("TypeExtensions_ExtractGenericType", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The UniqueModes &apos;{0}&apos; is unknow and cant be mapped..
+        /// </summary>
+        internal static string UniqueModesCantBeMapped {
+            get {
+                return ResourceManager.GetString("UniqueModesCantBeMapped", resourceCulture);
+            }
+        }
     }
 }

@@ -11,8 +11,6 @@ namespace SisoDb.Structures
     {
         public ISisoId Id { get; private set; }
 
-        //public byte[] Version { get; private set; }
-
         public string Name { get; private set; }
 
         public string Json { get; private set; }
@@ -52,7 +50,7 @@ namespace SisoDb.Structures
                             Name,
                             idValue,
                             firstUniqueNotBeingUnique.Name,
-                            (string)uniqueValue));
+                            uniqueValue));
                 }
             }
         }

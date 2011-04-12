@@ -21,9 +21,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
                           ? _sqlStringsRepository.GetSql("CreateUniquesGuid")
                           : _sqlStringsRepository.GetSql("CreateUniquesIdentity");
 
-            return sql.Inject(
-                structureSchema.GetStructureTableName(),
-                structureSchema.GetUniquesTableName());
+            return sql.Inject(structureSchema.GetUniquesTableName());
         }
     }
 }

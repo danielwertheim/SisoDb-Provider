@@ -22,8 +22,6 @@ namespace SisoDb.Structures
         {
             var indexes = new IStructureIndex[structureSchema.IndexAccessors.Count];
 
-            //for (var c = 0; c < indexes.Length; c++)
-            //{
             Parallel.For(0, indexes.Length,
                 c =>
                 {
@@ -31,10 +29,10 @@ namespace SisoDb.Structures
                     var values = indexAccessor.GetValues(item);
                     if (values == null || values.Count < 1)
                     {
-                        if (indexAccessor.IsUnique)
+                        if (indexAccessor.Uniqueness != StructureIndexUniques.None)
                             throw new SisoDbException(ExceptionMessages.StructureIndexesFactory_UniqueIndex_IsNull.Inject(indexAccessor.Path, indexAccessor.Name));
 
-                        indexes[c] = new StructureIndex(id, indexAccessor.Name, null, indexAccessor.IsUnique);
+                        indexes[c] = new StructureIndex(id, indexAccessor.Name, null, indexAccessor.Uniqueness);
                     }
                     else
                     {
@@ -47,13 +45,12 @@ namespace SisoDb.Structures
                                 valueString.Append(StringConverter.AsString(value));
                                 valueString.Append("$>");
                             }
-                            indexes[c] = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.IsUnique);
+                            indexes[c] = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.Uniqueness);
                         }
                         else
-                            indexes[c] = new StructureIndex(id, indexAccessor.Name, values[0], indexAccessor.IsUnique);
+                            indexes[c] = new StructureIndex(id, indexAccessor.Name, values[0], indexAccessor.Uniqueness);
                     }
                 });
-            //}
             return indexes;
         }
     }

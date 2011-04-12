@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -64,6 +65,7 @@ namespace SisoDb.Providers.SqlProvider
             _dbClient.Flush();
         }
 
+        [DebuggerStepThrough]
         public void Insert<T>(T item) where T : class
         {
             InsertMany(new[] { item });
@@ -137,11 +139,13 @@ namespace SisoDb.Providers.SqlProvider
             bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 
+        [DebuggerStepThrough]
         public void DeleteById<T>(Guid sisoId) where T : class
         {
             DeleteById<T>(SisoId.NewGuidId(sisoId));
         }
 
+        [DebuggerStepThrough]
         public void DeleteById<T>(int sisoId) where T : class
         {
             DeleteById<T>(SisoId.NewIdentityId(sisoId));
@@ -184,16 +188,19 @@ namespace SisoDb.Providers.SqlProvider
             return _dbClient.RowCount(structureSchema.GetStructureTableName());
         }
 
+        [DebuggerStepThrough]
         public T GetById<T>(Guid sisoId) where T : class
         {
             return GetById<T, T>(SisoId.NewGuidId(sisoId));
         }
 
+        [DebuggerStepThrough]
         public T GetById<T>(int sisoId) where T : class
         {
             return GetById<T, T>(SisoId.NewIdentityId(sisoId));
         }
 
+        [DebuggerStepThrough]
         public TOut GetByIdAs<TContract, TOut>(Guid sisoId)
             where TContract : class
             where TOut : class
@@ -201,6 +208,7 @@ namespace SisoDb.Providers.SqlProvider
             return GetById<TContract, TOut>(SisoId.NewGuidId(sisoId));
         }
 
+        [DebuggerStepThrough]
         public TOut GetByIdAs<TContract, TOut>(int sisoId)
             where TContract : class
             where TOut : class
@@ -212,16 +220,17 @@ namespace SisoDb.Providers.SqlProvider
             where TContract : class
             where TOut : class
         {
-            var json = GetByIdAsJson<TContract>(sisoId);
-
-            return _jsonSerializer.ToItemOrNull<TOut>(json);
+            return _jsonSerializer.ToItemOrNull<TOut>(
+                GetByIdAsJson<TContract>(sisoId));
         }
 
+        [DebuggerStepThrough]
         public string GetByIdAsJson<T>(Guid sisoId) where T : class
         {
             return GetByIdAsJson<T>(SisoId.NewGuidId(sisoId));
         }
 
+        [DebuggerStepThrough]
         public string GetByIdAsJson<T>(int sisoId) where T : class
         {
             return GetByIdAsJson<T>(SisoId.NewIdentityId(sisoId));

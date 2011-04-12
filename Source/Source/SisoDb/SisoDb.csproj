@@ -263,6 +263,8 @@
     <Compile Include="SisoDbEnvironment.cs" />
     <Compile Include="Structures\StructureIndexesFactory.cs" />
     <Compile Include="Core\ValidationExtensions.cs" />
+    <Compile Include="Structures\StructureIndexUniques.cs" />
+    <Compile Include="Structures\StructureIndexUniquesExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.2008.resx">

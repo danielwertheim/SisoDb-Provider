@@ -10,11 +10,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
         {
             public static readonly SchemaField Id = new SchemaField(0, "SisoId");
             public static readonly SchemaField Json = new SchemaField(1, "Json");
-
-            public static SchemaField[] GetOrderedFields()
-            {
-                return new[] { Id, Json };
-            }
+            public static readonly SchemaField[] OrderedFields = new[] { Id, Json };
         }
 
         public StructureStorageSchema(IStructureSchema structureSchema) 
@@ -24,7 +20,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
         protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
         {
-            return Fields.GetOrderedFields();
+            return Fields.OrderedFields;
         }
     }
 }

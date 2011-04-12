@@ -15,6 +15,8 @@ namespace SisoDb.Structures.Schemas
         bool IsRootMember { get; }
 
         bool IsUnique { get; }
+
+        StructureIndexUniques Uniqueness { get; }
         
         bool IsEnumerable { get; }
 

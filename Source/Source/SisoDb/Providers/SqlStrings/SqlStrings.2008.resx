@@ -126,27 +126,14 @@ add {1};</value>
 alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
-    <value>create table [dbo].[{1}] (
+    <value>create table [dbo].[{0}] (
 [SisoId] [uniqueidentifier] not null primary key clustered rowguidcol,
-{2});</value>
+{1});</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
-    <value>create table [dbo].[{1}] (
+    <value>create table [dbo].[{0}] (
 [SisoId] [int] not null primary key clustered,
-{2});</value>
-  </data>
-  <data name="CreatePerInstanceUniqueIndex" xml:space="preserve">
-    <value>CREATE UNIQUE NONCLUSTERED INDEX [IX_{0}_PerInstance_{1}] ON [dbo].[{0}] 
-(
-[SisoId] ASC,
-[{1}] ASC
-);</value>
-  </data>
-  <data name="CreatePerTypeUniqueIndex" xml:space="preserve">
-    <value>CREATE UNIQUE NONCLUSTERED INDEX [IX_{0}_PerType_{1}] ON [dbo].[{0}] 
-(
-[{1}] ASC
-);</value>
+{1});</value>
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
@@ -161,20 +148,22 @@ alter database [{0}] set recovery simple;</value>
 insert into [dbo].[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
-    <value>create table [dbo].[{1}] (
+    <value>create table [dbo].[{0}] (
+[SisoIdRef] [uniqueidentifier] not null,
 [SisoId] [uniqueidentifier] null,
 [Name] [varchar](250) not null,
 [Value] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{1}] on [{1}] ([SisoId], [Name], [Value]);</value>
+create unique clustered index [UQ_{0}] on [{0}] ([SisoId], [Name], [Value]);</value>
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
-    <value>create table [dbo].[{1}] (
+    <value>create table [dbo].[{0}] (
+[SisoIdRef] [int] not null,
 [SisoId] [int] null,
 [Name] [varchar](250) not null,
 [Value] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{1}] on [{1}] ([SisoId], [Name], [Value]);</value>
+create unique clustered index [UQ_{0}] on [{0}] ([SisoId], [Name], [Value]);</value>
   </data>
   <data name="DatabaseExists" xml:space="preserve">
     <value>select DB_ID(@dbName);</value>
@@ -183,7 +172,7 @@ create unique clustered index [UQ_{1}] on [{1}] ([SisoId], [Name], [Value]);</va
     <value>set nocount on;
 delete from [dbo].[{0}] where SisoId = @id;
 delete from [dbo].[{1}] where SisoId = @id;
-delete from [dbo].[{2}] where SisoId = @id;</value>
+delete from [dbo].[{2}] where SisoIdRef = @id;</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;

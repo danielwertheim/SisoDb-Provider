@@ -53,7 +53,7 @@ namespace SisoDbLab
                 Console.Out.WriteLine("Name \t=\t {0}", indexAccessor.Name);
                 Console.Out.WriteLine("Path \t=\t {0}", indexAccessor.Path);
                 Console.Out.WriteLine("DataType \t=\t {0}", indexAccessor.DataType.Name);
-                Console.Out.WriteLine("IsUnique \t=\t {0}", indexAccessor.IsUnique);
+                Console.Out.WriteLine("Uniqueness \t=\t {0}", indexAccessor.Uniqueness);
                 Console.Out.WriteLine("IsElement \t=\t {0}", indexAccessor.IsElement);
                 Console.WriteLine("");
             }
