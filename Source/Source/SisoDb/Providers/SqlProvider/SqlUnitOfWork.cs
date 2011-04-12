@@ -107,8 +107,7 @@ namespace SisoDb.Providers.SqlProvider
                     structureSchema.IdAccessor.SetValue(item, id);
                 }
 
-                var structure = _structureBuilder.CreateStructure(item, structureSchema);
-                structures[c] = structure;
+                structures[c] = _structureBuilder.CreateStructure(item, structureSchema);
             };
 
             if (structures.Length > 10)

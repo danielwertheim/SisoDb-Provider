@@ -32,13 +32,15 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
                         indexesStorageSchema,
                         batch.Select(s => new IndexRow(s.Id, s.Indexes.ToArray()))))
                     {
-                        //TODO: Not needed if no data
+                        InsertStructures(structuresReader);
+                        InsertIndexes(indexesReader);
+
+                        var uniques = batch.SelectMany(s => s.Uniques).ToArray();
+                        if (uniques.Length <= 0) continue;
                         using (var uniquesReader = new UniquesReader(
-                            uniquesStorageSchema, 
-                            batch.SelectMany(s => s.Uniques).ToList()))
+                            uniquesStorageSchema,
+                            uniques))
                         {
-                            InsertStructures(structuresReader);
-                            InsertIndexes(indexesReader);
                             InsertUniques(uniquesReader);
                         }
                     }
