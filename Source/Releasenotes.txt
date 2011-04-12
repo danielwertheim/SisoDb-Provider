@@ -22,7 +22,7 @@ v1.0.1.1    - 2011-04-12
 
 
 v1.0.1      - 2011-04-10
-[Update]    Performance optimazation, not using Reflection to extract values for indexing anymore. Now using ILGeneration instead.
+[Update]    Performance optimizations, not using Reflection to extract values for indexing anymore. Now using ILGeneration instead.
 [Update]    Using NuGet to resolve ServiceStack.Text dependency.
 
 v1.0.0.2    - 2011-04-xx
