@@ -2,6 +2,6 @@
 {
     public interface ISchemaBuilder
     {
-        IStructureSchema CreateSchema();
+        IStructureSchema CreateSchema(IStructureType structureType);
     }
 }

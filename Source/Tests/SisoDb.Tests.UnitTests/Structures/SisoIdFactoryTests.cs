@@ -1,7 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
 using SisoDb.Structures;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Structures
 {
@@ -11,7 +10,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void GetId_WhenInt_ReturnsSisoIdForIdentity()
         {
-            var schema = AutoSchemaBuilderFor<IdentityItem>.Instance.CreateSchema();
+            var schema = StructureSchemaTestFactory.CreateSchema<IdentityItem>();
             var item = new IdentityItem {SisoId = 32};
 
             var factory = new SisoIdFactory();
@@ -23,7 +22,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void GetId_WhenNullableInt_ReturnsSisoIdForIdentity()
         {
-            var schema = AutoSchemaBuilderFor<NullableIdentityItem>.Instance.CreateSchema();
+            var schema = StructureSchemaTestFactory.CreateSchema<NullableIdentityItem>();
             var item = new NullableIdentityItem { SisoId = 32 };
 
             var factory = new SisoIdFactory();
@@ -36,7 +35,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         public void GetId_WhenGuid_ReturnsSisoIdForIdentity()
         {
             var id = new Guid("A13D516B-C204-4544-BAFA-E94BB3408F98");
-            var schema = AutoSchemaBuilderFor<GuidItem>.Instance.CreateSchema();
+            var schema = StructureSchemaTestFactory.CreateSchema<GuidItem>();
             var item = new GuidItem { SisoId = id };
 
             var factory = new SisoIdFactory();
@@ -49,7 +48,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         public void GetId_WhenNullableGuid_ReturnsSisoIdForIdentity()
         {
             var id = new Guid("1FD9C8AA-44F4-4A17-8A10-8C0880ACCF5A");
-            var schema = AutoSchemaBuilderFor<NullableGuidItem>.Instance.CreateSchema();
+            var schema = StructureSchemaTestFactory.CreateSchema<NullableGuidItem>();
             var item = new NullableGuidItem { SisoId = id };
 
             var factory = new SisoIdFactory();

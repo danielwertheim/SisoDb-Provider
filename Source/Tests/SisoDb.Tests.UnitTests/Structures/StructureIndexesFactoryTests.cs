@@ -3,7 +3,6 @@ using Moq;
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Structures;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Structures
 {
@@ -15,7 +14,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         {
             var stringConverterFake = new Mock<IStringConverter>();
             var sisoId = SisoId.NewGuidId(new Guid("D2F88EBA-A39C-4EF6-86D0-82658FD8E891"));
-            var schema = AutoSchemaBuilderFor<WithNoArray>.Instance.CreateSchema();
+            var schema = StructureSchemaTestFactory.CreateSchema<WithNoArray>();
             var item = new WithNoArray { Value = "A" };
 
             var indexFactory = new StructureIndexesFactory(stringConverterFake.Object);
@@ -29,7 +28,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         {
             var stringConverterFake = new Mock<IStringConverter>();
             var sisoId = SisoId.NewGuidId(new Guid("EDD397F4-E637-4298-BCC5-21CCE0851E91"));
-            var schema = AutoSchemaBuilderFor<WithArray>.Instance.CreateSchema();
+            var schema = StructureSchemaTestFactory.CreateSchema<WithArray>();
             var item = new WithArray { Values = new[] { "A", "B" } };
 
             var indexFactory = new StructureIndexesFactory(stringConverterFake.Object);

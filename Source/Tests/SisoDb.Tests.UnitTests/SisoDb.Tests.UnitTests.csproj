@@ -133,6 +133,7 @@
     <Compile Include="Structures\Schemas\StructureSchemaTests.cs" />
     <Compile Include="Structures\StructureIndexesFactoryTests.cs" />
     <Compile Include="Structures\StructureIndexTests.cs" />
+    <Compile Include="Structures\StructureSchemaTestFactory.cs" />
     <Compile Include="Structures\StructureTests.cs" />
     <Compile Include="TypeExtensionsEnumerableTests.cs" />
     <Compile Include="TypeExtensionsIsByteTypeTests.cs" />

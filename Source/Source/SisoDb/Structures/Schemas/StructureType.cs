@@ -18,9 +18,11 @@ namespace SisoDb.Structures.Schemas
         {
             _type = type.AssertNotNull("type");
 
+            var structureTypeReflecter = SisoDbEnvironment.ResourceContainer.ResolveStructureTypeReflecter();
+
             Name = _type.Name;
-            IdProperty = SisoDbEnvironment.StructureTypeReflecter.GetIdProperty(_type);
-            IndexableProperties = SisoDbEnvironment.StructureTypeReflecter.GetIndexableProperties(_type, new[] { StructureSchema.IdMemberName });
+            IdProperty = structureTypeReflecter.GetIdProperty(_type);
+            IndexableProperties = structureTypeReflecter.GetIndexableProperties(_type, new[] { StructureSchema.IdMemberName });
         }
     }
 }

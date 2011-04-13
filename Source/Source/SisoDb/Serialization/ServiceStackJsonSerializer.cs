@@ -52,7 +52,7 @@ namespace SisoDb.Serialization
         private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
         {
             return properties.Where(p => 
-                !SisoDbEnvironment.StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+                !SisoDbEnvironment.ResourceContainer.ResolveStructureTypeReflecter().HasIdProperty(p.PropertyType)).ToArray();
         }
 
         internal static string ToJsonOrEmptyString(T item)

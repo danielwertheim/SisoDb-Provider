@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
+using SisoDb.Core;
 
 namespace SisoDb.Structures.Schemas
 {
     public class StructureSchemas : IStructureSchemas
     {
+        private readonly ISchemaBuilder _schemaBuilder;
         private readonly Dictionary<string, IStructureSchema> _schemas;
 
-        public StructureSchemas()
+        public StructureSchemas(ISchemaBuilder schemaBuilder)
         {
+            _schemaBuilder = schemaBuilder.AssertNotNull("schemaBuilder");
+
             _schemas = new Dictionary<string, IStructureSchema>();
         }
 
@@ -33,7 +37,7 @@ namespace SisoDb.Structures.Schemas
         {
             _schemas.Add(
                 structureType.Name,
-                new AutoSchemaBuilder(structureType).CreateSchema());
+                _schemaBuilder.CreateSchema(structureType));
         }
     }
 }

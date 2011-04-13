@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-using SisoDb.Core;
-using SisoDb.Cryptography;
 using SisoDb.Providers;
-using SisoDb.Serialization;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {
@@ -11,19 +7,14 @@ namespace SisoDb
     {
         private static readonly Dictionary<StorageProviders, IProviderFactory> ProviderFactories;
 
-        public static readonly ISisoDbFormatting Formatting;
-        public static readonly IHashService HashService;
-        public static readonly IMemberNameGenerator MemberNameGenerator;
-        public static readonly IJsonSerializer JsonSerializer;
-        public static readonly IStructureTypeReflecter StructureTypeReflecter;
+        public static readonly ResourceContainer ResourceContainer;
 
+        public static readonly ISisoDbFormatting Formatting;
+        
         static SisoDbEnvironment()
         {
             Formatting = new SisoDbFormatting();
-            HashService = new HashService();
-            MemberNameGenerator = new HashMemberNameGenerator(HashService);
-            JsonSerializer = new ServiceStackJsonSerializer();
-            StructureTypeReflecter = new StructureTypeReflecter();
+            ResourceContainer = new ResourceContainer();
             
             ProviderFactories = new Dictionary<StorageProviders, IProviderFactory>();
             RegisterProviderFactory(StorageProviders.SqlAzure, new SqlAzureProviderFactory());

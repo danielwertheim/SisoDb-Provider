@@ -37,10 +37,10 @@ namespace SisoDb.Providers.SqlProvider
 
             //_providerFactory = SisoDbEnvironment.GetProviderFactory(ConnectionInfo.ProviderType);
 
-            StructureSchemas = new StructureSchemas();
+            StructureSchemas = SisoDbEnvironment.ResourceContainer.ResolveStructureSchemas();
             DbSchemaManager = new DbSchemaManager();
             StructureBuilder = new StructureBuilder(
-                SisoDbEnvironment.JsonSerializer, 
+                SisoDbEnvironment.ResourceContainer.ResolveJsonSerializer(), 
                 new SisoIdFactory(), 
                 new StructureIndexesFactory(SisoDbEnvironment.Formatting.StringConverter));
         }
@@ -146,11 +146,12 @@ namespace SisoDb.Providers.SqlProvider
         {
             var dbClient = new SqlDbClient(ConnectionInfo, true);
             var dbClientNonTrans = new SqlDbClient(ConnectionInfo, false);
+            var memberNameGenerator = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator();
 
             var queryGenerator = new SqlQueryGenerator(
-                new ParsedWhereSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
-                new ParsedSortingSqlProcessor(SisoDbEnvironment.MemberNameGenerator),
-                new ParsedIncludeSqlProcessor(SisoDbEnvironment.MemberNameGenerator));
+                new ParsedWhereSqlProcessor(memberNameGenerator),
+                new ParsedSortingSqlProcessor(memberNameGenerator),
+                new ParsedIncludeSqlProcessor(memberNameGenerator));
 
             var commandBuilderFactory = new CommandBuilderFactory();
             var dbSchemaUpserter = new SqlDbSchemaUpserter(dbClientNonTrans);
@@ -160,7 +161,7 @@ namespace SisoDb.Providers.SqlProvider
                 dbClient, dbClientNonTrans, identityGenerator, 
                 DbSchemaManager, dbSchemaUpserter,
                 StructureSchemas, StructureBuilder, 
-                SisoDbEnvironment.JsonSerializer, queryGenerator,
+                SisoDbEnvironment.ResourceContainer.ResolveJsonSerializer(), queryGenerator,
                 commandBuilderFactory);
 
             return unitOfWork;

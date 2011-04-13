@@ -44,7 +44,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         public void Synhronize_WhenTableIsMissingColumn_ColumnIsAdded()
         {
             CreateStructureSet();
-            var hashForColumn = SisoDbEnvironment.MemberNameGenerator.Generate("IndexableMember2");
+            var hashForColumn = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator().Generate("IndexableMember2");
             DbHelper.DropColumns(_indexesTableName, hashForColumn);
 
             using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
@@ -62,7 +62,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         public void Synhronize_WhenTableHasObsoleteColumn_ColumnIsDropped()
         {
             CreateStructureSet();
-            var hashForObsoleteColumn = SisoDbEnvironment.HashService.GenerateHash("ExtraColumn");
+            var hashForObsoleteColumn = SisoDbEnvironment.ResourceContainer.ResolveHashService().GenerateHash("ExtraColumn");
             var obsoleteColumnDefinition = string.Format("[{0}] [int] sparse null", hashForObsoleteColumn);
             DbHelper.AddColumns(_indexesTableName, obsoleteColumnDefinition);
 

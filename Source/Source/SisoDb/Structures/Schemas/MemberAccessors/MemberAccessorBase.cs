@@ -21,7 +21,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
         protected MemberAccessorBase(IStructureProperty property)
         {
             Property = property;
-            Name = SisoDbEnvironment.MemberNameGenerator.Generate(property.Path);
+            Name = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator().Generate(property.Path);
         }
     }
 }
