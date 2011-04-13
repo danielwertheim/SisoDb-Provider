@@ -29,7 +29,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
         private static IStructureProperty GetPropertyByPath(string path)
         {
-            return StructureType<Dummy1>.Instance.IndexableProperties.Where(p => p.Path == path).Single();
+            return StructureTypeFor<Dummy1>.Instance.IndexableProperties.Where(p => p.Path == path).Single();
         }
 
         private class Dummy1

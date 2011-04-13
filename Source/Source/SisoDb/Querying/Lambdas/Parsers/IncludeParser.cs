@@ -16,7 +16,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             foreach (var includeExpression in includeExpressions)
             {
-                var childStructureName = StructureType<TInclude>.Instance.Name;
+                var childStructureName = StructureTypeFor<TInclude>.Instance.Name;
                 var memberExpression = Expressions.GetRightMostMember(includeExpression);
                 var idReferencePath = memberExpression.Path();
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);

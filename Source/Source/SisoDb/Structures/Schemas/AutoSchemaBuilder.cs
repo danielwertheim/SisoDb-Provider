@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using SisoDb.Core;
 using SisoDb.Reflections;
 using SisoDb.Resources;
@@ -7,22 +6,11 @@ using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Structures.Schemas
 {
-    public class AutoSchemaBuilder<T> : ISchemaBuilder
-        where T : class
-    {
-        private static readonly AutoSchemaBuilder InnerBuilder = new AutoSchemaBuilder(StructureType<T>.Instance);
-
-        public IStructureSchema CreateSchema()
-        {
-            return InnerBuilder.CreateSchema();
-        }
-    }
-
     public class AutoSchemaBuilder : ISchemaBuilder
     {
-        private readonly StructureType _structureType;
+        private readonly IStructureType _structureType;
 
-        public AutoSchemaBuilder(StructureType structureType)
+        public AutoSchemaBuilder(IStructureType structureType)
         {
             _structureType = structureType.AssertNotNull("structureType");
         }
@@ -43,15 +31,14 @@ namespace SisoDb.Structures.Schemas
 
         private IIdAccessor GetIdAccessor()
         {
-            var property = _structureType.IdProperty;
-            if (property == null)
+            if (_structureType.IdProperty == null)
                 throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIdMember.Inject(_structureType.Name));
 
-            if (property.PropertyType.IsGuidType() || property.PropertyType.IsNullableGuidType()
-                || (property.PropertyType.IsIntType() || property.PropertyType.IsNullableIntType()))
-                return new IdAccessor(property);
+            if (_structureType.IdProperty.PropertyType.IsGuidType() || _structureType.IdProperty.PropertyType.IsNullableGuidType()
+                || (_structureType.IdProperty.PropertyType.IsIntType() || _structureType.IdProperty.PropertyType.IsNullableIntType()))
+                return new IdAccessor(_structureType.IdProperty);
 
-            throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_UnsupportedIdAccessorType.Inject(property.Name));
+            throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_UnsupportedIdAccessorType.Inject(_structureType.IdProperty.Name));
         }
 
         private IIndexAccessor[] GetIndexAccessors()

@@ -16,17 +16,17 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 
         protected string GetStructureTableName<T>() where T : class
         {
-            return Database.StructureSchemas.GetSchema(StructureType<T>.Instance).GetStructureTableName();
+            return Database.StructureSchemas.GetSchema(StructureTypeFor<T>.Instance).GetStructureTableName();
         }
 
         protected string GetIndexesTableName<T>() where T : class
         {
-            return Database.StructureSchemas.GetSchema(StructureType<T>.Instance).GetIndexesTableName();
+            return Database.StructureSchemas.GetSchema(StructureTypeFor<T>.Instance).GetIndexesTableName();
         }
 
         protected string GetUniquesTableName<T>() where T : class
         {
-            return Database.StructureSchemas.GetSchema(StructureType<T>.Instance).GetUniquesTableName();
+            return Database.StructureSchemas.GetSchema(StructureTypeFor<T>.Instance).GetUniquesTableName();
         }
     }
 }

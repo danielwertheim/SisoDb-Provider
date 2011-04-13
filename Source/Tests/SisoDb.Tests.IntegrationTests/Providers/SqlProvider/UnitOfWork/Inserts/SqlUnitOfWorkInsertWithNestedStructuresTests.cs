@@ -63,7 +63,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert(rootStructure);
                 uow.Commit();
 
-                var schema = Database.StructureSchemas.GetSchema(StructureType<MyFirstStructure>.Instance);
+                var schema = Database.StructureSchemas.GetSchema(StructureTypeFor<MyFirstStructure>.Instance);
                 var valueColumnExistsForNestedInFirstStructure = DbHelper.ColumnsExist(
                     schema.GetIndexesTableName(),
                     SisoDbEnvironment.MemberNameGenerator.Generate("NestedStructure.Value"));

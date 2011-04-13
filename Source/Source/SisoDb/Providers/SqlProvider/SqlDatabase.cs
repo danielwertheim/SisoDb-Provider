@@ -113,9 +113,9 @@ namespace SisoDb.Providers.SqlProvider
             using (var client = new SqlDbClient(ConnectionInfo, false))
             {
                 var dropper = new SqlDbSchemaDropper(client);
-                var structureSchema = StructureSchemas.GetSchema(StructureType<T>.Instance);
+                var structureSchema = StructureSchemas.GetSchema(StructureTypeFor<T>.Instance);
                 DbSchemaManager.DropStructureSet(structureSchema, dropper);
-                StructureSchemas.RemoveSchema(StructureType<T>.Instance);
+                StructureSchemas.RemoveSchema(StructureTypeFor<T>.Instance);
             }
         }
 
@@ -124,7 +124,7 @@ namespace SisoDb.Providers.SqlProvider
             using (var client = new SqlDbClient(ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(client);
-                var structureSchema = StructureSchemas.GetSchema(StructureType<T>.Instance);
+                var structureSchema = StructureSchemas.GetSchema(StructureTypeFor<T>.Instance);
                 DbSchemaManager.UpsertStructureSet(structureSchema, upserter);
             }
         }
@@ -133,9 +133,9 @@ namespace SisoDb.Providers.SqlProvider
             where TOld : class 
             where TNew : class
         {
-            var structureSchemaOld = StructureSchemas.GetSchema(StructureType<TOld>.Instance);
-            StructureSchemas.RemoveSchema(StructureType<TOld>.Instance);
-            var structureSchemaNew = StructureSchemas.GetSchema(StructureType<TNew>.Instance);
+            var structureSchemaOld = StructureSchemas.GetSchema(StructureTypeFor<TOld>.Instance);
+            StructureSchemas.RemoveSchema(StructureTypeFor<TOld>.Instance);
+            var structureSchemaNew = StructureSchemas.GetSchema(StructureTypeFor<TNew>.Instance);
             
             var updater = new SqlStructureSetUpdater<TOld, TNew>(ConnectionInfo, structureSchemaOld, structureSchemaNew, StructureBuilder);
             

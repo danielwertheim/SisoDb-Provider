@@ -18,7 +18,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         public void CreateSchema_WhenNestedType_SchemaNameReflectsTypeName()
         {
             const string expectedName = "WithIdAndIndexableFirstLevelMembers";
-            var builder = new AutoSchemaBuilder<WithIdAndIndexableFirstLevelMembers>();
+            var builder = AutoSchemaBuilderFor<WithIdAndIndexableFirstLevelMembers>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -28,7 +28,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenSecondLevelIndexablePropertiesExists_IndexAccessorsAreCreated()
         {
-            var builder = new AutoSchemaBuilder<WithFirstSecondAndThirdLevelMembers>();
+            var builder = AutoSchemaBuilderFor<WithFirstSecondAndThirdLevelMembers>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -39,7 +39,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenSecondLevelIndexablePropertiesExists_PathReflectsHierarchy()
         {
-            var builder = new AutoSchemaBuilder<WithFirstSecondAndThirdLevelMembers>();
+            var builder = AutoSchemaBuilderFor<WithFirstSecondAndThirdLevelMembers>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -50,7 +50,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenThirdLevelIndexablePropertiesExists_IndexAccessorsAreCreated()
         {
-            var builder = new AutoSchemaBuilder<WithFirstSecondAndThirdLevelMembers>();
+            var builder = AutoSchemaBuilderFor<WithFirstSecondAndThirdLevelMembers>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -61,7 +61,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenThirdLevelIndexablePropertiesExists_PathReflectsHierarchy()
         {
-            var builder = new AutoSchemaBuilder<WithFirstSecondAndThirdLevelMembers>();
+            var builder = AutoSchemaBuilderFor<WithFirstSecondAndThirdLevelMembers>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -72,7 +72,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenItemHasNoIdMember_ThrowsMissingKeyMemberException()
         {
-            var builder = new AutoSchemaBuilder<WithNoId>();
+            var builder = AutoSchemaBuilderFor<WithNoId>.Instance;
             
             var ex = CustomAssert.Throws<SisoDbException>(() => builder.CreateSchema());
 
@@ -83,7 +83,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenItemHasIdMember_CreatesSchemaWithKeyMemberAccessor()
         {
-            var builder = new AutoSchemaBuilder<WithIdAndIndexableFirstLevelMembers>();
+            var builder = AutoSchemaBuilderFor<WithIdAndIndexableFirstLevelMembers>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -93,7 +93,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenItemHasIndexableFirstLevelProperties_IndexAccessorsAreExtracted()
         {
-            var builder = new AutoSchemaBuilder<WithIdAndIndexableFirstLevelMembers>();
+            var builder = AutoSchemaBuilderFor<WithIdAndIndexableFirstLevelMembers>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -103,7 +103,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenGuidItemHasNoIndexableFirstLevelProperties_ThrowsMissingIndexableMembersException()
         {
-            var builder = new AutoSchemaBuilder<WithOnlyId>();
+            var builder = AutoSchemaBuilderFor<WithOnlyId>.Instance;
 
             var ex = CustomAssert.Throws<SisoDbException>(
                 () => builder.CreateSchema());
@@ -115,7 +115,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenIdentityItemHasNoIndexableFirstLevelProperties_ThrowsMissingIndexableMembersException()
         {
-            var builder = new AutoSchemaBuilder<WithOnlyIdentity>();
+            var builder = AutoSchemaBuilderFor<WithOnlyIdentity>.Instance;
 
             var ex = CustomAssert.Throws<SisoDbException>(
                 () => builder.CreateSchema());
@@ -127,7 +127,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenFirstLevelIdentity_ReturnsSchemaWithIdentityAccessor()
         {
-            var builder = new AutoSchemaBuilder<WithIdentity>();
+            var builder = AutoSchemaBuilderFor<WithIdentity>.Instance;
             
             var schema = builder.CreateSchema();
 
@@ -138,7 +138,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenFirstLevelGuid_ReturnsSchemaWithIdentityAccessor()
         {
-            var builder = new AutoSchemaBuilder<WithGuid>();
+            var builder = AutoSchemaBuilderFor<WithGuid>.Instance;
             
             var schema = builder.CreateSchema();
 
@@ -149,7 +149,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenByteMember_IndexAccessorIsCreatedForByteMember()
         {
-            var builder = new AutoSchemaBuilder<WithByte>();
+            var builder = AutoSchemaBuilderFor<WithByte>.Instance;
             
             var schema = builder.CreateSchema();
 
@@ -161,7 +161,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenNullableByteMember_IndexAccessorIsCreatedForByteMember()
         {
-            var builder = new AutoSchemaBuilder<WithNullableByte>();
+            var builder = AutoSchemaBuilderFor<WithNullableByte>.Instance;
 
             var schema = builder.CreateSchema();
 
@@ -173,7 +173,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenByteArrayMember_NoIndexAccessorIsCreatedForByteArrayMember()
         {
-            var builder = new AutoSchemaBuilder<WithBytes>();
+            var builder = AutoSchemaBuilderFor<WithBytes>.Instance;
 
             var ex = Assert.Throws<SisoDbException>(() => builder.CreateSchema());
 

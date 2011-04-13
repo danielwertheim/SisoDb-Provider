@@ -15,7 +15,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         {
             var stringConverterFake = new Mock<IStringConverter>();
             var sisoId = SisoId.NewGuidId(new Guid("D2F88EBA-A39C-4EF6-86D0-82658FD8E891"));
-            var schema = new AutoSchemaBuilder<WithNoArray>().CreateSchema();
+            var schema = AutoSchemaBuilderFor<WithNoArray>.Instance.CreateSchema();
             var item = new WithNoArray { Value = "A" };
 
             var indexFactory = new StructureIndexesFactory(stringConverterFake.Object);
@@ -29,7 +29,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         {
             var stringConverterFake = new Mock<IStringConverter>();
             var sisoId = SisoId.NewGuidId(new Guid("EDD397F4-E637-4298-BCC5-21CCE0851E91"));
-            var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
+            var schema = AutoSchemaBuilderFor<WithArray>.Instance.CreateSchema();
             var item = new WithArray { Values = new[] { "A", "B" } };
 
             var indexFactory = new StructureIndexesFactory(stringConverterFake.Object);

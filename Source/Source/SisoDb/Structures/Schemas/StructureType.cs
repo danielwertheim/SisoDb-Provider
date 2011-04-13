@@ -4,17 +4,7 @@ using SisoDb.Core;
 
 namespace SisoDb.Structures.Schemas
 {
-    public static class StructureType<T>
-    {
-        public static readonly StructureType Instance;
-        
-        static StructureType()
-        {
-            Instance = new StructureType(typeof(T));
-        }
-    }
-
-    public class StructureType
+    public class StructureType : IStructureType
     {
         private readonly Type _type;
 

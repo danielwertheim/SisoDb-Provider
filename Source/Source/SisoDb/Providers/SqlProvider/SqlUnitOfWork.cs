@@ -78,7 +78,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public void InsertMany<T>(IList<T> items) where T : class
         {
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             DoInsert(structureSchema, items);
@@ -122,7 +122,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public void Update<T>(T item) where T : class
         {
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             var updatedStructure = _structureBuilder.CreateStructure(item, structureSchema);
@@ -152,7 +152,7 @@ namespace SisoDb.Providers.SqlProvider
 
         private void DeleteById<T>(ISisoId sisoId) where T : class
         {
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             _dbClient.DeleteById(
@@ -166,7 +166,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             expression.AssertNotNull("expression");
 
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
@@ -181,7 +181,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public int Count<T>() where T : class
         {
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             return _dbClient.RowCount(structureSchema.GetStructureTableName());
@@ -237,7 +237,7 @@ namespace SisoDb.Providers.SqlProvider
 
         private string GetByIdAsJson<T>(ISisoId sisoId) where T : class
         {
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             return _dbClient.GetJsonById(sisoId.Value, structureSchema.GetStructureTableName());
@@ -298,7 +298,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             getCommand.AssertNotNull("getCommand");
 
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             string sql;
@@ -339,7 +339,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
         {
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             using (var cmd = _dbClient.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
@@ -405,7 +405,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             queryCommand.AssertNotNull("queryCommand");
 
-            var structureSchema = _structureSchemas.GetSchema(StructureType<T>.Instance);
+            var structureSchema = _structureSchemas.GetSchema(StructureTypeFor<T>.Instance);
             UpsertStructureSet(structureSchema);
 
             var query = _queryGenerator.Generate(queryCommand, structureSchema);

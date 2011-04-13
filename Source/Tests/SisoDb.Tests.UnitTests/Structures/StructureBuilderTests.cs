@@ -24,7 +24,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void CreateStructure_WhenItemWithNoEnumerable_ReturnsIndexWithStringValue()
         {
-            var schema = new AutoSchemaBuilder<WithNoArray>().CreateSchema();
+            var schema = AutoSchemaBuilderFor<WithNoArray>.Instance.CreateSchema();
             var item = new WithNoArray { Value = "A" };
 
             var structure = _builder.CreateStructure(item, schema);
@@ -36,7 +36,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void CreateStructure_WhenItemWithEnumerableWithOneElement_ReturnsIndexWithStringsAsOneValuedDelimitedString()
         {
-            var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
+            var schema = AutoSchemaBuilderFor<WithArray>.Instance.CreateSchema();
             var item = new WithArray { Values = new[] { "A" } };
 
             var structure = _builder.CreateStructure(item, schema);
@@ -48,7 +48,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void CreateStructure_WhenItemWithEnumerableWithTwoDifferentElements_ReturnsIndexWithStringsAsTwoValuedDelimitedString()
         {
-            var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
+            var schema = AutoSchemaBuilderFor<WithArray>.Instance.CreateSchema();
             var item = new WithArray { Values = new[] { "A", "B" } };
 
             var structure = _builder.CreateStructure(item, schema);
@@ -60,7 +60,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void CreateStructure_WhenItemWithEnumerableWithTwoEqualElements_ReturnsIndexWithStringsAsOneValuedDelimitedString()
         {
-            var schema = new AutoSchemaBuilder<WithArray>().CreateSchema();
+            var schema = AutoSchemaBuilderFor<WithArray>.Instance.CreateSchema();
             var item = new WithArray { Values = new[] { "A", "A" } };
 
             var structure = _builder.CreateStructure(item, schema);
@@ -72,7 +72,7 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void CreateStructure_WhenItemWithByteArray_NoIndexShouldBeCreatedForByteArray()
         {
-            var schema = new AutoSchemaBuilder<WithBytes>().CreateSchema();
+            var schema = AutoSchemaBuilderFor<WithBytes>.Instance.CreateSchema();
             var item = new WithBytes { Bytes1 = BitConverter.GetBytes(242) };
 
             var structure = _builder.CreateStructure(item, schema);

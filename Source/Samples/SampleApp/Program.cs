@@ -40,7 +40,7 @@ namespace SisoDbLab
         {
             Console.Out.WriteLine("Generating schedule for: '{0}'.", typeof(T).Name);
 
-            var schema = database.StructureSchemas.GetSchema(StructureType<T>.Instance);
+            var schema = database.StructureSchemas.GetSchema(StructureTypeFor<T>.Instance);
 
             Console.Out.WriteLine("IdAccessor.IdType \t=\t {0}", schema.IdAccessor.IdType);
             Console.Out.WriteLine("IdAccessor.Name \t=\t {0}", schema.IdAccessor.Name);

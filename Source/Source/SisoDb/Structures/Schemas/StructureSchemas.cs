@@ -11,7 +11,7 @@ namespace SisoDb.Structures.Schemas
             _schemas = new Dictionary<string, IStructureSchema>();
         }
 
-        public IStructureSchema GetSchema(StructureType structureType)
+        public IStructureSchema GetSchema(IStructureType structureType)
         {
             if (!_schemas.ContainsKey(structureType.Name))
                 Register(structureType);
@@ -19,7 +19,7 @@ namespace SisoDb.Structures.Schemas
             return _schemas[structureType.Name];
         }
 
-        public void RemoveSchema(StructureType structureType)
+        public void RemoveSchema(IStructureType structureType)
         {
             _schemas.Remove(structureType.Name);
         }
@@ -29,7 +29,7 @@ namespace SisoDb.Structures.Schemas
             _schemas.Clear();
         }
 
-        private void Register(StructureType structureType)
+        private void Register(IStructureType structureType)
         {
             _schemas.Add(
                 structureType.Name,

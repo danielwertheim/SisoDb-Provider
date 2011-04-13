@@ -205,8 +205,10 @@
     <Compile Include="Structures\IdTypes.cs" />
     <Compile Include="Structures\ISisoIdFactory.cs" />
     <Compile Include="Structures\IStructureIndexesFactory.cs" />
+    <Compile Include="Structures\Schemas\AutoSchemaBuilderFor.cs" />
     <Compile Include="Structures\Schemas\IStructureProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
+    <Compile Include="Structures\Schemas\IStructureType.cs" />
     <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
     <Compile Include="Reflections\TypeExtensions.cs" />
@@ -229,6 +231,7 @@
     <Compile Include="Structures\Schemas\DynamicPropertyFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Structures\Schemas\StructureTypeFor.cs" />
     <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
     <Compile Include="Structures\SisoId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
