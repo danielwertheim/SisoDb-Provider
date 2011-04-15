@@ -3,13 +3,14 @@ using System.Linq.Expressions;
 using SisoDb.Core;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying
 {
     public class GetCommandBuilder<T> : IGetCommandBuilder<T> where T : class
     {
-        public ISortingParser SortingParser { private get; set; }
-        public IIncludeParser IncludeParser { private get; set; }
+        public ISortingParser SortingParser { protected get; set; }
+        public IIncludeParser IncludeParser { protected get; set; }
 
         public IGetCommand Command { get; private set; }
 
@@ -37,7 +38,10 @@ namespace SisoDb.Querying
         {
             includes.AssertHasItems("includes");
 
-            Command.Includes.Add(IncludeParser.Parse<TInclude>(includes));
+            Command.Includes.Add(
+                IncludeParser.Parse(
+                    StructureTypeNameFor<TInclude>.Name,
+                    includes));
 
             return this;
         }

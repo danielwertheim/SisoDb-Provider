@@ -34,7 +34,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
                 return Enumerator.Current.Name;
 
             if (schemaField.Name == UniqueStorageSchema.Fields.UqValue.Name)
-                return SisoDbEnvironment.Formatting.StringConverter.AsString(Enumerator.Current.Value);
+                return SisoEnvironment.Formatting.StringConverter.AsString(Enumerator.Current.Value);
             
             throw new NotSupportedException();
         }

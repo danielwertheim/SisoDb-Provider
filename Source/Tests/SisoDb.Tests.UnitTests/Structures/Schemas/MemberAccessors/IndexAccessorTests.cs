@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using NUnit.Framework;
-using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
@@ -122,7 +120,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.MemberAccessors
 
         private static IStructureProperty GetProperty(string name)
         {
-            return StructureTypeFor<Dummy>.Instance.IndexableProperties.Where(p => p.Name == name).Single();
+            return StructurePropertyTestFactory.GetPropertyByPath<Dummy>(name);
         }
 
         private class Dummy

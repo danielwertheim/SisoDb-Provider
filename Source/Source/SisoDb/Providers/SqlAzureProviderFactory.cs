@@ -3,7 +3,7 @@ using SisoDb.Providers.DbSchema;
 
 namespace SisoDb.Providers
 {
-    public class SqlAzureProviderFactory : IProviderFactory
+    public class SqlAzureProviderFactory : ISisoProviderFactory
     {
         public IDbColumnGenerator GetDbColumnGenerator()
         {

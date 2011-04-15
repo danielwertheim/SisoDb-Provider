@@ -1,31 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SisoDb.Core;
 
 namespace SisoDb.Structures.Schemas
 {
     public class StructureSchemas : IStructureSchemas
     {
-        private readonly ISchemaBuilder _schemaBuilder;
         private readonly Dictionary<string, IStructureSchema> _schemas;
 
-        public StructureSchemas(ISchemaBuilder schemaBuilder)
+        public IStructureTypeFactory StructureTypeFactory { protected get; set; }
+        public ISchemaBuilder SchemaBuilder { protected get; set; }
+        
+        public StructureSchemas(IStructureTypeFactory structureTypeFactory, ISchemaBuilder schemaBuilder)
         {
-            _schemaBuilder = schemaBuilder.AssertNotNull("schemaBuilder");
+            StructureTypeFactory = structureTypeFactory.AssertNotNull("structureTypeFactory");
+            SchemaBuilder = schemaBuilder.AssertNotNull("schemaBuilder");
 
             _schemas = new Dictionary<string, IStructureSchema>();
         }
 
-        public IStructureSchema GetSchema(IStructureType structureType)
+        public IStructureSchema GetSchema(Type type)
         {
-            if (!_schemas.ContainsKey(structureType.Name))
-                Register(structureType);
+            type.AssertNotNull("type");
 
-            return _schemas[structureType.Name];
+            if (!_schemas.ContainsKey(type.Name))
+                Register(type);
+
+            return _schemas[type.Name];
         }
 
-        public void RemoveSchema(IStructureType structureType)
+        public void RemoveSchema(Type type)
         {
-            _schemas.Remove(structureType.Name);
+            type.AssertNotNull("type");
+
+            _schemas.Remove(type.Name);
         }
 
         public void Clear()
@@ -33,11 +41,13 @@ namespace SisoDb.Structures.Schemas
             _schemas.Clear();
         }
 
-        private void Register(IStructureType structureType)
+        private void Register(Type type)
         {
+            var structureType = StructureTypeFactory.CreateFor(type);
+
             _schemas.Add(
                 structureType.Name,
-                _schemaBuilder.CreateSchema(structureType));
+                SchemaBuilder.CreateSchema(structureType));
         }
     }
 }

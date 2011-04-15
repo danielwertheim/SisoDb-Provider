@@ -35,7 +35,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private void CreateStoredProcedure()
         {
-            var memberNameGenerator = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator();
+            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
             var hashForName = memberNameGenerator.Generate("Name");
             var hashForGenreId = memberNameGenerator.Generate("GenreId");
             var hashForArtistId = memberNameGenerator.Generate("ArtistId");
@@ -56,7 +56,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private void CreateStoredProcedureForInterfaces()
         {
-            var memberNameGenerator = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator();
+            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
             var hashForName = memberNameGenerator.Generate("Name");
             var hashForGenreId = memberNameGenerator.Generate("GenreId");
             var hashForArtistId = memberNameGenerator.Generate("ArtistId");

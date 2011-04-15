@@ -5,6 +5,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public interface IIncludeParser
     {
-        IParsedLambda Parse<TInclude>(IEnumerable<LambdaExpression> includeExpressions) where TInclude : class;
+        IParsedLambda Parse(string includedStructureTypeName, IEnumerable<LambdaExpression> includeExpressions);
     }
 }

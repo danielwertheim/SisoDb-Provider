@@ -21,7 +21,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             _dbClient = dbClient.AssertNotNull("dbClient");
 
             var columnGenerator =
-                SisoDbEnvironment.GetProviderFactory(dbClient.ProviderType).GetDbColumnGenerator();
+                SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
 
             _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(_dbClient.SqlStringsRepository);
             _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStringsRepository, columnGenerator);

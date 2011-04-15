@@ -3,12 +3,17 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Structures
 {
+    //TODO: Remove and mock instead
     internal static class StructureSchemaTestFactory
     {
+        private static readonly IStructureTypeFactory StructureTypeFactory = new StructureTypeFactory(new StructureTypeReflecter());
+        private static readonly ISchemaBuilder SchemaBuilder = new AutoSchemaBuilder(new HashService());
+
         internal static IStructureSchema CreateSchema<T>()
             where T : class
         {
-            return new AutoSchemaBuilder(new HashService()).CreateSchema(StructureTypeFor<T>.Instance);
+            return SchemaBuilder.CreateSchema(
+                StructureTypeFactory.CreateFor(TypeFor<T>.Type));
         }
     }
 }

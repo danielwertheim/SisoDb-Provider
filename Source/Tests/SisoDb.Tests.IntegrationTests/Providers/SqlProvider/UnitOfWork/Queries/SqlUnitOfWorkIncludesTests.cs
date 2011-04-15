@@ -136,9 +136,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
                 refetched = uow.QueryAs<IAlbumData, Album>(q => q
                     .Include<IGenreData>(a => a.GenreId)
-                    .Include<IArtistData>(
-                        a => a.ArtistId,
-                        a => a.SecondArtistId)).Single();
+                    .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId))
+                    .Single();
             }
 
             AssertAlbumEquality(album, refetched);

@@ -20,7 +20,14 @@ namespace SisoDb
             RPC_S_UUID_NO_ADDRESS = 1739
         }
 
-        public static Guid NewGuid()
+        public static Guid NewSqlCompatibleGuid()
+        {
+            var sequentialGuid = NewGuid();
+
+            return ConvertToSqlCompatible(sequentialGuid);
+        }
+
+        private static Guid NewGuid()
         {
             Guid sequentialGuid;
 
@@ -42,14 +49,7 @@ namespace SisoDb
             return sequentialGuid;
         }
 
-        public static Guid NewSqlCompatibleGuid()
-        {
-            var sequentialGuid = NewGuid();
-
-            return ConvertToSqlCompatible(sequentialGuid);
-        }
-
-        public static Guid ConvertToSqlCompatible(Guid guid)
+        private static Guid ConvertToSqlCompatible(Guid guid)
         {
             byte[] guidBytes = guid.ToByteArray();
             Array.Reverse(guidBytes, 0, 4);

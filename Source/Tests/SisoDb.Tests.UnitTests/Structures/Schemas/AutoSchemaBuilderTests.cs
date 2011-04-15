@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Cryptography;
@@ -15,12 +16,13 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
     [TestFixture]
     public class AutoSchemaBuilderTests : UnitTestBase
     {
+        private readonly IStructureTypeFactory _structureTypeFactory = new StructureTypeFactory(new StructureTypeReflecter());
         private readonly ISchemaBuilder _schemaBuilder = new AutoSchemaBuilder(new HashService());
 
-        private static IStructureType GetStructureTypeFor<T>()
-            where T : class 
+        private IStructureType GetStructureTypeFor<T>()
+            where T : class
         {
-            return StructureTypeFor<T>.Instance;
+            return _structureTypeFactory.CreateFor(TypeFor<T>.Type);
         }
 
         [Test]
@@ -40,7 +42,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             var structureType = GetStructureTypeFor<WithFirstSecondAndThirdLevelMembers>();
 
             var schema = _schemaBuilder.CreateSchema(structureType);
-            
+
             var hasSecondLevelAccessors = schema.IndexAccessors.Any(iac => HasLevel(iac, 1));
             Assert.IsTrue(hasSecondLevelAccessors);
         }
@@ -81,11 +83,12 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenItemHasNoIdMember_ThrowsMissingKeyMemberException()
         {
-            var structureType = GetStructureTypeFor<WithNoId>();
+            var structureTypeStub = new Mock<IStructureType>();
+            structureTypeStub.Setup(s => s.Name).Returns("TempType");
 
-            var ex = CustomAssert.Throws<SisoDbException>(() => _schemaBuilder.CreateSchema(structureType));
+            var ex = CustomAssert.Throws<SisoDbException>(() => _schemaBuilder.CreateSchema(structureTypeStub.Object));
 
-            var expectedMessage = string.Format(ExceptionMessages.AutoSchemaBuilder_MissingIdMember, "WithNoId");
+            var expectedMessage = string.Format(ExceptionMessages.AutoSchemaBuilder_MissingIdMember, "TempType");
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 
@@ -112,24 +115,44 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void CreateSchema_WhenGuidItemHasNoIndexableFirstLevelProperties_ThrowsMissingIndexableMembersException()
         {
-            var structureType = GetStructureTypeFor<WithOnlyId>();
+            var structureType = new Mock<IStructureType>();
+            structureType.Setup(s => s.Name).Returns("TmpType");
+            structureType.Setup(s => s.IdProperty).Returns(() =>
+            {
+                var idProp = new Mock<IStructureProperty>();
+                idProp.Setup(i => i.Name).Returns("SisoId");
+                idProp.Setup(i => i.Path).Returns("SisoId");
+                idProp.Setup(i => i.IsRootMember).Returns(true);
+                idProp.Setup(i => i.PropertyType).Returns(typeof(Guid));
+                return idProp.Object;
+            });
 
             var ex = CustomAssert.Throws<SisoDbException>(
-                () => _schemaBuilder.CreateSchema(structureType));
+                () => _schemaBuilder.CreateSchema(structureType.Object));
 
-            var expectedMessage = string.Format(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers, "WithOnlyId");
+            var expectedMessage = string.Format(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers, "TmpType");
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 
         [Test]
         public void CreateSchema_WhenIdentityItemHasNoIndexableFirstLevelProperties_ThrowsMissingIndexableMembersException()
         {
-            var structureType = GetStructureTypeFor<WithOnlyIdentity>();
+            var structureType = new Mock<IStructureType>();
+            structureType.Setup(s => s.Name).Returns("TmpType");
+            structureType.Setup(s => s.IdProperty).Returns(() =>
+            {
+                var idProp = new Mock<IStructureProperty>();
+                idProp.Setup(i => i.Name).Returns("SisoId");
+                idProp.Setup(i => i.Path).Returns("SisoId");
+                idProp.Setup(i => i.IsRootMember).Returns(true);
+                idProp.Setup(i => i.PropertyType).Returns(typeof(int));
+                return idProp.Object;
+            });
 
             var ex = CustomAssert.Throws<SisoDbException>(
-                () => _schemaBuilder.CreateSchema(structureType));
-            
-            var expectedMessage = string.Format(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers, "WithOnlyIdentity");
+                () => _schemaBuilder.CreateSchema(structureType.Object));
+
+            var expectedMessage = string.Format(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers, "TmpType");
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 
@@ -179,38 +202,11 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             Assert.IsTrue(byteIac.DataType.IsNullableByteType());
         }
 
-        [Test]
-        public void CreateSchema_WhenByteArrayMember_NoIndexAccessorIsCreatedForByteArrayMember()
-        {
-            var structureType = GetStructureTypeFor<WithBytes>();
-
-            var ex = Assert.Throws<SisoDbException>(
-                () => _schemaBuilder.CreateSchema(structureType));
-
-            Assert.AreEqual(
-                ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers.Inject("WithBytes"),
-                ex.Message);
-        }
-
         private static bool HasLevel(IIndexAccessor iac, int level)
         {
             var count = iac.Path.Count(ch => ch == '.');
 
             return count == level;
-        }
-
-        private class WithNoId
-        {
-        }
-
-        private class WithOnlyId
-        {
-            public Guid SisoId { get; set; }
-        }
-
-        private class WithOnlyIdentity
-        {
-            public int SisoId { get; set; }
         }
 
         private class WithIdentity
@@ -239,13 +235,6 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             public Guid SisoId { get; set; }
 
             public byte? Byte { get; set; }
-        }
-
-        private class WithBytes
-        {
-            public Guid SisoId { get; set; }
-
-            public byte[] Bytes { get; set; }
         }
 
         private class WithIdAndIndexableFirstLevelMembers

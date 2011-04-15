@@ -2,7 +2,7 @@ using SisoDb.Providers.DbSchema;
 
 namespace SisoDb.Providers
 {
-    public interface IProviderFactory
+    public interface ISisoProviderFactory
     {
         IDbColumnGenerator GetDbColumnGenerator();
     }

@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
 {
@@ -18,7 +19,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
 
         internal IParsedLambda CreateParsedLambda<TInclude>(params LambdaExpression[] expressions) where TInclude : class
         {
-            return _includeParser.Parse<TInclude>(expressions);
+            return _includeParser.Parse(StructureTypeNameFor<TInclude>.Name,expressions);
         }
 
         protected class Master

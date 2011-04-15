@@ -12,6 +12,15 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
 
         [Test]
+        public void GetIndexableProperties_WhenByteArray_DoesNotReturnTheArrayMember()
+        {
+            var properties = _reflecter.GetIndexableProperties(typeof(WithArrayOfBytes))
+                .SingleOrDefault(p => p.Path == "Values");
+
+            Assert.IsNull(properties);
+        }
+
+        [Test]
         public void GetIndexableProperties_WhenIEnumerableOfTIndexes_DoesNotReturnTheEnumerableMember()
         {
             var properties = _reflecter.GetIndexableProperties(typeof(WithCollectionIndexes))
@@ -109,6 +118,11 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         private class WithArrayOfIntegers
         {
             public int[] Values { get; set; }
+        }
+
+        private class WithArrayOfBytes
+        {
+            public byte[] Values { get; set; }
         }
 
         private class WithNestedArrayOfStrings

@@ -9,11 +9,11 @@ namespace SisoDb.Structures.Schemas
 {
     public class AutoSchemaBuilder : ISchemaBuilder
     {
-        private readonly IHashService _hashService;
+        public IHashService HashService { protected get; set; }
 
         public AutoSchemaBuilder(IHashService hashService)
         {
-            _hashService = hashService.AssertNotNull("hashService");
+            HashService = hashService.AssertNotNull("hashService");
         }
 
         public IStructureSchema CreateSchema(IStructureType structureType)
@@ -25,11 +25,13 @@ namespace SisoDb.Structures.Schemas
             if (indexAccessors == null || indexAccessors.Length < 1)
                 throw new SisoDbException(ExceptionMessages.AutoSchemaBuilder_MissingIndexableMembers.Inject(structureType.Name));
 
-            var schemaName = structureType.Name;
-            var schemaHash = _hashService.GenerateHash(schemaName);
-            var schema = new StructureSchema(schemaName, schemaHash, idAccessor, indexAccessors);
+            var schemaHash = HashService.GenerateHash(structureType.Name);
 
-            return schema;
+            return new StructureSchema(
+                structureType.Name, 
+                schemaHash,
+                idAccessor, 
+                indexAccessors);
         }
 
         private static IIdAccessor GetIdAccessor(IStructureType structureType)
@@ -46,17 +48,9 @@ namespace SisoDb.Structures.Schemas
 
         private static IIndexAccessor[] GetIndexAccessors(IStructureType structureType)
         {
-            var indexableProperties = structureType.IndexableProperties;
-            var indexAccessors = indexableProperties.Select(CreateIndexAccessor);
-
-            return indexAccessors.ToArray();
-        }
-
-        private static IIndexAccessor CreateIndexAccessor(IStructureProperty property)
-        {
-            var indexAccessor = new IndexAccessor(property);
-
-            return indexAccessor;
+            return structureType.IndexableProperties
+                .Select(p => new IndexAccessor(p))
+                .ToArray();
         }
     }
 }

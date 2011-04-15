@@ -43,7 +43,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 unitOfWork.Commit();
             }
 
-            var memberNameGenerator = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator();
+            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
             var level1IntegersHash = memberNameGenerator.Generate("Integers");
             var level1StringsHash = memberNameGenerator.Generate("Strings");
             var level1DatesHash = memberNameGenerator.Generate("Dates");

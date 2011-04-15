@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SisoDb.Annotations;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructurePropertyTests
 {
     [TestFixture]
     public class StructurePropertyTests : UnitTestBase

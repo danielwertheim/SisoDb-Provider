@@ -35,7 +35,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         [Test]
         public void Process_WhenStaticFunctionWithMultiArgs_GeneratesCorrectSqlQuery()
         {
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12", SisoDbEnvironment.Formatting.DateTimeFormatProvider));
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12", SisoEnvironment.Formatting.DateTimeFormatProvider));
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
@@ -47,7 +47,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         [Test]
         public void Process_WhenStaticFunctionWithMultiArgs_ExtractsCorrectParameters()
         {
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12", SisoDbEnvironment.Formatting.DateTimeFormatProvider));
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12", SisoEnvironment.Formatting.DateTimeFormatProvider));
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
@@ -60,7 +60,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         public void Process_WhenInstanceFunction_GeneratesCorrectSqlQuery()
         {
             var dateTime = new DateTime(2010, 11, 12);
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == dateTime.ToString(SisoDbEnvironment.Formatting.DateTimeFormatProvider));
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == dateTime.ToString(SisoEnvironment.Formatting.DateTimeFormatProvider));
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
@@ -73,7 +73,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         public void Process_WhenInstanceFunction_ExtractsCorrectParameters()
         {
             var dateTime = new DateTime(2010, 11, 12);
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == dateTime.ToString(SisoDbEnvironment.Formatting.DateTimeFormatProvider));
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == dateTime.ToString(SisoEnvironment.Formatting.DateTimeFormatProvider));
 
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);

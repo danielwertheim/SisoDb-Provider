@@ -16,9 +16,9 @@ namespace SisoDb.Tests.UnitTests.Structures
         protected override void OnTestInitialize()
         {
             _builder = new StructureBuilder(
-                SisoDbEnvironment.ResourceContainer.ResolveJsonSerializer(),
+                SisoEnvironment.Resources.ResolveJsonSerializer(),
                 new SisoIdFactory(),
-                new StructureIndexesFactory(SisoDbEnvironment.Formatting.StringConverter));
+                new StructureIndexesFactory(SisoEnvironment.Formatting.StringConverter));
         }
 
         [Test]

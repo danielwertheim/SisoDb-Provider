@@ -116,7 +116,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
                 uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
                 uow.Commit();
             }
-            Database.StructureSchemas.RemoveSchema(StructureTypeFor<StructureSetUpdaterTests.ModelOld.ItemForPropChange>.Instance);
+            Database.StructureSchemas.RemoveSchema(TypeFor<StructureSetUpdaterTests.ModelOld.ItemForPropChange>.Type);
 
             var id1 = orgItem1.SisoId;
             var id2 = orgItem2.SisoId;

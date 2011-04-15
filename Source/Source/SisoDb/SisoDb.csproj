@@ -83,6 +83,7 @@
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="ISisoDbFormatting.cs" />
     <Compile Include="Core\IStringConverter.cs" />
+    <Compile Include="Providers\ISisoProviderFactories.cs" />
     <Compile Include="Querying\Lambdas\IExpressionEvaluator.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="SequentialGuid.cs" />
     <Compile Include="ResourceContainer.cs" />
+    <Compile Include="Providers\SisoProviderFactories.cs" />
     <Compile Include="StructureSetUpdaterStatuses.cs" />
     <Compile Include="Querying\CommandBuilderFactory.cs" />
     <Compile Include="Querying\GetCommandBuilder.cs" />
@@ -107,7 +109,7 @@
     <Compile Include="Querying\Sql\ISqlInclude.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedIncludeSqlProcessor.cs" />
     <Compile Include="Providers\SqlAzureProviderFactory.cs" />
-    <Compile Include="Providers\IProviderFactory.cs" />
+    <Compile Include="Providers\ISisoProviderFactory.cs" />
     <Compile Include="Providers\Sql2008ProviderFactory.cs" />
     <Compile Include="Querying\QueryCommandBuilder.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
@@ -209,6 +211,7 @@
     <Compile Include="Structures\Schemas\IStructureProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
     <Compile Include="Structures\Schemas\IStructureType.cs" />
+    <Compile Include="Structures\Schemas\IStructureTypeFactory.cs" />
     <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
     <Compile Include="Reflections\TypeExtensions.cs" />
@@ -231,8 +234,10 @@
     <Compile Include="Structures\Schemas\DynamicPropertyFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Structures\Schemas\StructureTypeFor.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeFactory.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeNameFor.cs" />
     <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
+    <Compile Include="TypeFor.cs" />
     <Compile Include="Structures\SisoId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
@@ -263,7 +268,7 @@
     <Compile Include="Structures\StructureBuilder.cs" />
     <Compile Include="Structures\SisoIdFactory.cs" />
     <Compile Include="Structures\StructureIndex.cs" />
-    <Compile Include="SisoDbEnvironment.cs" />
+    <Compile Include="SisoEnvironment.cs" />
     <Compile Include="Structures\StructureIndexesFactory.cs" />
     <Compile Include="Core\ValidationExtensions.cs" />
     <Compile Include="Structures\StructureIndexUniques.cs" />

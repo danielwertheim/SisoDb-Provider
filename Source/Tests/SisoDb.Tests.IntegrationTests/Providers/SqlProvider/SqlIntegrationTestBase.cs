@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using SisoDb.Providers.SqlProvider;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 {
@@ -16,17 +15,17 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 
         protected string GetStructureTableName<T>() where T : class
         {
-            return Database.StructureSchemas.GetSchema(StructureTypeFor<T>.Instance).GetStructureTableName();
+            return Database.StructureSchemas.GetSchema(TypeFor<T>.Type).GetStructureTableName();
         }
 
         protected string GetIndexesTableName<T>() where T : class
         {
-            return Database.StructureSchemas.GetSchema(StructureTypeFor<T>.Instance).GetIndexesTableName();
+            return Database.StructureSchemas.GetSchema(TypeFor<T>.Type).GetIndexesTableName();
         }
 
         protected string GetUniquesTableName<T>() where T : class
         {
-            return Database.StructureSchemas.GetSchema(StructureTypeFor<T>.Instance).GetUniquesTableName();
+            return Database.StructureSchemas.GetSchema(TypeFor<T>.Type).GetUniquesTableName();
         }
     }
 }

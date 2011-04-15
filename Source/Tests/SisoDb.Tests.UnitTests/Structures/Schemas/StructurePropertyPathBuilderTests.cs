@@ -1,6 +1,8 @@
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using SisoDb.Structures.Schemas;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
@@ -10,8 +12,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void BuildPath_ForFirstLevelScalar_NoRootButPathWithNoDelimitor()
         {
-            var property = GetPropertyByPath("Int1");
-
+            var property = StructurePropertyTestFactory.GetPropertyByPath<Dummy1>("Int1");
+            
             var path = PropertyPathBuilder.BuildPath(property);
 
             Assert.AreEqual("Int1", path);
@@ -20,16 +22,11 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         [Test]
         public void BuildPath_ForSecondLevelScalar_NoRootButPathWithDelimitor()
         {
-            var property = GetPropertyByPath("Dummy2.Bool1");
+            var property = StructurePropertyTestFactory.GetPropertyByPath<Dummy1>("Dummy2.Bool1");
 
             var path = PropertyPathBuilder.BuildPath(property);
 
             Assert.AreEqual("Dummy2.Bool1", path);
-        }
-
-        private static IStructureProperty GetPropertyByPath(string path)
-        {
-            return StructureTypeFor<Dummy1>.Instance.IndexableProperties.Where(p => p.Path == path).Single();
         }
 
         private class Dummy1

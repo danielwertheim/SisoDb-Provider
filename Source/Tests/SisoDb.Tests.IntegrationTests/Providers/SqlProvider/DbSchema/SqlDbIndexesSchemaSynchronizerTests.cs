@@ -19,7 +19,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
             DropStructureSet<Class_2579AF20_51A0_475A_A24D_8056828DB1DC>();
 
             _structureSchema = Database.StructureSchemas.GetSchema(
-                StructureTypeFor<Class_2579AF20_51A0_475A_A24D_8056828DB1DC>.Instance);
+                TypeFor<Class_2579AF20_51A0_475A_A24D_8056828DB1DC>.Type);
             _structureSetPrefix = typeof(Class_2579AF20_51A0_475A_A24D_8056828DB1DC).Name;
             _indexesTableName = _structureSetPrefix + "Indexes";
 
@@ -44,12 +44,12 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         public void Synhronize_WhenTableIsMissingColumn_ColumnIsAdded()
         {
             CreateStructureSet();
-            var hashForColumn = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator().Generate("IndexableMember2");
+            var hashForColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("IndexableMember2");
             DbHelper.DropColumns(_indexesTableName, hashForColumn);
 
             using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
             {
-                var columnGenerator = SisoDbEnvironment.GetProviderFactory(dbClient.ProviderType).GetDbColumnGenerator();
+                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
                 synhronizer.Synchronize(_structureSchema);
             }
@@ -62,13 +62,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         public void Synhronize_WhenTableHasObsoleteColumn_ColumnIsDropped()
         {
             CreateStructureSet();
-            var hashForObsoleteColumn = SisoDbEnvironment.ResourceContainer.ResolveHashService().GenerateHash("ExtraColumn");
+            var hashForObsoleteColumn = SisoEnvironment.Resources.ResolveHashService().GenerateHash("ExtraColumn");
             var obsoleteColumnDefinition = string.Format("[{0}] [int] sparse null", hashForObsoleteColumn);
             DbHelper.AddColumns(_indexesTableName, obsoleteColumnDefinition);
 
             using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
             {
-                var columnGenerator = SisoDbEnvironment.GetProviderFactory(dbClient.ProviderType).GetDbColumnGenerator();
+                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
                 synhronizer.Synchronize(_structureSchema);
             }

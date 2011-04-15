@@ -2,13 +2,12 @@
 using System.Linq.Expressions;
 using SisoDb.Core;
 using SisoDb.Querying.Lambdas.Nodes;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {
     public class IncludeParser : IIncludeParser
     {
-        public IParsedLambda Parse<TInclude>(IEnumerable<LambdaExpression> includeExpressions) where TInclude : class
+        public IParsedLambda Parse(string includedStructureTypeName, IEnumerable<LambdaExpression> includeExpressions)
         {
             includeExpressions.AssertHasItems("includeExpressions");
 
@@ -16,13 +15,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             foreach (var includeExpression in includeExpressions)
             {
-                var childStructureName = StructureTypeFor<TInclude>.Instance.Name;
                 var memberExpression = Expressions.GetRightMostMember(includeExpression);
                 var idReferencePath = memberExpression.Path();
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
-                
-                var includeNode = new IncludeNode(childStructureName, idReferencePath, objectReferencePath);
-                nodes.AddNode(includeNode);    
+
+                nodes.AddNode(
+                    new IncludeNode(includedStructureTypeName, idReferencePath, objectReferencePath));    
             }
 
             return new ParsedLambda(nodes);

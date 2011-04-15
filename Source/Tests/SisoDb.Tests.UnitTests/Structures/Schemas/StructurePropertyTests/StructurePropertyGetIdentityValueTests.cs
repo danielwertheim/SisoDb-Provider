@@ -1,8 +1,7 @@
 ﻿using NUnit.Framework;
-using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructurePropertyTests
 {
     [TestFixture]
     public class StructurePropertyGetIdentityValueTests : UnitTestBase

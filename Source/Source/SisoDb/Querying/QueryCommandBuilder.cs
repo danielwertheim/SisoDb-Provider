@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using SisoDb.Core;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying
 {
@@ -67,7 +68,10 @@ namespace SisoDb.Querying
         {
             includes.AssertHasItems("includes");
 
-            Command.Includes.Add(IncludeParser.Parse<TInclude>(includes));
+            Command.Includes.Add(
+                IncludeParser.Parse(
+                    StructureTypeNameFor<TInclude>.Name,
+                    includes));
 
             return this;
         }

@@ -1,10 +1,12 @@
-﻿namespace SisoDb.Structures.Schemas
+﻿using System;
+
+namespace SisoDb.Structures.Schemas
 {
     public interface IStructureSchemas
     {
-        IStructureSchema GetSchema(IStructureType structureType);
+        IStructureSchema GetSchema(Type type);
 
-        void RemoveSchema(IStructureType structureType);
+        void RemoveSchema(Type type);
         
         void Clear();
     }

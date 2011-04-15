@@ -20,7 +20,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         {
             DropStructureSet<Class_12E6E3A7_482C_4E1A_88BE_393D29253203>();
 
-            _structureSchema = Database.StructureSchemas.GetSchema(StructureTypeFor<Class_12E6E3A7_482C_4E1A_88BE_393D29253203>.Instance);
+            _structureSchema = Database.StructureSchemas.GetSchema(TypeFor<Class_12E6E3A7_482C_4E1A_88BE_393D29253203>.Type);
             _structureSetPrefix = typeof(Class_12E6E3A7_482C_4E1A_88BE_393D29253203).Name;
             _structureTableName = _structureSetPrefix + "Structure";
             _indexesTableName = _structureSetPrefix + "Indexes";
@@ -64,7 +64,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         [Test]
         public void Upsert_WhenClassHasOneNewMember_ColumnIsAddedToIndexesTable()
         {
-            var hashForColumn = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator().Generate("IndexableMember2");
+            var hashForColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("IndexableMember2");
             
             using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
             {
@@ -84,7 +84,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
         [Test]
         public void Upsert_WhenDbHasOneObsoleteMember_ColumnIsDroppedFromIndexesTable()
         {
-            var hashForObsoleteColumn = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator().Generate("ExtraColumn");
+            var hashForObsoleteColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("ExtraColumn");
             using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(dbClient);

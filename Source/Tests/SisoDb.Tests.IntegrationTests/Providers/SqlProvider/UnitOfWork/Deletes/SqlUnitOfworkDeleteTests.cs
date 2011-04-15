@@ -76,7 +76,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
         {
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                unitOfWork.DeleteById<SimpleGuidItem>(Guid.NewGuid());
+                unitOfWork.DeleteById<SimpleGuidItem>(SequentialGuid.NewSqlCompatibleGuid());
                 unitOfWork.Commit();
             }
         }

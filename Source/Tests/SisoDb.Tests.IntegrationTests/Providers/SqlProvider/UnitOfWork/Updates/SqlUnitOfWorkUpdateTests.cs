@@ -83,7 +83,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
             }
 
             var propertyHash =
-                Database.StructureSchemas.GetSchema(StructureTypeFor<SimpleItem>.Instance).IndexAccessors
+                Database.StructureSchemas.GetSchema(TypeFor<SimpleItem>.Type).IndexAccessors
                 .Single(iac => iac.Name.StartsWith("Value")).Name;
             var table = DbHelper.GetTableBySql(
                 "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));
@@ -112,7 +112,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Updates
             }
 
             var propertyHash =
-                Database.StructureSchemas.GetSchema(StructureTypeFor<SimpleItem>.Instance).IndexAccessors
+                Database.StructureSchemas.GetSchema(TypeFor<SimpleItem>.Type).IndexAccessors
                 .Single(iac => iac.Name.StartsWith("Value")).Name;
             var table = DbHelper.GetTableBySql(
                 "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));

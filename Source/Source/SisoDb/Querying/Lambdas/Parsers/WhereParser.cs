@@ -123,7 +123,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if (IsFlatteningMembers)
             {
                 if (!(value is string))
-                    value = SisoDbEnvironment.Formatting.StringConverter.AsString(value);
+                    value = SisoEnvironment.Formatting.StringConverter.AsString(value);
 
                 value = "%<${0}$>%".Inject(value);
             }

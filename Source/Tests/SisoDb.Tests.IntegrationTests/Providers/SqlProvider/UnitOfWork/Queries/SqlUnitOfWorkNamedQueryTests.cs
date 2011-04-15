@@ -46,7 +46,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
 
         private void CreateStoredProcedure()
         {
-            var hashForSortOrder = SisoDbEnvironment.ResourceContainer.ResolveMemberNameGenerator().Generate("SortOrder");
+            var hashForSortOrder = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("SortOrder");
             var sql =
                 string.Format("create procedure [dbo].[{0}] @minId int, @maxId int as begin "
                 + "select Json from dbo.ItemForNamedQueriesStructure as S inner join dbo.ItemForNamedQueriesIndexes as I on I.SisoId = S.SisoId "

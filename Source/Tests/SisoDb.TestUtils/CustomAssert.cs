@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using SisoDb.Core;
@@ -9,6 +10,7 @@ namespace SisoDb.TestUtils
 {
     public static class CustomAssert
     {
+        [DebuggerStepThrough()]
         public static Exception Throws<T>(Action action) where T : Exception
         {
             try

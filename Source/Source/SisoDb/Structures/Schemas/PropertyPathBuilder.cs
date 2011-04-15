@@ -7,9 +7,7 @@
             if (property.IsRootMember)
                 return property.Name;
 
-            var parentPath = BuildPath(property.Parent);
-
-            return parentPath + "." + property.Name;            
+            return BuildPath(property.Parent) + "." + property.Name;            
         }
     }
 }

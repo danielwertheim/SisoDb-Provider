@@ -43,8 +43,8 @@ namespace SisoDb.Structures
                     Uniques.FirstOrDefault(u => indexes.Count(i => i.Name.Equals(u.Name)) > 1);
                 if (firstUniqueNotBeingUnique != null)
                 {
-                    var idValue = SisoDbEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.SisoId.Value);
-                    var uniqueValue = SisoDbEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.Value);
+                    var idValue = SisoEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.SisoId.Value);
+                    var uniqueValue = SisoEnvironment.Formatting.StringConverter.AsString(firstUniqueNotBeingUnique.Value);
                     throw new SisoDbException(
                         ExceptionMessages.Structure_DuplicateUniques.Inject(
                             Name,
