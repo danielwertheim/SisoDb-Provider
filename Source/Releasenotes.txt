@@ -1,7 +1,7 @@
 From v0.8.0.0 the following is used for versioning:
 vA.B.C.D
 A=Will see when I get there
-B=Major changes of API and especially changes breaking backward compatibility.
+B=Major changes of API
 C=Minor changes
 D=Bug fixes
 

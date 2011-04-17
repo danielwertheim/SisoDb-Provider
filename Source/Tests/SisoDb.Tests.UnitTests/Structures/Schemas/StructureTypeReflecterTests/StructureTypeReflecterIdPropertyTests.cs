@@ -10,6 +10,51 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
 
         [Test]
+        public void HasIdProperty_WhenGuidIdPropertyExists_ReturnsTrue()
+        {
+            var type = typeof(WithGuidId);
+            var reflecter = new StructureTypeReflecter();
+
+            Assert.IsTrue(reflecter.HasIdProperty(type));
+        }
+
+        [Test]
+        public void HasIdProperty_WhenIdentityPropertyExists_ReturnsTrue()
+        {
+            var type = typeof(WithIntId);
+            var reflecter = new StructureTypeReflecter();
+
+            Assert.IsTrue(reflecter.HasIdProperty(type));
+        }
+
+        [Test]
+        public void HasIdProperty_WhenNullableGuidIdPropertyExists_ReturnsTrue()
+        {
+            var type = typeof(WithNullableGuidId);
+            var reflecter = new StructureTypeReflecter();
+
+            Assert.IsTrue(reflecter.HasIdProperty(type));
+        }
+
+        [Test]
+        public void HasIdProperty_WhenNullableIdentityPropertyExists_ReturnsTrue()
+        {
+            var type = typeof(WithNullableIntId);
+            var reflecter = new StructureTypeReflecter();
+
+            Assert.IsTrue(reflecter.HasIdProperty(type));
+        }
+
+        [Test]
+        public void HasIdProperty_WhenIdPropertyDoesNotExist_ReturnsTrue()
+        {
+            var type = typeof(WithNoId);
+            var reflecter = new StructureTypeReflecter();
+
+            Assert.IsFalse(reflecter.HasIdProperty(type));
+        }
+
+        [Test]
         public void GetIdProperty_WhenPublicGuidIdProperty_ReturnsProperty()
         {
             var property = _reflecter.GetIdProperty(typeof (WithGuidId));
@@ -56,6 +101,9 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
 
             Assert.IsNull(property);
         }
+
+        private class WithNoId
+        {}
 
         private class WithGuidId
         {

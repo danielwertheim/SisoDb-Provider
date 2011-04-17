@@ -117,6 +117,7 @@
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithSortingTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryEnumerableWithQxAnyTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\SqlUnitOfWorkIndexesTableTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\Address.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\Customer.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\CustomerDbExtensions.cs" />

@@ -8,7 +8,7 @@ namespace SisoDb
 
         public static readonly ResourceContainer Resources;
 
-        public static readonly SisoProviderFactories ProviderFactories;
+        public static readonly ISisoProviderFactories ProviderFactories;
         
         static SisoEnvironment()
         {

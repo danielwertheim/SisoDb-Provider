@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using NUnit.Framework;
@@ -10,6 +11,42 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
     public class StructureTypeReflecterIndexablePropertiesTests : UnitTestBase
     {
         private readonly IStructureTypeReflecter _reflecter = new StructureTypeReflecter();
+
+        [Test]
+        public void GetIndexableProperties_WhenGuidIdExists_IdMemberIsNotReturned()
+        {
+            var property = _reflecter.GetIndexableProperties(typeof (WithGuidId))
+                .SingleOrDefault(p => p.Path == "SisoId");
+
+            Assert.IsNull(property);
+        }
+
+        [Test]
+        public void GetIndexableProperties_WhenIdentityExists_IdMemberIsNotReturned()
+        {
+            var property = _reflecter.GetIndexableProperties(typeof(WithIdentityId))
+                .SingleOrDefault(p => p.Path == "SisoId");
+
+            Assert.IsNull(property);
+        }
+
+        [Test]
+        public void GetIndexableProperties_WhenNullableGuidIdExists_IdMemberIsNotReturned()
+        {
+            var property = _reflecter.GetIndexableProperties(typeof(WithNullableGuidId))
+                .SingleOrDefault(p => p.Path == "SisoId");
+
+            Assert.IsNull(property);
+        }
+
+        [Test]
+        public void GetIndexableProperties_WhenNullableIdentityExists_IdMemberIsNotReturned()
+        {
+            var property = _reflecter.GetIndexableProperties(typeof(WithNullableIdentityId))
+                .SingleOrDefault(p => p.Path == "SisoId");
+
+            Assert.IsNull(property);
+        }
 
         [Test]
         public void GetIndexableProperties_WhenByteArray_DoesNotReturnTheArrayMember()
@@ -93,6 +130,26 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
             var properties = _reflecter.GetIndexableProperties(typeof(WithEnumarbleBytes));
 
             Assert.AreEqual(0, properties.Count());
+        }
+
+        private class WithIdentityId
+        {
+            public int SisoId { get; set; }
+        }
+
+        private class WithGuidId
+        {
+            public Guid SisoId { get; set; }
+        }
+
+        private class WithNullableIdentityId
+        {
+            public int? SisoId { get; set; }
+        }
+
+        private class WithNullableGuidId
+        {
+            public Guid? SisoId { get; set; }
         }
 
         private class WithEnumarbleBytes

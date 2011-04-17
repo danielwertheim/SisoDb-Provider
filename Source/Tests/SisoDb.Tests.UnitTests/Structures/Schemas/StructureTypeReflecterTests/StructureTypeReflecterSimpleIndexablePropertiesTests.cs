@@ -38,7 +38,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetSimpleIndexableProperties_WhenExclusionIsPassed_DoesNotReturnExcludedProperties()
         {
-            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "SisoId", "Name" });
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), null, new[] { "SisoId", "Name" });
 
             var names = properties.Select(p => p.Name).ToArray();
             CollectionAssert.DoesNotContain(names, "SisoId");
@@ -48,7 +48,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetSimpleIndexableProperties_WhenExclusionIsPassed_DoesReturnNonExcludedProperties()
         {
-            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), new[] { "SisoId", "Name" });
+            var properties = _reflecter.GetSimpleIndexablePropertyInfos(typeof(WithSimpleProperties), null, new[] { "SisoId", "Name" });
 
             var names = properties.Select(p => p.Name).ToArray();
             CollectionAssert.Contains(names, "Age");

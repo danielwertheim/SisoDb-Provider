@@ -125,6 +125,8 @@
     <Compile Include="Structures\Schemas\StructurePropertyTestFactory.cs" />
     <Compile Include="Structures\Schemas\StructurePropertyTestHelper.cs" />
     <Compile Include="Structures\Schemas\StructureTypeFactoryTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterGetIndexablePropertiesExceptTests.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterGetSpecificIndexablePropertiesTests.cs" />
     <Compile Include="Structures\StructureBuilderTests.cs" />
     <Compile Include="Structures\SisoIdFactoryTests.cs" />
     <Compile Include="Structures\SisoIdTests.cs" />
@@ -134,7 +136,7 @@
     <Compile Include="Structures\Schemas\StructurePropertyTests\StructurePropertyGetGuidValueTests.cs" />
     <Compile Include="Structures\Schemas\StructurePropertyTests\StructurePropertyGetIdentityValueTests.cs" />
     <Compile Include="Structures\Schemas\StructurePropertyTests\StructurePropertyGetStringValuesTests.cs" />
-    <Compile Include="Structures\Schemas\StructurePropertyPathBuilderTests.cs" />
+    <Compile Include="Structures\Schemas\PropertyPathBuilderTests.cs" />
     <Compile Include="Structures\Schemas\StructurePropertyTests\StructurePropertyTests.cs" />
     <Compile Include="Structures\Schemas\StructureSchemaTests.cs" />
     <Compile Include="Structures\StructureIndexesFactoryTests.cs" />

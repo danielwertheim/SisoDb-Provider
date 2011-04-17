@@ -7,7 +7,15 @@
             if (property.IsRootMember)
                 return property.Name;
 
-            return BuildPath(property.Parent) + "." + property.Name;            
+            return string.Concat(BuildPath(property.Parent), ".", property.Name);
+        }
+
+        public static string BuildPath(IStructureProperty parent, string name)
+        {
+            if (parent == null)
+                return name;
+
+            return string.Concat(parent.Path, ".", name);
         }
     }
 }
