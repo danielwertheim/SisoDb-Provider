@@ -14,7 +14,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetComplexIndexableProperties_WhenRootWithSimpleAndComplexProperties_ReturnsOnlyComplexProperties()
         {
-            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithSimpleAndComplexProperties));
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(
+                typeof(WithSimpleAndComplexProperties).GetProperties(StructureTypeReflecter.PropertyBindingFlags));
 
             Assert.AreEqual(1, properties.Count());
         }
@@ -22,7 +23,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetComplexProperties_WhenRootWithUniqeAndNonUniqueComplexProperties_ReturnsComplexUniqueProperties()
         {
-            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithUniqueAndNonUniqueComplexProperties));
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(
+                typeof(WithUniqueAndNonUniqueComplexProperties).GetProperties(StructureTypeReflecter.PropertyBindingFlags));
 
             Assert.AreEqual(2, properties.Count());
         }
@@ -30,7 +32,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetComplexProperties_WhenRootWithEnumerable_EnumerableMemberIsNotReturnedAsComplex()
         {
-            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithEnumerable));
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(
+                typeof(WithEnumerable).GetProperties(StructureTypeReflecter.PropertyBindingFlags));
 
             Assert.AreEqual(0, properties.Count());
         }
@@ -38,7 +41,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetComplexProperties_WhenItIsContainedStructure_NotExtracted()
         {
-            var properties = _reflecter.GetComplexIndexablePropertyInfos(typeof(WithContainedStructure));
+            var properties = _reflecter.GetComplexIndexablePropertyInfos(
+                typeof(WithContainedStructure).GetProperties(StructureTypeReflecter.PropertyBindingFlags));
 
             Assert.AreEqual(0, properties.Count());
         }

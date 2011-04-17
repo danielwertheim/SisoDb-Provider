@@ -13,7 +13,7 @@ namespace SisoDb.Structures.Schemas.Configuration
             get { return _configurations.Count < 1; }
         }
 
-        public IEnumerable<IStructureTypeConfig> Configurations
+        public IEnumerable<IStructureTypeConfig> Items
         {
             get { return _configurations.Values; }
         }
@@ -21,6 +21,11 @@ namespace SisoDb.Structures.Schemas.Configuration
         public StructureTypeConfigurations()
         {
             _configurations = new Dictionary<Type, IStructureTypeConfig>();
+        }
+
+        public void Clear()
+        {
+            _configurations.Clear();
         }
 
         public IStructureTypeConfig GetConfiguration(Type type)

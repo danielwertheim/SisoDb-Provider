@@ -32,7 +32,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.Configuration
 
             configs.NewForType(typeof (Dummy));
 
-            Assert.AreEqual(1, configs.Configurations.Count());
+            Assert.AreEqual(1, configs.Items.Count());
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.Configuration
 
             configs.NewForType<Dummy>();
 
-            Assert.AreEqual(1, configs.Configurations.Count());
+            Assert.AreEqual(1, configs.Items.Count());
         }
 
         [Test]

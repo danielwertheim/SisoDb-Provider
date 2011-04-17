@@ -5,6 +5,14 @@ B=Major changes of API
 C=Minor changes
 D=Bug fixes
 
+v1.0.2      - 2011-04-17
+[New]       You can now specify explicitly what to index or what not to index. This will of course result in that fields not being indexed, is not queryable.
+            This is something you might want to do to get better performance. You can always reindex the data using DataBase.UpdateStructureSet (http://sisodb.com/docs/doc13)
+            NOTE! The values are cached per database.
+            The new functionality lies under Database.StructureSchemas.StructureTypeFactory.Configurations (http://sisodb.com/docs/doc15)
+
+[New]       Redesigned the internals so you can now access. SisoEnvironment.ResourceContainer and assign new resolvers to your specific implementations of some resource.
+
 v1.0.1.1    - 2011-04-12
 [Fixed]     There was an bug in how the Unique constraints where handled. This have been fixed but you need to update all Uniques table.
 

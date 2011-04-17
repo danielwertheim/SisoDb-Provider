@@ -15,7 +15,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenNoEnumerableIndexesExists_ReturnsEmptyList()
         {
-            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithNoEnumerableMembers));
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(
+                typeof(WithNoEnumerableMembers).GetProperties(StructureTypeReflecter.PropertyBindingFlags));
 
             CustomAssert.IsEmpty(properties);
         }
@@ -23,9 +24,10 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenIListOfTIndexesExists_ReturnsTheMember()
         {
-            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithCollectionIndexes))
-                .Where(p => p.Name == "IList1")
-                .SingleOrDefault();
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(
+                typeof(WithCollectionIndexes).GetProperties(StructureTypeReflecter.PropertyBindingFlags))
+                    .Where(p => p.Name == "IList1")
+                    .SingleOrDefault();
 
             Assert.IsNotNull(properties);
         }
@@ -33,9 +35,10 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenIEnumerableOfTIndexesExists_ReturnsTheMember()
         {
-            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithCollectionIndexes))
-                .Where(p => p.Name == "IEnumerable1")
-                .SingleOrDefault();
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(
+                typeof(WithCollectionIndexes).GetProperties(StructureTypeReflecter.PropertyBindingFlags))
+                    .Where(p => p.Name == "IEnumerable1")
+                    .SingleOrDefault();
 
             Assert.IsNotNull(properties);
         }
@@ -43,9 +46,10 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenIEnumerableOfTIndexesExists_DoesNotReturnTheElementMembers()
         {
-            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithCollectionIndexes))
-                .Where(p => p.Name == "ElementInt1")
-                .SingleOrDefault();
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(
+                typeof(WithCollectionIndexes).GetProperties(StructureTypeReflecter.PropertyBindingFlags))
+                    .Where(p => p.Name == "ElementInt1")
+                    .SingleOrDefault();
 
             Assert.IsNull(properties);
         }
@@ -53,7 +57,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetEnumerableIndexablePropertyInfos_WhenEnumerableOfBytes_NoPropertiesAreReturned()
         {
-            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(typeof(WithEnumarbleBytes));
+            var properties = _reflecter.GetEnumerableIndexablePropertyInfos(
+                typeof(WithEnumarbleBytes).GetProperties(StructureTypeReflecter.PropertyBindingFlags));
 
             Assert.AreEqual(0, properties.Count());
         }

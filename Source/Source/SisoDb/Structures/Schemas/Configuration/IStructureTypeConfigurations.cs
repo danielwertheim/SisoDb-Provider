@@ -7,7 +7,9 @@ namespace SisoDb.Structures.Schemas.Configuration
     {
         bool IsEmpty { get; }
 
-        IEnumerable<IStructureTypeConfig> Configurations { get; }
+        IEnumerable<IStructureTypeConfig> Items { get; }
+
+        void Clear();
 
         IStructureTypeConfig GetConfiguration(Type type);
 
