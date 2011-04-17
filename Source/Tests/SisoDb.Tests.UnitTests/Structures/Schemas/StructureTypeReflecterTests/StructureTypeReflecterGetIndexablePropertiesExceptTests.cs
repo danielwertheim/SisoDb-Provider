@@ -63,9 +63,30 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         {
             var reflecter = new StructureTypeReflecter();
 
-            var properties = reflecter.GetIndexablePropertiesExcept(typeof(WithSisoId), new[] { "Bool1", "DateTime1", "String1", "Nested" });
+            var properties = reflecter.GetIndexablePropertiesExcept(typeof(WithSisoId), new[] { "Bool1", "DateTime1", "String1", "Nested", "Nested.Int1OnNested", "Nested.String1OnNested" });
 
             Assert.AreEqual(0, properties.Count());
+        }
+
+        [Test]
+        public void GetIndexablePropertiesExcept_WhenExcludingComplexNested_NoNestedPropertiesAreReturned()
+        {
+            var reflecter = new StructureTypeReflecter();
+
+            var properties = reflecter.GetIndexablePropertiesExcept(typeof(WithSisoId), new[] { "Nested" });
+
+            Assert.AreEqual(0, properties.Count(p => p.Path.StartsWith("Nested")));
+        }
+
+        [Test]
+        public void GetIndexablePropertiesExcept_WhenExcludingNestedSimple_OtherSimpleNestedPropertiesAreReturned()
+        {
+            var reflecter = new StructureTypeReflecter();
+
+            var properties = reflecter.GetIndexablePropertiesExcept(typeof(WithSisoId), new[] { "Nested.String1OnNested" });
+
+            Assert.AreEqual(1, properties.Count(p => p.Path.StartsWith("Nested")));
+            Assert.AreEqual(1, properties.Count(p => p.Path == "Nested.Int1OnNested"));
         }
 
         private class WithSisoId
@@ -86,6 +107,8 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         private class Nested
         {
             public int Int1OnNested { get; set; }
+
+            public string String1OnNested { get; set; }
         }
     }
 }
