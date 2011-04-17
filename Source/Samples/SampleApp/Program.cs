@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using SisoDb;
+using SisoDb.Core;
 using SisoDb.Querying;
 using SisoDb.Serialization;
 using SisoDb.Structures.Schemas;
@@ -53,7 +54,7 @@ namespace SisoDbLab
                 Console.Out.WriteLine("Name \t=\t {0}", indexAccessor.Name);
                 Console.Out.WriteLine("Path \t=\t {0}", indexAccessor.Path);
                 Console.Out.WriteLine("DataType \t=\t {0}", indexAccessor.DataType.Name);
-                Console.Out.WriteLine("Uniqueness \t=\t {0}", indexAccessor.Uniqueness);
+                Console.Out.WriteLine("IndexType \t=\t {0}", indexAccessor.IndexType);
                 Console.Out.WriteLine("IsElement \t=\t {0}", indexAccessor.IsElement);
                 Console.WriteLine("");
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using SisoDb.Core;
+using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Resources;
 
@@ -19,7 +20,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 if (lambda == null)
                     continue;
 
-                var memberExpression = Expressions.GetRightMostMember(lambda.Body);
+                var memberExpression = ExpressionUtils.GetRightMostMember(lambda.Body);
 
                 var sortDirection = SortDirections.Asc;
                 var callExpression = (lambda.Body is UnaryExpression)

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace SisoDb.Querying.Lambdas
+namespace SisoDb.Core.Expressions
 {
     public interface IExpressionEvaluator
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using SisoDb.Core;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Structures.Schemas;

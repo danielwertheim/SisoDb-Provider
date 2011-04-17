@@ -1,9 +1,7 @@
 using System;
 using Moq;
 using NUnit.Framework;
-using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
-using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Structures.Schemas
 {
@@ -19,7 +17,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
         }
 
         [Test]
-        public void CreateFor_Calls_GetIndexableProperties_On_Reflecter_Excluding_IdName()
+        public void CreateFor_WhenNoExplicitConfigExistsForType_InvokesGetIndexablePropertiesOnReflecter()
         {
             var type = typeof(MyClass);
             var reflecterMock = new Mock<IStructureTypeReflecter>();
@@ -29,7 +27,7 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
 
                 return idProperty.Object;
             });
-            reflecterMock.Setup(m => m.GetIndexableProperties(type, It.IsAny<string[]>())).Returns(() =>
+            reflecterMock.Setup(m => m.GetIndexableProperties(type)).Returns(() =>
             {
                 var indexProperty = new Mock<IStructureProperty>();
 
@@ -39,7 +37,57 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas
             var factory = new StructureTypeFactory(reflecterMock.Object);
             factory.CreateFor(type);
 
-            reflecterMock.Verify(m => m.GetIndexableProperties(type, new[] { StructureSchema.IdMemberName }));
+            reflecterMock.Verify(m => m.GetIndexableProperties(type));
+        }
+
+        [Test]
+        public void CreateFor_WhenConfigExcludingMembersExistsForType_InvokesGetIndexablePropertiesExceptOnReflecter()
+        {
+            var type = typeof(MyClass);
+            var reflecterMock = new Mock<IStructureTypeReflecter>();
+            reflecterMock.Setup(m => m.GetIdProperty(type)).Returns(() =>
+            {
+                var idProperty = new Mock<IStructureProperty>();
+
+                return idProperty.Object;
+            });
+            reflecterMock.Setup(m => m.GetIndexablePropertiesExcept(type, new[] { "ExcludeTEMP" })).Returns(() =>
+            {
+                var indexProperty = new Mock<IStructureProperty>();
+
+                return new[] { indexProperty.Object };
+            });
+
+            var factory = new StructureTypeFactory(reflecterMock.Object);
+            factory.Configurations.NewForType(type).DoNotIndexThis("ExcludeTEMP");
+            factory.CreateFor(type);
+
+            reflecterMock.Verify(m => m.GetIndexablePropertiesExcept(type, new[] { "ExcludeTEMP" }));
+        }
+
+        [Test]
+        public void CreateFor_WhenConfigIncludingMembersExistsForType_InvokesGetSpecificIndexablePropertiesOnReflecter()
+        {
+            var type = typeof(MyClass);
+            var reflecterMock = new Mock<IStructureTypeReflecter>();
+            reflecterMock.Setup(m => m.GetIdProperty(type)).Returns(() =>
+            {
+                var idProperty = new Mock<IStructureProperty>();
+
+                return idProperty.Object;
+            });
+            reflecterMock.Setup(m => m.GetSpecificIndexableProperties(type, new[] { "IncludeTEMP" })).Returns(() =>
+            {
+                var indexProperty = new Mock<IStructureProperty>();
+
+                return new[] { indexProperty.Object };
+            });
+
+            var factory = new StructureTypeFactory(reflecterMock.Object);
+            factory.Configurations.NewForType(type).OnlyIndexThis("IncludeTEMP");
+            factory.CreateFor(type);
+
+            reflecterMock.Verify(m => m.GetSpecificIndexableProperties(type, new[] { "IncludeTEMP" }));
         }
 
         private class MyClass

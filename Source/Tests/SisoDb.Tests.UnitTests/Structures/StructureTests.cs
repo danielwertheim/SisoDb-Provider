@@ -14,8 +14,8 @@ namespace SisoDb.Tests.UnitTests.Structures
             var fakeSisoId = new Mock<ISisoId>().Object;
             var indexes = new List<IStructureIndex>
             {
-                new StructureIndex(fakeSisoId, "UniqueIndex1", "Value1", StructureIndexUniques.PerType),
-                new StructureIndex(fakeSisoId, "UniqueIndex1", "Value1", StructureIndexUniques.PerType)
+                new StructureIndex(fakeSisoId, "UniqueIndex1", "Value1", StructureIndexType.UniquePerType),
+                new StructureIndex(fakeSisoId, "UniqueIndex1", "Value1", StructureIndexType.UniquePerType)
             };
             
             Assert.Throws<SisoDbException>(() => new Structure("Name", fakeSisoId, indexes, "{Value : \"Test\"}"));

@@ -1,5 +1,7 @@
-﻿using SisoDb.Cryptography;
+﻿using SisoDb.Core;
+using SisoDb.Cryptography;
 using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
 
 namespace SisoDb.Tests.UnitTests.Structures
 {

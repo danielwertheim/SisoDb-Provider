@@ -8,10 +8,11 @@ using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
 using SisoDb.Structures.Schemas.MemberAccessors;
 using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Structures.Schemas
+namespace SisoDb.Tests.UnitTests.Structures.Schemas.Builders
 {
     [TestFixture]
     public class AutoSchemaBuilderTests : UnitTestBase

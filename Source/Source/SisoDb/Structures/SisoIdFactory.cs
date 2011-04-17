@@ -10,18 +10,16 @@ namespace SisoDb.Structures
         public ISisoId GetId<T>(IStructureSchema structureSchema, T item) where T : class
         {
             ISisoId id;
+
             if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
-            {
-                var idValue = EnsureGuidIdValueExists(item, structureSchema);
-                id = SisoId.NewGuidId(idValue);
-            }
+                id = SisoId.NewGuidId(
+                    EnsureGuidIdValueExists(item, structureSchema));
             else if (structureSchema.IdAccessor.IdType == IdTypes.Identity)
-            {
-                var idValue = EnsureIdentityValueExists(item, structureSchema);
-                id = SisoId.NewIdentityId(idValue);
-            }
+                id = SisoId.NewIdentityId(
+                    EnsureIdentityValueExists(item, structureSchema));
             else
-                throw new SisoDbException(ExceptionMessages.SisoIdFactory_UnSupportedIdentityType.Inject(structureSchema.IdAccessor.IdType));
+                throw new SisoDbException(
+                    ExceptionMessages.SisoIdFactory_UnSupportedIdentityType.Inject(structureSchema.IdAccessor.IdType));
 
             return id;
         }

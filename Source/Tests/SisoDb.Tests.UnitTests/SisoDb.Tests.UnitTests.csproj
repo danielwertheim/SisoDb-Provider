@@ -85,6 +85,8 @@
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="Core\ElementsBatcherTests.cs" />
     <Compile Include="HashMemberNameGeneratorTests.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\IndexStorageSchemaTests.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\UniqueStorageSchemaTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
@@ -117,6 +119,8 @@
     <Compile Include="Providers\SqlProvider\SqlDatabaseTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlStructureSchemaExtensionsTests.cs" />
     <Compile Include="Core\StringConverterTests.cs" />
+    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfigurationsTests.cs" />
+    <Compile Include="Structures\Schemas\Configuration\StuctureTypeConfigTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessorGetValuesOnSubItemTests.cs" />
     <Compile Include="Structures\Schemas\StructurePropertyTestFactory.cs" />
     <Compile Include="Structures\Schemas\StructurePropertyTestHelper.cs" />
@@ -124,7 +128,7 @@
     <Compile Include="Structures\StructureBuilderTests.cs" />
     <Compile Include="Structures\SisoIdFactoryTests.cs" />
     <Compile Include="Structures\SisoIdTests.cs" />
-    <Compile Include="Structures\Schemas\AutoSchemaBuilderTests.cs" />
+    <Compile Include="Structures\Schemas\Builders\AutoSchemaBuilderTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessorTests.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IdAccessorTests.cs" />
     <Compile Include="Structures\Schemas\StructurePropertyTests\StructurePropertyGetGuidValueTests.cs" />
@@ -135,8 +139,10 @@
     <Compile Include="Structures\Schemas\StructureSchemaTests.cs" />
     <Compile Include="Structures\StructureIndexesFactoryTests.cs" />
     <Compile Include="Structures\StructureIndexTests.cs" />
+    <Compile Include="Structures\StructureIndexTypeTests.cs" />
     <Compile Include="Structures\StructureSchemaTestFactory.cs" />
     <Compile Include="Structures\StructureTests.cs" />
+    <Compile Include="Structures\UniqueModesExtensions.cs" />
     <Compile Include="TypeExtensionsEnumerableTests.cs" />
     <Compile Include="TypeExtensionsIsByteTypeTests.cs" />
     <Compile Include="TypeExtensionsIsEnumerableBytesTypeTests.cs" />

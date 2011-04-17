@@ -84,7 +84,7 @@
     <Compile Include="ISisoDbFormatting.cs" />
     <Compile Include="Core\IStringConverter.cs" />
     <Compile Include="Providers\ISisoProviderFactories.cs" />
-    <Compile Include="Querying\Lambdas\IExpressionEvaluator.cs" />
+    <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />
@@ -114,11 +114,11 @@
     <Compile Include="Querying\QueryCommandBuilder.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Reflections\Reflect.cs" />
-    <Compile Include="Querying\Lambdas\LambdaExpressionEvaluator.cs" />
+    <Compile Include="Core\Expressions\LambdaExpressionEvaluator.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedSortingSqlProcessor.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParser.cs" />
-    <Compile Include="Querying\Lambdas\ExpressionExtensions.cs" />
+    <Compile Include="Core\Expressions\ExpressionExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndGroupNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNode.cs" />
@@ -185,7 +185,7 @@
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserter.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\UniqueStorageSchema.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaManager.cs" />
-    <Compile Include="Querying\Lambdas\Expressions.cs" />
+    <Compile Include="Core\Expressions\ExpressionUtils.cs" />
     <Compile Include="Providers\IIdentityGenerator.cs" />
     <Compile Include="Providers\SqlProvider\ISqlDatabase.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SchemaChanges.cs" />
@@ -211,6 +211,8 @@
     <Compile Include="Structures\Schemas\IStructureProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
     <Compile Include="Structures\Schemas\IStructureType.cs" />
+    <Compile Include="Structures\Schemas\Configuration\IStructureTypeConfig.cs" />
+    <Compile Include="Structures\Schemas\Configuration\IStructureTypeConfigurations.cs" />
     <Compile Include="Structures\Schemas\IStructureTypeFactory.cs" />
     <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
@@ -234,10 +236,12 @@
     <Compile Include="Structures\Schemas\DynamicPropertyFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfig.cs" />
+    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfigurations.cs" />
     <Compile Include="Structures\Schemas\StructureTypeFactory.cs" />
     <Compile Include="Structures\Schemas\StructureTypeNameFor.cs" />
     <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
-    <Compile Include="TypeFor.cs" />
+    <Compile Include="Core\TypeFor.cs" />
     <Compile Include="Structures\SisoId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
@@ -245,9 +249,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Structures\Schemas\AutoSchemaBuilder.cs" />
+    <Compile Include="Structures\Schemas\Builders\AutoSchemaBuilder.cs" />
     <Compile Include="Structures\Schemas\IStructureSchema.cs" />
-    <Compile Include="Structures\Schemas\ISchemaBuilder.cs" />
+    <Compile Include="Structures\Schemas\Builders\ISchemaBuilder.cs" />
     <Compile Include="Structures\Schemas\IStructureSchemas.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIndexAccessor.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IMemberAccessor.cs" />
@@ -271,8 +275,8 @@
     <Compile Include="SisoEnvironment.cs" />
     <Compile Include="Structures\StructureIndexesFactory.cs" />
     <Compile Include="Core\ValidationExtensions.cs" />
-    <Compile Include="Structures\StructureIndexUniques.cs" />
-    <Compile Include="Structures\StructureIndexUniquesExtensions.cs" />
+    <Compile Include="Structures\StructureIndexType.cs" />
+    <Compile Include="Structures\UniqueModesExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.2008.resx">

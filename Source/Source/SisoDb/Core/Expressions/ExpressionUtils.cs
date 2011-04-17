@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using SisoDb.Core;
 using SisoDb.Resources;
 
-namespace SisoDb.Querying.Lambdas
+namespace SisoDb.Core.Expressions
 {
-    public static class Expressions
+    public static class ExpressionUtils
     {
         public static bool IsNullConstant(Expression e)
         {

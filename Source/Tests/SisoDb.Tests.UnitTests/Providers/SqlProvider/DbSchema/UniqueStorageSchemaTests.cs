@@ -7,9 +7,9 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlProvider.DbSchema
     public class UniqueStorageSchemaTests : UnitTestBase
     {
         [Test]
-        public void GetOrderedFields_ShouldBeReturnedInCorrectSequence()
+        public void OrderedFields_ShouldBeReturnedInCorrectSequence()
         {
-            var fields = UniqueStorageSchema.Fields.GetOrderedFields();
+            var fields = UniqueStorageSchema.Fields.OrderedFields;
 
             Assert.AreEqual(UniqueStorageSchema.Fields.SisoId, fields[0]);
             Assert.AreEqual(UniqueStorageSchema.Fields.UqSisoId, fields[1]);

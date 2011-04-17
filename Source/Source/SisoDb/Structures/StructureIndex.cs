@@ -15,9 +15,9 @@ namespace SisoDb.Structures
 
         public bool IsUnique { get; private set; }
 
-        public StructureIndexUniques Uniqueness { get; private set; }
+        public StructureIndexType IndexType { get; private set; }
 
-        public StructureIndex(ISisoId sisoId, string name, object value, StructureIndexUniques uniqueness)
+        public StructureIndex(ISisoId sisoId, string name, object value, StructureIndexType indexType = StructureIndexType.Normal)
         {
             sisoId.AssertNotNull("sisoId");
             name.AssertNotNullOrWhiteSpace("name");
@@ -28,8 +28,8 @@ namespace SisoDb.Structures
             SisoId = sisoId;
             Name = name;
             Value = value;
-            Uniqueness = uniqueness;
-            IsUnique = Uniqueness != StructureIndexUniques.None;
+            IndexType = indexType;
+            IsUnique = IndexType.IsUnique();
         }
 
         public override bool Equals(object obj)

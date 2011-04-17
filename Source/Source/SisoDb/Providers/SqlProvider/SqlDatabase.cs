@@ -13,8 +13,6 @@ namespace SisoDb.Providers.SqlProvider
 {
     public class SqlDatabase : ISqlDatabase
     {
-        //private readonly ISisoProviderFactory _providerFactory;
-
         public string Name { get; private set; }
 
         public ISisoConnectionInfo ServerConnectionInfo { get; private set; }
@@ -35,14 +33,9 @@ namespace SisoDb.Providers.SqlProvider
 
             InitializeConnectionInfo(connectionInfo);
 
-            //_providerFactory = SisoEnvironment.GetProviderFactory(ConnectionInfo.ProviderType);
-
             StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
+            StructureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
             DbSchemaManager = new DbSchemaManager();
-            StructureBuilder = new StructureBuilder(
-                SisoEnvironment.Resources.ResolveJsonSerializer(), 
-                new SisoIdFactory(), 
-                new StructureIndexesFactory(SisoEnvironment.Formatting.StringConverter));
         }
 
         private void InitializeConnectionInfo(ISisoConnectionInfo connectionInfo)

@@ -16,7 +16,7 @@ namespace SisoDb.Structures.Schemas
 
         bool IsUnique { get; }
 
-        StructureIndexUniques Uniqueness { get; }
+        StructureIndexType IndexType { get; }
         
         bool IsEnumerable { get; }
 

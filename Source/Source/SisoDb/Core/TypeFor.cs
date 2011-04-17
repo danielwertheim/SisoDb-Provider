@@ -1,6 +1,6 @@
 using System;
 
-namespace SisoDb
+namespace SisoDb.Core
 {
     public static class TypeFor<T> where T : class
     {

@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SisoDb.Core;
 using SisoDb.Reflections;
 
 namespace SisoDb.Structures.Schemas
 {
     public class StructureTypeReflecter : IStructureTypeReflecter
     {
+        private static readonly string[] NonIndexableSystemMembers = new[] { StructureSchema.IdMemberName };
+
         public const BindingFlags IdPropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
@@ -30,30 +33,48 @@ namespace SisoDb.Structures.Schemas
             return new StructureProperty(propertyInfo);
         }
 
-        public IEnumerable<IStructureProperty> GetIndexableProperties(IReflect type, IEnumerable<string> nonIndexableNames = null)
+        public IEnumerable<IStructureProperty> GetIndexableProperties(IReflect type)
         {
-            return GetIndexableProperties(type, null, nonIndexableNames);
+            type.AssertNotNull("type");
+
+            return GetIndexableProperties(type, null, NonIndexableSystemMembers, null);
         }
 
-        private IEnumerable<IStructureProperty> GetIndexableProperties(IReflect type, IStructureProperty parent, IEnumerable<string> nonIndexableNames = null)
+        public IEnumerable<IStructureProperty> GetIndexablePropertiesExcept(IReflect type, IEnumerable<string> nonIndexablePaths)
+        {
+            type.AssertNotNull("type");
+            nonIndexablePaths.AssertHasItems("indexablePaths");
+
+            return GetIndexableProperties(type, null, NonIndexableSystemMembers.Union(nonIndexablePaths), null);
+        }
+
+        public IEnumerable<IStructureProperty> GetSpecificIndexableProperties(IReflect type, IEnumerable<string> indexablePaths)
+        {
+            type.AssertNotNull("type");
+            indexablePaths.AssertHasItems("indexablePaths");
+
+            return GetIndexableProperties(type, null, NonIndexableSystemMembers, indexablePaths);
+        }
+
+        private IEnumerable<IStructureProperty> GetIndexableProperties(IReflect type, IStructureProperty parent, IEnumerable<string> nonIndexablePaths, IEnumerable<string> indexablePaths)
         {
             var properties = new List<IStructureProperty>();
 
-            var simplePropertyInfos = GetSimpleIndexablePropertyInfos(type, nonIndexableNames);
+            var simplePropertyInfos = GetSimpleIndexablePropertyInfos(type, nonIndexablePaths);
             var simpleProperties = simplePropertyInfos.Select(spi => new StructureProperty(parent, spi));
             properties.AddRange(simpleProperties);
 
-            var complexPropertyInfos = GetComplexIndexablePropertyInfos(type, nonIndexableNames);
+            var complexPropertyInfos = GetComplexIndexablePropertyInfos(type, nonIndexablePaths);
             foreach (var complexPropertyInfo in complexPropertyInfos)
             {
                 var complexProperty = new StructureProperty(parent, complexPropertyInfo);
                 var simpleComplexProps = GetIndexableProperties(
-                    complexProperty.PropertyType, complexProperty, nonIndexableNames);
+                    complexProperty.PropertyType, complexProperty, nonIndexablePaths, indexablePaths);
 
                 properties.AddRange(simpleComplexProps);
             }
 
-            var enumerablePropertyInfos = GetEnumerableIndexablePropertyInfos(type, nonIndexableNames);
+            var enumerablePropertyInfos = GetEnumerableIndexablePropertyInfos(type, nonIndexablePaths);
             foreach (var enumerablePropertyInfo in enumerablePropertyInfos)
             {
                 var enumerableProperty = new StructureProperty(parent, enumerablePropertyInfo);
@@ -65,45 +86,46 @@ namespace SisoDb.Structures.Schemas
 
                 var elementProperties = GetIndexableProperties(enumerableProperty.ElementType,
                                                                enumerableProperty,
-                                                               nonIndexableNames);
+                                                               nonIndexablePaths,
+                                                               indexablePaths);
                 properties.AddRange(elementProperties);
             }
 
             return properties;
         }
 
-        internal IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(IReflect type, IEnumerable<string> nonIndexableNames = null)
+        internal IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(IReflect type, IEnumerable<string> nonIndexablePaths = null)
         {
             var properties = type.GetProperties(PropertyBindingFlags)
                 .Where(p => p.PropertyType.IsSimpleType());
 
-            if (nonIndexableNames != null)
-                properties = properties.Where(p => !nonIndexableNames.Contains(p.Name));
+            if (nonIndexablePaths != null)
+                properties = properties.Where(p => !nonIndexablePaths.Contains(p.Name));
 
             return properties.ToArray();
         }
 
-        internal IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IReflect type, IEnumerable<string> nonIndexableNames = null)
+        internal IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(IReflect type, IEnumerable<string> nonIndexablePaths = null)
         {
             var properties = type.GetProperties(PropertyBindingFlags)
-                .Where(p => 
-                       !p.PropertyType.IsSimpleType() && 
+                .Where(p =>
+                       !p.PropertyType.IsSimpleType() &&
                        !p.PropertyType.IsEnumerableType() &&
                        GetIdProperty(p.PropertyType) == null);
 
-            if (nonIndexableNames != null)
-                properties = properties.Where(p => !nonIndexableNames.Contains(p.Name));
+            if (nonIndexablePaths != null)
+                properties = properties.Where(p => !nonIndexablePaths.Contains(p.Name));
 
             return properties.ToArray();
         }
 
-        internal IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IReflect type, IEnumerable<string> nonIndexableNames = null)
+        internal IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(IReflect type, IEnumerable<string> nonIndexablePaths = null)
         {
             var properties = type.GetProperties(PropertyBindingFlags)
                 .Where(p => !p.PropertyType.IsSimpleType() && p.PropertyType.IsEnumerableType() && !p.PropertyType.IsEnumerableBytesType());
 
-            if (nonIndexableNames != null)
-                properties = properties.Where(p => !nonIndexableNames.Contains(p.Name));
+            if (nonIndexablePaths != null)
+                properties = properties.Where(p => !nonIndexablePaths.Contains(p.Name));
 
             return properties.ToArray();
         }

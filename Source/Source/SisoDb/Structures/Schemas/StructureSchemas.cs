@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SisoDb.Core;
+using SisoDb.Structures.Schemas.Builders;
 
 namespace SisoDb.Structures.Schemas
 {
@@ -8,8 +9,9 @@ namespace SisoDb.Structures.Schemas
     {
         private readonly Dictionary<string, IStructureSchema> _schemas;
 
-        public IStructureTypeFactory StructureTypeFactory { protected get; set; }
-        public ISchemaBuilder SchemaBuilder { protected get; set; }
+        public IStructureTypeFactory StructureTypeFactory { get; set; }
+        
+        public ISchemaBuilder SchemaBuilder { get; set; }
         
         public StructureSchemas(IStructureTypeFactory structureTypeFactory, ISchemaBuilder schemaBuilder)
         {

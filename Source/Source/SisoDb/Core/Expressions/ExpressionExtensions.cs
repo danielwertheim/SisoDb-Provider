@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace SisoDb.Querying.Lambdas
+namespace SisoDb.Core.Expressions
 {
     public static class ExpressionExtensions
     {

@@ -27,7 +27,7 @@ namespace SisoDb.Structures.Schemas
 
         public bool IsUnique { get; private set; }
 
-        public StructureIndexUniques Uniqueness { get; private set; }
+        public StructureIndexType IndexType { get; private set; }
 
         public bool IsEnumerable { get; private set; }
 
@@ -57,10 +57,10 @@ namespace SisoDb.Structures.Schemas
             if (uniqueAttribute != null && !isSimpleType)
                 throw new SisoDbException(ExceptionMessages.Property_Ctor_UniqueOnNonSimpleType);
 
-            Uniqueness = uniqueAttribute == null ? 
-                StructureIndexUniques.None : 
-                uniqueAttribute.Mode.ToStructureIndexUniques();
-            IsUnique = Uniqueness != StructureIndexUniques.None;
+            IndexType = uniqueAttribute == null ? 
+                StructureIndexType.Normal : 
+                uniqueAttribute.Mode.ToStructureIndexType();
+            IsUnique = IndexType.IsUnique();
 
             Path = PropertyPathBuilder.BuildPath(this);
 

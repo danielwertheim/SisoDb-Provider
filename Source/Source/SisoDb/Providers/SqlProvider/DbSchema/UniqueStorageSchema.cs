@@ -12,12 +12,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             public static readonly SchemaField UqSisoId = new SchemaField(1, "UqSisoId");
             public static readonly SchemaField UqName = new SchemaField(2, "UqName");
             public static readonly SchemaField UqValue = new SchemaField(3, "UqValue");
-            private static readonly SchemaField[] OrderedFields = new[] { SisoId, UqSisoId, UqName, UqValue };
-
-            public static SchemaField[] GetOrderedFields()
-            {
-                return OrderedFields;
-            }
+            internal static readonly SchemaField[] OrderedFields = new[] { SisoId, UqSisoId, UqName, UqValue };
         }
 
         public UniqueStorageSchema(IStructureSchema structureSchema)
@@ -27,7 +22,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
 
         protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
         {
-            return Fields.GetOrderedFields();
+            return Fields.OrderedFields;
         }
     }
 }

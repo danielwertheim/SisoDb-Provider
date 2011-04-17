@@ -10,7 +10,7 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
         public static class Fields
         {
             public static readonly SchemaField SisoId = new SchemaField(0, "SisoId");
-            public static readonly SchemaField[] OrderedFields = new[] { SisoId };
+            internal static readonly SchemaField[] OrderedFields = new[] { SisoId };
         }
 
         public IndexStorageSchema(IStructureSchema structureSchema)
@@ -22,10 +22,9 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
         {
             var staticFields = Fields.OrderedFields;
             var dynamicIndex = staticFields.Count();
-            var dynamicFields = structureSchema.IndexAccessors.Select(iac => new SchemaField(dynamicIndex++, iac.Name));
-            var fields = staticFields.Union(dynamicFields).ToArray();
-
-            return fields;
+            var dynamicFields = structureSchema.IndexAccessors.Select(iac => new SchemaField(dynamicIndex++, iac.Name)); //TODO: Cache
+            
+            return staticFields.Union(dynamicFields).ToArray();
         }
     }
 }

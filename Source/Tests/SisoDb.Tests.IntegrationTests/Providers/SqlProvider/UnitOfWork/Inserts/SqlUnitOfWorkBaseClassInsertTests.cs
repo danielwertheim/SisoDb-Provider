@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using SisoDb.Core;
 using SisoDb.Providers.SqlProvider;
 using SisoDb.Structures.Schemas;
 

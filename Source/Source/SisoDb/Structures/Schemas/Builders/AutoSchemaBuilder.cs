@@ -5,7 +5,7 @@ using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Structures.Schemas
+namespace SisoDb.Structures.Schemas.Builders
 {
     public class AutoSchemaBuilder : ISchemaBuilder
     {

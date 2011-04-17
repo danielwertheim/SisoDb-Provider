@@ -22,13 +22,13 @@ namespace SisoDb.Structures
         public IStructure CreateStructure<T>(T item, IStructureSchema structureSchema)
             where T : class
         {
-            var name = structureSchema.Name;
             var id = IdFactory.GetId(structureSchema, item);
-            var indexes = IndexesFactory.GetIndexes(structureSchema, item, id);
-            var json = JsonSerializer.ToJsonOrEmptyString(item);
 
-            return new Structure(name, id, indexes, json);
+            return new Structure(
+                structureSchema.Name, 
+                id,
+                IndexesFactory.GetIndexes(structureSchema, item, id),
+                JsonSerializer.ToJsonOrEmptyString(item));
         }
-
     }
 }

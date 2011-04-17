@@ -22,9 +22,9 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             get { return Property.IsUnique; }
         }
 
-        public StructureIndexUniques Uniqueness
+        public StructureIndexType IndexType
         {
-            get { return Property.Uniqueness; }
+            get { return Property.IndexType; }
         }
 
         public IndexAccessor(IStructureProperty property) 

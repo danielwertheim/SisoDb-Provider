@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.Core;
+using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Reflections;
@@ -95,7 +96,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             else
                 Visit(e.Left);
 
-            if (Expressions.IsNullConstant(e.Right))
+            if (ExpressionUtils.IsNullConstant(e.Right))
                 _nodesContainer.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
                 _nodesContainer.AddNode(!isGroup && IsFlatteningMembers
@@ -112,7 +113,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected override Expression VisitConstant(ConstantExpression e)
         {
-            if (Expressions.IsNullConstant(e))
+            if (ExpressionUtils.IsNullConstant(e))
             {
                 _nodesContainer.AddNode(new NullValueNode());
                 return e;

@@ -21,7 +21,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
 
             if (schemaField.Name == UniqueStorageSchema.Fields.UqSisoId.Name)
             {
-                if (Enumerator.Current.Uniqueness == StructureIndexUniques.PerType)
+                if (Enumerator.Current.IndexType == StructureIndexType.UniquePerType)
                     return DBNull.Value;
 
                 if (Enumerator.Current.SisoId != null && Enumerator.Current.SisoId.Value != null)

@@ -29,10 +29,10 @@ namespace SisoDb.Structures
                     var values = indexAccessor.GetValues(item);
                     if (values == null || values.Count < 1)
                     {
-                        if (indexAccessor.Uniqueness != StructureIndexUniques.None)
+                        if (indexAccessor.IndexType.IsUnique())
                             throw new SisoDbException(ExceptionMessages.StructureIndexesFactory_UniqueIndex_IsNull.Inject(indexAccessor.Path, indexAccessor.Name));
 
-                        indexes[c] = new StructureIndex(id, indexAccessor.Name, null, indexAccessor.Uniqueness);
+                        indexes[c] = new StructureIndex(id, indexAccessor.Name, null, indexAccessor.IndexType);
                     }
                     else
                     {
@@ -45,10 +45,10 @@ namespace SisoDb.Structures
                                 valueString.Append(StringConverter.AsString(value));
                                 valueString.Append("$>");
                             }
-                            indexes[c] = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.Uniqueness);
+                            indexes[c] = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.IndexType);
                         }
                         else
-                            indexes[c] = new StructureIndex(id, indexAccessor.Name, values[0], indexAccessor.Uniqueness);
+                            indexes[c] = new StructureIndex(id, indexAccessor.Name, values[0], indexAccessor.IndexType);
                     }
                 });
             return indexes;

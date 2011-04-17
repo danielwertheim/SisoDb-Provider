@@ -10,6 +10,6 @@
 
         bool IsUnique { get; }
 
-        StructureIndexUniques Uniqueness { get; }
+        StructureIndexType IndexType { get; }
     }
 }

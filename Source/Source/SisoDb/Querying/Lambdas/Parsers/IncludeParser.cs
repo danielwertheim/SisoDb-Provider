@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using SisoDb.Core;
+using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 
 namespace SisoDb.Querying.Lambdas.Parsers
@@ -15,7 +16,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             foreach (var includeExpression in includeExpressions)
             {
-                var memberExpression = Expressions.GetRightMostMember(includeExpression);
+                var memberExpression = ExpressionUtils.GetRightMostMember(includeExpression);
                 var idReferencePath = memberExpression.Path();
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
 

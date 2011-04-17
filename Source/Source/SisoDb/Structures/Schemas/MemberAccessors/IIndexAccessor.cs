@@ -10,7 +10,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
 
         bool IsUnique { get; }
 
-        StructureIndexUniques Uniqueness { get; }
+        StructureIndexType IndexType { get; }
 
         IList<object> GetValues<T>(T item) where T : class;
     }

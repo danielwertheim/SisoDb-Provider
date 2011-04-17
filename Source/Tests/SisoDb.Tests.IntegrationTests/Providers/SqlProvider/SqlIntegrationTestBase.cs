@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using SisoDb.Core;
 using SisoDb.Providers.SqlProvider;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider

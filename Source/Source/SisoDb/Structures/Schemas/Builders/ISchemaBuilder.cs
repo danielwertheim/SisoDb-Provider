@@ -1,4 +1,4 @@
-﻿namespace SisoDb.Structures.Schemas
+﻿namespace SisoDb.Structures.Schemas.Builders
 {
     public interface ISchemaBuilder
     {

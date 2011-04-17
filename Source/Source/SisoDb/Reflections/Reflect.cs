@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas;
 
 namespace SisoDb.Reflections
@@ -30,7 +31,7 @@ namespace SisoDb.Reflections
 
         public static MemberExpression MemberFrom<TProp>(Expression<Func<T, TProp>> e)
         {
-            return Expressions.GetRightMostMember(e.Body);
+            return ExpressionUtils.GetRightMostMember(e.Body);
         }
     }
 }
