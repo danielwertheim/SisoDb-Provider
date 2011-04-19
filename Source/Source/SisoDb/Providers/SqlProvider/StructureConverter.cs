@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
@@ -31,25 +32,26 @@ namespace SisoDb.Providers.SqlProvider
             var batchCount = 0;
             while (true)
             {
-                //TODO: Pointer instead?
-                var sourceBatch = sourceElements.Skip(batchCount * batchSize).Take(batchSize);
-                if (sourceBatch.Count() < 1)
+                var sourceBatch = sourceElements.Skip(batchCount * batchSize).Take(batchSize).ToArray();
+                if (sourceBatch.Length < 1)
                     yield break;
 
-                var structures = new IStructure[sourceBatch.Count()];
-                var c = 0;
+                var structures = new IStructure[sourceBatch.Length];
                 var consumedIds = (batchCount * _maxBatchSize);
-                foreach (var sourceItem in sourceBatch)
-                {
-                    if (_identitySeed.HasValue)
-                    {
-                        var id = _identitySeed.Value + consumedIds + c;
-                        _structureSchema.IdAccessor.SetValue(sourceItem, id);
-                    }
 
-                    structures[c] = _structureBuilder.CreateStructure(sourceItem, _structureSchema);
-                    c++;
-                }
+                Parallel.For(0, sourceBatch.Length, 
+                    i =>
+                    {
+                        var sourceItem = sourceBatch[i];
+
+                        if (_identitySeed.HasValue)
+                        {
+                            var id = _identitySeed.Value + consumedIds + i;
+                            _structureSchema.IdAccessor.SetValue(sourceItem, id);
+                        }
+
+                        structures[i] = _structureBuilder.CreateStructure(sourceItem, _structureSchema);
+                    });
 
                 yield return structures;
 
