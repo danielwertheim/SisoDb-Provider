@@ -10,12 +10,10 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
     public class SqlBulkInserter
     {
         private readonly ISqlDbClient _dbClient;
-        private readonly IElementBatcher _elementsBatcher;
 
         public SqlBulkInserter(ISqlDbClient dbClient)
         {
             _dbClient = dbClient;
-            _elementsBatcher = new ElementBatcher(1000);
         }
 
         public void Insert(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
@@ -23,29 +21,28 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
             var structureStorageSchema = new StructureStorageSchema(structureSchema);
             var indexesStorageSchema = new IndexStorageSchema(structureSchema);
             var uniquesStorageSchema = new UniqueStorageSchema(structureSchema);
-
-            foreach (var batch in _elementsBatcher.Batch(structures))
+            
+            using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
             {
-                using (var structuresReader = new StructuresReader(structureStorageSchema, batch))
+                using (var indexesReader = new IndexesReader(
+                    indexesStorageSchema,
+                    structures.Select(s => new IndexRow(s.Id, s.Indexes.ToArray()))))
                 {
-                    using (var indexesReader = new IndexesReader(
-                        indexesStorageSchema,
-                        batch.Select(s => new IndexRow(s.Id, s.Indexes.ToArray()))))
-                    {
-                        InsertStructures(structuresReader);
-                        InsertIndexes(indexesReader);
+                    InsertStructures(structuresReader);
+                    InsertIndexes(indexesReader);
 
-                        var uniques = batch.SelectMany(s => s.Uniques).ToArray();
-                        if (uniques.Length <= 0) continue;
-                        using (var uniquesReader = new UniquesReader(
-                            uniquesStorageSchema,
-                            uniques))
-                        {
-                            InsertUniques(uniquesReader);
-                        }
+                    var uniques = structures.SelectMany(s => s.Uniques).ToArray();
+                    if (uniques.Length <= 0)
+                        return;
+                    using (var uniquesReader = new UniquesReader(
+                        uniquesStorageSchema,
+                        uniques))
+                    {
+                        InsertUniques(uniquesReader);
                     }
                 }
             }
+
         }
 
         private void InsertStructures(StructuresReader structures)

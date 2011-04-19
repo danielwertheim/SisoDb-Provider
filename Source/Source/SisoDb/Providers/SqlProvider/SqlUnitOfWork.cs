@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlProvider.BulkInserts;
@@ -89,35 +88,18 @@ namespace SisoDb.Providers.SqlProvider
             InsertMany(_batchDeserializer.Deserialize<T>(json).ToList());
         }
 
-        private void DoInsert<T>(IStructureSchema structureSchema, IList<T> items) where T : class
+        private void DoInsert<T>(IStructureSchema structureSchema, IEnumerable<T> items) where T : class 
         {
-            if (items.Count < 1)
+            if (items.Count() < 1)
                 return;
 
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
-            var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, items.Count) : null;
-            var structures = new IStructure[items.Count];
-            Action<int> itteration = c =>
-            {
-                var item = items[c];
+            var seed = hasIdentity ? (int?)_identityGenerator.CheckOutAndGetSeed(structureSchema, items.Count()) : null;
 
-                if (seed.HasValue)
-                {
-                    var id = seed.Value + c;
-                    structureSchema.IdAccessor.SetValue(item, id);
-                }
-
-                structures[c] = _structureBuilder.CreateStructure(item, structureSchema);
-            };
-
-            if (structures.Length > 10)
-                Parallel.For(0, structures.Length, itteration);
-            else
-                for (var c = 0; c < structures.Length; c++)
-                    itteration(c);
-
+            var converter = new StructureConverter(structureSchema, _structureBuilder, 1000, seed);
             var bulkInserter = new SqlBulkInserter(_dbClient);
-            bulkInserter.Insert(structureSchema, structures);
+            foreach (var structures in converter.Convert(items))
+                bulkInserter.Insert(structureSchema, structures);
         }
 
         public void Update<T>(T item) where T : class
@@ -354,25 +336,26 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
-        public IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression) 
+        public IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression)
             where T : class
         {
             return Query<T>(q => q.Where(expression));
         }
 
-        public IEnumerable<TOut> WhereAs<TContract, TOut>(Expression<Func<TContract, bool>> expression) 
-            where TContract : class where TOut : class 
+        public IEnumerable<TOut> WhereAs<TContract, TOut>(Expression<Func<TContract, bool>> expression)
+            where TContract : class
+            where TOut : class
         {
             return QueryAs<TContract, TOut>(q => q.Where(expression));
         }
 
-        public IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression) 
+        public IEnumerable<string> WhereAsJson<T>(Expression<Func<T, bool>> expression)
             where T : class
         {
             return QueryAsJson<T>(q => q.Where(expression));
         }
 
-        public IEnumerable<T> Query<T>(Action<IQueryCommandBuilder<T>> commandInitializer) 
+        public IEnumerable<T> Query<T>(Action<IQueryCommandBuilder<T>> commandInitializer)
             where T : class
         {
             var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
