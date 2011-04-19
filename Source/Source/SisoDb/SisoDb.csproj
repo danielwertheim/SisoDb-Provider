@@ -163,7 +163,6 @@
     <Compile Include="Core\IElementBatcher.cs" />
     <Compile Include="Providers\AzureProvider\AzureDatabase.cs" />
     <Compile Include="Providers\SqlProvider\BulkInserts\IndexesReader.cs" />
-    <Compile Include="Providers\SqlProvider\BulkInserts\IndexRow.cs" />
     <Compile Include="Providers\SqlProvider\BulkInserts\UniquesReader.cs" />
     <Compile Include="Providers\AzureProvider\DbSchema\AzureDbColumnGenerator.cs" />
     <Compile Include="Providers\DbSchema\IDbColumnGenerator.cs" />

@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using SisoDb.Providers.SqlProvider.DbSchema;
+using SisoDb.Structures;
 
 namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
-    public class IndexesReader : SingleResultReaderBase<IndexRow>
+    public class IndexesReader : SingleResultReaderBase<IStructureIndex[]>
     {
-        public IndexesReader(IndexStorageSchema storageSchema, IEnumerable<IndexRow> items) //TODO: TA BORT INDEXROW
+        public IndexesReader(IndexStorageSchema storageSchema, IEnumerable<IStructureIndex[]> items) //TODO: TA BORT INDEXROW
             : base(storageSchema, items)
         {
         }
 
         public override object GetValue(int ordinal)
         {
-            return Enumerator.Current.GetValue(ordinal);
+            return ordinal != 0
+                ? Enumerator.Current[ordinal - 1].Value
+                : Enumerator.Current[0].SisoId.Value;
         }
     }
 }

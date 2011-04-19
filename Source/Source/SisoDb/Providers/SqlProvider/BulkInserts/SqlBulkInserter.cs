@@ -24,9 +24,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
             
             using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
             {
-                using (var indexesReader = new IndexesReader(
-                    indexesStorageSchema,
-                    structures.Select(s => new IndexRow(s.Id, s.Indexes.ToArray()))))
+                using (var indexesReader = new IndexesReader(indexesStorageSchema, ExtractIndexes(structures)))
                 {
                     InsertStructures(structuresReader);
                     InsertIndexes(indexesReader);
@@ -42,7 +40,11 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
                     }
                 }
             }
+        }
 
+        private static IEnumerable<IStructureIndex[]> ExtractIndexes(IEnumerable<IStructure> structures)
+        {
+            return structures.Select(s => s.Indexes.ToArray());
         }
 
         private void InsertStructures(StructuresReader structures)

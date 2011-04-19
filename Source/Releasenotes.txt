@@ -5,6 +5,9 @@ B=Major changes of API
 C=Minor changes
 D=Bug fixes
 
+v1.0.2.1    - 2011-04-19
+[Fixed]     Fixed overconsumption of memory while inserting big batches of items.
+
 v1.0.2      - 2011-04-17
 [New]       You can now specify explicitly what to index or what not to index. This will of course result in that fields not being indexed, is not queryable.
             This is something you might want to do to get better performance. You can always reindex the data using DataBase.UpdateStructureSet (http://sisodb.com/docs/doc13)

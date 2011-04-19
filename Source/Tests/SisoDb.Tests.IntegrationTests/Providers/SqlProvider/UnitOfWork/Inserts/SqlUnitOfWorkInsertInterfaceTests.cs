@@ -5,12 +5,11 @@ using System.Linq;
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Providers.SqlProvider;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 {
     [TestFixture]
-    public class SqlUnitOfWorkInterfaceInsertTests : SqlIntegrationTestBase
+    public class SqlUnitOfWorkInsertInterfaceTests : SqlIntegrationTestBase
     {
         protected override void OnTestFinalize()
         {

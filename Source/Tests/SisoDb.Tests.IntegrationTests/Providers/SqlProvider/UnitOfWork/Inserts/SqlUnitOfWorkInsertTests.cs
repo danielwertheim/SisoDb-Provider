@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Data;
+using NUnit.Framework;
 using SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.TestModel;
 using SisoDb.TestUtils;
 
