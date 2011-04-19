@@ -1,12 +1,12 @@
 From v0.8.0.0 the following is used for versioning:
 vA.B.C.D
 A=Will see when I get there
-B=Major changes of API
+B=Major changes
 C=Minor changes
 D=Bug fixes
 
 v1.0.2.1    - 2011-04-19
-[Fixed]     Fixed overconsumption of memory while inserting big batches of items.
+[Fixed]    Fixed overconsumption of memory while inserting big batches of items.
 
 v1.0.2      - 2011-04-17
 [New]       You can now specify explicitly what to index or what not to index. This will of course result in that fields not being indexed, is not queryable.
