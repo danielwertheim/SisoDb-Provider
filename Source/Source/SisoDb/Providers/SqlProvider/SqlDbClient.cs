@@ -159,9 +159,9 @@ namespace SisoDb.Providers.SqlProvider
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
-        public int GetIdentity(string entityHash, int numOfIds)
+        public int CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
         {
-            var sql = SqlStringsRepository.GetSql("Sys_Identities_Get");
+            var sql = SqlStringsRepository.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
             return ExecuteScalar<int>(CommandType.Text, sql,
                                                 new QueryParameter("entityHash", entityHash),

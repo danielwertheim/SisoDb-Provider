@@ -232,6 +232,12 @@ end</value>
     <value>set nocount on;
 select count(*) from [dbo].[{0}];</value>
   </data>
+  <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
+    <value>set nocount on;
+declare @id int;
+update [dbo].[SisoDbIdentities] set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityHash] = @entityHash;
+select @id as SisoId;</value>
+  </data>
   <data name="Sys_Identities_CreateIfNotExists" xml:space="preserve">
     <value>if object_id(N'[{0}].[dbo].[SisoDbIdentities]', N'U') is null
 begin
@@ -243,12 +249,6 @@ begin
 		constraint [PK_SisoDbIdentities] primary key([EntityHash])
 	);
 end</value>
-  </data>
-  <data name="Sys_Identities_Get" xml:space="preserve">
-    <value>set nocount on;
-declare @id int;
-update [dbo].[SisoDbIdentities] set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityHash] = @entityHash;
-select @id as SisoId;</value>
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>set nocount on;

@@ -25,7 +25,7 @@ namespace SisoDb.Providers.SqlProvider
         bool TableExists(string name);
         IList<SqlDbColumn> GetColumns(string tableName, params string[] namesToSkip);
         int RowCount(string tableName);
-        int GetIdentity(string entityHash, int numOfIds);
+        int CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
         
         void DeleteById(ValueType sisoId, string structureTableName, string indexesTableName, string uniquesTableName);
         void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName);

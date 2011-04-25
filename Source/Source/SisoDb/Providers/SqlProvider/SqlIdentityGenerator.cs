@@ -14,7 +14,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public int CheckOutAndGetSeed(IStructureSchema structureSchema, int numOfIds)
         {
-            return _dbClient.GetIdentity(structureSchema.Hash, numOfIds);
+            return _dbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, numOfIds);
         }
     }
 }
