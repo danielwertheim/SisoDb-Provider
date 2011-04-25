@@ -37,7 +37,10 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             var sql = _sqlStringsRepository.GetSql("UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
                 .Inject(structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.UqName.Name, inString);
 
-            _dbClient.ExecuteNonQuery(CommandType.Text, sql);
+            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
+            {
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private IList<string> GetKeyNamesToDrop(IStructureSchema structureSchema)

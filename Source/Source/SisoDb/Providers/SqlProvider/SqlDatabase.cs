@@ -55,7 +55,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public virtual void EnsureNewDatabase()
         {
-            using (var client = new SqlDbClient(ServerConnectionInfo, false))
+            using (var client = new SqlServerClient(ServerConnectionInfo))
             {
                 if (client.DatabaseExists(Name))
                     client.DropDatabase(Name);
@@ -66,7 +66,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public virtual void CreateIfNotExists()
         {
-            using (var client = new SqlDbClient(ServerConnectionInfo, false))
+            using (var client = new SqlServerClient(ServerConnectionInfo))
             {
                 if (!client.DatabaseExists(Name))
                     client.CreateDatabase(Name);
@@ -75,18 +75,18 @@ namespace SisoDb.Providers.SqlProvider
 
         public virtual void InitializeExisting()
         {
-            using (var client = new SqlDbClient(ServerConnectionInfo, false))
+            using (var client = new SqlServerClient(ServerConnectionInfo))
             {
                 if (!client.DatabaseExists(Name))
                     throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(Name));
 
-                client.CreateSysTables(Name);
+                client.InitializeExistingDb(Name);
             }
         }
 
         public virtual void DeleteIfExists()
         {
-            using (var client = new SqlDbClient(ServerConnectionInfo, false))
+            using (var client = new SqlServerClient(ServerConnectionInfo))
             {
                 if (client.DatabaseExists(Name))
                     client.DropDatabase(Name);
@@ -95,7 +95,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public virtual bool Exists()
         {
-            using (var client = new SqlDbClient(ServerConnectionInfo, false))
+            using (var client = new SqlServerClient(ServerConnectionInfo))
             {
                 return client.DatabaseExists(Name);
             }
@@ -103,22 +103,26 @@ namespace SisoDb.Providers.SqlProvider
 
         public void DropStructureSet<T>() where T : class
         {
-            using (var client = new SqlDbClient(ConnectionInfo, false))
+            using (var client = new SqlDbClient(ConnectionInfo, true))
             {
                 var dropper = new SqlDbSchemaDropper(client);
                 var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
                 DbSchemaManager.DropStructureSet(structureSchema, dropper);
                 StructureSchemas.RemoveSchema(TypeFor<T>.Type);
+
+                client.Flush();
             }
         }
 
         public void UpsertStructureSet<T>() where T : class
         {
-            using (var client = new SqlDbClient(ConnectionInfo, false))
+            using (var client = new SqlDbClient(ConnectionInfo, true))
             {
                 var upserter = new SqlDbSchemaUpserter(client);
                 var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
                 DbSchemaManager.UpsertStructureSet(structureSchema, upserter);
+
+                client.Flush();
             }
         }
 

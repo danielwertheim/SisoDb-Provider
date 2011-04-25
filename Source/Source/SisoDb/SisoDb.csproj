@@ -85,6 +85,9 @@
     <Compile Include="Core\IStringConverter.cs" />
     <Compile Include="Providers\ISisoProviderFactories.cs" />
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
+    <Compile Include="Providers\AdoNetExtensions.cs" />
+    <Compile Include="Providers\SqlProvider\ISqlServerClient.cs" />
+    <Compile Include="Providers\SqlProvider\SqlServerClient.cs" />
     <Compile Include="Providers\SqlProvider\StructureConverter.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />

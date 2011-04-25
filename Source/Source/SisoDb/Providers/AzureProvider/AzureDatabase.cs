@@ -24,17 +24,6 @@ namespace SisoDb.Providers.AzureProvider
             throw new NotSupportedException();
         }
 
-        public override void InitializeExisting()
-        {
-            using (var client = new SqlDbClient(ConnectionInfo, false))
-            {
-                if (!client.DatabaseExists(Name))
-                    throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(Name));
-
-                client.CreateSysTables(Name);
-            }
-        }
-
         public override void DeleteIfExists()
         {
             throw new NotSupportedException();

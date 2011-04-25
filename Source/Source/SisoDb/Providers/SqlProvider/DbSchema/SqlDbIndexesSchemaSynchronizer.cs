@@ -57,7 +57,10 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             var sql = _sqlStringsRepository.GetSql("AddColumns")
                 .Inject(tableName, columnsDdlCombined);
 
-            _dbClient.ExecuteNonQuery(CommandType.Text, sql);
+            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
+            {
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private void DropColumns(string tableName, IList<SchemaChange> columns)
@@ -70,7 +73,10 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
             var sql = _sqlStringsRepository.GetSql("DropColumns")
                 .Inject(tableName, namesCombined);
 
-            _dbClient.ExecuteNonQuery(CommandType.Text, sql);
+            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
+            {
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private IEnumerable<SchemaChange> GetSchemaChanges(IStructureSchema structureSchema)

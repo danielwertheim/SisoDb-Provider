@@ -21,8 +21,11 @@ namespace SisoDb.Providers.SqlProvider.DbSchema
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetStructureTableName(),
                 structureSchema.GetUniquesTableName());
-            
-            _dbClient.ExecuteNonQuery(CommandType.Text, sql, new QueryParameter("entityHash", structureSchema.Hash));
+
+            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql, new QueryParameter("entityHash", structureSchema.Hash)))
+            {
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
