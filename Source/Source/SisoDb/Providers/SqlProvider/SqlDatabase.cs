@@ -35,7 +35,7 @@ namespace SisoDb.Providers.SqlProvider
 
             StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
             StructureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
-            DbSchemaManager = new DbSchemaManager();
+            DbSchemaManager = SisoEnvironment.Resources.ResolveDbSchemaManager();
         }
 
         private void InitializeConnectionInfo(ISisoConnectionInfo connectionInfo)

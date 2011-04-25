@@ -1,5 +1,6 @@
 ﻿using System;
 using SisoDb.Cryptography;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
@@ -28,6 +29,7 @@ namespace SisoDb
         public Func<ISisoIdFactory> ResolveSisoIdFactory;
         public Func<IStructureIndexesFactory> ResolveStructureIndexesFactory;
         public Func<IStructureBuilder> ResolveStructureBuilder;
+        public Func<IDbSchemaManager> ResolveDbSchemaManager;
 
         public ResourceContainer()
         {
@@ -48,6 +50,7 @@ namespace SisoDb
             ResolveSisoIdFactory = () => new SisoIdFactory();
             ResolveStructureIndexesFactory = () => new StructureIndexesFactory(SisoEnvironment.Formatting.StringConverter);
             ResolveStructureBuilder = () => new StructureBuilder(ResolveJsonSerializer(), ResolveSisoIdFactory(), ResolveStructureIndexesFactory());
+            ResolveDbSchemaManager = () => new DbSchemaManager();
         }
     }
 }
