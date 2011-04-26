@@ -42,6 +42,7 @@ namespace SisoDb.Providers.SqlProvider
             ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
             SqlStringsRepository = new SqlStringsRepository(ProviderType);
             DbDataTypeTranslator = new SqlDbDataTypeTranslator();
+
             _connection = new SqlConnection(ConnectionInfo.ConnectionString.PlainString);
             _connection.Open();
 

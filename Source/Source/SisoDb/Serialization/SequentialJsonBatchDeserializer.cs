@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SisoDb.Core;
 
 namespace SisoDb.Serialization
@@ -14,8 +15,7 @@ namespace SisoDb.Serialization
 
         public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class
         {
-            foreach (var json in sourceData)
-                yield return JsonSerializer.ToItemOrNull<T>(json);
+            return sourceData.Select(json => JsonSerializer.ToItemOrNull<T>(json));
         }
     }
 }

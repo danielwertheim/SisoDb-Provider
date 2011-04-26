@@ -19,10 +19,11 @@ namespace SisoDb.Serialization
             var q = new ConcurrentQueue<string>();
 
             var task = new Task(() =>
-                                    {
-                                        foreach (var json in sourceData)
-                                            q.Enqueue(json);
-                                    });
+            {
+                foreach (var json in sourceData)
+                    q.Enqueue(json);
+            });
+
             task.Start();
 
             while (!task.IsCompleted)
@@ -34,13 +35,9 @@ namespace SisoDb.Serialization
 
             Task.WaitAll(task);
 
-            //Can not read back in parallel since we don't want to
-            //mess up the ordering.
-            string json2;
-            while (q.TryDequeue(out json2))
-            {
-                yield return JsonSerializer.ToItemOrNull<T>(json2);
-            }
+            string j2;
+            while (q.TryDequeue(out j2))
+                yield return JsonSerializer.ToItemOrNull<T>(j2);
         }
     }
 }
