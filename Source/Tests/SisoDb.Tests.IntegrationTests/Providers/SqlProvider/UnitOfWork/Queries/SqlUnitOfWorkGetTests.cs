@@ -295,6 +295,54 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             CustomAssert.AreValueEqual(items[3], refetched[0]);
         }
 
+        [Test]
+        public void GetByIds_WhenSeveralIdentityIds_MatchingSubsetIsReturned()
+        {
+            var items = new List<IdentityItemForGetQueries>
+                        {
+                            new IdentityItemForGetQueries {SortOrder = 1, StringValue = "A"},
+                            new IdentityItemForGetQueries {SortOrder = 2, StringValue = "B"},
+                            new IdentityItemForGetQueries {SortOrder = 3, StringValue = "C"}
+                        };
+            List<IdentityItemForGetQueries> refetched;
+
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                refetched = uow.GetByIds<IdentityItemForGetQueries>(new[] { 1, 3 }).ToList();
+            }
+
+            Assert.AreEqual(2, refetched.Count);
+            CustomAssert.AreValueEqual(items[0], refetched[0]);
+            CustomAssert.AreValueEqual(items[2], refetched[1]);
+        }
+
+        [Test]
+        public void GetByIds_WhenSeveralGuidIds_MatchingSubsetIsReturned()
+        {
+            var items = new List<GuidItemForGetQueries>
+                        {
+                            new GuidItemForGetQueries {SortOrder = 1, StringValue = "A"},
+                            new GuidItemForGetQueries {SortOrder = 2, StringValue = "B"},
+                            new GuidItemForGetQueries {SortOrder = 3, StringValue = "C"}
+                        };
+            List<GuidItemForGetQueries> refetched;
+
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                refetched = uow.GetByIds<GuidItemForGetQueries>(new[] { items[0].SisoId, items[2].SisoId }).ToList();
+            }
+
+            Assert.AreEqual(2, refetched.Count);
+            CustomAssert.AreValueEqual(items[0], refetched[0]);
+            CustomAssert.AreValueEqual(items[2], refetched[1]);
+        }
+
         private class IdentityItemForGetQueries
         {
             public int SisoId { get; set; }
@@ -309,13 +357,13 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             public Guid SisoId { get; set; }
 
             public int SortOrder { get; set; }
+
+            public string StringValue { get; set; }
         }
 
         private class ItemForQueriesInfo
         {
             public int SortOrder { get; set; }
-
-            public string StringValue { get; set; }
         }
     }
 }

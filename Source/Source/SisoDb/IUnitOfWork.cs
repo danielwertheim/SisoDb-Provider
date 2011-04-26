@@ -132,6 +132,26 @@ namespace SisoDb
             where T : class;
 
         /// <summary>
+        /// Returns all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed identities.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <returns>All structures (<typeparamref name="T"/>)
+        /// or empty IEnumerable of <typeparamref name="T"/>.</returns>
+        IEnumerable<T> GetByIds<T>(IEnumerable<int> ids) 
+            where T : class;
+
+        /// <summary>
+        /// Returns all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed Guids.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <returns>All structures (<typeparamref name="T"/>)
+        /// or empty IEnumerable of <typeparamref name="T"/>.</returns>
+        IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids)
+            where T : class;
+
+        /// <summary>
         /// Returns one single structure identified
         /// by a guid sisoId. 
         /// </summary>

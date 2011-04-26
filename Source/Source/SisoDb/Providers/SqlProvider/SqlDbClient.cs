@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.SqlServer.Server;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 using SisoDb.Resources;
+using SisoDb.Structures;
 
 namespace SisoDb.Providers.SqlProvider
 {
@@ -81,25 +83,7 @@ namespace SisoDb.Providers.SqlProvider
 
         public IDbCommand CreateCommand(CommandType commandType, string sql, params IQueryParameter[] parameters)
         {
-            var cmd = _connection.CreateCommand();
-            cmd.CommandType = commandType;
-
-            if (!string.IsNullOrWhiteSpace(sql))
-                cmd.CommandText = sql;
-
-            if (_transaction != null)
-                cmd.Transaction = _transaction;
-
-            foreach (var queryParameter in parameters)
-            {
-                var parameter = cmd.CreateParameter();
-                parameter.ParameterName = queryParameter.Name;
-                parameter.Value = queryParameter.Value;
-
-                cmd.Parameters.Add(parameter);
-            }
-
-            return cmd;
+            return _connection.CreateCommand(_transaction, commandType, sql, parameters);
         }
 
         public SqlBulkCopy GetBulkCopy(bool keepIdentities)
@@ -201,6 +185,63 @@ namespace SisoDb.Providers.SqlProvider
             var sql = SqlStringsRepository.GetSql("GetById").Inject(structureTableName);
 
             return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", sisoId));
+        }
+
+        public IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName)
+        {
+            var sql = SqlStringsRepository.GetSql("GetByIds").Inject(structureTableName);
+
+            using (var cmd = CreateCommand(CommandType.Text, sql))
+            {
+                cmd.Parameters.Add(idType == IdTypes.Identity
+                                   ? CreateIdentityIdsTableParam(ids)
+                                   : CreateGuidIdsTableParam(ids));
+
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                {
+                    while (reader.Read())
+                    {
+                        yield return reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+            }
+        }
+
+        private static SqlParameter CreateIdentityIdsTableParam(IEnumerable<ValueType> ids)
+        {
+            return new SqlParameter("@ids", SqlDbType.Structured)
+                           {
+                               Value = ids.Select(id => CreateIdentityIdRecord((int)id)),
+                               TypeName = "dbo.SisoIdentityIds"
+                           };
+        }
+
+        private static SqlDataRecord CreateIdentityIdRecord(int id)
+        {
+            var record = new SqlDataRecord(new SqlMetaData("Id", SqlDbType.Int));
+
+            record.SetInt32(0, id);
+
+            return record;
+        }
+
+        private static SqlParameter CreateGuidIdsTableParam(IEnumerable<ValueType> ids)
+        {
+            return new SqlParameter("@ids", SqlDbType.Structured)
+            {
+                Value = ids.Select(id => CreateGuidIdRecord((Guid)id)),
+                TypeName = "dbo.SisoGuidIds"
+            };
+        }
+
+        private static SqlDataRecord CreateGuidIdRecord(Guid id)
+        {
+            var record = new SqlDataRecord(new SqlMetaData("Id", SqlDbType.UniqueIdentifier));
+
+            record.SetGuid(0, id);
+
+            return record;
         }
 
         private T ExecuteScalar<T>(CommandType commandType, string sql, params IQueryParameter[] parameters)

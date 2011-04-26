@@ -217,6 +217,10 @@ select json from [dbo].[{0}] order by [SisoId];</value>
     <value>set nocount on;
 select json from [dbo].[{0}] where SisoId =@id;</value>
   </data>
+  <data name="GetByIds" xml:space="preserve">
+    <value>set nocount on;
+select Json from [dbo].[{0}] where SisoId in (select Id from @ids);</value>
+  </data>
   <data name="GetColumns" xml:space="preserve">
     <value>set nocount on;
 if (select OBJECT_ID(@tableName, 'U')) is not null
@@ -248,6 +252,19 @@ begin
 		[CurrentId] [int] NOT NULL default(0),
 		constraint [PK_SisoDbIdentities] primary key([EntityHash])
 	);
+end</value>
+  </data>
+  <data name="Sys_Types_CreateIfNotExists" xml:space="preserve">
+    <value>use [{0}];
+set nocount on;
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuidIds') is null
+begin
+create type dbo.SisoGuidIds as table (Id uniqueidentifier primary key not null)	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIdentityIds') is null
+begin
+create type dbo.SisoIdentityIds as table (Id int primary key not null)	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">

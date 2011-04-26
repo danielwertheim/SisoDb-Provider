@@ -181,6 +181,18 @@ namespace SisoDb.Providers.SqlProvider
             return GetById<T, T>(SisoId.NewIdentityId(sisoId));
         }
 
+        public IEnumerable<T> GetByIds<T>(IEnumerable<int> ids) where T : class
+        {
+            return _batchDeserializer.Deserialize<T>(
+                GetByIdsAsJson<T>(ids.Select(SisoId.NewIdentityId), IdTypes.Identity));
+        }
+
+        public IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids) where T : class
+        {
+            return _batchDeserializer.Deserialize<T>(
+                GetByIdsAsJson<T>(ids.Select(SisoId.NewGuidId), IdTypes.Guid));
+        }
+
         [DebuggerStepThrough]
         public TOut GetByIdAs<TContract, TOut>(Guid sisoId)
             where TContract : class
@@ -223,6 +235,17 @@ namespace SisoDb.Providers.SqlProvider
             UpsertStructureSet(structureSchema);
 
             return _dbClient.GetJsonById(sisoId.Value, structureSchema.GetStructureTableName());
+        }
+
+        private IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<ISisoId> ids, IdTypes idType) where T : class
+        {
+            var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
+            UpsertStructureSet(structureSchema);
+
+            return _dbClient.GetJsonByIds(
+                ids.Select(id => id.Value),
+                idType,
+                structureSchema.GetStructureTableName());
         }
 
         public IEnumerable<T> GetAll<T>() where T : class
@@ -301,6 +324,7 @@ namespace SisoDb.Providers.SqlProvider
                     {
                         yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
                     }
+                    reader.Close();
                 }
             }
         }
@@ -332,6 +356,7 @@ namespace SisoDb.Providers.SqlProvider
                     {
                         yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
                     }
+                    reader.Close();
                 }
             }
         }
@@ -402,6 +427,7 @@ namespace SisoDb.Providers.SqlProvider
                     {
                         yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
                     }
+                    reader.Close();
                 }
             }
         }

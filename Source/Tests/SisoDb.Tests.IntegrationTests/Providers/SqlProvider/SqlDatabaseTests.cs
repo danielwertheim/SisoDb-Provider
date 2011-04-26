@@ -75,7 +75,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
 
             var db = new SqlDatabase(connectionInfo);
 
-            Assert.Throws<SisoDbException>(() => db.InitializeExisting());
+            Assert.Throws<SisoDbException>(db.InitializeExisting);
         }
 
         [Test]

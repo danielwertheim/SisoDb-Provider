@@ -6,6 +6,7 @@ using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlProvider.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
+using SisoDb.Structures;
 
 namespace SisoDb.Providers.SqlProvider
 {
@@ -40,7 +41,9 @@ namespace SisoDb.Providers.SqlProvider
         int CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
 
         string GetJsonById(ValueType sisoId, string structureTableName);
-        
+
+        IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName);
+
         void ExecuteSingleResultReader(CommandType commandType, string sql, Action<IDataRecord> callback, params IQueryParameter[] parameters);
     }
 }

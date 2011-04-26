@@ -49,31 +49,11 @@ namespace SisoDb.Providers.SqlProvider
             _connection = null;
         }
 
-        public IDbCommand CreateCommand(CommandType commandType, string sql, params IQueryParameter[] parameters)
-        {
-            var cmd = _connection.CreateCommand();
-            cmd.CommandType = commandType;
-
-            if (!string.IsNullOrWhiteSpace(sql))
-                cmd.CommandText = sql;
-            
-            foreach (var queryParameter in parameters)
-            {
-                var parameter = cmd.CreateParameter();
-                parameter.ParameterName = queryParameter.Name;
-                parameter.Value = queryParameter.Value;
-
-                cmd.Parameters.Add(parameter);
-            }
-
-            return cmd;
-        }
-
         public bool DatabaseExists(string name)
         {
             var sql = SqlStringsRepository.GetSql("DatabaseExists");
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("dbName", name)))
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sql, new QueryParameter("dbName", name)))
             {
                 return cmd.GetScalarResult<int>() > 0;
             }
@@ -83,25 +63,24 @@ namespace SisoDb.Providers.SqlProvider
         {
             var sql = SqlStringsRepository.GetSql("CreateDatabase").Inject(name);
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
             {
                 cmd.ExecuteNonQuery();
-
-                ExecuteCreateSysTables(name, cmd);
             }
-        }
 
-        private void ExecuteCreateSysTables(string name, IDbCommand cmd)
-        {
-            cmd.CommandText = SqlStringsRepository.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
-            cmd.ExecuteNonQuery();
+            InitializeExistingDb(name);
         }
 
         public void InitializeExistingDb(string name)
         {
-            using (var cmd = CreateCommand(CommandType.Text, string.Empty))
+            var firstSql = SqlStringsRepository.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
+
+            using (var cmd = _connection.CreateCommand(CommandType.Text, firstSql))
             {
-                ExecuteCreateSysTables(name, cmd);
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = SqlStringsRepository.GetSql("Sys_Types_CreateIfNotExists").Inject(name);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -109,7 +88,7 @@ namespace SisoDb.Providers.SqlProvider
         {
             var sql = SqlStringsRepository.GetSql("DropDatabase").Inject(name);
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
             {
                 cmd.ExecuteNonQuery();
             }

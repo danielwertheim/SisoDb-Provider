@@ -117,6 +117,7 @@ namespace SisoDb.Providers.SqlProvider
                         {
                             yield return reader.GetString(0);
                         }
+                        reader.Close();
                     }
                 }
             }
