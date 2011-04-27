@@ -136,8 +136,7 @@ namespace SisoDb
         /// matching passed identities.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <returns>All structures (<typeparamref name="T"/>)
-        /// or empty IEnumerable of <typeparamref name="T"/>.</returns>
+        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
         IEnumerable<T> GetByIds<T>(IEnumerable<int> ids) 
             where T : class;
 
@@ -146,8 +145,7 @@ namespace SisoDb
         /// matching passed Guids.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <returns>All structures (<typeparamref name="T"/>)
-        /// or empty IEnumerable of <typeparamref name="T"/>.</returns>
+        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
         IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids)
             where T : class;
 
@@ -205,6 +203,24 @@ namespace SisoDb
         /// <param name="sisoId"></param>
         /// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
         string GetByIdAsJson<T>(int sisoId) 
+            where T : class;
+
+        /// <summary>
+        /// Returns Json representation for all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed identities.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
+        IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<int> ids)
+            where T : class;
+
+        /// <summary>
+        /// Returns Json representation for all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed Guids.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
+        IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<Guid> ids)
             where T : class;
 
         /// <summary>

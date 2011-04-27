@@ -184,13 +184,13 @@ namespace SisoDb.Providers.SqlProvider
         public IEnumerable<T> GetByIds<T>(IEnumerable<int> ids) where T : class
         {
             return _batchDeserializer.Deserialize<T>(
-                GetByIdsAsJson<T>(ids.Select(SisoId.NewIdentityId), IdTypes.Identity));
+                GetByIdsAsJson<T>(ids.Select(i => (ValueType)i), IdTypes.Identity));
         }
 
         public IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids) where T : class
         {
             return _batchDeserializer.Deserialize<T>(
-                GetByIdsAsJson<T>(ids.Select(SisoId.NewGuidId), IdTypes.Guid));
+                GetByIdsAsJson<T>(ids.Select(i => (ValueType)i), IdTypes.Guid));
         }
 
         [DebuggerStepThrough]
@@ -229,6 +229,18 @@ namespace SisoDb.Providers.SqlProvider
             return GetByIdAsJson<T>(SisoId.NewIdentityId(sisoId));
         }
 
+        [DebuggerStepThrough]
+        public IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<int> ids) where T : class
+        {
+            return GetByIdsAsJson<T>(ids.Select(i => (ValueType)i), IdTypes.Identity);
+        }
+
+        [DebuggerStepThrough]
+        public IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<Guid> ids) where T : class
+        {
+            return GetByIdsAsJson<T>(ids.Select(i => (ValueType)i), IdTypes.Guid);
+        }
+
         private string GetByIdAsJson<T>(ISisoId sisoId) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
@@ -237,13 +249,13 @@ namespace SisoDb.Providers.SqlProvider
             return _dbClient.GetJsonById(sisoId.Value, structureSchema.GetStructureTableName());
         }
 
-        private IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<ISisoId> ids, IdTypes idType) where T : class
+        private IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<ValueType> ids, IdTypes idType) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
             UpsertStructureSet(structureSchema);
 
             return _dbClient.GetJsonByIds(
-                ids.Select(id => id.Value),
+                ids,
                 idType,
                 structureSchema.GetStructureTableName());
         }
