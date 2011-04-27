@@ -197,7 +197,12 @@ delete from [dbo].[{2}] where SisoId &gt;= @idFrom and SisoId &lt;= @idTo;</valu
 drop column {1};</value>
   </data>
   <data name="DropDatabase" xml:space="preserve">
-    <value>drop database [{0}];</value>
+    <value>if (select DB_ID('{0}')) is not null
+begin
+    alter database [{0}] set offline with rollback immediate;
+    alter database [{0}] set online;
+    drop database [{0}];
+end</value>
   </data>
   <data name="DropStructureTables" xml:space="preserve">
     <value>if object_id(N'{0}', N'U') is not null drop table [dbo].[{0}];

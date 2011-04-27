@@ -37,18 +37,18 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
             ExecuteSql(CommandType.Text, sql);
         }
 
-        public bool DatabaseExists(string name)
-        {
-            var sql = "select DB_ID('{0}');".Inject(name);
-
-            return ExecuteScalar<int>(CommandType.Text, sql) > 0;
-        }
-
         public bool TableExists(string name)
         {
             var sql = "select OBJECT_ID('[{0}]', 'U');".Inject(name);
 
             return !string.IsNullOrWhiteSpace(ExecuteScalar<string>(CommandType.Text, sql));
+        }
+
+        public bool TypeExists(string name)
+        {
+            var sql = "select 1 from sys.table_types where name = '{0}';".Inject(name);
+
+            return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
 
         public void CreateProcedure(string spSql)
@@ -172,9 +172,34 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
                     var value = cmd.ExecuteScalar();
 
                     if (value == null || value == DBNull.Value)
-                        return default(T);
+                        retVal = default(T);
+                    else
+                        retVal = (T)Convert.ChangeType(value, typeof(T));
+                }
+                cn.Close();
+            }
 
-                    retVal = (T)Convert.ChangeType(value, typeof(T));
+            return retVal;
+        }
+
+        public T? ExecuteNullableScalar<T>(CommandType commandType, string sql) where T : struct
+        {
+            T? retVal;
+
+            using (var cn = CreateConnection())
+            {
+                cn.Open();
+                using (var cmd = cn.CreateCommand())
+                {
+                    cmd.CommandType = commandType;
+                    cmd.CommandText = sql;
+
+                    var value = cmd.ExecuteScalar();
+
+                    if (value == null || value == DBNull.Value)
+                        retVal = default(T?);
+                    else
+                        retVal = (T)Convert.ChangeType(value, typeof(T));
                 }
                 cn.Close();
             }

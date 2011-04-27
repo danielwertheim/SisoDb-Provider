@@ -9,6 +9,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
     [TestFixture]
     public class SqlDatabaseTests : SqlIntegrationTestBase
     {
+        private readonly ISisoConnectionInfo _connectionInfoForTempDb = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForTemp);
+
         protected override void OnTestFinalize()
         {
             DbHelper.DropDatabase(LocalConstants.TempDbName);
@@ -21,9 +23,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         public void Exists_WhenItExists_ReturnsTrue()
         {
             DbHelper.EnsureDbExists(LocalConstants.TempDbName);
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForTemp);
             
-            var db = new SqlDatabase(connectionInfo);
+            var db = new SqlDatabase(_connectionInfoForTempDb);
             var dbExists = db.Exists();
 
             Assert.IsTrue(dbExists);
@@ -33,34 +34,52 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         public void Exists_WhenItDoesNotExist_ReturnsTrue()
         {
             DbHelper.DropDatabase(LocalConstants.TempDbName);
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForTemp);
-            var db = new SqlDatabase(connectionInfo);
-
+            
+            var db = new SqlDatabase(_connectionInfoForTempDb);
             var dbExists = db.Exists();
 
             Assert.IsFalse(dbExists);
         }
 
         [Test]
-        public void CreateIfNotExists_WhenNoDatabaseExists_DatabaseGetsCreated()
+        public void EnsureNewDatabase_WhenNoDbExists_CreatesNewInitializedDb()
         {
             DbHelper.DropDatabase(LocalConstants.TempDbName);
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForTemp);
 
-            var db = new SqlDatabase(connectionInfo);
+            var db = new SqlDatabase(_connectionInfoForTempDb);
+            db.EnsureNewDatabase();
+
+            AssertInitializedDbExists(db);
+        }
+
+        [Test]
+        public void EnsureNewDatabase_WhenDbExists_CreatesNewInitializedDb()
+        {
+            DbHelper.EnsureDbExists(LocalConstants.TempDbName);
+
+            var db = new SqlDatabase(_connectionInfoForTempDb);
+            db.EnsureNewDatabase();
+
+            AssertInitializedDbExists(db);
+        }
+
+        [Test]
+        public void CreateIfNotExists_WhenNoDatabaseExists_CreatesNewInitializedDb()
+        {
+            DbHelper.DropDatabase(LocalConstants.TempDbName);
+
+            var db = new SqlDatabase(_connectionInfoForTempDb);
             db.CreateIfNotExists();
 
-            var dbExists = DbHelper.DatabaseExists(LocalConstants.TempDbName);
-            Assert.IsTrue(dbExists);
+            AssertInitializedDbExists(db);
         }
 
         [Test]
         public void DeleteIfExists_WhenDatabaseExists_DatabaseGetsDropped()
         {
             DbHelper.EnsureDbExists(LocalConstants.TempDbName);
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForTemp);
 
-            var db = new SqlDatabase(connectionInfo);
+            var db = new SqlDatabase(_connectionInfoForTempDb);
             db.DeleteIfExists();
 
             var dbExists = db.Exists();
@@ -71,9 +90,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         public void InitializeExisting_WhenDatabaseDoesNotExist_ThrowsSisoDbException()
         {
             DbHelper.DropDatabase(LocalConstants.TempDbName);
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForTemp);
 
-            var db = new SqlDatabase(connectionInfo);
+            var db = new SqlDatabase(_connectionInfoForTempDb);
 
             Assert.Throws<SisoDbException>(db.InitializeExisting);
         }
@@ -82,9 +100,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         public void InitializeExisting_WhenDatabaseExists_CreatesSisoSysTables()
         {
             DbHelper.EnsureDbExists(LocalConstants.TempDbName);
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForTemp);
 
-            var db = new SqlDatabase(connectionInfo);
+            var db = new SqlDatabase(_connectionInfoForTempDb);
             db.InitializeExisting();
 
             var identitiesTableExists = DbHelper.TableExists("SisoDbIdentities");
@@ -92,17 +109,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
         }
 
         [Test]
-        public void UpsertStructureSet_WhenEntityHasGuidId_IdColumnGetsRowGuidCol()
+        public void InitializeExisting_WhenDatabaseExists_CreatesSisoSysMembers()
         {
-            Database.UpsertStructureSet<ItemForUpsertStructureSet>();
+            DbHelper.EnsureDbExists(LocalConstants.TempDbName);
 
-            var structureTableHasRowGuidCol = DbHelper.ExecuteScalar<bool>(CommandType.Text,
-                "select columnproperty(object_id('ItemForUpsertStructureSetStructure'), 'SisoId', 'IsRowGuidCol');");
-            var indexesTableHasRowGuidCol = DbHelper.ExecuteScalar<bool>(CommandType.Text,
-                "select columnproperty(object_id('ItemForUpsertStructureSetIndexes'), 'SisoId', 'IsRowGuidCol');");
+            var db = new SqlDatabase(_connectionInfoForTempDb);
+            db.InitializeExisting();
 
-            Assert.IsTrue(structureTableHasRowGuidCol, "Structure table");
-            Assert.IsTrue(indexesTableHasRowGuidCol, "Indexes table");
+            AssertInitializedDbExists(db);
         }
 
         [Test]
@@ -143,6 +157,20 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider
                 Assert.IsNotNull(newItem3);
                 Assert.AreEqual("C", newItem3.NewString1);
             }
+        }
+
+        private void AssertInitializedDbExists(SqlDatabase db)
+        {
+            var dbExists = db.Exists();
+            Assert.IsTrue(dbExists);
+
+            var identitiesTableExists = DbHelper.TableExists("SisoDbIdentities");
+            Assert.IsTrue(identitiesTableExists);
+
+            var guidIdsTypeExists = DbHelper.TypeExists("SisoGuidIds");
+            var identityIdsTypeExists = DbHelper.TypeExists("SisoIdentityIds");
+            Assert.IsTrue(guidIdsTypeExists);
+            Assert.IsTrue(identityIdsTypeExists);
         }
 
         private class ItemForUpsertStructureSet
