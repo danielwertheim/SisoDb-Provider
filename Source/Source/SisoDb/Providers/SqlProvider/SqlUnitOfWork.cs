@@ -209,6 +209,18 @@ namespace SisoDb.Providers.SqlProvider
             return GetById<TContract, TOut>(SisoId.NewIdentityId(sisoId));
         }
 
+        public IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<int> ids) where TContract : class where TOut : class
+        {
+            return _batchDeserializer.Deserialize<TOut>(
+                GetByIdsAsJson<TContract>(ids.Select(i => (ValueType)i), IdTypes.Identity));
+        }
+
+        public IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<Guid> ids) where TContract : class where TOut : class
+        {
+            return _batchDeserializer.Deserialize<TOut>(
+                 GetByIdsAsJson<TContract>(ids.Select(i => (ValueType)i), IdTypes.Guid));
+        }
+
         private TOut GetById<TContract, TOut>(ISisoId sisoId)
             where TContract : class
             where TOut : class

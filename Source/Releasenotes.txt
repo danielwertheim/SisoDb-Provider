@@ -5,8 +5,9 @@ B=Major changes
 C=Minor changes
 D=Bug fixes
 
-v1.0.3      - 2011-04-27
+v1.0.3      - 2011-04-28
 [New]       GetByIds, GetByIdsAsJson, GetByIdsAs - Lets you return multiple structures based on multiple ids.
+[New]       Count(lambda expression) - Lets you execute a count on on structures matching a boolean lambda expression.
 
 v1.0.2.1    - 2011-04-19
 [Fixed]    Fixed overconsumption of memory while inserting big batches of items.
@@ -31,7 +32,7 @@ v1.0.1.1    - 2011-04-12
 
             1) SisoId       int|uniqueidentifier    not null
             2) UqSisoId     int|uniqueidentifier    null
-            3) UqName       [nvarchar](250)          not null
+            3) UqName       [nvarchar](250)         not null
             4) UqValue      [varchar](100)          not null
 
 

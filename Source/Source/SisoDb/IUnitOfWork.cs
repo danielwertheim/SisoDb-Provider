@@ -178,6 +178,32 @@ namespace SisoDb
             where TOut : class;
 
         /// <summary>
+        /// Returns all structures for the defined structure <typeparamref name="TContract"/>
+        /// matching passed identities.
+        /// </summary>
+        /// <typeparam name="TContract">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <typeparam name="TOut">
+        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
+        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<int> ids)
+            where TContract : class
+            where TOut : class;
+
+        /// <summary>
+        /// Returns all structures for the defined structure <typeparamref name="TContract"/>
+        /// matching passed Guids.
+        /// </summary>
+        /// <typeparam name="TContract">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <typeparam name="TOut">
+        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
+        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<Guid> ids)
+            where TContract : class
+            where TOut : class;
+
+        /// <summary>
         /// Returns one single structure identified
         /// by a guid sisoId as Json. This is the most
         /// effective return type, since the Json
