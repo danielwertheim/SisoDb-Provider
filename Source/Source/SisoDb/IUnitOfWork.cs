@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using SisoDb.Querying;
+using SisoDb.Structures;
 
 namespace SisoDb
 {
@@ -108,6 +109,27 @@ namespace SisoDb
             where T : class;
 
         /// <summary>
+        /// Deletes all structures for the defined structure <typeparamref name="T"/>
+        /// having an id in the intervall.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        void DeleteByIdInterval<T>(int idFrom, int idTo)
+            where T : class;
+
+        /// <summary>
+        /// Deletes all structures for the defined structure <typeparamref name="T"/>
+        /// having an id in the intervall.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        /// <remarks>EXTREMLY IMPORTANT THAT YOU HAVE NOT USED OWN NON SEQUENTIAL GUIDS!</remarks>
+        void DeleteByIdInterval<T>(Guid idFrom, Guid idTo)
+            where T : class;
+
+        /// <summary>
         /// Deletes one or more structures matchings the sent
         /// expression.
         /// </summary>
@@ -178,6 +200,29 @@ namespace SisoDb
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
         IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids)
+            where T : class;
+
+        /// <summary>
+        /// Returns all structures for the defined structure <typeparamref name="T"/>
+        /// matching specified identity interval.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
+        IEnumerable<T> GetByIdInterval<T>(int idFrom, int idTo)
+            where T : class;
+
+        /// <summary>
+        /// Returns all structures for the defined structure <typeparamref name="T"/>
+        /// matching specified guid interval.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
+        /// <remarks>YOU COULD GET STRANGE RESULTS IF YOU HAVE SPECIFIED NON SEQUENTIAL GUIDS.</remarks>
+        IEnumerable<T> GetByIdInterval<T>(Guid idFrom, Guid idTo)
             where T : class;
 
         /// <summary>

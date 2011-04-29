@@ -93,6 +93,7 @@
     <Compile Include="Providers\SqlProvider\SqlIntegrationTestBase.cs" />
     <Compile Include="Providers\SqlProvider\StructureSetUpdaterTests\SqlStructureSetUpdaterTests.cs" />
     <Compile Include="Providers\SqlProvider\StructureSetUpdaterTests\SqlStructureSetUpdaterTestsForDifferentTypes.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdIntervalTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdsTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkBaseClassInsertTests.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertInterfaceTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkJsonInsertTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkCountTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkGetByIdIntervalTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkGetByIdsTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithPagingTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithTakeTests.cs" />

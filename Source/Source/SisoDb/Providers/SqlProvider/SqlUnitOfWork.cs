@@ -156,6 +156,30 @@ namespace SisoDb.Providers.SqlProvider
             DeleteByIds<T>(ids.Select(id => (ValueType)id), IdTypes.Guid);
         }
 
+        [DebuggerStepThrough]
+        public void DeleteByIdInterval<T>(int idFrom, int idTo) where T : class
+        {
+            DeleteWhereIdIsBetween<T>(idFrom, idTo);
+        }
+
+        [DebuggerStepThrough]
+        public void DeleteByIdInterval<T>(Guid idFrom, Guid idTo) where T : class
+        {
+            DeleteWhereIdIsBetween<T>(idFrom, idTo);
+        }
+
+        private void DeleteWhereIdIsBetween<T>(ValueType idFrom, ValueType idTo) where T : class
+        {
+            var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
+            UpsertStructureSet(structureSchema);
+
+            _dbClient.DeleteWhereIdIsBetween(
+                idFrom, idTo, 
+                structureSchema.GetStructureTableName(), 
+                structureSchema.GetIndexesTableName(), 
+                structureSchema.GetUniquesTableName());
+        }
+
         private void DeleteByIds<T>(IEnumerable<ValueType> ids, IdTypes idType) where T : class
         {
             var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
@@ -218,16 +242,40 @@ namespace SisoDb.Providers.SqlProvider
             return GetById<T, T>(SisoId.NewIdentityId(sisoId));
         }
 
+        [DebuggerStepThrough]
         public IEnumerable<T> GetByIds<T>(IEnumerable<int> ids) where T : class
         {
             return _batchDeserializer.Deserialize<T>(
                 GetByIdsAsJson<T>(ids.Select(i => (ValueType)i), IdTypes.Identity));
         }
 
+        [DebuggerStepThrough]
         public IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids) where T : class
         {
             return _batchDeserializer.Deserialize<T>(
                 GetByIdsAsJson<T>(ids.Select(i => (ValueType)i), IdTypes.Guid));
+        }
+
+        [DebuggerStepThrough]
+        public IEnumerable<T> GetByIdInterval<T>(int idFrom, int idTo) where T : class
+        {
+            return _batchDeserializer.Deserialize<T>(
+                GetJsonWhereIdIsBetween<T>(idFrom, idTo));
+        }
+
+        [DebuggerStepThrough]
+        public IEnumerable<T> GetByIdInterval<T>(Guid idFrom, Guid idTo) where T : class
+        {
+            return _batchDeserializer.Deserialize<T>(
+                GetJsonWhereIdIsBetween<T>(idFrom, idTo));
+        }
+
+        private IEnumerable<string> GetJsonWhereIdIsBetween<T>(ValueType idFrom, ValueType idTo) where T : class
+        {
+            var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
+            UpsertStructureSet(structureSchema);
+
+            return _dbClient.GetJsonWhereIdIsBetween(idFrom, idTo, structureSchema.GetStructureTableName());
         }
 
         [DebuggerStepThrough]

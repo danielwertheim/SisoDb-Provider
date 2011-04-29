@@ -48,6 +48,8 @@ namespace SisoDb.Providers.SqlProvider
 
         IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName);
 
+        IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName);
+
         void ExecuteSingleResultReader(CommandType commandType, string sql, Action<IDataRecord> callback, params IQueryParameter[] parameters);
     }
 }

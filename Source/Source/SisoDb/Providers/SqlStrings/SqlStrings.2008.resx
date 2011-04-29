@@ -243,6 +243,10 @@ from INFORMATION_SCHEMA.COLUMNS
 where TABLE_NAME = @tableName;
 end</value>
   </data>
+  <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
+    <value>set nocount on;
+select Json from [dbo].[{0}] where SisoId between @idFrom and @idTo;</value>
+  </data>
   <data name="RowCount" xml:space="preserve">
     <value>set nocount on;
 select count(*) from [dbo].[{0}];</value>

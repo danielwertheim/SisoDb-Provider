@@ -110,6 +110,10 @@ namespace SisoDb.Providers.SqlProvider
 
         public void DeleteByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName, string indexesTableName, string uniquesTableName)
         {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
+            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+
             var sql = SqlStringsRepository.GetSql("DeleteByIds").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
@@ -128,6 +132,7 @@ namespace SisoDb.Providers.SqlProvider
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+            
             var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
             var sql = SqlStringsRepository.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Sql, sqlDataType);
 
@@ -154,6 +159,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public bool TableExists(string name)
         {
+            name.AssertNotNullOrWhiteSpace("name");
+
             var sql = SqlStringsRepository.GetSql("TableExists");
             var value = ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("tableName", name));
 
@@ -162,6 +169,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public IList<SqlDbColumn> GetColumns(string tableName, params string[] namesToSkip)
         {
+            tableName.AssertNotNullOrWhiteSpace("tableName");
+
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
             var dbColumns = new List<SqlDbColumn>();
 
@@ -181,6 +190,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public int RowCount(string structureTableName)
         {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+
             var sql = SqlStringsRepository.GetSql("RowCount").Inject(structureTableName);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
@@ -188,6 +199,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public int RowCountByQuery(string indexesTableName, ISqlCommandInfo cmdInfo)
         {
+            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
+
             var sql = SqlStringsRepository.GetSql("RowCountByQuery").Inject(indexesTableName, cmdInfo.Sql);
 
             return ExecuteScalar<int>(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
@@ -195,6 +208,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public int CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
         {
+            entityHash.AssertNotNullOrWhiteSpace("entityHash");
+
             var sql = SqlStringsRepository.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
             return ExecuteScalar<int>(CommandType.Text, sql,
@@ -204,6 +219,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public string GetJsonById(ValueType sisoId, string structureTableName)
         {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+
             var sql = SqlStringsRepository.GetSql("GetById").Inject(structureTableName);
 
             return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", sisoId));
@@ -211,6 +228,8 @@ namespace SisoDb.Providers.SqlProvider
 
         public IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName)
         {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+
             var sql = SqlStringsRepository.GetSql("GetByIds").Inject(structureTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql))
@@ -219,6 +238,25 @@ namespace SisoDb.Providers.SqlProvider
                                    ? CreateIdentityIdsTableParam(ids)
                                    : CreateGuidIdsTableParam(ids));
 
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                {
+                    while (reader.Read())
+                    {
+                        yield return reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+            }
+        }
+
+        public IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName)
+        {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+
+            var sql = SqlStringsRepository.GetSql("GetJsonWhereIdIsBetween").Inject(structureTableName);
+
+            using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("idFrom", sisoIdFrom), new QueryParameter("idTo", sisoIdTo)))
+            {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
                 {
                     while (reader.Read())
