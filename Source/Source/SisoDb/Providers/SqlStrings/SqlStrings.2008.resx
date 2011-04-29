@@ -174,6 +174,12 @@ delete from [dbo].[{0}] where SisoId = @id;
 delete from [dbo].[{1}] where SisoId = @id;
 delete from [dbo].[{2}] where SisoId = @id;</value>
   </data>
+  <data name="DeleteByIds" xml:space="preserve">
+    <value>set nocount on;
+delete from [dbo].[{0}] where SisoId in (select Id from @ids);
+delete from [dbo].[{1}] where SisoId in (select Id from @ids);
+delete from [dbo].[{2}] where SisoId in (select Id from @ids);</value>
+  </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
 declare @ids table (id {4});
@@ -240,6 +246,10 @@ end</value>
   <data name="RowCount" xml:space="preserve">
     <value>set nocount on;
 select count(*) from [dbo].[{0}];</value>
+  </data>
+  <data name="RowCountByQuery" xml:space="preserve">
+    <value>set nocount on;
+select count(*) from [dbo].[{0}] si where {1}; </value>
   </data>
   <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
     <value>set nocount on;

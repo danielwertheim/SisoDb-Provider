@@ -90,6 +90,24 @@ namespace SisoDb
             where T : class;
 
         /// <summary>
+        /// Deletes all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed identities.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to delete.</param>
+        void DeleteByIds<T>(IEnumerable<int> ids)
+            where T : class;
+
+        /// <summary>
+        /// Deletes all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed Guids.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to delete.</param>
+        void DeleteByIds<T>(IEnumerable<Guid> ids)
+            where T : class;
+
+        /// <summary>
         /// Deletes one or more structures matchings the sent
         /// expression.
         /// </summary>
@@ -107,6 +125,17 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <returns>Number of structures.</returns>
         int Count<T>() 
+            where T : class;
+
+        /// <summary>
+        /// Issues a simple count for how many structures there are
+        /// in the specified structure type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="expression"></param>
+        /// <returns>Number of structures.</returns>
+        int Count<T>(Expression<Func<T, bool>> expression)
             where T : class;
 
         /// <summary>
@@ -136,6 +165,7 @@ namespace SisoDb
         /// matching passed identities.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
         IEnumerable<T> GetByIds<T>(IEnumerable<int> ids) 
             where T : class;
@@ -145,6 +175,7 @@ namespace SisoDb
         /// matching passed Guids.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
         IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids)
             where T : class;
@@ -185,6 +216,7 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <typeparam name="TOut">
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
         IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<int> ids)
             where TContract : class
@@ -198,6 +230,7 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <typeparam name="TOut">
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
         IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<Guid> ids)
             where TContract : class
@@ -236,6 +269,7 @@ namespace SisoDb
         /// matching passed identities.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
         IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<int> ids)
             where T : class;
@@ -245,6 +279,7 @@ namespace SisoDb
         /// matching passed Guids.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
         IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<Guid> ids)
             where T : class;

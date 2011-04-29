@@ -144,6 +144,31 @@ namespace SisoDb.Providers.SqlProvider
                 structureSchema.GetUniquesTableName());
         }
 
+        [DebuggerStepThrough]
+        public void DeleteByIds<T>(IEnumerable<int> ids) where T : class
+        {
+            DeleteByIds<T>(ids.Select(id => (ValueType)id), IdTypes.Identity);
+        }
+
+        [DebuggerStepThrough]
+        public void DeleteByIds<T>(IEnumerable<Guid> ids) where T : class
+        {
+            DeleteByIds<T>(ids.Select(id => (ValueType)id), IdTypes.Guid);
+        }
+
+        private void DeleteByIds<T>(IEnumerable<ValueType> ids, IdTypes idType) where T : class
+        {
+            var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
+            UpsertStructureSet(structureSchema);
+
+            _dbClient.DeleteByIds(
+                ids,
+                idType,
+                structureSchema.GetStructureTableName(),
+                structureSchema.GetIndexesTableName(),
+                structureSchema.GetUniquesTableName());
+        }
+
         public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
             expression.AssertNotNull("expression");
@@ -167,6 +192,18 @@ namespace SisoDb.Providers.SqlProvider
             UpsertStructureSet(structureSchema);
 
             return _dbClient.RowCount(structureSchema.GetStructureTableName());
+        }
+
+        public int Count<T>(Expression<Func<T, bool>> expression) where T : class
+        {
+            var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
+            UpsertStructureSet(structureSchema);
+
+            var commandBuilder = _commandBuilderFactory.CreateQueryCommandBuilder<T>();
+            var queryCommand = commandBuilder.Where(expression).Command;
+            var whereSql = _queryGenerator.GenerateWhere(queryCommand);
+            
+            return _dbClient.RowCountByQuery(structureSchema.GetIndexesTableName(), whereSql);
         }
 
         [DebuggerStepThrough]

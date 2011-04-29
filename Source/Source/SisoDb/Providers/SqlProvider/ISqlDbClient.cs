@@ -28,6 +28,8 @@ namespace SisoDb.Providers.SqlProvider
 
         void DeleteById(ValueType sisoId, string structureTableName, string indexesTableName, string uniquesTableName);
 
+        void DeleteByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName, string indexesTableName, string uniquesTableName);
+
         void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName);
         
         void DeleteWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName, string indexesTableName, string uniquesTableName);
@@ -36,7 +38,9 @@ namespace SisoDb.Providers.SqlProvider
 
         IList<SqlDbColumn> GetColumns(string tableName, params string[] namesToSkip);
 
-        int RowCount(string tableName);
+        int RowCount(string structureTableName);
+
+        int RowCountByQuery(string tableName, ISqlCommandInfo cmdInfo);
 
         int CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
 

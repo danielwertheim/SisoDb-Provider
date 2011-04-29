@@ -5,9 +5,12 @@ B=Major changes
 C=Minor changes
 D=Bug fixes
 
-v1.0.3      - 2011-04-28
-[New]       GetByIds, GetByIdsAsJson, GetByIdsAs - Lets you return multiple structures based on multiple ids.
-[New]       Count(lambda expression) - Lets you execute a count on on structures matching a boolean lambda expression.
+v1.0.3      - 2011-04-29
+[New]       GetByIds, GetByIdsAsJson, GetByIdsAs - Lets you return multiple structures based on a set of multiple ids.
+[New]       GetByIdInterval - Lets you return multiple structures having ids matching a defined interval.
+[New]       DeleteByIds - Lets you delete multiple structures by specifying a set of ids to delete.
+[New]       DeleteByIdInterval - Lets you delete multiple structures having ids matching a defined interval.
+[New]       Count(lambda expression) - Lets you execute a count on structures matching a boolean lambda expression.
 
 v1.0.2.1    - 2011-04-19
 [Fixed]    Fixed overconsumption of memory while inserting big batches of items.

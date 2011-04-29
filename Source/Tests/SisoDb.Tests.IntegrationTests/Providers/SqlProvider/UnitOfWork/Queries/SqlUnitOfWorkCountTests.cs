@@ -20,6 +20,15 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         }
 
         [Test]
+        public void Count_UsingExpressionWhenNoItemsExists_ReturnsZero()
+        {
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                Assert.AreEqual(0, uow.Count<ItemForCountTests>(i => i.SortOrder == 0));
+            }
+        }
+
+        [Test]
         public void Count_WhenTwoItemsExistsInUnCommittedUnitOfWork_ReturnsTwo()
         {
             var items = new[]
@@ -51,6 +60,44 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
                 uow.Commit();
 
                 Assert.AreEqual(2, uow.Count<ItemForCountTests>());
+            }
+        }
+
+        [Test]
+        public void Count_WhenExpressionMatchesTwoOfThreeItems_ReturnsTwo()
+        {
+            var items = new[]
+                        {
+                            new ItemForCountTests{SortOrder = 1, Value = "A"},
+                            new ItemForCountTests{SortOrder = 2, Value = "B"},
+                            new ItemForCountTests{SortOrder = 3, Value = "C"}
+                        };
+
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                Assert.AreEqual(2, uow.Count<ItemForCountTests>(i => i.SortOrder > 1));
+            }
+        }
+
+        [Test]
+        public void Count_WhenExpressionMatchesNoneOfThreeItems_ReturnsTwo()
+        {
+            var items = new[]
+                        {
+                            new ItemForCountTests{SortOrder = 1, Value = "A"},
+                            new ItemForCountTests{SortOrder = 2, Value = "B"},
+                            new ItemForCountTests{SortOrder = 3, Value = "C"}
+                        };
+
+            using (var uow = Database.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+
+                Assert.AreEqual(0, uow.Count<ItemForCountTests>(i => i.SortOrder == 0));
             }
         }
 

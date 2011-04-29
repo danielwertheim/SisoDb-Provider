@@ -108,6 +108,21 @@ namespace SisoDb.Providers.SqlProvider
             }
         }
 
+        public void DeleteByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName, string indexesTableName, string uniquesTableName)
+        {
+            var sql = SqlStringsRepository.GetSql("DeleteByIds").Inject(
+                structureTableName, indexesTableName, uniquesTableName);
+
+            using (var cmd = CreateCommand(CommandType.Text, sql))
+            {
+                cmd.Parameters.Add(idType == IdTypes.Identity
+                                   ? CreateIdentityIdsTableParam(ids)
+                                   : CreateGuidIdsTableParam(ids));
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName)
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
@@ -164,11 +179,18 @@ namespace SisoDb.Providers.SqlProvider
             return dbColumns;
         }
 
-        public int RowCount(string tableName)
+        public int RowCount(string structureTableName)
         {
-            var sql = SqlStringsRepository.GetSql("RowCount").Inject(tableName);
+            var sql = SqlStringsRepository.GetSql("RowCount").Inject(structureTableName);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
+        }
+
+        public int RowCountByQuery(string indexesTableName, ISqlCommandInfo cmdInfo)
+        {
+            var sql = SqlStringsRepository.GetSql("RowCountByQuery").Inject(indexesTableName, cmdInfo.Sql);
+
+            return ExecuteScalar<int>(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
 
         public int CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
