@@ -16,6 +16,6 @@
   <files>
       <file src="..\Solution\Source\SisoDb\bin\Deploy\*.dll" target="lib" />
       <file src="..\Solution\Source\SisoDb\bin\Deploy\*.xml" target="lib" />
-	  <file src="..\Solution\Source\SisoDb\bin\Deploy\Licence*.txt" target="lib" />
+	  <file src="..\Solution\Source\SisoDb\bin\Deploy\*.txt" target="lib" />
   </files>
 </package>
