@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>SisoDb</id>    
+    <title>SisoDb - Simple Structure Oriented Db</title>
+	<version>1.0.3</version>
+	<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
+	<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
+	<summary>SisoDb is a document-oriented nosql'ish provider over SQL-Server.</summary>
+    <description>SisoDb is a document oriented nosql'ish provider over SQL-Server. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs simple schemachanges on the fly and can assist you to handle more complex model updates. NOTE! The reference being added for ServiceStack is not necessary as a reference but a dependency and must be included in the bin-folder. A NuGet issue if you ask me. Just ensure it's in the bin-folder.</description>
+	<projectUrl>http://www.sisodb.com</projectUrl>
+	<licenseUrl>http://github.com/sedanwer/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
+	<requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<tags>sisodb, sql, sql server, json, nosql, document-oriented database</tags>
+    </metadata>
+  <files>
+      <file src="..\Solution\Source\SisoDb\bin\Deploy\*.dll" target="lib" />
+      <file src="..\Solution\Source\SisoDb\bin\Deploy\*.xml" target="lib" />
+	  <file src="..\Solution\Source\SisoDb\bin\Deploy\Licence*.txt" target="lib" />
+  </files>
+</package>
