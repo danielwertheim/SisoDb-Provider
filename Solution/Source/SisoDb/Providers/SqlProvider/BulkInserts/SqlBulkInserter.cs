@@ -65,7 +65,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
 
         private void InsertIndexes(IndexesReader indexes)
         {
-            using (var bulkInserter = _dbClient.GetBulkCopy(false))
+            using (var bulkInserter = _dbClient.GetBulkCopy(true))
             {
                 bulkInserter.BatchSize = indexes.RecordsAffected;
                 bulkInserter.DestinationTableName = indexes.StorageSchema.Name;

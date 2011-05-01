@@ -18,12 +18,15 @@ namespace SisoDb.Structures
 
         public static SisoId NewIdentityId(int value)
         {
+            if (value < 1)
+                throw new ArgumentOutOfRangeException("value", ExceptionMessages.Id_IdentityIsOutOfRange);
+
             var id = new SisoId
                          {
                              IdType = IdTypes.Identity, 
-                             DataType = typeof (int)
+                             DataType = typeof (int),
+                             Value = value
                          };
-            id.SetIdentityValue(value);
 
             return id;
         }
@@ -41,14 +44,6 @@ namespace SisoDb.Structures
                          };
 
             return id;
-        }
-
-        public void SetIdentityValue(int value)
-        {
-            if (value < 1)
-                throw new ArgumentOutOfRangeException("value", ExceptionMessages.Id_IdentityIsOutOfRange);
-
-            Value = value;
         }
 
         public override bool Equals(object obj)

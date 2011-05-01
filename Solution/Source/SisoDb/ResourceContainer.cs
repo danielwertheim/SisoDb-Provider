@@ -30,6 +30,7 @@ namespace SisoDb
         public Func<IStructureIndexesFactory> ResolveStructureIndexesFactory;
         public Func<IStructureBuilder> ResolveStructureBuilder;
         public Func<IDbSchemaManager> ResolveDbSchemaManager;
+        public Func<IJsonBatchDeserializer> ResolveJsonBatchDeserializer;
 
         public ResourceContainer()
         {
@@ -51,6 +52,7 @@ namespace SisoDb
             ResolveStructureIndexesFactory = () => new StructureIndexesFactory(SisoEnvironment.Formatting.StringConverter);
             ResolveStructureBuilder = () => new StructureBuilder(ResolveJsonSerializer(), ResolveSisoIdFactory(), ResolveStructureIndexesFactory());
             ResolveDbSchemaManager = () => new DbSchemaManager();
+            ResolveJsonBatchDeserializer = () => new ParallelJsonBatchDeserializer(ResolveJsonSerializer());
         }
     }
 }

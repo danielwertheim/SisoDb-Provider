@@ -10,8 +10,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             where T : class
             where TOut : struct;
 
-        void SetValue<T, TIn>(T item, TIn value)
-            where T : class
-            where TIn : struct;
+        void SetValue<T>(T item, ValueType value)
+            where T : class;
     }
 }

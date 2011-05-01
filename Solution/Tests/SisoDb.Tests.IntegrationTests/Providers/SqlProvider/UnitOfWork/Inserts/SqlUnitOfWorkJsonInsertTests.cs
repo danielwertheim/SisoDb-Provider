@@ -62,7 +62,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
         }
 
         [Test]
-        public void Insert_WhenGuidIdMemberHasValue_ValueIsInjectedToMember()
+        public void Insert_WhenGuidIdMemberHasValue_ValueIsNotInjectedToMember()
         {
             var sisoId = SequentialGuid.NewSqlCompatibleGuid();
             var json = string.Format("{{\"SisoId\":{0}}}", sisoId);
@@ -73,7 +73,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Commit();
 
                 var item = uow.GetAll<MyGuidClass>().Single();
-                Assert.AreEqual(sisoId, item.SisoId);
+                Assert.AreNotEqual(sisoId, item.SisoId);
             }
         }
 

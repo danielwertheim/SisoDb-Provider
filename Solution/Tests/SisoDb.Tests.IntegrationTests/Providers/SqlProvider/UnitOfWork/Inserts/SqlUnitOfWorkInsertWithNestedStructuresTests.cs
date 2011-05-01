@@ -17,15 +17,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
         [Test]
         public void Insert_WhenNestedStructureHasValues_NestedStructureIsNotStoredInJson()
         {
-            var idForRoot = new Guid("FC424BFD-1C50-4615-8492-BC2EF53ACAB3");
-            var idForNested = new Guid("6244FB01-EECA-4EBC-806E-61A22D74D454");
             var rootStructure = new MyFirstStructure
                                 {
-                                    SisoId = idForRoot,
                                     Value = "My first structure.",
                                     NestedStructure = new MySecondStructure
                                                       {
-                                                          SisoId = idForNested,
                                                           Value = "My second structure."
                                                       },
                                     NestedObject =  new MyValueObject{Value = "My value object."}
@@ -36,8 +32,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
                 uow.Insert(rootStructure);
                 uow.Commit();
 
-                var json = uow.GetByIdAsJson<MyFirstStructure>(idForRoot);
-                Assert.AreEqual("{\"SisoId\":\"fc424bfd1c5046158492bc2ef53acab3\",\"Value\":\"My first structure.\",\"NestedObject\":{\"Value\":\"My value object.\"}}", json);
+                var json = uow.GetByIdAsJson<MyFirstStructure>(rootStructure.SisoId);
+                Assert.AreEqual("{\"SisoId\":\"" + rootStructure.SisoId.ToString("N") + "\",\"Value\":\"My first structure.\",\"NestedObject\":{\"Value\":\"My value object.\"}}", json);
             }
         }
 

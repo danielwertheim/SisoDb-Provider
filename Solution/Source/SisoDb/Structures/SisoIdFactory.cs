@@ -1,49 +1,48 @@
 ﻿using System;
 using SisoDb.Core;
 using SisoDb.Resources;
-using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Structures
 {
     public class SisoIdFactory : ISisoIdFactory
     {
-        public ISisoId GetId<T>(IStructureSchema structureSchema, T item) where T : class
-        {
-            ISisoId id;
-
-            if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
-                id = SisoId.NewGuidId(
-                    EnsureGuidIdValueExists(item, structureSchema));
-            else if (structureSchema.IdAccessor.IdType == IdTypes.Identity)
-                id = SisoId.NewIdentityId(
-                    EnsureIdentityValueExists(item, structureSchema));
-            else
-                throw new SisoDbException(
-                    ExceptionMessages.SisoIdFactory_UnSupportedIdentityType.Inject(structureSchema.IdAccessor.IdType));
-
-            return id;
-        }
-
-        private static Guid EnsureGuidIdValueExists<T>(T item, IStructureSchema structureSchema)
+        public ISisoId GetId<T>(IIdAccessor idAccessor, T item)
             where T : class
         {
-            var idValue = structureSchema.IdAccessor.GetValue<T, Guid>(item);
-            var keyIsAssigned = idValue.HasValue && !Guid.Empty.Equals(idValue.Value);
+            if (idAccessor.IdType == IdTypes.Guid)
+                return SisoId.NewGuidId(
+                    EnsureGuidIdValueExists(idAccessor, item));
 
-            if (!keyIsAssigned)
-            {
-                idValue = SequentialGuid.NewSqlCompatibleGuid();
-                structureSchema.IdAccessor.SetValue(item, idValue.Value);
-            }
+            if (idAccessor.IdType == IdTypes.Identity)
+                return SisoId.NewIdentityId(
+                    EnsureIdentityValueExists(idAccessor, item));
+            
+            throw new SisoDbException(
+                ExceptionMessages.SisoIdFactory_UnSupportedIdentityType.Inject(idAccessor.IdType));
+        }
+
+        private static Guid EnsureGuidIdValueExists<T>(IIdAccessor idAccessor, T item)
+            where T : class
+        {
+            var idValue = idAccessor.GetValue<T, Guid>(item);
+            
+            var idIsAssigned = idValue.HasValue && !Guid.Empty.Equals(idValue.Value);
+
+            if (!idIsAssigned)
+                throw new SisoDbException(ExceptionMessages.SisoIdFactory_MissingGuidValue);
 
             return idValue.Value;
         }
 
-        private static int EnsureIdentityValueExists<T>(T item, IStructureSchema structureSchema)
+        private static int EnsureIdentityValueExists<T>(IIdAccessor idAccessor, T item)
             where T : class
         {
-            var idValue = structureSchema.IdAccessor.GetValue<T, int>(item);
-            if (!idValue.HasValue || idValue < 1)
+            var idValue = idAccessor.GetValue<T, int>(item);
+            
+            var idIsAssigned = idValue.HasValue && idValue.Value > 0;
+            
+            if (!idIsAssigned)
                 throw new SisoDbException(ExceptionMessages.SisoIdFactory_MissingIdentityValue);
 
             return idValue.Value;

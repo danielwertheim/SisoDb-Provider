@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
@@ -203,6 +205,17 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.Builders
             Assert.IsTrue(byteIac.DataType.IsNullableByteType());
         }
 
+        [Test]
+        public void CreateSchema_WhenItemWithByteArray_NoIndexShouldBeCreatedForByteArray()
+        {
+            var structureType = GetStructureTypeFor<WithBytes>();
+
+            var schema = _schemaBuilder.CreateSchema(structureType);
+
+            Assert.AreEqual(1, schema.IndexAccessors.Count);
+            Assert.IsTrue(schema.IndexAccessors[0].Name.StartsWith("DummyMember_"));
+        }
+
         private static bool HasLevel(IIndexAccessor iac, int level)
         {
             var count = iac.Path.Count(ch => ch == '.');
@@ -267,6 +280,25 @@ namespace SisoDb.Tests.UnitTests.Structures.Schemas.Builders
         {
             public int AreaCode { get; set; }
             public int Number { get; set; }
+        }
+
+        private class WithBytes
+        {
+            public Guid SisoId { get; set; }
+
+            public int DummyMember { get; set; }
+
+            public byte[] Bytes1 { get; set; }
+
+            public IEnumerable<byte> Bytes2 { get; set; }
+
+            public IList<byte> Bytes3 { get; set; }
+
+            public List<byte> Bytes4 { get; set; }
+
+            public ICollection<byte> Bytes5 { get; set; }
+
+            public Collection<byte> Bytes6 { get; set; }
         }
     }
 }

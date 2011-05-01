@@ -80,6 +80,7 @@
     <Compile Include="Dynamic\TypeMember.cs" />
     <Compile Include="IConnectionString.cs" />
     <Compile Include="IMemberNameGenerator.cs" />
+    <Compile Include="IQueryEngine.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="ISisoDbFormatting.cs" />
     <Compile Include="Core\IStringConverter.cs" />
@@ -87,8 +88,8 @@
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Providers\AdoNetExtensions.cs" />
     <Compile Include="Providers\SqlProvider\ISqlServerClient.cs" />
+    <Compile Include="Providers\SqlProvider\SqlQueryEngine.cs" />
     <Compile Include="Providers\SqlProvider\SqlServerClient.cs" />
-    <Compile Include="Providers\SqlProvider\StructureConverter.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />
@@ -202,7 +203,7 @@
     <Compile Include="Querying\SortingExtensions.cs" />
     <Compile Include="Providers\SqlProvider\SqlCommandInfo.cs" />
     <Compile Include="Querying\Sql\SqlSorting.cs" />
-    <Compile Include="Serialization\IBatchDeserializer.cs" />
+    <Compile Include="Serialization\IJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="Serialization\ParallelJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\SequentialJsonBatchDeserializer.cs" />
@@ -271,6 +272,7 @@
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
     <Compile Include="Core\StringExtensions.cs" />
+    <Compile Include="Structures\SisoIdValueGenerator.cs" />
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Structures\StructureBuilder.cs" />
     <Compile Include="Structures\SisoIdFactory.cs" />

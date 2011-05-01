@@ -50,6 +50,11 @@ namespace SisoDb.Providers.SqlProvider
 
                 if (ItterateStructures(dbClient, onProcess))
                     dbClient.Flush();
+
+                dbClient.RebuildIndexes(
+                    StructureSchemaNew.GetStructureTableName(),
+                    StructureSchemaNew.GetIndexesTableName(),
+                    StructureSchemaNew.GetUniquesTableName());
             }
         }
 
@@ -64,16 +69,18 @@ namespace SisoDb.Providers.SqlProvider
             foreach (var json in GetAllJson())
             {
                 var oldStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TOld>(json);
-                var newStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TNew>(json);
                 var oldId = GetSisoId(oldStructure);
                 if (oldId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_OldIdDoesNotExist);
 
+                var newStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TNew>(json);
+                
                 var status = onProcess(oldStructure, newStructure);
 
                 var newId = GetSisoId(newStructure);
                 if (newId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotExist);
+
                 if (!newId.Value.Equals(oldId.Value))
                     throw new SisoDbException(
                         ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(newId.Value, oldId.Value));

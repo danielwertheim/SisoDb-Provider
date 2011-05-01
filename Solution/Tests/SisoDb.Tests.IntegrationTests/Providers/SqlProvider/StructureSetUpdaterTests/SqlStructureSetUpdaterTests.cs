@@ -71,8 +71,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
         [Test]
         public void Process_WhenGuidId_IdIsNotChanged()
         {
-            var id = new Guid("EDD37F1C-81D4-411F-8D1D-C86AEB86F1A1");
-            var orgItem = new ModelOld.GuidItemForPropChange { SisoId = id };
+            var orgItem = new ModelOld.GuidItemForPropChange();
             using (var uow = Database.CreateUnitOfWork())
             {
                 uow.Insert(orgItem);
@@ -85,7 +84,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem = uow.GetById<ModelNew.GuidItemForPropChange>(id);
+                var newItem = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem.SisoId);
                 Assert.IsNotNull(newItem);
             }
         }
@@ -195,10 +194,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
         [Test]
         public void Process_WhenTwoStructuresExistsAndTrashIsMadeOnSecond_OnlyTheFirstItemRemains()
         {
-            var id1 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
-            var id2 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
-            var orgItem1 = new ModelOld.GuidItemForPropChange { SisoId = id1, Int1 = 10 };
-            var orgItem2 = new ModelOld.GuidItemForPropChange { SisoId = id2, Int1 = 20 };
+            var orgItem1 = new ModelOld.GuidItemForPropChange { Int1 = 10 };
+            var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 20 };
             using (var uow = Database.CreateUnitOfWork())
             {
                 uow.InsertMany(new[] { orgItem1, orgItem2 });
@@ -208,14 +205,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
 
             var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem)
-                => oldItem.SisoId.Equals(id1) ? StructureSetUpdaterStatuses.Keep : StructureSetUpdaterStatuses.Trash);
+                => oldItem.SisoId.Equals(orgItem2.SisoId) ? StructureSetUpdaterStatuses.Trash : StructureSetUpdaterStatuses.Keep);
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(id1);
+                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem1.SisoId);
                 Assert.IsNotNull(newItem1);
 
-                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(id2);
+                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem2.SisoId);
                 Assert.IsNull(newItem2);
             }
         }
@@ -223,12 +220,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
         [Test]
         public void Process_WhenThreeStructuresExistsAndTrashIsMadeOnSecond_OnlyFirstAndThirdItemsRemains()
         {
-            var id1 = new Guid("CC72BF41-C161-4267-9E3C-421D4BB7B37D");
-            var id2 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
-            var id3 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
-            var orgItem1 = new ModelOld.GuidItemForPropChange { SisoId = id1, String1 = "A" };
-            var orgItem2 = new ModelOld.GuidItemForPropChange { SisoId = id2, String1 = "B" };
-            var orgItem3 = new ModelOld.GuidItemForPropChange { SisoId = id3, String1 = "C" };
+            var orgItem1 = new ModelOld.GuidItemForPropChange { String1 = "A" };
+            var orgItem2 = new ModelOld.GuidItemForPropChange { String1 = "B" };
+            var orgItem3 = new ModelOld.GuidItemForPropChange { String1 = "C" };
             using (var uow = Database.CreateUnitOfWork())
             {
                 uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
@@ -240,21 +234,21 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
             updater.Process((oldItem, newItem) =>
             {
                 newItem.NewString1 = oldItem.String1;
-                return oldItem.SisoId.Equals(id2)
+                return oldItem.SisoId.Equals(orgItem2.SisoId)
                             ? StructureSetUpdaterStatuses.Trash
                             : StructureSetUpdaterStatuses.Keep;
             });
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(id1);
+                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem1.SisoId);
                 Assert.IsNotNull(newItem1);
                 Assert.AreEqual("A", newItem1.NewString1);
 
-                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(id2);
+                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem2.SisoId);
                 Assert.IsNull(newItem2);
 
-                var newItem3 = uow.GetById<ModelNew.GuidItemForPropChange>(id3);
+                var newItem3 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem3.SisoId);
                 Assert.IsNotNull(newItem3);
                 Assert.AreEqual("C", newItem3.NewString1);
             }
@@ -304,10 +298,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
         [Test]
         public void Process_WhenTwoStructuresExistsAndAbortIsMadeOnSecond_StructureCanBeReadBack()
         {
-            var id1 = new Guid("FFC5A4A6-AE53-4B19-BD23-A49DC60F10C0");
-            var id2 = new Guid("55C86AC9-8676-4782-B280-BEE4C19E98EC");
-            var orgItem1 = new ModelOld.GuidItemForPropChange { SisoId = id1, Int1 = 10, String1 = "Arbitrary string1" };
-            var orgItem2 = new ModelOld.GuidItemForPropChange { SisoId = id2, Int1 = 20, String1 = "Arbitrary string2" };
+            var orgItem1 = new ModelOld.GuidItemForPropChange { Int1 = 10, String1 = "Arbitrary string1" };
+            var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 20, String1 = "Arbitrary string2" };
             using (var uow = Database.CreateUnitOfWork())
             {
                 uow.InsertMany(new[] { orgItem1, orgItem2 });
@@ -317,17 +309,17 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.StructureSetUpdate
 
             var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem)
-                            => oldItem.SisoId.Equals(id1) ? StructureSetUpdaterStatuses.Keep : StructureSetUpdaterStatuses.Abort);
+                            => oldItem.SisoId.Equals(orgItem1.SisoId) ? StructureSetUpdaterStatuses.Keep : StructureSetUpdaterStatuses.Abort);
 
             Database.StructureSchemas.RemoveSchema(TypeFor<ModelNew.GuidItemForPropChange>.Type);
             using (var uow = Database.CreateUnitOfWork())
             {
-                var refetchedOrgItem1 = uow.GetById<ModelOld.GuidItemForPropChange>(id1);
+                var refetchedOrgItem1 = uow.GetById<ModelOld.GuidItemForPropChange>(orgItem1.SisoId);
                 Assert.IsNotNull(refetchedOrgItem1);
                 Assert.AreEqual(10, refetchedOrgItem1.Int1);
                 Assert.AreEqual("Arbitrary string1", refetchedOrgItem1.String1);
 
-                var refetchedOrgItem2 = uow.GetById<ModelOld.GuidItemForPropChange>(id2);
+                var refetchedOrgItem2 = uow.GetById<ModelOld.GuidItemForPropChange>(orgItem2.SisoId);
                 Assert.IsNotNull(refetchedOrgItem2);
                 Assert.AreEqual(20, refetchedOrgItem2.Int1);
                 Assert.AreEqual("Arbitrary string2", refetchedOrgItem2.String1);

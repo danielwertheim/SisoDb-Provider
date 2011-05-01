@@ -73,19 +73,12 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
         [Test]
         public void DeleteByIdInterval_ForGuids_WhenIntervalMatchesOnlyASubset_OnlySubsetIsDeleted()
         {
-            var guids = new[]
-                        {
-                            SequentialGuid.NewSqlCompatibleGuid(),
-                            SequentialGuid.NewSqlCompatibleGuid(),
-                            SequentialGuid.NewSqlCompatibleGuid(),
-                            SequentialGuid.NewSqlCompatibleGuid()
-                        };
             var items = new List<GuidItem>
                         {
-                            new GuidItem{SisoId = guids[0], SortOrder = 1, Value = "A"},
-                            new GuidItem{SisoId = guids[1], SortOrder = 2, Value = "B"},
-                            new GuidItem{SisoId = guids[2], SortOrder = 3, Value = "C"},
-                            new GuidItem{SisoId = guids[3], SortOrder = 4, Value = "D"},
+                            new GuidItem{SortOrder = 1, Value = "A"},
+                            new GuidItem{SortOrder = 2, Value = "B"},
+                            new GuidItem{SortOrder = 3, Value = "C"},
+                            new GuidItem{SortOrder = 4, Value = "D"},
                         };
 
             IList<GuidItem> refetched;
@@ -95,7 +88,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIdInterval<GuidItem>(guids[0], guids[2]);
+                uow.DeleteByIdInterval<GuidItem>(items[0].SisoId, items[2].SisoId);
                 uow.Commit();
 
                 refetched = uow.GetAll<GuidItem>().ToList();

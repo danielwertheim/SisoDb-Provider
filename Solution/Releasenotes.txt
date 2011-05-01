@@ -1,9 +1,16 @@
-From v0.8.0.0 the following is used for versioning:
+From v2.0 the following is used for versioning:
 vA.B.C.D
-A=Will see when I get there
-B=Major changes
-C=Minor changes
-D=Bug fixes
+A=Major changes
+B=New features and minor changes not braking API etc.
+C=Bug fixes
+D=Optional build number for feature use.
+
+v2.0        - 2011-05-01
+[Fixed]     When assigning SisoId values, the parallelization messed up the ordering. This has been corrected. The generation is now sequential.
+[New]       IMPORTANT! When inserting items any assigned SisoId-values will not be preserved. This is done because you shouldn't mess up the sequential order of the Guids or the identities. If you do need to preserve values. Let me know.
+[New]       IMPORTANT! Database.CreateQueryEngine : IQueryEngine - Should be used for querying instead of the UnitOfWork retrieved by Database.CreateUnitOfWork. You should only use the UnitOfWork for querying when you need to query structures within the same transaction.
+[New]       IMPORTANT! Naming conventions on primary keys for Structure-table (PK_CustomerStructure) and Indexes-table (PK_CustomerIndexes). If this isn't applied, Database.UpdateStructureSet below will not work.
+[New]       Database.UpdateStructureSet will now perform a rebuild of primary key indexes after the process is done. This is done since Id-values might be reused during this process.
 
 v1.0.3      - 2011-04-29
 [New]       GetByIds, GetByIdsAsJson, GetByIdsAs - Lets you return multiple structures based on a set of multiple ids. (http://sisodb.com/docs/doc16)

@@ -1,3 +1,4 @@
+using System;
 using SisoDb.Core;
 using SisoDb.Reflections;
 using SisoDb.Resources;
@@ -7,20 +8,6 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
     public class IdAccessor : MemberAccessorBase, IIdAccessor
     {
         public IdTypes IdType { get; private set; }
-
-        public TOut? GetValue<T, TOut>(T item)
-            where T : class
-            where TOut : struct
-        {
-            return (TOut?)Property.GetValue(item);
-        }
-        
-        public void SetValue<T, TIn>(T item, TIn value)
-            where T : class
-            where TIn : struct
-        {
-            Property.SetValue(item, value);
-        }
 
         public IdAccessor(IStructureProperty property)
             : base(property)
@@ -34,7 +21,20 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
                 IdType = IdTypes.Identity;
             else
                 throw new SisoDbException(
-                    ExceptionMessages.IdAccessor_UnsupportedPropertyType.Inject(property.PropertyType.Name));
+                    ExceptionMessages.IdAccessor_UnsupportedPropertyType.Inject(Property.PropertyType.Name));
+        }
+
+        public TOut? GetValue<T, TOut>(T item)
+            where T : class
+            where TOut : struct
+        {
+            return (TOut?)Property.GetValue(item);
+        }
+        
+        public void SetValue<T>(T item, ValueType value)
+            where T : class
+        {
+            Property.SetValue(item, value);
         }
     }
 }

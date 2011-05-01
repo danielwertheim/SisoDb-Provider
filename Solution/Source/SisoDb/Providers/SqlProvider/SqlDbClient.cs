@@ -81,6 +81,21 @@ namespace SisoDb.Providers.SqlProvider
             _transaction = _connection.BeginTransaction();
         }
 
+        public void RebuildIndexes(string structureTableName, string indexesTableName, string uniquesTableName)
+        {
+            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
+            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+
+            var sql = SqlStringsRepository.GetSql("RebuildIndexes").Inject(
+                structureTableName, indexesTableName, uniquesTableName);
+
+            using (var cmd = CreateCommand(CommandType.Text, sql))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public IDbCommand CreateCommand(CommandType commandType, string sql, params IQueryParameter[] parameters)
         {
             return _connection.CreateCommand(_transaction, commandType, sql, parameters);

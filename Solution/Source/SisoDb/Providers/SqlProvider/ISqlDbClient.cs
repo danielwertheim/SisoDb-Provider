@@ -22,6 +22,8 @@ namespace SisoDb.Providers.SqlProvider
 
         void Flush();
 
+        void RebuildIndexes(string structureTableName, string indexesTableName, string uniquesTableName);
+
         IDbCommand CreateCommand(CommandType commandType, string sql, params IQueryParameter[] parameters);
 
         SqlBulkCopy GetBulkCopy(bool keepIdentities);

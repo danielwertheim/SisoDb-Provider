@@ -89,9 +89,16 @@ namespace SisoDb
         void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
             where TOld : class
             where TNew : class;
-        
+
         /// <summary>
-        /// Creates an UnitOfWork <see cref="IUnitOfWork"/>, which is designed
+        /// Creates a NON Transactional <see cref="IQueryEngine"/> used for searching.
+        /// Is designed for being short lived. Create, consume and dispose.
+        /// </summary>
+        /// <returns></returns>
+        IQueryEngine CreateQueryEngine();
+
+        /// <summary>
+        /// Creates a Transactional UnitOfWork <see cref="IUnitOfWork"/>, which is designed
         /// for being shortlived. Create, consume and dispose.
         /// </summary>
         /// <returns></returns>

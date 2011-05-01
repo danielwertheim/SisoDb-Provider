@@ -166,17 +166,11 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         [Test]
         public void GetByIdsAsJson_WhenSeveralGuidIds_MatchingSubsetIsReturned()
         {
-            var ids = new[]
-                      {
-                          Guid.Parse("B5CB06F0-F853-4BF2-9BED-2B1E4D703A7A"),
-                          Guid.Parse("158FD134-1A3A-462B-A11B-7853D9D5B668"),
-                          Guid.Parse("5C3FFE86-21D3-4C60-9519-F6C198992F07")
-                      };
             var items = new List<GuidItemForGetQueries>
                         {
-                            new GuidItemForGetQueries {SisoId = ids[0], SortOrder = 1, StringValue = "A"},
-                            new GuidItemForGetQueries {SisoId = ids[1], SortOrder = 2, StringValue = "B"},
-                            new GuidItemForGetQueries {SisoId = ids[2], SortOrder = 3, StringValue = "C"}
+                            new GuidItemForGetQueries {SortOrder = 1, StringValue = "A"},
+                            new GuidItemForGetQueries {SortOrder = 2, StringValue = "B"},
+                            new GuidItemForGetQueries {SortOrder = 3, StringValue = "C"}
                         };
             List<string> refetched;
 
@@ -189,8 +183,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
             }
 
             Assert.AreEqual(2, refetched.Count);
-            Assert.AreEqual("{\"SisoId\":\"b5cb06f0f8534bf29bed2b1e4d703a7a\",\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
-            Assert.AreEqual("{\"SisoId\":\"5c3ffe8621d34c609519f6c198992f07\",\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[1]);
+            Assert.AreEqual("{\"SisoId\":\"" + items[0].SisoId.ToString("N") + "\",\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
+            Assert.AreEqual("{\"SisoId\":\"" + items[2].SisoId.ToString("N") + "\",\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[1]);
         }
 
         [Test]

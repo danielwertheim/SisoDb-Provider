@@ -164,10 +164,8 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
         [Test]
         public void GetByGuidIdAsJson_WhenTwoItemsExistsAndTheSecondIsQueriedFor_ReturnsTheCorrectItemJson()
         {
-            var id1 = new Guid("b84f156a-139f-4add-b3d1-25e2b0696268");
-            var id2 = new Guid("8a2f9a21-d2fa-4eae-82ac-ace6aef34e7d");
-            var item1 = new GuidItemForGetQueries { SisoId = id1, SortOrder = 1 };
-            var item2 = new GuidItemForGetQueries { SisoId = id2, SortOrder = 2 };
+            var item1 = new GuidItemForGetQueries { SortOrder = 1 };
+            var item2 = new GuidItemForGetQueries { SortOrder = 2 };
 
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
@@ -182,7 +180,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Queries
                 itemJsonRefetched = unitOfWork.GetByIdAsJson<GuidItemForGetQueries>(item2.SisoId);
             }
 
-            Assert.AreEqual("{\"SisoId\":\"8a2f9a21d2fa4eae82acace6aef34e7d\",\"SortOrder\":2}", itemJsonRefetched);
+            Assert.AreEqual("{\"SisoId\":\"" + item2.SisoId.ToString("N") + "\",\"SortOrder\":2}", itemJsonRefetched);
         }
 
         [Test]

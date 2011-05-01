@@ -5,13 +5,13 @@ using SisoDb.Core;
 
 namespace SisoDb.Serialization
 {
-    public class ParallelJsonBatchDeserializer : IBatchDeserializer
+    public class ParallelJsonBatchDeserializer : IJsonBatchDeserializer
     {
-        public IJsonSerializer JsonSerializer { private get; set; }
+        private readonly IJsonSerializer _jsonSerializer;
 
         public ParallelJsonBatchDeserializer(IJsonSerializer jsonSerializer)
         {
-            JsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
+            _jsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
         }
 
         public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class
@@ -30,14 +30,14 @@ namespace SisoDb.Serialization
             {
                 string json;
                 if (q.TryDequeue(out json))
-                    yield return JsonSerializer.ToItemOrNull<T>(json);
+                    yield return _jsonSerializer.ToItemOrNull<T>(json);
             }
 
             Task.WaitAll(task);
 
             string j2;
             while (q.TryDequeue(out j2))
-                yield return JsonSerializer.ToItemOrNull<T>(j2);
+                yield return _jsonSerializer.ToItemOrNull<T>(j2);
         }
     }
 }

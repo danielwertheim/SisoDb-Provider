@@ -131,12 +131,35 @@ namespace SisoDb.Providers.SqlProvider
             where TNew : class
         {
             var structureSchemaOld = StructureSchemas.GetSchema(TypeFor<TOld>.Type);
+
             StructureSchemas.RemoveSchema(TypeFor<TOld>.Type);
+            
             var structureSchemaNew = StructureSchemas.GetSchema(TypeFor<TNew>.Type);
             
             var updater = new SqlStructureSetUpdater<TOld, TNew>(ConnectionInfo, structureSchemaOld, structureSchemaNew, StructureBuilder);
             
             updater.Process(onProcess);
+        }
+
+        public IQueryEngine CreateQueryEngine()
+        {
+            var dbClient = new SqlDbClient(ConnectionInfo, false);
+            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
+
+            var queryGenerator = new SqlQueryGenerator(
+                new ParsedWhereSqlProcessor(memberNameGenerator),
+                new ParsedSortingSqlProcessor(memberNameGenerator),
+                new ParsedIncludeSqlProcessor(memberNameGenerator));
+            
+            return new SqlQueryEngine(
+                dbClient,
+                DbSchemaManager,
+                new SqlDbSchemaUpserter(dbClient),
+                StructureSchemas,
+                SisoEnvironment.Resources.ResolveJsonSerializer(), 
+                SisoEnvironment.Resources.ResolveJsonBatchDeserializer(),
+                queryGenerator,
+                new CommandBuilderFactory());
         }
 
         public IUnitOfWork CreateUnitOfWork()
@@ -155,10 +178,12 @@ namespace SisoDb.Providers.SqlProvider
             var identityGenerator = new SqlIdentityGenerator(dbClientNonTrans);
 
             return new SqlUnitOfWork(
-                dbClient, dbClientNonTrans, identityGenerator, 
+                dbClient, identityGenerator, 
                 DbSchemaManager, dbSchemaUpserter,
                 StructureSchemas, StructureBuilder, 
-                SisoEnvironment.Resources.ResolveJsonSerializer(), queryGenerator,
+                SisoEnvironment.Resources.ResolveJsonSerializer(),
+                SisoEnvironment.Resources.ResolveJsonBatchDeserializer(),
+                queryGenerator,
                 commandBuilderFactory);
         }
     }

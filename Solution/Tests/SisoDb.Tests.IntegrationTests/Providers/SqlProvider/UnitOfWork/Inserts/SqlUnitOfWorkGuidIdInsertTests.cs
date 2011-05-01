@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
@@ -13,7 +14,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
         }
 
         [Test]
-        public void Insert_WhenIdSetterIsPrivate_ItemIsInsertedAndIdIsAssigned()
+        public void Insert_WhenIdSetterIsPrivate_ItemIsInsertedAndIdIsNotAssignedButRegenerated()
         {
             var id = new Guid("174063DA-0315-4AB2-A527-C1450AFDE587");
             var item = new ItemForGuidIdInsertsWithPrivateSetter(id);
@@ -26,10 +27,10 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Inserts
 
             using(var uow = Database.CreateUnitOfWork())
             {
-                item = uow.GetById<ItemForGuidIdInsertsWithPrivateSetter>(id);
+                item = uow.GetAll<ItemForGuidIdInsertsWithPrivateSetter>().Single();
             }
 
-            Assert.AreEqual(id, item.SisoId);
+            Assert.AreNotEqual(id, item.SisoId);
         }
 
         [Test]

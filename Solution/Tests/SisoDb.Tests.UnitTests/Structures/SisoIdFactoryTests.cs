@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using SisoDb.Resources;
 using SisoDb.Structures;
 
 namespace SisoDb.Tests.UnitTests.Structures
@@ -8,13 +9,61 @@ namespace SisoDb.Tests.UnitTests.Structures
     public class SisoIdFactoryTests : UnitTestBase
     {
         [Test]
+        public void GetId_WhenUnassignedInt_ThrowsSisoDbException()
+        {
+            var schema = StructureSchemaTestFactory.Stub<IdentityItem>(generateIdAccessor: true);
+            var item = new IdentityItem();
+
+            var factory = new SisoIdFactory();
+            var ex = Assert.Throws<SisoDbException>(() => factory.GetId(schema.IdAccessor, item));
+
+            Assert.AreEqual(ExceptionMessages.SisoIdFactory_MissingIdentityValue, ex.Message);
+        }
+
+        [Test]
+        public void GetId_WhenUnassignedGuid_ThrowsSisoDbException()
+        {
+            var schema = StructureSchemaTestFactory.Stub<GuidItem>(generateIdAccessor: true);
+            var item = new GuidItem();
+
+            var factory = new SisoIdFactory();
+            var ex = Assert.Throws<SisoDbException>(() => factory.GetId(schema.IdAccessor, item));
+
+            Assert.AreEqual(ExceptionMessages.SisoIdFactory_MissingGuidValue, ex.Message);
+        }
+
+        [Test]
+        public void GetId_WhenUnassignedNullableInt_ThrowsSisoDbException()
+        {
+            var schema = StructureSchemaTestFactory.Stub<NullableIdentityItem>(generateIdAccessor: true);
+            var item = new NullableIdentityItem();
+
+            var factory = new SisoIdFactory();
+            var ex = Assert.Throws<SisoDbException>(() => factory.GetId(schema.IdAccessor, item));
+
+            Assert.AreEqual(ExceptionMessages.SisoIdFactory_MissingIdentityValue, ex.Message);
+        }
+
+        [Test]
+        public void GetId_WhenUnassignedNullableGuid_ThrowsSisoDbException()
+        {
+            var schema = StructureSchemaTestFactory.Stub<NullableGuidItem>(generateIdAccessor: true);
+            var item = new NullableGuidItem();
+
+            var factory = new SisoIdFactory();
+            var ex = Assert.Throws<SisoDbException>(() => factory.GetId(schema.IdAccessor, item));
+
+            Assert.AreEqual(ExceptionMessages.SisoIdFactory_MissingGuidValue, ex.Message);
+        }
+
+        [Test]
         public void GetId_WhenInt_ReturnsSisoIdForIdentity()
         {
-            var schema = StructureSchemaTestFactory.CreateSchema<IdentityItem>();
+            var schema = StructureSchemaTestFactory.Stub<IdentityItem>(generateIdAccessor: true);
             var item = new IdentityItem {SisoId = 32};
 
             var factory = new SisoIdFactory();
-            var sisoId = factory.GetId(schema, item);
+            var sisoId = factory.GetId(schema.IdAccessor, item);
 
             Assert.AreEqual(32, sisoId.Value);
         }
@@ -22,11 +71,11 @@ namespace SisoDb.Tests.UnitTests.Structures
         [Test]
         public void GetId_WhenNullableInt_ReturnsSisoIdForIdentity()
         {
-            var schema = StructureSchemaTestFactory.CreateSchema<NullableIdentityItem>();
+            var schema = StructureSchemaTestFactory.Stub<NullableIdentityItem>(generateIdAccessor: true);
             var item = new NullableIdentityItem { SisoId = 32 };
 
             var factory = new SisoIdFactory();
-            var sisoId = factory.GetId(schema, item);
+            var sisoId = factory.GetId(schema.IdAccessor, item);
 
             Assert.AreEqual(32, sisoId.Value);
         }
@@ -35,11 +84,11 @@ namespace SisoDb.Tests.UnitTests.Structures
         public void GetId_WhenGuid_ReturnsSisoIdForIdentity()
         {
             var id = new Guid("A13D516B-C204-4544-BAFA-E94BB3408F98");
-            var schema = StructureSchemaTestFactory.CreateSchema<GuidItem>();
+            var schema = StructureSchemaTestFactory.Stub<GuidItem>(generateIdAccessor: true);
             var item = new GuidItem { SisoId = id };
 
             var factory = new SisoIdFactory();
-            var sisoId = factory.GetId(schema, item);
+            var sisoId = factory.GetId(schema.IdAccessor, item);
 
             Assert.AreEqual(id, sisoId.Value);
         }
@@ -48,11 +97,11 @@ namespace SisoDb.Tests.UnitTests.Structures
         public void GetId_WhenNullableGuid_ReturnsSisoIdForIdentity()
         {
             var id = new Guid("1FD9C8AA-44F4-4A17-8A10-8C0880ACCF5A");
-            var schema = StructureSchemaTestFactory.CreateSchema<NullableGuidItem>();
+            var schema = StructureSchemaTestFactory.Stub<NullableGuidItem>(generateIdAccessor: true);
             var item = new NullableGuidItem { SisoId = id };
 
             var factory = new SisoIdFactory();
-            var sisoId = factory.GetId(schema, item);
+            var sisoId = factory.GetId(schema.IdAccessor, item);
 
             Assert.AreEqual(id, sisoId.Value);
         }
@@ -87,7 +136,7 @@ namespace SisoDb.Tests.UnitTests.Structures
 
         private class InvalidIdType
         {
-            public decimal Id { get; set; }
+            public decimal SisoId { get; set; }
 
             public string Temp { get; set; }
         }

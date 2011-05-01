@@ -77,20 +77,12 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
         [Test]
         public void DeleteByIds_ForGuids_WhenMatchingSubsetOfAllRows_OnlySubsetIsDeleted()
         {
-            var guids = new[]
-                        {
-                            Guid.Parse("063EC0E2-30FC-4940-9A8B-7AB34B29350A"),
-                            Guid.Parse("A5B78C0E-256B-4DF1-8362-64C167D642C1"),
-                            Guid.Parse("E86F1B36-0268-4955-980F-DD60B5A24397"),
-                            Guid.Parse("F748F706-13BB-41CD-B1E5-7580F5146ADA"),
-                            
-                        };
             var items = new List<GuidItem>
                         {
-                            new GuidItem{SisoId = guids[0], SortOrder = 1, Value = "A"},
-                            new GuidItem{SisoId = guids[1], SortOrder = 2, Value = "B"},
-                            new GuidItem{SisoId = guids[2], SortOrder = 3, Value = "C"},
-                            new GuidItem{SisoId = guids[3], SortOrder = 4, Value = "D"},
+                            new GuidItem{SortOrder = 1, Value = "A"},
+                            new GuidItem{SortOrder = 2, Value = "B"},
+                            new GuidItem{SortOrder = 3, Value = "C"},
+                            new GuidItem{SortOrder = 4, Value = "D"},
                         };
 
             IList<GuidItem> refetched;
@@ -100,7 +92,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIds<GuidItem>(new[] { guids[1], guids[2] });
+                uow.DeleteByIds<GuidItem>(new[] { items[1].SisoId, items[2].SisoId });
                 uow.Commit();
 
                 refetched = uow.GetAll<GuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();
@@ -115,20 +107,12 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
         public void DeleteByIds_ForGuids_WhenSpecifyingItemThatDoesNotExist_OnlySubsetIsDeleted()
         {
             var nonExistingId = Guid.Empty;
-            var guids = new[]
-                        {
-                            Guid.Parse("063EC0E2-30FC-4940-9A8B-7AB34B29350A"),
-                            Guid.Parse("A5B78C0E-256B-4DF1-8362-64C167D642C1"),
-                            Guid.Parse("E86F1B36-0268-4955-980F-DD60B5A24397"),
-                            Guid.Parse("F748F706-13BB-41CD-B1E5-7580F5146ADA"),
-                            
-                        };
             var items = new List<GuidItem>
                         {
-                            new GuidItem{SisoId = guids[0], SortOrder = 1, Value = "A"},
-                            new GuidItem{SisoId = guids[1], SortOrder = 2, Value = "B"},
-                            new GuidItem{SisoId = guids[2], SortOrder = 3, Value = "C"},
-                            new GuidItem{SisoId = guids[3], SortOrder = 4, Value = "D"},
+                            new GuidItem{SortOrder = 1, Value = "A"},
+                            new GuidItem{SortOrder = 2, Value = "B"},
+                            new GuidItem{SortOrder = 3, Value = "C"},
+                            new GuidItem{SortOrder = 4, Value = "D"},
                         };
 
             IList<GuidItem> refetched;
@@ -138,7 +122,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIds<GuidItem>(new[] { guids[1], guids[2], nonExistingId });
+                uow.DeleteByIds<GuidItem>(new[] { items[1].SisoId, items[2].SisoId, nonExistingId });
                 uow.Commit();
 
                 refetched = uow.GetAll<GuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();

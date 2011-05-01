@@ -6,7 +6,7 @@ namespace SisoDb.Providers.SqlProvider.BulkInserts
 {
     public class IndexesReader : SingleResultReaderBase<IStructureIndex[]>
     {
-        public IndexesReader(IndexStorageSchema storageSchema, IEnumerable<IStructureIndex[]> items) //TODO: TA BORT INDEXROW
+        public IndexesReader(IndexStorageSchema storageSchema, IEnumerable<IStructureIndex[]> items)
             : base(storageSchema, items)
         {
         }

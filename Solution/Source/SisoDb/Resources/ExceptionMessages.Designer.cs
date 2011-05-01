@@ -296,7 +296,16 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When using identities the Id-property of the entity must be assigned before structure is created..
+        ///   Looks up a localized string similar to When using Guids the Id-property of the entity must be assigned before structure is created..
+        /// </summary>
+        internal static string SisoIdFactory_MissingGuidValue {
+            get {
+                return ResourceManager.GetString("SisoIdFactory_MissingGuidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When using Identities the Id-property of the entity must be assigned before structure is created..
         /// </summary>
         internal static string SisoIdFactory_MissingIdentityValue {
             get {

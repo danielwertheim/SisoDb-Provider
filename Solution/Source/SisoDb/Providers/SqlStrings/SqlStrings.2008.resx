@@ -127,22 +127,22 @@ alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[SisoId] [uniqueidentifier] not null primary key clustered rowguidcol,
+[SisoId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([SisoId]),
 {1});</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[SisoId] [int] not null primary key clustered,
+[SisoId] [int] not null constraint [PK_{0}] primary key clustered ([SisoId]),
 {1});</value>
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[SisoId] [uniqueidentifier] not null primary key clustered rowguidcol,
+[SisoId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([SisoId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[SisoId] [int] identity(1,1) not null primary key clustered,
+[SisoId] [int] identity(1,1) not null constraint [PK_{0}] primary key clustered ([SisoId]),
 [Json] [nvarchar](max) not null);
 
 insert into [dbo].[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
@@ -246,6 +246,12 @@ end</value>
   <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
 select Json from [dbo].[{0}] where SisoId between @idFrom and @idTo;</value>
+  </data>
+  <data name="RebuildIndexes" xml:space="preserve">
+    <value>set nocount on;
+ALTER INDEX [PK_{0}] ON dbo.[{0}] REBUILD;
+ALTER INDEX [PK_{1}] ON dbo.[{1}] REBUILD;
+ALTER INDEX [UQ_{2}] ON dbo.[{2}] REBUILD;</value>
   </data>
   <data name="RowCount" xml:space="preserve">
     <value>set nocount on;

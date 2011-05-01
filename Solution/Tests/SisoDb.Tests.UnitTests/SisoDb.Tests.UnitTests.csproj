@@ -129,6 +129,7 @@
     <Compile Include="Structures\Schemas\StructureTypeFactoryTests.cs" />
     <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterGetIndexablePropertiesExceptTests.cs" />
     <Compile Include="Structures\Schemas\StructureTypeReflecterTests\StructureTypeReflecterGetSpecificIndexablePropertiesTests.cs" />
+    <Compile Include="Structures\SisoIdValueGeneratorTests.cs" />
     <Compile Include="Structures\StructureBuilderTests.cs" />
     <Compile Include="Structures\SisoIdFactoryTests.cs" />
     <Compile Include="Structures\SisoIdTests.cs" />

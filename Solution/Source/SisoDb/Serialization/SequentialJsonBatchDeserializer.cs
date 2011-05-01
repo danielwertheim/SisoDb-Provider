@@ -4,18 +4,18 @@ using SisoDb.Core;
 
 namespace SisoDb.Serialization
 {
-    public class SequentialJsonBatchDeserializer : IBatchDeserializer
+    public class SequentialJsonBatchDeserializer : IJsonBatchDeserializer
     {
-        public IJsonSerializer JsonSerializer { private get; set; }
+        private readonly IJsonSerializer _jsonSerializer;
 
         public SequentialJsonBatchDeserializer(IJsonSerializer jsonSerializer)
         {
-            JsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
+            _jsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
         }
 
         public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class
         {
-            return sourceData.Select(json => JsonSerializer.ToItemOrNull<T>(json));
+            return sourceData.Select(json => _jsonSerializer.ToItemOrNull<T>(json));
         }
     }
 }

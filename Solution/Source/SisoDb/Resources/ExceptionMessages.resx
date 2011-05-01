@@ -166,7 +166,7 @@
     <value>Direct memberaccess of node: '{0}'; with with membertype: '{1}'; is not supported!</value>
   </data>
   <data name="SisoIdFactory_MissingIdentityValue" xml:space="preserve">
-    <value>When using identities the Id-property of the entity must be assigned before structure is created.</value>
+    <value>When using Identities the Id-property of the entity must be assigned before structure is created.</value>
   </data>
   <data name="SisoIdFactory_UnSupportedIdentityType" xml:space="preserve">
     <value>The identity type: '{0}' is not supported.</value>
@@ -258,5 +258,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="UniqueModesCantBeMapped" xml:space="preserve">
     <value>The UniqueModes '{0}' is unknow and cant be mapped.</value>
+  </data>
+  <data name="SisoIdFactory_MissingGuidValue" xml:space="preserve">
+    <value>When using Guids the Id-property of the entity must be assigned before structure is created.</value>
   </data>
 </root>

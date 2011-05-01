@@ -9,7 +9,5 @@ namespace SisoDb.Structures
         Type DataType { get; }
         
         ValueType Value { get; }
-
-        void SetIdentityValue(int value);
     }
 }

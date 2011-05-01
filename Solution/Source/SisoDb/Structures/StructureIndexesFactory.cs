@@ -10,11 +10,11 @@ namespace SisoDb.Structures
 {
     public class StructureIndexesFactory : IStructureIndexesFactory
     {
-        public IStringConverter StringConverter { private get; set; }
+        private readonly IStringConverter _stringConverter;
 
         public StructureIndexesFactory(IStringConverter stringConverter)
         {
-            StringConverter = stringConverter.AssertNotNull("stringConverter");
+            _stringConverter = stringConverter.AssertNotNull("stringConverter");
         }
 
         public IEnumerable<IStructureIndex> GetIndexes<T>(IStructureSchema structureSchema, T item, ISisoId id)
@@ -42,7 +42,7 @@ namespace SisoDb.Structures
                             foreach (var value in values.Distinct())
                             {
                                 valueString.Append("<$");
-                                valueString.Append(StringConverter.AsString(value));
+                                valueString.Append(_stringConverter.AsString(value));
                                 valueString.Append("$>");
                             }
                             indexes[c] = new StructureIndex(id, indexAccessor.Name, valueString.ToString(), indexAccessor.IndexType);
