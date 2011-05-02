@@ -93,6 +93,8 @@
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropperTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserterTests.cs" />
     <Compile Include="Providers\SqlProvider\DbSchema\SqlDbIndexesSchemaSynchronizerTests.cs" />
+    <Compile Include="Providers\SqlProvider\QueryEngine\SqlQueryEngineCountTests.cs" />
+    <Compile Include="Providers\SqlProvider\QueryEngine\SqlQueryEngineGetByIdIntervalTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlDbClientTests.cs" />
     <Compile Include="Providers\SqlProvider\SqlDatabaseTests.cs" />
     <Compile Include="Providers\DbSchemaManagerTests.cs" />
