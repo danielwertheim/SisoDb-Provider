@@ -13,6 +13,42 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.TransactionScopes
         }
 
         [Test]
+        public void TransactionScope_WhenNestingMultipleUnitOfWorks_NothingIsInserted()
+        {
+            var items1 = new List<IdentityItem>
+                        {
+                            new IdentityItem {Value = 1}, new IdentityItem {Value = 2}, new IdentityItem {Value = 3},
+                        };
+
+            var items2 = new List<IdentityItem>
+                        {
+                            new IdentityItem {Value = 4}, new IdentityItem {Value = 5}, new IdentityItem {Value = 6},
+                        };
+
+            using (var ts = new TransactionScope())
+            {
+                using (var uow = Database.CreateUnitOfWork())
+                {
+                    uow.InsertMany(items1);
+                    uow.Commit();
+                }
+
+                using (var uow = Database.CreateUnitOfWork())
+                {
+                    uow.InsertMany(items2);
+                    uow.Commit();
+                }
+
+                ts.Complete();
+            }
+
+            using (var qe = Database.CreateQueryEngine())
+            {
+                Assert.AreEqual(6, qe.Count<IdentityItem>());
+            }
+        }
+
+        [Test]
         public void TransactionScope_WhenCommittingUnitOfWorkButNotTransactionScope_NothingIsInserted()
         {
             var items = new List<IdentityItem>
