@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Transactions;
 using NUnit.Framework;
 
-namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.UnitOfWork.TransactionScopes
+namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.TransactionScopes
 {
     [TestFixture]
     public class SqlUnitOfWorkWithTransactionScopeTests : SqlIntegrationTestBase

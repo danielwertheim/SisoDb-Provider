@@ -142,7 +142,7 @@
     <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\ShoppingIndexes.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\TheBase.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\TheChild.cs" />
-    <Compile Include="Providers\SqlProvider\UnitOfWork\TransactionScopes\SqlUnitOfWorkWithTransactionScopeTests.cs" />
+    <Compile Include="Providers\SqlProvider\TransactionScopes\SqlUnitOfWorkWithTransactionScopeTests.cs" />
     <Compile Include="Providers\SqlProvider\UnitOfWork\Updates\SqlUnitOfWorkUpdateTests.cs" />
   </ItemGroup>
   <ItemGroup>
