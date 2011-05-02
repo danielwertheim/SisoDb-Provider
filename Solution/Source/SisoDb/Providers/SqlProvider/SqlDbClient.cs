@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Transactions;
 using Microsoft.SqlServer.Server;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
@@ -22,15 +23,11 @@ namespace SisoDb.Providers.SqlProvider
     {
         private SqlConnection _connection;
         private SqlTransaction _transaction;
+        private TransactionScope _ts;
 
         public string DbName
         {
             get { return _connection.Database; }
-        }
-
-        public StorageProviders ProviderType
-        {
-            get { return ConnectionInfo.ProviderType; }
         }
 
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
@@ -42,14 +39,16 @@ namespace SisoDb.Providers.SqlProvider
         public SqlDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
             ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
-            SqlStringsRepository = new SqlStringsRepository(ProviderType);
+            SqlStringsRepository = new SqlStringsRepository(ConnectionInfo.ProviderType);
             DbDataTypeTranslator = new SqlDbDataTypeTranslator();
 
             _connection = new SqlConnection(ConnectionInfo.ConnectionString.PlainString);
             _connection.Open();
 
-            _transaction = transactional ?
-                _connection.BeginTransaction() : null;
+            if (Transaction.Current == null)
+                _transaction = transactional ? _connection.BeginTransaction() : null;
+            else
+                _ts = new TransactionScope(TransactionScopeOption.Suppress);
         }
 
         public void Dispose()
@@ -59,6 +58,12 @@ namespace SisoDb.Providers.SqlProvider
                 _transaction.Rollback();
                 _transaction.Dispose();
                 _transaction = null;
+            }
+
+            if(_ts != null)
+            {
+                _ts.Dispose();
+                _ts = null;
             }
 
             if (_connection == null)
@@ -73,6 +78,17 @@ namespace SisoDb.Providers.SqlProvider
 
         public void Flush()
         {
+            if(_ts != null)
+            {
+                _ts.Complete();
+                _ts.Dispose();
+                _ts = new TransactionScope(TransactionScopeOption.Suppress);
+                return;
+            }
+
+            if (System.Transactions.Transaction.Current != null)
+                return;
+
             if (_transaction == null)
                 throw new NotSupportedException(ExceptionMessages.SqlDbClient_Flus_NonTransactional);
 
@@ -147,7 +163,7 @@ namespace SisoDb.Providers.SqlProvider
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
-            
+
             var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
             var sql = SqlStringsRepository.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Sql, sqlDataType);
 

@@ -5,6 +5,9 @@ B=New features and minor changes not braking API etc.
 C=Bug fixes
 D=Optional build number for feature use.
 
+v2.1        - 2011-05-02
+[New]       Now lets you nest UnitOfWorks in TransactionScopes. When doing that, Commit and rollbacks are controlled by the TransactionScope.
+
 v2.0        - 2011-05-01
 [Fixed]     When assigning SisoId values, the parallelization messed up the ordering. This has been corrected. The generation is now sequential.
 [New]       IMPORTANT! When inserting items any assigned SisoId-values will not be preserved. This is done because you shouldn't mess up the sequential order of the Guids or the identities. If you do need to preserve values. Let me know.

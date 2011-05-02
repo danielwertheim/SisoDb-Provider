@@ -50,7 +50,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
             using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
             {
-                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
+                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ConnectionInfo.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
                 synhronizer.Synchronize(_structureSchema);
             }
@@ -69,7 +69,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlProvider.DbSchema
 
             using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
             {
-                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
+                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ConnectionInfo.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
                 synhronizer.Synchronize(_structureSchema);
             }
