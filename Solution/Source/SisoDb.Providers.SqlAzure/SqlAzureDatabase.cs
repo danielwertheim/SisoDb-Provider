@@ -15,7 +15,7 @@ namespace SisoDb.Providers.SqlAzure
                 throw new SisoDbException(ExceptionMessages.AzureDatabase_UnsupportedProviderSpecified
                     .Inject(ConnectionInfo.ProviderType, StorageProviders.SqlAzure));
 
-            OnInitialize();
+            Initialize();
         }
 
         public override void EnsureNewDatabase()

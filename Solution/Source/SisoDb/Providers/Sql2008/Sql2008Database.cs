@@ -41,10 +41,10 @@ namespace SisoDb.Providers.Sql2008
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_UnsupportedProviderSpecified
                     .Inject(ConnectionInfo.ProviderType, StorageProviders.Sql2008));
 
-            OnInitialize();
+            Initialize();
         }
 
-        protected void OnInitialize()
+        protected void Initialize()
         {
             var cnStringBuilder = new SqlConnectionStringBuilder(ConnectionInfo.ConnectionString.PlainString);
             
