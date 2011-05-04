@@ -207,7 +207,7 @@ namespace SisoDb.Providers.Sql2008Provider
 
             var sql = SqlStringsRepository.GetSql("GetColumns");
 
-            ExecuteSingleResultReader(CommandType.Text, sql,
+            SingleResultSequentialReader(CommandType.Text, sql,
                 dr =>
                 {
                     var name = dr.GetString(0);
@@ -288,7 +288,7 @@ namespace SisoDb.Providers.Sql2008Provider
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("idFrom", sisoIdFrom), new QueryParameter("idTo", sisoIdTo)))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {
@@ -343,12 +343,12 @@ namespace SisoDb.Providers.Sql2008Provider
             }
         }
 
-        public void ExecuteSingleResultReader(CommandType commandType, string sql,
+        public void SingleResultSequentialReader(CommandType commandType, string sql,
             Action<IDataRecord> callback, params IQueryParameter[] parameters)
         {
             using (var cmd = CreateCommand(commandType, sql, parameters))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {
