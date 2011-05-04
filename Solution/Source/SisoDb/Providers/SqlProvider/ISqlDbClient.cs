@@ -52,6 +52,6 @@ namespace SisoDb.Providers.SqlProvider
 
         IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName);
 
-        void ExecuteSingleResultReader(CommandType commandType, string sql, Action<IDataRecord> callback, params IQueryParameter[] parameters);
+        void SingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> callback, params IQueryParameter[] parameters);
     }
 }

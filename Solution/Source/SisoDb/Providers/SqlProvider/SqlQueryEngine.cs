@@ -271,7 +271,7 @@ namespace SisoDb.Providers.SqlProvider
 
             using (var cmd = DbClient.CreateCommand(CommandType.Text, sql))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {
@@ -303,7 +303,7 @@ namespace SisoDb.Providers.SqlProvider
 
             using (var cmd = DbClient.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {
@@ -374,7 +374,7 @@ namespace SisoDb.Providers.SqlProvider
 
             using (var cmd = DbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {
