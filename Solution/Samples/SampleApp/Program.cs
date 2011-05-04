@@ -2,6 +2,7 @@
 using System.Linq;
 using SisoDb;
 using SisoDb.Core;
+using SisoDb.Providers.Sql2008;
 using SisoDb.Querying;
 using SisoDb.Serialization;
 using SisoDb.Structures.Schemas;
@@ -18,7 +19,7 @@ namespace SisoDbLab
             return;
 
             //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDbLab;Integrated security=SSPI;");
-            //var db = new SisoDbFactory().CreateDatabase(cnInfo);
+            //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
             
             //ShowSchemaInfo<Customer>(db);

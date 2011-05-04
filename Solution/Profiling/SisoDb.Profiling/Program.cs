@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SisoDb.Profiling.Model;
+using SisoDb.Providers.Sql2008;
 
 namespace SisoDb.Profiling
 {
@@ -15,7 +16,7 @@ namespace SisoDb.Profiling
             return;
 
             //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
-            //var db = new SisoDbFactory().CreateDatabase(cnInfo);
+            //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
 
             //ProfilingInserts(db, 1000, 5);
