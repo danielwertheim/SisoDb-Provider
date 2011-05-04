@@ -1,4 +1,4 @@
-﻿using SisoDb.Providers.Sql2008Provider;
+﻿using SisoDb.Providers.Sql2008;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying.Sql

@@ -35,6 +35,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("2.1.0.0")]
 [assembly: AssemblyFileVersion("2.1.0.0")]
 
+[assembly: InternalsVisibleTo("SisoDb.Providers.SqlAzure")]
+[assembly: InternalsVisibleTo("SisoDb.Providers.SqlCe4")]
+
 #if DEPLOY
 #else
 [assembly: InternalsVisibleTo("SisoDb.TestUtils")]

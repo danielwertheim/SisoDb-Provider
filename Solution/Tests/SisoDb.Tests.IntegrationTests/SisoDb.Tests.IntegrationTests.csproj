@@ -89,69 +89,76 @@
     <Compile Include="IntegrationTestBase.cs" />
     <Compile Include="LocalConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\SqlCe4Provider\SqlCe4DatabaseTests.cs" />
-    <Compile Include="Providers\SqlCe4Provider\SqlCe4IntegrationTestBase.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbHelper.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbSchemaDropperTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbSchemaUpserterTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbIndexesSchemaSynchronizerTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\QueryEngine\SqlQueryEngineCountTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\QueryEngine\SqlQueryEngineGetByIdIntervalTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\SqlDbClientTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\SqlDatabaseTests.cs" />
-    <Compile Include="Providers\DbSchemaManagerTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\SqlIntegrationTestBase.cs" />
-    <Compile Include="Providers\Sql2008Provider\StructureSetUpdaterTests\SqlStructureSetUpdaterTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\StructureSetUpdaterTests\SqlStructureSetUpdaterTestsForDifferentTypes.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdIntervalTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdsTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkBaseClassInsertTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkGuidIdInsertTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkIdentityInsertTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkInsertCompleteTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkInsertItemWithArraysTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkInsertStructureIndexesTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkInsertTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithNestedStructuresTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithUniqueTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkInsertInterfaceTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Inserts\SqlUnitOfWorkJsonInsertTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkCountTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkGetByIdIntervalTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkGetByIdsTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithPagingTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithTakeTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkWhereTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkNamedQueryIncludeTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxContainsTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxEndsWithTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxLikeTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxStartsWithTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkGetTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkIncludesTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkNamedQueryTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithSortingTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryEnumerableWithQxAnyTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Queries\SqlUnitOfWorkQueryTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\SqlUnitOfWorkIndexesTableTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\Address.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\Customer.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\CustomerDbExtensions.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\CustomerFactory.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\Nested.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\Root.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\ShoppingIndexes.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\TheBase.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\TestModel\TheChild.cs" />
-    <Compile Include="Providers\Sql2008Provider\TransactionScopes\SqlUnitOfWorkWithTransactionScopeTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\UnitOfWork\Updates\SqlUnitOfWorkUpdateTests.cs" />
+    <Compile Include="Providers\SqlCe4\SqlCe4DatabaseTests.cs" />
+    <Compile Include="Providers\SqlCe4\SqlCe4IntegrationTestBase.cs" />
+    <Compile Include="Providers\Sql2008\DbHelper.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\SqlDbSchemaDropperTests.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\SqlDbSchemaUpserterTests.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\SqlDbIndexesSchemaSynchronizerTests.cs" />
+    <Compile Include="Providers\Sql2008\QueryEngine\SqlQueryEngineCountTests.cs" />
+    <Compile Include="Providers\Sql2008\QueryEngine\SqlQueryEngineGetByIdIntervalTests.cs" />
+    <Compile Include="Providers\Sql2008\SqlDbClientTests.cs" />
+    <Compile Include="Providers\Sql2008\SqlDatabaseTests.cs" />
+    <Compile Include="Providers\Sql2008\SqlIntegrationTestBase.cs" />
+    <Compile Include="Providers\Sql2008\StructureSetUpdaterTests\SqlStructureSetUpdaterTests.cs" />
+    <Compile Include="Providers\Sql2008\StructureSetUpdaterTests\SqlStructureSetUpdaterTestsForDifferentTypes.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdIntervalTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdsTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Deletes\SqlUnitOfWorkDeleteTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkBaseClassInsertTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkGuidIdInsertTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkIdentityInsertTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkInsertCompleteTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkInsertItemWithArraysTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkInsertStructureIndexesTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkInsertTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithNestedStructuresTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithUniqueTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkInsertInterfaceTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Inserts\SqlUnitOfWorkJsonInsertTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkCountTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkGetByIdIntervalTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkGetByIdsTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkQueryWithPagingTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkQueryWithTakeTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkWhereTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkNamedQueryIncludeTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxContainsTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxEndsWithTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxLikeTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxStartsWithTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkGetTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkIncludesTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkNamedQueryTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkQueryWithSortingTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryEnumerableWithQxAnyTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\SqlUnitOfWorkQueryTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\SqlUnitOfWorkIndexesTableTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\Address.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\Customer.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\CustomerDbExtensions.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\CustomerFactory.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\Nested.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\Root.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\ShoppingIndexes.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\TheBase.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\TheChild.cs" />
+    <Compile Include="Providers\Sql2008\TransactionScopes\SqlUnitOfWorkWithTransactionScopeTests.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Updates\SqlUnitOfWorkUpdateTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\SisoDb.Providers.SqlAzure\SisoDb.Providers.SqlAzure.csproj">
+      <Project>{BE01AA89-F64C-4CDF-B936-EC973868E0F8}</Project>
+      <Name>SisoDb.Providers.SqlAzure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Source\SisoDb.Providers.SqlCe4\SisoDb.Providers.SqlCe4.csproj">
+      <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
+      <Name>SisoDb.Providers.SqlCe4</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Source\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>

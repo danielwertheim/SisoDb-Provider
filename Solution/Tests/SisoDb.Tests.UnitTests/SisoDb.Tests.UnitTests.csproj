@@ -87,10 +87,11 @@
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="Core\ElementsBatcherTests.cs" />
     <Compile Include="HashMemberNameGeneratorTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\IndexStorageSchemaTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\StructureStorageSchemaTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\UniqueStorageSchemaTests.cs" />
-    <Compile Include="Providers\SqlCe4Provider\DbSchema\SqlCe4DbColumnGeneratorTests.cs" />
+    <Compile Include="Providers\DbSchemaManagerTests.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\IndexStorageSchemaTests.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\StructureStorageSchemaTests.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Providers\SqlCe4\DbSchema\SqlCe4DbColumnGeneratorTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
@@ -110,17 +111,17 @@
     <Compile Include="MemberNameGeneratorFake.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedWhereSqlProcessorTests\ParsedWhereSqlProcessorCommonDataTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\Sql2008Provider\SqlQueryGeneratorTests.cs" />
+    <Compile Include="Providers\Sql2008\SqlQueryGeneratorTests.cs" />
     <Compile Include="Querying\PagingTests.cs" />
     <Compile Include="Querying\QueryCommandBuilderTests.cs" />
     <Compile Include="Querying\QueryCommandTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="SisoConnectionInfoTests.cs" />
-    <Compile Include="Providers\AzureProvider\DbSchema\AzureDbColumnGeneratorTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\Sql2008DbColumnGeneratorTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\SqlDatabaseTests.cs" />
-    <Compile Include="Providers\Sql2008Provider\SqlStructureSchemaExtensionsTests.cs" />
+    <Compile Include="Providers\SqlAzure\DbSchema\AzureDbColumnGeneratorTests.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\Sql2008DbColumnGeneratorTests.cs" />
+    <Compile Include="Providers\Sql2008\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
+    <Compile Include="Providers\Sql2008\SqlDatabaseTests.cs" />
+    <Compile Include="Providers\Sql2008\SqlStructureSchemaExtensionsTests.cs" />
     <Compile Include="Core\StringConverterTests.cs" />
     <Compile Include="Structures\Schemas\Configuration\StructureTypeConfigurationsTests.cs" />
     <Compile Include="Structures\Schemas\Configuration\StuctureTypeConfigTests.cs" />
@@ -163,6 +164,14 @@
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\SisoDb.Providers.SqlAzure\SisoDb.Providers.SqlAzure.csproj">
+      <Project>{BE01AA89-F64C-4CDF-B936-EC973868E0F8}</Project>
+      <Name>SisoDb.Providers.SqlAzure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Source\SisoDb.Providers.SqlCe4\SisoDb.Providers.SqlCe4.csproj">
+      <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
+      <Name>SisoDb.Providers.SqlCe4</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Source\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>

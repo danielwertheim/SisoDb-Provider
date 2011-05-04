@@ -10,6 +10,6 @@
 
         internal const string ConnectionStringNameForSqlCe4Temp = "SisoDb.SqlCe4.Temp";
 
-        internal const string TempDbName = "SisoDbTestsTemp";
+        internal const string TempDbName = "SisoDbTests.Temp";
     }
 }
