@@ -6,6 +6,7 @@ namespace SisoDb
     public enum StorageProviders
     {
         Sql2008 = 0,
-        SqlAzure = 10
+        SqlAzure = 10,
+        SqlCe4 = 20
     }
 }

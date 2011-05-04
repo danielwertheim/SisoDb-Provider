@@ -66,6 +66,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -73,6 +74,7 @@
     <Compile Include="Annotations\UniqueAttribute.cs" />
     <Compile Include="Annotations\UniqueModes.cs" />
     <Compile Include="ConnectionString.cs" />
+    <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Cryptography\Crc32Algorithm.cs" />
     <Compile Include="Cryptography\HashService.cs" />
     <Compile Include="Cryptography\IHashService.cs" />
@@ -88,9 +90,47 @@
     <Compile Include="Providers\ISisoProviderFactories.cs" />
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Providers\AdoNetExtensions.cs" />
-    <Compile Include="Providers\SqlProvider\ISqlServerClient.cs" />
-    <Compile Include="Providers\SqlProvider\SqlQueryEngine.cs" />
-    <Compile Include="Providers\SqlProvider\SqlServerClient.cs" />
+    <Compile Include="Providers\Sql2008Provider\BulkInserts\IndexesReader.cs" />
+    <Compile Include="Providers\Sql2008Provider\BulkInserts\SingleResultReaderBase.cs" />
+    <Compile Include="Providers\Sql2008Provider\BulkInserts\SqlBulkInserter.cs" />
+    <Compile Include="Providers\Sql2008Provider\BulkInserts\StructuresReader.cs" />
+    <Compile Include="Providers\Sql2008Provider\BulkInserts\UniquesReader.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\IndexStorageSchema.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\ISqlDbSchemaUpserter.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SchemaChange.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SchemaChanges.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SchemaField.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbColumn.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\Sql2008DbColumnGenerator.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbDataTypeTranslator.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbIndexesSchemaBuilder.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbSchemaDropper.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbSchemaUpserter.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbStructuresSchemaBuilder.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbUniquesSchemaBuilder.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\StorageSchemaBase.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\StructureStorageSchema.cs" />
+    <Compile Include="Providers\Sql2008Provider\DbSchema\UniqueStorageSchema.cs" />
+    <Compile Include="Providers\Sql2008Provider\ISqlCommandInfo.cs" />
+    <Compile Include="Providers\Sql2008Provider\ISqlDatabase.cs" />
+    <Compile Include="Providers\Sql2008Provider\ISqlDbClient.cs" />
+    <Compile Include="Providers\Sql2008Provider\ISqlServerClient.cs" />
+    <Compile Include="Providers\Sql2008Provider\Sql2008Database.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlCommandBuildInfo.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlCommandInfo.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlDbClient.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlIdentityGenerator.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlQueryEngine.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlQueryGenerator.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlServerClient.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlStructureSchemaExtensions.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlStructureSetUpdater.cs" />
+    <Compile Include="Providers\Sql2008Provider\SqlUnitOfWork.cs" />
+    <Compile Include="Providers\SqlCe4ProviderFactory.cs" />
+    <Compile Include="Providers\SqlCe4Provider\DbSchema\SqlCe4DbColumnGenerator.cs" />
+    <Compile Include="Providers\SqlCe4Provider\SqlCe4Database.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />
@@ -99,9 +139,6 @@
     <Compile Include="Querying\Lambdas\Parsers\ISortingParser.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaDropper.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaUpserter.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropper.cs" />
-    <Compile Include="Providers\SqlProvider\SqlCommandBuildInfo.cs" />
-    <Compile Include="Providers\SqlProvider\SqlStructureSetUpdater.cs" />
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="SequentialGuid.cs" />
     <Compile Include="ResourceContainer.cs" />
@@ -151,11 +188,9 @@
     <Compile Include="Querying\Lambdas\Nodes\SortDirections.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
     <Compile Include="Providers\DbSchema\IDbDataTypeTranslator.cs" />
-    <Compile Include="Providers\SqlProvider\ISqlDbClient.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
-    <Compile Include="Providers\SqlProvider\ISqlCommandInfo.cs" />
     <Compile Include="Querying\Sql\ISqlWhere.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedWhereSqlProcessor.cs" />
     <Compile Include="Querying\IEnumerableQueryExtensions.cs" />
@@ -167,42 +202,18 @@
     <Compile Include="Core\ElementBatcher.cs" />
     <Compile Include="Core\IElementBatcher.cs" />
     <Compile Include="Providers\AzureProvider\AzureDatabase.cs" />
-    <Compile Include="Providers\SqlProvider\BulkInserts\IndexesReader.cs" />
-    <Compile Include="Providers\SqlProvider\BulkInserts\UniquesReader.cs" />
     <Compile Include="Providers\AzureProvider\DbSchema\AzureDbColumnGenerator.cs" />
     <Compile Include="Providers\DbSchema\IDbColumnGenerator.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaBuilder.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaSynchronizer.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbColumn.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\IndexStorageSchema.cs" />
-    <Compile Include="Providers\SqlProvider\BulkInserts\SingleResultReaderBase.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SchemaField.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbColumnGenerator.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbDataTypeTranslator.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbStructuresSchemaBuilder.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbIndexesSchemaBuilder.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbUniquesSchemaBuilder.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\StorageSchemaBase.cs" />
-    <Compile Include="Providers\SqlProvider\BulkInserts\StructuresReader.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\StructureStorageSchema.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserter.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\UniqueStorageSchema.cs" />
     <Compile Include="Providers\DbSchema\IDbSchemaManager.cs" />
     <Compile Include="Core\Expressions\ExpressionUtils.cs" />
     <Compile Include="Providers\IIdentityGenerator.cs" />
-    <Compile Include="Providers\SqlProvider\ISqlDatabase.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SchemaChanges.cs" />
-    <Compile Include="Providers\SqlProvider\DbSchema\SchemaChange.cs" />
     <Compile Include="Querying\Sql\ISqlQueryGenerator.cs" />
     <Compile Include="Providers\SqlStrings\ISqlStringsRepository.cs" />
-    <Compile Include="Providers\SqlProvider\SqlQueryGenerator.cs" />
-    <Compile Include="Providers\SqlProvider\SqlIdentityGenerator.cs" />
     <Compile Include="Providers\SqlStrings\SqlStringsRepository.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
     <Compile Include="Querying\SortingExtensions.cs" />
-    <Compile Include="Providers\SqlProvider\SqlCommandInfo.cs" />
     <Compile Include="Querying\Sql\SqlSorting.cs" />
     <Compile Include="Serialization\IJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
@@ -222,14 +233,9 @@
     <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
     <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
     <Compile Include="Reflections\TypeExtensions.cs" />
-    <Compile Include="Providers\SqlProvider\BulkInserts\SqlBulkInserter.cs" />
-    <Compile Include="Providers\SqlProvider\SqlDbClient.cs" />
-    <Compile Include="Providers\SqlProvider\SqlStructureSchemaExtensions.cs" />
     <Compile Include="Providers\DbSchema\DbSchemaManager.cs" />
     <Compile Include="Querying\QueryParameter.cs" />
-    <Compile Include="Providers\SqlProvider\SqlDatabase.cs" />
     <Compile Include="Querying\Sql\SqlWhere.cs" />
-    <Compile Include="Providers\SqlProvider\SqlUnitOfWork.cs" />
     <Compile Include="Core\StringConverter.cs" />
     <Compile Include="Structures\ISisoId.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
@@ -305,6 +311,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

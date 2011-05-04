@@ -8,7 +8,7 @@ namespace SisoDb.Tests.IntegrationTests
         [SetUp]
         public void Initialize()
         {
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringName);
+            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForSql2008);
             var database = new SisoDbFactory().CreateDatabase(connectionInfo);
             database.EnsureNewDatabase();
         }

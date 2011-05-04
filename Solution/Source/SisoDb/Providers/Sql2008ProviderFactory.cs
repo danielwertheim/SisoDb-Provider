@@ -1,5 +1,5 @@
 ﻿using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlProvider.DbSchema;
+using SisoDb.Providers.Sql2008Provider.DbSchema;
 
 namespace SisoDb.Providers
 {
@@ -7,7 +7,7 @@ namespace SisoDb.Providers
     {
         public IDbColumnGenerator GetDbColumnGenerator()
         {
-            return new SqlDbColumnGenerator();
+            return new Sql2008DbColumnGenerator();
         }
     }
 }

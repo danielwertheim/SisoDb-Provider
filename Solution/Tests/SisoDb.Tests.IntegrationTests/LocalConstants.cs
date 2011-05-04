@@ -2,10 +2,14 @@
 {
     internal class LocalConstants
     {
-        internal const string ConnectionStringName = "SisoDb.IntegrationTests";
+        internal const string ConnectionStringNameForSql2008 = "SisoDb.Sql2008";
 
-        internal const string ConnectionStringNameForTemp = "SisoDb.IntegrationTests.Temp";
+        internal const string ConnectionStringNameForSql2008Temp = "SisoDb.Sql2008.Temp";
 
-        internal const string TempDbName = "SisoDb.IntegrationTests.Temp";
+        internal const string ConnectionStringNameForSqlCe4 = "SisoDb.SqlCe4";
+
+        internal const string ConnectionStringNameForSqlCe4Temp = "SisoDb.SqlCe4.Temp";
+
+        internal const string TempDbName = "SisoDbTestsTemp";
     }
 }

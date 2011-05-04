@@ -16,8 +16,9 @@ namespace SisoDb
             Resources = new ResourceContainer();
 
             ProviderFactories = new SisoProviderFactories();
-            ProviderFactories.Register(StorageProviders.SqlAzure, new SqlAzureProviderFactory());
             ProviderFactories.Register(StorageProviders.Sql2008, new Sql2008ProviderFactory());
+            ProviderFactories.Register(StorageProviders.SqlAzure, new SqlAzureProviderFactory());
+            ProviderFactories.Register(StorageProviders.SqlCe4, new SqlCe4ProviderFactory());
         }
     }
 }

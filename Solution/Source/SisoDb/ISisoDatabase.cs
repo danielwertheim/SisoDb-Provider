@@ -17,11 +17,6 @@ namespace SisoDb
         string Name { get; }
 
         /// <summary>
-        /// Connection info for the Server.
-        /// </summary>
-        ISisoConnectionInfo ServerConnectionInfo { get; }
-
-        /// <summary>
         /// Connection info for the database.
         /// </summary>
         ISisoConnectionInfo ConnectionInfo { get; }

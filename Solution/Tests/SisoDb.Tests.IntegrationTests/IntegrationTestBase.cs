@@ -7,9 +7,9 @@ namespace SisoDb.Tests.IntegrationTests
     {
         protected ISisoDatabase Database { get; private set; }
 
-        protected IntegrationTestBase()
+        protected IntegrationTestBase(string connectionStringName)
         {
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringName);
+            var connectionInfo = new SisoConnectionInfo(connectionStringName);
             Database = new SisoDbFactory().CreateDatabase(connectionInfo);
         }
 

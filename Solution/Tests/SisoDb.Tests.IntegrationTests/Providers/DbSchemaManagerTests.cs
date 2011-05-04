@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Structures.Schemas;
-using SisoDb.Tests.IntegrationTests.Providers.SqlProvider;
+using SisoDb.Tests.IntegrationTests.Providers.Sql2008Provider;
 
 namespace SisoDb.Tests.IntegrationTests.Providers
 {

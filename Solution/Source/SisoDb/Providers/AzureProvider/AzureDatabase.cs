@@ -1,17 +1,21 @@
 ﻿using System;
 using SisoDb.Core;
-using SisoDb.Providers.SqlProvider;
+using SisoDb.Providers.Sql2008Provider;
 using SisoDb.Resources;
 
 namespace SisoDb.Providers.AzureProvider
 {
-    public class AzureDatabase : SqlDatabase
+    public class AzureDatabase : Sql2008Database
     {
-        public AzureDatabase(ISisoConnectionInfo connectionInfo) : base(connectionInfo)
+        public AzureDatabase(ISisoConnectionInfo connectionInfo)
         {
-            if(connectionInfo.ProviderType != StorageProviders.SqlAzure)
+            ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
+
+            if(ConnectionInfo.ProviderType != StorageProviders.SqlAzure)
                 throw new SisoDbException(ExceptionMessages.AzureDatabase_UnsupportedProviderSpecified
-                    .Inject(connectionInfo.ProviderType, StorageProviders.SqlAzure));
+                    .Inject(ConnectionInfo.ProviderType, StorageProviders.SqlAzure));
+
+            OnInitialize();
         }
 
         public override void EnsureNewDatabase()

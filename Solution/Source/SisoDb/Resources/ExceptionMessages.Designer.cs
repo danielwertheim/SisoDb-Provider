@@ -332,6 +332,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. When consuming a SqlCE4-database the storageprovider should be: &apos;{1}&apos;..
+        /// </summary>
+        internal static string SqlCe4Database_UnsupportedProviderSpecified {
+            get {
+                return ResourceManager.GetString("SqlCe4Database_UnsupportedProviderSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The name of the database could not be extracted from the connection-info..
         /// </summary>
         internal static string SqlDatabase_ConnectionInfo_MissingName {
