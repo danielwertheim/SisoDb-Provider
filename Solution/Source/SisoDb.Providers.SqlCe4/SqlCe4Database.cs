@@ -4,14 +4,13 @@ using System.IO;
 using SisoDb.Core;
 using SisoDb.Core.Io;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008;
-using SisoDb.Resources;
+using SisoDb.Providers.SqlCe4.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlCe4
 {
-    public class SqlCe4Database : ISqlDatabase
+    public class SqlCe4Database : ISisoDatabase
     {
         public string Name { get; private set; }
 
@@ -30,7 +29,7 @@ namespace SisoDb.Providers.SqlCe4
             ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
             
             if (ConnectionInfo.ProviderType != StorageProviders.SqlCe4)
-                throw new SisoDbException(ExceptionMessages.SqlCe4Database_UnsupportedProviderSpecified.Inject(
+                throw new SisoDbException(SqlCe4Exceptions.SqlCe4Database_UnsupportedProviderSpecified.Inject(
                     ConnectionInfo.ProviderType, StorageProviders.SqlCe4));
 
             StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
@@ -53,7 +52,10 @@ namespace SisoDb.Providers.SqlCe4
 
         public void EnsureNewDatabase()
         {
-            throw new NotImplementedException();
+            if(IoHelper.FileExists(FilePath))
+                IoHelper.DeleteIfFileExists(FilePath);
+
+            CreateIfNotExists();
         }
 
         public void CreateIfNotExists()
@@ -69,7 +71,10 @@ namespace SisoDb.Providers.SqlCe4
 
         public void InitializeExisting()
         {
-            throw new NotImplementedException();
+            if(!IoHelper.FileExists(FilePath))
+                throw new SisoDbException(SqlCe4Exceptions.SqlCe4Database_InitializeExisting_DbDoesNotExist.Inject(Name));
+            
+            
         }
 
         public void DeleteIfExists()

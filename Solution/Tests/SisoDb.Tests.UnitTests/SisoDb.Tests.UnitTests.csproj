@@ -164,6 +164,10 @@
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\SisoDb.Providers.Sql2008\SisoDb.Providers.Sql2008.csproj">
+      <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
+      <Name>SisoDb.Providers.Sql2008</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Source\SisoDb.Providers.SqlAzure\SisoDb.Providers.SqlAzure.csproj">
       <Project>{BE01AA89-F64C-4CDF-B936-EC973868E0F8}</Project>
       <Name>SisoDb.Providers.SqlAzure</Name>

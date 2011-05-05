@@ -11,9 +11,8 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.Sql2008
 {
-    public class Sql2008Database : ISqlDatabase
+    public class Sql2008Database : ISisoDatabase
     {
-        
         public string Name { get; private set; }
 
         public ISisoConnectionInfo ServerConnectionInfo { get; private set; }

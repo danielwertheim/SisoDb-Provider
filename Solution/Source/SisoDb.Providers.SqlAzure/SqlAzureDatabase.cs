@@ -1,7 +1,7 @@
 ﻿using System;
 using SisoDb.Core;
 using SisoDb.Providers.Sql2008;
-using SisoDb.Resources;
+using SisoDb.Providers.SqlAzure.Resources;
 
 namespace SisoDb.Providers.SqlAzure
 {
@@ -12,7 +12,7 @@ namespace SisoDb.Providers.SqlAzure
             ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
 
             if(ConnectionInfo.ProviderType != StorageProviders.SqlAzure)
-                throw new SisoDbException(ExceptionMessages.AzureDatabase_UnsupportedProviderSpecified
+                throw new SisoDbException(SqlAzureExceptions.AzureDatabase_UnsupportedProviderSpecified
                     .Inject(ConnectionInfo.ProviderType, StorageProviders.SqlAzure));
 
             Initialize();

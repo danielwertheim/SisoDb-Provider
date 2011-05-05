@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SisoDb.Querying;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Commands
 {
     public interface ISqlCommandInfo
     {

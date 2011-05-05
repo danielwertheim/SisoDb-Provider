@@ -2,7 +2,6 @@
 using System.Linq;
 using SisoDb;
 using SisoDb.Core;
-using SisoDb.Providers.Sql2008;
 using SisoDb.Querying;
 using SisoDb.Serialization;
 using SisoDb.Structures.Schemas;

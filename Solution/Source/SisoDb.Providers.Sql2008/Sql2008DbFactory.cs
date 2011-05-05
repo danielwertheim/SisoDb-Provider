@@ -2,6 +2,11 @@
 {
     public class Sql2008DbFactory : ISisoDbFactory
     {
+        static Sql2008DbFactory()
+        {
+            SisoEnvironment.ProviderFactories.Register(StorageProviders.Sql2008, new Sql2008ProviderFactory());
+        }
+
         public ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
         {
             return new Sql2008Database(connectionInfo);

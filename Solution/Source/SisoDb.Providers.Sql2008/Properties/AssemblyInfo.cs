@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SisoDb")]
+[assembly: AssemblyTitle("SisoDb.Providers.Sql2008")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Daniel Wertheim")]
-[assembly: AssemblyProduct("SisoDb")]
+[assembly: AssemblyProduct("SisoDb.Providers.Sql2008")]
 [assembly: AssemblyCopyright("Copyright © Daniel Wertheim 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f4a3a647-0355-4a16-9f21-6b041e8aa186")]
+[assembly: Guid("eb9d06ed-e127-46b4-9200-eb377f6c254c")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,11 +34,6 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("3.0.0.0")]
 [assembly: AssemblyFileVersion("3.0.0.0")]
-
-[assembly: InternalsVisibleTo("SisoDb.Providers.Sql2008")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.SqlAzure")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.SqlCe4")]
-
 #if DEPLOY
 #else
 [assembly: InternalsVisibleTo("SisoDb.TestUtils")]

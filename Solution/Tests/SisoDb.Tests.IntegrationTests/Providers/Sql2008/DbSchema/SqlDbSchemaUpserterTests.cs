@@ -15,7 +15,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.DbSchema
         private string _structureTableName;
         private string _indexesTableName;
         private string _uniquesTableName;
-        private ISqlDatabase _sqlDb;
+        private ISisoDatabase _sqlDb;
 
         protected override void OnFixtureInitialize()
         {

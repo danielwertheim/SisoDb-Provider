@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Providers.SqlCe4", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Providers.SqlAzure", "Source\SisoDb.Providers.SqlAzure\SisoDb.Providers.SqlAzure.csproj", "{BE01AA89-F64C-4CDF-B936-EC973868E0F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Providers.Sql2008", "Source\SisoDb.Providers.Sql2008\SisoDb.Providers.Sql2008.csproj", "{661D181A-AAE8-45AE-ABE8-379947DDF686}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,12 @@ Global
 		{BE01AA89-F64C-4CDF-B936-EC973868E0F8}.Deploy|Any CPU.Build.0 = Debug|Any CPU
 		{BE01AA89-F64C-4CDF-B936-EC973868E0F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE01AA89-F64C-4CDF-B936-EC973868E0F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

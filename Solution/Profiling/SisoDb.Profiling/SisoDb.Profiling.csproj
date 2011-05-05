@@ -83,6 +83,10 @@
     <Compile Include="Model\ShoppingIndexes.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\SisoDb.Providers.Sql2008\SisoDb.Providers.Sql2008.csproj">
+      <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
+      <Name>SisoDb.Providers.Sql2008</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Source\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>

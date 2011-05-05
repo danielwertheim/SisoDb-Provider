@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{661D181A-AAE8-45AE-ABE8-379947DDF686}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SisoDb.Providers.Sql2008</RootNamespace>
+    <AssemblyName>SisoDb.Providers.Sql2008</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BulkInserts\IndexesReader.cs" />
+    <Compile Include="BulkInserts\SingleResultReaderBase.cs" />
+    <Compile Include="BulkInserts\SqlBulkInserter.cs" />
+    <Compile Include="BulkInserts\StructuresReader.cs" />
+    <Compile Include="BulkInserts\UniquesReader.cs" />
+    <Compile Include="DbSchema\IndexStorageSchema.cs" />
+    <Compile Include="DbSchema\ISqlDbSchemaUpserter.cs" />
+    <Compile Include="DbSchema\SchemaChange.cs" />
+    <Compile Include="DbSchema\SchemaChanges.cs" />
+    <Compile Include="DbSchema\SchemaField.cs" />
+    <Compile Include="DbSchema\Sql2008DbColumnGenerator.cs" />
+    <Compile Include="DbSchema\SqlDbColumn.cs" />
+    <Compile Include="DbSchema\SqlDbDataTypeTranslator.cs" />
+    <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
+    <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
+    <Compile Include="DbSchema\SqlDbSchemaDropper.cs" />
+    <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
+    <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
+    <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
+    <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
+    <Compile Include="DbSchema\StorageSchemaBase.cs" />
+    <Compile Include="DbSchema\StructureStorageSchema.cs" />
+    <Compile Include="DbSchema\UniqueStorageSchema.cs" />
+    <Compile Include="ISqlDbClient.cs" />
+    <Compile Include="ISqlServerClient.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Sql2008Exceptions.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Sql2008Exceptions.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Sql2008Database.cs" />
+    <Compile Include="Sql2008DbFactory.cs" />
+    <Compile Include="Sql2008ProviderFactory.cs" />
+    <Compile Include="SqlCommandBuildInfo.cs" />
+    <Compile Include="SqlCommandInfo.cs" />
+    <Compile Include="SqlDbClient.cs" />
+    <Compile Include="SqlIdentityGenerator.cs" />
+    <Compile Include="SqlQueryEngine.cs" />
+    <Compile Include="SqlQueryGenerator.cs" />
+    <Compile Include="SqlServerClient.cs" />
+    <Compile Include="SqlStructureSchemaExtensions.cs" />
+    <Compile Include="SqlStructureSetUpdater.cs" />
+    <Compile Include="SqlUnitOfWork.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Sql2008Exceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Sql2008Exceptions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SisoDb\SisoDb.csproj">
+      <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
+      <Name>SisoDb</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

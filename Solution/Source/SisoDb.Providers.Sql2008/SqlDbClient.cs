@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Transactions;
 using Microsoft.SqlServer.Server;
+using SisoDb.Commands;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.DbSchema;

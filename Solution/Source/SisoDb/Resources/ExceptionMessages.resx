@@ -192,9 +192,6 @@
   <data name="SqlDatabase_InitializeExisting_DbDoesNotExist" xml:space="preserve">
     <value>The database '{0}' doesn't exist.</value>
   </data>
-  <data name="AzureDatabase_UnsupportedProviderSpecified" xml:space="preserve">
-    <value>Storageprovider '{0}' is unsupported. When consuming an Azure-database the storageprovider should be: '{1}'.</value>
-  </data>
   <data name="SqlDatabase_UnsupportedProviderSpecified" xml:space="preserve">
     <value>Storageprovider '{0}' is unsupported. When consuming an Sql-database the storageprovider should be: '{1}'.</value>
   </data>
@@ -261,8 +258,5 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="SisoIdFactory_MissingGuidValue" xml:space="preserve">
     <value>When using Guids the Id-property of the entity must be assigned before structure is created.</value>
-  </data>
-  <data name="SqlCe4Database_UnsupportedProviderSpecified" xml:space="preserve">
-    <value>Storageprovider '{0}' is unsupported. When consuming a SqlCE4-database the storageprovider should be: '{1}'.</value>
   </data>
 </root>

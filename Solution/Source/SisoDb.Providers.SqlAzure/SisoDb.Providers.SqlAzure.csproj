@@ -26,7 +26,8 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -37,6 +38,11 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\SqlAzureExceptions.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SqlAzureExceptions.resx</DependentUpon>
+    </Compile>
     <Compile Include="SqlAzureDatabase.cs" />
     <Compile Include="DbSchema\AzureDbColumnGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -44,10 +50,20 @@
     <Compile Include="SqlAzureProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SisoDb.Providers.Sql2008\SisoDb.Providers.Sql2008.csproj">
+      <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
+      <Name>SisoDb.Providers.Sql2008</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SqlAzureExceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SqlAzureExceptions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

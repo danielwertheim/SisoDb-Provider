@@ -88,15 +88,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. When consuming an Azure-database the storageprovider should be: &apos;{1}&apos;..
-        /// </summary>
-        internal static string AzureDatabase_UnsupportedProviderSpecified {
-            get {
-                return ResourceManager.GetString("AzureDatabase_UnsupportedProviderSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The IdType &apos;{0}&apos; is not supported when upserting tables!.
         /// </summary>
         internal static string DbSchemaUpserter_Upsert_IdTypeNotSupported {
@@ -328,15 +319,6 @@ namespace SisoDb.Resources {
         internal static string SortingParser_UnsupportedMethodForSortingDirection {
             get {
                 return ResourceManager.GetString("SortingParser_UnsupportedMethodForSortingDirection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. When consuming a SqlCE4-database the storageprovider should be: &apos;{1}&apos;..
-        /// </summary>
-        internal static string SqlCe4Database_UnsupportedProviderSpecified {
-            get {
-                return ResourceManager.GetString("SqlCe4Database_UnsupportedProviderSpecified", resourceCulture);
             }
         }
         
