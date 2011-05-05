@@ -5,6 +5,9 @@ B=New features and minor changes not braking API etc.
 C=Bug fixes
 D=Optional build number for feature use.
 
+v2.2
+[New]       SisoDbFactory has been replaced by specific Db-factories lying in the provider of your choice, e.g Sql2008 uses Sql2008DbFactory, which currently is the only finnished provider.
+
 v2.1        - 2011-05-02
 [New]       Now lets you nest UnitOfWorks in TransactionScopes. When doing that, Commit and rollbacks are controlled by the TransactionScope.
 
