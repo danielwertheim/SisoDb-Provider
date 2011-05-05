@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using SisoDb.Core;
+using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Structures.Schemas;
@@ -21,7 +22,7 @@ namespace SisoDb.Providers.Sql2008.DbSchema
             _dbClient = dbClient.AssertNotNull("dbClient");
 
             var columnGenerator =
-                SisoEnvironment.ProviderFactories.Get(dbClient.ConnectionInfo.ProviderType).GetDbColumnGenerator();
+                SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
 
             _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(_dbClient.SqlStringsRepository);
             _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStringsRepository, columnGenerator);

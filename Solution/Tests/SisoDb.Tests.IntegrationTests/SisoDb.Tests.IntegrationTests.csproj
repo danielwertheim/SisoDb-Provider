@@ -89,6 +89,7 @@
     <Compile Include="IntegrationTestBase.cs" />
     <Compile Include="LocalConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\Sql2008\Sql2008ServerClientTests.cs" />
     <Compile Include="Providers\SqlCe4\SqlCe4DatabaseTests.cs" />
     <Compile Include="Providers\SqlCe4\SqlCe4IntegrationTestBase.cs" />
     <Compile Include="Providers\Sql2008\DbHelper.cs" />
@@ -97,8 +98,8 @@
     <Compile Include="Providers\Sql2008\DbSchema\SqlDbIndexesSchemaSynchronizerTests.cs" />
     <Compile Include="Providers\Sql2008\QueryEngine\SqlQueryEngineCountTests.cs" />
     <Compile Include="Providers\Sql2008\QueryEngine\SqlQueryEngineGetByIdIntervalTests.cs" />
-    <Compile Include="Providers\Sql2008\SqlDbClientTests.cs" />
-    <Compile Include="Providers\Sql2008\SqlDatabaseTests.cs" />
+    <Compile Include="Providers\Sql2008\Sql2008DbClientTests.cs" />
+    <Compile Include="Providers\Sql2008\Sql2008DatabaseTests.cs" />
     <Compile Include="Providers\Sql2008\SqlIntegrationTestBase.cs" />
     <Compile Include="Providers\Sql2008\StructureSetUpdaterTests\SqlStructureSetUpdaterTests.cs" />
     <Compile Include="Providers\Sql2008\StructureSetUpdaterTests\SqlStructureSetUpdaterTestsForDifferentTypes.cs" />

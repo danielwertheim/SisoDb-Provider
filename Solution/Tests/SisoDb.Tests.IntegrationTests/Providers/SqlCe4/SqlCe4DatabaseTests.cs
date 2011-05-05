@@ -4,8 +4,6 @@ using SisoDb.Core;
 using SisoDb.Core.Io;
 using SisoDb.Providers.SqlCe4;
 using SisoDb.Providers.SqlCe4.Resources;
-using SisoDb.Resources;
-using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Providers.SqlCe4
 {
@@ -23,18 +21,6 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlCe4
         protected override void OnTestFinalize()
         {
             IoHelper.DeleteIfFileExists(_dbForTemp.FilePath);
-        }
-
-        [Test]
-        public void Ctor_WhenConnectionInfoHasWrongProviderType_ThrowsSisoDbException()
-        {
-            var connectionInfoStub = Stub.This<ISisoConnectionInfo>(
-                o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008));
-
-            var ex = Assert.Throws<SisoDbException>(() => new SqlCe4Database(connectionInfoStub));
-
-            Assert.AreEqual(SqlCe4Exceptions.SqlCe4Database_UnsupportedProviderSpecified.Inject(
-                connectionInfoStub.ProviderType, StorageProviders.SqlCe4), ex.Message);
         }
 
         [Test]
@@ -94,6 +80,18 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlCe4
 
             Assert.IsTrue(IoHelper.FileExists(_dbForTemp.FilePath));
         }
+
+        //[Test]
+        //public void EnsureNewDatabase_SystemTablesWillGetCreated()
+        //{
+        //    Assert.Fail("Implement");
+        //}
+
+        //[Test]
+        //public void EnsureNewDatabase_SystemTypesWillGetCreated()
+        //{
+        //    Assert.Fail("Implement");
+        //}
 
         [Test]
         public void InitializeExisting_WhenNoDatabaseExists_ThrowsSisoDbException()

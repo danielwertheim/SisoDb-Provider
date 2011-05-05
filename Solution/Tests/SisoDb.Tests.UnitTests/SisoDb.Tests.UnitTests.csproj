@@ -91,7 +91,10 @@
     <Compile Include="Providers\Sql2008\DbSchema\IndexStorageSchemaTests.cs" />
     <Compile Include="Providers\Sql2008\DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="Providers\Sql2008\DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Providers\Sql2008\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Providers\SqlCe4\DbSchema\SqlCe4DbColumnGeneratorTests.cs" />
+    <Compile Include="Providers\SqlCe4\SqlCe4ConnectionInfoTests.cs" />
+    <Compile Include="Providers\SqlCe4\SqlCe4DatabaseTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
@@ -119,8 +122,8 @@
     <Compile Include="SisoConnectionInfoTests.cs" />
     <Compile Include="Providers\SqlAzure\DbSchema\AzureDbColumnGeneratorTests.cs" />
     <Compile Include="Providers\Sql2008\DbSchema\Sql2008DbColumnGeneratorTests.cs" />
-    <Compile Include="Providers\Sql2008\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
-    <Compile Include="Providers\Sql2008\SqlDatabaseTests.cs" />
+    <Compile Include="Providers\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
+    <Compile Include="Providers\Sql2008\Sql2008DatabaseTests.cs" />
     <Compile Include="Providers\Sql2008\SqlStructureSchemaExtensionsTests.cs" />
     <Compile Include="Core\StringConverterTests.cs" />
     <Compile Include="Structures\Schemas\Configuration\StructureTypeConfigurationsTests.cs" />

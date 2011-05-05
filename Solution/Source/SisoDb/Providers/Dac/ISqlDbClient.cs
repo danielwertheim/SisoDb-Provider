@@ -4,18 +4,19 @@ using System.Data;
 using System.Data.SqlClient;
 using SisoDb.Commands;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 using SisoDb.Structures;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Providers.Dac
 {
     public interface ISqlDbClient : IDisposable
     {
         string DbName { get; }
 
-        ISisoConnectionInfo ConnectionInfo { get; }
+        StorageProviders ProviderType { get; }
+
+        IConnectionString ConnectionString { get; }
 
         IDbDataTypeTranslator DbDataTypeTranslator { get; }
 

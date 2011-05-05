@@ -1,11 +1,10 @@
 ﻿using System;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
 using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Providers.DbSchema
 {
     public class SqlDbDataTypeTranslator : IDbDataTypeTranslator
     {

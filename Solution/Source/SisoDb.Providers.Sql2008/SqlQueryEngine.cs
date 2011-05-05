@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using SisoDb.Core;
+using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;

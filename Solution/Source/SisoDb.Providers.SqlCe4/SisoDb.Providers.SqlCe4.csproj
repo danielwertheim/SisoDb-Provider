@@ -37,6 +37,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbSchema\SqlCe4DbColumnGenerator.cs" />
@@ -46,9 +47,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SqlCe4Exceptions.resx</DependentUpon>
     </Compile>
+    <Compile Include="SqlCe4ConnectionInfo.cs" />
+    <Compile Include="SqlCe4ServerClient.cs" />
     <Compile Include="SqlCe4Database.cs" />
     <Compile Include="SqlCe4DbFactory.cs" />
     <Compile Include="SqlCe4ProviderFactory.cs" />
+    <Compile Include="SqlCe4DbClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SisoDb\SisoDb.csproj">

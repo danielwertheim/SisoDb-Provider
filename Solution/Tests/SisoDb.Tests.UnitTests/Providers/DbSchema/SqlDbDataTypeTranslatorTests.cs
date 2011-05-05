@@ -2,12 +2,12 @@
 using Moq;
 using NUnit.Framework;
 using SisoDb.Core;
-using SisoDb.Providers.Sql2008.DbSchema;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Tests.UnitTests.Providers.Sql2008.DbSchema
+namespace SisoDb.Tests.UnitTests.Providers.DbSchema
 {
     [TestFixture]
     public class SqlDbDataTypeTranslatorTests : UnitTestBase

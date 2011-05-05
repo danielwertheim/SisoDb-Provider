@@ -2,11 +2,13 @@
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlStrings;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Providers.Dac
 {
     public interface ISqlServerClient : IDisposable
     {
-        ISisoConnectionInfo ConnectionInfo { get; }
+        StorageProviders ProviderType { get; }
+
+        IConnectionString ConnectionString { get; }
 
         IDbDataTypeTranslator DbDataTypeTranslator { get; }
 

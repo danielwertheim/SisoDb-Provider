@@ -88,6 +88,10 @@
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="ISisoDbFormatting.cs" />
     <Compile Include="Core\IStringConverter.cs" />
+    <Compile Include="Providers\Dac\ISqlDbClient.cs" />
+    <Compile Include="Providers\Dac\ISqlServerClient.cs" />
+    <Compile Include="Providers\DbSchema\SqlDbColumn.cs" />
+    <Compile Include="Providers\DbSchema\SqlDbDataTypeTranslator.cs" />
     <Compile Include="Providers\ISisoProviderFactories.cs" />
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Providers\AdoNetExtensions.cs" />

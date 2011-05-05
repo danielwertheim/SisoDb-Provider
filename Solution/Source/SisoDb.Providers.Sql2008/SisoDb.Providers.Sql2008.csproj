@@ -51,8 +51,6 @@
     <Compile Include="DbSchema\SchemaChanges.cs" />
     <Compile Include="DbSchema\SchemaField.cs" />
     <Compile Include="DbSchema\Sql2008DbColumnGenerator.cs" />
-    <Compile Include="DbSchema\SqlDbColumn.cs" />
-    <Compile Include="DbSchema\SqlDbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\SqlDbSchemaDropper.cs" />
@@ -63,8 +61,6 @@
     <Compile Include="DbSchema\StorageSchemaBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
-    <Compile Include="ISqlDbClient.cs" />
-    <Compile Include="ISqlServerClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Sql2008Exceptions.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -74,13 +70,14 @@
     <Compile Include="Sql2008Database.cs" />
     <Compile Include="Sql2008DbFactory.cs" />
     <Compile Include="Sql2008ProviderFactory.cs" />
+    <Compile Include="Sql2008ConnectionInfo.cs" />
     <Compile Include="SqlCommandBuildInfo.cs" />
     <Compile Include="SqlCommandInfo.cs" />
-    <Compile Include="SqlDbClient.cs" />
+    <Compile Include="Sql2008DbClient.cs" />
     <Compile Include="SqlIdentityGenerator.cs" />
     <Compile Include="SqlQueryEngine.cs" />
     <Compile Include="SqlQueryGenerator.cs" />
-    <Compile Include="SqlServerClient.cs" />
+    <Compile Include="Sql2008ServerClient.cs" />
     <Compile Include="SqlStructureSchemaExtensions.cs" />
     <Compile Include="SqlStructureSetUpdater.cs" />
     <Compile Include="SqlUnitOfWork.cs" />

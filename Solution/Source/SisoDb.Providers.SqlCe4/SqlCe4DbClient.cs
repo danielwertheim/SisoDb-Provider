@@ -7,20 +7,20 @@ using System.Transactions;
 using Microsoft.SqlServer.Server;
 using SisoDb.Commands;
 using SisoDb.Core;
+using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 using SisoDb.Resources;
 using SisoDb.Structures;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Providers.SqlCe4
 {
     /// <summary>
     /// Performs the ADO.Net communication for the Sql-provider for a
     /// specific database.
     /// </summary>
-    public class SqlDbClient : ISqlDbClient
+    public class SqlCe4DbClient : ISqlDbClient
     {
         private SqlConnection _connection;
         private SqlTransaction _transaction;
@@ -31,19 +31,25 @@ namespace SisoDb.Providers.Sql2008
             get { return _connection.Database; }
         }
 
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
+        public StorageProviders ProviderType { get; private set; }
+
+        public IConnectionString ConnectionString { get; private set; }
 
         public IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
 
         public ISqlStringsRepository SqlStringsRepository { get; private set; }
 
-        public SqlDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+        public SqlCe4DbClient(SqlCe4ConnectionInfo connectionInfo, bool transactional)
         {
-            ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
-            SqlStringsRepository = new SqlStringsRepository(ConnectionInfo.ProviderType);
+            connectionInfo.AssertNotNull("connectionInfo");
+
+            ProviderType = connectionInfo.ProviderType;
+            ConnectionString = connectionInfo.ConnectionString;
+            
+            SqlStringsRepository = new SqlStringsRepository(ProviderType);
             DbDataTypeTranslator = new SqlDbDataTypeTranslator();
 
-            _connection = new SqlConnection(ConnectionInfo.ConnectionString.PlainString);
+            _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();
 
             if (Transaction.Current == null)
@@ -87,7 +93,7 @@ namespace SisoDb.Providers.Sql2008
                 return;
             }
 
-            if (System.Transactions.Transaction.Current != null)
+            if (Transaction.Current != null)
                 return;
 
             if (_transaction == null)

@@ -48,9 +48,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.DbSchema
             var hashForColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("IndexableMember2");
             DbHelper.DropColumns(_indexesTableName, hashForColumn);
 
-            using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
-                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ConnectionInfo.ProviderType).GetDbColumnGenerator();
+                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
                 synhronizer.Synchronize(_structureSchema);
             }
@@ -67,9 +67,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.DbSchema
             var obsoleteColumnDefinition = string.Format("[{0}] [int] sparse null", hashForObsoleteColumn);
             DbHelper.AddColumns(_indexesTableName, obsoleteColumnDefinition);
 
-            using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
-                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ConnectionInfo.ProviderType).GetDbColumnGenerator();
+                var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
                 synhronizer.Synchronize(_structureSchema);
             }
@@ -80,7 +80,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.DbSchema
 
         private void CreateStructureSet()
         {
-            using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(dbClient);
                 upserter.Upsert(_structureSchema);

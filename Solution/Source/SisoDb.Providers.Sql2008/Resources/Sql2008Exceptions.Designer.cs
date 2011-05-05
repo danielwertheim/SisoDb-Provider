@@ -59,5 +59,14 @@ namespace SisoDb.Providers.Sql2008.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. When consuming an Sql-database the storageprovider should be: &apos;{1}&apos;..
+        /// </summary>
+        internal static string Sql2008Database_UnsupportedProviderSpecified {
+            get {
+                return ResourceManager.GetString("Sql2008Database_UnsupportedProviderSpecified", resourceCulture);
+            }
+        }
     }
 }

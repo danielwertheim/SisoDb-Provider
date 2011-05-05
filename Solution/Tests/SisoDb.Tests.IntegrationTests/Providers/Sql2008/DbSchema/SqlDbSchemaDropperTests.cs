@@ -47,7 +47,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.DbSchema
         [Test]
         public void DropStructureSet_WhenTablesExists_AllTablesAreDropped()
         {
-            using (var dbClient = new SqlDbClient(_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaDropper(dbClient);
                 upserter.Drop(_structureSchema);

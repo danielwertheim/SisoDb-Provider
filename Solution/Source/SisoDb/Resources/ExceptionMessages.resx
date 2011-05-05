@@ -192,9 +192,6 @@
   <data name="SqlDatabase_InitializeExisting_DbDoesNotExist" xml:space="preserve">
     <value>The database '{0}' doesn't exist.</value>
   </data>
-  <data name="SqlDatabase_UnsupportedProviderSpecified" xml:space="preserve">
-    <value>Storageprovider '{0}' is unsupported. When consuming an Sql-database the storageprovider should be: '{1}'.</value>
-  </data>
   <data name="LambdaParser_NoMemberExpressions" xml:space="preserve">
     <value>You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true)</value>
   </data>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using SisoDb.Core;
+using SisoDb.Providers.Dac;
 using SisoDb.Providers.Sql2008.BulkInserts;
 using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Resources;
@@ -21,7 +22,7 @@ namespace SisoDb.Providers.Sql2008
 
         protected Queue<TNew> KeepQueue { get; private set; }
 
-        protected ISisoConnectionInfo ConnectionInfo { get; private set; }
+        protected Sql2008ConnectionInfo ConnectionInfo { get; private set; }
 
         protected IStructureSchema StructureSchemaOld { get; private set; }
 
@@ -30,7 +31,7 @@ namespace SisoDb.Providers.Sql2008
         protected IStructureBuilder StructureBuilder { get; private set; }
 
         public SqlStructureSetUpdater(
-            ISisoConnectionInfo connectionInfo, 
+            Sql2008ConnectionInfo connectionInfo, 
             IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew,
             IStructureBuilder structureBuilder)
         {
@@ -44,7 +45,7 @@ namespace SisoDb.Providers.Sql2008
 
         public void Process(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            using (var dbClient = new SqlDbClient(ConnectionInfo, true))
+            using (var dbClient = new Sql2008DbClient(ConnectionInfo, true))
             {
                 UpsertSchema(dbClient);
 
@@ -113,7 +114,7 @@ namespace SisoDb.Providers.Sql2008
 
         private IEnumerable<string> GetAllJson()
         {
-            using (var dbClient = new SqlDbClient(ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient(ConnectionInfo, false))
             {
                 var sql = dbClient.SqlStringsRepository.GetSql("GetAllById").Inject(StructureSchemaOld.GetStructureTableName());
                 using (var cmd = dbClient.CreateCommand(CommandType.Text, sql))

@@ -341,15 +341,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. When consuming an Sql-database the storageprovider should be: &apos;{1}&apos;..
-        /// </summary>
-        internal static string SqlDatabase_UnsupportedProviderSpecified {
-            get {
-                return ResourceManager.GetString("SqlDatabase_UnsupportedProviderSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You can not flush a non transational DbClient..
         /// </summary>
         internal static string SqlDbClient_Flus_NonTransactional {

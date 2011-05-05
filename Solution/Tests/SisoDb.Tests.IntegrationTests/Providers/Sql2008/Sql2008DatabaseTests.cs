@@ -7,7 +7,7 @@ using SisoDb.Tests.IntegrationTests.Providers.Sql2008.StructureSetUpdaterTests.M
 namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008
 {
     [TestFixture]
-    public class SqlDatabaseTests : SqlIntegrationTestBase
+    public class Sql2008DatabaseTests : SqlIntegrationTestBase
     {
         private readonly ISisoConnectionInfo _connectionInfoForTempDb = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForSql2008Temp);
 

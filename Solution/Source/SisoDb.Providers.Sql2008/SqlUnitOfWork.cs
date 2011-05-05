@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.Core;
+using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.BulkInserts;
 using SisoDb.Querying;

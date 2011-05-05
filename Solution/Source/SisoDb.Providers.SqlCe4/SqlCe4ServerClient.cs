@@ -1,39 +1,40 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using SisoDb.Core;
+using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Providers.SqlCe4
 {
     /// <summary>
     /// Performs the ADO.Net communication for the Sql-provider and
     /// executes command against the server not a specific database.
     /// </summary>
-    public class SqlServerClient : ISqlServerClient
+    public class SqlCe4ServerClient : ISqlServerClient
     {
         private SqlConnection _connection;
 
-        public StorageProviders ProviderType
-        {
-            get { return ConnectionInfo.ProviderType; }
-        }
+        public StorageProviders ProviderType { get; private set; }
 
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
+        public IConnectionString ConnectionString { get; private set; }
 
         public IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
 
         public ISqlStringsRepository SqlStringsRepository { get; private set; }
 
-        public SqlServerClient(ISisoConnectionInfo connectionInfo)
+        public SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo)
         {
-            ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
+            connectionInfo.AssertNotNull("connectionInfo");
+
+            ProviderType = connectionInfo.ProviderType;
+            ConnectionString = connectionInfo.ConnectionString;
+
             SqlStringsRepository = new SqlStringsRepository(ProviderType);
             DbDataTypeTranslator = new SqlDbDataTypeTranslator();
 
-            _connection = new SqlConnection(ConnectionInfo.ConnectionString.PlainString);
+            _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();
         }
 

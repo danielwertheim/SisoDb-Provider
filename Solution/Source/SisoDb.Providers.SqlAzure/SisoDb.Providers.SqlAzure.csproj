@@ -43,6 +43,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SqlAzureExceptions.resx</DependentUpon>
     </Compile>
+    <Compile Include="SqlAzureConnectionInfo.cs" />
     <Compile Include="SqlAzureDatabase.cs" />
     <Compile Include="DbSchema\AzureDbColumnGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

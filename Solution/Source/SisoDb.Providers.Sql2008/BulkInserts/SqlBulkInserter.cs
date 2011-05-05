@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SisoDb.Providers.Dac;
 using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;

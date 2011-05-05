@@ -1,6 +1,5 @@
 using System;
 using System.Data.SqlServerCe;
-using System.IO;
 using SisoDb.Core;
 using SisoDb.Core.Io;
 using SisoDb.Providers.DbSchema;
@@ -12,11 +11,22 @@ namespace SisoDb.Providers.SqlCe4
 {
     public class SqlCe4Database : ISisoDatabase
     {
-        public string Name { get; private set; }
+        private readonly SqlCe4ConnectionInfo _innerConnectionInfo;
 
-        public string FilePath { get; private set; }
+        public string Name 
+        {
+            get { return _innerConnectionInfo.Name; }
+        }
 
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
+        public string FilePath
+        {
+            get { return _innerConnectionInfo.FilePath; }
+        }
+
+        public ISisoConnectionInfo ConnectionInfo
+        {
+            get { return _innerConnectionInfo; }
+        }
 
         public IStructureSchemas StructureSchemas { get; set; }
 
@@ -26,28 +36,11 @@ namespace SisoDb.Providers.SqlCe4
 
         internal SqlCe4Database(ISisoConnectionInfo connectionInfo)
         {
-            ConnectionInfo = connectionInfo.AssertNotNull("connectionInfo");
-            
-            if (ConnectionInfo.ProviderType != StorageProviders.SqlCe4)
-                throw new SisoDbException(SqlCe4Exceptions.SqlCe4Database_UnsupportedProviderSpecified.Inject(
-                    ConnectionInfo.ProviderType, StorageProviders.SqlCe4));
+            _innerConnectionInfo = new SqlCe4ConnectionInfo(connectionInfo.AssertNotNull("connectionInfo"));
 
             StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
             StructureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
             DbSchemaManager = SisoEnvironment.Resources.ResolveDbSchemaManager();
-
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(ConnectionInfo.ConnectionString.PlainString);
-
-            FilePath = cnStringBuilder.DataSource;
-            
-            Name = FilePath.Contains(Path.DirectorySeparatorChar.ToString())
-                       ? Path.GetFileNameWithoutExtension(FilePath)
-                       : FilePath;
         }
 
         public void EnsureNewDatabase()
@@ -74,7 +67,11 @@ namespace SisoDb.Providers.SqlCe4
             if(!IoHelper.FileExists(FilePath))
                 throw new SisoDbException(SqlCe4Exceptions.SqlCe4Database_InitializeExisting_DbDoesNotExist.Inject(Name));
             
-            
+
+            //using(var dbClient = new SqlCe4DbClient(ConnectionInfo, true))
+            //{
+            //    dbClient.
+            //}
         }
 
         public void DeleteIfExists()
