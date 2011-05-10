@@ -89,12 +89,12 @@
     <Compile Include="ISisoDbFormatting.cs" />
     <Compile Include="Core\IStringConverter.cs" />
     <Compile Include="Providers\Dac\ISqlDbClient.cs" />
-    <Compile Include="Providers\Dac\ISqlServerClient.cs" />
     <Compile Include="Providers\DbSchema\SqlDbColumn.cs" />
     <Compile Include="Providers\DbSchema\SqlDbDataTypeTranslator.cs" />
     <Compile Include="Providers\ISisoProviderFactories.cs" />
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
-    <Compile Include="Providers\AdoNetExtensions.cs" />
+    <Compile Include="Providers\Dac\AdoNetExtensions.cs" />
+    <Compile Include="Providers\SqlStructureSchemaExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />
@@ -253,6 +253,7 @@
     <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.2008.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.SqlCe4.resx" />
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>

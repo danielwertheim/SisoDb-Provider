@@ -3,6 +3,7 @@ using System.Data.SqlServerCe;
 using SisoDb.Core;
 using SisoDb.Core.Io;
 using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.SqlCe4.Dac;
 using SisoDb.Providers.SqlCe4.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
@@ -45,43 +46,48 @@ namespace SisoDb.Providers.SqlCe4
 
         public void EnsureNewDatabase()
         {
-            if(IoHelper.FileExists(FilePath))
-                IoHelper.DeleteIfFileExists(FilePath);
+            IoHelper.DeleteIfFileExists(_innerConnectionInfo.FilePath);
 
-            CreateIfNotExists();
+            using (var engine = new SqlCeEngine(ConnectionInfo.ConnectionString.PlainString))
+            {
+                engine.CreateDatabase();
+            }
+
+            InitializeExisting();
         }
 
         public void CreateIfNotExists()
         {
-            if(IoHelper.FileExists(FilePath))
+            if(IoHelper.FileExists(_innerConnectionInfo.FilePath))
                 return;
 
             using (var engine = new SqlCeEngine(ConnectionInfo.ConnectionString.PlainString))
             {
                 engine.CreateDatabase();
             }
+
+            InitializeExisting();
         }
 
         public void InitializeExisting()
         {
-            if(!IoHelper.FileExists(FilePath))
+            if (!IoHelper.FileExists(_innerConnectionInfo.FilePath))
                 throw new SisoDbException(SqlCe4Exceptions.SqlCe4Database_InitializeExisting_DbDoesNotExist.Inject(Name));
-            
 
-            //using(var dbClient = new SqlCe4DbClient(ConnectionInfo, true))
-            //{
-            //    dbClient.
-            //}
+            using (var serverClient = new SqlCe4ServerClient(_innerConnectionInfo))
+            {
+                serverClient.InitializeExistingDb();
+            }
         }
 
         public void DeleteIfExists()
         {
-            throw new NotImplementedException();
+            IoHelper.DeleteIfFileExists(_innerConnectionInfo.FilePath);
         }
 
         public bool Exists()
         {
-            throw new NotImplementedException();
+            return IoHelper.FileExists(_innerConnectionInfo.FilePath);
         }
 
         public void DropStructureSet<T>() where T : class

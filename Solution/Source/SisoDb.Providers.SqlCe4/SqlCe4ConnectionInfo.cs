@@ -25,6 +25,10 @@ namespace SisoDb.Providers.SqlCe4
             get { return _innerConnectionInfo.ConnectionString; }
         }
 
+        public SqlCe4ConnectionInfo(string connectionStringOrName) 
+            : this(new SisoConnectionInfo(connectionStringOrName))
+        {}
+
         public SqlCe4ConnectionInfo(ISisoConnectionInfo connectionInfo)
         {
             _innerConnectionInfo = connectionInfo;

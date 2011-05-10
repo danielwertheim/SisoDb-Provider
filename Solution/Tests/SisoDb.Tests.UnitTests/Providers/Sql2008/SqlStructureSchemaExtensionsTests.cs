@@ -1,5 +1,6 @@
 using Moq;
 using NUnit.Framework;
+using SisoDb.Providers;
 using SisoDb.Providers.Sql2008;
 using SisoDb.Structures.Schemas;
 

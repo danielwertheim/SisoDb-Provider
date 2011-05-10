@@ -73,12 +73,11 @@
     <Compile Include="Sql2008ConnectionInfo.cs" />
     <Compile Include="SqlCommandBuildInfo.cs" />
     <Compile Include="SqlCommandInfo.cs" />
-    <Compile Include="Sql2008DbClient.cs" />
+    <Compile Include="Dac\Sql2008DbClient.cs" />
     <Compile Include="SqlIdentityGenerator.cs" />
     <Compile Include="SqlQueryEngine.cs" />
     <Compile Include="SqlQueryGenerator.cs" />
-    <Compile Include="Sql2008ServerClient.cs" />
-    <Compile Include="SqlStructureSchemaExtensions.cs" />
+    <Compile Include="Dac\Sql2008ServerClient.cs" />
     <Compile Include="SqlStructureSetUpdater.cs" />
     <Compile Include="SqlUnitOfWork.cs" />
   </ItemGroup>

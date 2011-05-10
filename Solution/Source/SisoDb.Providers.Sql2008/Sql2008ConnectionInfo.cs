@@ -25,6 +25,10 @@ namespace SisoDb.Providers.Sql2008
             get { return _innerConnectionInfo.ConnectionString; }
         }
 
+        public Sql2008ConnectionInfo(string connectionStringOrName) 
+            : this(new SisoConnectionInfo(connectionStringOrName))
+        {}
+
         public Sql2008ConnectionInfo(ISisoConnectionInfo connectionInfo)
         {
             _innerConnectionInfo = connectionInfo;

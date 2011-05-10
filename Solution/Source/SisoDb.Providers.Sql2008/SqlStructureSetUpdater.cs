@@ -4,6 +4,7 @@ using System.Data;
 using SisoDb.Core;
 using SisoDb.Providers.Dac;
 using SisoDb.Providers.Sql2008.BulkInserts;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Resources;
 using SisoDb.Structures;

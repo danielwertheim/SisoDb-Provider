@@ -10,99 +10,132 @@ namespace SisoDb.Tests.IntegrationTests.Providers.SqlCe4
     [TestFixture]
     public class SqlCe4DatabaseTests : SqlCe4IntegrationTestBase
     {
-        private readonly SqlCe4Database _dbForTemp;
-
-        public SqlCe4DatabaseTests()
+        protected override void OnFixtureInitialize()
         {
             var cnInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForSqlCe4Temp);
-            _dbForTemp = new SqlCe4Database(cnInfo);
+            Database = new SqlCe4Database(cnInfo);
+            DbHelper = new SqlCe4DbUtils(cnInfo.ConnectionString.PlainString);
+        }
+
+        protected override void OnTestInitialize()
+        {
+            IoHelper.DeleteIfFileExists(Database.FilePath);
         }
 
         protected override void OnTestFinalize()
         {
-            IoHelper.DeleteIfFileExists(_dbForTemp.FilePath);
+            IoHelper.DeleteIfFileExists(Database.FilePath);
         }
 
         [Test]
-        public void CreateIfNotExists_WhenItDoesNotExist_DatabaseGetsCreated()
+        public void Exists_WhenItDoesNotExist_ReturnsFalse()
         {
-            IoHelper.DeleteIfFileExists(_dbForTemp.FilePath);
+            var exists = Database.Exists();
 
-            Assert.IsFalse(IoHelper.FileExists(_dbForTemp.FilePath));
+            Assert.IsFalse(exists);
+        }
 
-            _dbForTemp.CreateIfNotExists();
+        [Test]
+        public void Exists_WhenItDoesExist_ReturnsTrue()
+        {
+            IoHelper.CreateEmptyFile(Database.FilePath);
 
-            Assert.IsTrue(IoHelper.FileExists(_dbForTemp.FilePath));
+            var exists = Database.Exists();
+
+            Assert.IsTrue(exists);
+        }
+
+        [Test]
+        public void CreateIfNotExists_WhenItDoesNotExist_DatabaseFileGetsCreated()
+        {
+            Database.CreateIfNotExists();
+
+            Assert.IsTrue(IoHelper.FileExists(Database.FilePath));
         }
 
         [Test]
         public void CreateIfNotExists_WhenOneExists_IsNotDroppedAndRecreated()
         {
-            _dbForTemp.CreateIfNotExists();
+            IoHelper.CreateEmptyFile(Database.FilePath);
 
             var wasDeleted = false;
-            using (var fileWatch = new FileSystemWatcher(Path.GetDirectoryName(_dbForTemp.FilePath), "*.sdf"))
+            using (var fileWatch = new FileSystemWatcher(Path.GetDirectoryName(Database.FilePath), "*.sdf"))
             {
                 fileWatch.Deleted += (s, e) => wasDeleted = true;
                 fileWatch.EnableRaisingEvents = true;
 
-                _dbForTemp.CreateIfNotExists();
+                Database.CreateIfNotExists();
             }
 
             Assert.IsFalse(wasDeleted);
-            Assert.IsTrue(IoHelper.FileExists(_dbForTemp.FilePath));
+            Assert.IsTrue(IoHelper.FileExists(Database.FilePath));
+        }
+
+        [Test]
+        public void CreateIfNotExists_WhenItDoesNotExist_DatabaseGetsCreatedAndInitialized()
+        {
+            Database.CreateIfNotExists();
+
+            AssertInitializedDbExists();
+        }
+
+        [Test]
+        public void InitializeExisting_WhenDbExists_DatabaseGetsInitialized()
+        {
+            DbHelper.CreateEmptyDb();
+
+            Database.InitializeExisting();
+
+            AssertInitializedDbExists();
         }
 
         [Test]
         public void EnsureNewDatabase_WhenOneExists_OneIsRecreated()
         {
-            _dbForTemp.CreateIfNotExists();
+            DbHelper.CreateEmptyDb();
 
             var wasDeleted = false;
-            using (var fileWatch = new FileSystemWatcher(Path.GetDirectoryName(_dbForTemp.FilePath), "*.sdf"))
+            using (var fileWatch = new FileSystemWatcher(Path.GetDirectoryName(Database.FilePath), "*.sdf"))
             {
                 fileWatch.Deleted += (s, e) => wasDeleted = true;
                 fileWatch.EnableRaisingEvents = true;
 
-                _dbForTemp.EnsureNewDatabase();
+                Database.EnsureNewDatabase();
             }
 
             Assert.IsTrue(wasDeleted);
-            Assert.IsTrue(IoHelper.FileExists(_dbForTemp.FilePath));
+            AssertInitializedDbExists();
         }
 
         [Test]
-        public void EnsureNewDatabase_WhenNoneExists_GetsCreated()
+        public void EnsureNewDatabase_WhenNoDbExists_DbGetsCreated()
         {
-            IoHelper.DeleteIfFileExists(_dbForTemp.FilePath);
+            IoHelper.DeleteIfFileExists(Database.FilePath);
 
-            _dbForTemp.EnsureNewDatabase();
+            Database.EnsureNewDatabase();
 
-            Assert.IsTrue(IoHelper.FileExists(_dbForTemp.FilePath));
+            AssertInitializedDbExists();
         }
-
-        //[Test]
-        //public void EnsureNewDatabase_SystemTablesWillGetCreated()
-        //{
-        //    Assert.Fail("Implement");
-        //}
-
-        //[Test]
-        //public void EnsureNewDatabase_SystemTypesWillGetCreated()
-        //{
-        //    Assert.Fail("Implement");
-        //}
 
         [Test]
         public void InitializeExisting_WhenNoDatabaseExists_ThrowsSisoDbException()
         {
-            IoHelper.DeleteIfFileExists(_dbForTemp.FilePath);
+            IoHelper.DeleteIfFileExists(Database.FilePath);
 
-            var ex = Assert.Throws<SisoDbException>(() => _dbForTemp.InitializeExisting());
+            var ex = Assert.Throws<SisoDbException>(() => Database.InitializeExisting());
 
             Assert.AreEqual(
-                SqlCe4Exceptions.SqlCe4Database_InitializeExisting_DbDoesNotExist.Inject(_dbForTemp.Name),
+                SqlCe4Exceptions.SqlCe4Database_InitializeExisting_DbDoesNotExist.Inject(Database.Name),
                 ex.Message);
+        }
+
+        private void AssertInitializedDbExists()
+        {
+            var dbExists = Database.Exists();
+            Assert.IsTrue(dbExists);
+
+            var identitiesTableExists = DbHelper.TableExists("SisoDbIdentities");
+            Assert.IsTrue(identitiesTableExists, "SisoDbIdentities table was not created");
         }
     }
 }

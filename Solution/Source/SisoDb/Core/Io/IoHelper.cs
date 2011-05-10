@@ -16,5 +16,13 @@ namespace SisoDb.Core.Io
 
             File.Delete(path);
         }
+
+        internal static void CreateEmptyFile(string filePath)
+        {
+            using (var f = File.Open(filePath, FileMode.CreateNew, FileAccess.Write))
+            {
+                f.Close();
+            }
+        }
     }
 }

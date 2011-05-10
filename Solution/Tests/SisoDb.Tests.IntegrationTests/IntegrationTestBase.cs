@@ -3,13 +3,13 @@ using NUnit.Framework;
 namespace SisoDb.Tests.IntegrationTests
 {
     [TestFixture]
-    public abstract class IntegrationTestBase
+    public abstract class IntegrationTestBase<T> where T : ISisoDatabase
     {
-        protected ISisoDatabase Database { get; private set; }
+        protected T Database { get; set; }
 
         protected IntegrationTestBase(ISisoDbFactory dbFactory, string connectionStringName)
         {
-            Database = dbFactory.CreateDatabase(new SisoConnectionInfo(connectionStringName));
+            Database = (T)dbFactory.CreateDatabase(new SisoConnectionInfo(connectionStringName));
         }
 
         [TestFixtureSetUp]

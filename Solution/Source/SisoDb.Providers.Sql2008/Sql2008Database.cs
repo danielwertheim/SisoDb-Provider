@@ -1,6 +1,7 @@
 using System;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
@@ -43,8 +44,7 @@ namespace SisoDb.Providers.Sql2008
         {
             using (var client = new Sql2008ServerClient(_innerConnectionInfo))
             {
-                if (client.DatabaseExists(Name))
-                    client.DropDatabase(Name);
+                client.DropDatabaseIfExists(Name);
 
                 client.CreateDatabase(Name);
             }
@@ -74,8 +74,7 @@ namespace SisoDb.Providers.Sql2008
         {
             using (var client = new Sql2008ServerClient(_innerConnectionInfo))
             {
-                if (client.DatabaseExists(Name))
-                    client.DropDatabase(Name);
+                client.DropDatabaseIfExists(Name);
             }
         }
 

@@ -7,7 +7,7 @@ using SisoDb.Resources;
 namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.StructureSetUpdaterTests
 {
     [TestFixture]
-    public class SqlStructureSetUpdaterTestsForSameModelNames : SqlIntegrationTestBase
+    public class Sql2008StructureSetUpdaterTestsForSameModelNames : Sql2008IntegrationTestBase
     {
         protected override void OnTestFinalize()
         {

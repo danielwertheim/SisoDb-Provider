@@ -8,6 +8,10 @@ namespace SisoDb.Providers.SqlAzure
     [Serializable]
     public class SqlAzureConnectionInfo : Sql2008ConnectionInfo
     {
+        public SqlAzureConnectionInfo(string connectionStringOrName) 
+            : this(new SisoConnectionInfo(connectionStringOrName))
+        {}
+
         public SqlAzureConnectionInfo(ISisoConnectionInfo connectionInfo) : base(connectionInfo)
         {
         }
