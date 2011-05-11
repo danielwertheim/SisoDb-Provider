@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Providers.DbSchema
 {
     [Serializable]
     public abstract class StorageSchemaBase

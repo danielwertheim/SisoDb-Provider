@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using SisoDb.Core;
 using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.BulkInserts;
+using SisoDb.Providers.SqlCe4.BulkInserts;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
@@ -14,14 +14,14 @@ using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Providers.SqlCe4
 {
-    public class SqlUnitOfWork : SqlQueryEngine, IUnitOfWork
+    public class SqlCe4UnitOfWork : SqlCe4QueryEngine, IUnitOfWork
     {
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IStructureBuilder _structureBuilder;
 
-        protected internal SqlUnitOfWork(
+        protected internal SqlCe4UnitOfWork(
             ISqlDbClient dbClient,
             IIdentityGenerator identityGenerator,
             IDbSchemaManager dbSchemaManager,
@@ -31,7 +31,7 @@ namespace SisoDb.Providers.Sql2008
             IJsonSerializer jsonSerializer,
             IJsonBatchDeserializer jsonBatchDeserializer,
             ISqlQueryGenerator queryGenerator,
-            ICommandBuilderFactory commandBuilderFactory) 
+            ICommandBuilderFactory commandBuilderFactory)
             : base(dbClient, dbSchemaManager, dbSchemaUpserter, structureSchemas, jsonSerializer, jsonBatchDeserializer, queryGenerator, commandBuilderFactory)
         {
             _identityGenerator = identityGenerator.AssertNotNull("identityGenerator");
@@ -67,13 +67,13 @@ namespace SisoDb.Providers.Sql2008
             InsertMany(JsonBatchDeserializer.Deserialize<T>(json).ToList());
         }
 
-        private void DoInsert<T>(IStructureSchema structureSchema, IEnumerable<T> items) where T : class 
+        private void DoInsert<T>(IStructureSchema structureSchema, IEnumerable<T> items) where T : class
         {
             if (items.Count() < 1)
                 return;
 
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
-            
+
             var bulkInserter = new SqlBulkInserter(DbClient);
 
             if (hasIdentity)
@@ -162,9 +162,9 @@ namespace SisoDb.Providers.Sql2008
             UpsertStructureSet(structureSchema);
 
             DbClient.DeleteWhereIdIsBetween(
-                idFrom, idTo, 
-                structureSchema.GetStructureTableName(), 
-                structureSchema.GetIndexesTableName(), 
+                idFrom, idTo,
+                structureSchema.GetStructureTableName(),
+                structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName());
         }
 

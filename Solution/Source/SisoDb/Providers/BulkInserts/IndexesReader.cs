@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using SisoDb.Providers.Sql2008.DbSchema;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Structures;
 
-namespace SisoDb.Providers.Sql2008.BulkInserts
+namespace SisoDb.Providers.BulkInserts
 {
     public class IndexesReader : SingleResultReaderBase<IStructureIndex[]>
     {

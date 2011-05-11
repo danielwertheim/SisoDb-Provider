@@ -36,10 +36,10 @@ namespace SisoDb.Tests.UnitTests.Structures
         }
 
         [Test]
-        public void CreateBatchedIdentityStructures_WhenProcessing9900Items_ItemsAreGettingGeneratedInCorrectOrder()
+        public void CreateBatchedIdentityStructures_WhenProcessing4900Items_ItemsAreGettingGeneratedInCorrectOrder()
         {
             var schema = StructureSchemaTestFactory.Stub<IdentityItem>(generateIdAccessor: true, indexAccessorsPaths: new[] {"Value"});
-            var items = CreateIdentityItems(9900);
+            var items = CreateIdentityItems(4900);
 
             var structuresBatches = _builder.CreateBatchedIdentityStructures(items, schema, 1000, 1);
 

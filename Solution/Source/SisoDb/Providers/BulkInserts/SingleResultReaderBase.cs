@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using SisoDb.Providers.Sql2008.DbSchema;
+using SisoDb.Providers.DbSchema;
 
-namespace SisoDb.Providers.Sql2008.BulkInserts
+namespace SisoDb.Providers.BulkInserts
 {
     public abstract class SingleResultReaderBase<T> : DbDataReader where T : class 
     {

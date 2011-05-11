@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using ServiceStack.Text;
-using SisoDb.Dynamic;
 
 namespace SisoDb.Serialization
 {
@@ -16,29 +15,6 @@ namespace SisoDb.Serialization
         public T ToItemOrNull<T>(string json) where T : class
         {
             return ServiceStackJsonSerializer<T>.ToItemOrNull(json);
-        }
-
-        public IDictionary<string, object> ToTypedKeyValueOrNull(TypeDescriptor typeDescriptor, string json)
-        {
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-
-            var kvRepresentation = ToItemOrNull<IDictionary<string, dynamic>>(json);
-            if (kvRepresentation == null || kvRepresentation.Count < 1)
-                return null;
-
-            foreach (var key in kvRepresentation.Keys.ToArray())
-            {
-                var membername = key;
-                var member = typeDescriptor.Get(membername);
-
-                if (member == null)
-                    continue;
-
-                kvRepresentation[membername] = JsonSerializer.DeserializeFromString(kvRepresentation[membername], member.Type);
-            }
-
-            return kvRepresentation;
         }
     }
 

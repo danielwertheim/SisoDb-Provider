@@ -6,7 +6,7 @@ using SisoDb.Providers.DbSchema;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008.BulkInserts
+namespace SisoDb.Providers.SqlCe4.BulkInserts
 {
     public class SqlBulkInserter
     {

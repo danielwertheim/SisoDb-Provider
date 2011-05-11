@@ -404,24 +404,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
-        /// </summary>
-        internal static string SqlUnitOfWork_DoIdentityInsert_RootItemsMissmatch {
-            get {
-                return ResourceManager.GetString("SqlUnitOfWork_DoIdentityInsert_RootItemsMissmatch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is no &apos;{0}&apos;-structure to update matching the sent Id &apos;{1}&apos;..
-        /// </summary>
-        internal static string SqlUnitOfWork_NoItemExistsForUpdate {
-            get {
-                return ResourceManager.GetString("SqlUnitOfWork_NoItemExistsForUpdate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The value being retrieved is not of supported type. It must either be a string or the type needs to implement IConvertible or if Nullable&lt;T&gt;, then T needs to implement it..
         /// </summary>
         internal static string StringConverter_AsString_TypeOfValueIsNotSupported {
@@ -472,6 +454,24 @@ namespace SisoDb.Resources {
         internal static string UniqueModesCantBeMapped {
             get {
                 return ResourceManager.GetString("UniqueModesCantBeMapped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
+        /// </summary>
+        internal static string UnitOfWork_DoIdentityInsert_RootItemsMissmatch {
+            get {
+                return ResourceManager.GetString("UnitOfWork_DoIdentityInsert_RootItemsMissmatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no &apos;{0}&apos;-structure to update matching the sent Id &apos;{1}&apos;..
+        /// </summary>
+        internal static string UnitOfWork_NoItemExistsForUpdate {
+            get {
+                return ResourceManager.GetString("UnitOfWork_NoItemExistsForUpdate", resourceCulture);
             }
         }
     }

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.DbSchema;
 
 namespace SisoDb.Tests.UnitTests.Providers.Sql2008.DbSchema

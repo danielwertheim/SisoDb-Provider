@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using SisoDb.Dynamic;
 using SisoDb.Serialization;
-using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Serialization
 {
@@ -60,26 +57,6 @@ namespace SisoDb.Tests.UnitTests.Serialization
             var json = _jsonSerializer.ToJsonOrEmptyString<JsonEntityX>(y);
 
             Assert.AreEqual("{\"String1\":\"The String1\",\"Int1\":42}", json);
-        }
-
-        [Test]
-        public void ToTypedKeyValue_WhenJsonWithDataTypes_DictionaryGetsTypedValues()
-        {
-            const string json = "{\"Name\":\"Daniel\",\"Age\":31,\"Item\":{\"Int1\":42,\"DateTime1\":\"\\/Date(-3600000+0000)\\/\"}}";
-            var typeDescriptor = new TypeDescriptor
-            {
-                {"Name", typeof (string)},
-                {"Age", typeof (int)},
-                {"Item", typeof (Item)},
-            };
-
-            var kv = _jsonSerializer.ToTypedKeyValueOrNull(typeDescriptor, json);
-
-            var expectedKv = new Dictionary<string, object>
-            {
-                {"Name", "Daniel"},{"Age", 31}, {"Item", new Item{Int1 = 42, DateTime1 = new DateTime(1970,01,01)}}
-            };
-            CustomAssert.KeyValueEquality(expectedKv, kv);
         }
 
         [Test]

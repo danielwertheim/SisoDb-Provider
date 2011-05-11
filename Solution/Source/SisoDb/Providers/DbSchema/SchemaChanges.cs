@@ -1,4 +1,4 @@
-﻿namespace SisoDb.Providers.Sql2008.DbSchema
+﻿namespace SisoDb.Providers.DbSchema
 {
     public enum SchemaChanges
     {

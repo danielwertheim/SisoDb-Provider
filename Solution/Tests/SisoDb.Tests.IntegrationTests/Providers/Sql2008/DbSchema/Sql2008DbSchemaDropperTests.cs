@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using SisoDb.Core;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008;
 using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Providers.Sql2008.DbSchema;

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SisoDb")]
+[assembly: AssemblyTitle("SisoDb.Dynamic")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Daniel Wertheim")]
-[assembly: AssemblyProduct("SisoDb")]
+[assembly: AssemblyProduct("SisoDb.Dynamic")]
 [assembly: AssemblyCopyright("Copyright © Daniel Wertheim 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f4a3a647-0355-4a16-9f21-6b041e8aa186")]
+[assembly: Guid("58833c9a-16a2-488f-8433-4506f9b105b0")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,13 +32,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.2.0.0")]
-[assembly: AssemblyFileVersion("2.2.0.0")]
-
-[assembly: InternalsVisibleTo("SisoDb.Dynamic")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.Sql2008")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.SqlAzure")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.SqlCe4")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
 
 #if DEPLOY
 #else

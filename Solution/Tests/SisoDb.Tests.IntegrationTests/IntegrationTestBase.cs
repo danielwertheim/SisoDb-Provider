@@ -53,9 +53,9 @@ namespace SisoDb.Tests.IntegrationTests
         {
         }
 
-        protected void DropStructureSet<T>() where T : class
+        protected void DropStructureSet<TStructure>() where TStructure : class
         {
-            Database.DropStructureSet<T>();
+            Database.DropStructureSet<TStructure>();
         }
     }
 }

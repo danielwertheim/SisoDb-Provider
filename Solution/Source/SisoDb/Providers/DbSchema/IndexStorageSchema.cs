@@ -2,7 +2,7 @@
 using System.Linq;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Providers.DbSchema
 {
     [Serializable]
     public class IndexStorageSchema : StorageSchemaBase

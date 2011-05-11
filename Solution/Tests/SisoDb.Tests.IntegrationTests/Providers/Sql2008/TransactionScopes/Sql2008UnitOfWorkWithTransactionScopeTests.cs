@@ -16,14 +16,14 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.TransactionScopes
         public void TransactionScope_WhenNestingMultipleUnitOfWorks_NothingIsInserted()
         {
             var items1 = new List<IdentityItem>
-                        {
-                            new IdentityItem {Value = 1}, new IdentityItem {Value = 2}, new IdentityItem {Value = 3},
-                        };
+            {
+                new IdentityItem {Value = 1}, new IdentityItem {Value = 2}, new IdentityItem {Value = 3},
+            };
 
             var items2 = new List<IdentityItem>
-                        {
-                            new IdentityItem {Value = 4}, new IdentityItem {Value = 5}, new IdentityItem {Value = 6},
-                        };
+            {
+                new IdentityItem {Value = 4}, new IdentityItem {Value = 5}, new IdentityItem {Value = 6},
+            };
 
             using (var ts = new TransactionScope())
             {

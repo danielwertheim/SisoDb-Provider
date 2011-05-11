@@ -1,11 +1,10 @@
 ﻿using System.Data;
 using SisoDb.Core;
 using SisoDb.Providers.Dac;
-using SisoDb.Providers.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Providers.DbSchema
 {
     public class SqlDbSchemaUpserter : IDbSchemaUpserter
     {

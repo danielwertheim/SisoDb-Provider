@@ -115,6 +115,7 @@ namespace SisoDb.Providers.SqlCe4
         public IUnitOfWork CreateUnitOfWork()
         {
             throw new NotImplementedException();
+            //return new SqlCe4UnitOfWork();
         }
     }
 }

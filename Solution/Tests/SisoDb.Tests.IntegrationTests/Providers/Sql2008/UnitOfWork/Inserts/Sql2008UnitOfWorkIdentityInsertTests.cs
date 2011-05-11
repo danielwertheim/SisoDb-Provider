@@ -15,6 +15,21 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.UnitOfWork.Inserts
         }
 
         [Test]
+        public void Insert_WhenIdHasBeenManuallyAssigned_IdIsReassigned()
+        {
+            var originalId = 33;
+            var item = new ItemForIdentityInserts { SisoId = 33 };
+
+            using(var uow = Database.CreateUnitOfWork())
+            {
+                uow.Insert(item);
+                uow.Commit();
+            }
+
+            Assert.AreNotEqual(originalId, item.SisoId);
+        }
+
+        [Test]
         public void Insert10Items_WhenNoItemsExists_CurrentIdInIdentitiesTableIs10()
         {
             var items = new List<ItemForIdentityInserts>();

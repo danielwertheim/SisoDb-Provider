@@ -154,6 +154,7 @@
     <Compile Include="Providers\Sql2008\UnitOfWork\TestModel\TheChild.cs" />
     <Compile Include="Providers\Sql2008\TransactionScopes\Sql2008UnitOfWorkWithTransactionScopeTests.cs" />
     <Compile Include="Providers\Sql2008\UnitOfWork\Updates\Sql2008UnitOfWorkUpdateTests.cs" />
+    <Compile Include="Providers\SqlCe4\UnitOfWork\Inserts\SqlCe4UnitOfWorkInsertTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

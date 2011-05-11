@@ -3,11 +3,10 @@ using System.Data;
 using System.Linq;
 using SisoDb.Core;
 using SisoDb.Providers.Dac;
-using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Providers.DbSchema
 {
     /// <summary>
     /// Delete records that represents an unique for a column that
