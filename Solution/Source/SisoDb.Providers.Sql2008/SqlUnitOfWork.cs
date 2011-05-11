@@ -97,7 +97,10 @@ namespace SisoDb.Providers.Sql2008
 
             var updatedStructure = _structureBuilder.CreateStructure(item, structureSchema);
 
-            var existingItem = GetByIdAsJson<T>((Guid)updatedStructure.Id.Value);
+            var existingItem = structureSchema.IdAccessor.IdType == IdTypes.Guid
+                                   ? GetByIdAsJson<T>((Guid)updatedStructure.Id.Value)
+                                   : GetByIdAsJson<T>((int)updatedStructure.Id.Value);
+
             if (string.IsNullOrWhiteSpace(existingItem))
                 throw new SisoDbException(
                     ExceptionMessages.UnitOfWork_NoItemExistsForUpdate.Inject(updatedStructure.Name, updatedStructure.Id));
