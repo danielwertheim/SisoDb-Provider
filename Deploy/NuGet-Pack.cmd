@@ -1,0 +1,1 @@
+nuget pack sisodb.nuspec

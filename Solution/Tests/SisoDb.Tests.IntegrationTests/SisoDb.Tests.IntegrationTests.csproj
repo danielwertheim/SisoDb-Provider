@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E347A655-DB90-41A6-B062-36F5F8B59C55}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SisoDb.Tests.IntegrationTests</RootNamespace>
+    <AssemblyName>SisoDb.Tests.IntegrationTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
+    <OutputPath>bin\Deploy\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\SisoDb.Tests.IntegrationTests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInitalizer.cs" />
+    <Compile Include="IntegrationTestBase.cs" />
+    <Compile Include="LocalConstants.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\SqlProvider\DbHelper.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaDropperTests.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbSchemaUpserterTests.cs" />
+    <Compile Include="Providers\SqlProvider\DbSchema\SqlDbIndexesSchemaSynchronizerTests.cs" />
+    <Compile Include="Providers\SqlProvider\QueryEngine\SqlQueryEngineCountTests.cs" />
+    <Compile Include="Providers\SqlProvider\QueryEngine\SqlQueryEngineGetByIdIntervalTests.cs" />
+    <Compile Include="Providers\SqlProvider\SqlDbClientTests.cs" />
+    <Compile Include="Providers\SqlProvider\SqlDatabaseTests.cs" />
+    <Compile Include="Providers\DbSchemaManagerTests.cs" />
+    <Compile Include="Providers\SqlProvider\SqlIntegrationTestBase.cs" />
+    <Compile Include="Providers\SqlProvider\StructureSetUpdaterTests\SqlStructureSetUpdaterTests.cs" />
+    <Compile Include="Providers\SqlProvider\StructureSetUpdaterTests\SqlStructureSetUpdaterTestsForDifferentTypes.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdIntervalTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteByIdsTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Deletes\SqlUnitOfWorkDeleteTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkBaseClassInsertTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkGuidIdInsertTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkIdentityInsertTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertCompleteTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertItemWithArraysTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertStructureIndexesTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithNestedStructuresTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertWithUniqueTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkInsertInterfaceTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Inserts\SqlUnitOfWorkJsonInsertTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkCountTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkGetByIdIntervalTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkGetByIdsTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithPagingTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithTakeTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkWhereTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkNamedQueryIncludeTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxContainsTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxEndsWithTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxLikeTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryStringUsingQxStartsWithTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkGetTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkIncludesTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkNamedQueryTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryWithSortingTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\QxExtensions\SqlUnitOfWorkQueryEnumerableWithQxAnyTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Queries\SqlUnitOfWorkQueryTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\SqlUnitOfWorkIndexesTableTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\Address.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\Customer.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\CustomerDbExtensions.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\CustomerFactory.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\Nested.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\Root.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\ShoppingIndexes.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\TheBase.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\TestModel\TheChild.cs" />
+    <Compile Include="Providers\SqlProvider\TransactionScopes\SqlUnitOfWorkWithTransactionScopeTests.cs" />
+    <Compile Include="Providers\SqlProvider\UnitOfWork\Updates\SqlUnitOfWorkUpdateTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\SisoDb\SisoDb.csproj">
+      <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
+      <Name>SisoDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SisoDb.TestUtils\SisoDb.TestUtils.csproj">
+      <Project>{5CAC205F-5470-44A6-878F-F33768415D25}</Project>
+      <Name>SisoDb.TestUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
