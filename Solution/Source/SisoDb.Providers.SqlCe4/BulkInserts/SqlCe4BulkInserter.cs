@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SisoDb.Providers.BulkInserts;
-using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.SqlCe4.Dac;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.SqlCe4.BulkInserts
 {
-    public class SqlBulkInserter
+    public class SqlCe4BulkInserter
     {
-        private readonly ISqlDbClient _dbClient;
+        private readonly SqlCe4DbClient _dbClient;
 
-        public SqlBulkInserter(ISqlDbClient dbClient)
+        public SqlCe4BulkInserter(SqlCe4DbClient dbClient)
         {
             _dbClient = dbClient;
         }

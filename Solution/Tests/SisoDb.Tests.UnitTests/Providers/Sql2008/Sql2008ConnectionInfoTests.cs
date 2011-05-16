@@ -7,7 +7,7 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.UnitTests.Providers.Sql2008
 {
     [TestFixture]
-    public class Sql2008ConnectionInfoTests : UnitTestBase
+    public class SqlConnectionInfoTests : UnitTestBase
     {
         [Test]
         public void Ctor_WhenConnectionInfoHasWrongProviderType_ThrowsSisoDbException()
@@ -15,10 +15,10 @@ namespace SisoDb.Tests.UnitTests.Providers.Sql2008
             var connectionInfoStub = Stub.This<ISisoConnectionInfo>(
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.SqlCe4));
 
-            var ex = Assert.Throws<SisoDbException>(() => new Sql2008ConnectionInfo(connectionInfoStub));
+            var ex = Assert.Throws<SisoDbException>(() => new SqlConnectionInfo(connectionInfoStub));
 
             Assert.AreEqual(
-                Sql2008Exceptions.Sql2008Database_UnsupportedProviderSpecified
+                Sql2008Exceptions.SqlDatabase_UnsupportedProviderSpecified
                     .Inject(connectionInfoStub.ProviderType, StorageProviders.Sql2008), ex.Message);
         }
 
@@ -31,7 +31,7 @@ namespace SisoDb.Tests.UnitTests.Providers.Sql2008
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008),
                 o => o.Setup(s => s.ConnectionString).Returns(cnString));
 
-            var cnInfo = new Sql2008ConnectionInfo(cnInfoStub);
+            var cnInfo = new SqlConnectionInfo(cnInfoStub);
 
             Assert.AreEqual(StorageProviders.Sql2008, cnInfo.ProviderType);
         }
@@ -45,7 +45,7 @@ namespace SisoDb.Tests.UnitTests.Providers.Sql2008
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008),
                 o => o.Setup(s => s.ConnectionString).Returns(cnString));
 
-            var cnInfo = new Sql2008ConnectionInfo(cnInfoStub);
+            var cnInfo = new SqlConnectionInfo(cnInfoStub);
 
             Assert.AreEqual("SisoDbTests.Temp", cnInfo.Name);
         }
@@ -59,7 +59,7 @@ namespace SisoDb.Tests.UnitTests.Providers.Sql2008
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008),
                 o => o.Setup(s => s.ConnectionString).Returns(cnString));
 
-            var cnInfo = new Sql2008ConnectionInfo(cnInfoStub);
+            var cnInfo = new SqlConnectionInfo(cnInfoStub);
 
             Assert.AreEqual(@"Data Source=.;Initial Catalog=;Integrated Security=True", cnInfo.ServerConnectionString.PlainString);
         }

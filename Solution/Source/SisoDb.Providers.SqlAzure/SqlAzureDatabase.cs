@@ -3,7 +3,7 @@ using SisoDb.Providers.Sql2008;
 
 namespace SisoDb.Providers.SqlAzure
 {
-    public class SqlAzureDatabase : Sql2008Database
+    public class SqlAzureDatabase : SqlDatabase
     {
         internal SqlAzureDatabase(ISisoConnectionInfo connectionInfo) : base(connectionInfo)
         {  

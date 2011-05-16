@@ -21,7 +21,7 @@ namespace SisoDb.Tests.UnitTests.Providers.SqlCe4
         }
 
         [Test]
-        public void CTor_SisoConnectionInfoIsPassed_ConnectionInfoOnDbIsSql2008ConnectionInfo()
+        public void CTor_SisoConnectionInfoIsPassed_ConnectionInfoOnDbIsSqlConnectionInfo()
         {
             var cnInfo = new SisoConnectionInfo(
                 @"sisodb:provider=SqlCe4||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;");

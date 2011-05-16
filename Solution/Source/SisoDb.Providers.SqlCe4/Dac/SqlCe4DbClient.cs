@@ -20,7 +20,7 @@ namespace SisoDb.Providers.SqlCe4.Dac
     /// Performs the ADO.Net communication for the Sql-provider for a
     /// specific database.
     /// </summary>
-    internal class SqlCe4DbClient : ISqlDbClient
+    public class SqlCe4DbClient : IDisposable
     {
         private SqlConnection _connection;
         private SqlTransaction _transaction;
@@ -205,12 +205,12 @@ namespace SisoDb.Providers.SqlCe4.Dac
             return !string.IsNullOrWhiteSpace(value);
         }
 
-        public IList<SqlDbColumn> GetColumns(string tableName, params string[] namesToSkip)
+        public IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip)
         {
             tableName.AssertNotNullOrWhiteSpace("tableName");
 
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
-            var dbColumns = new List<SqlDbColumn>();
+            var dbColumns = new List<DbColumn>();
 
             var sql = SqlStringsRepository.GetSql("GetColumns");
 
@@ -219,7 +219,7 @@ namespace SisoDb.Providers.SqlCe4.Dac
                 {
                     var name = dr.GetString(0);
                     if (!tmpNamesToSkip.Contains(name))
-                        dbColumns.Add(new SqlDbColumn(name, dr.GetString(1)));
+                        dbColumns.Add(new DbColumn(name, dr.GetString(1)));
                 },
                 new QueryParameter("tableName", tableName));
 

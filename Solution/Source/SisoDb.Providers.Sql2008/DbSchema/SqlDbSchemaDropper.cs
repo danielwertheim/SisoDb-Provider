@@ -1,16 +1,17 @@
 ﻿using System.Data;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
+using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Querying;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.DbSchema
+namespace SisoDb.Providers.Sql2008.DbSchema
 {
     public class SqlDbSchemaDropper : IDbSchemaDropper
     {
-        private readonly ISqlDbClient _dbClient;
+        private readonly SqlDbClient _dbClient;
 
-        public SqlDbSchemaDropper(ISqlDbClient dbClient)
+        public SqlDbSchemaDropper(SqlDbClient dbClient)
         {
             _dbClient = dbClient.AssertNotNull("dbClient");
         }

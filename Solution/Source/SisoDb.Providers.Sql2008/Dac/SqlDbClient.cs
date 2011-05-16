@@ -9,6 +9,7 @@ using SisoDb.Commands;
 using SisoDb.Core;
 using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 using SisoDb.Resources;
@@ -20,7 +21,7 @@ namespace SisoDb.Providers.Sql2008.Dac
     /// Performs the ADO.Net communication for the Sql-provider for a
     /// specific database.
     /// </summary>
-    internal class Sql2008DbClient : ISqlDbClient
+    public class SqlDbClient : IDisposable
     {
         private SqlConnection _connection;
         private SqlTransaction _transaction;
@@ -39,7 +40,7 @@ namespace SisoDb.Providers.Sql2008.Dac
 
         public ISqlStringsRepository SqlStringsRepository { get; private set; }
 
-        public Sql2008DbClient(Sql2008ConnectionInfo connectionInfo, bool transactional)
+        public SqlDbClient(SqlConnectionInfo connectionInfo, bool transactional)
         {
             connectionInfo.AssertNotNull("connectionInfo");
 
@@ -205,12 +206,12 @@ namespace SisoDb.Providers.Sql2008.Dac
             return !string.IsNullOrWhiteSpace(value);
         }
 
-        public IList<SqlDbColumn> GetColumns(string tableName, params string[] namesToSkip)
+        public IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip)
         {
             tableName.AssertNotNullOrWhiteSpace("tableName");
 
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
-            var dbColumns = new List<SqlDbColumn>();
+            var dbColumns = new List<DbColumn>();
 
             var sql = SqlStringsRepository.GetSql("GetColumns");
 
@@ -219,7 +220,7 @@ namespace SisoDb.Providers.Sql2008.Dac
                 {
                     var name = dr.GetString(0);
                     if (!tmpNamesToSkip.Contains(name))
-                        dbColumns.Add(new SqlDbColumn(name, dr.GetString(1)));
+                        dbColumns.Add(new DbColumn(name, dr.GetString(1)));
                 },
                 new QueryParameter("tableName", tableName));
 

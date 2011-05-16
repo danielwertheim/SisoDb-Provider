@@ -3,16 +3,17 @@
   <metadata>
     <id>SisoDb</id>    
     <title>SisoDb - Simple Structure Oriented Db</title>
-	<version>2.2</version>
+	<version>3.0</version>
 	<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 	<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
-	<summary>SisoDb is a document-oriented nosql'ish provider over SQL-Server.</summary>
+	<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
     <description>
-		SisoDb is a document oriented nosql'ish provider over SQL-Server.
+		SisoDb is a document-oriented provider over SQL-Server.
 		It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc.
 		It lets you perform queries against SQL-server, using lambda expressions.
 		It syncs schemachanges on the fly and can assist you to handle more complex model updates.
-		NOTE! This package is not intended for use directly. It is used by the specific SisoDb-provider packages.
+		NOTE! This package is not intended for use directly. It is used by the specific SisoDb-provider packages,
+		e.g package: "SisoDb.SQL2008"
 	</description>
 	<projectUrl>http://www.sisodb.com</projectUrl>
 	<licenseUrl>http://github.com/sedanwer/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>

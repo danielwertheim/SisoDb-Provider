@@ -2,7 +2,7 @@
 
 namespace SisoDb.Providers.Sql2008.DbSchema
 {
-    public class Sql2008DbColumnGenerator : IDbColumnGenerator
+    public class SqlDbColumnGenerator : IDbColumnGenerator
     {
         public string ToSql(string name, string dbType)
         {

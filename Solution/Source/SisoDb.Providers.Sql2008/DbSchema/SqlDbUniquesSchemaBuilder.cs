@@ -1,9 +1,10 @@
 ﻿using SisoDb.Core;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.DbSchema
+namespace SisoDb.Providers.Sql2008.DbSchema
 {
     public class SqlDbUniquesSchemaBuilder : IDbSchemaBuilder
     {

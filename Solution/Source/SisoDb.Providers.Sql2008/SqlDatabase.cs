@@ -11,9 +11,9 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.Sql2008
 {
-    public class Sql2008Database : ISisoDatabase
+    public class SqlDatabase : ISisoDatabase
     {
-        private readonly Sql2008ConnectionInfo _innerConnectionInfo;
+        private readonly SqlConnectionInfo _innerConnectionInfo;
 
         public string Name
         {
@@ -31,9 +31,9 @@ namespace SisoDb.Providers.Sql2008
 
         public IDbSchemaManager DbSchemaManager { get; set; }
 
-        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo)
+        protected internal SqlDatabase(ISisoConnectionInfo connectionInfo)
         {
-            _innerConnectionInfo = new Sql2008ConnectionInfo(connectionInfo.AssertNotNull("connectionInfo"));
+            _innerConnectionInfo = new SqlConnectionInfo(connectionInfo.AssertNotNull("connectionInfo"));
 
             StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
             StructureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
@@ -42,7 +42,7 @@ namespace SisoDb.Providers.Sql2008
 
         public virtual void EnsureNewDatabase()
         {
-            using (var client = new Sql2008ServerClient(_innerConnectionInfo))
+            using (var client = new SqlServerClient(_innerConnectionInfo))
             {
                 client.DropDatabaseIfExists(Name);
 
@@ -52,7 +52,7 @@ namespace SisoDb.Providers.Sql2008
 
         public virtual void CreateIfNotExists()
         {
-            using (var client = new Sql2008ServerClient(_innerConnectionInfo))
+            using (var client = new SqlServerClient(_innerConnectionInfo))
             {
                 if (!client.DatabaseExists(Name))
                     client.CreateDatabase(Name);
@@ -61,7 +61,7 @@ namespace SisoDb.Providers.Sql2008
 
         public virtual void InitializeExisting()
         {
-            using (var client = new Sql2008ServerClient(_innerConnectionInfo))
+            using (var client = new SqlServerClient(_innerConnectionInfo))
             {
                 if (!client.DatabaseExists(Name))
                     throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(Name));
@@ -72,7 +72,7 @@ namespace SisoDb.Providers.Sql2008
 
         public virtual void DeleteIfExists()
         {
-            using (var client = new Sql2008ServerClient(_innerConnectionInfo))
+            using (var client = new SqlServerClient(_innerConnectionInfo))
             {
                 client.DropDatabaseIfExists(Name);
             }
@@ -80,7 +80,7 @@ namespace SisoDb.Providers.Sql2008
 
         public virtual bool Exists()
         {
-            using (var client = new Sql2008ServerClient(_innerConnectionInfo))
+            using (var client = new SqlServerClient(_innerConnectionInfo))
             {
                 return client.DatabaseExists(Name);
             }
@@ -88,7 +88,7 @@ namespace SisoDb.Providers.Sql2008
 
         public void DropStructureSet<T>() where T : class
         {
-            using (var client = new Sql2008DbClient(_innerConnectionInfo, true))
+            using (var client = new SqlDbClient(_innerConnectionInfo, true))
             {
                 var dropper = new SqlDbSchemaDropper(client);
                 var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
@@ -101,7 +101,7 @@ namespace SisoDb.Providers.Sql2008
 
         public void UpsertStructureSet<T>() where T : class
         {
-            using (var client = new Sql2008DbClient(_innerConnectionInfo, true))
+            using (var client = new SqlDbClient(_innerConnectionInfo, true))
             {
                 var upserter = new SqlDbSchemaUpserter(client);
                 var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
@@ -128,7 +128,7 @@ namespace SisoDb.Providers.Sql2008
 
         public IQueryEngine CreateQueryEngine()
         {
-            var dbClient = new Sql2008DbClient(_innerConnectionInfo, false);
+            var dbClient = new SqlDbClient(_innerConnectionInfo, false);
             var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
 
             var queryGenerator = new SqlQueryGenerator(
@@ -149,8 +149,8 @@ namespace SisoDb.Providers.Sql2008
 
         public IUnitOfWork CreateUnitOfWork()
         {
-            var dbClient = new Sql2008DbClient(_innerConnectionInfo, true);
-            var dbClientNonTrans = new Sql2008DbClient(_innerConnectionInfo, false);
+            var dbClient = new SqlDbClient(_innerConnectionInfo, true);
+            var dbClientNonTrans = new SqlDbClient(_innerConnectionInfo, false);
             var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
 
             var queryGenerator = new SqlQueryGenerator(

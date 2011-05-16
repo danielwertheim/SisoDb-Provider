@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
-using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.BulkInserts;
 using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Providers.Sql2008.DbSchema;
@@ -24,7 +22,7 @@ namespace SisoDb.Providers.Sql2008
 
         protected Queue<TNew> KeepQueue { get; private set; }
 
-        protected Sql2008ConnectionInfo ConnectionInfo { get; private set; }
+        protected SqlConnectionInfo ConnectionInfo { get; private set; }
 
         protected IStructureSchema StructureSchemaOld { get; private set; }
 
@@ -33,7 +31,7 @@ namespace SisoDb.Providers.Sql2008
         protected IStructureBuilder StructureBuilder { get; private set; }
 
         public SqlStructureSetUpdater(
-            Sql2008ConnectionInfo connectionInfo, 
+            SqlConnectionInfo connectionInfo, 
             IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew,
             IStructureBuilder structureBuilder)
         {
@@ -47,7 +45,7 @@ namespace SisoDb.Providers.Sql2008
 
         public void Process(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            using (var dbClient = new Sql2008DbClient(ConnectionInfo, true))
+            using (var dbClient = new SqlDbClient(ConnectionInfo, true))
             {
                 UpsertSchema(dbClient);
 
@@ -61,13 +59,13 @@ namespace SisoDb.Providers.Sql2008
             }
         }
 
-        private void UpsertSchema(ISqlDbClient dbClient)
+        private void UpsertSchema(SqlDbClient dbClient)
         {
             var upserter = new SqlDbSchemaUpserter(dbClient);
             upserter.Upsert(StructureSchemaNew);
         }
 
-        private bool ItterateStructures(ISqlDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
+        private bool ItterateStructures(SqlDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
             foreach (var json in GetAllJson())
             {
@@ -116,7 +114,7 @@ namespace SisoDb.Providers.Sql2008
 
         private IEnumerable<string> GetAllJson()
         {
-            using (var dbClient = new Sql2008DbClient(ConnectionInfo, false))
+            using (var dbClient = new SqlDbClient(ConnectionInfo, false))
             {
                 var sql = dbClient.SqlStringsRepository.GetSql("GetAllById").Inject(StructureSchemaOld.GetStructureTableName());
                 using (var cmd = dbClient.CreateCommand(CommandType.Text, sql))
@@ -160,7 +158,7 @@ namespace SisoDb.Providers.Sql2008
             KeepQueue.Enqueue(newStructure);
         }
 
-        protected virtual void DequeueStructuresToKeep(ISqlDbClient dbClient)
+        protected virtual void DequeueStructuresToKeep(SqlDbClient dbClient)
         {
             if (KeepQueue.Count < 1)
                 return;
@@ -182,7 +180,7 @@ namespace SisoDb.Providers.Sql2008
             _deleteSisoIdTo = sisoId;
         }
 
-        protected virtual void DequeueStructuresToTrash(ISqlDbClient dbClient)
+        protected virtual void DequeueStructuresToTrash(SqlDbClient dbClient)
         {
             if (_deleteSisoIdFrom == null)
                 return;

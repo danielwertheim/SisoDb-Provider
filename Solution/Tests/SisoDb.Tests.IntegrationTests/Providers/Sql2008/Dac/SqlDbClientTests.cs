@@ -5,7 +5,7 @@ using SisoDb.Providers.Sql2008.Dac;
 namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.Dac
 {
     [TestFixture]
-    public class Sql2008DbClientTests : Sql2008TembDbIntegrationTestBase
+    public class SqlDbClientTests : Sql2008TembDbIntegrationTestBase
     {
         protected override string TempDbName
         {
@@ -17,7 +17,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.Dac
         {
             DbHelperForServer.EnsureDbExists(TempDbName);
 
-            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)Database.ConnectionInfo, false))
+            using (var dbClient = new SqlDbClient((SqlConnectionInfo)Database.ConnectionInfo, false))
             {
                 Assert.AreEqual("data source=.;initial catalog=FA81E9F0F4904FE488BECF9B6005FAA2;integrated security=SSPI;", dbClient.ConnectionString.PlainString);
             }
@@ -28,7 +28,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.Dac
         {
             DbHelperForServer.EnsureDbExists(TempDbName);
 
-            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)Database.ConnectionInfo, false))
+            using (var dbClient = new SqlDbClient((SqlConnectionInfo)Database.ConnectionInfo, false))
             {
                 Assert.AreEqual(StorageProviders.Sql2008, dbClient.ProviderType);
             }
@@ -39,7 +39,7 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008.Dac
         {
             DbHelperForServer.EnsureDbExists(TempDbName);
 
-            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)Database.ConnectionInfo, false))
+            using (var dbClient = new SqlDbClient((SqlConnectionInfo)Database.ConnectionInfo, false))
             {
                 Assert.AreEqual("FA81E9F0F4904FE488BECF9B6005FAA2", dbClient.DbName);
             }

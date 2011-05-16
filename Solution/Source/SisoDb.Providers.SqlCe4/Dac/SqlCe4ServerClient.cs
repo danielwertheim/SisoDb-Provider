@@ -32,7 +32,7 @@ namespace SisoDb.Providers.SqlCe4.Dac
             _connectionInfo = connectionInfo.AssertNotNull("connectionInfo");
 
             SqlStringsRepository = new SqlStringsRepository(_connectionInfo.ProviderType);
-            //DbDataTypeTranslator = new SqlDbDataTypeTranslator();
+            //DbDataTypeTranslator = new TSqlDbDataTypeTranslator();
 
             _connection = new SqlCeConnection(_connectionInfo.ConnectionString.PlainString);
             _connection.Open();

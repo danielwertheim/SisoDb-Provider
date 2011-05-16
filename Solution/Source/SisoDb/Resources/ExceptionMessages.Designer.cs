@@ -474,5 +474,14 @@ namespace SisoDb.Resources {
                 return ResourceManager.GetString("UnitOfWork_NoItemExistsForUpdate", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The operator &apos;{0}&apos; is not supported for Qx-methods on enumerables..
+        /// </summary>
+        internal static string WhereParser_QxEnumerables_OperatorNotSupported {
+            get {
+                return ResourceManager.GetString("WhereParser_QxEnumerables_OperatorNotSupported", resourceCulture);
+            }
+        }
     }
 }

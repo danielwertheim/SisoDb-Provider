@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlCe4.BulkInserts;
+using SisoDb.Providers.SqlCe4.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
@@ -22,7 +22,7 @@ namespace SisoDb.Providers.SqlCe4
         private readonly IStructureBuilder _structureBuilder;
 
         protected internal SqlCe4UnitOfWork(
-            ISqlDbClient dbClient,
+            SqlCe4DbClient dbClient,
             IIdentityGenerator identityGenerator,
             IDbSchemaManager dbSchemaManager,
             IDbSchemaUpserter dbSchemaUpserter,
@@ -74,7 +74,7 @@ namespace SisoDb.Providers.SqlCe4
 
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
 
-            var bulkInserter = new SqlBulkInserter(DbClient);
+            var bulkInserter = new SqlCe4BulkInserter(DbClient);
 
             if (hasIdentity)
             {
@@ -107,7 +107,7 @@ namespace SisoDb.Providers.SqlCe4
 
             DeleteById<T>(updatedStructure.Id);
 
-            var bulkInserter = new SqlBulkInserter(DbClient);
+            var bulkInserter = new SqlCe4BulkInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 

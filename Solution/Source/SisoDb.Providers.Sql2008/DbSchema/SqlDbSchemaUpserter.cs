@@ -1,10 +1,11 @@
 ﻿using System.Data;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
+using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Querying;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.DbSchema
+namespace SisoDb.Providers.Sql2008.DbSchema
 {
     public class SqlDbSchemaUpserter : IDbSchemaUpserter
     {
@@ -14,9 +15,9 @@ namespace SisoDb.Providers.DbSchema
 
         private readonly SqlDbIndexesSchemaSynchronizer _indexesDbSchemaSynchronizer;
         private readonly SqlDbUniquesSchemaSynchronizer _uniquesDbSchemaSynchronizer;
-        private readonly ISqlDbClient _dbClient;
+        private readonly SqlDbClient _dbClient;
 
-        public SqlDbSchemaUpserter(ISqlDbClient dbClient)
+        public SqlDbSchemaUpserter(SqlDbClient dbClient)
         {
             _dbClient = dbClient.AssertNotNull("dbClient");
 

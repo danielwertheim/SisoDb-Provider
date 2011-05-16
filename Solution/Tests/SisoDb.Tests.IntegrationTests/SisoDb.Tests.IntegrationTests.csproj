@@ -97,6 +97,7 @@
     <Compile Include="Providers\Sql2008\DatabaseTests\InitializeExisting_WhenBlankDbExists_CreatesNewInitializedDb.cs" />
     <Compile Include="Providers\Sql2008\DatabaseTests\InitializeExisting_WhenDatabaseDoesNotExist_ThrowsSisoDbException.cs" />
     <Compile Include="Providers\Sql2008\DatabaseTests\UpdateStructureSet_WhenThreeStructuresWithIdentitiesExistsAndTrashIsMadeOnSecond_OnlyFirstAndThirdItemsRemains.cs" />
+    <Compile Include="Providers\Sql2008\UnitOfWork\Queries\QxExtensions\Sql2008UnitOfWorkQueryNestedEnumerablesWithQxAny.cs" />
     <Compile Include="Providers\SqlCe4\SqlCe4DbUtils.cs" />
     <Compile Include="Providers\SqlCe4\SqlCe4DatabaseTests.cs" />
     <Compile Include="Providers\SqlCe4\SqlCe4IntegrationTestBase.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Providers\Sql2008\DbSchema\Sql2008DbIndexesSchemaSynchronizerTests.cs" />
     <Compile Include="Providers\Sql2008\QueryEngine\Sql2008QueryEngineCountTests.cs" />
     <Compile Include="Providers\Sql2008\QueryEngine\Sql2008QueryEngineGetByIdIntervalTests.cs" />
-    <Compile Include="Providers\Sql2008\Dac\Sql2008DbClientTests.cs" />
+    <Compile Include="Providers\Sql2008\Dac\SqlDbClientTests.cs" />
     <Compile Include="Providers\Sql2008\Sql2008TembDbIntegrationTestBase.cs" />
     <Compile Include="Providers\Sql2008\Sql2008IntegrationTestBase.cs" />
     <Compile Include="Providers\Sql2008\StructureSetUpdaterTests\SqlStructureSetUpdaterTests.cs" />

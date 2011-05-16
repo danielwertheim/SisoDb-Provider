@@ -17,9 +17,9 @@ namespace SisoDb.Tests.IntegrationTests.Providers.Sql2008
                 ConfigurationManager.ConnectionStrings[LocalConstants.ConnectionStringNameForSql2008Temp].ConnectionString,
                 TempDbName);
             
-            var cnInfo = new Sql2008ConnectionInfo(cnString);
+            var cnInfo = new SqlConnectionInfo(cnString);
 
-            Database = new Sql2008Database(cnInfo);
+            Database = new SqlDatabase(cnInfo);
             DbHelper = new Sql2008DbUtils(cnInfo.ConnectionString.PlainString);
             DbHelperForServer = new Sql2008DbUtils(cnInfo.ServerConnectionString.PlainString);
         }

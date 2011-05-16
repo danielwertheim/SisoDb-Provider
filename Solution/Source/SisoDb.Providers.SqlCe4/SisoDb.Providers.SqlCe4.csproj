@@ -56,7 +56,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BulkInserts\SqlBulkInserter.cs" />
+    <Compile Include="BulkInserts\SqlCe4BulkInserter.cs" />
     <Compile Include="DbSchema\SqlCe4DbColumnGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\SqlCe4Exceptions.Designer.cs">

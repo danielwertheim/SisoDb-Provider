@@ -9,7 +9,7 @@ using SisoDb.TestUtils;
 namespace SisoDb.Tests.UnitTests.Providers.Sql2008
 {
     [TestFixture]
-    public class Sql2008DatabaseTests : UnitTestBase
+    public class SqlDatabaseTests : UnitTestBase
     {
         [Test]
         public void Ctor_WhenConnectionInfoHasWrongProviderType_ThrowsSisoDbException()
@@ -17,9 +17,9 @@ namespace SisoDb.Tests.UnitTests.Providers.Sql2008
             var connectionInfoStub = Stub.This<ISisoConnectionInfo>(
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.SqlCe4));
 
-            var ex = Assert.Throws<SisoDbException>(() => new Sql2008Database(connectionInfoStub));
+            var ex = Assert.Throws<SisoDbException>(() => new SqlDatabase(connectionInfoStub));
 
-            Assert.AreEqual(Sql2008Exceptions.Sql2008Database_UnsupportedProviderSpecified
+            Assert.AreEqual(Sql2008Exceptions.SqlDatabase_UnsupportedProviderSpecified
                 .Inject(connectionInfoStub.ProviderType, StorageProviders.Sql2008), ex.Message);
         }
 
@@ -30,20 +30,20 @@ namespace SisoDb.Tests.UnitTests.Providers.Sql2008
             cnInfo.Setup(x=>x.ConnectionString.PlainString)
                 .Returns("data source=localhost;integrated security=SSPI;");
 
-            var ex = Assert.Throws<SisoDbException>(() => new Sql2008Database(cnInfo.Object));
+            var ex = Assert.Throws<SisoDbException>(() => new SqlDatabase(cnInfo.Object));
 
             Assert.AreEqual(ExceptionMessages.SqlDatabase_ConnectionInfo_MissingName, ex.Message);
         }
 
         [Test]
-        public void CTor_SisoConnectionInfoIsPassed_ConnectionInfoOnDbIsSql2008ConnectionInfo()
+        public void CTor_SisoConnectionInfoIsPassed_ConnectionInfoOnDbIsSqlConnectionInfo()
         {
             var cnInfo = new SisoConnectionInfo(
                 @"sisodb:provider=Sql2008||plain:Data Source=.\sqlexpress;Initial Catalog=DummyDb;Integrated Security=True");
 
-            var db = new Sql2008Database(cnInfo);
+            var db = new SqlDatabase(cnInfo);
 
-            Assert.IsInstanceOf(typeof(Sql2008ConnectionInfo), db.ConnectionInfo);
+            Assert.IsInstanceOf(typeof(SqlConnectionInfo), db.ConnectionInfo);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using SisoDb.Core;
+using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Providers.DbSchema
+namespace SisoDb.Providers.Sql2008.DbSchema
 {
     public class SqlDbIndexesSchemaBuilder : IDbSchemaBuilder
     {

@@ -13,6 +13,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public class WhereParser : ExpressionVisitor, IWhereParser
     {
+        private static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
         private readonly object _lock;
         private readonly IExpressionEvaluator _expressionEvaluator;
         private readonly Stack<MemberExpression> _virtualPrefixMembers;
@@ -29,6 +30,15 @@ namespace SisoDb.Querying.Lambdas.Parsers
         private bool IsFlatteningMembers
         {
             get { return _virtualPrefixMembers.Count > 0; }
+        }
+
+        static WhereParser()
+        {
+            SupportedEnumerableQxOperators = new HashSet<ExpressionType>
+                                             {
+                                                 ExpressionType.Equal, ExpressionType.NotEqual,
+                                                 ExpressionType.OrElse, ExpressionType.AndAlso
+                                             };
         }
 
         public WhereParser()
@@ -86,9 +96,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected override Expression VisitBinary(BinaryExpression e)
         {
-            var isGroup = e.Left is BinaryExpression || e.Right is BinaryExpression;
+            var isGroupExpression = e.Left is BinaryExpression || e.Right is BinaryExpression;
 
-            if (isGroup)
+            if (isGroupExpression)
                 _nodesContainer.AddNode(new StartGroupNode());
 
             if (e.Left.NodeType == ExpressionType.Parameter)
@@ -99,16 +109,27 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if (ExpressionUtils.IsNullConstant(e.Right))
                 _nodesContainer.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
-                _nodesContainer.AddNode(!isGroup && IsFlatteningMembers
-                    ? new OperatorNode(Operator.Like())
-                    : new OperatorNode(Operator.Create(e.NodeType)));
+                AddOperator(isGroupExpression, e.NodeType);
 
             Visit(e.Right);
 
-            if (isGroup)
+            if (isGroupExpression)
                 _nodesContainer.AddNode(new EndGroupNode());
 
             return e;
+        }
+
+        private void AddOperator(bool isGroupExpression, ExpressionType nodeType)
+        {
+            if (!isGroupExpression && IsFlatteningMembers)
+            {
+                if (nodeType == ExpressionType.NotEqual)
+                    _nodesContainer.AddNode(new OperatorNode(Operator.Create(ExpressionType.Not)));
+
+                _nodesContainer.AddNode(new OperatorNode(Operator.Like()));
+            }
+            else
+                _nodesContainer.AddNode(new OperatorNode(Operator.Create(nodeType)));
         }
 
         protected override Expression VisitConstant(ConstantExpression e)
@@ -158,31 +179,34 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         private MemberNode CreateNewMemberNode(MemberExpression e)
         {
-            var graphLine = new List<MemberExpression>(e.ExtractGraphLineFirstToLast());
-            MemberNode previous = null;
+            var graphLine = new List<MemberExpression> {e};
+            MemberNode lastNode = null;
 
             if (IsFlatteningMembers)
                 graphLine.InsertRange(0, _virtualPrefixMembers.Reverse().Where(vir => !graphLine.Any(gl => gl.Equals(vir))));
 
+            if (graphLine.Count < 1)
+                return null;
+
             foreach (var memberExpression in graphLine)
             {
-                var node = new MemberNode(previous, IsFlatteningMembers, memberExpression);
-                previous = node;
+                var newNode = new MemberNode(lastNode, memberExpression);
+                lastNode = newNode;
             }
 
-            if(previous.MemberType.IsEnumerableBytesType())
-                throw new NotSupportedException(ExceptionMessages.LambdaParser_MemberIsBytes.Inject(previous.Path));
+            if (lastNode.MemberType.IsEnumerableBytesType())
+                throw new NotSupportedException(ExceptionMessages.LambdaParser_MemberIsBytes.Inject(lastNode.Path));
 
-            return previous;
+            return lastNode;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression e)
         {
             if (e.Method.DeclaringType == typeof(StringQueryExtensions))
-                return VisitStringQueryExtensionMethodCall(e);
+                return VisitStringQxMethodCall(e);
             
             if (e.Method.DeclaringType == typeof(EnumerableQueryExtensions))
-                return VisitEnumerableQueryExtensionMethodCall(e);
+                return VisitEnumerableQxMethodCall(e);
 
             try
             {
@@ -200,7 +224,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
-        private Expression VisitStringQueryExtensionMethodCall(MethodCallExpression e)
+        private Expression VisitStringQxMethodCall(MethodCallExpression e)
         {
             var member = e.Arguments[0];
             var methodName = e.Method.Name;
@@ -225,21 +249,33 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
-        private Expression VisitEnumerableQueryExtensionMethodCall(MethodCallExpression e)
+        private Expression VisitEnumerableQxMethodCall(MethodCallExpression e)
         {
             var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
+            var lambda = e.Arguments[1] as LambdaExpression;
 
             switch (methodName)
             {
                 case "QxAny":
+                    EnsureSupportedEnumerableQxOperator(lambda);
                     _virtualPrefixMembers.Push(member);
-                    Visit(e.Arguments[1]);
+                    Visit(lambda);
                     _virtualPrefixMembers.Pop();
                     break;
             }
 
             return e;
+        }
+
+        private static void EnsureSupportedEnumerableQxOperator(LambdaExpression e)
+        {
+            var isSupportedMethodCall = e.Body.NodeType == ExpressionType.Call && ((MethodCallExpression)e.Body).Method.Name == "QxAny";
+            
+            var operatorIsSupported = isSupportedMethodCall || SupportedEnumerableQxOperators.Contains(e.Body.NodeType);
+
+            if(!operatorIsSupported)
+                throw new SisoDbException(ExceptionMessages.WhereParser_QxEnumerables_OperatorNotSupported.Inject(e.Body.NodeType));
         }
     }
 }

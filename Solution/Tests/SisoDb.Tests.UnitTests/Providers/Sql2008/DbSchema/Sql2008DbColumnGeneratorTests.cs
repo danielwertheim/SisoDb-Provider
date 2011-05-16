@@ -4,7 +4,7 @@ using SisoDb.Providers.Sql2008.DbSchema;
 namespace SisoDb.Tests.UnitTests.Providers.Sql2008.DbSchema
 {
     [TestFixture]
-    public class Sql2008DbColumnGeneratorTests : UnitTestBase
+    public class SqlDbColumnGeneratorTests : UnitTestBase
     {
         [Test]
         public void ToSql_WhenNameAndDbDataTypeIsPassed_ReturnsSqlWithNameAndType()
@@ -13,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Providers.Sql2008.DbSchema
             const string arbitraryDbDataTypeName = "TestDbDataType";
             var expectedColumnDefinition = string.Format("[{0}] {1} sparse null", arbitraryColumnName, arbitraryDbDataTypeName);
 
-            var columnGenerator = new Sql2008DbColumnGenerator();
+            var columnGenerator = new SqlDbColumnGenerator();
             var columnDefinition = columnGenerator.ToSql(arbitraryColumnName, arbitraryDbDataTypeName);
 
             Assert.AreEqual(expectedColumnDefinition, columnDefinition);

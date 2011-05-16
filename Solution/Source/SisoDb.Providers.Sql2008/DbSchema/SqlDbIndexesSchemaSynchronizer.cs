@@ -2,12 +2,13 @@
 using System.Data;
 using System.Linq;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
+using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Providers.DbSchema
+namespace SisoDb.Providers.Sql2008.DbSchema
 {
     /// <summary>
     /// Adds missing columns and Drops obsolete columns; to Indexes-table.
@@ -15,12 +16,12 @@ namespace SisoDb.Providers.DbSchema
     /// <remarks>The table must exist, otherwise an Exception is thrown!</remarks>
     public class SqlDbIndexesSchemaSynchronizer : IDbSchemaSynchronizer
     {
-        private readonly ISqlDbClient _dbClient;
+        private readonly SqlDbClient _dbClient;
         private readonly ISqlStringsRepository _sqlStringsRepository;
         private readonly IDbColumnGenerator _columnGenerator;
         private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
 
-        public SqlDbIndexesSchemaSynchronizer(ISqlDbClient dbClient, IDbColumnGenerator columnGenerator)
+        public SqlDbIndexesSchemaSynchronizer(SqlDbClient dbClient, IDbColumnGenerator columnGenerator)
         {
             _dbClient = dbClient.AssertNotNull("dbClient");
             _sqlStringsRepository = dbClient.SqlStringsRepository;
@@ -104,11 +105,11 @@ namespace SisoDb.Providers.DbSchema
             return changes;
         }
 
-        private IList<SqlDbColumn> GetIndexesColumns(IStructureSchema structureSchema)
+        private IList<DbColumn> GetIndexesColumns(IStructureSchema structureSchema)
         {
             var dbColumns = _dbClient.GetColumns(structureSchema.GetIndexesTableName(), IndexStorageSchema.Fields.SisoId.Name);
 
-            return dbColumns ?? new List<SqlDbColumn>();
+            return dbColumns ?? new List<DbColumn>();
         }
     }
 }

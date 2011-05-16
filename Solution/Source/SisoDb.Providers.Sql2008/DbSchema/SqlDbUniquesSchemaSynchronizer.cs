@@ -2,11 +2,12 @@
 using System.Data;
 using System.Linq;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
+using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.DbSchema
+namespace SisoDb.Providers.Sql2008.DbSchema
 {
     /// <summary>
     /// Delete records that represents an unique for a column that
@@ -14,10 +15,10 @@ namespace SisoDb.Providers.DbSchema
     /// </summary>
     public class SqlDbUniquesSchemaSynchronizer : IDbSchemaSynchronizer
     {
-        private readonly ISqlDbClient _dbClient;
+        private readonly SqlDbClient _dbClient;
         private readonly ISqlStringsRepository _sqlStringsRepository;
 
-        public SqlDbUniquesSchemaSynchronizer(ISqlDbClient dbClient)
+        public SqlDbUniquesSchemaSynchronizer(SqlDbClient dbClient)
         {
             _dbClient = dbClient;
             _sqlStringsRepository = dbClient.SqlStringsRepository;

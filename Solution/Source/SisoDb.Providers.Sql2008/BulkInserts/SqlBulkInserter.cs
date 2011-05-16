@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SisoDb.Providers.BulkInserts;
-using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
@@ -10,9 +10,9 @@ namespace SisoDb.Providers.Sql2008.BulkInserts
 {
     public class SqlBulkInserter
     {
-        private readonly ISqlDbClient _dbClient;
+        private readonly SqlDbClient _dbClient;
 
-        public SqlBulkInserter(ISqlDbClient dbClient)
+        public SqlBulkInserter(SqlDbClient dbClient)
         {
             _dbClient = dbClient;
         }

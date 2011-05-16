@@ -7,7 +7,7 @@ using SisoDb.Resources;
 namespace SisoDb.Providers.Sql2008
 {
     [Serializable]
-    public class Sql2008ConnectionInfo : ISisoConnectionInfo
+    public class SqlConnectionInfo : ISisoConnectionInfo
     {
         private readonly ISisoConnectionInfo _innerConnectionInfo;
 
@@ -25,11 +25,11 @@ namespace SisoDb.Providers.Sql2008
             get { return _innerConnectionInfo.ConnectionString; }
         }
 
-        public Sql2008ConnectionInfo(string connectionStringOrName) 
+        public SqlConnectionInfo(string connectionStringOrName) 
             : this(new SisoConnectionInfo(connectionStringOrName))
         {}
 
-        public Sql2008ConnectionInfo(ISisoConnectionInfo connectionInfo)
+        public SqlConnectionInfo(ISisoConnectionInfo connectionInfo)
         {
             _innerConnectionInfo = connectionInfo;
 
@@ -46,7 +46,7 @@ namespace SisoDb.Providers.Sql2008
         protected virtual void OnEnsureValid()
         {
             if (ProviderType != StorageProviders.Sql2008)
-                throw new SisoDbException(Sql2008Exceptions.Sql2008Database_UnsupportedProviderSpecified
+                throw new SisoDbException(Sql2008Exceptions.SqlDatabase_UnsupportedProviderSpecified
                     .Inject(ProviderType, StorageProviders.Sql2008));
         }
 

@@ -5,116 +5,110 @@ using SisoDb.Reflections;
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
 {
     [TestFixture]
-    public class MemberNodeTests
+    public class MemberNodeTests : UnitTestBase
     {
         [Test]
-        public void CTor_WhenMemberNameIsId_MemberNameIsNotTranslated()
+        public void CTor_WhenMemberNameIsSisoId_MemberNameIsTranslated()
         {
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.SisoId);
 
-            var node = new MemberNode(null, false, memberExpression);
+            var node = new MemberNode(null, memberExpression);
 
             Assert.AreEqual("SisoId", node.Name);
         }
 
         [Test]
-        public void CTor_WhenMemberNameIsId_MemberPathIsNotTranslated()
+        public void CTor_WhenMemberNameIsSisoId_MemberPathIsTranslated()
         {
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.SisoId);
 
-            var node = new MemberNode(null, false, memberExpression);
+            var node = new MemberNode(null, memberExpression);
 
             Assert.AreEqual("SisoId", node.Path);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameIsId_MemberNameIsNotTranslated()
+        public void CTor_WhenNestedMemberNameIsSisoId_MemberNameIsTranslated()
         {
             var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.SisoId);
 
-            var parentNode = new MemberNode(null, false, parentExpression);
-            var node = new MemberNode(parentNode, false, memberExpression);
+            var parentNode = new MemberNode(null, parentExpression);
+            var node = new MemberNode(parentNode, memberExpression);
 
             Assert.AreEqual("SisoId", node.Name);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameIsId_MemberPathIsNotTranslated()
+        public void CTor_WhenNestedMemberNameIsSisoId_MemberPathIsTranslated()
         {
-            var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.SisoId);
 
-            var parentNode = new MemberNode(null, false, parentExpression);
-            var node = new MemberNode(parentNode, false, memberExpression);
+            var node = new MemberNode(null, memberExpression);
 
             Assert.AreEqual("Child.SisoId", node.Path);
         }
 
         [Test]
-        public void CTor_WhenMemberNameStartsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenMemberNameStartsWithId_MemberNameIsTranslated()
         {
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.IdTmp);
 
-            var node = new MemberNode(null, false, memberExpression);
+            var node = new MemberNode(null, memberExpression);
 
             Assert.AreEqual("IdTmp", node.Name);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameStartsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenNestedMemberNameStartsWithId_MemberNameIsTranslated()
         {
             var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.IdTmp);
 
-            var parentNode = new MemberNode(null, false, parentExpression);
-            var node = new MemberNode(parentNode, false, memberExpression);
+            var parentNode = new MemberNode(null, parentExpression);
+            var node = new MemberNode(parentNode, memberExpression);
 
             Assert.AreEqual("IdTmp", node.Name);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameStartsWithId_MemberPathIsNotTranslated()
+        public void CTor_WhenNestedMemberNameStartsWithId_MemberPathIsTranslated()
         {
-            var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.IdTmp);
 
-            var parentNode = new MemberNode(null, false, parentExpression);
-            var node = new MemberNode(parentNode, false, memberExpression);
+            var node = new MemberNode(null, memberExpression);
 
             Assert.AreEqual("Child.IdTmp", node.Path);
         }
 
         [Test]
-        public void CTor_WhenMemberNameEndsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenMemberNameEndsWithId_MemberNameIsTranslated()
         {
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.TmpId);
 
-            var node = new MemberNode(null, false, memberExpression);
+            var node = new MemberNode(null, memberExpression);
 
             Assert.AreEqual("TmpId", node.Name);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameEndsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenNestedMemberNameEndsWithId_MemberNameIsTranslated()
         {
             var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.TmpId);
 
-            var parentNode = new MemberNode(null, false, parentExpression);
-            var node = new MemberNode(parentNode, false, memberExpression);
+            var parentNode = new MemberNode(null, parentExpression);
+            var node = new MemberNode(parentNode, memberExpression);
 
             Assert.AreEqual("TmpId", node.Name);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameEndsWithId_MemberPathIsNotTranslated()
+        public void CTor_WhenNestedMemberNameEndsWithId_MemberPathIsTranslated()
         {
-            var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
             var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.TmpId);
 
-            var parentNode = new MemberNode(null, false, parentExpression);
-            var node = new MemberNode(parentNode, false, memberExpression);
+            var node = new MemberNode(null, memberExpression);
 
             Assert.AreEqual("Child.TmpId", node.Path);
         }

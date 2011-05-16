@@ -1,14 +1,14 @@
 ﻿using SisoDb.Core;
-using SisoDb.Providers.Dac;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.Sql2008
 {
     public class SqlIdentityGenerator : IIdentityGenerator
     {
-        private readonly ISqlDbClient _dbClient;
+        private readonly SqlDbClient _dbClient;
 
-        public SqlIdentityGenerator(ISqlDbClient dbClient)
+        public SqlIdentityGenerator(SqlDbClient dbClient)
         {
             _dbClient = dbClient.AssertNotNull("dbClient");
         }

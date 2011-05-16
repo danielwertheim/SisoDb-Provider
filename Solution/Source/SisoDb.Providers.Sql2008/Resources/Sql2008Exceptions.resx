@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Sql2008Database_UnsupportedProviderSpecified" xml:space="preserve">
+  <data name="SqlDatabase_UnsupportedProviderSpecified" xml:space="preserve">
     <value>Storageprovider '{0}' is unsupported. When consuming an Sql-database the storageprovider should be: '{1}'.</value>
   </data>
 </root>

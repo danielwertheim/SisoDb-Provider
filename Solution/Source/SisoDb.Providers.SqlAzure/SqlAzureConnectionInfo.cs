@@ -6,7 +6,7 @@ using SisoDb.Providers.SqlAzure.Resources;
 namespace SisoDb.Providers.SqlAzure
 {
     [Serializable]
-    public class SqlAzureConnectionInfo : Sql2008ConnectionInfo
+    public class SqlAzureConnectionInfo : SqlConnectionInfo
     {
         public SqlAzureConnectionInfo(string connectionStringOrName) 
             : this(new SisoConnectionInfo(connectionStringOrName))

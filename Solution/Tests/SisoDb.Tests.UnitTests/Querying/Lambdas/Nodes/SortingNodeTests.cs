@@ -4,10 +4,10 @@ using SisoDb.Querying.Lambdas.Nodes;
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
 {
     [TestFixture]
-    public class SortingNodeTests
+    public class SortingNodeTests : UnitTestBase
     {
         [Test]
-        public void CTor_WhenMemberPathIsSisoId_MemberNameIsNotTranslated()
+        public void CTor_WhenMemberPathIsSisoId_MemberNameIsTranslated()
         {
             var node = new SortingNode("SisoId");
 
@@ -15,7 +15,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         }
 
         [Test]
-        public void CTor_WhenMemberPathIsId_MemberNameIsNotTranslated()
+        public void CTor_WhenMemberPathIsId_MemberNameIsTranslated()
         {
             var node = new SortingNode("Id");
 
@@ -23,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         }
 
         [Test]
-        public void CTor_WhenMemberPathStartsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenMemberPathStartsWithId_MemberNameIsTranslated()
         {
             var node = new SortingNode("IdTmp");
 
@@ -31,7 +31,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         }
 
         [Test]
-        public void CTor_WhenMemberPathEndsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenMemberPathEndsWithId_MemberNameIsTranslated()
         {
             var node = new SortingNode("TmpId");
 
@@ -39,7 +39,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         }
 
         [Test]
-        public void CTor_WhenNestedMemberPathIsId_MemberNameIsNotTranslated()
+        public void CTor_WhenNestedMemberPathIsId_MemberNameIsTranslated()
         {
             var node = new SortingNode("Nested.Id");
 
@@ -47,7 +47,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         }
 
         [Test]
-        public void CTor_WhenNestedMemberPathStartsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenNestedMemberPathStartsWithId_MemberNameIsTranslated()
         {
             var node = new SortingNode("Nested.IdTmp");
 
@@ -55,7 +55,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         }
 
         [Test]
-        public void CTor_WhenNestedMemberPathEndsWithId_MemberNameIsNotTranslated()
+        public void CTor_WhenNestedMemberPathEndsWithId_MemberNameIsTranslated()
         {
             var node = new SortingNode("Nested.TmpId");
 

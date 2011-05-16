@@ -7,7 +7,7 @@ namespace SisoDb.Providers.Sql2008
     {
         public IDbColumnGenerator GetDbColumnGenerator()
         {
-            return new Sql2008DbColumnGenerator();
+            return new SqlDbColumnGenerator();
         }
     }
 }

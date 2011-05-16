@@ -6,8 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.SqlCe4.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Serialization;
@@ -18,7 +18,7 @@ namespace SisoDb.Providers.SqlCe4
 {
     public class SqlCe4QueryEngine : IQueryEngine
     {
-        protected readonly ISqlDbClient DbClient;
+        protected readonly SqlCe4DbClient DbClient;
         protected readonly IDbSchemaManager DbSchemaManager;
         protected readonly IDbSchemaUpserter DbSchemaUpserter;
         protected readonly IStructureSchemas StructureSchemas;
@@ -28,7 +28,7 @@ namespace SisoDb.Providers.SqlCe4
         protected readonly ICommandBuilderFactory CommandBuilderFactory;
 
         protected internal SqlCe4QueryEngine(
-            ISqlDbClient dbClient,
+            SqlCe4DbClient dbClient,
             IDbSchemaManager dbSchemaManager,
             IDbSchemaUpserter dbSchemaUpserter,
             IStructureSchemas structureSchemas,

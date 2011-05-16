@@ -101,6 +101,7 @@
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNodeTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeTests.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\WhereParserQxAnyTests.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedIncludeSqlProcessorTests\ParsedIncludeSqlProcessorTestBase.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedIncludeSqlProcessorTests\ParsedIncludeSqlProcessorTests.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedSortingSqlProcessorTests\ParsedSortingSqlProcessorTestBase.cs" />

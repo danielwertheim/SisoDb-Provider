@@ -256,4 +256,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SisoIdFactory_MissingGuidValue" xml:space="preserve">
     <value>When using Guids the Id-property of the entity must be assigned before structure is created.</value>
   </data>
+  <data name="WhereParser_QxEnumerables_OperatorNotSupported" xml:space="preserve">
+    <value>The operator '{0}' is not supported for Qx-methods on enumerables.</value>
+  </data>
 </root>

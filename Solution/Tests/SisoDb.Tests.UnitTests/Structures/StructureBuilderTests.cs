@@ -36,10 +36,10 @@ namespace SisoDb.Tests.UnitTests.Structures
         }
 
         [Test]
-        public void CreateBatchedIdentityStructures_WhenProcessing4900Items_ItemsAreGettingGeneratedInCorrectOrder()
+        public void CreateBatchedIdentityStructures_WhenProcessing2900Items_ItemsAreGettingGeneratedInCorrectOrder()
         {
             var schema = StructureSchemaTestFactory.Stub<IdentityItem>(generateIdAccessor: true, indexAccessorsPaths: new[] {"Value"});
-            var items = CreateIdentityItems(4900);
+            var items = CreateIdentityItems(2900);
 
             var structuresBatches = _builder.CreateBatchedIdentityStructures(items, schema, 1000, 1);
 
@@ -56,10 +56,10 @@ namespace SisoDb.Tests.UnitTests.Structures
         }
 
         [Test]
-        public void CreateBatchedGuidStructures_WhenProcessing9900Items_ItemsAreGettingGeneratedInCorrectOrder()
+        public void CreateBatchedGuidStructures_WhenProcessing2900Items_ItemsAreGettingGeneratedInCorrectOrder()
         {
             var schema = StructureSchemaTestFactory.Stub<GuidItem>(generateIdAccessor: true, indexAccessorsPaths: new[] { "Value" });
-            var items = CreateGuidItems(9900);
+            var items = CreateGuidItems(2900);
 
             var structuresBatches = _builder.CreateBatchedGuidStructures(items, schema, 1000);
 

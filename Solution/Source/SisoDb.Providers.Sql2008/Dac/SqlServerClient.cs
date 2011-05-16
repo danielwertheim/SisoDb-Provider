@@ -13,7 +13,7 @@ namespace SisoDb.Providers.Sql2008.Dac
     /// Performs the ADO.Net communication for the Sql-provider and
     /// executes command against the server not a specific database.
     /// </summary>
-    internal class Sql2008ServerClient : IDisposable
+    public class SqlServerClient : IDisposable
     {
         private SqlConnection _connection;
 
@@ -25,7 +25,7 @@ namespace SisoDb.Providers.Sql2008.Dac
 
         internal ISqlStringsRepository SqlStringsRepository { get; private set; }
 
-        internal Sql2008ServerClient(Sql2008ConnectionInfo connectionInfo)
+        internal SqlServerClient(SqlConnectionInfo connectionInfo)
         {
             connectionInfo.AssertNotNull("connectionInfo");
 

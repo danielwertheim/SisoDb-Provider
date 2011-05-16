@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.BulkInserts;
+using SisoDb.Providers.Sql2008.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
@@ -22,7 +22,7 @@ namespace SisoDb.Providers.Sql2008
         private readonly IStructureBuilder _structureBuilder;
 
         protected internal SqlUnitOfWork(
-            ISqlDbClient dbClient,
+            SqlDbClient dbClient,
             IIdentityGenerator identityGenerator,
             IDbSchemaManager dbSchemaManager,
             IDbSchemaUpserter dbSchemaUpserter,

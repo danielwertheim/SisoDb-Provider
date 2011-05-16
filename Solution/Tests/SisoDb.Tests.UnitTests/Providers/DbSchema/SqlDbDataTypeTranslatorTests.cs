@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
+using SisoDb.Providers.Sql2008.DbSchema;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
