@@ -17,12 +17,10 @@
 	<licenseUrl>http://github.com/sedanwer/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<tags>sisodb, sql, sql server, json, nosql, document-oriented database</tags>
-	<dependencies>
-	  <dependency id="SisoDb" version="3.0" />
-	</dependencies>
     </metadata>
   <files>
       <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.dll" target="lib" />
+	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.pdb" target="lib" />
       <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.xml" target="lib" />
 	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.txt" target="lib" />
   </files>
