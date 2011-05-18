@@ -5,10 +5,10 @@ B=New features and minor changes not braking API etc.
 C=Bug fixes
 D=Optional build number for feature use.
 
-v3.0
+v3.0        2011-05-18
+[New]       IMPORTANT! As of now SisoDb has been divided in a core assembly "SisoDb" and a provider assembly "SisoDb.Providers.Sql2008". Other providers are work in progress.
+[New]       NuGet Id for Sql2008 provider is "SisoDb.Sql2008".
 [Fixed]     QxAny now can be used on nested enumerables but it only support operators: (== and !=), if non supported operator is used, a SisoDbException will be thrown.
-[New]       As of now SisoDb has been divided in a core assembly "SisoDb" and a provider assembly "SisoDb.Providers.Sql2008". Other providers are work in progress.
-[New]       NuGet id for Sql2008 provider is "SisoDb.Sql2008". The core uses "SisoDb.Core".
 
 v2.2
 [New]       SisoDbFactory has been replaced by specific Db-factories lying in the provider of your choice, e.g Sql2008 uses Sql2008DbFactory, which currently is the only finnished provider.
