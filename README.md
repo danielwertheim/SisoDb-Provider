@@ -9,11 +9,13 @@ By using SisoDb you get to store and retrieve complete POCO-graphs without havin
 _there's also no proxies_ etc. **It's just storage of your entities made simple**.
 
 ## NuGet
-SisoDb is available via NuGet: http://nuget.org/List/Packages/SisoDb
+SisoDb is available via NuGet: http://nuget.org/List/Packages/SisoDb.Sql2008
+
+NOTE! The old package (SisoDb) will be left for a while but from v3.0 specific provider packages exists.
 
 or simply just run:
 
-### PM> Install-Package SisoDb
+### PM> Install-Package SisoDb.Sql2008
 
 ## More information
 Follow [@danielwertheim](http://twitter.com/danielwertheim) and [@sisodb](http://twitter.com/sisodb)
