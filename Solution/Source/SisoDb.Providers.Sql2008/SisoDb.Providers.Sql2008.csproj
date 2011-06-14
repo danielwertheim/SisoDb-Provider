@@ -70,6 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Sql2008Exceptions.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sql2008Statements.cs" />
     <Compile Include="SqlDatabase.cs" />
     <Compile Include="Sql2008DbFactory.cs" />
     <Compile Include="Sql2008ProviderFactory.cs" />
@@ -88,6 +89,9 @@
     <EmbeddedResource Include="Resources\Sql2008Exceptions.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Sql2008Exceptions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Sql2008Statements.resx">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

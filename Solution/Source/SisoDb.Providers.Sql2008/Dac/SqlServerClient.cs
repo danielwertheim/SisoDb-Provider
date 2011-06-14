@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using SisoDb.Core;
 using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 
 namespace SisoDb.Providers.Sql2008.Dac
@@ -23,7 +22,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         
         internal IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
 
-        internal ISqlStringsRepository SqlStringsRepository { get; private set; }
+        internal ISqlStatements SqlStatements { get; private set; }
 
         internal SqlServerClient(SqlConnectionInfo connectionInfo)
         {
@@ -32,7 +31,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             ProviderType = connectionInfo.ProviderType;
             ConnectionString = connectionInfo.ServerConnectionString;
             
-            SqlStringsRepository = new SqlStringsRepository(ProviderType);
+            SqlStatements = Sql2008Statements.Instance;
             DbDataTypeTranslator = new SqlDbDataTypeTranslator();
 
             _connection = new SqlConnection(ConnectionString.PlainString);
@@ -53,7 +52,7 @@ namespace SisoDb.Providers.Sql2008.Dac
 
         internal bool DatabaseExists(string name)
         {
-            var sql = SqlStringsRepository.GetSql("DatabaseExists");
+            var sql = SqlStatements.GetSql("DatabaseExists");
 
             using (var cmd = _connection.CreateCommand(CommandType.Text, sql, new QueryParameter("dbName", name)))
             {
@@ -63,7 +62,7 @@ namespace SisoDb.Providers.Sql2008.Dac
 
         internal void CreateDatabase(string name)
         {
-            var sql = SqlStringsRepository.GetSql("CreateDatabase").Inject(name);
+            var sql = SqlStatements.GetSql("CreateDatabase").Inject(name);
 
             using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
             {
@@ -75,20 +74,20 @@ namespace SisoDb.Providers.Sql2008.Dac
 
         internal void InitializeExistingDb(string name)
         {
-            var sqlCreateIdentitiesTables = SqlStringsRepository.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
+            var sqlCreateIdentitiesTables = SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
 
             using (var cmd = _connection.CreateCommand(CommandType.Text, sqlCreateIdentitiesTables))
             {
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = SqlStringsRepository.GetSql("Sys_Types_CreateIfNotExists").Inject(name);
+                cmd.CommandText = SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(name);
                 cmd.ExecuteNonQuery();
             }
         }
 
         internal void DropDatabaseIfExists(string name)
         {
-            var sql = SqlStringsRepository.GetSql("DropDatabase").Inject(name);
+            var sql = SqlStatements.GetSql("DropDatabase").Inject(name);
 
             using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
             {

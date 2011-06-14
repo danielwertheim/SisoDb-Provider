@@ -18,7 +18,7 @@ namespace SisoDb.Providers.Sql2008.DbSchema
 
         public void Drop(IStructureSchema structureSchema)
         {
-            var sql = _dbClient.SqlStringsRepository.GetSql("DropStructureTables").Inject(
+            var sql = _dbClient.SqlStatements.GetSql("DropStructureTables").Inject(
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetStructureTableName(),
                 structureSchema.GetUniquesTableName());

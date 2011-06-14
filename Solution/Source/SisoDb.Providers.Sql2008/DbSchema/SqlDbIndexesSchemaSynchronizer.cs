@@ -4,7 +4,6 @@ using System.Linq;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.Dac;
-using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
@@ -17,14 +16,14 @@ namespace SisoDb.Providers.Sql2008.DbSchema
     public class SqlDbIndexesSchemaSynchronizer : IDbSchemaSynchronizer
     {
         private readonly SqlDbClient _dbClient;
-        private readonly ISqlStringsRepository _sqlStringsRepository;
+        private readonly ISqlStatements _sqlStatements;
         private readonly IDbColumnGenerator _columnGenerator;
         private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
 
         public SqlDbIndexesSchemaSynchronizer(SqlDbClient dbClient, IDbColumnGenerator columnGenerator)
         {
             _dbClient = dbClient.AssertNotNull("dbClient");
-            _sqlStringsRepository = dbClient.SqlStringsRepository;
+            _sqlStatements = dbClient.SqlStatements;
             _columnGenerator = columnGenerator.AssertNotNull("columnGenerator");
             _dataTypeTranslator = new SqlDbDataTypeTranslator();
         }
@@ -55,7 +54,7 @@ namespace SisoDb.Providers.Sql2008.DbSchema
 
             var columnsDdl = columns.Select(sc => _columnGenerator.ToSql(sc.Name, sc.DbDataType));
             var columnsDdlCombined = string.Join(",", columnsDdl);
-            var sql = _sqlStringsRepository.GetSql("AddColumns")
+            var sql = _sqlStatements.GetSql("AddColumns")
                 .Inject(tableName, columnsDdlCombined);
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
@@ -71,7 +70,7 @@ namespace SisoDb.Providers.Sql2008.DbSchema
 
             var columnNames = columns.Select(sc => "[" + sc.Name + "]");
             var namesCombined = string.Join(",", columnNames);
-            var sql = _sqlStringsRepository.GetSql("DropColumns")
+            var sql = _sqlStatements.GetSql("DropColumns")
                 .Inject(tableName, namesCombined);
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))

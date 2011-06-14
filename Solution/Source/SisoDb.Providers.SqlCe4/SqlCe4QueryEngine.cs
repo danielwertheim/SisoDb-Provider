@@ -268,7 +268,7 @@ namespace SisoDb.Providers.SqlCe4
                 sql = query.Sql;
             }
             else
-                sql = DbClient.SqlStringsRepository.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
+                sql = DbClient.SqlStatements.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
 
             using (var cmd = DbClient.CreateCommand(CommandType.Text, sql))
             {

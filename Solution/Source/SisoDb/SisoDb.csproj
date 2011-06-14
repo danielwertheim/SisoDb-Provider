@@ -61,7 +61,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="ServiceStack.Text">
-      <HintPath>..\..\Libs\ServiceStack.Text\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.2.20\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -179,8 +179,8 @@
     <Compile Include="Core\Expressions\ExpressionUtils.cs" />
     <Compile Include="Providers\IIdentityGenerator.cs" />
     <Compile Include="Querying\Sql\ISqlQueryGenerator.cs" />
-    <Compile Include="Providers\SqlStrings\ISqlStringsRepository.cs" />
-    <Compile Include="Providers\SqlStrings\SqlStringsRepository.cs" />
+    <Compile Include="Providers\ISqlStatements.cs" />
+    <Compile Include="Providers\SqlStatementsBase.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
     <Compile Include="Querying\SortingExtensions.cs" />
     <Compile Include="Querying\Sql\SqlSorting.cs" />
@@ -259,16 +259,11 @@
     <Compile Include="Structures\UniqueModesExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.2008.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.SqlCe4.resx" />
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Providers\SqlStrings\SqlStrings.Azure.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\License-ServiceStack.txt">
@@ -280,7 +275,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

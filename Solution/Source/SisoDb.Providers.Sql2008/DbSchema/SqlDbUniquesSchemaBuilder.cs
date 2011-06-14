@@ -1,6 +1,5 @@
 ﻿using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
@@ -8,18 +7,18 @@ namespace SisoDb.Providers.Sql2008.DbSchema
 {
     public class SqlDbUniquesSchemaBuilder : IDbSchemaBuilder
     {
-        private readonly ISqlStringsRepository _sqlStringsRepository;
+        private readonly ISqlStatements _sqlStatements;
 
-        public SqlDbUniquesSchemaBuilder(ISqlStringsRepository sqlStringsRepository)
+        public SqlDbUniquesSchemaBuilder(ISqlStatements sqlStatements)
         {
-            _sqlStringsRepository = sqlStringsRepository;
+            _sqlStatements = sqlStatements;
         }
 
         public string GenerateSql(IStructureSchema structureSchema)
         {
             var sql = structureSchema.IdAccessor.IdType == IdTypes.Guid
-                          ? _sqlStringsRepository.GetSql("CreateUniquesGuid")
-                          : _sqlStringsRepository.GetSql("CreateUniquesIdentity");
+                          ? _sqlStatements.GetSql("CreateUniquesGuid")
+                          : _sqlStatements.GetSql("CreateUniquesIdentity");
 
             return sql.Inject(structureSchema.GetUniquesTableName());
         }

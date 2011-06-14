@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
@@ -10,13 +9,13 @@ namespace SisoDb.Providers.Sql2008.DbSchema
 {
     public class SqlDbIndexesSchemaBuilder : IDbSchemaBuilder
     {
-        private readonly ISqlStringsRepository _sqlStringsRepository;
+        private readonly ISqlStatements _sqlStatements;
         private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
         private readonly IDbColumnGenerator _columnGenerator;
 
-        public SqlDbIndexesSchemaBuilder(ISqlStringsRepository sqlStringsRepository, IDbColumnGenerator columnGenerator)
+        public SqlDbIndexesSchemaBuilder(ISqlStatements sqlStatements, IDbColumnGenerator columnGenerator)
         {
-            _sqlStringsRepository = sqlStringsRepository.AssertNotNull("sqlStringsRepository");
+            _sqlStatements = sqlStatements.AssertNotNull("SqlStatements");
             _columnGenerator = columnGenerator.AssertNotNull("columnGenerator");
             _dataTypeTranslator = new SqlDbDataTypeTranslator();
         }
@@ -27,8 +26,8 @@ namespace SisoDb.Providers.Sql2008.DbSchema
                 .Select(GenerateColumnDefinition);
             var columnsString = string.Join(",", columnDefinitions);
             var sql = structureSchema.IdAccessor.IdType == IdTypes.Guid
-                          ? _sqlStringsRepository.GetSql("CreateIndexesGuid")
-                          : _sqlStringsRepository.GetSql("CreateIndexesIdentity");
+                          ? _sqlStatements.GetSql("CreateIndexesGuid")
+                          : _sqlStatements.GetSql("CreateIndexesIdentity");
 
             return sql.Inject(
                 structureSchema.GetIndexesTableName(),

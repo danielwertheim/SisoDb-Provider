@@ -116,7 +116,7 @@ namespace SisoDb.Providers.Sql2008
         {
             using (var dbClient = new SqlDbClient(ConnectionInfo, false))
             {
-                var sql = dbClient.SqlStringsRepository.GetSql("GetAllById").Inject(StructureSchemaOld.GetStructureTableName());
+                var sql = dbClient.SqlStatements.GetSql("GetAllById").Inject(StructureSchemaOld.GetStructureTableName());
                 using (var cmd = dbClient.CreateCommand(CommandType.Text, sql))
                 {
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))

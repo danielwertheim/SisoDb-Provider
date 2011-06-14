@@ -3,7 +3,6 @@ using System.Data;
 using System.Data.SqlServerCe;
 using SisoDb.Core;
 using SisoDb.Core.Io;
-using SisoDb.Providers.SqlStrings;
 
 namespace SisoDb.Providers.SqlCe4.Dac
 {
@@ -25,13 +24,13 @@ namespace SisoDb.Providers.SqlCe4.Dac
 
         //internal IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
 
-        internal ISqlStringsRepository SqlStringsRepository { get; private set; }
+        internal ISqlStatements SqlStatements { get; private set; }
 
         internal SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo)
         {
             _connectionInfo = connectionInfo.AssertNotNull("connectionInfo");
 
-            SqlStringsRepository = new SqlStringsRepository(_connectionInfo.ProviderType);
+            SqlStatements = SqlCe4Statements.Instance;
             //DbDataTypeTranslator = new TSqlDbDataTypeTranslator();
 
             _connection = new SqlCeConnection(_connectionInfo.ConnectionString.PlainString);
@@ -52,7 +51,7 @@ namespace SisoDb.Providers.SqlCe4.Dac
 
         internal void InitializeExistingDb()
         {
-            var sqlCreateIdentitiesTables = SqlStringsRepository.GetSql("Sys_Identities_Create");
+            var sqlCreateIdentitiesTables = SqlStatements.GetSql("Sys_Identities_Create");
             
             using (var cmd = _connection.CreateCommand())
             {
@@ -61,7 +60,7 @@ namespace SisoDb.Providers.SqlCe4.Dac
 
                 cmd.ExecuteNonQuery();
 
-                //cmd.CommandText = SqlStringsRepository.GetSql("Sys_Types_Create");
+                //cmd.CommandText = SqlStatements.GetSql("Sys_Types_Create");
                 //cmd.ExecuteNonQuery();
             }
         }

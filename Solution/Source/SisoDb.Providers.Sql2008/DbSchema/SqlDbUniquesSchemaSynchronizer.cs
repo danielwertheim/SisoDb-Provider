@@ -4,7 +4,6 @@ using System.Linq;
 using SisoDb.Core;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.Dac;
-using SisoDb.Providers.SqlStrings;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Providers.Sql2008.DbSchema
@@ -16,12 +15,12 @@ namespace SisoDb.Providers.Sql2008.DbSchema
     public class SqlDbUniquesSchemaSynchronizer : IDbSchemaSynchronizer
     {
         private readonly SqlDbClient _dbClient;
-        private readonly ISqlStringsRepository _sqlStringsRepository;
+        private readonly ISqlStatements _sqlStatements;
 
         public SqlDbUniquesSchemaSynchronizer(SqlDbClient dbClient)
         {
             _dbClient = dbClient;
-            _sqlStringsRepository = dbClient.SqlStringsRepository;
+            _sqlStatements = dbClient.SqlStatements;
         }
 
         public void Synchronize(IStructureSchema structureSchema)
@@ -35,7 +34,7 @@ namespace SisoDb.Providers.Sql2008.DbSchema
         private void DeleteRecordsMatchingKeyNames(IStructureSchema structureSchema, IEnumerable<string> names)
         {
             var inString = string.Join(",", names.Select(n => "'" + n + "'"));
-            var sql = _sqlStringsRepository.GetSql("UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
+            var sql = _sqlStatements.GetSql("UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
                 .Inject(structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.UqName.Name, inString);
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
@@ -57,7 +56,7 @@ namespace SisoDb.Providers.Sql2008.DbSchema
             var dbColumns = new List<string>();
 
             _dbClient.SingleResultSequentialReader(CommandType.Text,
-                                                _sqlStringsRepository.GetSql("UniquesSchemaSynchronizer_GetKeyNames")
+                                                _sqlStatements.GetSql("UniquesSchemaSynchronizer_GetKeyNames")
                                                 .Inject(
                                                     UniqueStorageSchema.Fields.UqName.Name, structureSchema.GetUniquesTableName()),
                                                     dr => dbColumns.Add(dr.GetString(0)));

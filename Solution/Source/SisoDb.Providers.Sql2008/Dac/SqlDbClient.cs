@@ -10,7 +10,6 @@ using SisoDb.Core;
 using SisoDb.Providers.Dac;
 using SisoDb.Providers.DbSchema;
 using SisoDb.Providers.Sql2008.DbSchema;
-using SisoDb.Providers.SqlStrings;
 using SisoDb.Querying;
 using SisoDb.Resources;
 using SisoDb.Structures;
@@ -38,7 +37,7 @@ namespace SisoDb.Providers.Sql2008.Dac
 
         public IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
 
-        public ISqlStringsRepository SqlStringsRepository { get; private set; }
+        public ISqlStatements SqlStatements { get; private set; }
 
         public SqlDbClient(SqlConnectionInfo connectionInfo, bool transactional)
         {
@@ -47,7 +46,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             ProviderType = connectionInfo.ProviderType;
             ConnectionString = connectionInfo.ConnectionString;
 
-            SqlStringsRepository = new SqlStringsRepository(ProviderType);
+            SqlStatements = Sql2008Statements.Instance;
             DbDataTypeTranslator = new SqlDbDataTypeTranslator();
 
             _connection = new SqlConnection(ConnectionString.PlainString);
@@ -111,7 +110,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
-            var sql = SqlStringsRepository.GetSql("RebuildIndexes").Inject(
+            var sql = SqlStatements.GetSql("RebuildIndexes").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql))
@@ -138,7 +137,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
-            var sql = SqlStringsRepository.GetSql("DeleteById").Inject(
+            var sql = SqlStatements.GetSql("DeleteById").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("id", sisoId)))
@@ -153,7 +152,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
-            var sql = SqlStringsRepository.GetSql("DeleteByIds").Inject(
+            var sql = SqlStatements.GetSql("DeleteByIds").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql))
@@ -173,7 +172,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
             var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
-            var sql = SqlStringsRepository.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Sql, sqlDataType);
+            var sql = SqlStatements.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Sql, sqlDataType);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, cmdInfo.Parameters.ToArray()))
             {
@@ -187,7 +186,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
-            var sql = SqlStringsRepository.GetSql("DeleteWhereIdIsBetween").Inject(
+            var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("idFrom", sisoIdFrom), new QueryParameter("idTo", sisoIdTo)))
@@ -200,7 +199,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             name.AssertNotNullOrWhiteSpace("name");
 
-            var sql = SqlStringsRepository.GetSql("TableExists");
+            var sql = SqlStatements.GetSql("TableExists");
             var value = ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("tableName", name));
 
             return !string.IsNullOrWhiteSpace(value);
@@ -213,7 +212,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
             var dbColumns = new List<DbColumn>();
 
-            var sql = SqlStringsRepository.GetSql("GetColumns");
+            var sql = SqlStatements.GetSql("GetColumns");
 
             SingleResultSequentialReader(CommandType.Text, sql,
                 dr =>
@@ -231,7 +230,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
 
-            var sql = SqlStringsRepository.GetSql("RowCount").Inject(structureTableName);
+            var sql = SqlStatements.GetSql("RowCount").Inject(structureTableName);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
@@ -240,7 +239,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
 
-            var sql = SqlStringsRepository.GetSql("RowCountByQuery").Inject(indexesTableName, cmdInfo.Sql);
+            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(indexesTableName, cmdInfo.Sql);
 
             return ExecuteScalar<int>(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
@@ -249,7 +248,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             entityHash.AssertNotNullOrWhiteSpace("entityHash");
 
-            var sql = SqlStringsRepository.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
+            var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
             return ExecuteScalar<int>(CommandType.Text, sql,
                                                 new QueryParameter("entityHash", entityHash),
@@ -260,7 +259,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
 
-            var sql = SqlStringsRepository.GetSql("GetById").Inject(structureTableName);
+            var sql = SqlStatements.GetSql("GetById").Inject(structureTableName);
 
             return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", sisoId));
         }
@@ -269,7 +268,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
 
-            var sql = SqlStringsRepository.GetSql("GetByIds").Inject(structureTableName);
+            var sql = SqlStatements.GetSql("GetByIds").Inject(structureTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql))
             {
@@ -292,7 +291,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
 
-            var sql = SqlStringsRepository.GetSql("GetJsonWhereIdIsBetween").Inject(structureTableName);
+            var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("idFrom", sisoIdFrom), new QueryParameter("idTo", sisoIdTo)))
             {
