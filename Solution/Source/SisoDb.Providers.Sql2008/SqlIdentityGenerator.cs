@@ -1,8 +1,9 @@
 ﻿using SisoDb.Core;
-using SisoDb.Providers.Sql2008.Dac;
+using SisoDb.Providers;
+using SisoDb.Sql2008.Dac;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     public class SqlIdentityGenerator : IIdentityGenerator
     {

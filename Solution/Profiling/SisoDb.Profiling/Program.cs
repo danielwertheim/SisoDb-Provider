@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SisoDb.Profiling.Model;
-using SisoDb.Providers.Sql2008;
 
 namespace SisoDb.Profiling
 {
@@ -63,7 +62,7 @@ namespace SisoDb.Profiling
                 stopWatch.Reset();
             }
 
-            using (var unitOfWork = database.CreateUnitOfWork())
+            using (var unitOfWork = database.CreateQueryEngine())
             {
                 var rowCount = unitOfWork.Count<Customer>();
 

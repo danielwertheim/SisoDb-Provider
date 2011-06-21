@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using SisoDb.Querying;
+using SisoDb.Dac;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     [Serializable]
     internal class SqlCommandBuildInfo
@@ -13,6 +13,6 @@ namespace SisoDb.Providers.Sql2008
         public string OrderBySql { get; set; }
         public string IncludesSql { get; set; }
         public string WhereSql { get; set; }
-        public IList<IQueryParameter> WhereParams { get; set; }
+        public IList<IDacParameter> WhereParams { get; set; }
     }
 }

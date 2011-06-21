@@ -1,4 +1,4 @@
-namespace SisoDb.Providers.SqlCe4
+namespace SisoDb.SqlCe4
 {
     public class SqlCe4DbFactory : ISisoDbFactory
     {

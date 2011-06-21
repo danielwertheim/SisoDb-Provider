@@ -22,11 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Profiling", "Profiling", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Profiling", "Profiling\SisoDb.Profiling\SisoDb.Profiling.csproj", "{A3FDFDC3-EE16-4BE8-A01A-ADF5198D9240}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Providers.SqlCe4", "Source\SisoDb.Providers.SqlCe4\SisoDb.Providers.SqlCe4.csproj", "{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.SqlCe4", "Source\SisoDb.Providers.SqlCe4\SisoDb.SqlCe4.csproj", "{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Providers.SqlAzure", "Source\SisoDb.Providers.SqlAzure\SisoDb.Providers.SqlAzure.csproj", "{BE01AA89-F64C-4CDF-B936-EC973868E0F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.SqlAzure", "Source\SisoDb.Providers.SqlAzure\SisoDb.SqlAzure.csproj", "{BE01AA89-F64C-4CDF-B936-EC973868E0F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Providers.Sql2008", "Source\SisoDb.Providers.Sql2008\SisoDb.Providers.Sql2008.csproj", "{661D181A-AAE8-45AE-ABE8-379947DDF686}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Sql2008", "Source\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj", "{661D181A-AAE8-45AE-ABE8-379947DDF686}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Dynamic", "Source\SisoDb.Dynamic\SisoDb.Dynamic.csproj", "{A6AEE197-668A-4A08-98A7-F0CB76D359C0}"
 EndProject

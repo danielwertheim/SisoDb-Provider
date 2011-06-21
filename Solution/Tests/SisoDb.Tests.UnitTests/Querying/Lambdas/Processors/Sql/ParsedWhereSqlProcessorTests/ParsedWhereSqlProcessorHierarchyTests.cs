@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 
@@ -27,7 +28,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] {new QueryParameter("@p0", 42)};
+            var expectedParameters = new[] {new DacParameter("@p0", 42)};
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -51,7 +52,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -75,7 +76,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -101,7 +102,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
     }

@@ -2,13 +2,13 @@ using System;
 using System.Data.SqlServerCe;
 using SisoDb.Core;
 using SisoDb.Core.Io;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlCe4.Dac;
-using SisoDb.Providers.SqlCe4.Resources;
+using SisoDb.DbSchema;
+using SisoDb.SqlCe4.Dac;
+using SisoDb.SqlCe4.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.SqlCe4
+namespace SisoDb.SqlCe4
 {
     public class SqlCe4Database : ISisoDatabase
     {

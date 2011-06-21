@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 
@@ -35,11 +36,11 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
 
             var expectedParameters = new[]
             {
-                new QueryParameter("@p0", 42),
-                new QueryParameter("@p1", "A"),
-                new QueryParameter("@p2", 11),
-                new QueryParameter("@p3", "AA"),
-                new QueryParameter("@p4", 99)
+                new DacParameter("@p0", 42),
+                new DacParameter("@p1", "A"),
+                new DacParameter("@p2", 11),
+                new DacParameter("@p3", "AA"),
+                new DacParameter("@p4", 99)
             };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }

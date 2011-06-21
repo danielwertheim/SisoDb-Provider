@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Data.SqlClient;
 using SisoDb.Core;
-using SisoDb.Providers.Sql2008.Resources;
 using SisoDb.Resources;
+using SisoDb.Sql2008.Resources;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     [Serializable]
     public class SqlConnectionInfo : ISisoConnectionInfo

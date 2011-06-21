@@ -2,12 +2,13 @@
 using System.Data;
 using System.Linq;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
+using SisoDb.Sql2008.Dac;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Sql2008.DbSchema
 {
     /// <summary>
     /// Adds missing columns and Drops obsolete columns; to Indexes-table.

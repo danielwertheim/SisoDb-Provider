@@ -1,6 +1,7 @@
 using System;
+using SisoDb.Providers;
 
-namespace SisoDb.Providers.SqlCe4
+namespace SisoDb.SqlCe4
 {
     internal class SqlCe4Statements : SqlStatementsBase
     {

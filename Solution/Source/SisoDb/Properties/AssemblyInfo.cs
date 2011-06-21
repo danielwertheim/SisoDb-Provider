@@ -36,9 +36,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("3.0.0.0")]
 
 [assembly: InternalsVisibleTo("SisoDb.Dynamic")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.Sql2008")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.SqlAzure")]
-[assembly: InternalsVisibleTo("SisoDb.Providers.SqlCe4")]
+[assembly: InternalsVisibleTo("SisoDb.Sql2008")]
+[assembly: InternalsVisibleTo("SisoDb.SqlAzure")]
+[assembly: InternalsVisibleTo("SisoDb.SqlCe4")]
 
 #if DEPLOY
 #else

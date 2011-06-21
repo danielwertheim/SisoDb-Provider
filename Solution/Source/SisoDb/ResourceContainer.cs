@@ -1,6 +1,6 @@
 ﻿using System;
 using SisoDb.Cryptography;
-using SisoDb.Providers.DbSchema;
+using SisoDb.DbSchema;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;

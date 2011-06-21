@@ -1,6 +1,6 @@
-﻿using SisoDb.Providers.DbSchema;
+﻿using SisoDb.DbSchema;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Sql2008.DbSchema
 {
     public class SqlDbColumnGenerator : IDbColumnGenerator
     {

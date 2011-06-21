@@ -25,12 +25,12 @@ namespace SisoDb.Structures
             Uniques = new HashSet<IStructureIndex>();
         }
 
-        public Structure(string typeName, ISisoId id, IEnumerable<IStructureIndex> indexes, string json)
+        public Structure(string name, ISisoId id, IEnumerable<IStructureIndex> indexes, string json)
         {
-            typeName.AssertNotNullOrWhiteSpace("typeName");
+            name.AssertNotNullOrWhiteSpace("name");
             id.AssertNotNull("id");
 
-            Name = typeName;
+            Name = name;
             Id = id;
             Json = json;
 

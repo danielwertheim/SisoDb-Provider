@@ -1,11 +1,12 @@
 ﻿using System.Data;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.Dac;
-using SisoDb.Querying;
+using SisoDb.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
+using SisoDb.Sql2008.Dac;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Sql2008.DbSchema
 {
     public class SqlDbSchemaDropper : IDbSchemaDropper
     {
@@ -23,7 +24,7 @@ namespace SisoDb.Providers.Sql2008.DbSchema
                 structureSchema.GetStructureTableName(),
                 structureSchema.GetUniquesTableName());
 
-            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql, new QueryParameter("entityHash", structureSchema.Hash)))
+            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql, new DacParameter("entityHash", structureSchema.Hash)))
             {
                 cmd.ExecuteNonQuery();
             }

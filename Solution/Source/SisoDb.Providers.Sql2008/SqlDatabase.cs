@@ -1,15 +1,15 @@
 using System;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.Dac;
-using SisoDb.Providers.Sql2008.DbSchema;
+using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 using SisoDb.Resources;
+using SisoDb.Sql2008.Dac;
+using SisoDb.Sql2008.DbSchema;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     public class SqlDatabase : ISisoDatabase
     {

@@ -1,6 +1,7 @@
 using System;
+using SisoDb.Providers;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     internal class Sql2008Statements : SqlStatementsBase
     {

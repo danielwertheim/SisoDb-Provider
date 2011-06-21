@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using SisoDb.Dac;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Querying.Sql;
@@ -17,7 +18,7 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
 
         public ISqlWhere Process(IParsedLambda lambda)
         {
-            var queryParams = new HashSet<QueryParameter>();
+            var queryParams = new HashSet<DacParameter>();
             var sql = new StringBuilder();
 
             foreach (var node in lambda.Nodes)
@@ -39,7 +40,7 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
                 {
                     var valueNode = (ValueNode)node;
                     var name = "@p" + queryParams.Count;
-                    var param = new QueryParameter(name, valueNode.Value);
+                    var param = new DacParameter(name, valueNode.Value);
                     queryParams.Add(param);
                     sql.Append(param.Name);
                 }

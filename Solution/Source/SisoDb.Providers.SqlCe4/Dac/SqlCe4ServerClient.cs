@@ -2,9 +2,9 @@
 using System.Data;
 using System.Data.SqlServerCe;
 using SisoDb.Core;
-using SisoDb.Core.Io;
+using SisoDb.Providers;
 
-namespace SisoDb.Providers.SqlCe4.Dac
+namespace SisoDb.SqlCe4.Dac
 {
     /// <summary>
     /// Performs the ADO.Net communication for the Sql-provider and

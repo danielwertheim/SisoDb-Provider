@@ -1,7 +1,7 @@
 ﻿using System;
-using SisoDb.Providers.Sql2008;
+using SisoDb.Sql2008;
 
-namespace SisoDb.Providers.SqlAzure
+namespace SisoDb.SqlAzure
 {
     public class SqlAzureDatabase : SqlDatabase
     {

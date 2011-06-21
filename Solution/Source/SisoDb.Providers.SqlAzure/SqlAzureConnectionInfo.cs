@@ -1,9 +1,9 @@
 ﻿using System;
-using SisoDb.Providers.Sql2008;
 using SisoDb.Core;
-using SisoDb.Providers.SqlAzure.Resources;
+using SisoDb.Sql2008;
+using SisoDb.SqlAzure.Resources;
 
-namespace SisoDb.Providers.SqlAzure
+namespace SisoDb.SqlAzure
 {
     [Serializable]
     public class SqlAzureConnectionInfo : SqlConnectionInfo

@@ -1,6 +1,6 @@
-﻿using SisoDb.Providers.DbSchema;
+﻿using SisoDb.DbSchema;
 
-namespace SisoDb.Providers.SqlCe4.DbSchema
+namespace SisoDb.SqlCe4.DbSchema
 {
     public class SqlCe4DbColumnGenerator : IDbColumnGenerator
     {

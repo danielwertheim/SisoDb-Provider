@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using SisoDb.Commands;
 using SisoDb.Core;
+using SisoDb.Dac;
+using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     public class SqlQueryGenerator : ISqlQueryGenerator
     {
@@ -81,10 +83,10 @@ namespace SisoDb.Providers.Sql2008
 
             var takeFromRowNum = (paging.PageIndex * paging.PageSize) + 1;
             var takeToRowNum = (takeFromRowNum + paging.PageSize) - 1;
-            var queryParams = new List<IQueryParameter>(sqlCommandBuildInfo.WhereParams)
+            var queryParams = new List<IDacParameter>(sqlCommandBuildInfo.WhereParams)
             {
-                new QueryParameter("@pagingFrom", takeFromRowNum),
-                new QueryParameter("@pagingTo", takeToRowNum)
+                new DacParameter("@pagingFrom", takeFromRowNum),
+                new DacParameter("@pagingTo", takeToRowNum)
             };
 
             return new SqlCommandInfo(sql, queryParams);
@@ -98,17 +100,17 @@ namespace SisoDb.Providers.Sql2008
             return string.Format("top({0}) ", queryCommand.TakeNumOfStructures);
         }
 
-        private Tuple<string, IList<IQueryParameter>> GenerateWhereStringAndParams(IQueryCommand queryCommand)
+        private Tuple<string, IList<IDacParameter>> GenerateWhereStringAndParams(IQueryCommand queryCommand)
         {
             if (!queryCommand.HasWhere)
-                return new Tuple<string, IList<IQueryParameter>>(string.Empty, new List<IQueryParameter>());
+                return new Tuple<string, IList<IDacParameter>>(string.Empty, new List<IDacParameter>());
 
             var where = _parsedWhereProcessor.Process(queryCommand.Where);
             var sql = string.IsNullOrWhiteSpace(where.Sql)
                 ? string.Empty
                 : " where " + where.Sql;
 
-            return new Tuple<string, IList<IQueryParameter>>(sql, where.Parameters);
+            return new Tuple<string, IList<IDacParameter>>(sql, where.Parameters);
         }
 
         private string GenerateSortingString(IQueryCommand queryCommand)

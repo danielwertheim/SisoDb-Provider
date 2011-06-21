@@ -1,7 +1,8 @@
-﻿using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlAzure.DbSchema;
+﻿using SisoDb.DbSchema;
+using SisoDb.Providers;
+using SisoDb.SqlAzure.DbSchema;
 
-namespace SisoDb.Providers.SqlAzure
+namespace SisoDb.SqlAzure
 {
     public class SqlAzureProviderFactory : ISisoProviderFactory
     {

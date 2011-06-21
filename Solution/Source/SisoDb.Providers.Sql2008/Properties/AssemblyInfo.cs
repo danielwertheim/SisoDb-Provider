@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SisoDb.Providers.Sql2008")]
+[assembly: AssemblyTitle("SisoDb.Sql2008")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Daniel Wertheim")]
-[assembly: AssemblyProduct("SisoDb.Providers.Sql2008")]
+[assembly: AssemblyProduct("SisoDb.Sql2008")]
 [assembly: AssemblyCopyright("Copyright © Daniel Wertheim 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

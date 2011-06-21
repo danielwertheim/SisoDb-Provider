@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using SisoDb.Core;
-using SisoDb.Providers.Sql2008.BulkInserts;
-using SisoDb.Providers.Sql2008.Dac;
-using SisoDb.Providers.Sql2008.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Resources;
+using SisoDb.Sql2008.Dac;
+using SisoDb.Sql2008.DbSchema;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     public class SqlStructureSetUpdater<TOld, TNew>
         where TOld : class

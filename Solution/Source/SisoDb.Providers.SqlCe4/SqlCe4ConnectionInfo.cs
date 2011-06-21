@@ -2,9 +2,9 @@
 using System.Data.SqlServerCe;
 using System.IO;
 using SisoDb.Core;
-using SisoDb.Providers.SqlCe4.Resources;
+using SisoDb.SqlCe4.Resources;
 
-namespace SisoDb.Providers.SqlCe4
+namespace SisoDb.SqlCe4
 {
     [Serializable]
     public class SqlCe4ConnectionInfo : ISisoConnectionInfo

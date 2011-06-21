@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SisoDb.Dac;
 
 namespace SisoDb.Querying
 {
@@ -6,8 +7,8 @@ namespace SisoDb.Querying
     {
         string Name { get; }
 
-        IEnumerable<IQueryParameter> Parameters { get; }
+        IEnumerable<IDacParameter> Parameters { get; }
 
-        void Add(params IQueryParameter[] parameters);
+        void Add(params IDacParameter[] parameters);
     }
 }

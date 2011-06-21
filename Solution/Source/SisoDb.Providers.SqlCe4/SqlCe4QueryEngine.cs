@@ -6,15 +6,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlCe4.Dac;
+using SisoDb.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Serialization;
+using SisoDb.SqlCe4.Dac;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.SqlCe4
+namespace SisoDb.SqlCe4
 {
     public class SqlCe4QueryEngine : IQueryEngine
     {
@@ -371,7 +373,7 @@ namespace SisoDb.Providers.SqlCe4
             UpsertStructureSet(structureSchema);
 
             var query = QueryGenerator.Generate(queryCommand, structureSchema);
-            var parameters = query.Parameters.Select(p => new QueryParameter(p.Name, p.Value)).ToArray();
+            var parameters = query.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
             using (var cmd = DbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
             {

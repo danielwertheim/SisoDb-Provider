@@ -1,4 +1,4 @@
-﻿namespace SisoDb.Providers.SqlAzure
+﻿namespace SisoDb.SqlAzure
 {
     public class SqlAzureDbFactory : ISisoDbFactory
     {

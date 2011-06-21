@@ -1,7 +1,8 @@
-﻿using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlCe4.DbSchema;
+﻿using SisoDb.DbSchema;
+using SisoDb.Providers;
+using SisoDb.SqlCe4.DbSchema;
 
-namespace SisoDb.Providers.SqlCe4
+namespace SisoDb.SqlCe4
 {
     public class SqlCe4ProviderFactory : ISisoProviderFactory
     {

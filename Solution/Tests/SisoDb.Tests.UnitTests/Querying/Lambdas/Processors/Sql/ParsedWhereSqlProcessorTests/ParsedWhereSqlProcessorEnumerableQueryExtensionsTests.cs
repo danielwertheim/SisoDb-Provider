@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 
@@ -27,7 +28,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "%<$Alpha$>%"), new QueryParameter("@p1", "%<$Bravo$>%") };
+            var expectedParameters = new[] { new DacParameter("@p0", "%<$Alpha$>%"), new DacParameter("@p1", "%<$Bravo$>%") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -51,7 +52,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "%<$3.14$>%"), new QueryParameter("@p1", "%<$-1.89$>%") };
+            var expectedParameters = new[] { new DacParameter("@p0", "%<$3.14$>%"), new DacParameter("@p1", "%<$-1.89$>%") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -75,7 +76,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "%<$42$>%") };
+            var expectedParameters = new[] { new DacParameter("@p0", "%<$42$>%") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -99,7 +100,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "%<$42$>%"), new QueryParameter("@p1", "%<$55$>%") };
+            var expectedParameters = new[] { new DacParameter("@p0", "%<$42$>%"), new DacParameter("@p1", "%<$55$>%") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -123,7 +124,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "%<$42$>%") };
+            var expectedParameters = new[] { new DacParameter("@p0", "%<$42$>%") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -147,7 +148,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "%<$42$>%") };
+            var expectedParameters = new[] { new DacParameter("@p0", "%<$42$>%") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
     }

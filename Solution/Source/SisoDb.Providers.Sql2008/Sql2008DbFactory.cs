@@ -1,4 +1,4 @@
-﻿namespace SisoDb.Providers.Sql2008
+﻿namespace SisoDb.Sql2008
 {
     public class Sql2008DbFactory : ISisoDbFactory
     {

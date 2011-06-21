@@ -1,11 +1,12 @@
 ﻿using System.Data;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.Dac;
-using SisoDb.Querying;
+using SisoDb.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
+using SisoDb.Sql2008.Dac;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008.DbSchema
+namespace SisoDb.Sql2008.DbSchema
 {
     public class SqlDbSchemaUpserter : IDbSchemaUpserter
     {
@@ -54,8 +55,8 @@ namespace SisoDb.Providers.Sql2008.DbSchema
             var uniquesSql = uniquesTableExists ? "" : _uniquesDbSchemaBuilder.GenerateSql(structureSchema);
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, null,
-                new QueryParameter("entityHash", structureSchema.Hash),
-                new QueryParameter("entityName", structureSchema.Name)))
+                new DacParameter("entityHash", structureSchema.Hash),
+                new DacParameter("entityName", structureSchema.Name)))
             {
                 if (!structuresTableExists)
                 {

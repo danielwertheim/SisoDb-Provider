@@ -4,17 +4,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlCe4.BulkInserts;
-using SisoDb.Providers.SqlCe4.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Serialization;
+using SisoDb.SqlCe4.BulkInserts;
+using SisoDb.SqlCe4.Dac;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.SqlCe4
+namespace SisoDb.SqlCe4
 {
     public class SqlCe4UnitOfWork : SqlCe4QueryEngine, IUnitOfWork
     {

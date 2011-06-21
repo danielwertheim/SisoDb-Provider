@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SisoDb.Dac;
 using SisoDb.Querying;
 
 namespace SisoDb.Commands
@@ -6,6 +7,6 @@ namespace SisoDb.Commands
     public interface ISqlCommandInfo
     {
         string Sql { get; }
-        IList<IQueryParameter> Parameters { get; }
+        IList<IDacParameter> Parameters { get; }
     }
 }

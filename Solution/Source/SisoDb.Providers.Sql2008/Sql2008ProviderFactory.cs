@@ -1,7 +1,8 @@
-﻿using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.DbSchema;
+﻿using SisoDb.DbSchema;
+using SisoDb.Providers;
+using SisoDb.Sql2008.DbSchema;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     public class Sql2008ProviderFactory : ISisoProviderFactory
     {

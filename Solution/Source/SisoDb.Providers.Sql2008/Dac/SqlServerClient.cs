@@ -2,11 +2,11 @@
 using System.Data;
 using System.Data.SqlClient;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Querying;
+using SisoDb.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
 
-namespace SisoDb.Providers.Sql2008.Dac
+namespace SisoDb.Sql2008.Dac
 {
     /// <summary>
     /// Performs the ADO.Net communication for the Sql-provider and
@@ -54,7 +54,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         {
             var sql = SqlStatements.GetSql("DatabaseExists");
 
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sql, new QueryParameter("dbName", name)))
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sql, new DacParameter("dbName", name)))
             {
                 return cmd.GetScalarResult<int>() > 0;
             }

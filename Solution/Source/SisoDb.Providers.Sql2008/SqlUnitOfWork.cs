@@ -4,20 +4,22 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.Core;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.BulkInserts;
-using SisoDb.Providers.Sql2008.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Serialization;
+using SisoDb.Sql2008.Dac;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.Sql2008
+namespace SisoDb.Sql2008
 {
     public class SqlUnitOfWork : SqlQueryEngine, IUnitOfWork
     {
+        private const int BatchSize = 1000;
+
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IStructureBuilder _structureBuilder;
 
@@ -31,7 +33,7 @@ namespace SisoDb.Providers.Sql2008
             IJsonSerializer jsonSerializer,
             IJsonBatchDeserializer jsonBatchDeserializer,
             ISqlQueryGenerator queryGenerator,
-            ICommandBuilderFactory commandBuilderFactory) 
+            ICommandBuilderFactory commandBuilderFactory)
             : base(dbClient, dbSchemaManager, dbSchemaUpserter, structureSchemas, jsonSerializer, jsonBatchDeserializer, queryGenerator, commandBuilderFactory)
         {
             _identityGenerator = identityGenerator.AssertNotNull("identityGenerator");
@@ -67,25 +69,46 @@ namespace SisoDb.Providers.Sql2008
             InsertMany(JsonBatchDeserializer.Deserialize<T>(json).ToList());
         }
 
-        private void DoInsert<T>(IStructureSchema structureSchema, IEnumerable<T> items) where T : class 
+        private void DoInsert<T>(IStructureSchema structureSchema, IEnumerable<T> items) where T : class
         {
-            if (items.Count() < 1)
-                return;
+            var itemsCount = items.Count();
 
+            if (itemsCount == 1)
+                DoSingleInsert(structureSchema, items.SingleOrDefault());
+            else if (itemsCount > 1)
+                DoBatchInsert(structureSchema, items);
+        }
+
+        private void DoSingleInsert<T>(IStructureSchema structureSchema, T item) where T : class
+        {
+            var sisoId = structureSchema.IdAccessor.IdType == IdTypes.Identity
+                                 ? SisoId.NewIdentityId(_identityGenerator.CheckOutAndGetSeed(structureSchema, 1))
+                                 : SisoId.NewGuidId(SequentialGuid.NewSqlCompatibleGuid());
+
+            structureSchema.IdAccessor.SetValue(item, sisoId.Value);
+
+            var structure = _structureBuilder.CreateStructure(item, structureSchema);
+
+            var singleInserter = new SqlSingleInserter(DbClient);
+            singleInserter.Insert(structureSchema, structure);
+        }
+
+        private void DoBatchInsert<T>(IStructureSchema structureSchema, IEnumerable<T> items) where T : class
+        {
             var hasIdentity = structureSchema.IdAccessor.IdType == IdTypes.Identity;
-            
+
             var bulkInserter = new SqlBulkInserter(DbClient);
 
             if (hasIdentity)
             {
                 var seed = _identityGenerator.CheckOutAndGetSeed(structureSchema, items.Count());
 
-                foreach (var structures in _structureBuilder.CreateBatchedIdentityStructures(items, structureSchema, 1000, seed))
+                foreach (var structures in _structureBuilder.CreateBatchedIdentityStructures(items, structureSchema, BatchSize, seed))
                     bulkInserter.Insert(structureSchema, structures);
             }
             else
             {
-                foreach (var structures in _structureBuilder.CreateBatchedGuidStructures(items, structureSchema, 1000))
+                foreach (var structures in _structureBuilder.CreateBatchedGuidStructures(items, structureSchema, BatchSize))
                     bulkInserter.Insert(structureSchema, structures);
             }
         }
@@ -107,8 +130,8 @@ namespace SisoDb.Providers.Sql2008
 
             DeleteById<T>(updatedStructure.Id);
 
-            var bulkInserter = new SqlBulkInserter(DbClient);
-            bulkInserter.Insert(structureSchema, new[] { updatedStructure });
+            var singleInserter = new SqlSingleInserter(DbClient);
+            singleInserter.Insert(structureSchema, updatedStructure);
         }
 
         [DebuggerStepThrough]
@@ -165,9 +188,9 @@ namespace SisoDb.Providers.Sql2008
             UpsertStructureSet(structureSchema);
 
             DbClient.DeleteWhereIdIsBetween(
-                idFrom, idTo, 
-                structureSchema.GetStructureTableName(), 
-                structureSchema.GetIndexesTableName(), 
+                idFrom, idTo,
+                structureSchema.GetStructureTableName(),
+                structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName());
         }
 

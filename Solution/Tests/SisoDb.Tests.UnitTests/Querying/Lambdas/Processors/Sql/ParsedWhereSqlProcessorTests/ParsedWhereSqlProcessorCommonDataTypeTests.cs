@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
+using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 
@@ -29,7 +30,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -53,7 +54,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -77,7 +78,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -103,7 +104,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -127,7 +128,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", -42) };
+            var expectedParameters = new[] { new DacParameter("@p0", -42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -151,7 +152,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 42) };
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -175,7 +176,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", 3.14M) };
+            var expectedParameters = new[] { new DacParameter("@p0", 3.14M) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -199,7 +200,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", false) };
+            var expectedParameters = new[] { new DacParameter("@p0", false) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -223,7 +224,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", true) };
+            var expectedParameters = new[] { new DacParameter("@p0", true) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -247,7 +248,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", true) };
+            var expectedParameters = new[] { new DacParameter("@p0", true) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -271,7 +272,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", false) };
+            var expectedParameters = new[] { new DacParameter("@p0", false) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -297,7 +298,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", guid) };
+            var expectedParameters = new[] { new DacParameter("@p0", guid) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -321,7 +322,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", Guid.Empty) };
+            var expectedParameters = new[] { new DacParameter("@p0", Guid.Empty) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -347,7 +348,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", dateTime) };
+            var expectedParameters = new[] { new DacParameter("@p0", dateTime) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -371,7 +372,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameter = new QueryParameter("@p0", DateTime.Now);
+            var expectedParameter = new DacParameter("@p0", DateTime.Now);
             var actualParameter = query.Parameters.Single();
             var dateTimeNowDelta = DateTime.Now.Subtract((DateTime)actualParameter.Value);
             Assert.AreEqual(expectedParameter.Name, actualParameter.Name);
@@ -398,7 +399,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "Adam") };
+            var expectedParameters = new[] { new DacParameter("@p0", "Adam") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -422,7 +423,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "Adam") };
+            var expectedParameters = new[] { new DacParameter("@p0", "Adam") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -446,7 +447,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", string.Empty) };
+            var expectedParameters = new[] { new DacParameter("@p0", string.Empty) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -518,7 +519,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", value) };
+            var expectedParameters = new[] { new DacParameter("@p0", value) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -544,7 +545,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", value) };
+            var expectedParameters = new[] { new DacParameter("@p0", value) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
     }

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SisoDb.Providers.BulkInserts;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.SqlCe4.Dac;
+using SisoDb.Dac.BulkInserts;
+using SisoDb.DbSchema;
+using SisoDb.SqlCe4.Dac;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Providers.SqlCe4.BulkInserts
+namespace SisoDb.SqlCe4.BulkInserts
 {
     public class SqlCe4BulkInserter
     {
@@ -56,7 +56,7 @@ namespace SisoDb.Providers.SqlCe4.BulkInserts
                 bulkInserter.DestinationTableName = structures.StorageSchema.Name;
                 bulkInserter.NotifyAfter = 0;
 
-                foreach (var field in structures.StorageSchema.FieldsByIndex.Values)
+                foreach (var field in structures.StorageSchema.GetFieldsOrderedByIndex())
                     bulkInserter.ColumnMappings.Add(field.Name, field.Name);
 
                 bulkInserter.WriteToServer(structures);
@@ -72,7 +72,7 @@ namespace SisoDb.Providers.SqlCe4.BulkInserts
                 bulkInserter.DestinationTableName = indexes.StorageSchema.Name;
                 bulkInserter.NotifyAfter = 0;
 
-                foreach (var field in indexes.StorageSchema.FieldsByIndex.Values)
+                foreach (var field in indexes.StorageSchema.GetFieldsOrderedByIndex())
                     bulkInserter.ColumnMappings.Add(field.Name, field.Name);
 
                 bulkInserter.WriteToServer(indexes);
@@ -88,7 +88,7 @@ namespace SisoDb.Providers.SqlCe4.BulkInserts
                 bulkInserter.DestinationTableName = uniques.StorageSchema.Name;
                 bulkInserter.NotifyAfter = 0;
 
-                foreach (var field in uniques.StorageSchema.FieldsByIndex.Values)
+                foreach (var field in uniques.StorageSchema.GetFieldsOrderedByIndex())
                     bulkInserter.ColumnMappings.Add(field.Name, field.Name);
 
                 bulkInserter.WriteToServer(uniques);

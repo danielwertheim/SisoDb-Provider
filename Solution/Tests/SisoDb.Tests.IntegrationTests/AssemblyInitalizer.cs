@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
-using SisoDb.Providers.Sql2008;
-using SisoDb.Providers.SqlCe4;
+using SisoDb.Sql2008;
+using SisoDb.SqlCe4;
 
 namespace SisoDb.Tests.IntegrationTests
 {

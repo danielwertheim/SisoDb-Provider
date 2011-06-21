@@ -7,14 +7,13 @@ using System.Transactions;
 using Microsoft.SqlServer.Server;
 using SisoDb.Commands;
 using SisoDb.Core;
-using SisoDb.Providers.Dac;
-using SisoDb.Providers.DbSchema;
-using SisoDb.Providers.Sql2008.DbSchema;
-using SisoDb.Querying;
+using SisoDb.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Resources;
 using SisoDb.Structures;
 
-namespace SisoDb.Providers.Sql2008.Dac
+namespace SisoDb.Sql2008.Dac
 {
     /// <summary>
     /// Performs the ADO.Net communication for the Sql-provider for a
@@ -119,7 +118,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             }
         }
 
-        public IDbCommand CreateCommand(CommandType commandType, string sql, params IQueryParameter[] parameters)
+        public IDbCommand CreateCommand(CommandType commandType, string sql, params IDacParameter[] parameters)
         {
             return _connection.CreateCommand(_transaction, commandType, sql, parameters);
         }
@@ -140,7 +139,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             var sql = SqlStatements.GetSql("DeleteById").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("id", sisoId)))
+            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("id", sisoId)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -189,7 +188,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("idFrom", sisoIdFrom), new QueryParameter("idTo", sisoIdTo)))
+            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", sisoIdFrom), new DacParameter("idTo", sisoIdTo)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -200,7 +199,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             name.AssertNotNullOrWhiteSpace("name");
 
             var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("tableName", name));
+            var value = ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("tableName", name));
 
             return !string.IsNullOrWhiteSpace(value);
         }
@@ -221,7 +220,7 @@ namespace SisoDb.Providers.Sql2008.Dac
                     if (!tmpNamesToSkip.Contains(name))
                         dbColumns.Add(new DbColumn(name, dr.GetString(1)));
                 },
-                new QueryParameter("tableName", tableName));
+                new DacParameter("tableName", tableName));
 
             return dbColumns;
         }
@@ -251,8 +250,8 @@ namespace SisoDb.Providers.Sql2008.Dac
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
             return ExecuteScalar<int>(CommandType.Text, sql,
-                                                new QueryParameter("entityHash", entityHash),
-                                                new QueryParameter("numOfIds", numOfIds));
+                                                new DacParameter("entityHash", entityHash),
+                                                new DacParameter("numOfIds", numOfIds));
         }
 
         public string GetJsonById(ValueType sisoId, string structureTableName)
@@ -261,7 +260,7 @@ namespace SisoDb.Providers.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("GetById").Inject(structureTableName);
 
-            return ExecuteScalar<string>(CommandType.Text, sql, new QueryParameter("id", sisoId));
+            return ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("id", sisoId));
         }
 
         public IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName)
@@ -293,7 +292,7 @@ namespace SisoDb.Providers.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureTableName);
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new QueryParameter("idFrom", sisoIdFrom), new QueryParameter("idTo", sisoIdTo)))
+            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", sisoIdFrom), new DacParameter("idTo", sisoIdTo)))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
@@ -342,7 +341,7 @@ namespace SisoDb.Providers.Sql2008.Dac
             return record;
         }
 
-        private T ExecuteScalar<T>(CommandType commandType, string sql, params IQueryParameter[] parameters)
+        private T ExecuteScalar<T>(CommandType commandType, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(commandType, sql, parameters))
             {
@@ -351,7 +350,7 @@ namespace SisoDb.Providers.Sql2008.Dac
         }
 
         public void SingleResultSequentialReader(CommandType commandType, string sql,
-            Action<IDataRecord> callback, params IQueryParameter[] parameters)
+            Action<IDataRecord> callback, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(commandType, sql, parameters))
             {

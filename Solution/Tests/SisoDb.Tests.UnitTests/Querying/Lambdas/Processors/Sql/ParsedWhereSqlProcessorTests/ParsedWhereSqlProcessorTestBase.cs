@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
@@ -24,7 +25,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             return _whereParser.Parse(e);
         }
 
-        protected void AssertQueryParameters(IEnumerable<IQueryParameter> expected, IEnumerable<IQueryParameter> actual)
+        protected void AssertQueryParameters(IEnumerable<IDacParameter> expected, IEnumerable<IDacParameter> actual)
         {
             CustomAssert.AreEqual(expected, actual, (x, y) => x.Name.Equals(y.Name) && Equals(x.Value, y.Value));
         }

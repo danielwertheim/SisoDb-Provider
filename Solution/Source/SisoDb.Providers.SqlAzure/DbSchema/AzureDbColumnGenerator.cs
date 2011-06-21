@@ -1,6 +1,6 @@
-﻿using SisoDb.Providers.DbSchema;
+﻿using SisoDb.DbSchema;
 
-namespace SisoDb.Providers.SqlAzure.DbSchema
+namespace SisoDb.SqlAzure.DbSchema
 {
     public class AzureDbColumnGenerator : IDbColumnGenerator
     {

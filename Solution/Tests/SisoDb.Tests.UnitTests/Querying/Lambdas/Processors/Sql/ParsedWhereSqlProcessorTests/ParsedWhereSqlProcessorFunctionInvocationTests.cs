@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 
@@ -28,7 +29,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", new DateTime(2010, 11, 12)) };
+            var expectedParameters = new[] { new DacParameter("@p0", new DateTime(2010, 11, 12)) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -52,7 +53,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", new DateTime(2010, 11, 12)) };
+            var expectedParameters = new[] { new DacParameter("@p0", new DateTime(2010, 11, 12)) };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
 
@@ -78,7 +79,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
             var query = processor.Process(parsedLambda);
 
-            var expectedParameters = new[] { new QueryParameter("@p0", "2010-11-12 00:00:00") };
+            var expectedParameters = new[] { new DacParameter("@p0", "2010-11-12 00:00:00") };
             AssertQueryParameters(expectedParameters, query.Parameters);
         }
     }
