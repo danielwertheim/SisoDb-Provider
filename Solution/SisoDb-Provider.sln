@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		License-ServiceStack.txt = License-ServiceStack.txt
 		License-SisoDb.txt = License-SisoDb.txt
 		Releasenotes.txt = Releasenotes.txt
+		Samples.txt = Samples.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Tests.UnitTests", "Tests\SisoDb.Tests.UnitTests\SisoDb.Tests.UnitTests.csproj", "{73C5C30B-36DE-4A5E-A64D-CD06A63A601C}"

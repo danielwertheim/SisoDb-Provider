@@ -8,6 +8,7 @@ v3.1
 [Fixed]		Single Insert method on UnitOfWork does not forward call to InsertMany anymore. Hence for "UoW.Insert" no bulk insert is performed, which leads to less overhead; while "UoW.InsertMany" still makes use of bulkinserts.
 [New]		Foreign-keys and relations are now used between Structure, Indexes and Uniques table.
 [Updated]	IMPORTANT! Skiped "Providers" in the namespace for each provider plugin and rearranged some internal code.
+[Updated]	Latest release of ServiceStack.Text, which now is resolved as a NuGet package.
 
 v3.0        2011-05-18
 [New]       IMPORTANT! As of now SisoDb has been divided in a core assembly "SisoDb" and a provider assembly "SisoDb.Providers.Sql2008". Other providers are work in progress.

@@ -2,10 +2,10 @@
 <package> 
   <metadata> 
     <id>ServiceStack.Text</id> 
-    <version>2.20</version> 
+    <version>2.26</version> 
     <authors>Demis Bellot</authors> 
     <owners>Demis Bellot</owners>
-    <description>.NET's fastest JSON, JSV and CSV Text Serializers</description> 
+    <description>.NET's fastest JSON, JSV and CSV Text Serializers (3x faster than JSON.NET)</description> 
     <projectUrl>https://github.com/ServiceStack/ServiceStack.Text</projectUrl>
     <licenseUrl>https://github.com/ServiceStack/ServiceStack.Text/blob/master/LICENSE</licenseUrl>
     <iconUrl>http://www.servicestack.net/logo-32x32.png</iconUrl>

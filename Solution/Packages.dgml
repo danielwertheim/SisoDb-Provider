@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="SisoDb.Dynamic" Label="SisoDb.Dynamic" Category="Project" />
+    <Node Id="ServiceStack.Text 2.20" Label="ServiceStack.Text 2.20" Category="Package" />
+    <Node Id="Tests\SisoDb.Tests.IntegrationTests" Label="SisoDb.Tests.IntegrationTests" Category="Project" />
+    <Node Id="Moq 4.0.10827" Label="Moq 4.0.10827" Category="Package" />
+    <Node Id="NUnit 2.5.10.11092" Label="NUnit 2.5.10.11092" Category="Package" />
+    <Node Id="Tests\SisoDb.Tests.UnitTests" Label="SisoDb.Tests.UnitTests" Category="Project" />
+    <Node Id="Moq 4.0.10827" Label="Moq 4.0.10827" Category="Package" />
+    <Node Id="NUnit 2.5.10.11092" Label="NUnit 2.5.10.11092" Category="Package" />
+    <Node Id="Tests\SisoDb.TestUtils" Label="SisoDb.TestUtils" Category="Project" />
+    <Node Id="NUnit 2.5.10.11092" Label="NUnit 2.5.10.11092" Category="Package" />
+    <Node Id="Moq 4.0.10827" Label="Moq 4.0.10827" Category="Package" />
+    <Node Id="SisoDb" Label="SisoDb" Category="Project" />
+    <Node Id="ServiceStack.Text 2.20" Label="ServiceStack.Text 2.20" Category="Package" />
+  </Nodes>
+  <Links>
+    <Link Source="SisoDb.Dynamic" Target="ServiceStack.Text 2.20" Category="Installed Package" />
+    <Link Source="Tests\SisoDb.Tests.IntegrationTests" Target="Moq 4.0.10827" Category="Installed Package" />
+    <Link Source="Tests\SisoDb.Tests.IntegrationTests" Target="NUnit 2.5.10.11092" Category="Installed Package" />
+    <Link Source="Tests\SisoDb.Tests.UnitTests" Target="Moq 4.0.10827" Category="Installed Package" />
+    <Link Source="Tests\SisoDb.Tests.UnitTests" Target="NUnit 2.5.10.11092" Category="Installed Package" />
+    <Link Source="Tests\SisoDb.TestUtils" Target="NUnit 2.5.10.11092" Category="Installed Package" />
+    <Link Source="Tests\SisoDb.TestUtils" Target="Moq 4.0.10827" Category="Installed Package" />
+    <Link Source="SisoDb" Target="ServiceStack.Text 2.20" Category="Installed Package" />
+  </Links>
+  <Categories>
+    <Category Id="Project" />
+    <Category Id="Package" />
+  </Categories>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+  </Styles>
+</DirectedGraph>
