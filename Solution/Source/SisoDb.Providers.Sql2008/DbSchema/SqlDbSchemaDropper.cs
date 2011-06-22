@@ -21,8 +21,8 @@ namespace SisoDb.Sql2008.DbSchema
         {
             var sql = _dbClient.SqlStatements.GetSql("DropStructureTables").Inject(
                 structureSchema.GetIndexesTableName(),
-                structureSchema.GetStructureTableName(),
-                structureSchema.GetUniquesTableName());
+                structureSchema.GetUniquesTableName(),
+                structureSchema.GetStructureTableName());
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql, new DacParameter("entityHash", structureSchema.Hash)))
             {

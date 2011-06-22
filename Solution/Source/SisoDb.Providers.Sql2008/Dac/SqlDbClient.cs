@@ -137,7 +137,7 @@ namespace SisoDb.Sql2008.Dac
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
             var sql = SqlStatements.GetSql("DeleteById").Inject(
-                structureTableName, indexesTableName, uniquesTableName);
+                indexesTableName, uniquesTableName, structureTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("id", sisoId)))
             {
@@ -152,7 +152,7 @@ namespace SisoDb.Sql2008.Dac
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
             var sql = SqlStatements.GetSql("DeleteByIds").Inject(
-                structureTableName, indexesTableName, uniquesTableName);
+                indexesTableName, uniquesTableName, structureTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql))
             {
@@ -171,7 +171,8 @@ namespace SisoDb.Sql2008.Dac
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
             var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
-            var sql = SqlStatements.GetSql("DeleteByQuery").Inject(indexesTableName, uniquesTableName, structureTableName, cmdInfo.Sql, sqlDataType);
+            var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
+                indexesTableName, uniquesTableName, structureTableName, cmdInfo.Sql, sqlDataType);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, cmdInfo.Parameters.ToArray()))
             {
@@ -186,7 +187,7 @@ namespace SisoDb.Sql2008.Dac
             uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
 
             var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
-                structureTableName, indexesTableName, uniquesTableName);
+                indexesTableName, uniquesTableName, structureTableName);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", sisoIdFrom), new DacParameter("idTo", sisoIdTo)))
             {

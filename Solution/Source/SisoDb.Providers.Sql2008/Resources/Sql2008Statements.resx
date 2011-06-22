@@ -126,44 +126,52 @@ add {1};</value>
 alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
-    <value>create table [dbo].[{0}] (
+    <value>create table dbo.[{0}] (
 [SisoId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([SisoId]),
-{1});</value>
+{2});
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
-    <value>create table [dbo].[{0}] (
+    <value>create table dbo.[{0}] (
 [SisoId] [int] not null constraint [PK_{0}] primary key clustered ([SisoId]),
-{1});</value>
+{2});
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
-    <value>create table [dbo].[{0}] (
+    <value>create table dbo.[{0}] (
 [SisoId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([SisoId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
-    <value>create table [dbo].[{0}] (
+    <value>create table dbo.[{0}] (
 [SisoId] [int] identity(1,1) not null constraint [PK_{0}] primary key clustered ([SisoId]),
 [Json] [nvarchar](max) not null);
 
-insert into [dbo].[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
+insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
-    <value>create table [dbo].[{0}] (
+    <value>create table dbo.[{0}] (
 [SisoId] [uniqueidentifier] not null,
 [UqSisoId] [uniqueidentifier] null,
 [UqName] [varchar](250) not null,
 [UqValue] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqSisoId], [UqName], [UqValue]);</value>
+create unique clustered index [UQ_{0}] on [{0}] ([UqSisoId], [UqName], [UqValue]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
-    <value>create table [dbo].[{0}] (
+    <value>create table dbo.[{0}] (
 [SisoId] [int] not null,
 [UqSisoId] [int] null,
 [UqName] [varchar](250) not null,
 [UqValue] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqSisoId], [UqName], [UqValue]);</value>
+create unique clustered index [UQ_{0}] on [{0}] ([UqSisoId], [UqName], [UqValue]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
   </data>
   <data name="DatabaseExists" xml:space="preserve">
     <value>select DB_ID(@dbName);</value>

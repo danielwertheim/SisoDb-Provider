@@ -274,14 +274,7 @@ namespace SisoDb.Sql2008
 
             using (var cmd = DbClient.CreateCommand(CommandType.Text, sql))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
-                    }
-                    reader.Close();
-                }
+                return ConsumeReader(cmd);
             }
         }
 
@@ -306,14 +299,7 @@ namespace SisoDb.Sql2008
 
             using (var cmd = DbClient.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
-                    }
-                    reader.Close();
-                }
+                return ConsumeReader(cmd);
             }
         }
 
@@ -377,14 +363,27 @@ namespace SisoDb.Sql2008
 
             using (var cmd = DbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                return ConsumeReader(cmd);
+            }
+        }
+
+        private static IEnumerable<string> ConsumeReader(IDbCommand cmd)
+        {
+            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+            {
+                Func<string> read;
+
+                if(reader.FieldCount < 2)
+                    read = () => reader.GetString(0);
+                else 
+                    read = () => GetMergedJsonStructure(reader);
+
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        yield return reader.FieldCount < 2 ? reader.GetString(0) : GetMergedJsonStructure(reader);
-                    }
-                    reader.Close();
+                    yield return read();
                 }
+
+                reader.Close();
             }
         }
 

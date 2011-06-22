@@ -21,7 +21,9 @@ namespace SisoDb.Sql2008.DbSchema
                           ? _sqlStatements.GetSql("CreateUniquesGuid")
                           : _sqlStatements.GetSql("CreateUniquesIdentity");
 
-            return sql.Inject(structureSchema.GetUniquesTableName());
+            return sql.Inject(
+                structureSchema.GetUniquesTableName(),
+                structureSchema.GetStructureTableName());
         }
     }
 }

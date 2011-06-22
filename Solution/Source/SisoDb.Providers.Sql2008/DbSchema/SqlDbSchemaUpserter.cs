@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Text;
 using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
@@ -58,27 +59,35 @@ namespace SisoDb.Sql2008.DbSchema
                 new DacParameter("entityHash", structureSchema.Hash),
                 new DacParameter("entityName", structureSchema.Name)))
             {
+                var sql = new StringBuilder();
+
                 if (!structuresTableExists)
                 {
-                    cmd.CommandText = structuresSql;
-                    cmd.ExecuteNonQuery();
+                    sql.AppendLine(structuresSql);
+                    //cmd.CommandText = structuresSql;
+                    //cmd.ExecuteNonQuery();
                 }
 
                 if (!indexesTableExists)
                 {
-                    cmd.CommandText = indexesSql;
-                    cmd.ExecuteNonQuery();
+                    sql.AppendLine(indexesSql);
+                    //cmd.CommandText = indexesSql;
+                    //cmd.ExecuteNonQuery();
                 }
                 else
                     _indexesDbSchemaSynchronizer.Synchronize(structureSchema);
 
                 if (!uniquesTableExists)
                 {
-                    cmd.CommandText = uniquesSql;
-                    cmd.ExecuteNonQuery();
+                    sql.AppendLine(uniquesSql);
+                    //cmd.CommandText = uniquesSql;
+                    //cmd.ExecuteNonQuery();
                 }
                 else
                     _uniquesDbSchemaSynchronizer.Synchronize(structureSchema);
+
+                cmd.CommandText = sql.ToString();
+                cmd.ExecuteNonQuery();
             }
         }
     }

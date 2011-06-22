@@ -32,6 +32,7 @@ namespace SisoDb.Sql2008.DbSchema
 
             return sql.Inject(
                 structureSchema.GetIndexesTableName(),
+                structureSchema.GetStructureTableName(),
                 columnsString);
         }
 

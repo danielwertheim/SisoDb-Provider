@@ -16,28 +16,30 @@ namespace SisoDb.Serialization
 
         public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class
         {
-            var q = new ConcurrentQueue<string>();
-
-            var task = new Task(() =>
+            using (var q = new BlockingCollection<string>())
             {
-                foreach (var json in sourceData)
-                    q.Enqueue(json);
-            });
+                var task = new Task(() =>
+                                    {
+                                        foreach (var json in sourceData)
+                                            q.Add(json);
+                                    });
 
-            task.Start();
+                task.Start();
 
-            while (!task.IsCompleted)
-            {
-                string json;
-                if (q.TryDequeue(out json))
-                    yield return _jsonSerializer.ToItemOrNull<T>(json);
+                while (!task.IsCompleted)
+                {
+                    string json;
+                    if (q.TryTake(out json))
+                        yield return _jsonSerializer.ToItemOrNull<T>(json);
+                }
+
+                Task.WaitAll(task);
+
+                q.CompleteAdding();
+
+                while (q.Count > 0)
+                    yield return _jsonSerializer.ToItemOrNull<T>(q.Take());
             }
-
-            Task.WaitAll(task);
-
-            string j2;
-            while (q.TryDequeue(out j2))
-                yield return _jsonSerializer.ToItemOrNull<T>(j2);
         }
     }
 }

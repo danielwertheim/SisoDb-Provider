@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SisoDb.Profiling.Model;
+using SisoDb.Sql2008;
 
 namespace SisoDb.Profiling
 {
@@ -18,11 +19,13 @@ namespace SisoDb.Profiling
             //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 1000, 5);
+            //ProfilingInserts(db, 1000000, 2);
 
             //InsertCustomers(1, 100000, db);
             //ProfilingQueries(db, GetAllCustomers);
             //ProfilingQueries(db, GetAllCustomersAsJson);
+            //ProfilingQueries(db, GetAllCustomersViaIndexesTable);
+            //ProfilingQueries(db, GetAllCustomersAsJsonViaIndexesTable);
 
             //ProfilingUpdateStructureSet(db);
 
@@ -105,6 +108,22 @@ namespace SisoDb.Profiling
             using (var unitOfWork = database.CreateUnitOfWork())
             {
                 return unitOfWork.GetAll<Customer>().ToList();
+            }
+        }
+
+        private static IList<Customer> GetAllCustomersViaIndexesTable(ISisoDatabase database)
+        {
+            using (var unitOfWork = database.CreateUnitOfWork())
+            {
+                return unitOfWork.Where<Customer>(c => c.SisoId == c.SisoId).ToList();
+            }
+        }
+
+        private static IList<string> GetAllCustomersAsJsonViaIndexesTable(ISisoDatabase database)
+        {
+            using (var unitOfWork = database.CreateUnitOfWork())
+            {
+                return unitOfWork.WhereAsJson<Customer>(c => c.SisoId == c.SisoId).ToList();
             }
         }
 
