@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>SisoDb</id>    
+    <title>SisoDb - Simple Structure Oriented Db</title>
+	<version>3.1</version>
+	<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
+	<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
+	<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
+    <description>
+		This package is up to date, but YOU SHOULD USE THIS INSTEAD. http://nuget.org/List/Packages/SisoDb.SQL2008
+	</description>
+	<projectUrl>http://www.sisodb.com</projectUrl>
+	<licenseUrl>http://github.com/sedanwer/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
+	<requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<tags>sisodb, sql, sql server, json, document-oriented database</tags>
+	<dependencies>
+      <dependency id="ServiceStack.Text" version="2.26" />
+    </dependencies>
+    </metadata>
+  <files>
+      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.dll" target="lib" />
+	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.pdb" target="lib" />
+      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.xml" target="lib" />
+	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.txt" target="lib" />
+  </files>
+</package>
