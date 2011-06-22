@@ -62,27 +62,15 @@ namespace SisoDb.Sql2008.DbSchema
                 var sql = new StringBuilder();
 
                 if (!structuresTableExists)
-                {
                     sql.AppendLine(structuresSql);
-                    //cmd.CommandText = structuresSql;
-                    //cmd.ExecuteNonQuery();
-                }
 
                 if (!indexesTableExists)
-                {
                     sql.AppendLine(indexesSql);
-                    //cmd.CommandText = indexesSql;
-                    //cmd.ExecuteNonQuery();
-                }
                 else
                     _indexesDbSchemaSynchronizer.Synchronize(structureSchema);
 
                 if (!uniquesTableExists)
-                {
                     sql.AppendLine(uniquesSql);
-                    //cmd.CommandText = uniquesSql;
-                    //cmd.ExecuteNonQuery();
-                }
                 else
                     _uniquesDbSchemaSynchronizer.Synchronize(structureSchema);
 
