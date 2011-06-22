@@ -22,9 +22,9 @@
     </dependencies>
     </metadata>
   <files>
-      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.dll" target="lib" />
-	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.pdb" target="lib" />
-      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.xml" target="lib" />
+      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.dll" target="lib" />
+	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.pdb" target="lib" />
+      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.xml" target="lib" />
 	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.txt" target="lib" />
   </files>
 </package>

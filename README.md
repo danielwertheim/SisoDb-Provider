@@ -1,4 +1,4 @@
-# SisoDb - Simple-Structure-Oriented-Db - A NoSQL'ish implementation for SQL-Server.
+# SisoDb - Simple-Structure-Oriented-Db - a document-oriented db-provider for SQL-Server.
 
 By using SisoDb you get to store and retrieve complete POCO-graphs without having to specify:
 
