@@ -1,8 +1,11 @@
 # Visual studio stuff
+[Bb]uilds/
 [Oo]bj/
 [Bb]in/
 [D]ebug/
 [Tt]est[Rr]esult/
+[Pp]ackages/
+[Tt]emp/
 *.vspscc
 *.vssscc
 *.suo

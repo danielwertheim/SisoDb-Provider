@@ -14,7 +14,7 @@
 		It syncs schemachanges on the fly and can assist you to handle more complex model updates.
 	</description>
 	<projectUrl>http://www.sisodb.com</projectUrl>
-	<licenseUrl>http://github.com/sedanwer/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
+	<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<tags>sisodb, sql, sql server, json, document-oriented database</tags>
 	<dependencies>

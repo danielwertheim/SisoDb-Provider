@@ -11,7 +11,7 @@
 		This package is up to date, but YOU SHOULD USE THIS INSTEAD. http://nuget.org/List/Packages/SisoDb.SQL2008
 	</description>
 	<projectUrl>http://www.sisodb.com</projectUrl>
-	<licenseUrl>http://github.com/sedanwer/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
+	<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<tags>sisodb, sql, sql server, json, document-oriented database</tags>
 	<dependencies>
