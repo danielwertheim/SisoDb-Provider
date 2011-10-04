@@ -1,5 +1,5 @@
 ﻿using System;
-using SisoDb.Core;
+using EnsureThat;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
@@ -10,7 +10,9 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public ValueNode(object value)
         {
-            Value = value.AssertNotNull("value");
+            Ensure.That(() => value).IsNotNull();
+
+            Value = value;
         }
 
         public override string ToString()

@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Processors.Sql;
-using SisoDb.Reflections;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
 {

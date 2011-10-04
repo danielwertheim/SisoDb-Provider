@@ -3,8 +3,8 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.Reflections;
 using SisoDb.Structures.Schemas;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
 {

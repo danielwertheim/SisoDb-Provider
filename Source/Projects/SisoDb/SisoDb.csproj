@@ -59,7 +59,16 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnsureThat">
+      <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NCore">
+      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.3.0\lib\PineCone.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text, Version=2.2.6.33214, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\ServiceStack.Text.2.26\lib\net35\ServiceStack.Text.dll</HintPath>
@@ -72,8 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Annotations\UniqueAttribute.cs" />
-    <Compile Include="Annotations\UniqueModes.cs" />
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands\ISqlCommandInfo.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
@@ -81,6 +91,9 @@
     <Compile Include="Cryptography\HashService.cs" />
     <Compile Include="Cryptography\IHashService.cs" />
     <Compile Include="IConnectionString.cs" />
+    <Compile Include="IdTypes.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IMemberNameGenerator.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="ISisoDbFactory.cs" />
@@ -96,7 +109,6 @@
     <Compile Include="DbSchema\SchemaChanges.cs" />
     <Compile Include="DbSchema\SchemaField.cs" />
     <Compile Include="DbSchema\DbColumn.cs" />
-    <Compile Include="DbSchema\SqlDbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\StorageSchemaBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
@@ -127,7 +139,6 @@
     <Compile Include="Providers\ISisoProviderFactory.cs" />
     <Compile Include="Querying\QueryCommandBuilder.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
-    <Compile Include="Reflections\Reflect.cs" />
     <Compile Include="Core\Expressions\LambdaExpressionEvaluator.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedSortingSqlProcessor.cs" />
@@ -189,78 +200,31 @@
     <Compile Include="Serialization\ParallelJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\SequentialJsonBatchDeserializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
-    <Compile Include="Structures\IdTypes.cs" />
-    <Compile Include="Structures\ISisoIdFactory.cs" />
-    <Compile Include="Structures\IStructureIndexesFactory.cs" />
-    <Compile Include="Structures\Schemas\IStructureProperty.cs" />
     <Compile Include="HashMemberNameGenerator.cs" />
-    <Compile Include="Structures\Schemas\IStructureType.cs" />
-    <Compile Include="Structures\Schemas\Configuration\IStructureTypeConfig.cs" />
-    <Compile Include="Structures\Schemas\Configuration\IStructureTypeConfigurations.cs" />
-    <Compile Include="Structures\Schemas\IStructureTypeFactory.cs" />
-    <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
-    <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
-    <Compile Include="Reflections\TypeExtensions.cs" />
     <Compile Include="DbSchema\DbSchemaManager.cs" />
     <Compile Include="Dac\DacParameter.cs" />
     <Compile Include="Querying\Sql\SqlWhere.cs" />
     <Compile Include="StringConverter.cs" />
-    <Compile Include="Structures\ISisoId.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
-    <Compile Include="Structures\IStructure.cs" />
-    <Compile Include="Structures\IStructureBuilder.cs" />
-    <Compile Include="Structures\IStructureIndex.cs" />
     <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="Structures\Schemas\DynamicPropertyFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfig.cs" />
-    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfigurations.cs" />
-    <Compile Include="Structures\Schemas\StructureTypeFactory.cs" />
-    <Compile Include="Structures\Schemas\StructureTypeNameFor.cs" />
-    <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
+    <Compile Include="StructureTypeNameFor.cs" />
     <Compile Include="TypeFor.cs" />
-    <Compile Include="Structures\SisoId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Structures\Schemas\Builders\AutoSchemaBuilder.cs" />
-    <Compile Include="Structures\Schemas\IStructureSchema.cs" />
-    <Compile Include="Structures\Schemas\Builders\ISchemaBuilder.cs" />
-    <Compile Include="Structures\Schemas\IStructureSchemas.cs" />
-    <Compile Include="Structures\Schemas\MemberAccessors\IIndexAccessor.cs" />
-    <Compile Include="Structures\Schemas\MemberAccessors\IMemberAccessor.cs" />
-    <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessor.cs" />
-    <Compile Include="Structures\Schemas\MemberAccessors\IdAccessor.cs" />
-    <Compile Include="Structures\Schemas\MemberAccessors\MemberAccessorBase.cs" />
-    <Compile Include="Structures\Schemas\StructureProperty.cs" />
-    <Compile Include="Structures\Schemas\PropertyPathBuilder.cs" />
-    <Compile Include="Structures\Schemas\StructureSchema.cs" />
-    <Compile Include="Structures\Schemas\StructureSchemas.cs" />
-    <Compile Include="Structures\Schemas\StructureType.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
-    <Compile Include="Core\StringExtensions.cs" />
-    <Compile Include="Structures\SisoIdValueGenerator.cs" />
-    <Compile Include="Structures\Structure.cs" />
-    <Compile Include="Structures\StructureBuilder.cs" />
-    <Compile Include="Structures\SisoIdFactory.cs" />
-    <Compile Include="Structures\StructureIndex.cs" />
     <Compile Include="SisoEnvironment.cs" />
-    <Compile Include="Structures\StructureIndexesFactory.cs" />
-    <Compile Include="Core\AssertArgsExtensions.cs" />
-    <Compile Include="Structures\StructureIndexType.cs" />
-    <Compile Include="Structures\UniqueModesExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -277,6 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reflections\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

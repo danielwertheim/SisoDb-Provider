@@ -1,10 +1,10 @@
 ﻿using System;
+using PineCone.Structures;
+using PineCone.Structures.Schemas;
+using PineCone.Structures.Schemas.Builders;
 using SisoDb.Cryptography;
 using SisoDb.DbSchema;
 using SisoDb.Serialization;
-using SisoDb.Structures;
-using SisoDb.Structures.Schemas;
-using SisoDb.Structures.Schemas.Builders;
 
 namespace SisoDb
 {
@@ -26,7 +26,6 @@ namespace SisoDb
         //NON SHARED AS DEFAULT
         public Func<IStructureTypeFactory> ResolveStructureTypeFactory;
         public Func<IStructureSchemas> ResolveStructureSchemas;
-        public Func<ISisoIdFactory> ResolveSisoIdFactory;
         public Func<IStructureIndexesFactory> ResolveStructureIndexesFactory;
         public Func<IStructureBuilder> ResolveStructureBuilder;
         public Func<IDbSchemaManager> ResolveDbSchemaManager;
@@ -37,7 +36,7 @@ namespace SisoDb
             _defaultHashService = new HashService();
             _defaultJsonSerializer = new ServiceStackJsonSerializer();
             _defaultMemberNameGenerator = new HashMemberNameGenerator(_defaultHashService);
-            _defaultSchemaBuilder = new AutoSchemaBuilder(_defaultHashService);
+            _defaultSchemaBuilder = new AutoSchemaBuilder();
             _defaultStructureTypeReflecter = new StructureTypeReflecter();
 
             ResolveHashService = () => _defaultHashService;
@@ -46,11 +45,10 @@ namespace SisoDb
             ResolveSchemaBuilder = () => _defaultSchemaBuilder;
             ResolveStructureTypeReflecter = () => _defaultStructureTypeReflecter;
 
-            ResolveStructureTypeFactory = () => new StructureTypeFactory(_defaultStructureTypeReflecter);
+            ResolveStructureTypeFactory = () => new StructureTypeFactory();
             ResolveStructureSchemas = () => new StructureSchemas(ResolveStructureTypeFactory(), _defaultSchemaBuilder);
-            ResolveSisoIdFactory = () => new SisoIdFactory();
-            ResolveStructureIndexesFactory = () => new StructureIndexesFactory(SisoEnvironment.Formatting.StringConverter);
-            ResolveStructureBuilder = () => new StructureBuilder(ResolveJsonSerializer(), ResolveSisoIdFactory(), ResolveStructureIndexesFactory());
+            ResolveStructureIndexesFactory = () => new StructureIndexesFactory();
+            ResolveStructureBuilder = () => new StructureBuilder(ResolveStructureIndexesFactory());
             ResolveDbSchemaManager = () => new DbSchemaManager();
             ResolveJsonBatchDeserializer = () => new ParallelJsonBatchDeserializer(ResolveJsonSerializer());
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
-using SisoDb.Core;
+using EnsureThat;
+using NCore;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
@@ -13,7 +14,9 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
 
         public ParsedSortingSqlProcessor(IMemberNameGenerator memberNameGenerator)
         {
-            MemberNameGenerator = memberNameGenerator.AssertNotNull("memberNameGenerator");
+            Ensure.That(() => memberNameGenerator).IsNotNull();
+
+            MemberNameGenerator = memberNameGenerator;
         }
 
         public ISqlSorting Process(IParsedLambda lambda)

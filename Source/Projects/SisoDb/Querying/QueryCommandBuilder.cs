@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using EnsureThat;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying
 {
@@ -17,32 +16,39 @@ namespace SisoDb.Querying
 
         public QueryCommandBuilder(IWhereParser whereParser, ISortingParser sortingParser, IIncludeParser includeParser)
         {
-            WhereParser = whereParser.AssertNotNull("whereParser");
-            SortingParser = sortingParser.AssertNotNull("sortingParser");
-            IncludeParser = includeParser.AssertNotNull("includeParser");
+            Ensure.That(() => whereParser).IsNotNull();
+            Ensure.That(() => sortingParser).IsNotNull();
+            Ensure.That(() => includeParser).IsNotNull();
+
+            WhereParser = whereParser;
+            SortingParser = sortingParser;
+            IncludeParser = includeParser;
 
             Command = new QueryCommand();
         }
 
         public IQueryCommandBuilder<T> Take(int numOfStructures)
         {
-            Command.TakeNumOfStructures = numOfStructures.AssertGt(0, "numOfStructures");
+            Ensure.That(() => numOfStructures).IsGte(0);
+
+            Command.TakeNumOfStructures = numOfStructures;
 
             return this;
         }
 
         public IQueryCommandBuilder<T> Page(int pageIndex, int pageSize)
         {
-            Command.Paging = new Paging(
-                pageIndex.AssertGte(0, "pageIndex"), 
-                pageSize.AssertGt(0, "pageSize"));
+            Ensure.That(() => pageIndex).IsGte(0);
+            Ensure.That(() => pageSize).IsGt(0);
+
+            Command.Paging = new Paging(pageIndex, pageSize);
 
             return this;
         }
 
         public IQueryCommandBuilder<T> Where(Expression<Func<T, bool>> predicate)
         {
-            predicate.AssertNotNull("predicate");
+            Ensure.That(() => predicate).IsNotNull();
 
             if (Command.Where != null)
                 throw new SisoDbException(ExceptionMessages.QueryCommandBuilder_WhereAllreadyInitialized);
@@ -54,7 +60,7 @@ namespace SisoDb.Querying
 
         public IQueryCommandBuilder<T> SortBy(params Expression<Func<T, object>>[] sortings)
         {
-            sortings.AssertHasItems("sortings");
+            Ensure.That(() => sortings).HasItems();
 
             if (Command.Sortings != null)
                 throw new SisoDbException(ExceptionMessages.QueryCommandBuilder_SortingsAllreadyInitialized);
@@ -66,12 +72,10 @@ namespace SisoDb.Querying
 
         public IQueryCommandBuilder<T> Include<TInclude>(params Expression<Func<T, object>>[] includes) where TInclude : class
         {
-            includes.AssertHasItems("includes");
+            Ensure.That(() => includes).HasItems();
 
             Command.Includes.Add(
-                IncludeParser.Parse(
-                    StructureTypeNameFor<TInclude>.Name,
-                    includes));
+                IncludeParser.Parse(StructureTypeNameFor<TInclude>.Name, includes));
 
             return this;
         }

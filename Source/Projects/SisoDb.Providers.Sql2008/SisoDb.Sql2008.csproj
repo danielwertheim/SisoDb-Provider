@@ -48,6 +48,15 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnsureThat">
+      <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
+    </Reference>
+    <Reference Include="NCore">
+      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.3.0\lib\PineCone.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,9 +65,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Dac\SqlBulkInserter.cs" />
     <Compile Include="Dac\SqlSingleInserter.cs" />
     <Compile Include="DbSchema\SqlDbColumnGenerator.cs" />
+    <Compile Include="DbSchema\SqlDbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\SqlDbSchemaDropper.cs" />
@@ -89,7 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Sql2008Exceptions.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Sql2008Exceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Sql2008Statements.resx">
@@ -101,6 +114,9 @@
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

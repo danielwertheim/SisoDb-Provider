@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NCore;
 using SisoDb.Core;
+using SisoDb.Resources;
 
 namespace SisoDb
 {
@@ -32,14 +34,12 @@ namespace SisoDb
 
             var plainString = parts.SingleOrDefault(p => p.StartsWith(PlainMarker, StringComparison.InvariantCultureIgnoreCase));
             if (plainString == null)
-                throw new ArgumentException(
-                    string.Format("The connectionstring is missing the Plain-part, indicated by '{0}'. Example: '{1}'.", PlainMarker, Example));
+                throw new ArgumentException(ExceptionMessages.ConnectionString_MissingPlainPart.Inject(PlainMarker, Example));
             PlainString = plainString.Substring(PlainMarker.Length);
 
             var sisoDbString = parts.SingleOrDefault(p => p.StartsWith(SisoDbMarker, StringComparison.InvariantCultureIgnoreCase));
             if (sisoDbString == null)
-                throw new ArgumentException(
-                    string.Format("The connectionstring is missing the SisoDb-part, indicated by '{0}'. Example: '{1}'.", SisoDbMarker, Example));
+                throw new ArgumentException(ExceptionMessages.ConnectionString_MissingSisoDbPart.Inject(SisoDbMarker, Example));
             SisoDbString = sisoDbString.Substring(SisoDbMarker.Length);
 
             InitializeSisoDbKeyValues();
@@ -50,7 +50,7 @@ namespace SisoDb
             var parts = value.Split("||".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             if (parts.Length != 2)
-                throw new ArgumentException("The connectionstring should have exactly two parts ('{0}' and '{1}'). Example: '{2}'.".Inject(SisoDbMarker, PlainMarker, Example));
+                throw new ArgumentException(ExceptionMessages.ConnectionString_MissingParts.Inject(SisoDbMarker, PlainMarker, Example));
 
             return parts;
         }
@@ -70,7 +70,7 @@ namespace SisoDb
         private void EnsureRequiredSisoDbKeysExists()
         {
             if (!_sisoDbKeyValues.ContainsKey("provider"))
-                throw new ArgumentException("The SisoDb-part is missing required key: 'provider'.");
+                throw new ArgumentException(ExceptionMessages.ConnectionString_MissingProviderKey);
         }
 
         public IConnectionString ReplacePlain(string plainString)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using NCore;
 using SisoDb.Resources;
 
 namespace SisoDb.Querying.Lambdas.Operators
@@ -39,9 +39,7 @@ namespace SisoDb.Querying.Lambdas.Operators
         public static Operator Create(ExpressionType expressionType)
         {
             if (!OperatorMap.ContainsKey(expressionType))
-                throw new NotSupportedException(
-                    ExceptionMessages.LambdaOperator_OperatorTypeIsNotSupported
-                    .Inject(expressionType));
+                throw new NotSupportedException(ExceptionMessages.LambdaOperator_OperatorTypeIsNotSupported.Inject(expressionType));
 
             return OperatorMap[expressionType].Invoke();
         }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using NCore;
+using NCore.Reflections;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
-using SisoDb.Reflections;
 using SisoDb.Resources;
 
 namespace SisoDb.Querying.Lambdas.Parsers
@@ -59,7 +59,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
                 Visit(e);
 
-                return new ParsedLambda(_nodesContainer);
+                return new ParsedLambda(_nodesContainer.ToArray());
             }
         }
 
@@ -86,9 +86,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     Visit(e.Operand);
                     break;
                 default:
-                    throw new NotSupportedException(
-                        ExceptionMessages.LambdaParser_VisitUnary_NotSupported
-                        .Inject(e.NodeType));
+                    throw new NotSupportedException(ExceptionMessages.LambdaParser_VisitUnary_NotSupported.Inject(e.NodeType));
             }
 
             return e;
@@ -147,7 +145,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 if (!(value is string))
                     value = SisoEnvironment.Formatting.StringConverter.AsString(value);
 
-                value = "%<${0}$>%".Inject(value);
+                value = "%<${0}$>%".Inject(value); //TODO: Not ok
             }
 
             _nodesContainer.AddNode(new ValueNode(value));
@@ -194,7 +192,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 lastNode = newNode;
             }
 
-            if (lastNode.MemberType.IsEnumerableBytesType())
+            if (lastNode.MemberType.IsEnumerableBytesType()) //TODO: Hmm
                 throw new NotSupportedException(ExceptionMessages.LambdaParser_MemberIsBytes.Inject(lastNode.Path));
 
             return lastNode;

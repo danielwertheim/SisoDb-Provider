@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SisoDb.Structures
+namespace SisoDb
 {
     [Serializable]
     public enum IdTypes

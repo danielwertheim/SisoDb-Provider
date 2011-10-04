@@ -4,19 +4,19 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Transactions;
+using EnsureThat;
 using Microsoft.SqlServer.Server;
+using NCore;
 using SisoDb.Commands;
-using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.Sql2008.Dac
 {
     /// <summary>
-    /// Performs the ADO.Net communication for the Sql-provider for a
+    /// Performs the ADO.Net communication for the Sql2008-provider for a
     /// specific database.
     /// </summary>
     public class SqlDbClient : IDisposable
@@ -40,8 +40,8 @@ namespace SisoDb.Sql2008.Dac
 
         public SqlDbClient(SqlConnectionInfo connectionInfo, bool transactional)
         {
-            connectionInfo.AssertNotNull("connectionInfo");
-
+            Ensure.That(() => connectionInfo).IsNotNull();
+            
             ProviderType = connectionInfo.ProviderType;
             ConnectionString = connectionInfo.ConnectionString;
 
@@ -105,9 +105,9 @@ namespace SisoDb.Sql2008.Dac
 
         public void RebuildIndexes(string structureTableName, string indexesTableName, string uniquesTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
-            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
-            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => indexesTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => uniquesTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("RebuildIndexes").Inject(
                 structureTableName, indexesTableName, uniquesTableName);
@@ -132,9 +132,9 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteById(ValueType sisoId, string structureTableName, string indexesTableName, string uniquesTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
-            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
-            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => indexesTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => uniquesTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("DeleteById").Inject(
                 indexesTableName, uniquesTableName, structureTableName);
@@ -147,9 +147,9 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName, string indexesTableName, string uniquesTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
-            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
-            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => indexesTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => uniquesTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("DeleteByIds").Inject(
                 indexesTableName, uniquesTableName, structureTableName);
@@ -166,9 +166,9 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, string structureTableName, string indexesTableName, string uniquesTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
-            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
-            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => indexesTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => uniquesTableName).IsNotNullOrWhiteSpace();
 
             var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
             var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
@@ -182,9 +182,9 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName, string indexesTableName, string uniquesTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
-            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
-            uniquesTableName.AssertNotNullOrWhiteSpace("uniquesTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => indexesTableName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => uniquesTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
                 indexesTableName, uniquesTableName, structureTableName);
@@ -197,7 +197,7 @@ namespace SisoDb.Sql2008.Dac
 
         public bool TableExists(string name)
         {
-            name.AssertNotNullOrWhiteSpace("name");
+            Ensure.That(() => name).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("TableExists");
             var value = ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("tableName", name));
@@ -207,8 +207,8 @@ namespace SisoDb.Sql2008.Dac
 
         public IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip)
         {
-            tableName.AssertNotNullOrWhiteSpace("tableName");
-
+            Ensure.That(() => tableName).IsNotNullOrWhiteSpace();
+            
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
             var dbColumns = new List<DbColumn>();
 
@@ -228,7 +228,7 @@ namespace SisoDb.Sql2008.Dac
 
         public int RowCount(string structureTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("RowCount").Inject(structureTableName);
 
@@ -237,7 +237,7 @@ namespace SisoDb.Sql2008.Dac
 
         public int RowCountByQuery(string indexesTableName, ISqlCommandInfo cmdInfo)
         {
-            indexesTableName.AssertNotNullOrWhiteSpace("indexesTableName");
+            Ensure.That(() => indexesTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("RowCountByQuery").Inject(indexesTableName, cmdInfo.Sql);
 
@@ -246,7 +246,7 @@ namespace SisoDb.Sql2008.Dac
 
         public int CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
         {
-            entityHash.AssertNotNullOrWhiteSpace("entityHash");
+            Ensure.That(() => entityHash).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
@@ -257,7 +257,7 @@ namespace SisoDb.Sql2008.Dac
 
         public string GetJsonById(ValueType sisoId, string structureTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("GetById").Inject(structureTableName);
 
@@ -266,7 +266,7 @@ namespace SisoDb.Sql2008.Dac
 
         public IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, IdTypes idType, string structureTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("GetByIds").Inject(structureTableName);
 
@@ -289,7 +289,7 @@ namespace SisoDb.Sql2008.Dac
 
         public IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, string structureTableName)
         {
-            structureTableName.AssertNotNullOrWhiteSpace("structureTableName");
+            Ensure.That(() => structureTableName).IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureTableName);
 
@@ -309,10 +309,10 @@ namespace SisoDb.Sql2008.Dac
         private static SqlParameter CreateIdentityIdsTableParam(IEnumerable<ValueType> ids)
         {
             return new SqlParameter("@ids", SqlDbType.Structured)
-                           {
-                               Value = ids.Select(id => CreateIdentityIdRecord((int)id)),
-                               TypeName = "dbo.SisoIdentityIds"
-                           };
+            {
+                Value = ids.Select(id => CreateIdentityIdRecord((int)id)),
+                TypeName = "dbo.SisoIdentityIds"
+            };
         }
 
         private static SqlDataRecord CreateIdentityIdRecord(int id)

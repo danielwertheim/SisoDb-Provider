@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using NCore;
 using SisoDb.Resources;
 
 namespace SisoDb.Core.Expressions
@@ -51,8 +52,7 @@ namespace SisoDb.Core.Expressions
                 return GetRightMostMember(unaryExpression.Operand);
             }
 
-            throw new SisoDbException(ExceptionMessages.ExpressionUtils_GetRightMostMember_NoMemberFound
-                .Inject(e.ToString()));
+            throw new SisoDbException(ExceptionMessages.ExpressionUtils_GetRightMostMember_NoMemberFound.Inject(e.ToString()));
         }
     }
 }

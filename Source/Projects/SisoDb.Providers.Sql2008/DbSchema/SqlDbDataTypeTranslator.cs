@@ -1,19 +1,19 @@
 ﻿using System;
-using SisoDb.Core;
-using SisoDb.Reflections;
-using SisoDb.Resources;
-using SisoDb.Structures.Schemas.MemberAccessors;
+using NCore;
+using NCore.Reflections;
+using PineCone.Structures.Schemas.MemberAccessors;
+using SisoDb.DbSchema;
+using SisoDb.Sql2008.Resources;
 
-namespace SisoDb.DbSchema
+namespace SisoDb.Sql2008.DbSchema
 {
-    //TODO: Move to Sql2008
     public class SqlDbDataTypeTranslator : IDbDataTypeTranslator
     {
         public string ToDbType(IIndexAccessor indexAccessor)
         {
             if(indexAccessor.IsEnumerable && indexAccessor.DataType.IsEnumerableBytesType())
                 throw new SisoDbException(
-                    ExceptionMessages.SqlDbDataTypeTranslator_ByteArraysAreNotSupported.Inject(indexAccessor.Path));
+                    Sql2008Exceptions.SqlDbDataTypeTranslator_ByteArraysAreNotSupported.Inject(indexAccessor.Path));
 
             if(indexAccessor.IsElement)
                 return ("[nvarchar](max)");
@@ -69,7 +69,7 @@ namespace SisoDb.DbSchema
                 return ("[int]");
             
             throw new SisoDbException(
-                ExceptionMessages.SqlDbDataTypeTranslator_UnsupportedDataType.Inject(dataType.Name));
+                Sql2008Exceptions.SqlDbDataTypeTranslator_UnsupportedDataType.Inject(dataType.Name));
         }
     }
 }

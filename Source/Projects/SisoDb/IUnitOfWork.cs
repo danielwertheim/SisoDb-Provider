@@ -75,8 +75,8 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="sisoId"></param>
-        void DeleteById<T>(Guid sisoId) 
+        /// <param name="id"></param>
+        void DeleteById<T>(Guid id) 
             where T : class;
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="sisoId"></param>
-        void DeleteById<T>(int sisoId) 
+        /// <param name="id"></param>
+        void DeleteById<T>(int id) 
             where T : class;
 
         /// <summary>

@@ -1,7 +1,8 @@
 ﻿using System;
+using PineCone.Structures.Schemas.MemberAccessors;
 using SisoDb.Core;
+using SisoDb.Reflections;
 using SisoDb.Resources;
-using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Structures
 {
@@ -10,16 +11,16 @@ namespace SisoDb.Structures
         public ISisoId GetId<T>(IIdAccessor idAccessor, T item)
             where T : class
         {
-            if (idAccessor.IdType == IdTypes.Guid)
+            if (idAccessor.DataType.IsGuidType())
                 return SisoId.NewGuidId(
                     EnsureGuidIdValueExists(idAccessor, item));
 
-            if (idAccessor.IdType == IdTypes.Identity)
+            if (idAccessor.DataType.IsIntType() || idAccessor.DataType.IsLongType())
                 return SisoId.NewIdentityId(
                     EnsureIdentityValueExists(idAccessor, item));
             
             throw new SisoDbException(
-                ExceptionMessages.SisoIdFactory_UnSupportedIdentityType.Inject(idAccessor.IdType));
+                ExceptionMessages.SisoIdFactory_UnSupportedIdentityType.Inject(idAccessor.DataType));
         }
 
         private static Guid EnsureGuidIdValueExists<T>(IIdAccessor idAccessor, T item)

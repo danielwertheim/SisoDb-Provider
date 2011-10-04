@@ -1,7 +1,7 @@
 using System.IO;
 using System.Reflection;
 using System.Resources;
-using SisoDb.Core;
+using EnsureThat;
 
 namespace SisoDb.Providers
 {
@@ -11,8 +11,8 @@ namespace SisoDb.Providers
 
         protected SqlStatementsBase(Assembly assembly, string resxPath)
         {
-            assembly.AssertNotNull("assembly");
-            resxPath.AssertNotNullOrWhiteSpace("resxPath");
+            Ensure.That(() => assembly).IsNotNull();
+            Ensure.That(() => resxPath).IsNotNullOrWhiteSpace();
 
             var extension = Path.GetExtension(resxPath);
             if (!string.IsNullOrWhiteSpace(extension) && extension == ".resx")

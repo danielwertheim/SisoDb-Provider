@@ -5,8 +5,8 @@ using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.Reflections;
 using SisoDb.Resources;
+using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
 {

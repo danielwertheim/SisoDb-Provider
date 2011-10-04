@@ -1,5 +1,5 @@
 ﻿using System;
-using SisoDb.Core;
+using EnsureThat;
 
 namespace SisoDb.Querying
 {
@@ -11,8 +11,10 @@ namespace SisoDb.Querying
 
         public Paging(int pageIndex, int pageSize)
         {
-            PageIndex = pageIndex.AssertGte(0, "pageIndex");
-            PageSize = pageSize.AssertGt(0, "pageSize");
+            Ensure.That(() => pageIndex).IsGte(0);
+            Ensure.That(() => pageSize).IsGt(0);
+            PageIndex = pageIndex;
+            PageSize = pageSize;
         }
 
         public override bool Equals(object obj)

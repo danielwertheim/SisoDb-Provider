@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using EnsureThat;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Resources;
@@ -10,9 +10,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public class SortingParser : ISortingParser
     {
-        public IParsedLambda Parse(IEnumerable<LambdaExpression> sortingExpressions)
+        public IParsedLambda Parse(LambdaExpression[] sortingExpressions)
         {
-            sortingExpressions.AssertHasItems("sortingExpressions");
+            Ensure.That(() => sortingExpressions).HasItems();
 
             var nodesContainer = new NodesContainer();
             foreach (var lambda in sortingExpressions)
@@ -46,7 +46,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 nodesContainer.AddNode(sortingNode);
             }
 
-            return new ParsedLambda(nodesContainer);
+            return new ParsedLambda(nodesContainer.ToArray());
         }
     }
 }

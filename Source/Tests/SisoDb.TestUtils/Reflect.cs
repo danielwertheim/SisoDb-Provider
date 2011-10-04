@@ -1,9 +1,8 @@
 using System;
 using System.Linq.Expressions;
 using SisoDb.Core.Expressions;
-using SisoDb.Querying.Lambdas;
 
-namespace SisoDb.Reflections
+namespace SisoDb.TestUtils
 {
     public static class Reflect<T> where T : class
     {

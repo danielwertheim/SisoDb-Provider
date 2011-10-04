@@ -48,6 +48,16 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnsureThat">
+      <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
+    </Reference>
+    <Reference Include="NCore, Version=0.2.0.43, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.3.0\lib\PineCone.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,6 +67,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="BulkInserts\SqlCe4BulkInserter.cs" />
     <Compile Include="SqlCe4Statements.cs" />
     <Compile Include="DbSchema\SqlCe4DbColumnGenerator.cs" />
@@ -81,10 +94,12 @@
       <Name>SisoDb</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\SqlCe4Exceptions.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SqlCe4Exceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SqlCe4Statements.resx" />

@@ -5,7 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using SisoDb.Core;
+using EnsureThat;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
@@ -13,8 +14,6 @@ using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Serialization;
 using SisoDb.Sql2008.Dac;
-using SisoDb.Structures;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Sql2008
 {
@@ -39,14 +38,23 @@ namespace SisoDb.Sql2008
             ISqlQueryGenerator queryGenerator,
             ICommandBuilderFactory commandBuilderFactory)
         {
-            DbClient = dbClient.AssertNotNull("dbClient");
-            DbSchemaManager = dbSchemaManager.AssertNotNull("dbSchemaManager");
-            DbSchemaUpserter = dbSchemaUpserter.AssertNotNull("dbSchemaUpserter");
-            StructureSchemas = structureSchemas.AssertNotNull("structureSchemas");
-            JsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
-            JsonBatchDeserializer = jsonBatchDeserializer.AssertNotNull("jsonBatchDeserializer");
-            QueryGenerator = queryGenerator.AssertNotNull("queryGenerator");
-            CommandBuilderFactory = commandBuilderFactory.AssertNotNull("commandBuilderFactory");
+            Ensure.That(() => dbClient).IsNotNull();
+            Ensure.That(() => dbSchemaManager).IsNotNull();
+            Ensure.That(() => dbSchemaUpserter).IsNotNull();
+            Ensure.That(() => structureSchemas).IsNotNull();
+            Ensure.That(() => jsonSerializer).IsNotNull();
+            Ensure.That(() => jsonBatchDeserializer).IsNotNull();
+            Ensure.That(() => queryGenerator).IsNotNull();
+            Ensure.That(() => commandBuilderFactory).IsNotNull();
+
+            DbClient = dbClient;
+            DbSchemaManager = dbSchemaManager;
+            DbSchemaUpserter = dbSchemaUpserter;
+            StructureSchemas = structureSchemas;
+            JsonSerializer = jsonSerializer;
+            JsonBatchDeserializer = jsonBatchDeserializer;
+            QueryGenerator = queryGenerator;
+            CommandBuilderFactory = commandBuilderFactory;
         }
         public void Dispose()
         {

@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using NCore;
+using NCore.Reflections;
 using NUnit.Framework;
-using SisoDb.Core;
-using SisoDb.Reflections;
 
 namespace SisoDb.TestUtils
 {

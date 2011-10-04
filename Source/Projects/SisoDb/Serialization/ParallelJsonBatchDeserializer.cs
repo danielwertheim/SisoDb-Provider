@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SisoDb.Core;
+using EnsureThat;
 
 namespace SisoDb.Serialization
 {
@@ -11,7 +11,9 @@ namespace SisoDb.Serialization
 
         public ParallelJsonBatchDeserializer(IJsonSerializer jsonSerializer)
         {
-            _jsonSerializer = jsonSerializer.AssertNotNull("jsonSerializer");
+            Ensure.That(() => jsonSerializer).IsNotNull();
+
+            _jsonSerializer = jsonSerializer;
         }
 
         public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class

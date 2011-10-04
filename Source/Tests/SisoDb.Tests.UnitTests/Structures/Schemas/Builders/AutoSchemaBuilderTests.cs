@@ -6,7 +6,6 @@ using Moq;
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Cryptography;
-using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;

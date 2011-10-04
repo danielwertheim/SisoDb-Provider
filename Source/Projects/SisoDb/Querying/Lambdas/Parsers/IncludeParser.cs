@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using EnsureThat;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 
@@ -8,9 +8,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public class IncludeParser : IIncludeParser
     {
-        public IParsedLambda Parse(string includedStructureTypeName, IEnumerable<LambdaExpression> includeExpressions)
+        public IParsedLambda Parse(string includedStructureTypeName, LambdaExpression[] includeExpressions)
         {
-            includeExpressions.AssertHasItems("includeExpressions");
+            Ensure.That(() => includeExpressions).HasItems();
 
             var nodes = new NodesContainer();
 
@@ -24,7 +24,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     new IncludeNode(includedStructureTypeName, idReferencePath, objectReferencePath));    
             }
 
-            return new ParsedLambda(nodes);
+            return new ParsedLambda(nodes.ToArray());
         }
 
         private static string BuildObjectReferencePath(string idReferencePath)

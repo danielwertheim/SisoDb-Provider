@@ -1,4 +1,5 @@
-﻿using SisoDb.Core;
+﻿using EnsureThat;
+using SisoDb.Core;
 using SisoDb.Cryptography;
 
 namespace SisoDb
@@ -20,8 +21,8 @@ namespace SisoDb
 
         public string Generate(string memberPath)
         {
-            memberPath.AssertNotNullOrWhiteSpace("memberPath");
-
+            Ensure.That(() => memberPath).IsNotNullOrWhiteSpace();
+            
             if (memberPath == "SisoId")
                 return memberPath;
 

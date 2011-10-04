@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using SisoDb.Core;
+using EnsureThat;
 using SisoDb.Dac;
 
 namespace SisoDb.Querying.Sql
@@ -21,11 +21,10 @@ namespace SisoDb.Querying.Sql
 
         public SqlWhere(string sql, IEnumerable<IDacParameter> parameters)
         {
-            sql.AssertNotNullOrWhiteSpace("sql");
-            parameters.AssertNotNull("parameters");
+            Ensure.That(() => sql).IsNotNullOrWhiteSpace();
+            Ensure.That(() => parameters).IsNotNull();
 
             Sql = sql;
-
             _parameters = new ReadOnlyCollection<IDacParameter>(parameters.Distinct().ToList());
         }
     }

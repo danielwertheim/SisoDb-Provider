@@ -1,6 +1,4 @@
-﻿using SisoDb.Core;
-
-namespace SisoDb.Structures.Schemas
+﻿namespace SisoDb
 {
     public static class StructureTypeNameFor<T> where T : class
     {

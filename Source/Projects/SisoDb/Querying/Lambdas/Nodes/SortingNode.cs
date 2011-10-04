@@ -1,5 +1,5 @@
 using System;
-using SisoDb.Core;
+using EnsureThat;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
@@ -12,7 +12,9 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public SortingNode(string memberPath, SortDirections direction = SortDirections.Asc)
         {
-            MemberPath = memberPath.AssertNotNull("memberPath");
+            Ensure.That(() => memberPath).IsNotNullOrWhiteSpace();
+
+            MemberPath = memberPath;
             Direction = direction;
         }
 

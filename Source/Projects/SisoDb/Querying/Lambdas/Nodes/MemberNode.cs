@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using EnsureThat;
 using SisoDb.Core.Expressions;
 
 namespace SisoDb.Querying.Lambdas.Nodes
@@ -16,7 +16,7 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public MemberNode(MemberNode parent, MemberExpression member)
         {
-            member.AssertNotNull("member");
+            Ensure.That(() => member).IsNotNull();
 
             Name = member.Member.Name;
             Path = parent == null ? member.Path() : parent.Path + "." + member.Path();

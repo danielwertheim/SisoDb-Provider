@@ -1,5 +1,5 @@
 ﻿using System;
-using SisoDb.Core;
+using EnsureThat;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
@@ -14,9 +14,13 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public IncludeNode(string childStructureName, string idReferencePath, string objectReferencePath)
         {
-            ChildStructureName = childStructureName.AssertNotNullOrWhiteSpace("childStructureName");
-            IdReferencePath = idReferencePath.AssertNotNullOrWhiteSpace("idReferencePath");
-            ObjectReferencePath = objectReferencePath.AssertNotNullOrWhiteSpace("objectReferencePath");
+            Ensure.That(() => childStructureName).IsNotNullOrWhiteSpace();
+            Ensure.That(() => idReferencePath).IsNotNullOrWhiteSpace();
+            Ensure.That(() => objectReferencePath).IsNotNullOrWhiteSpace();
+
+            ChildStructureName = childStructureName;
+            IdReferencePath = idReferencePath;
+            ObjectReferencePath = objectReferencePath;
         }
     }
 }

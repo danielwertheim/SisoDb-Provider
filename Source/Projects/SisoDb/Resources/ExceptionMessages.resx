@@ -180,9 +180,6 @@
   <data name="SqlDatabase_ConnectionInfo_MissingName" xml:space="preserve">
     <value>The name of the database could not be extracted from the connection-info.</value>
   </data>
-  <data name="SqlDbDataTypeTranslator_UnsupportedDataType" xml:space="preserve">
-    <value>The datatype '{0}' is not supported!</value>
-  </data>
   <data name="Property_Ctor_UniqueOnNonSimpleType" xml:space="preserve">
     <value>You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc.</value>
   </data>
@@ -207,9 +204,6 @@
   <data name="LambdaParser_UnsupportedMethodCall" xml:space="preserve">
     <value>Could not evaluate the method call: '{0}'.
 Specific supported method exists as extensionmethods and are prefixed with 'Qx'. Import namespace 'SisoDb.Querying' to enable them.</value>
-  </data>
-  <data name="SqlDbDataTypeTranslator_ByteArraysAreNotSupported" xml:space="preserve">
-    <value>Byte arrays are not supported for storage in the Indexes-table since they should not be queryable. Index name: '{0}'.</value>
   </data>
   <data name="LambdaParser_MemberIsBytes" xml:space="preserve">
     <value>Byte arrays are not supported for member: '{0}'.</value>
@@ -258,5 +252,17 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="WhereParser_QxEnumerables_OperatorNotSupported" xml:space="preserve">
     <value>The operator '{0}' is not supported for Qx-methods on enumerables.</value>
+  </data>
+  <data name="ConnectionString_MissingParts" xml:space="preserve">
+    <value>The connectionstring should have exactly two parts ('{0}' and '{1}'). Example: '{2}'.</value>
+  </data>
+  <data name="ConnectionString_MissingPlainPart" xml:space="preserve">
+    <value>The connectionstring is missing the Plain-part, indicated by '{0}'. Example: '{1}'.</value>
+  </data>
+  <data name="ConnectionString_MissingProviderKey" xml:space="preserve">
+    <value>The SisoDb-part is missing required key: 'provider'.</value>
+  </data>
+  <data name="ConnectionString_MissingSisoDbPart" xml:space="preserve">
+    <value>The connectionstring is missing the SisoDb-part, indicated by '{0}'. Example: '{1}'.</value>
   </data>
 </root>

@@ -1,5 +1,5 @@
 ﻿using System;
-using SisoDb.Core;
+using EnsureThat;
 
 namespace SisoDb.Querying.Sql
 {
@@ -10,7 +10,8 @@ namespace SisoDb.Querying.Sql
 
         public SqlSorting(string sql)
         {
-            Sql = sql.AssertNotNullOrWhiteSpace("sql");
+            Ensure.That(() => sql).IsNotNullOrWhiteSpace();
+            Sql = sql;
         }
     }
 }

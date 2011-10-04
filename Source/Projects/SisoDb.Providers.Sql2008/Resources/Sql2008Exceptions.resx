@@ -120,4 +120,10 @@
   <data name="SqlDatabase_UnsupportedProviderSpecified" xml:space="preserve">
     <value>Storageprovider '{0}' is unsupported. When consuming an Sql-database the storageprovider should be: '{1}'.</value>
   </data>
+  <data name="SqlDbDataTypeTranslator_ByteArraysAreNotSupported" xml:space="preserve">
+    <value>Byte arrays are not supported for storage in the Indexes-table since they should not be queryable. Index name: '{0}'.</value>
+  </data>
+  <data name="SqlDbDataTypeTranslator_UnsupportedDataType" xml:space="preserve">
+    <value>The datatype '{0}' is not supported!</value>
+  </data>
 </root>

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using NUnit.Framework;
-using SisoDb.Reflections;
 using SisoDb.Resources;
 using SisoDb.TestUtils;
 

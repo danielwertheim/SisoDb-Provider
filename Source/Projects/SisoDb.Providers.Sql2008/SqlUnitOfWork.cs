@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using EnsureThat;
+using NCore;
+using PineCone.Structures;
+using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
@@ -11,8 +14,6 @@ using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Serialization;
 using SisoDb.Sql2008.Dac;
-using SisoDb.Structures;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Sql2008
 {
@@ -36,8 +37,8 @@ namespace SisoDb.Sql2008
             ICommandBuilderFactory commandBuilderFactory)
             : base(dbClient, dbSchemaManager, dbSchemaUpserter, structureSchemas, jsonSerializer, jsonBatchDeserializer, queryGenerator, commandBuilderFactory)
         {
-            _identityGenerator = identityGenerator.AssertNotNull("identityGenerator");
-            _structureBuilder = structureBuilder.AssertNotNull("structureBuilder");
+            Ensure.That(() => identityGenerator).IsNotNull();
+            Ensure.That(() => structureBuilder).IsNotNull();
         }
 
         public void Commit()
@@ -209,7 +210,7 @@ namespace SisoDb.Sql2008
 
         public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
-            expression.AssertNotNull("expression");
+            Ensure.That(() => expression).IsNotNull();
 
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
             UpsertStructureSet(structureSchema);

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using SisoDb.Core;
+using EnsureThat;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying
 {
@@ -16,15 +15,18 @@ namespace SisoDb.Querying
 
         public GetCommandBuilder(ISortingParser sortingParser, IIncludeParser includeParser)
         {
-            SortingParser = sortingParser.AssertNotNull("sortingParser");
-            IncludeParser = includeParser.AssertNotNull("includeParser");
+            Ensure.That(() => sortingParser).IsNotNull();
+            Ensure.That(() => includeParser).IsNotNull();
+
+            SortingParser = sortingParser;
+            IncludeParser = includeParser;
 
             Command = new GetCommand();
         }
 
         public IGetCommandBuilder<T> SortBy(params Expression<Func<T, object>>[] sortings)
         {
-            sortings.AssertHasItems("sortings");
+            Ensure.That(() => sortings).HasItems();
 
             if (Command.Sortings != null)
                 throw new SisoDbException(ExceptionMessages.GetCommand_SortingsAllreadyInitialized);
@@ -36,12 +38,9 @@ namespace SisoDb.Querying
 
         public IGetCommandBuilder<T> Include<TInclude>(params Expression<Func<T, object>>[] includes) where TInclude : class
         {
-            includes.AssertHasItems("includes");
+            Ensure.That(() => includes).HasItems();
 
-            Command.Includes.Add(
-                IncludeParser.Parse(
-                    StructureTypeNameFor<TInclude>.Name,
-                    includes));
+            Command.Includes.Add(IncludeParser.Parse(StructureTypeNameFor<TInclude>.Name, includes));
 
             return this;
         }

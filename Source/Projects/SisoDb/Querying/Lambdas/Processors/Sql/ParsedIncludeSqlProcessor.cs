@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SisoDb.Core;
+using EnsureThat;
+using NCore;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 
@@ -12,7 +13,8 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
 
         public ParsedIncludeSqlProcessor(IMemberNameGenerator memberNameGenerator)
         {
-            MemberNameGenerator = memberNameGenerator.AssertNotNull("memberNameGenerator");
+            Ensure.That(() => memberNameGenerator).IsNotNull();
+            MemberNameGenerator = memberNameGenerator;
         }
 
         public IList<ISqlInclude> Process(IParsedLambda lambda)

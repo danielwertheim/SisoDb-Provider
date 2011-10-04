@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using SisoDb.Core;
+using EnsureThat;
 using SisoDb.Querying.Lambdas.Nodes;
 
 namespace SisoDb.Querying.Lambdas
@@ -12,9 +11,9 @@ namespace SisoDb.Querying.Lambdas
     {
         public ReadOnlyCollection<INode> Nodes { get; private set; }
 
-        public ParsedLambda(IEnumerable<INode> nodes)
+        public ParsedLambda(INode[] nodes)
         {
-            nodes.AssertHasItems("nodes");
+            Ensure.That(() => nodes).HasItems();
 
             Nodes = new ReadOnlyCollection<INode>(nodes.ToList());
         }
@@ -24,7 +23,7 @@ namespace SisoDb.Querying.Lambdas
             var thisNodes = Nodes.ToList();
             var otherNodes = other.Nodes;
 
-            return new ParsedLambda(thisNodes.Union(otherNodes));
+            return new ParsedLambda(thisNodes.Union(otherNodes).ToArray()); //TODO: Union or Merge?
         }
     }
 }
