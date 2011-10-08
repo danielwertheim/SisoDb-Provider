@@ -2,16 +2,17 @@
 using System.Linq;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 
 namespace SisoDb.Sql2008.Dac
 {
-    public class SqlBulkInserter
+    public class Sql2008DbBulkInserter : IDbBulkInserter
     {
-        private readonly Sql2008DbClient _dbClient;
+        private readonly IDbClient _dbClient;
 
-        public SqlBulkInserter(Sql2008DbClient dbClient)
+        public Sql2008DbBulkInserter(IDbClient dbClient)
         {
             _dbClient = dbClient;
         }

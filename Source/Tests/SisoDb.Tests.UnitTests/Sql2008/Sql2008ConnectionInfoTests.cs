@@ -15,7 +15,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var connectionInfoStub = Stub.This<ISisoConnectionInfo>(
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.SqlCe4));
 
-            var ex = Assert.Throws<SisoDbException>(() => new SqlConnectionInfo(connectionInfoStub));
+            var ex = Assert.Throws<SisoDbException>(() => new Sql2008ConnectionInfo(connectionInfoStub));
 
             Assert.AreEqual(
                 Sql2008Exceptions.SqlDatabase_UnsupportedProviderSpecified
@@ -31,7 +31,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008),
                 o => o.Setup(s => s.ConnectionString).Returns(cnString));
 
-            var cnInfo = new SqlConnectionInfo(cnInfoStub);
+            var cnInfo = new Sql2008ConnectionInfo(cnInfoStub);
 
             Assert.AreEqual(StorageProviders.Sql2008, cnInfo.ProviderType);
         }
@@ -45,7 +45,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008),
                 o => o.Setup(s => s.ConnectionString).Returns(cnString));
 
-            var cnInfo = new SqlConnectionInfo(cnInfoStub);
+            var cnInfo = new Sql2008ConnectionInfo(cnInfoStub);
 
             Assert.AreEqual("SisoDbTests.Temp", cnInfo.Name);
         }
@@ -59,7 +59,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
                 o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008),
                 o => o.Setup(s => s.ConnectionString).Returns(cnString));
 
-            var cnInfo = new SqlConnectionInfo(cnInfoStub);
+            var cnInfo = new Sql2008ConnectionInfo(cnInfoStub);
 
             Assert.AreEqual(@"Data Source=.;Initial Catalog=;Integrated Security=True", cnInfo.ServerConnectionString.PlainString);
         }

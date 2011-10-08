@@ -10,14 +10,13 @@ using SisoDb.Providers;
 
 namespace SisoDb.Dac
 {
-    public interface IDbClient
+    public interface IDbClient : IDisposable
     {
         string DbName { get; }
         StorageProviders ProviderType { get; }
         IConnectionString ConnectionString { get; }
         IDbDataTypeTranslator DbDataTypeTranslator { get; }
         ISqlStatements SqlStatements { get; }
-        void Dispose();
         void Flush();
         void Drop(IStructureSchema structureSchema);
         void RebuildIndexes(IStructureSchema structureSchema);
@@ -36,7 +35,6 @@ namespace SisoDb.Dac
         IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, IStructureSchema structureSchema);
 
-        void SingleResultSequentialReader(CommandType commandType, string sql,
-                                                          Action<IDataRecord> callback, params IDacParameter[] parameters);
+        void SingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
     }
 }

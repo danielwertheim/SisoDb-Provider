@@ -296,15 +296,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A connectionstring or connectionstring name needs to be passed to the constructor..
-        /// </summary>
-        public static string SisoConnectionInfo_MissingConnectionStringOrNameArg {
-            get {
-                return ResourceManager.GetString("SisoConnectionInfo_MissingConnectionStringOrNameArg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The provided StorageProvider &apos;{0}&apos; is not supported..
         /// </summary>
         public static string SisoDbFactory_UnknownStorageProvider {

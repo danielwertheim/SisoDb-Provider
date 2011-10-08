@@ -12,7 +12,7 @@ namespace SisoDb.Dynamic
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            var kvRepresentation = ServiceStackJsonSerializer<IDictionary<string, dynamic>>.ToItemOrNull(json);
+            var kvRepresentation = ServiceStackJsonSerializer<IDictionary<string, dynamic>>.Deserialize(json);
             if (kvRepresentation == null || kvRepresentation.Count < 1)
                 return null;
 

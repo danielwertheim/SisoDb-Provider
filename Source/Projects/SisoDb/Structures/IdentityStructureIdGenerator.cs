@@ -7,11 +7,11 @@ using SisoDb.Dac;
 
 namespace SisoDb.Structures
 {
-    public class IdentityStructureIdGenerator : IStructureIdGenerator
+    public class IdentityStructureIdGenerator : IStructureIdGenerator, IDisposable
     {
         private static readonly Type LongType = typeof (long);
 
-        private readonly IDbClient _dbClient;
+        private IDbClient _dbClient;
 
         public IdentityStructureIdGenerator(IDbClient dbClient)
         {
@@ -33,6 +33,15 @@ namespace SisoDb.Structures
 
             for (var c = 0; c < numOfIds; c++)
                 yield return StructureId.Create((nextId + c), LongType);
+        }
+
+        public void Dispose()
+        {
+            if (_dbClient != null)
+            {
+                _dbClient.Dispose();
+                _dbClient = null;
+            }
         }
     }
 }

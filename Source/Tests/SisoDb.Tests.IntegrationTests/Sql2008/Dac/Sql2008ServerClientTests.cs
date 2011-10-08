@@ -15,7 +15,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.Dac
         [Test]
         public void ForServerConnection_WhenServerExists_ConnectionIsAgainstMaster()
         {
-            using (var serverClient = new Sql2008ServerClient((SqlConnectionInfo)Database.ConnectionInfo))
+            using (var serverClient = new Sql2008ServerClient((Sql2008ConnectionInfo)Database.ConnectionInfo))
             {
                 Assert.AreEqual("Data Source=.\\sqlexpress;Initial Catalog=;Integrated Security=True", serverClient.ConnectionString.PlainString);
             }

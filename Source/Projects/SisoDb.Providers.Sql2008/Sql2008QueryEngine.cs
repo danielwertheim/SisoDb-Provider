@@ -13,29 +13,31 @@ using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Serialization;
-using SisoDb.Sql2008.Dac;
 
 namespace SisoDb.Sql2008
 {
     public class Sql2008QueryEngine : IQueryEngine
     {
-        protected readonly Sql2008DbClient DbClient;
+        protected readonly ISisoProviderFactory ProviderFactory;
+        protected readonly IDbClient DbClient;
         protected readonly IDbSchemaManager DbSchemaManager;
         protected readonly IDbSchemaUpserter DbSchemaUpserter;
         protected readonly IStructureSchemas StructureSchemas;
-        protected readonly ISqlQueryGenerator QueryGenerator;
+        protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly IJsonSerializer JsonSerializer;
         protected readonly ICommandBuilderFactory CommandBuilderFactory;
 
         protected internal Sql2008QueryEngine(
-            Sql2008DbClient dbClient,
+            ISisoProviderFactory providerFactory,
+            IDbClient dbClient,
             IDbSchemaManager dbSchemaManager, 
             IDbSchemaUpserter dbSchemaUpserter,
             IStructureSchemas structureSchemas,
             IJsonSerializer jsonSerializer,
-            ISqlQueryGenerator queryGenerator,
+            IDbQueryGenerator queryGenerator,
             ICommandBuilderFactory commandBuilderFactory)
         {
+            Ensure.That(() => providerFactory).IsNotNull();
             Ensure.That(() => dbClient).IsNotNull();
             Ensure.That(() => dbSchemaManager).IsNotNull();
             Ensure.That(() => dbSchemaUpserter).IsNotNull();
@@ -44,6 +46,7 @@ namespace SisoDb.Sql2008
             Ensure.That(() => queryGenerator).IsNotNull();
             Ensure.That(() => commandBuilderFactory).IsNotNull();
 
+            ProviderFactory = providerFactory;
             DbClient = dbClient;
             DbSchemaManager = dbSchemaManager;
             DbSchemaUpserter = dbSchemaUpserter;
@@ -82,7 +85,7 @@ namespace SisoDb.Sql2008
 
         public T GetById<T>(ValueType id) where T : class
         {
-            return JsonSerializer.ToItemOrNull<T>(
+            return JsonSerializer.Deserialize<T>(
                 GetByIdAsJson<T>(id));
         }
         
@@ -106,7 +109,7 @@ namespace SisoDb.Sql2008
             where TContract : class
             where TOut : class
         {
-            return JsonSerializer.ToItemOrNull<TOut>(
+            return JsonSerializer.Deserialize<TOut>(
                 GetByIdAsJson<TContract>(id));
         }
 

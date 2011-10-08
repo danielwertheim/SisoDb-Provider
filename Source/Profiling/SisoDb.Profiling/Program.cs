@@ -15,7 +15,7 @@ namespace SisoDb.Profiling
             Console.ReadKey();
             return;
 
-            //var cnInfo = new SisoConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
+            //var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
             //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
             //db.EnsureNewDatabase();
 

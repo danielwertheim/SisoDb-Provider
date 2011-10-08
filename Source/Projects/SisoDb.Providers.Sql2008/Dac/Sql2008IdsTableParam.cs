@@ -18,8 +18,7 @@ namespace SisoDb.Sql2008.Dac
             {
                 case StructureIdTypes.Guid:
                     return CreateGuidIdsTableParam(ids);
-                case StructureIdTypes.SmallIdentity:
-                case StructureIdTypes.BigIdentity:
+                case StructureIdTypes.Identity:
                     return CreateBigIdentityIdsTableParam(ids);
             }
 

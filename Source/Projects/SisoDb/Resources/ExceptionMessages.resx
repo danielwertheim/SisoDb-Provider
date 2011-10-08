@@ -138,9 +138,6 @@
   <data name="UnitOfWork_NoItemExistsForUpdate" xml:space="preserve">
     <value>There is no '{0}'-structure to update matching the sent Id '{1}'.</value>
   </data>
-  <data name="SisoConnectionInfo_MissingConnectionStringOrNameArg" xml:space="preserve">
-    <value>A connectionstring or connectionstring name needs to be passed to the constructor.</value>
-  </data>
   <data name="LambdaParser_VisitUnary_NotSupported" xml:space="preserve">
     <value>The unary operator '{0}' is not supported.</value>
   </data>

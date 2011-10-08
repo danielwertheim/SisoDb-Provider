@@ -3,7 +3,7 @@ using SisoDb.Commands;
 
 namespace SisoDb.Querying.Sql
 {
-    public interface ISqlQueryGenerator
+    public interface IDbQueryGenerator
     {
         ISqlCommandInfo Generate(IQueryCommand queryCommand, IStructureSchema schema);
 

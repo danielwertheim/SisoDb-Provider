@@ -49,7 +49,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
             var hashForColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("IndexableMember2");
             DbHelper.DropColumns(_indexesTableName, hashForColumn);
 
-            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
@@ -68,7 +68,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
             var obsoleteColumnDefinition = string.Format("[{0}] [int] sparse null", hashForObsoleteColumn);
             DbHelper.AddColumns(_indexesTableName, obsoleteColumnDefinition);
 
-            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var columnGenerator = SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
                 var synhronizer = new SqlDbIndexesSchemaSynchronizer(dbClient, columnGenerator);
@@ -81,9 +81,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
 
         private void CreateStructureSet()
         {
-            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
-                var upserter = new SqlDbSchemaUpserter(dbClient);
+                var upserter = new Sql2008DbSchemaUpserter(dbClient);
                 upserter.Upsert(_structureSchema);
             }
         }

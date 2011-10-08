@@ -21,7 +21,7 @@ namespace SisoDb.Sql2008.Dac
     /// Performs the ADO.Net communication for the Sql2008-provider for a
     /// specific database.
     /// </summary>
-    public class Sql2008DbClient : IDisposable, IDbClient
+    public class Sql2008DbClient : IDbClient
     {
         private SqlConnection _connection;
         private SqlTransaction _transaction;
@@ -40,7 +40,7 @@ namespace SisoDb.Sql2008.Dac
 
         public ISqlStatements SqlStatements { get; private set; }
 
-        public Sql2008DbClient(SqlConnectionInfo connectionInfo, bool transactional)
+        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
 

@@ -53,10 +53,10 @@
       <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
-      <HintPath>..\..\packages\PineCone.0.12.0\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.14.0\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.12.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.14.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

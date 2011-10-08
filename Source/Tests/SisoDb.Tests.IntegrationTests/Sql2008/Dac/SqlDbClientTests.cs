@@ -17,7 +17,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.Dac
         {
             DbHelperForServer.EnsureDbExists(TempDbName);
 
-            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)Database.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)Database.ConnectionInfo, false))
             {
                 Assert.AreEqual("data source=.\\sqlexpress;initial catalog=FA81E9F0F4904FE488BECF9B6005FAA2;integrated security=SSPI;", dbClient.ConnectionString.PlainString);
             }
@@ -28,7 +28,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.Dac
         {
             DbHelperForServer.EnsureDbExists(TempDbName);
 
-            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)Database.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)Database.ConnectionInfo, false))
             {
                 Assert.AreEqual(StorageProviders.Sql2008, dbClient.ProviderType);
             }
@@ -39,7 +39,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.Dac
         {
             DbHelperForServer.EnsureDbExists(TempDbName);
 
-            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)Database.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)Database.ConnectionInfo, false))
             {
                 Assert.AreEqual("FA81E9F0F4904FE488BECF9B6005FAA2", dbClient.DbName);
             }

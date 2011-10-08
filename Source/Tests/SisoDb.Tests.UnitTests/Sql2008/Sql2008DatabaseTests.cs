@@ -43,7 +43,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
 
             var db = new Sql2008Database(cnInfo);
 
-            Assert.IsInstanceOf(typeof(SqlConnectionInfo), db.ConnectionInfo);
+            Assert.IsInstanceOf(typeof(Sql2008ConnectionInfo), db.ConnectionInfo);
         }
     }
 }

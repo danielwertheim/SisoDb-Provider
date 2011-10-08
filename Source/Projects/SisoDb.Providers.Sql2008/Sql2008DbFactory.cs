@@ -9,7 +9,9 @@
 
         public ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008Database(connectionInfo);
+            var providerFactory = SisoEnvironment.ProviderFactories.Get(StorageProviders.Sql2008);
+
+            return new Sql2008Database(connectionInfo, providerFactory);
         }
     }
 }

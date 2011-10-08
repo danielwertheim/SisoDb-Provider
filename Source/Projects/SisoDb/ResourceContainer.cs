@@ -1,10 +1,7 @@
 ﻿using System;
-using PineCone;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.Builders;
-using PineCone.Structures.Schemas.Configuration;
-using SisoDb.DbSchema;
 using SisoDb.Serialization;
 
 namespace SisoDb
@@ -13,33 +10,25 @@ namespace SisoDb
     {
         private readonly IJsonSerializer _defaultJsonSerializer;
         private readonly IMemberNameGenerator _defaultMemberNameGenerator;
-        private readonly IStructureTypeReflecter _defaultStructureTypeReflecter;
+        private readonly IStructureSchemas _defaultStructureSchemas;
+        private readonly IStructureBuilder _defaultStructureBuilder;
 
         public readonly Func<IJsonSerializer> ResolveJsonSerializer;
         public readonly Func<IMemberNameGenerator> ResolveMemberNameGenerator;
-        public readonly Func<IStructureTypeReflecter> ResolveStructureTypeReflecter;
-
-        public Func<IDbSchemaManager> ResolveDbSchemaManager;
-        public Func<IStructureSchemas> ResolveStructureSchemas;
-        public Func<IStructureBuilder> ResolveStructureBuilder;
+        public readonly Func<IStructureSchemas> ResolveStructureSchemas;
+        public readonly Func<IStructureBuilder> ResolveStructureBuilder;
 
         public ResourceContainer()
         {
             _defaultJsonSerializer = new ServiceStackJsonSerializer();
             _defaultMemberNameGenerator = new MemberNameGenerator();
-            _defaultStructureTypeReflecter = new StructureTypeReflecter();
-
+            _defaultStructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
+            _defaultStructureBuilder = new StructureBuilder();
+            
             ResolveJsonSerializer = () => _defaultJsonSerializer;
             ResolveMemberNameGenerator = () => _defaultMemberNameGenerator;
-            ResolveStructureTypeReflecter = () => _defaultStructureTypeReflecter;
-
-            ResolveDbSchemaManager = () => new DbSchemaManager();
-            ResolveStructureBuilder = () => new StructureBuilder(new StructureIdGenerators(), new StructureIndexesFactory());
-
-            var structureTypeFactory = new StructureTypeFactory(ResolveStructureTypeReflecter(), new StructureTypeConfigurations());
-            var schemaBuilder = new AutoSchemaBuilder();
-
-            ResolveStructureSchemas = () => new StructureSchemas(structureTypeFactory, schemaBuilder);
+            ResolveStructureSchemas = () => _defaultStructureSchemas;
+            ResolveStructureBuilder = () => _defaultStructureBuilder;
         }
     }
 }

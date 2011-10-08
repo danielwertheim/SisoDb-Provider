@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
@@ -14,19 +13,19 @@ namespace SisoDb.Sql2008.Dac
     /// Performs the ADO.Net communication for the Sql-provider and
     /// executes command against the server not a specific database.
     /// </summary>
-    public class Sql2008ServerClient : IDisposable
+    public class Sql2008ServerClient : IServerClient
     {
         private SqlConnection _connection;
 
-        internal StorageProviders ProviderType { get; private set; }
+        public StorageProviders ProviderType { get; private set; }
 
-        internal IConnectionString ConnectionString { get; private set; }
-        
-        internal IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
+        public IConnectionString ConnectionString { get; private set; }
 
-        internal ISqlStatements SqlStatements { get; private set; }
+        public IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
 
-        internal Sql2008ServerClient(SqlConnectionInfo connectionInfo)
+        public ISqlStatements SqlStatements { get; private set; }
+
+        public Sql2008ServerClient(ISisoConnectionInfo connectionInfo)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
 
@@ -52,7 +51,7 @@ namespace SisoDb.Sql2008.Dac
             _connection = null;
         }
 
-        internal bool DatabaseExists(string name)
+        public bool DatabaseExists(string name)
         {
             var sql = SqlStatements.GetSql("DatabaseExists");
 
@@ -62,7 +61,7 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        internal void CreateDatabase(string name)
+        public void CreateDatabase(string name)
         {
             var sql = SqlStatements.GetSql("CreateDatabase").Inject(name);
 
@@ -74,7 +73,7 @@ namespace SisoDb.Sql2008.Dac
             InitializeExistingDb(name);
         }
 
-        internal void InitializeExistingDb(string name)
+        public void InitializeExistingDb(string name)
         {
             var sqlCreateIdentitiesTables = SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
 
@@ -87,7 +86,7 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        internal void DropDatabaseIfExists(string name)
+        public void DropDatabaseIfExists(string name)
         {
             var sql = SqlStatements.GetSql("DropDatabase").Inject(name);
 

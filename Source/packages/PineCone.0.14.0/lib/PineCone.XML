@@ -102,7 +102,7 @@
             Items.
             </summary>
         </member>
-        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructure``1(``0,PineCone.Structures.Schemas.IStructureSchema)">
+        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructure``1(``0,PineCone.Structures.Schemas.IStructureSchema,PineCone.Structures.IStructureIdGenerator)">
             <summary>
             Creates a single <see cref="T:PineCone.Structures.IStructure"/> for sent <typeparamref name="T"/> item.
             The item will be assigned a new Sequential Guid Id as StructureId.
@@ -110,9 +110,10 @@
             <typeparam name="T"></typeparam>
             <param name="item"></param>
             <param name="structureSchema"></param>
+            <param name="structureIdGenerator">Optional</param>
             <returns></returns>
         </member>
-        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructures``1(System.Collections.Generic.ICollection{``0},PineCone.Structures.Schemas.IStructureSchema)">
+        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructures``1(System.Collections.Generic.ICollection{``0},PineCone.Structures.Schemas.IStructureSchema,PineCone.Structures.IStructureIdGenerator)">
             <summary>
             Yields each item as an <see cref="T:PineCone.Structures.IStructure"/>.
             All items will be assigned a new Sequential Guid Id as StructureId.
@@ -120,9 +121,10 @@
             <typeparam name="T"></typeparam>
             <param name="items"></param>
             <param name="structureSchema"></param>
+            <param name="structureIdGenerator">Optional</param>
             <returns></returns>
         </member>
-        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructureBatches``1(System.Collections.Generic.ICollection{``0},PineCone.Structures.Schemas.IStructureSchema,System.Int32)">
+        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructureBatches``1(System.Collections.Generic.ICollection{``0},PineCone.Structures.Schemas.IStructureSchema,System.Int32,PineCone.Structures.IStructureIdGenerator)">
             <summary>
             Yields batches of <see cref="T:PineCone.Structures.IStructure"/> for sent <typeparamref name="T"/> item.
             All items will be assigned a new Sequential Guid Id as StructureId.
@@ -130,14 +132,22 @@
             <typeparam name="T"></typeparam>
             <param name="items"></param>
             <param name="structureSchema"></param>
+            <param name="structureIdGenerator">Optional</param>
             <param name="maxBatchSize"></param>
             <returns></returns>
         </member>
-        <member name="P:PineCone.Structures.IStructureBuilder.StructureIdGenerators">
+        <member name="P:PineCone.Structures.IStructureBuilder.IndexesFactory">
             <summary>
-            Collection of <see cref="T:PineCone.Structures.IStructureIdGenerator"/> that is used
-            to generate StructureIds. As default, only <see cref="T:PineCone.Structures.GuidStructureIdGenerator"/>
-            is registrered.
+            Factory used for constructing <see cref="T:PineCone.Structures.IStructureIndex"/>.
+            </summary>
+        </member>
+        <member name="P:PineCone.Structures.IStructureBuilder.IdGenerator">
+            <summary>
+            Default structure Id generator that will be used if
+            you dont call <see cref="M:PineCone.Structures.IStructureBuilder.CreateStructure``1(``0,PineCone.Structures.Schemas.IStructureSchema,PineCone.Structures.IStructureIdGenerator)"/> or
+            <see cref="M:PineCone.Structures.IStructureBuilder.CreateStructures``1(System.Collections.Generic.ICollection{``0},PineCone.Structures.Schemas.IStructureSchema,PineCone.Structures.IStructureIdGenerator)"/> or
+            <see cref="M:PineCone.Structures.IStructureBuilder.CreateStructureBatches``1(System.Collections.Generic.ICollection{``0},PineCone.Structures.Schemas.IStructureSchema,System.Int32,PineCone.Structures.IStructureIdGenerator)"/> with a
+            specific <see cref="T:PineCone.Structures.IStructureIdGenerator"/>.
             </summary>
         </member>
         <member name="P:PineCone.Structures.IStructureBuilder.Serializer">

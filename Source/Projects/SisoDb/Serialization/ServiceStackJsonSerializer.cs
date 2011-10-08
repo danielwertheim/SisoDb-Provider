@@ -9,27 +9,27 @@ namespace SisoDb.Serialization
 {
     public class ServiceStackJsonSerializer : IJsonSerializer
     {
-        public string ToJsonOrEmptyString<T>(T item) where T : class
+        public string Serialize<T>(T item) where T : class
         {
-            return ServiceStackJsonSerializer<T>.ToJsonOrEmptyString(item);
+            return ServiceStackJsonSerializer<T>.Serialize(item);
         }
 
-        public T ToItemOrNull<T>(string json) where T : class
+        public T Deserialize<T>(string json) where T : class
         {
-            return ServiceStackJsonSerializer<T>.ToItemOrNull(json);
+            return ServiceStackJsonSerializer<T>.Deserialize(json);
         }
 
-        public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class
+        public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
-            return ParallelDeserialize<T>(sourceData);
+            return DeserializeManyInParallel<T>(sourceData);
         }
 
-        //private IEnumerable<T> SequentialDeserialize<T>(IEnumerable<string> sourceData) where T : class
-        //{
-        //    return sourceData.Select(ToItemOrNull<T>);
-        //}
+        private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
+        {
+            return sourceData.Select(Deserialize<T>);
+        }
 
-        private IEnumerable<T> ParallelDeserialize<T>(IEnumerable<string> sourceData) where T : class
+        private IEnumerable<T> DeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
         {
             using (var q = new BlockingCollection<string>())
             {
@@ -45,7 +45,7 @@ namespace SisoDb.Serialization
                 {
                     string json;
                     if (q.TryTake(out json))
-                        yield return ToItemOrNull<T>(json);
+                        yield return Deserialize<T>(json);
                 }
 
                 Task.WaitAll(task);
@@ -53,32 +53,33 @@ namespace SisoDb.Serialization
                 q.CompleteAdding();
 
                 while (q.Count > 0)
-                    yield return ToItemOrNull<T>(q.Take());
+                    yield return Deserialize<T>(q.Take());
             }
         }
     }
 
-    internal static class ServiceStackJsonSerializer<T> where T : class
+    public static class ServiceStackJsonSerializer<T> where T : class
     {
         static ServiceStackJsonSerializer()
         {
+
             TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 
         private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
         {
             return properties.Where(p => 
-                !SisoEnvironment.Resources.ResolveStructureTypeReflecter().HasIdProperty(p.PropertyType)).ToArray();
+                !SisoEnvironment.Resources.ResolveStructureSchemas().StructureTypeFactory.Reflecter.HasIdProperty(p.PropertyType)).ToArray();
         }
 
-        internal static string ToJsonOrEmptyString(T item)
+        public static string Serialize(T item)
         {
             return item == null 
                 ? string.Empty 
                 : JsonSerializer.SerializeToString(item);
         }
 
-        internal static T ToItemOrNull(string json)
+        public static T Deserialize(string json)
         {
             return string.IsNullOrWhiteSpace(json) 
                 ? null 

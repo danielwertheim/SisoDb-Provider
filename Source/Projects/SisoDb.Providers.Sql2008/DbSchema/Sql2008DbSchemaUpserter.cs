@@ -8,7 +8,7 @@ using SisoDb.Providers;
 
 namespace SisoDb.Sql2008.DbSchema
 {
-    public class SqlDbSchemaUpserter : IDbSchemaUpserter
+    public class Sql2008DbSchemaUpserter : IDbSchemaUpserter
     {
         private readonly SqlDbStructuresSchemaBuilder _structuresDbSchemaBuilder;
         private readonly SqlDbIndexesSchemaBuilder _indexesDbSchemaBuilder;
@@ -18,7 +18,7 @@ namespace SisoDb.Sql2008.DbSchema
         private readonly SqlDbUniquesSchemaSynchronizer _uniquesDbSchemaSynchronizer;
         private readonly IDbClient _dbClient;
 
-        public SqlDbSchemaUpserter(IDbClient dbClient)
+        public Sql2008DbSchemaUpserter(IDbClient dbClient)
         {
             Ensure.That(() => dbClient).IsNotNull();
 

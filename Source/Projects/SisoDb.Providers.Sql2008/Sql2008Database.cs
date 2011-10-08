@@ -1,172 +1,170 @@
 using System;
 using EnsureThat;
 using NCore;
-using PineCone;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
-using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Providers;
 using SisoDb.Resources;
-using SisoDb.Sql2008.Dac;
-using SisoDb.Sql2008.DbSchema;
 
 namespace SisoDb.Sql2008
 {
     public class Sql2008Database : ISisoDatabase
     {
-        private readonly SqlConnectionInfo _connectionInfo;
+        private readonly ISisoProviderFactory _providerFactory;
+        private readonly ISisoConnectionInfo _connectionInfo;
         private readonly IDbSchemaManager _dbSchemaManager;
         private readonly IStructureSchemas _structureSchemas;
-
-        //var dbClientNonTrans = new Sql2008DbClient(_connectionInfo, false);lkhgfhgfhgf
-        //var identityGenerator = new SqlIdentityGenerator(dbClientNonTrans);
+        private readonly IStructureBuilder _structureBuilder;
 
         public string Name
         {
-            get { return _connectionInfo.Name; }
+            get { return _connectionInfo.DbName; }
         }
-        
+
         public ISisoConnectionInfo ConnectionInfo
         {
             get { return _connectionInfo; }
         }
 
-        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo)
+        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
+            Ensure.That(() => providerFactory).IsNotNull();
 
-            _connectionInfo = new SqlConnectionInfo(connectionInfo);
-            _dbSchemaManager = SisoEnvironment.Resources.ResolveDbSchemaManager();
+            _connectionInfo = connectionInfo;
+            _providerFactory = providerFactory;
+
+            _dbSchemaManager = _providerFactory.GetDbSchemaManager();
             _structureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
+            _structureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
         }
 
         public virtual void EnsureNewDatabase()
         {
-            using (var client = new Sql2008ServerClient(_connectionInfo))
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
             {
-                client.DropDatabaseIfExists(Name);
+                serverClient.DropDatabaseIfExists(Name);
 
-                client.CreateDatabase(Name);
+                serverClient.CreateDatabase(Name);
             }
         }
 
         public virtual void CreateIfNotExists()
         {
-            using (var client = new Sql2008ServerClient(_connectionInfo))
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
             {
-                if (!client.DatabaseExists(Name))
-                    client.CreateDatabase(Name);
+                if (!serverClient.DatabaseExists(Name))
+                    serverClient.CreateDatabase(Name);
             }
         }
 
         public virtual void InitializeExisting()
         {
-            using (var client = new Sql2008ServerClient(_connectionInfo))
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
             {
-                if (!client.DatabaseExists(Name))
+                if (!serverClient.DatabaseExists(Name))
                     throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(Name));
 
-                client.InitializeExistingDb(Name);
+                serverClient.InitializeExistingDb(Name);
             }
         }
 
         public virtual void DeleteIfExists()
         {
-            using (var client = new Sql2008ServerClient(_connectionInfo))
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
             {
-                client.DropDatabaseIfExists(Name);
+                serverClient.DropDatabaseIfExists(Name);
             }
         }
 
         public virtual bool Exists()
         {
-            using (var client = new Sql2008ServerClient(_connectionInfo))
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
             {
-                return client.DatabaseExists(Name);
+                return serverClient.DatabaseExists(Name);
             }
         }
 
         public void DropStructureSet<T>() where T : class
         {
-            using (var client = new Sql2008DbClient(_connectionInfo, true))
+            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
             {
                 var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
-                
-                _dbSchemaManager.DropStructureSet(structureSchema, client);
+
+                _dbSchemaManager.DropStructureSet(structureSchema, dbClient);
 
                 _structureSchemas.RemoveSchema(TypeFor<T>.Type);
 
-                client.Flush();
+                dbClient.Flush();
             }
         }
 
         public void UpsertStructureSet<T>() where T : class
         {
-            using (var client = new Sql2008DbClient(_connectionInfo, true))
+            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
             {
-                var upserter = new SqlDbSchemaUpserter(client);
+                var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClient);
                 var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
-                _dbSchemaManager.UpsertStructureSet(structureSchema, upserter);
+                _dbSchemaManager.UpsertStructureSet(structureSchema, dbSchemaUpserter);
 
-                client.Flush();
+                dbClient.Flush();
             }
         }
 
         public void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
-            where TOld : class 
+            where TOld : class
             where TNew : class
         {
             var structureSchemaOld = _structureSchemas.GetSchema(TypeFor<TOld>.Type);
-
             _structureSchemas.RemoveSchema(TypeFor<TOld>.Type);
 
             var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
-            
-            var updater = new Sql2008StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _pineConizer.Builder);
-            
-            updater.Process(onProcess);
+
+            using (var identityIdGenerator = _providerFactory.GetStructureIdGeneratorForIdentities(ConnectionInfo))
+            {
+                var structureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
+                var updater = new Sql2008StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, structureBuilder);
+                updater.Process(onProcess);
+            }
         }
 
         public IQueryEngine CreateQueryEngine()
         {
-            var dbClient = new Sql2008DbClient(_connectionInfo, false);
-            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
+            var dbClient = _providerFactory.GetDbClient(_connectionInfo, false);
+            var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClient);
+            var queryGenerator = _providerFactory.GetDbQueryGenerator();
+            var commandBuilderFactory = _providerFactory.GetCommandBuilderFactory();
+            var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
 
-            var queryGenerator = new SqlQueryGenerator(
-                new ParsedWhereSqlProcessor(memberNameGenerator),
-                new ParsedSortingSqlProcessor(memberNameGenerator),
-                new ParsedIncludeSqlProcessor(memberNameGenerator));
-            
             return new Sql2008QueryEngine(
+                _providerFactory,
                 dbClient,
                 _dbSchemaManager,
-                new SqlDbSchemaUpserter(dbClient),
-                _pineConizer,
-                SisoEnvironment.Resources.ResolveJsonSerializer(),
+                dbSchemaUpserter,
+                _structureSchemas,
+                jsonSerializer,
                 queryGenerator,
-                new CommandBuilderFactory());
+                commandBuilderFactory);
         }
 
         public IUnitOfWork CreateUnitOfWork()
         {
-            var dbClient = new Sql2008DbClient(_connectionInfo, true);
-            var dbClientNonTrans = new Sql2008DbClient(_connectionInfo, false);
-            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
-
-            var queryGenerator = new SqlQueryGenerator(
-                new ParsedWhereSqlProcessor(memberNameGenerator),
-                new ParsedSortingSqlProcessor(memberNameGenerator),
-                new ParsedIncludeSqlProcessor(memberNameGenerator));
-
-            var commandBuilderFactory = new CommandBuilderFactory();
-            var dbSchemaUpserter = new SqlDbSchemaUpserter(dbClientNonTrans);
-
+            var dbClient = _providerFactory.GetDbClient(_connectionInfo, true);
+            var dbClientNonTrans = _providerFactory.GetDbClient(_connectionInfo, false);
+            var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClientNonTrans);
+            var queryGenerator = _providerFactory.GetDbQueryGenerator();
+            var commandBuilderFactory = _providerFactory.GetCommandBuilderFactory();
+            var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+            
             return new Sql2008UnitOfWork(
-                dbClient,  
-                _dbSchemaManager, dbSchemaUpserter,
-                _pineConizer, 
-                SisoEnvironment.Resources.ResolveJsonSerializer(),
+                _providerFactory,
+                dbClient,
+                _dbSchemaManager,
+                dbSchemaUpserter,
+                _structureSchemas,
+                _structureBuilder,
+                jsonSerializer,
                 queryGenerator,
                 commandBuilderFactory);
         }

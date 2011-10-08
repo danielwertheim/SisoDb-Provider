@@ -13,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         [Test]
         public void ToJsonOrEmptyString_WhenNullEntity_ReturnsEmptyString()
         {
-            var json = _jsonSerializer.ToJsonOrEmptyString<JsonEntity>(null);
+            var json = _jsonSerializer.Serialize<JsonEntity>(null);
 
             Assert.AreEqual(string.Empty, json);
         }
@@ -23,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         {
             var entity = new JsonEntityWithPrivateGetter { Name = "Daniel" };
 
-            var json = _jsonSerializer.ToJsonOrEmptyString(entity);
+            var json = _jsonSerializer.Serialize(entity);
 
             Assert.AreEqual("{}", json);
         }
@@ -34,7 +34,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
             var entity = new JsonEntity();
             entity.SetName("Daniel");
 
-            var json = _jsonSerializer.ToJsonOrEmptyString(entity);
+            var json = _jsonSerializer.Serialize(entity);
 
             Assert.AreEqual("{\"Name\":\"Daniel\"}", json);
         }
@@ -44,7 +44,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         {
             var json = @"{""Name"":""Daniel""}";
 
-            var entity = _jsonSerializer.ToItemOrNull<JsonEntity>(json);
+            var entity = _jsonSerializer.Deserialize<JsonEntity>(json);
 
             Assert.AreEqual("Daniel", entity.Name);
         }
@@ -54,7 +54,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         {
             var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)) };
 
-            var json = _jsonSerializer.ToJsonOrEmptyString<JsonEntityX>(y);
+            var json = _jsonSerializer.Serialize<JsonEntityX>(y);
 
             Assert.AreEqual("{\"String1\":\"The String1\",\"Int1\":42}", json);
         }
@@ -69,7 +69,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
                 Item = {String1 = "To be included"}
             };
 
-            var json = _jsonSerializer.ToJsonOrEmptyString(structure);
+            var json = _jsonSerializer.Serialize(structure);
 
             const string expectedJson = "{\"SisoId\":0,\"ReferencedSisoId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);

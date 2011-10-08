@@ -6,12 +6,13 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Serialization;
-using SisoDb.Sql2008.Dac;
 
 namespace SisoDb.Sql2008
 {
@@ -22,15 +23,16 @@ namespace SisoDb.Sql2008
         protected readonly IStructureBuilder StructureBuilder;
 
         protected internal Sql2008UnitOfWork(
-            Sql2008DbClient dbClient,
+            ISisoProviderFactory providerFactory,
+            IDbClient dbClient,
             IDbSchemaManager dbSchemaManager,
             IDbSchemaUpserter dbSchemaUpserter,
             IStructureSchemas structureSchemas,
             IStructureBuilder structureBuilder,
             IJsonSerializer jsonSerializer,
-            ISqlQueryGenerator queryGenerator,
+            IDbQueryGenerator queryGenerator,
             ICommandBuilderFactory commandBuilderFactory)
-            : base(dbClient, dbSchemaManager, dbSchemaUpserter, structureSchemas, jsonSerializer, queryGenerator, commandBuilderFactory)
+            : base(providerFactory, dbClient, dbSchemaManager, dbSchemaUpserter, structureSchemas, jsonSerializer, queryGenerator, commandBuilderFactory)
         {
             Ensure.That(() => structureBuilder).IsNotNull();
 
@@ -50,13 +52,13 @@ namespace SisoDb.Sql2008
 
             var structure = StructureBuilder.CreateStructure(item, structureSchema);
 
-            var bulkInserter = new SqlBulkInserter(DbClient);
+            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { structure });
         }
 
         public void InsertJson<T>(string json) where T : class
         {
-            Insert(JsonSerializer.ToItemOrNull<T>(json));
+            Insert(JsonSerializer.Deserialize<T>(json));
         }
 
         public void InsertMany<T>(IList<T> items) where T : class
@@ -65,7 +67,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            var bulkInserter = new SqlBulkInserter(DbClient);
+            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
 
             foreach (var batchOfStructures in StructureBuilder.CreateStructureBatches(items, structureSchema, BatchSize))
                 bulkInserter.Insert(structureSchema, batchOfStructures);
@@ -73,7 +75,7 @@ namespace SisoDb.Sql2008
 
         public void InsertManyJson<T>(IList<string> json) where T : class
         {
-            InsertMany(JsonSerializer.Deserialize<T>(json).ToList());
+            InsertMany(JsonSerializer.DeserializeMany<T>(json).ToList());
         }
 
         public void Update<T>(T item) where T : class
@@ -91,7 +93,7 @@ namespace SisoDb.Sql2008
 
             DeleteById(structureSchema, updatedStructure.Id.Value);
 
-            var bulkInserter = new SqlBulkInserter(DbClient);
+            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 

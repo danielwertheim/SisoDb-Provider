@@ -5,6 +5,7 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 using SisoDb.Providers;
 using SisoDb.Resources;
 using SisoDb.Sql2008.Dac;
@@ -23,7 +24,7 @@ namespace SisoDb.Sql2008
 
         protected Queue<TNew> KeepQueue { get; private set; }
 
-        protected SqlConnectionInfo ConnectionInfo { get; private set; }
+        protected ISisoConnectionInfo ConnectionInfo { get; private set; }
 
         protected IStructureSchema StructureSchemaOld { get; private set; }
 
@@ -32,8 +33,9 @@ namespace SisoDb.Sql2008
         protected IStructureBuilder StructureBuilder { get; private set; }
 
         public Sql2008StructureSetUpdater(
-            SqlConnectionInfo connectionInfo, 
-            IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew,
+            ISisoConnectionInfo connectionInfo, 
+            IStructureSchema structureSchemaOld,
+            IStructureSchema structureSchemaNew,
             IStructureBuilder structureBuilder)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
@@ -58,16 +60,13 @@ namespace SisoDb.Sql2008
                 if (ItterateStructures(dbClient, onProcess))
                     dbClient.Flush();
 
-                dbClient.RebuildIndexes(
-                    StructureSchemaNew.GetStructureTableName(),
-                    StructureSchemaNew.GetIndexesTableName(),
-                    StructureSchemaNew.GetUniquesTableName());
+                dbClient.RebuildIndexes(StructureSchemaNew);
             }
         }
 
-        private void UpsertSchema(Sql2008DbClient dbClient)
+        private void UpsertSchema(IDbClient dbClient)
         {
-            var upserter = new SqlDbSchemaUpserter(dbClient);
+            var upserter = new Sql2008DbSchemaUpserter(dbClient);
             upserter.Upsert(StructureSchemaNew);
         }
 
@@ -164,7 +163,7 @@ namespace SisoDb.Sql2008
             KeepQueue.Enqueue(newStructure);
         }
 
-        protected virtual void DequeueStructuresToKeep(Sql2008DbClient dbClient)
+        protected virtual void DequeueStructuresToKeep(IDbClient dbClient)
         {
             if (KeepQueue.Count < 1)
                 return;
@@ -176,7 +175,7 @@ namespace SisoDb.Sql2008
                 var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew);
                 structures.Add(structureItem);
             }
-            var bulkInserter = new SqlBulkInserter(dbClient);
+            var bulkInserter = new Sql2008DbBulkInserter(dbClient);
             bulkInserter.Insert(StructureSchemaNew, structures);
         }
 
@@ -186,16 +185,12 @@ namespace SisoDb.Sql2008
             _deleteIdTo = sisoId;
         }
 
-        protected virtual void DequeueStructuresToTrash(Sql2008DbClient dbClient)
+        protected virtual void DequeueStructuresToTrash(IDbClient dbClient)
         {
             if (_deleteIdFrom == null)
                 return;
             
-            dbClient.DeleteWhereIdIsBetween(
-              _deleteIdFrom.Value, _deleteIdTo.Value,
-              StructureSchemaOld.GetStructureTableName(),
-              StructureSchemaOld.GetIndexesTableName(),
-              StructureSchemaOld.GetUniquesTableName());
+            dbClient.DeleteWhereIdIsBetween(_deleteIdFrom.Value, _deleteIdTo.Value, StructureSchemaOld);
 
             _deleteIdFrom = null;
             _deleteIdTo = null;
