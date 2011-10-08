@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Transactions;
 using Microsoft.SqlServer.Server;
+using NCore;
 using SisoDb.Commands;
 using SisoDb.Core;
 using SisoDb.Dac;
@@ -244,13 +245,13 @@ namespace SisoDb.SqlCe4.Dac
             return ExecuteScalar<int>(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
         }
 
-        public int CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
+        public long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
         {
             entityHash.AssertNotNullOrWhiteSpace("entityHash");
 
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
-            return ExecuteScalar<int>(CommandType.Text, sql,
+            return ExecuteScalar<long>(CommandType.Text, sql,
                                                 new DacParameter("entityHash", entityHash),
                                                 new DacParameter("numOfIds", numOfIds));
         }

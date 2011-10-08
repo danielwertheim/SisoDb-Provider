@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EnsureThat;
+using PineCone.Structures.Schemas;
 using SisoDb.Commands;
-using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Sql2008
 {
@@ -25,15 +25,19 @@ namespace SisoDb.Sql2008
             IParsedLambdaProcessor<ISqlSorting> parsedSortingProcessor,
             IParsedLambdaProcessor<IList<ISqlInclude>> parsedIncludeProcessor)
         {
-            _parsedWhereProcessor = parsedWhereProcessor.AssertNotNull("parsedWhereProcessor");
-            _parsedSortingProcessor = parsedSortingProcessor.AssertNotNull("parsedSortingProcessor");
-            _parsedIncludeProcessor = parsedIncludeProcessor.AssertNotNull("parsedIncludeProcessor");
+            Ensure.That(() => parsedWhereProcessor).IsNotNull();
+            Ensure.That(() => parsedSortingProcessor).IsNotNull();
+            Ensure.That(() => parsedIncludeProcessor).IsNotNull();
+
+            _parsedWhereProcessor = parsedWhereProcessor;
+            _parsedSortingProcessor = parsedSortingProcessor;
+            _parsedIncludeProcessor = parsedIncludeProcessor;
         }
 
         public ISqlCommandInfo Generate(IQueryCommand queryCommand, IStructureSchema schema)
         {
-            queryCommand.AssertNotNull("queryCommand");
-            schema.AssertNotNull("schema");
+            Ensure.That(() => queryCommand).IsNotNull();
+            Ensure.That(() => schema).IsNotNull();
 
             var whereTuple = GenerateWhereStringAndParams(queryCommand);
             var buildInfo = new SqlCommandBuildInfo
@@ -68,9 +72,11 @@ namespace SisoDb.Sql2008
         private static ISqlCommandInfo CreateSqlCommandInfoForPaging(SqlCommandBuildInfo sqlCommandBuildInfo, Paging paging)
         {
             var orderBySql = string.IsNullOrWhiteSpace(sqlCommandBuildInfo.OrderBySql)
-                                 ? "order by s.SisoId"
-                                 : sqlCommandBuildInfo.OrderBySql;
+                ? "order by s.SisoId"
+                : sqlCommandBuildInfo.OrderBySql;
+
             const string sqlFormat = "with pagedRs as ({0}){1};";
+            
             var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.SisoId = s.SisoId{5}",
                 sqlCommandBuildInfo.TakeSql,
                 sqlCommandBuildInfo.IncludesSql,
@@ -78,7 +84,9 @@ namespace SisoDb.Sql2008
                 sqlCommandBuildInfo.StructureTableName,
                 sqlCommandBuildInfo.IndexesTableName,
                 sqlCommandBuildInfo.WhereSql);
+            
             var outerSelect = string.Format("select Json{0} from pagedRs where RowNum between @pagingFrom and @pagingTo", sqlCommandBuildInfo.IncludesSql);
+            
             var sql = string.Format(sqlFormat, innerSelect, outerSelect);
 
             var takeFromRowNum = (paging.PageIndex * paging.PageSize) + 1;
@@ -146,7 +154,7 @@ namespace SisoDb.Sql2008
 
         public ISqlCommandInfo GenerateWhere(IQueryCommand queryCommand)
         {
-            queryCommand.AssertNotNull("queryCommand");
+            Ensure.That(() => queryCommand).IsNotNull();
 
             if (!queryCommand.HasWhere)
                 throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);

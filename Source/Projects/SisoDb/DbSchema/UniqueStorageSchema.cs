@@ -9,12 +9,13 @@ namespace SisoDb.DbSchema
     {
         public static class Fields
         {
-            public static readonly SchemaField SisoId = new SchemaField(0, "SisoId");
-            public static readonly SchemaField UqSisoId = new SchemaField(1, "UqSisoId");
+            public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
+            public static readonly SchemaField UqStructureId = new SchemaField(1, "UqStructureId");
             public static readonly SchemaField UqName = new SchemaField(2, "UqName");
             public static readonly SchemaField UqValue = new SchemaField(3, "UqValue");
-            internal static readonly SchemaField[] OrderedFields = new[] { SisoId, UqSisoId, UqName, UqValue };
         }
+
+        private static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId, Fields.UqStructureId, Fields.UqName, Fields.UqValue };
 
         public UniqueStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetUniquesTableName())
@@ -23,7 +24,7 @@ namespace SisoDb.DbSchema
 
         protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
         {
-            return Fields.OrderedFields;
+            return OrderedFields;
         }
     }
 }

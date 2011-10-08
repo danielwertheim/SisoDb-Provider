@@ -71,49 +71,21 @@ namespace SisoDb
             where T : class;
 
         /// <summary>
-        /// Deletes structure by SisoId using a guid.
+        /// Deletes structure by id.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
-        void DeleteById<T>(Guid id) 
-            where T : class;
-
-        /// <summary>
-        /// Deletes structure by SisoId using an integer.
-        /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
-        void DeleteById<T>(int id) 
+        void DeleteById<T>(ValueType id) 
             where T : class;
 
         /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>
-        /// matching passed identities.
+        /// matching passed ids.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
-        void DeleteByIds<T>(IEnumerable<int> ids)
-            where T : class;
-
-        /// <summary>
-        /// Deletes all structures for the defined structure <typeparamref name="T"/>
-        /// matching passed Guids.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="ids">Ids used for matching the structures to delete.</param>
-        void DeleteByIds<T>(IEnumerable<Guid> ids)
-            where T : class;
-
-        /// <summary>
-        /// Deletes all structures for the defined structure <typeparamref name="T"/>
-        /// having an id in the intervall.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="idFrom"></param>
-        /// <param name="idTo"></param>
-        void DeleteByIdInterval<T>(int idFrom, int idTo)
+        void DeleteByIds<T>(IEnumerable<ValueType> ids)
             where T : class;
 
         /// <summary>
@@ -124,7 +96,7 @@ namespace SisoDb
         /// <param name="idFrom"></param>
         /// <param name="idTo"></param>
         /// <remarks>EXTREMLY IMPORTANT THAT YOU HAVE NOT USED OWN NON SEQUENTIAL GUIDS!</remarks>
-        void DeleteByIdInterval<T>(Guid idFrom, Guid idTo)
+        void DeleteByIdInterval<T>(ValueType idFrom, ValueType idTo)
             where T : class;
 
         /// <summary>

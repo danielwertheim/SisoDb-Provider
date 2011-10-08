@@ -1,8 +1,8 @@
-﻿using SisoDb.Core;
+﻿using NCore;
+using PineCone.Structures;
+using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
-using SisoDb.Structures;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Sql2008.DbSchema
 {
@@ -17,7 +17,7 @@ namespace SisoDb.Sql2008.DbSchema
 
         public string GenerateSql(IStructureSchema structureSchema)
         {
-            var sql = structureSchema.IdAccessor.IdType == IdTypes.Guid
+            var sql = structureSchema.IdAccessor.IdType == StructureIdTypes.Guid
                           ? _sqlStatements.GetSql("CreateUniquesGuid")
                           : _sqlStatements.GetSql("CreateUniquesIdentity");
 

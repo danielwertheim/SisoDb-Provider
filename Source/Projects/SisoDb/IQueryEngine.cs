@@ -33,72 +33,18 @@ namespace SisoDb
 
         /// <summary>
         /// Returns one single structure identified
-        /// by a guid id.
+        /// by an id.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
         /// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
-        T GetById<T>(Guid id)
+        T GetById<T>(ValueType id)
             where T : class;
 
         /// <summary>
         /// Returns one single structure identified
-        /// by an integer id. 
-        /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
-        /// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
-        T GetById<T>(int id)
-            where T : class;
-
-        /// <summary>
-        /// Returns all structures for the defined structure <typeparamref name="T"/>
-        /// matching passed identities.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="ids">Ids used for matching the structures to return.</param>
-        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-        IEnumerable<T> GetByIds<T>(IEnumerable<int> ids)
-            where T : class;
-
-        /// <summary>
-        /// Returns all structures for the defined structure <typeparamref name="T"/>
-        /// matching passed Guids.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="ids">Ids used for matching the structures to return.</param>
-        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-        IEnumerable<T> GetByIds<T>(IEnumerable<Guid> ids)
-            where T : class;
-
-        /// <summary>
-        /// Returns all structures for the defined structure <typeparamref name="T"/>
-        /// matching specified identity interval.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="idFrom"></param>
-        /// <param name="idTo"></param>
-        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-        IEnumerable<T> GetByIdInterval<T>(int idFrom, int idTo)
-            where T : class;
-
-        /// <summary>
-        /// Returns all structures for the defined structure <typeparamref name="T"/>
-        /// matching specified guid interval.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="idFrom"></param>
-        /// <param name="idTo"></param>
-        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-        /// <remarks>YOU COULD GET STRANGE RESULTS IF YOU HAVE SPECIFIED NON SEQUENTIAL GUIDS.</remarks>
-        IEnumerable<T> GetByIdInterval<T>(Guid idFrom, Guid idTo)
-            where T : class;
-
-        /// <summary>
-        /// Returns one single structure identified
-        /// by a guid id. 
+        /// by an id. 
         /// </summary>
         /// <typeparam name="TContract">
         /// Structure type, used as a contract defining the scheme.</typeparam>
@@ -106,27 +52,23 @@ namespace SisoDb
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="id"></param>
         /// <returns>Structure (<typeparamref name="TOut"/>) or null.</returns>
-        TOut GetByIdAs<TContract, TOut>(Guid id)
+        TOut GetByIdAs<TContract, TOut>(ValueType id)
             where TContract : class
             where TOut : class;
 
         /// <summary>
-        /// Returns one single structure identified
-        /// by an integer id.  
+        /// Returns all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed ids.
         /// </summary>
-        /// <typeparam name="TContract">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <typeparam name="TOut">
-        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
-        /// <param name="id"></param>
-        /// <returns>Structure (<typeparamref name="TOut"/>) or null.</returns>
-        TOut GetByIdAs<TContract, TOut>(int id)
-            where TContract : class
-            where TOut : class;
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
+        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
+        IEnumerable<T> GetByIds<T>(IEnumerable<ValueType> ids)
+            where T : class;
 
         /// <summary>
         /// Returns all structures for the defined structure <typeparamref name="TContract"/>
-        /// matching passed identities.
+        /// matching passed ids.
         /// </summary>
         /// <typeparam name="TContract">
         /// Structure type, used as a contract defining the scheme.</typeparam>
@@ -134,27 +76,25 @@ namespace SisoDb
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
-        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<int> ids)
+        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<ValueType> ids)
             where TContract : class
             where TOut : class;
 
         /// <summary>
-        /// Returns all structures for the defined structure <typeparamref name="TContract"/>
-        /// matching passed Guids.
+        /// Returns all structures for the defined structure <typeparamref name="T"/>
+        /// matching specified id interval.
         /// </summary>
-        /// <typeparam name="TContract">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <typeparam name="TOut">
-        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
-        /// <param name="ids">Ids used for matching the structures to return.</param>
-        /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
-        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<Guid> ids)
-            where TContract : class
-            where TOut : class;
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
+        /// /// <remarks>YOU COULD GET STRANGE RESULTS IF YOU HAVE SPECIFIED NON SEQUENTIAL GUIDS.</remarks>
+        IEnumerable<T> GetByIdInterval<T>(ValueType idFrom, ValueType idTo)
+            where T : class;
 
         /// <summary>
         /// Returns one single structure identified
-        /// by a guid id as Json. This is the most
+        /// by an id, as Json. This is the most
         /// effective return type, since the Json
         /// is stored in the database, no deserialization
         /// will take place.  
@@ -163,41 +103,17 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
         /// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
-        string GetByIdAsJson<T>(Guid id)
-            where T : class;
-
-        /// <summary>
-        /// Returns one single structure identified
-        /// by an integer id as Json. This is the most
-        /// effective return type, since the Json
-        /// is stored in the database, no deserialization
-        /// will take place.  
-        /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="id"></param>
-        /// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
-        string GetByIdAsJson<T>(int id)
+        string GetByIdAsJson<T>(ValueType id)
             where T : class;
 
         /// <summary>
         /// Returns Json representation for all structures for the defined structure <typeparamref name="T"/>
-        /// matching passed identities.
+        /// matching passed ids.
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
-        IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<int> ids)
-            where T : class;
-
-        /// <summary>
-        /// Returns Json representation for all structures for the defined structure <typeparamref name="T"/>
-        /// matching passed Guids.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="ids">Ids used for matching the structures to return.</param>
-        /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
-        IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<Guid> ids)
+        IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<ValueType> ids)
             where T : class;
 
         /// <summary>

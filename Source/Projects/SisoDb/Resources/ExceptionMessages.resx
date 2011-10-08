@@ -156,9 +156,6 @@
   <data name="AutoSchemaBuilder_UnsupportedIdAccessorType" xml:space="preserve">
     <value>The id property: '{0}'; is not of suported type. Only Guid and Int is accepted.</value>
   </data>
-  <data name="DbSchemaUpserter_Upsert_IdTypeNotSupported" xml:space="preserve">
-    <value>The IdType '{0}' is not supported when upserting tables!</value>
-  </data>
   <data name="UnitOfWork_DoIdentityInsert_RootItemsMissmatch" xml:space="preserve">
     <value>The number of passed root items is not equal to the number of inserted root items!</value>
   </data>

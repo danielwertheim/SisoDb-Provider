@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using ServiceStack.Text;
 
 namespace SisoDb.Serialization
@@ -15,6 +17,44 @@ namespace SisoDb.Serialization
         public T ToItemOrNull<T>(string json) where T : class
         {
             return ServiceStackJsonSerializer<T>.ToItemOrNull(json);
+        }
+
+        public IEnumerable<T> Deserialize<T>(IEnumerable<string> sourceData) where T : class
+        {
+            return ParallelDeserialize<T>(sourceData);
+        }
+
+        //private IEnumerable<T> SequentialDeserialize<T>(IEnumerable<string> sourceData) where T : class
+        //{
+        //    return sourceData.Select(ToItemOrNull<T>);
+        //}
+
+        private IEnumerable<T> ParallelDeserialize<T>(IEnumerable<string> sourceData) where T : class
+        {
+            using (var q = new BlockingCollection<string>())
+            {
+                var task = new Task(() =>
+                {
+                    foreach (var json in sourceData)
+                        q.Add(json);
+                });
+
+                task.Start();
+
+                while (!task.IsCompleted)
+                {
+                    string json;
+                    if (q.TryTake(out json))
+                        yield return ToItemOrNull<T>(json);
+                }
+
+                Task.WaitAll(task);
+
+                q.CompleteAdding();
+
+                while (q.Count > 0)
+                    yield return ToItemOrNull<T>(q.Take());
+            }
         }
     }
 

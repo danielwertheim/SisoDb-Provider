@@ -124,15 +124,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The IdType &apos;{0}&apos; is not supported when upserting tables!.
-        /// </summary>
-        public static string DbSchemaUpserter_Upsert_IdTypeNotSupported {
-            get {
-                return ResourceManager.GetString("DbSchemaUpserter_Upsert_IdTypeNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Direct memberaccess of node: &apos;{0}&apos;; with with membertype: &apos;{1}&apos;; is not supported!.
         /// </summary>
         public static string ExpressionEvaluator_EvaluateMemberExpression_NotSupported {

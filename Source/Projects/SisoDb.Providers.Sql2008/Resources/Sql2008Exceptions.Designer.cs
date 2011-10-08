@@ -86,5 +86,14 @@ namespace SisoDb.Sql2008.Resources {
                 return ResourceManager.GetString("SqlDbDataTypeTranslator_UnsupportedDataType", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can not create Id-Table parameter for IdType: &apos;{0}&apos;..
+        /// </summary>
+        public static string SqlIdsTableParam_CreateIdsTableParam {
+            get {
+                return ResourceManager.GetString("SqlIdsTableParam_CreateIdsTableParam", resourceCulture);
+            }
+        }
     }
 }

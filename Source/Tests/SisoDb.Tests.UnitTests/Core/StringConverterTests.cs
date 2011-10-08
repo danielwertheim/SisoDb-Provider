@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using SisoDb.Core;
 
 namespace SisoDb.Tests.UnitTests.Core
 {

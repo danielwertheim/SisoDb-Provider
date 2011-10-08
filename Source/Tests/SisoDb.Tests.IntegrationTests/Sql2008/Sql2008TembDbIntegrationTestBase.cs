@@ -19,7 +19,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008
             
             var cnInfo = new SqlConnectionInfo(cnString);
 
-            Database = new SqlDatabase(cnInfo);
+            Database = new Sql2008Database(cnInfo);
             DbHelper = new Sql2008DbUtils(cnInfo.ConnectionString.PlainString);
             DbHelperForServer = new Sql2008DbUtils(cnInfo.ServerConnectionString.PlainString);
         }

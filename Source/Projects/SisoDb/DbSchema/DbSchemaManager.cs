@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 
 namespace SisoDb.DbSchema
 {
@@ -12,13 +13,13 @@ namespace SisoDb.DbSchema
             _upsertedSchemas = new HashSet<string>();
         }
 
-        public void DropStructureSet(IStructureSchema structureSchema, IDbSchemaDropper dropper)
+        public void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
         {
             lock (_upsertedSchemas)
             {
                 _upsertedSchemas.Remove(structureSchema.Name);
 
-                dropper.Drop(structureSchema);
+                dbClient.Drop(structureSchema);
             }
         }
 

@@ -127,17 +127,17 @@ alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[SisoId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([SisoId]),
+[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([StructureId]),
 {2});
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[SisoId] [int] not null constraint [PK_{0}] primary key clustered ([SisoId]),
+[StructureId] [bigint] not null constraint [PK_{0}] primary key clustered ([StructureId]),
 {2});
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
@@ -146,32 +146,32 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[SisoId] [int] identity(1,1) not null constraint [PK_{0}] primary key clustered ([SisoId]),
+[StructureId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
 insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[SisoId] [uniqueidentifier] not null,
-[UqSisoId] [uniqueidentifier] null,
+[StructureId] [uniqueidentifier] not null,
+[UqStructureId] [uniqueidentifier] null,
 [UqName] [varchar](250) not null,
 [UqValue] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqSisoId], [UqName], [UqValue]);
+create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqName], [UqValue]);
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[SisoId] [int] not null,
-[UqSisoId] [int] null,
+[StructureId] [bigint] not null,
+[UqStructureId] [int] null,
 [UqName] [varchar](250) not null,
 [UqValue] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqSisoId], [UqName], [UqValue]);
+create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqName], [UqValue]);
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (SisoId) references dbo.[{1}] (SisoId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
   <data name="DatabaseExists" xml:space="preserve">
     <value>select DB_ID(@dbName);</value>
@@ -271,9 +271,9 @@ select count(*) from [dbo].[{0}] si where {1}; </value>
   </data>
   <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
     <value>set nocount on;
-declare @id int;
+declare @id bigint;
 update [dbo].[SisoDbIdentities] set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityHash] = @entityHash;
-select @id as SisoId;</value>
+select @id as StructureId;</value>
   </data>
   <data name="Sys_Identities_CreateIfNotExists" xml:space="preserve">
     <value>if object_id(N'[{0}].[dbo].[SisoDbIdentities]', N'U') is null
@@ -282,7 +282,7 @@ begin
 	(
 		[EntityHash] [varchar](8) NOT NULL,
 		[EntityName] [varchar](100) NOT NULL,
-		[CurrentId] [int] NOT NULL default(0),
+		[CurrentId] [bigint] NOT NULL default(0),
 		constraint [PK_SisoDbIdentities] primary key([EntityHash])
 	);
 end</value>
@@ -297,7 +297,7 @@ end
 
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIdentityIds') is null
 begin
-create type dbo.SisoIdentityIds as table (Id int primary key not null)	
+create type dbo.SisoIdentityIds as table (Id bigint primary key not null)	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">

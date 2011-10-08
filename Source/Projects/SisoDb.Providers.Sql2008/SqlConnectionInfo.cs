@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using NCore;
 using SisoDb.Core;
 using SisoDb.Resources;
 using SisoDb.Sql2008.Resources;

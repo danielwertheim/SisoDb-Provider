@@ -61,7 +61,7 @@
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\NCore.0.3.0.44\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
@@ -102,9 +102,6 @@
     <Compile Include="Sql2008\DatabaseTests\UpdateStructureSet_WhenThreeStructuresWithIdentitiesExistsAndTrashIsMadeOnSecond_OnlyFirstAndThirdItemsRemains.cs" />
     <Compile Include="Sql2008\UnitOfWork\Inserts\Sql2008UnitOfWorkInsertCompleteTests.cs" />
     <Compile Include="Sql2008\UnitOfWork\Queries\QxExtensions\Sql2008UnitOfWorkQueryNestedEnumerablesWithQxAny.cs" />
-    <Compile Include="SqlCe4\SqlCe4DbUtils.cs" />
-    <Compile Include="SqlCe4\SqlCe4DatabaseTests.cs" />
-    <Compile Include="SqlCe4\SqlCe4IntegrationTestBase.cs" />
     <Compile Include="Sql2008\Sql2008DbUtils.cs" />
     <Compile Include="Sql2008\DbSchema\Sql2008DbSchemaDropperTests.cs" />
     <Compile Include="Sql2008\DbSchema\Sql2008DbSchemaUpserterTests.cs" />
@@ -158,7 +155,6 @@
     <Compile Include="Sql2008\UnitOfWork\TestModel\TheChild.cs" />
     <Compile Include="Sql2008\TransactionScopes\Sql2008UnitOfWorkWithTransactionScopeTests.cs" />
     <Compile Include="Sql2008\UnitOfWork\Updates\Sql2008UnitOfWorkUpdateTests.cs" />
-    <Compile Include="SqlCe4\UnitOfWork\Inserts\SqlCe4UnitOfWorkInsertTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

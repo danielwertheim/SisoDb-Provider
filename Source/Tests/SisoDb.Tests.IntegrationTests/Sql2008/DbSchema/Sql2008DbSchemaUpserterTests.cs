@@ -28,7 +28,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
             _indexesTableName = _structureSetPrefix + "Indexes";
             _uniquesTableName = _structureSetPrefix + "Uniques";
 
-            _sqlDb = new SqlDatabase(Database.ConnectionInfo);
+            _sqlDb = new Sql2008Database(Database.ConnectionInfo);
         }
 
         protected override void OnTestFinalize()
@@ -48,7 +48,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         [Test]
         public void Upsert_WhenNoSetExists_TablesAreCreated()
         {
-            using(var dbClient = new SqlDbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using(var dbClient = new Sql2008DbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(dbClient);
                 upserter.Upsert(_structureSchema);   
@@ -68,7 +68,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         {
             var hashForColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("IndexableMember2");
 
-            using (var dbClient = new SqlDbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(dbClient);
 
@@ -87,7 +87,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         public void Upsert_WhenDbHasOneObsoleteMember_ColumnIsDroppedFromIndexesTable()
         {
             var hashForObsoleteColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("ExtraColumn");
-            using (var dbClient = new SqlDbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(dbClient);
 

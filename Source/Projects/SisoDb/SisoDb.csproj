@@ -63,11 +63,12 @@
       <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.3.0.44, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PineCone.0.12.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.3.0\lib\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.12.0.40, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.12.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=2.2.6.33214, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -87,14 +88,14 @@
     <Compile Include="Commands\ISqlCommandInfo.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
-    <Compile Include="Cryptography\Crc32Algorithm.cs" />
-    <Compile Include="Cryptography\HashService.cs" />
-    <Compile Include="Cryptography\IHashService.cs" />
-    <Compile Include="IConnectionString.cs" />
-    <Compile Include="IdTypes.cs">
+    <Compile Include="Dac\IDbClient.cs" />
+    <Compile Include="MemberNameGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IMemberNameGenerator.cs" />
+    <Compile Include="IConnectionString.cs" />
+    <Compile Include="IMemberNameGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="ISisoDbFormatting.cs" />
@@ -181,26 +182,20 @@
     <Compile Include="Querying\INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
-    <Compile Include="Core\ElementBatcher.cs" />
-    <Compile Include="Core\IElementBatcher.cs" />
     <Compile Include="DbSchema\IDbColumnGenerator.cs" />
     <Compile Include="DbSchema\IDbSchemaBuilder.cs" />
     <Compile Include="DbSchema\IDbSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\IDbSchemaManager.cs" />
     <Compile Include="Core\Expressions\ExpressionUtils.cs" />
-    <Compile Include="IIdentityGenerator.cs" />
+    <Compile Include="Structures\IdentityStructureIdGenerator.cs" />
     <Compile Include="Querying\Sql\ISqlQueryGenerator.cs" />
     <Compile Include="Providers\ISqlStatements.cs" />
     <Compile Include="Providers\SqlStatementsBase.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
     <Compile Include="Querying\SortingExtensions.cs" />
     <Compile Include="Querying\Sql\SqlSorting.cs" />
-    <Compile Include="Serialization\IJsonBatchDeserializer.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
-    <Compile Include="Serialization\ParallelJsonBatchDeserializer.cs" />
-    <Compile Include="Serialization\SequentialJsonBatchDeserializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
-    <Compile Include="HashMemberNameGenerator.cs" />
     <Compile Include="DbSchema\DbSchemaManager.cs" />
     <Compile Include="Dac\DacParameter.cs" />
     <Compile Include="Querying\Sql\SqlWhere.cs" />
@@ -242,9 +237,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Reflections\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

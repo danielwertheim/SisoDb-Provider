@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using SisoDb.Providers;
+﻿using SisoDb.Providers;
 
 namespace SisoDb
 {

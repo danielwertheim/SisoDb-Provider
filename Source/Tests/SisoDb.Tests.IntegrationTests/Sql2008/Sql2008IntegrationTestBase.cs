@@ -6,7 +6,7 @@ using SisoDb.Sql2008;
 namespace SisoDb.Tests.IntegrationTests.Sql2008
 {
     [TestFixture]
-    public abstract class Sql2008IntegrationTestBase : IntegrationTestBase<SqlDatabase>
+    public abstract class Sql2008IntegrationTestBase : IntegrationTestBase<Sql2008Database>
     {
         protected Sql2008DbUtils DbHelper { get; set; }
 

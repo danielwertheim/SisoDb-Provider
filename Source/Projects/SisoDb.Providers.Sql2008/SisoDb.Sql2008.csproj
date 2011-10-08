@@ -52,10 +52,10 @@
       <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.12.0\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.3.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.12.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,13 +68,12 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dac\Sql2008IdsTableParam.cs" />
     <Compile Include="Dac\SqlBulkInserter.cs" />
-    <Compile Include="Dac\SqlSingleInserter.cs" />
     <Compile Include="DbSchema\SqlDbColumnGenerator.cs" />
     <Compile Include="DbSchema\SqlDbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
-    <Compile Include="DbSchema\SqlDbSchemaDropper.cs" />
     <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
     <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
@@ -86,19 +85,18 @@
       <DependentUpon>Sql2008Exceptions.resx</DependentUpon>
     </Compile>
     <Compile Include="Sql2008Statements.cs" />
-    <Compile Include="SqlDatabase.cs" />
+    <Compile Include="Sql2008Database.cs" />
     <Compile Include="Sql2008DbFactory.cs" />
     <Compile Include="Sql2008ProviderFactory.cs" />
     <Compile Include="SqlConnectionInfo.cs" />
     <Compile Include="SqlCommandBuildInfo.cs" />
     <Compile Include="SqlCommandInfo.cs" />
-    <Compile Include="Dac\SqlDbClient.cs" />
-    <Compile Include="SqlIdentityGenerator.cs" />
-    <Compile Include="SqlQueryEngine.cs" />
+    <Compile Include="Dac\Sql2008DbClient.cs" />
+    <Compile Include="Sql2008QueryEngine.cs" />
     <Compile Include="SqlQueryGenerator.cs" />
-    <Compile Include="Dac\SqlServerClient.cs" />
-    <Compile Include="SqlStructureSetUpdater.cs" />
-    <Compile Include="SqlUnitOfWork.cs" />
+    <Compile Include="Dac\Sql2008ServerClient.cs" />
+    <Compile Include="Sql2008StructureSetUpdater.cs" />
+    <Compile Include="Sql2008UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Sql2008Exceptions.resx">

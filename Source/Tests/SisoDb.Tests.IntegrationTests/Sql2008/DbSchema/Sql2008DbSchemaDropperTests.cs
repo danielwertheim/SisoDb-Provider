@@ -28,7 +28,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
             _indexesTableName = _structureSetPrefix + "Indexes";
             _uniquesTableName = _structureSetPrefix + "Uniques";
 
-            _sqlDb = new SqlDatabase(Database.ConnectionInfo);
+            _sqlDb = new Sql2008Database(Database.ConnectionInfo);
         }
 
         protected override void OnTestFinalize()
@@ -48,9 +48,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         [Test]
         public void DropStructureSet_WhenTablesExists_AllTablesAreDropped()
         {
-            using (var dbClient = new SqlDbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient((SqlConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
-                var upserter = new SqlDbSchemaDropper(dbClient);
+                var upserter = new Sql2008DbSchemaDropper(dbClient);
                 upserter.Drop(_structureSchema);
             }
 

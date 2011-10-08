@@ -51,12 +51,12 @@
     <Reference Include="EnsureThat">
       <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.2.0.43, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.3.0.44, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PineCone.0.12.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.3.0\lib\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.12.0.40, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.12.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -70,23 +70,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BulkInserts\SqlCe4BulkInserter.cs" />
-    <Compile Include="SqlCe4Statements.cs" />
-    <Compile Include="DbSchema\SqlCe4DbColumnGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\SqlCe4Exceptions.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SqlCe4Exceptions.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SqlCe4ConnectionInfo.cs" />
-    <Compile Include="Dac\SqlCe4ServerClient.cs" />
-    <Compile Include="SqlCe4Database.cs" />
-    <Compile Include="SqlCe4DbFactory.cs" />
-    <Compile Include="SqlCe4ProviderFactory.cs" />
-    <Compile Include="Dac\SqlCe4DbClient.cs" />
-    <Compile Include="SqlCe4QueryEngine.cs" />
-    <Compile Include="SqlCe4UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SisoDb\SisoDb.csproj">
@@ -96,13 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\SqlCe4Exceptions.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SqlCe4Exceptions.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SqlCe4Statements.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

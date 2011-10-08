@@ -1,11 +1,10 @@
 ﻿using System.Data;
 using System.Text;
-using SisoDb.Core;
+using EnsureThat;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
-using SisoDb.Sql2008.Dac;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Sql2008.DbSchema
 {
@@ -17,11 +16,13 @@ namespace SisoDb.Sql2008.DbSchema
 
         private readonly SqlDbIndexesSchemaSynchronizer _indexesDbSchemaSynchronizer;
         private readonly SqlDbUniquesSchemaSynchronizer _uniquesDbSchemaSynchronizer;
-        private readonly SqlDbClient _dbClient;
+        private readonly IDbClient _dbClient;
 
-        public SqlDbSchemaUpserter(SqlDbClient dbClient)
+        public SqlDbSchemaUpserter(IDbClient dbClient)
         {
-            _dbClient = dbClient.AssertNotNull("dbClient");
+            Ensure.That(() => dbClient).IsNotNull();
+
+            _dbClient = dbClient;
 
             var columnGenerator =
                 SisoEnvironment.ProviderFactories.Get(dbClient.ProviderType).GetDbColumnGenerator();
@@ -30,7 +31,7 @@ namespace SisoDb.Sql2008.DbSchema
             _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStatements, columnGenerator);
             _uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(_dbClient.SqlStatements);
 
-            _indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(_dbClient, columnGenerator);
+            _indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(_dbClient);
             _uniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(_dbClient);
         }
 

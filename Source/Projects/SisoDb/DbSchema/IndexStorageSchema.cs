@@ -10,9 +10,10 @@ namespace SisoDb.DbSchema
     {
         public static class Fields
         {
-            public static readonly SchemaField SisoId = new SchemaField(0, "SisoId");
-            internal static readonly SchemaField[] OrderedFields = new[] { SisoId };
+            public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
         }
+
+        private static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId };
 
         public IndexStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetIndexesTableName())
@@ -21,11 +22,11 @@ namespace SisoDb.DbSchema
 
         protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
         {
-            var staticFields = Fields.OrderedFields;
-            var dynamicIndex = staticFields.Count();
-            var dynamicFields = structureSchema.IndexAccessors.Select(iac => new SchemaField(dynamicIndex++, iac.Name)); //TODO: Cache
+            var staticFields = OrderedFields;
+            var dynamicIndex = staticFields.Length;
+            var dynamicFields = structureSchema.IndexAccessors.Select(iac => new SchemaField(dynamicIndex++, iac.Path)); //TODO: Cache
             
-            return staticFields.Union(dynamicFields).ToArray();
+            return staticFields.Union(dynamicFields).ToArray(); //TODO: Hmmm, perhaps Merge???
         }
     }
 }

@@ -126,4 +126,7 @@
   <data name="SqlDbDataTypeTranslator_UnsupportedDataType" xml:space="preserve">
     <value>The datatype '{0}' is not supported!</value>
   </data>
+  <data name="SqlIdsTableParam_CreateIdsTableParam" xml:space="preserve">
+    <value>Can not create Id-Table parameter for IdType: '{0}'.</value>
+  </data>
 </root>

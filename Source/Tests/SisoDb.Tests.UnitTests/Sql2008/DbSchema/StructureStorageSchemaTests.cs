@@ -10,7 +10,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         [Test]
         public void OrderedFields_ShouldBeReturnedInCorrectSequenece()
         {
-            var fields = StructureStorageSchema.Fields.OrderedFields;
+            var fields = StructureStorageSchema.OrderedFields;
 
             Assert.AreEqual(StructureStorageSchema.Fields.Id, fields[0]);
             Assert.AreEqual(StructureStorageSchema.Fields.Json, fields[1]);

@@ -15,7 +15,7 @@ namespace SisoDb.Dac.BulkInserts
         {
             return ordinal != 0
                 ? Enumerator.Current[ordinal - 1].Value
-                : Enumerator.Current[0].SisoId.Value;
+                : Enumerator.Current[0].StructureId.Value;
         }
     }
 }

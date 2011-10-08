@@ -16,19 +16,19 @@ namespace SisoDb.Dac.BulkInserts
         {
             var schemaField = StorageSchema[ordinal];
 
-            if (schemaField.Name == UniqueStorageSchema.Fields.SisoId.Name)
-                return Enumerator.Current.SisoId.Value;
+            if (schemaField.Name == UniqueStorageSchema.Fields.StructureId.Name)
+                return Enumerator.Current.StructureId.Value;
 
-            if (schemaField.Name == UniqueStorageSchema.Fields.UqSisoId.Name)
+            if (schemaField.Name == UniqueStorageSchema.Fields.UqStructureId.Name)
             {
                 if (Enumerator.Current.IndexType == StructureIndexType.UniquePerType)
                     return DBNull.Value;
                 
-                return Enumerator.Current.SisoId.Value;
+                return Enumerator.Current.StructureId.Value;
             }
 
             if (schemaField.Name == UniqueStorageSchema.Fields.UqName.Name)
-                return Enumerator.Current.Name;
+                return Enumerator.Current.Path;
 
             if (schemaField.Name == UniqueStorageSchema.Fields.UqValue.Name)
                 return SisoEnvironment.Formatting.StringConverter.AsString(Enumerator.Current.Value);

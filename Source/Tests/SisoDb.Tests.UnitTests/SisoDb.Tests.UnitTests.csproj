@@ -62,7 +62,7 @@
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.2.0.43\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\NCore.0.3.0.44\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
@@ -89,7 +89,6 @@
     <Compile Include="Cryptography\HashServiceTests.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
-    <Compile Include="Core\ElementsBatcherTests.cs" />
     <Compile Include="HashMemberNameGeneratorTests.cs" />
     <Compile Include="DbSchema\DbSchemaManagerTests.cs" />
     <Compile Include="Sql2008\DbSchema\IndexStorageSchemaTests.cs" />
@@ -97,9 +96,6 @@
     <Compile Include="Sql2008\DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="Sql2008\DbSchema\UniqueStorageSchemaTests.cs" />
     <Compile Include="Sql2008\Sql2008ConnectionInfoTests.cs" />
-    <Compile Include="SqlCe4\DbSchema\SqlCe4DbColumnGeneratorTests.cs" />
-    <Compile Include="SqlCe4\SqlCe4ConnectionInfoTests.cs" />
-    <Compile Include="SqlCe4\SqlCe4DatabaseTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
