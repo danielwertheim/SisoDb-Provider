@@ -40,12 +40,12 @@ namespace SisoDb.Sql2008
 
         public IDbQueryGenerator GetDbQueryGenerator()
         {
-            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
+            var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
 
             return new Sql2008QueryGenerator(
-                new ParsedWhereSqlProcessor(memberNameGenerator),
-                new ParsedSortingSqlProcessor(memberNameGenerator),
-                new ParsedIncludeSqlProcessor(memberNameGenerator));
+                new ParsedWhereSqlProcessor(memberPathGenerator),
+                new ParsedSortingSqlProcessor(memberPathGenerator),
+                new ParsedIncludeSqlProcessor(memberPathGenerator));
         }
 
         public IDbBulkInserter GetDbBulkInserter(IDbClient dbClient)

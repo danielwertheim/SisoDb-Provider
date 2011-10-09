@@ -13,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] = @p0";
@@ -25,7 +25,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] {new DacParameter("@p0", 42)};
@@ -37,7 +37,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[NestedItem.Int1] = @p0";
@@ -49,7 +49,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
@@ -61,7 +61,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.SuperNestedItem.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[NestedItem.SuperNestedItem.Int1] = @p0";
@@ -73,7 +73,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.SuperNestedItem.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
@@ -86,7 +86,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var item = new MyItem {NestedItem = new MyNestedItem {Int1 = 42}};
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.Int1 == item.NestedItem.Int1);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[NestedItem.Int1] = @p0";
@@ -99,7 +99,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var item = new MyItem { NestedItem = new MyNestedItem { Int1 = 42 } };
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.Int1 == item.NestedItem.Int1);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };

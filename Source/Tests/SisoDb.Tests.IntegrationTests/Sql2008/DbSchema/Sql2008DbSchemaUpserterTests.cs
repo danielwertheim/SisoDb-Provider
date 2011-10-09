@@ -66,7 +66,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         [Test]
         public void Upsert_WhenClassHasOneNewMember_ColumnIsAddedToIndexesTable()
         {
-            var hashForColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("IndexableMember2");
+            var hashForColumn = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("IndexableMember2");
 
             using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
@@ -86,7 +86,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         [Test]
         public void Upsert_WhenDbHasOneObsoleteMember_ColumnIsDroppedFromIndexesTable()
         {
-            var hashForObsoleteColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("ExtraColumn");
+            var hashForObsoleteColumn = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("ExtraColumn");
             using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new Sql2008DbSchemaUpserter(dbClient);

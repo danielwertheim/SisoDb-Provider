@@ -46,7 +46,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         public void Synhronize_WhenTableIsMissingColumn_ColumnIsAdded()
         {
             CreateStructureSet();
-            var hashForColumn = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("IndexableMember2");
+            var hashForColumn = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("IndexableMember2");
             DbHelper.DropColumns(_indexesTableName, hashForColumn);
 
             using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))

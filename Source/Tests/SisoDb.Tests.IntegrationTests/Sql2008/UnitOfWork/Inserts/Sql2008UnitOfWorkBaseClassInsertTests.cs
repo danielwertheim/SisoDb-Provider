@@ -33,7 +33,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             Assert.AreNotEqual(item.Stream.Length, fetched.Stream.Length);
 
             var indexesTableName = Database.StructureSchemas.GetSchema(TypeFor<MyItemBase>.Type).GetIndexesTableName();
-            var columnName = SisoEnvironment.Resources.ResolveMemberNameGenerator().Generate("Stream");
+            var columnName = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("Stream");
             var hasColumnForStream = DbHelper.ColumnsExist(indexesTableName, columnName);
             Assert.IsFalse(hasColumnForStream);
         }

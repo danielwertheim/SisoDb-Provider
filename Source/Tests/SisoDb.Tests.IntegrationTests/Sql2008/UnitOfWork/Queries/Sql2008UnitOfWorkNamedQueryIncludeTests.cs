@@ -35,11 +35,11 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private void CreateStoredProcedure()
         {
-            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
-            var hashForName = memberNameGenerator.Generate("Name");
-            var hashForGenreId = memberNameGenerator.Generate("GenreId");
-            var hashForArtistId = memberNameGenerator.Generate("ArtistId");
-            var hashForSecondArtistId = memberNameGenerator.Generate("SecondArtistId");
+            var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
+            var hashForName = memberPathGenerator.Generate("Name");
+            var hashForGenreId = memberPathGenerator.Generate("GenreId");
+            var hashForArtistId = memberPathGenerator.Generate("ArtistId");
+            var hashForSecondArtistId = memberPathGenerator.Generate("SecondArtistId");
 
             var sql =
                 string.Format("create procedure [dbo].[{0}] as begin "
@@ -56,11 +56,11 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private void CreateStoredProcedureForInterfaces()
         {
-            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
-            var hashForName = memberNameGenerator.Generate("Name");
-            var hashForGenreId = memberNameGenerator.Generate("GenreId");
-            var hashForArtistId = memberNameGenerator.Generate("ArtistId");
-            var hashForSecondArtistId = memberNameGenerator.Generate("SecondArtistId");
+            var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
+            var hashForName = memberPathGenerator.Generate("Name");
+            var hashForGenreId = memberPathGenerator.Generate("GenreId");
+            var hashForArtistId = memberPathGenerator.Generate("ArtistId");
+            var hashForSecondArtistId = memberPathGenerator.Generate("SecondArtistId");
 
             var sql =
                 string.Format("create procedure [dbo].[{0}] as begin "

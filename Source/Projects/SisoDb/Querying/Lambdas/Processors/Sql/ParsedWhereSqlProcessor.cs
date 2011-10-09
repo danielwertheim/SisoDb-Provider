@@ -9,11 +9,11 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
 {
     public class ParsedWhereSqlProcessor : IParsedLambdaProcessor<ISqlWhere>
     {
-        public IMemberNameGenerator MemberNameGenerator { private get; set; }
+        public IMemberPathGenerator MemberPathGenerator { private get; set; }
 
-        public ParsedWhereSqlProcessor(IMemberNameGenerator memberNameGenerator)
+        public ParsedWhereSqlProcessor(IMemberPathGenerator memberPathGenerator)
         {
-            MemberNameGenerator = memberNameGenerator;
+            MemberPathGenerator = memberPathGenerator;
         }
 
         public ISqlWhere Process(IParsedLambda lambda)
@@ -26,7 +26,7 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
                 if (node is MemberNode)
                 {
                     var memPath = ((MemberNode)node).Path;
-                    sql.AppendFormat("si.[{0}]", MemberNameGenerator.Generate(memPath));
+                    sql.AppendFormat("si.[{0}]", MemberPathGenerator.Generate(memPath));
                 }
                 else if (node is OperatorNode)
                 {

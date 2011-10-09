@@ -10,13 +10,13 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
 {
     public class ParsedSortingSqlProcessor : IParsedLambdaProcessor<ISqlSorting>
     {
-        public IMemberNameGenerator MemberNameGenerator { private get; set; }
+        public IMemberPathGenerator MemberPathGenerator { private get; set; }
 
-        public ParsedSortingSqlProcessor(IMemberNameGenerator memberNameGenerator)
+        public ParsedSortingSqlProcessor(IMemberPathGenerator memberPathGenerator)
         {
-            Ensure.That(() => memberNameGenerator).IsNotNull();
+            Ensure.That(() => memberPathGenerator).IsNotNull();
 
-            MemberNameGenerator = memberNameGenerator;
+            MemberPathGenerator = memberPathGenerator;
         }
 
         public ISqlSorting Process(IParsedLambda lambda)
@@ -31,7 +31,7 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
                 if (node is SortingNode)
                 {
                     var sortingNode = (SortingNode) node;
-                    sql.AppendFormat("si.[{0}] {1}", MemberNameGenerator.Generate(sortingNode.MemberPath), sortingNode.Direction);
+                    sql.AppendFormat("si.[{0}] {1}", MemberPathGenerator.Generate(sortingNode.MemberPath), sortingNode.Direction);
 
                     if (i != lastIndex)
                         sql.Append(", ");

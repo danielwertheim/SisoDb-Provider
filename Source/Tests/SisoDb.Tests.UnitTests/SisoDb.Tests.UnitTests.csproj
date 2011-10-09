@@ -94,7 +94,7 @@
     <Compile Include="ConnectionStringTests.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
-    <Compile Include="HashMemberNameGeneratorTests.cs" />
+    <Compile Include="SimpleMemberPathGeneratorTests.cs" />
     <Compile Include="DbSchema\DbSchemaManagerTests.cs" />
     <Compile Include="Sql2008\DbSchema\IndexStorageSchemaTests.cs" />
     <Compile Include="Sql2008\DbSchema\StorageSchemaTests.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedWhereSqlProcessorTests\ParsedWhereSqlProcessorHierarchyTests.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedWhereSqlProcessorTests\ParsedWhereSqlProcessorMemberComparisionTests.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedWhereSqlProcessorTests\ParsedWhereSqlProcessorTestBase.cs" />
-    <Compile Include="MemberNameGeneratorFake.cs" />
+    <Compile Include="MemberPathGeneratorFake.cs" />
     <Compile Include="Querying\Lambdas\Processors\Sql\ParsedWhereSqlProcessorTests\ParsedWhereSqlProcessorCommonDataTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql2008\SqlQueryGeneratorTests.cs" />

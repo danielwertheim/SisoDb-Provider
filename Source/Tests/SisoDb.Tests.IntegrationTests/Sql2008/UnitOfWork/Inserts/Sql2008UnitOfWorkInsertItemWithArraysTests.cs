@@ -43,16 +43,16 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 unitOfWork.Commit();
             }
 
-            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
-            var level1IntegersHash = memberNameGenerator.Generate("Integers");
-            var level1StringsHash = memberNameGenerator.Generate("Strings");
-            var level1DatesHash = memberNameGenerator.Generate("Dates");
-            var level1BytesHash = memberNameGenerator.Generate("Bytes");
-            var level2StringValueMemberHash = memberNameGenerator.Generate("Level2Items.StringValue");
-            var level2IntegerValueMemberHash = memberNameGenerator.Generate("Level2Items.IntegerValue");
-            var level2StringsMemberHash = memberNameGenerator.Generate("Level2Items.Strings");
-            var level2IntegersMemberHash = memberNameGenerator.Generate("Level2Items.Integers");
-            var level3IntegersMemberHash = memberNameGenerator.Generate("Level2Items.Level3Items.Integers");
+            var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
+            var level1IntegersHash = memberPathGenerator.Generate("Integers");
+            var level1StringsHash = memberPathGenerator.Generate("Strings");
+            var level1DatesHash = memberPathGenerator.Generate("Dates");
+            var level1BytesHash = memberPathGenerator.Generate("Bytes");
+            var level2StringValueMemberHash = memberPathGenerator.Generate("Level2Items.StringValue");
+            var level2IntegerValueMemberHash = memberPathGenerator.Generate("Level2Items.IntegerValue");
+            var level2StringsMemberHash = memberPathGenerator.Generate("Level2Items.Strings");
+            var level2IntegersMemberHash = memberPathGenerator.Generate("Level2Items.Integers");
+            var level3IntegersMemberHash = memberPathGenerator.Generate("Level2Items.Level3Items.Integers");
             var indexesTable = DbHelper.GetTableBySql("select * from dbo.Level1Indexes");
             Assert.AreEqual(1, indexesTable.Rows.Count);
             Assert.IsFalse(indexesTable.Columns.Contains(level1BytesHash));

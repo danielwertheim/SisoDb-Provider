@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Tests.UnitTests
 {
-    public class MemberNameGeneratorFake : IMemberNameGenerator
+    public class MemberPathGeneratorFake : IMemberPathGenerator
     {
         public string Generate(string memberPath)
         {

@@ -2,7 +2,7 @@
 
 namespace SisoDb
 {
-    public class MemberNameGenerator : IMemberNameGenerator
+    public class SimpleMemberPathGenerator : IMemberPathGenerator
     {
         public string Generate(string memberPath)
         {

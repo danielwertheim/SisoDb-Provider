@@ -91,11 +91,11 @@
     <Compile Include="Dac\BulkInserts\IDbBulkInserter.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
-    <Compile Include="MemberNameGenerator.cs">
+    <Compile Include="SimpleMemberPathGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IConnectionString.cs" />
-    <Compile Include="IMemberNameGenerator.cs">
+    <Compile Include="IMemberPathGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IQueryEngine.cs" />

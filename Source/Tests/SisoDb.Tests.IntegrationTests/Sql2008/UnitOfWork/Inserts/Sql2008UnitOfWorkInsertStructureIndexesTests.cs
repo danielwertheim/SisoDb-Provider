@@ -29,8 +29,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
             Assert.AreEqual(numOfItems, refetched.Count);
 
-            var memberNameGenerator = SisoEnvironment.Resources.ResolveMemberNameGenerator();
-            var valueMemberName = memberNameGenerator.Generate("Value");
+            var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
+            var valueMemberName = memberPathGenerator.Generate("Value");
 
             var table = DbHelper.GetTableBySql("select * from dbo.ItemForInsertStructureIndexesTestsIndexes;");
             for (var c = 0; c < numOfItems; c++)

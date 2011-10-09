@@ -11,7 +11,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == i.Int2);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] = si.[Int2]";
@@ -23,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == i.Int2);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberNameGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
             var query = processor.Process(parsedLambda);
 
             Assert.AreEqual(0, query.Parameters.Count);
