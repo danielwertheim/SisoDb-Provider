@@ -18,47 +18,53 @@ namespace SisoDb.Sql2008
 {
     public class Sql2008QueryEngine : IQueryEngine
     {
-        protected readonly ISisoProviderFactory ProviderFactory;
-        protected readonly IDbClient DbClient;
-        protected readonly IDbSchemaManager DbSchemaManager;
-        protected readonly IDbSchemaUpserter DbSchemaUpserter;
-        protected readonly IStructureSchemas StructureSchemas;
-        protected readonly IDbQueryGenerator QueryGenerator;
-        protected readonly IJsonSerializer JsonSerializer;
-        protected readonly ICommandBuilderFactory CommandBuilderFactory;
+        protected ISisoProviderFactory ProviderFactory { get; private set; }
+        protected IDbClient DbClientTrans { get; private set; }
+        protected IDbClient DbClientNonTrans { get; private set; }
+        protected IDbSchemaManager DbSchemaManager { get; private set; }
+        protected IDbSchemaUpserter DbSchemaUpserter { get; private set; }
+        protected IStructureSchemas StructureSchemas { get; private set; }
+        protected IDbQueryGenerator QueryGenerator { get; private set; }
+        protected IJsonSerializer JsonSerializer { get; private set; }
+        protected ICommandBuilderFactory CommandBuilderFactory { get; private set; }
 
         protected internal Sql2008QueryEngine(
             ISisoProviderFactory providerFactory,
-            IDbClient dbClient,
-            IDbSchemaManager dbSchemaManager, 
-            IDbSchemaUpserter dbSchemaUpserter,
+            ISisoConnectionInfo connectionInfo,
+            IDbSchemaManager dbSchemaManager,
             IStructureSchemas structureSchemas,
-            IJsonSerializer jsonSerializer,
-            IDbQueryGenerator queryGenerator,
-            ICommandBuilderFactory commandBuilderFactory)
+            IJsonSerializer jsonSerializer)
         {
             Ensure.That(() => providerFactory).IsNotNull();
-            Ensure.That(() => dbClient).IsNotNull();
+            Ensure.That(() => connectionInfo).IsNotNull();
             Ensure.That(() => dbSchemaManager).IsNotNull();
-            Ensure.That(() => dbSchemaUpserter).IsNotNull();
             Ensure.That(() => structureSchemas).IsNotNull();
             Ensure.That(() => jsonSerializer).IsNotNull();
-            Ensure.That(() => queryGenerator).IsNotNull();
-            Ensure.That(() => commandBuilderFactory).IsNotNull();
 
             ProviderFactory = providerFactory;
-            DbClient = dbClient;
+            DbClientTrans = providerFactory.GetDbClient(connectionInfo, true);
+            DbClientNonTrans = ProviderFactory.GetDbClient(connectionInfo, false);
+            DbSchemaUpserter = providerFactory.GetDbSchemaUpserter(DbClientTrans);
+            QueryGenerator = providerFactory.GetDbQueryGenerator();
+            CommandBuilderFactory = providerFactory.GetCommandBuilderFactory();
             DbSchemaManager = dbSchemaManager;
-            DbSchemaUpserter = dbSchemaUpserter;
             StructureSchemas = structureSchemas;
             JsonSerializer = jsonSerializer;
-            QueryGenerator = queryGenerator;
-            CommandBuilderFactory = commandBuilderFactory;
         }
 
         public void Dispose()
         {
-            DbClient.Dispose();
+            if (DbClientTrans != null)
+            {
+                DbClientTrans.Dispose();
+                DbClientTrans = null;
+            }
+
+            if (DbClientNonTrans != null)
+            {
+                DbClientNonTrans.Dispose();
+                DbClientNonTrans = null;
+            }
         }
 
         public int Count<T>() where T : class
@@ -67,7 +73,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return DbClient.RowCount(structureSchema);
+            return DbClientNonTrans.RowCount(structureSchema);
         }
 
         public int Count<T>(Expression<Func<T, bool>> expression) where T : class
@@ -80,7 +86,7 @@ namespace SisoDb.Sql2008
             var queryCommand = commandBuilder.Where(expression).Command;
             var whereSql = QueryGenerator.GenerateWhere(queryCommand);
 
-            return DbClient.RowCountByQuery(structureSchema, whereSql);
+            return DbClientNonTrans.RowCountByQuery(structureSchema, whereSql);
         }
 
         public T GetById<T>(ValueType id) where T : class
@@ -88,7 +94,7 @@ namespace SisoDb.Sql2008
             return JsonSerializer.Deserialize<T>(
                 GetByIdAsJson<T>(id));
         }
-        
+
         public IEnumerable<T> GetByIds<T>(IEnumerable<ValueType> ids) where T : class
         {
             return JsonSerializer.DeserializeMany<T>(GetByIdsAsJson<T>(ids));
@@ -100,7 +106,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return JsonSerializer.DeserializeMany<T>(DbClient.GetJsonWhereIdIsBetween(idFrom, idTo, structureSchema));
+            return JsonSerializer.DeserializeMany<T>(DbClientNonTrans.GetJsonWhereIdIsBetween(idFrom, idTo, structureSchema));
         }
 
         public TOut GetByIdAs<TContract, TOut>(ValueType id)
@@ -124,7 +130,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return DbClient.GetJsonById(id, structureSchema);
+            return DbClientNonTrans.GetJsonById(id, structureSchema);
         }
 
         public IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<ValueType> ids) where T : class
@@ -133,7 +139,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return DbClient.GetJsonByIds(ids, structureSchema.IdAccessor.IdType, structureSchema);
+            return DbClientNonTrans.GetJsonByIds(ids, structureSchema.IdAccessor.IdType, structureSchema);
         }
 
         public IEnumerable<T> GetAll<T>() where T : class
@@ -199,9 +205,9 @@ namespace SisoDb.Sql2008
                 sql = query.Sql;
             }
             else
-                sql = DbClient.SqlStatements.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
+                sql = DbClientNonTrans.SqlStatements.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = DbClient.CreateCommand(CommandType.Text, sql))
+            using (var cmd = DbClientNonTrans.CreateCommand(CommandType.Text, sql))
             {
                 return ConsumeReader(cmd);
             }
@@ -222,10 +228,10 @@ namespace SisoDb.Sql2008
         public IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
         {
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
-            
+
             UpsertStructureSet(structureSchema);
 
-            using (var cmd = DbClient.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
+            using (var cmd = DbClientNonTrans.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
             {
                 return ConsumeReader(cmd);
             }
@@ -287,7 +293,7 @@ namespace SisoDb.Sql2008
             var query = QueryGenerator.Generate(queryCommand, structureSchema);
             var parameters = query.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
-            using (var cmd = DbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
+            using (var cmd = DbClientNonTrans.CreateCommand(CommandType.Text, query.Sql, parameters))
             {
                 return ConsumeReader(cmd);
             }
@@ -299,9 +305,9 @@ namespace SisoDb.Sql2008
             {
                 Func<string> read;
 
-                if(reader.FieldCount < 2)
+                if (reader.FieldCount < 2)
                     read = () => reader.GetString(0);
-                else 
+                else
                     read = () => GetMergedJsonStructure(reader);
 
                 while (reader.Read())

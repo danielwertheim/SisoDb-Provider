@@ -129,46 +129,27 @@ namespace SisoDb.Sql2008
 
         public IQueryEngine CreateQueryEngine()
         {
-            var dbClient = _providerFactory.GetDbClient(_connectionInfo, false);
-            var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClient);
-            var queryGenerator = _providerFactory.GetDbQueryGenerator();
-            var commandBuilderFactory = _providerFactory.GetCommandBuilderFactory();
             var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
 
             return new Sql2008QueryEngine(
                 _providerFactory,
-                dbClient,
+                _connectionInfo,
                 _dbSchemaManager,
-                dbSchemaUpserter,
                 _structureSchemas,
-                jsonSerializer,
-                queryGenerator,
-                commandBuilderFactory);
+                jsonSerializer);
         }
 
         public IUnitOfWork CreateUnitOfWork()
         {
-            //TODO: dbClient and dbClientNonTrans needs to be disposed
-            //TODO: Only pass _providerFactory, _dbSchemaManager, _structureSchemas _structureBuilder
-            var dbClient = _providerFactory.GetDbClient(_connectionInfo, true);
-            var dbClientNonTrans = _providerFactory.GetDbClient(_connectionInfo, false);
-            var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClientNonTrans);
-            var identityStructureIdGenerator = _providerFactory.GetIdentityStructureIdGenerator(dbClientNonTrans);
-            var queryGenerator = _providerFactory.GetDbQueryGenerator();
-            var commandBuilderFactory = _providerFactory.GetCommandBuilderFactory();
             var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
 
             return new Sql2008UnitOfWork(
                 _providerFactory,
-                dbClient,
+                _connectionInfo,
                 _dbSchemaManager,
-                dbSchemaUpserter,
                 _structureSchemas,
-                _structureBuilder,
-                identityStructureIdGenerator,
                 jsonSerializer,
-                queryGenerator,
-                commandBuilderFactory);
+                _structureBuilder);
         }
     }
 }
