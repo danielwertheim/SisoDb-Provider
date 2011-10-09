@@ -7,7 +7,7 @@ using SisoDb.Sql2008.Resources;
 
 namespace SisoDb.Sql2008.DbSchema
 {
-    public class SqlDbDataTypeTranslator : IDbDataTypeTranslator
+    public class Sql2008DataTypeTranslator : IDbDataTypeTranslator
     {
         public string ToDbType(IIndexAccessor indexAccessor)
         {

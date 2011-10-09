@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using SisoDb.Sql2008;
-using SisoDb.SqlCe4;
+//using SisoDb.SqlCe4;
 
 namespace SisoDb.Tests.IntegrationTests
 {
@@ -15,16 +15,16 @@ namespace SisoDb.Tests.IntegrationTests
 
         private static void EnsureSql2008DbExists()
         {
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForSql2008);
+            var connectionInfo = new Sql2008ConnectionInfo(LocalConstants.ConnectionStringNameForSql2008);
             var database = new Sql2008DbFactory().CreateDatabase(connectionInfo);
             database.EnsureNewDatabase();
         }
 
         private static void EnsureSqlCe4DbExists()
         {
-            var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForSqlCe4);
-            var database = new SqlCe4DbFactory().CreateDatabase(connectionInfo);
-            database.EnsureNewDatabase();
+            //var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForSqlCe4);
+            //var database = new SqlCe4DbFactory().CreateDatabase(connectionInfo);
+            //database.EnsureNewDatabase();
         }
     }
 }

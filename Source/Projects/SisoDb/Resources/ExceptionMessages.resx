@@ -171,9 +171,6 @@
   <data name="StructureIndex_ValueArgument_IncorrectType" xml:space="preserve">
     <value>Only strings and valuetypes can be stored as indexes.</value>
   </data>
-  <data name="SqlDatabase_ConnectionInfo_MissingName" xml:space="preserve">
-    <value>The name of the database could not be extracted from the connection-info.</value>
-  </data>
   <data name="Property_Ctor_UniqueOnNonSimpleType" xml:space="preserve">
     <value>You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc.</value>
   </data>

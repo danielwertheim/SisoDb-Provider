@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
+using NCore;
 using NUnit.Framework;
-using SisoDb.Annotations;
 using System.Collections.Generic;
-using SisoDb.Core;
+using PineCone.Annotations;
 using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes

@@ -15,7 +15,7 @@ namespace SisoDb.DbSchema
             public static readonly SchemaField UqValue = new SchemaField(3, "UqValue");
         }
 
-        private static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId, Fields.UqStructureId, Fields.UqName, Fields.UqValue };
+        public static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId, Fields.UqStructureId, Fields.UqName, Fields.UqValue };
 
         public UniqueStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetUniquesTableName())

@@ -1,6 +1,6 @@
 using System;
+using NCore;
 using NUnit.Framework;
-using SisoDb.Core;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
 using SisoDb.TestUtils;

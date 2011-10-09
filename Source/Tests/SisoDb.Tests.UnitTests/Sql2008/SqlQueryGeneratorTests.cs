@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Processors;
 using SisoDb.Querying.Sql;
 using SisoDb.Sql2008;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Sql2008
 {

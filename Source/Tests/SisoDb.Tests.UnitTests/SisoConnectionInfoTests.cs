@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using Moq;
 using NUnit.Framework;
-using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.UnitTests
 {
@@ -14,7 +12,7 @@ namespace SisoDb.Tests.UnitTests
         {
             var connectionStringFake = new Mock<IConnectionString>();
             connectionStringFake.Setup(f => f.Provider).Returns("Sql2008");
-            var connectionInfo = new SisoConnectionInfo(connectionStringFake.Object);
+            var connectionInfo = new SisoConnectionInfoImplementation("");
 
             Assert.AreEqual(StorageProviders.Sql2008, connectionInfo.ProviderType);
         }
@@ -22,13 +20,36 @@ namespace SisoDb.Tests.UnitTests
         [Test]
         public void Constructor_WhenNoConnectionStringOrNameIsPassed_ThrowsArgumentNullException()
         {
-            CustomAssert.Throws<ArgumentNullException>(() => new SisoConnectionInfo(null as string));
+            var ex = Assert.Throws<ArgumentNullException>(() => new SisoConnectionInfoImplementation(null as string));
+
+            Assert.AreEqual("connectionStringOrName", ex.ParamName);
         }
 
         [Test]
         public void Constructor_WhenNoConnectionStringIsPassed_ThrowsArgumentNullException()
         {
-            CustomAssert.Throws<ArgumentNullException>(() => new SisoConnectionInfo(null as IConnectionString));
+            var ex = Assert.Throws<ArgumentNullException>(() => new SisoConnectionInfoImplementation(null as IConnectionString));
+
+            Assert.AreEqual("connectionString", ex.ParamName);
+        }
+
+        private class SisoConnectionInfoImplementation : SisoConnectionInfo
+        {
+            public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(connectionString)
+            {}
+
+            public SisoConnectionInfoImplementation(string connectionStringOrName) : base(connectionStringOrName)
+            {}
+
+            public override string DbName
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public override IConnectionString ServerConnectionString
+            {
+                get { throw new NotImplementedException(); }
+            }
         }
     }
 }

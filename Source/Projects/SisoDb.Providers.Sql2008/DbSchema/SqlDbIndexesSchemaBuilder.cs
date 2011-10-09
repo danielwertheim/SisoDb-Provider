@@ -12,7 +12,7 @@ namespace SisoDb.Sql2008.DbSchema
     public class SqlDbIndexesSchemaBuilder : IDbSchemaBuilder
     {
         private readonly ISqlStatements _sqlStatements;
-        private readonly SqlDbDataTypeTranslator _dataTypeTranslator;
+        private readonly Sql2008DataTypeTranslator _dataTypeTranslator;
         private readonly IDbColumnGenerator _columnGenerator;
 
         public SqlDbIndexesSchemaBuilder(ISqlStatements sqlStatements, IDbColumnGenerator columnGenerator)
@@ -22,7 +22,7 @@ namespace SisoDb.Sql2008.DbSchema
 
             _sqlStatements = sqlStatements;
             _columnGenerator = columnGenerator;
-            _dataTypeTranslator = new SqlDbDataTypeTranslator();
+            _dataTypeTranslator = new Sql2008DataTypeTranslator();
         }
 
         public string GenerateSql(IStructureSchema structureSchema)

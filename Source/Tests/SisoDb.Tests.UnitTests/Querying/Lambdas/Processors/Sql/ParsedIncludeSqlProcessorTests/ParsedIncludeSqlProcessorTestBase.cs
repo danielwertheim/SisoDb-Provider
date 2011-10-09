@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
 {

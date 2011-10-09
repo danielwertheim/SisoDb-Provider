@@ -128,15 +128,10 @@
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="SisoConnectionInfoTests.cs" />
     <Compile Include="Sql2008\DbSchema\Sql2008DbColumnGeneratorTests.cs" />
-    <Compile Include="DbSchema\SqlDbDataTypeTranslatorTests.cs" />
-    <Compile Include="Sql2008\Sql2008DatabaseTests.cs" />
+    <Compile Include="Sql2008\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
     <Compile Include="Sql2008\SqlStructureSchemaExtensionsTests.cs" />
-    <Compile Include="Core\StringConverterTests.cs" />
-    <Compile Include="TypeExtensionsEnumerableTests.cs" />
-    <Compile Include="TypeExtensionsIsByteTypeTests.cs" />
-    <Compile Include="TypeExtensionsIsEnumerableBytesTypeTests.cs" />
-    <Compile Include="TypeExtensionsIsEnumerableTypeTests.cs" />
-    <Compile Include="TypeExtensionsTests.cs" />
+    <Compile Include="TestFactories\StructureSchemaTestFactory.cs" />
+    <Compile Include="TestFactories\StructurePropertyTestFactory.cs" />
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>

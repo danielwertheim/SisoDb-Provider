@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using NCore;
 using NCore.Reflections;
@@ -11,25 +10,6 @@ namespace SisoDb.TestUtils
 {
     public static class CustomAssert
     {
-        [DebuggerStepThrough()]
-        public static Exception Throws<T>(Action action) where T : Exception
-        {
-            try
-            {
-                action.Invoke();
-            }
-            catch (T ex)
-            {
-                return ex;
-            }
-            catch (Exception ex)
-            {
-                throw new AssertionException("Expected exception was not thrown!", ex);
-            }
-
-            throw new AssertionException("Expected exception was not thrown!");
-        }
-
         public static void IsEmpty<T>(IEnumerable<T> source)
         {
             var isEmpty = source.Count() < 1;

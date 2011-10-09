@@ -1,9 +1,10 @@
 using System;
 using Moq;
 using NUnit.Framework;
+using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Structures.Schemas;
-using SisoDb.Tests.UnitTests.Structures;
+using SisoDb.Tests.UnitTests.TestFactories;
 
 namespace SisoDb.Tests.UnitTests.DbSchema
 {
@@ -44,13 +45,13 @@ namespace SisoDb.Tests.UnitTests.DbSchema
         [Test]
         public void DropStructureSet_WhenCalledTwice_DropperIsCalledTwice()
         {
-            var dropperFake = new Mock<IDbSchemaDropper>();
+            var dbClientFake = new Mock<IDbClient>();
 
             var manager = new DbSchemaManager();
-            manager.DropStructureSet(_structureSchema, dropperFake.Object);
-            manager.DropStructureSet(_structureSchema, dropperFake.Object);
+            manager.DropStructureSet(_structureSchema, dbClientFake.Object);
+            manager.DropStructureSet(_structureSchema, dbClientFake.Object);
 
-            dropperFake.Verify(f => f.Drop(_structureSchema), Times.Exactly(2));
+            dbClientFake.Verify(f => f.Drop(_structureSchema), Times.Exactly(2));
         }
 
         private class Class_53966417_B25D_49E1_966B_58754110781C

@@ -27,17 +27,21 @@ namespace SisoDb.Sql2008
             get { return _connectionInfo; }
         }
 
-        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory)
+        public IStructureSchemas StructureSchemas
+        {
+            get { return _structureSchemas; }
+        }
+
+        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
-            Ensure.That(() => providerFactory).IsNotNull();
 
             _connectionInfo = connectionInfo;
-            _providerFactory = providerFactory;
-
+            
             _dbSchemaManager = _providerFactory.GetDbSchemaManager();
             _structureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
             _structureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
         }
 
         public virtual void EnsureNewDatabase()

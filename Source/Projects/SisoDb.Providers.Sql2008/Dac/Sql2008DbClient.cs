@@ -48,7 +48,7 @@ namespace SisoDb.Sql2008.Dac
             ConnectionString = connectionInfo.ConnectionString;
 
             SqlStatements = Sql2008Statements.Instance;
-            DbDataTypeTranslator = new SqlDbDataTypeTranslator();
+            DbDataTypeTranslator = new Sql2008DataTypeTranslator();
 
             _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();

@@ -13,7 +13,7 @@ namespace SisoDb.DbSchema
             public static readonly SchemaField Json = new SchemaField(1, "Json");
         }
 
-        private static readonly SchemaField[] OrderedFields = new[] { Fields.Id, Fields.Json };
+        public static readonly SchemaField[] OrderedFields = new[] { Fields.Id, Fields.Json };
 
         public StructureStorageSchema(IStructureSchema structureSchema) 
             : base(structureSchema, structureSchema.GetStructureTableName())

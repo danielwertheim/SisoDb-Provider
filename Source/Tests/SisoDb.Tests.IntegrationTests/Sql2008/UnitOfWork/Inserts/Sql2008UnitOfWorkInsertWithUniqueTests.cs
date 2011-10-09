@@ -4,8 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
-using SisoDb.Annotations;
-using SisoDb.Core;
+using PineCone.Annotations;
 
 namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 {

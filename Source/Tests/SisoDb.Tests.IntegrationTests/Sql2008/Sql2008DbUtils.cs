@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using SisoDb.Core;
+using NCore;
 
 namespace SisoDb.Tests.IntegrationTests.Sql2008
 {

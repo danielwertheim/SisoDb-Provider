@@ -1,7 +1,7 @@
 using Moq;
 using NUnit.Framework;
+using PineCone.Structures.Schemas;
 using SisoDb.Providers;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.UnitTests.Sql2008
 {

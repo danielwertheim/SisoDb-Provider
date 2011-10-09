@@ -72,7 +72,7 @@
     <Compile Include="Dac\Sql2008IdsTableParam.cs" />
     <Compile Include="Dac\Sql2008DbBulkInserter.cs" />
     <Compile Include="DbSchema\SqlDbColumnGenerator.cs" />
-    <Compile Include="DbSchema\SqlDbDataTypeTranslator.cs" />
+    <Compile Include="DbSchema\Sql2008DataTypeTranslator.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\Sql2008DbSchemaUpserter.cs" />

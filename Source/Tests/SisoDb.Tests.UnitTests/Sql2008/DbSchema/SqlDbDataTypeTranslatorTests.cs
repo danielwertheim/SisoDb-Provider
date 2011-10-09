@@ -1,22 +1,22 @@
 ﻿using System;
 using Moq;
+using NCore;
 using NUnit.Framework;
-using SisoDb.Core;
-using SisoDb.DbSchema;
-using SisoDb.Resources;
-using SisoDb.Structures.Schemas;
-using SisoDb.Structures.Schemas.MemberAccessors;
+using PineCone.Structures.Schemas;
+using PineCone.Structures.Schemas.MemberAccessors;
+using SisoDb.Sql2008.DbSchema;
+using SisoDb.Sql2008.Resources;
 
-namespace SisoDb.Tests.UnitTests.DbSchema
+namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 {
     [TestFixture]
     public class SqlDbDataTypeTranslatorTests : UnitTestBase
     {
-        private SqlDbDataTypeTranslator _translator;
+        private Sql2008DataTypeTranslator _translator;
 
         protected override void OnFixtureInitialize()
         {
-            _translator = new SqlDbDataTypeTranslator();
+            _translator = new Sql2008DataTypeTranslator();
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace SisoDb.Tests.UnitTests.DbSchema
             var ex = Assert.Throws<SisoDbException>(() => _translator.ToDbType(iac));
 
             Assert.AreEqual(
-                ExceptionMessages.SqlDbDataTypeTranslator_ByteArraysAreNotSupported.Inject("Bytes"),
+                Sql2008Exceptions.SqlDbDataTypeTranslator_ByteArraysAreNotSupported.Inject("Bytes"),
                 ex.Message);
         }
 

@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using SisoDb.Core;
 using SisoDb.Providers;
 using SisoDb.Sql2008;
 
@@ -11,7 +10,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008
         protected Sql2008DbUtils DbHelper { get; set; }
 
         protected Sql2008IntegrationTestBase()
-            : base(new Sql2008DbFactory(), LocalConstants.ConnectionStringNameForSql2008)
+            : base(new Sql2008DbFactory(), new Sql2008ConnectionInfo(LocalConstants.ConnectionStringNameForSql2008))
         {
             DbHelper = new Sql2008DbUtils(Database.ConnectionInfo.ConnectionString.PlainString);
         }

@@ -11,9 +11,15 @@ namespace SisoDb.DbSchema
         public static class Fields
         {
             public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
+            public static readonly SchemaField MemberPath = new SchemaField(1, "MemberPath");
+            public static readonly SchemaField StringValue = new SchemaField(2, "StringValue");
+            public static readonly SchemaField IntegerValue = new SchemaField(3, "IntegerValue");
+            public static readonly SchemaField FractalValue = new SchemaField(4, "FractalValue");
+            public static readonly SchemaField DateTimeValue = new SchemaField(5, "DateTimeValue");
+            public static readonly SchemaField BitValue = new SchemaField(6, "BitValue");
         }
 
-        private static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId };
+        public static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId, Fields.MemberPath, Fields.StringValue, Fields.IntegerValue, Fields.FractalValue, Fields.DateTimeValue, Fields.BitValue };
 
         public IndexStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetIndexesTableName())
@@ -22,11 +28,7 @@ namespace SisoDb.DbSchema
 
         protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
         {
-            var staticFields = OrderedFields;
-            var dynamicIndex = staticFields.Length;
-            var dynamicFields = structureSchema.IndexAccessors.Select(iac => new SchemaField(dynamicIndex++, iac.Path)); //TODO: Cache
-            
-            return staticFields.Union(dynamicFields).ToArray(); //TODO: Hmmm, perhaps Merge???
+            return OrderedFields;
         }
     }
 }

@@ -341,15 +341,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The name of the database could not be extracted from the connection-info..
-        /// </summary>
-        public static string SqlDatabase_ConnectionInfo_MissingName {
-            get {
-                return ResourceManager.GetString("SqlDatabase_ConnectionInfo_MissingName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The database &apos;{0}&apos; doesn&apos;t exist..
         /// </summary>
         public static string SqlDatabase_InitializeExisting_DbDoesNotExist {

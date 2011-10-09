@@ -1,10 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
-using SisoDb.Core;
+using PineCone.Structures.Schemas;
 using SisoDb.Sql2008;
 using SisoDb.Sql2008.Dac;
-using SisoDb.Sql2008.DbSchema;
-using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
 {

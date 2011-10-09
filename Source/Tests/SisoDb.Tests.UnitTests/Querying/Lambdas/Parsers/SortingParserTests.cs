@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.Querying;
@@ -35,7 +34,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
         public void Parse_WhenEmptyExpressions_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new SortingParser().Parse(new List<LambdaExpression>()));
+                () => new SortingParser().Parse(new LambdaExpression[]{}));
         }
 
         [Test]
@@ -44,7 +43,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
             var lambda = Reflect<MyClass>.LambdaFrom(m => m.String1);
 
             Assert.DoesNotThrow(
-                () => new SortingParser().Parse(new List<LambdaExpression> { lambda, null }));
+                () => new SortingParser().Parse(new LambdaExpression[] { lambda, null }));
         }
 
         [Test]
