@@ -7,7 +7,6 @@ using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
-using SisoDb.Providers;
 using SisoDb.Resources;
 using SisoDb.Serialization;
 using SisoDb.Structures;
@@ -22,13 +21,12 @@ namespace SisoDb.Sql2008
         protected IdentityStructureIdGenerator IdentityStructureIdGenerator { get; private set; }
 
         protected internal Sql2008UnitOfWork(
-            ISisoProviderFactory providerFactory,
             ISisoConnectionInfo connectionInfo,
             IDbSchemaManager dbSchemaManager,
             IStructureSchemas structureSchemas,
             IJsonSerializer jsonSerializer,
             IStructureBuilder structureBuilder)
-            : base(providerFactory, connectionInfo, dbSchemaManager, structureSchemas, jsonSerializer)
+            : base(connectionInfo, dbSchemaManager, structureSchemas, jsonSerializer)
         {
             Ensure.That(() => structureBuilder).IsNotNull();
 
@@ -113,7 +111,7 @@ namespace SisoDb.Sql2008
             DbClientNonTrans.DeleteById(structureId, structureSchema);
         }
 
-        public void DeleteByIds<T>(IEnumerable<ValueType> ids) where T : class
+        public void DeleteByIds<T>(params ValueType[] ids) where T : class
         {
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
 

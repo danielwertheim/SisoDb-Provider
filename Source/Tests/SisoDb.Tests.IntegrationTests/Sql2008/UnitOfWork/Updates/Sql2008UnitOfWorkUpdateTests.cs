@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Linq;
+using NCore;
 using NUnit.Framework;
 using PineCone.Annotations;
 
@@ -82,7 +83,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Updates
 
             var propertyHash =
                 Database.StructureSchemas.GetSchema(TypeFor<SimpleItem>.Type).IndexAccessors
-                .Single(iac => iac.Name.StartsWith("Value")).Name;
+                .Single(iac => iac.Path.StartsWith("Value")).Path;
             var table = DbHelper.GetTableBySql(
                 "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));
             Assert.AreEqual(1, table.Rows.Count);
@@ -111,7 +112,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Updates
 
             var propertyHash =
                 Database.StructureSchemas.GetSchema(TypeFor<SimpleItem>.Type).IndexAccessors
-                .Single(iac => iac.Name.StartsWith("Value")).Name;
+                .Single(iac => iac.Path.StartsWith("Value")).Path;
             var table = DbHelper.GetTableBySql(
                 "select [{0}] from dbo.SimpleItemIndexes where SisoId = '{1}'".Inject(propertyHash, item.SisoId));
             Assert.AreEqual(1, table.Rows.Count);

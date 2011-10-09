@@ -4,10 +4,10 @@ using PineCone.Structures.Schemas;
 using SisoDb.Sql2008;
 using SisoDb.Sql2008.Dac;
 
-namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
+namespace SisoDb.Tests.IntegrationTests.Sql2008.Dac
 {
     [TestFixture]
-    public class Sql2008DbSchemaDropperTests : Sql2008IntegrationTestBase
+    public class Sql2008DbClientDropTests : Sql2008IntegrationTestBase
     {
         private IStructureSchema _structureSchema;
         private string _structureSetPrefix;
@@ -46,10 +46,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         [Test]
         public void DropStructureSet_WhenTablesExists_AllTablesAreDropped()
         {
-            using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
+            using (var dbClient = new Sql2008DbClient(_sqlDb.ConnectionInfo, false))
             {
-                var upserter = new Sql2008DbSchemaDropper(dbClient);
-                upserter.Drop(_structureSchema);
+                dbClient.Drop(_structureSchema);
             }
 
             var structureTableExists = DbHelper.TableExists(_structureTableName);

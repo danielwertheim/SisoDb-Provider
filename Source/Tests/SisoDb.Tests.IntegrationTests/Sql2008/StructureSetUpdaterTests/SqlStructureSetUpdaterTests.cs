@@ -1,4 +1,5 @@
 using System;
+using NCore;
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Resources;
@@ -159,8 +160,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
-            Assert.AreEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId
-                .Inject(newIdForAssert, oldIdForAssert), ex.Message);
+            Assert.AreEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(newIdForAssert, oldIdForAssert), ex.Message);
         }
 
         [Test]
@@ -187,8 +187,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
                                               return StructureSetUpdaterStatuses.Keep;
                                           }));
 
-            Assert.AreEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId
-                                .Inject(newIdForAssert, oldIdForAssert), ex.Message);
+            Assert.AreEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(newIdForAssert, oldIdForAssert), ex.Message);
         }
 
         [Test]
@@ -334,8 +333,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             Database.StructureSchemas.RemoveSchema(TypeFor<TOld>.Type);
 
             var structureSchemaNew = Database.StructureSchemas.GetSchema(TypeFor<TNew>.Type);
-            var updater = new Sql2008StructureSetUpdater<TOld, TNew>(
-                (Sql2008ConnectionInfo)Database.ConnectionInfo, structureSchemaOld, structureSchemaNew, Database.StructureBuilder, TODO);
+            var updater = new Sql2008StructureSetUpdater<TOld, TNew>(Database.ConnectionInfo, structureSchemaOld, structureSchemaNew, Database.StructureBuilder);
 
             return updater;
         }

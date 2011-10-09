@@ -63,7 +63,7 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-        IEnumerable<T> GetByIds<T>(IEnumerable<ValueType> ids)
+        IEnumerable<T> GetByIds<T>(params ValueType[] ids)
             where T : class;
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SisoDb
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
-        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<ValueType> ids)
+        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(params ValueType[] ids)
             where TContract : class
             where TOut : class;
 
@@ -113,7 +113,7 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
-        IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<ValueType> ids)
+        IEnumerable<string> GetByIdsAsJson<T>(params ValueType[] ids)
             where T : class;
 
         /// <summary>

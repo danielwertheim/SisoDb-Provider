@@ -31,7 +31,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIds<IdentityItemForGetQueries>(new[] { 1, 3 }).ToList();
+                refetched = uow.GetByIds<IdentityItemForGetQueries>(1, 3).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -56,7 +56,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIds<IdentityItemForGetQueries>(new[] { 1, 3, nonExistingIdentity }).ToList();
+                refetched = uow.GetByIds<IdentityItemForGetQueries>(1, 3, nonExistingIdentity).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -80,7 +80,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIdsAsJson<IdentityItemForGetQueries>(new[] { 1, 3 }).ToList();
+                refetched = uow.GetByIdsAsJson<IdentityItemForGetQueries>(1, 3).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -104,7 +104,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIdsAs<IdentityItemForGetQueries, View>(new[] { 1, 3 }).ToList();
+                refetched = uow.GetByIdsAs<IdentityItemForGetQueries, View>(1, 3).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -130,7 +130,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIds<GuidItemForGetQueries>(new[] { items[0].SisoId, items[2].SisoId }).ToList();
+                refetched = uow.GetByIds<GuidItemForGetQueries>(items[0].SisoId, items[2].SisoId).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -155,7 +155,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIds<GuidItemForGetQueries>(new[] { items[0].SisoId, items[2].SisoId, nonExistingGuid }).ToList();
+                refetched = uow.GetByIds<GuidItemForGetQueries>(items[0].SisoId, items[2].SisoId, nonExistingGuid).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -179,7 +179,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIdsAsJson<GuidItemForGetQueries>(new[] { items[0].SisoId, items[2].SisoId }).ToList();
+                refetched = uow.GetByIdsAsJson<GuidItemForGetQueries>(items[0].SisoId, items[2].SisoId).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -209,7 +209,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIdsAs<GuidItemForGetQueries, View>(new[] { items[0].SisoId, items[2].SisoId }).ToList();
+                refetched = uow.GetByIdsAs<GuidItemForGetQueries, View>(items[0].SisoId, items[2].SisoId).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);

@@ -32,6 +32,11 @@ namespace SisoDb.Sql2008
             get { return _structureSchemas; }
         }
 
+        public IStructureBuilder StructureBuilder
+        {
+            get { return _structureBuilder; }
+        }
+
         protected internal Sql2008Database(ISisoConnectionInfo connectionInfo)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
@@ -125,9 +130,7 @@ namespace SisoDb.Sql2008
 
             var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
 
-            var updater = new Sql2008StructureSetUpdater<TOld, TNew>(
-                _connectionInfo, _providerFactory, 
-                structureSchemaOld, structureSchemaNew, _structureBuilder);
+            var updater = new Sql2008StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _structureBuilder);
             updater.Process(onProcess);
         }
 
@@ -136,7 +139,6 @@ namespace SisoDb.Sql2008
             var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
 
             return new Sql2008QueryEngine(
-                _providerFactory,
                 _connectionInfo,
                 _dbSchemaManager,
                 _structureSchemas,
@@ -148,7 +150,6 @@ namespace SisoDb.Sql2008
             var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
 
             return new Sql2008UnitOfWork(
-                _providerFactory,
                 _connectionInfo,
                 _dbSchemaManager,
                 _structureSchemas,

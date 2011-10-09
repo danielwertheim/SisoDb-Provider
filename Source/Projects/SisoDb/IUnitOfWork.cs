@@ -85,7 +85,7 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
-        void DeleteByIds<T>(IEnumerable<ValueType> ids)
+        void DeleteByIds<T>(params ValueType[] ids)
             where T : class;
 
         /// <summary>

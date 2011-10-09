@@ -29,24 +29,22 @@ namespace SisoDb.Sql2008
         protected ICommandBuilderFactory CommandBuilderFactory { get; private set; }
 
         protected internal Sql2008QueryEngine(
-            ISisoProviderFactory providerFactory,
             ISisoConnectionInfo connectionInfo,
             IDbSchemaManager dbSchemaManager,
             IStructureSchemas structureSchemas,
             IJsonSerializer jsonSerializer)
         {
-            Ensure.That(() => providerFactory).IsNotNull();
             Ensure.That(() => connectionInfo).IsNotNull();
             Ensure.That(() => dbSchemaManager).IsNotNull();
             Ensure.That(() => structureSchemas).IsNotNull();
             Ensure.That(() => jsonSerializer).IsNotNull();
 
-            ProviderFactory = providerFactory;
-            DbClientTrans = providerFactory.GetDbClient(connectionInfo, true);
+            ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
+            DbClientTrans = ProviderFactory.GetDbClient(connectionInfo, true);
             DbClientNonTrans = ProviderFactory.GetDbClient(connectionInfo, false);
-            DbSchemaUpserter = providerFactory.GetDbSchemaUpserter(DbClientTrans);
-            QueryGenerator = providerFactory.GetDbQueryGenerator();
-            CommandBuilderFactory = providerFactory.GetCommandBuilderFactory();
+            DbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(DbClientTrans);
+            QueryGenerator = ProviderFactory.GetDbQueryGenerator();
+            CommandBuilderFactory = ProviderFactory.GetCommandBuilderFactory();
             DbSchemaManager = dbSchemaManager;
             StructureSchemas = structureSchemas;
             JsonSerializer = jsonSerializer;
@@ -95,7 +93,7 @@ namespace SisoDb.Sql2008
                 GetByIdAsJson<T>(id));
         }
 
-        public IEnumerable<T> GetByIds<T>(IEnumerable<ValueType> ids) where T : class
+        public IEnumerable<T> GetByIds<T>(params ValueType[] ids) where T : class
         {
             return JsonSerializer.DeserializeMany<T>(GetByIdsAsJson<T>(ids));
         }
@@ -117,11 +115,11 @@ namespace SisoDb.Sql2008
                 GetByIdAsJson<TContract>(id));
         }
 
-        public IEnumerable<TOut> GetByIdsAs<TContract, TOut>(IEnumerable<ValueType> ids)
+        public IEnumerable<TOut> GetByIdsAs<TContract, TOut>(params ValueType[] ids)
             where TContract : class
             where TOut : class
         {
-            return JsonSerializer.DeserializeMany<TOut>(GetByIdsAsJson<TContract>(ids.Select(i => i)));
+            return JsonSerializer.DeserializeMany<TOut>(GetByIdsAsJson<TContract>(ids.Select(i => i).ToArray()));
         }
 
         public string GetByIdAsJson<T>(ValueType id) where T : class
@@ -133,7 +131,7 @@ namespace SisoDb.Sql2008
             return DbClientNonTrans.GetJsonById(id, structureSchema);
         }
 
-        public IEnumerable<string> GetByIdsAsJson<T>(IEnumerable<ValueType> ids) where T : class
+        public IEnumerable<string> GetByIdsAsJson<T>(params ValueType[] ids) where T : class
         {
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
 

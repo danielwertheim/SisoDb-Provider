@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using NCore;
 using NUnit.Framework;
 using PineCone.Annotations;
 
@@ -19,14 +20,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         [Test]
         public void Insert_WhenValidUniquePerTypeByHavingUniqueOrderNo_StructureIsInserted()
         {
-            var order = new UniqueOrder { SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"), OrderNo = "O123" };
+            var order = new UniqueOrder { StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"), OrderNo = "O123" };
 
             using (var uow = Database.CreateUnitOfWork())
             {
                 uow.Insert(order);
                 uow.Commit();
 
-                order = uow.GetById<UniqueOrder>(order.SisoId);
+                order = uow.GetById<UniqueOrder>(order.StructureId);
             }
 
             Assert.IsNotNull(order);
@@ -37,7 +38,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         {
             var order = new UniqueOrder
                         {
-                            SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
+                            StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
                             OrderNo = "O123",
                             Lines = new List<UniqueOrderline> {new UniqueOrderline {ProductNo = "P123"}, new UniqueOrderline{ProductNo = "P321"}}
                         };
@@ -47,7 +48,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Insert(order);
                 uow.Commit();
 
-                order = uow.GetById<UniqueOrder>(order.SisoId);
+                order = uow.GetById<UniqueOrder>(order.StructureId);
             }
 
             Assert.IsNotNull(order);
@@ -56,7 +57,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         [Test]
         public void Insert_WhenUniquePerTypeAttributeExists_KeyValueEndsUpInUniquesTable()
         {
-            var order = new UniqueOrder { SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"), OrderNo = "O123" };
+            var order = new UniqueOrder { StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"), OrderNo = "O123" };
 
             using (var uow = Database.CreateUnitOfWork())
             {
@@ -76,7 +77,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         {
             var order = new UniqueOrder
             {
-                SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
+                StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
                 OrderNo = "O123",
                 Lines = new List<UniqueOrderline> { new UniqueOrderline { ProductNo = "P123" } }
             };
@@ -88,7 +89,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.SisoId));
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.StructureId));
             Assert.AreEqual(1, table.Rows.Count);
             Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
             Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);
@@ -97,8 +98,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         [Test]
         public void Insert_WhenViolatingUniquePerTypeByHavingDuplicateOrderNo_ThrowsException()
         {
-            var order1 = new UniqueOrder { SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"), OrderNo = "O123" };
-            var order2 = new UniqueOrder { SisoId = new Guid("127DDD19-E351-44B4-8DB8-3412AC58A03A"), OrderNo = "O123" };
+            var order1 = new UniqueOrder { StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"), OrderNo = "O123" };
+            var order2 = new UniqueOrder { StructureId = new Guid("127DDD19-E351-44B4-8DB8-3412AC58A03A"), OrderNo = "O123" };
 
             using (var uow = Database.CreateUnitOfWork())
             {
@@ -115,7 +116,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         {
             var order = new UniqueOrder
             {
-                SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
+                StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
                 OrderNo = "O123",
                 Lines = new List<UniqueOrderline> { new UniqueOrderline { ProductNo = "P123" }, new UniqueOrderline { ProductNo = "P123" } }
             };
@@ -127,7 +128,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.SisoId));
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.StructureId));
             Assert.AreEqual(1, table.Rows.Count);
             Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
             Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);
@@ -138,14 +139,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         {
             var order1 = new UniqueOrder
             {
-                SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
+                StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
                 OrderNo = "O123",
                 Lines = new List<UniqueOrderline> { new UniqueOrderline { ProductNo = "P123" } }
             };
 
             var order2 = new UniqueOrder
             {
-                SisoId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
+                StructureId = new Guid("BDAC94C3-7FB4-4781-9612-5753DD9F9330"),
                 OrderNo = "O123",
                 Lines = new List<UniqueOrderline> { new UniqueOrderline { ProductNo = "P123" } }
             };
@@ -162,7 +163,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         private class UniqueOrder
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             [Unique(UniqueModes.PerType)]
             public string OrderNo { get; set; }

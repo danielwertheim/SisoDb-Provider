@@ -34,27 +34,26 @@ namespace SisoDb.Sql2008
 
         protected IStructureBuilder StructureBuilder { get; private set; }
 
-        public Sql2008StructureSetUpdater(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilder structureBuilder)
+        public Sql2008StructureSetUpdater(ISisoConnectionInfo connectionInfo, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilder structureBuilder)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
-            Ensure.That(() => providerFactory).IsNotNull();
             Ensure.That(() => structureSchemaOld).IsNotNull();
             Ensure.That(() => structureSchemaNew).IsNotNull();
             Ensure.That(() => structureBuilder).IsNotNull();
 
             ConnectionInfo = connectionInfo;
-            ProviderFactory = providerFactory;
             StructureSchemaOld = structureSchemaOld;
             StructureSchemaNew = structureSchemaNew;
             StructureBuilder = structureBuilder;
 
-            KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
+            ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
             _jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
             _structureBuilderOptions = new StructureBuilderOptions
             {
                 Serializer = new SerializerForStructureBuilder(),
                 KeepStructureId = true
             };
+            KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
         }
 
         public void Process(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)

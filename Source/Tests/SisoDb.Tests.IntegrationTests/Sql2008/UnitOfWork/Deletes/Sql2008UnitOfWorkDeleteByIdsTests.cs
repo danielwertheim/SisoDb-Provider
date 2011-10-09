@@ -33,7 +33,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIds<IdentityItem>(new[] { 2, 3 });
+                uow.DeleteByIds<IdentityItem>(2, 3);
                 uow.Commit();
 
                 refetched = uow.GetAll<IdentityItem>().ToList();
@@ -63,7 +63,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIds<IdentityItem>(new[] { 2, 3, nonExistingId });
+                uow.DeleteByIds<IdentityItem>(2, 3, nonExistingId);
                 uow.Commit();
 
                 refetched = uow.GetAll<IdentityItem>().ToList();
@@ -92,7 +92,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIds<GuidItem>(new[] { items[1].SisoId, items[2].SisoId });
+                uow.DeleteByIds<GuidItem>(items[1].StructureId, items[2].StructureId);
                 uow.Commit();
 
                 refetched = uow.GetAll<GuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();
@@ -122,7 +122,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIds<GuidItem>(new[] { items[1].SisoId, items[2].SisoId, nonExistingId });
+                uow.DeleteByIds<GuidItem>(items[1].StructureId, items[2].StructureId, nonExistingId);
                 uow.Commit();
 
                 refetched = uow.GetAll<GuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();
@@ -144,7 +144,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
 
         private class GuidItem
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public int SortOrder { get; set; }
 

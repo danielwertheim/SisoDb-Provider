@@ -1,5 +1,5 @@
 using System;
-using PineCone;
+using PineCone.Structures;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb
@@ -25,6 +25,11 @@ namespace SisoDb
         /// Cached structure schemas.
         /// </summary>
         IStructureSchemas StructureSchemas { get; }
+
+        /// <summary>
+        /// Structure builder used to build structures for insert and updates.
+        /// </summary>
+        IStructureBuilder StructureBuilder { get; }
 
         /// <summary>
         /// Ensures that a new fresh database will exists. Drops any existing database.

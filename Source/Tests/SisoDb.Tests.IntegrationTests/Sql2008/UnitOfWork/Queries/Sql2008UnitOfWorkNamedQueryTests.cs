@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NCore;
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Dac;
