@@ -259,4 +259,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConnectionString_MissingSisoDbPart" xml:space="preserve">
     <value>The connectionstring is missing the SisoDb-part, indicated by '{0}'. Example: '{1}'.</value>
   </data>
+  <data name="StructureBuilderOptionsFactory_Create" xml:space="preserve">
+    <value>Can not create StructureBuilderOptions for StructureIdType '{0}'.</value>
+  </data>
 </root>

@@ -13,6 +13,7 @@ using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Serialization;
+using SisoDb.Structures;
 
 namespace SisoDb.Sql2008
 {
@@ -21,6 +22,7 @@ namespace SisoDb.Sql2008
         private const int BatchSize = 1000;
 
         protected readonly IStructureBuilder StructureBuilder;
+        protected readonly IdentityStructureIdGenerator IdentityStructureIdGenerator;
 
         protected internal Sql2008UnitOfWork(
             ISisoProviderFactory providerFactory,
@@ -29,14 +31,17 @@ namespace SisoDb.Sql2008
             IDbSchemaUpserter dbSchemaUpserter,
             IStructureSchemas structureSchemas,
             IStructureBuilder structureBuilder,
+            IdentityStructureIdGenerator identityStructureIdGenerator,
             IJsonSerializer jsonSerializer,
             IDbQueryGenerator queryGenerator,
             ICommandBuilderFactory commandBuilderFactory)
             : base(providerFactory, dbClient, dbSchemaManager, dbSchemaUpserter, structureSchemas, jsonSerializer, queryGenerator, commandBuilderFactory)
         {
             Ensure.That(() => structureBuilder).IsNotNull();
+            Ensure.That(() => identityStructureIdGenerator).IsNotNull();
 
             StructureBuilder = structureBuilder;
+            IdentityStructureIdGenerator = identityStructureIdGenerator;
         }
 
         public void Commit()
@@ -50,7 +55,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            var structure = StructureBuilder.CreateStructure(item, structureSchema);
+            var structure = StructureBuilder.CreateStructure(item, structureSchema, CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType));
 
             var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { structure });
@@ -67,9 +72,11 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
+            var structureBuilderOptions = CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType);
+            
             var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
 
-            foreach (var batchOfStructures in StructureBuilder.CreateStructureBatches(items, structureSchema, BatchSize))
+            foreach (var batchOfStructures in StructureBuilder.CreateStructureBatches(items, structureSchema, BatchSize, structureBuilderOptions))
                 bulkInserter.Insert(structureSchema, batchOfStructures);
         }
 
@@ -84,7 +91,10 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            var updatedStructure = StructureBuilder.CreateStructure(item, structureSchema);
+            var structureBuilderOptions = CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType);
+            structureBuilderOptions.KeepStructureId = true;
+
+            var updatedStructure = StructureBuilder.CreateStructure(item, structureSchema, structureBuilderOptions);
 
             var existingItem = GetByIdAsJson<T>(updatedStructure.Id.Value);
 
@@ -141,6 +151,11 @@ namespace SisoDb.Sql2008
             var queryCommand = commandBuilder.Where(expression).Command;
             var sql = QueryGenerator.GenerateWhere(queryCommand);
             DbClient.DeleteByQuery(sql, structureSchema.IdAccessor.DataType, structureSchema);
+        }
+
+        protected StructureBuilderOptions CreateStructureBuilderOptions(StructureIdTypes structureIdType)
+        {
+            return StructureBuilderOptionsFactory.Create(structureIdType, IdentityStructureIdGenerator);
         }
     }
 }

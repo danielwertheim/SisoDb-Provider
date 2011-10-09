@@ -17,6 +17,6 @@ namespace SisoDb.Providers
         IDbQueryGenerator GetDbQueryGenerator();
         IDbBulkInserter GetDbBulkInserter(IDbClient dbClient);
         ICommandBuilderFactory GetCommandBuilderFactory();
-        IdentityStructureIdGenerator GetStructureIdGeneratorForIdentities(ISisoConnectionInfo connectionInfo);
+        IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
     }
 }

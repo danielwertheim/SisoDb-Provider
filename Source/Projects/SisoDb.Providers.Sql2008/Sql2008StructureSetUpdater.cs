@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using EnsureThat;
 using NCore;
 using PineCone.Structures;
@@ -8,8 +7,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Providers;
 using SisoDb.Resources;
-using SisoDb.Sql2008.Dac;
-using SisoDb.Sql2008.DbSchema;
+using SisoDb.Serialization;
 
 namespace SisoDb.Sql2008
 {
@@ -21,6 +19,10 @@ namespace SisoDb.Sql2008
 
         private IStructureId _deleteIdFrom;
         private IStructureId _deleteIdTo;
+        private readonly IJsonSerializer _jsonSerializer;
+        private readonly StructureBuilderOptions _structureBuilderOptions;
+
+        protected ISisoProviderFactory ProviderFactory { get; private set; }
 
         protected Queue<TNew> KeepQueue { get; private set; }
 
@@ -32,28 +34,32 @@ namespace SisoDb.Sql2008
 
         protected IStructureBuilder StructureBuilder { get; private set; }
 
-        public Sql2008StructureSetUpdater(
-            ISisoConnectionInfo connectionInfo, 
-            IStructureSchema structureSchemaOld,
-            IStructureSchema structureSchemaNew,
-            IStructureBuilder structureBuilder)
+        public Sql2008StructureSetUpdater(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilder structureBuilder)
         {
             Ensure.That(() => connectionInfo).IsNotNull();
+            Ensure.That(() => providerFactory).IsNotNull();
             Ensure.That(() => structureSchemaOld).IsNotNull();
             Ensure.That(() => structureSchemaNew).IsNotNull();
             Ensure.That(() => structureBuilder).IsNotNull();
 
             ConnectionInfo = connectionInfo;
+            ProviderFactory = providerFactory;
             StructureSchemaOld = structureSchemaOld;
             StructureSchemaNew = structureSchemaNew;
             StructureBuilder = structureBuilder;
 
             KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
+            _jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+            _structureBuilderOptions = new StructureBuilderOptions
+            {
+                Serializer = new SerializerForStructureBuilder(),
+                KeepStructureId = true
+            };
         }
 
         public void Process(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            using (var dbClient = new Sql2008DbClient(ConnectionInfo, true))
+            using (var dbClient = ProviderFactory.GetDbClient(ConnectionInfo, true))
             {
                 UpsertSchema(dbClient);
 
@@ -66,24 +72,24 @@ namespace SisoDb.Sql2008
 
         private void UpsertSchema(IDbClient dbClient)
         {
-            var upserter = new Sql2008DbSchemaUpserter(dbClient);
+            var upserter = ProviderFactory.GetDbSchemaUpserter(dbClient);
             upserter.Upsert(StructureSchemaNew);
         }
 
-        private bool ItterateStructures(Sql2008DbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
+        private bool ItterateStructures(IDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
             foreach (var json in GetAllJson())
             {
-                var oldStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TOld>(json);
-                var oldId = GetSisoId(oldStructure);
+                var oldStructure = _jsonSerializer.Deserialize<TOld>(json);
+                var oldId = GetStructureId(oldStructure);
                 if (oldId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_OldIdDoesNotExist);
 
-                var newStructure = StructureBuilder.JsonSerializer.ToItemOrNull<TNew>(json);
-                
+                var newStructure = _jsonSerializer.Deserialize<TNew>(json);
+
                 var status = onProcess(oldStructure, newStructure);
 
-                var newId = GetSisoId(newStructure);
+                var newId = GetStructureId(newStructure);
                 if (newId == null)
                     throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotExist);
 
@@ -119,43 +125,18 @@ namespace SisoDb.Sql2008
 
         private IEnumerable<string> GetAllJson()
         {
-            using (var dbClient = new Sql2008DbClient(ConnectionInfo, false))
+            using (var dbClient = ProviderFactory.GetDbClient(ConnectionInfo, false))
             {
-                var sql = dbClient.SqlStatements.GetSql("GetAllById").Inject(StructureSchemaOld.GetStructureTableName());
-                using (var cmd = dbClient.CreateCommand(CommandType.Text, sql))
-                {
-                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
-                    {
-                        while (reader.Read())
-                        {
-                            yield return reader.GetString(0);
-                        }
-                        reader.Close();
-                    }
-                }
+                return dbClient.GetJson(StructureSchemaOld);
             }
         }
 
-        private IStructureId GetSisoId<T>(T item)
-            where T : class 
+        private IStructureId GetStructureId<T>(T item)
+            where T : class
         {
             var structureSchema = item is TOld ? StructureSchemaOld : StructureSchemaNew;
 
-            if (structureSchema.IdAccessor.IdType == IdTypes.Identity)
-            {
-                var idValue = structureSchema.IdAccessor.GetValue<T, int>(item);
-
-                return idValue.HasValue ? SisoId.NewIdentityId(idValue.Value) : null;
-            }
-
-            if (structureSchema.IdAccessor.IdType == IdTypes.Guid)
-            {
-                var idValue = structureSchema.IdAccessor.GetValue<T, Guid>(item);
-
-                return idValue.HasValue ? SisoId.NewGuidId(idValue.Value) : null;
-            }
-
-            return null;
+            return structureSchema.IdAccessor.GetValue(item);
         }
 
         protected virtual void OnKeep(TNew newStructure)
@@ -172,10 +153,10 @@ namespace SisoDb.Sql2008
             while (KeepQueue.Count > 0)
             {
                 var structureToKeep = KeepQueue.Dequeue();
-                var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew);
+                var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew, _structureBuilderOptions);
                 structures.Add(structureItem);
             }
-            var bulkInserter = new Sql2008DbBulkInserter(dbClient);
+            var bulkInserter = ProviderFactory.GetDbBulkInserter(dbClient);
             bulkInserter.Insert(StructureSchemaNew, structures);
         }
 
@@ -189,7 +170,7 @@ namespace SisoDb.Sql2008
         {
             if (_deleteIdFrom == null)
                 return;
-            
+
             dbClient.DeleteWhereIdIsBetween(_deleteIdFrom.Value, _deleteIdTo.Value, StructureSchemaOld);
 
             _deleteIdFrom = null;

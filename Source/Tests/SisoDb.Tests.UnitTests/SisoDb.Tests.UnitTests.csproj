@@ -57,18 +57,24 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnsureThat">
+      <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.3.0.44\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.16.0\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="nunit.mocks">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.16.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="pnunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
@@ -86,7 +92,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionStringTests.cs" />
-    <Compile Include="Cryptography\HashServiceTests.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="HashMemberNameGeneratorTests.cs" />
@@ -122,7 +127,6 @@
     <Compile Include="Querying\QueryCommandTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="SisoConnectionInfoTests.cs" />
-    <Compile Include="SqlAzure\DbSchema\AzureDbColumnGeneratorTests.cs" />
     <Compile Include="Sql2008\DbSchema\Sql2008DbColumnGeneratorTests.cs" />
     <Compile Include="DbSchema\SqlDbDataTypeTranslatorTests.cs" />
     <Compile Include="Sql2008\Sql2008DatabaseTests.cs" />

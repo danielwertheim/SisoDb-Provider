@@ -121,12 +121,10 @@ namespace SisoDb.Sql2008
 
             var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
 
-            using (var identityIdGenerator = _providerFactory.GetStructureIdGeneratorForIdentities(ConnectionInfo))
-            {
-                var structureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
-                var updater = new Sql2008StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, structureBuilder);
-                updater.Process(onProcess);
-            }
+            var updater = new Sql2008StructureSetUpdater<TOld, TNew>(
+                _connectionInfo, _providerFactory, 
+                structureSchemaOld, structureSchemaNew, _structureBuilder);
+            updater.Process(onProcess);
         }
 
         public IQueryEngine CreateQueryEngine()
@@ -150,13 +148,16 @@ namespace SisoDb.Sql2008
 
         public IUnitOfWork CreateUnitOfWork()
         {
+            //TODO: dbClient and dbClientNonTrans needs to be disposed
+            //TODO: Only pass _providerFactory, _dbSchemaManager, _structureSchemas _structureBuilder
             var dbClient = _providerFactory.GetDbClient(_connectionInfo, true);
             var dbClientNonTrans = _providerFactory.GetDbClient(_connectionInfo, false);
             var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClientNonTrans);
+            var identityStructureIdGenerator = _providerFactory.GetIdentityStructureIdGenerator(dbClientNonTrans);
             var queryGenerator = _providerFactory.GetDbQueryGenerator();
             var commandBuilderFactory = _providerFactory.GetCommandBuilderFactory();
             var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
-            
+
             return new Sql2008UnitOfWork(
                 _providerFactory,
                 dbClient,
@@ -164,6 +165,7 @@ namespace SisoDb.Sql2008
                 dbSchemaUpserter,
                 _structureSchemas,
                 _structureBuilder,
+                identityStructureIdGenerator,
                 jsonSerializer,
                 queryGenerator,
                 commandBuilderFactory);

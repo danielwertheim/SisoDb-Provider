@@ -422,6 +422,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can not create StructureBuilderOptions for StructureIdType &apos;{0}&apos;..
+        /// </summary>
+        public static string StructureBuilderOptionsFactory_Create {
+            get {
+                return ResourceManager.GetString("StructureBuilderOptionsFactory_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only strings and valuetypes can be stored as indexes..
         /// </summary>
         public static string StructureIndex_ValueArgument_IncorrectType {

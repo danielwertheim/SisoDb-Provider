@@ -91,8 +91,7 @@ namespace SisoDb.Sql2008
         
         public IEnumerable<T> GetByIds<T>(IEnumerable<ValueType> ids) where T : class
         {
-            return JsonSerializer.Deserialize<T>(
-                GetByIdsAsJson<T>(ids));
+            return JsonSerializer.DeserializeMany<T>(GetByIdsAsJson<T>(ids));
         }
 
         public IEnumerable<T> GetByIdInterval<T>(ValueType idFrom, ValueType idTo) where T : class
@@ -101,8 +100,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return JsonSerializer.Deserialize<T>(
-                DbClient.GetJsonWhereIdIsBetween(idFrom, idTo, structureSchema));
+            return JsonSerializer.DeserializeMany<T>(DbClient.GetJsonWhereIdIsBetween(idFrom, idTo, structureSchema));
         }
 
         public TOut GetByIdAs<TContract, TOut>(ValueType id)
@@ -117,8 +115,7 @@ namespace SisoDb.Sql2008
             where TContract : class
             where TOut : class
         {
-            return JsonSerializer.Deserialize<TOut>(
-                GetByIdsAsJson<TContract>(ids.Select(i => i)));
+            return JsonSerializer.DeserializeMany<TOut>(GetByIdsAsJson<TContract>(ids.Select(i => i)));
         }
 
         public string GetByIdAsJson<T>(ValueType id) where T : class
@@ -143,8 +140,7 @@ namespace SisoDb.Sql2008
         {
             var command = new GetCommand();
 
-            return JsonSerializer.Deserialize<T>(
-                GetAllAsJson<T>(command));
+            return JsonSerializer.DeserializeMany<T>(GetAllAsJson<T>(command));
         }
 
         public IEnumerable<T> GetAll<T>(Action<IGetCommandBuilder<T>> commandInitializer) where T : class
@@ -152,16 +148,14 @@ namespace SisoDb.Sql2008
             var commandBuilder = CommandBuilderFactory.CreateGetCommandBuilder<T>();
             commandInitializer(commandBuilder);
 
-            return JsonSerializer.Deserialize<T>(
-                GetAllAsJson<T>(commandBuilder.Command));
+            return JsonSerializer.DeserializeMany<T>(GetAllAsJson<T>(commandBuilder.Command));
         }
 
         public IEnumerable<TOut> GetAllAs<TContract, TOut>()
             where TContract : class
             where TOut : class
         {
-            return JsonSerializer.Deserialize<TOut>(
-                GetAllAsJson<TContract>());
+            return JsonSerializer.DeserializeMany<TOut>(GetAllAsJson<TContract>());
         }
 
         public IEnumerable<TOut> GetAllAs<TContract, TOut>(Action<IGetCommandBuilder<TContract>> commandInitializer)
@@ -171,8 +165,7 @@ namespace SisoDb.Sql2008
             var commandBuilder = CommandBuilderFactory.CreateGetCommandBuilder<TContract>();
             commandInitializer(commandBuilder);
 
-            return JsonSerializer.Deserialize<TOut>(
-                GetAllAsJson<TContract>(commandBuilder.Command));
+            return JsonSerializer.DeserializeMany<TOut>(GetAllAsJson<TContract>(commandBuilder.Command));
         }
 
         public IEnumerable<string> GetAllAsJson<T>() where T : class
@@ -216,16 +209,14 @@ namespace SisoDb.Sql2008
 
         public IEnumerable<T> NamedQuery<T>(INamedQuery query) where T : class
         {
-            return JsonSerializer.Deserialize<T>(
-                NamedQueryAsJson<T>(query));
+            return JsonSerializer.DeserializeMany<T>(NamedQueryAsJson<T>(query));
         }
 
         public IEnumerable<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query)
             where TContract : class
             where TOut : class
         {
-            return JsonSerializer.Deserialize<TOut>(
-                NamedQueryAsJson<TContract>(query));
+            return JsonSerializer.DeserializeMany<TOut>(NamedQueryAsJson<TContract>(query));
         }
 
         public IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
@@ -265,8 +256,7 @@ namespace SisoDb.Sql2008
             var commandBuilder = CommandBuilderFactory.CreateQueryCommandBuilder<T>();
             commandInitializer(commandBuilder);
 
-            return JsonSerializer.Deserialize<T>(
-                QueryAsJson<T>(commandBuilder.Command));
+            return JsonSerializer.DeserializeMany<T>(QueryAsJson<T>(commandBuilder.Command));
         }
 
         public IEnumerable<TOut> QueryAs<TContract, TOut>(Action<IQueryCommandBuilder<TContract>> commandInitializer)
@@ -276,8 +266,7 @@ namespace SisoDb.Sql2008
             var commandBuilder = CommandBuilderFactory.CreateQueryCommandBuilder<TContract>();
             commandInitializer(commandBuilder);
 
-            return JsonSerializer.Deserialize<TOut>(
-                QueryAsJson<TContract>(commandBuilder.Command));
+            return JsonSerializer.DeserializeMany<TOut>(QueryAsJson<TContract>(commandBuilder.Command));
         }
 
         public IEnumerable<string> QueryAsJson<T>(Action<IQueryCommandBuilder<T>> commandInitializer) where T : class

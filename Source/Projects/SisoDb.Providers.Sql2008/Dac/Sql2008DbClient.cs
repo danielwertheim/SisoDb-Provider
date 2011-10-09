@@ -104,6 +104,18 @@ namespace SisoDb.Sql2008.Dac
             _transaction.Dispose();
             _transaction = _connection.BeginTransaction();
         }
+        
+        public IDbCommand CreateCommand(CommandType commandType, string sql, params IDacParameter[] parameters)
+        {
+            return _connection.CreateCommand(_transaction, commandType, sql, parameters);
+        }
+
+        public SqlBulkCopy GetBulkCopy(bool keepIdentities)
+        {
+            var options = keepIdentities ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
+
+            return new SqlBulkCopy(_connection, options, _transaction);
+        }
 
         public void Drop(IStructureSchema structureSchema)
         {
@@ -131,18 +143,6 @@ namespace SisoDb.Sql2008.Dac
             {
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        public IDbCommand CreateCommand(CommandType commandType, string sql, params IDacParameter[] parameters)
-        {
-            return _connection.CreateCommand(_transaction, commandType, sql, parameters);
-        }
-
-        public SqlBulkCopy GetBulkCopy(bool keepIdentities)
-        {
-            var options = keepIdentities ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
-
-            return new SqlBulkCopy(_connection, options, _transaction);
         }
 
         public void DeleteById(ValueType sisoId, IStructureSchema structureSchema)
@@ -269,6 +269,25 @@ namespace SisoDb.Sql2008.Dac
             return ExecuteScalar<long>(CommandType.Text, sql,
                 new DacParameter("entityHash", entityHash),
                 new DacParameter("numOfIds", numOfIds));
+        }
+
+        public IEnumerable<string> GetJson(IStructureSchema structureSchema)
+        {
+            Ensure.That(() => structureSchema).IsNotNull();
+
+            var sql = SqlStatements.GetSql("GetAllById").Inject(structureSchema.GetStructureTableName());
+
+            using (var cmd = CreateCommand(CommandType.Text, sql))
+            {
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                {
+                    while (reader.Read())
+                    {
+                        yield return reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+            }
         }
 
         public string GetJsonById(ValueType sisoId, IStructureSchema structureSchema)

@@ -17,11 +17,14 @@ namespace SisoDb.Dac
         IConnectionString ConnectionString { get; }
         IDbDataTypeTranslator DbDataTypeTranslator { get; }
         ISqlStatements SqlStatements { get; }
+
         void Flush();
-        void Drop(IStructureSchema structureSchema);
-        void RebuildIndexes(IStructureSchema structureSchema);
+        
         IDbCommand CreateCommand(CommandType commandType, string sql, params IDacParameter[] parameters);
         SqlBulkCopy GetBulkCopy(bool keepIdentities);
+
+        void Drop(IStructureSchema structureSchema);
+        void RebuildIndexes(IStructureSchema structureSchema);
         void DeleteById(ValueType sisoId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
         void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, IStructureSchema structureSchema);
@@ -31,6 +34,7 @@ namespace SisoDb.Dac
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, ISqlCommandInfo cmdInfo);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
+        IEnumerable<string> GetJson(IStructureSchema structureSchema);
         string GetJsonById(ValueType sisoId, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, IStructureSchema structureSchema);

@@ -335,7 +335,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 
             var structureSchemaNew = Database.StructureSchemas.GetSchema(TypeFor<TNew>.Type);
             var updater = new Sql2008StructureSetUpdater<TOld, TNew>(
-                (Sql2008ConnectionInfo)Database.ConnectionInfo, structureSchemaOld, structureSchemaNew, Database.StructureBuilder);
+                (Sql2008ConnectionInfo)Database.ConnectionInfo, structureSchemaOld, structureSchemaNew, Database.StructureBuilder, TODO);
 
             return updater;
         }

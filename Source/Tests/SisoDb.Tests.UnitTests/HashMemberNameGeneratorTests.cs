@@ -1,7 +1,7 @@
 using System;
 using Moq;
+using NCore.Cryptography;
 using NUnit.Framework;
-using SisoDb.Cryptography;
 
 namespace SisoDb.Tests.UnitTests
 {

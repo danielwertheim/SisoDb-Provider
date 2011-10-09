@@ -24,7 +24,7 @@ namespace SisoDb
             _defaultMemberNameGenerator = new MemberNameGenerator();
             _defaultStructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
             _defaultStructureBuilder = new StructureBuilder();
-            
+
             ResolveJsonSerializer = () => _defaultJsonSerializer;
             ResolveMemberNameGenerator = () => _defaultMemberNameGenerator;
             ResolveStructureSchemas = () => _defaultStructureSchemas;

@@ -58,9 +58,9 @@ namespace SisoDb.Sql2008
             return new CommandBuilderFactory();
         }
 
-        public IdentityStructureIdGenerator GetStructureIdGeneratorForIdentities(ISisoConnectionInfo connectionInfo)
+        public IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
         {
-            return new IdentityStructureIdGenerator(GetDbClient(connectionInfo, false));
+            return new IdentityStructureIdGenerator(dbClient);
         }
     }
 }
