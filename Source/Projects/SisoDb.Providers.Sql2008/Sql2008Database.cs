@@ -42,6 +42,7 @@ namespace SisoDb.Sql2008
             Ensure.That(() => connectionInfo).IsNotNull();
 
             _connectionInfo = connectionInfo;
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
             
             _dbSchemaManager = _providerFactory.GetDbSchemaManager();
             _structureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();

@@ -14,13 +14,11 @@ namespace SisoDb.Sql2008.Dac
     {
         internal static SqlParameter CreateIdsTableParam(StructureIdTypes idType, IEnumerable<ValueType> ids)
         {
-            switch (idType)
-            {
-                case StructureIdTypes.Guid:
-                    return CreateGuidIdsTableParam(ids);
-                case StructureIdTypes.Identity:
-                    return CreateBigIdentityIdsTableParam(ids);
-            }
+            if(idType == StructureIdTypes.Guid)
+                return CreateGuidIdsTableParam(ids);
+
+            if(idType.IsIdentity())
+                return CreateBigIdentityIdsTableParam(ids);
 
             throw new SisoDbException(Sql2008Exceptions.SqlIdsTableParam_CreateIdsTableParam.Inject(idType));
         }

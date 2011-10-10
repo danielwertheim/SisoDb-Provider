@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using EnsureThat;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
@@ -9,8 +8,6 @@ namespace SisoDb.Structures
 {
     public class IdentityStructureIdGenerator : IStructureIdGenerator
     {
-        private static readonly Type LongType = typeof (long);
-
         private readonly IDbClient _dbClient;
 
         public IdentityStructureIdGenerator(IDbClient dbClient)
@@ -24,7 +21,7 @@ namespace SisoDb.Structures
         {
             var nextId = _dbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, 1);
 
-            return StructureId.Create(nextId, LongType);
+            return StructureId.Create(nextId);
         }
 
         public IEnumerable<IStructureId> CreateIds(int numOfIds, IStructureSchema structureSchema)
@@ -32,7 +29,7 @@ namespace SisoDb.Structures
             var nextId = _dbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, numOfIds);
 
             for (var c = 0; c < numOfIds; c++)
-                yield return StructureId.Create((nextId + c), LongType);
+                yield return StructureId.Create((nextId + c));
         }
     }
 }

@@ -36,7 +36,7 @@ namespace SisoDb.Sql2008
 
         public void Commit()
         {
-            DbClientNonTrans.Flush();
+            DbClientTrans.Flush();
         }
 
         public void Insert<T>(T item) where T : class

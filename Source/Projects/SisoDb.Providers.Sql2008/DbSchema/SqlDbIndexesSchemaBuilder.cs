@@ -22,7 +22,7 @@ namespace SisoDb.Sql2008.DbSchema
                           : _sqlStatements.GetSql("CreateIndexesIdentity");
 
             return sql.Inject(
-                structureSchema.GetUniquesTableName(),
+                structureSchema.GetIndexesTableName(),
                 structureSchema.GetStructureTableName());
         }
     }

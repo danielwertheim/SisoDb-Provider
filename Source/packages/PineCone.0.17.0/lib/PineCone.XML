@@ -66,11 +66,6 @@
               Looks up a localized string similar to The Item of type &apos;{0}&apos; has no members that are indexable. There&apos;s no point in treating items that has nothing to index..
             </summary>
         </member>
-        <member name="P:PineCone.Resources.ExceptionMessages.AutoSchemaBuilder_UnsupportedIdAccessorType">
-            <summary>
-              Looks up a localized string similar to The id property: &apos;{0}&apos;; is not of suported type. Only Guid and Int is accepted..
-            </summary>
-        </member>
         <member name="P:PineCone.Resources.ExceptionMessages.IdAccessor_GetIdValue_InvalidLevel">
             <summary>
               Looks up a localized string similar to Id values must lie on the root object..
@@ -78,7 +73,7 @@
         </member>
         <member name="P:PineCone.Resources.ExceptionMessages.IdAccessor_UnsupportedPropertyType">
             <summary>
-              Looks up a localized string similar to The Property.PropertyType &apos;{0}&apos; is not supported by the IdAccessor. Supported types are: Guid, Nullable-Guid, Int, Nullable-Int, Long and Nullable-Long..
+              Looks up a localized string similar to The Property.PropertyType &apos;{0}&apos; is not supported by the IdAccessor. Supported types are: Guid, Nullable-Guid, Int32, Nullable-Int32, Int64 and Nullable-Int64..
             </summary>
         </member>
         <member name="P:PineCone.Resources.ExceptionMessages.Structure_DuplicateUniques">
@@ -88,7 +83,7 @@
         </member>
         <member name="P:PineCone.Resources.ExceptionMessages.StructureId_InvalidType">
             <summary>
-              Looks up a localized string similar to The type &apos;{0}&apos; is not supported for StructureId. Only Guid, Nullable-Guid, Int, Nullable-Int, Long and Nullable-Long are supported..
+              Looks up a localized string similar to The type &apos;{0}&apos; is not supported for StructureId. Supported types are: Guid, Nullable-Guid, Int32, Nullable-Int32, Int64 and Nullable-Int64..
             </summary>
         </member>
         <member name="P:PineCone.Resources.ExceptionMessages.StructureIndex_ValueArgument_IncorrectType">

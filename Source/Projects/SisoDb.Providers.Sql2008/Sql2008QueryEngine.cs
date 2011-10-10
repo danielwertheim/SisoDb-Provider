@@ -42,7 +42,7 @@ namespace SisoDb.Sql2008
             ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
             DbClientTrans = ProviderFactory.GetDbClient(connectionInfo, true);
             DbClientNonTrans = ProviderFactory.GetDbClient(connectionInfo, false);
-            DbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(DbClientTrans);
+            DbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(DbClientNonTrans);
             QueryGenerator = ProviderFactory.GetDbQueryGenerator();
             CommandBuilderFactory = ProviderFactory.GetCommandBuilderFactory();
             DbSchemaManager = dbSchemaManager;

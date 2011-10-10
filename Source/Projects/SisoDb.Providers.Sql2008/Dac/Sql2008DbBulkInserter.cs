@@ -25,7 +25,7 @@ namespace SisoDb.Sql2008.Dac
             
             using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
             {
-                using (var indexesReader = new IndexesReader(indexesStorageSchema, ExtractIndexes(structures)))
+                using (var indexesReader = new IndexesReader(indexesStorageSchema, structures.SelectMany(s => s.Indexes)))
                 {
                     InsertStructures(structuresReader);
                     InsertIndexes(indexesReader);
@@ -41,11 +41,6 @@ namespace SisoDb.Sql2008.Dac
                     }
                 }
             }
-        }
-
-        private static IEnumerable<IStructureIndex[]> ExtractIndexes(IEnumerable<IStructure> structures)
-        {
-            return structures.Select(s => s.Indexes.ToArray());
         }
 
         private void InsertStructures(StructuresReader structures)

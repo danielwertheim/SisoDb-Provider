@@ -11,7 +11,7 @@ namespace SisoDb.Structures
         {
             var options = new StructureBuilderOptions { Serializer = new SerializerForStructureBuilder() };
 
-            if (structureIdType == StructureIdTypes.Identity)
+            if (structureIdType.IsIdentity())
                 options.IdGenerator = identityStructureIdGenerator;
 
             if (structureIdType == StructureIdTypes.Guid)

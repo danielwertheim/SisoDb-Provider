@@ -127,25 +127,25 @@ alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([StructureId]),
+[StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
-[MemberPath] [nvarchar](max) null,
-[IntegerValue] [varchar](bigint) null,
-[FractalValue] [varchar](real) null,
-[DateTimeValue] [varchar](datetime) null,
-[BoolValue] [varchar](bit) null,);
+[StringValue] [nvarchar](max) null,
+[IntegerValue] [bigint] null,
+[FractalValue] [real] null,
+[DateTimeValue] [datetime] null,
+[BoolValue] [bit] null);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[StructureId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
+[StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
-[MemberPath] [nvarchar](max) null,
-[IntegerValue] [varchar](bigint) null,
-[FractalValue] [varchar](real) null,
-[DateTimeValue] [varchar](datetime) null,
-[BoolValue] [varchar](bit) null,);
+[StringValue] [nvarchar](max) null,
+[IntegerValue] [bigint] null,
+[FractalValue] [real] null,
+[DateTimeValue] [datetime] null,
+[BoolValue] [bit] null);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
@@ -156,7 +156,7 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[StructureId] [int] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
+[StructureId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
 insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>

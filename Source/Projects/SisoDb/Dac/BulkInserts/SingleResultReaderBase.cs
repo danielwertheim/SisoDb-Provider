@@ -12,7 +12,7 @@ namespace SisoDb.Dac.BulkInserts
     {
         public StorageSchemaBase StorageSchema { get; private set; }
 
-        protected IEnumerable<T> Items { get; private set; }
+        private IEnumerable<T> Items { get; set; }
 
         protected IEnumerator<T> Enumerator { get; private set; }
 
