@@ -145,7 +145,7 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public void DeleteById(ValueType sisoId, IStructureSchema structureSchema)
+        public void DeleteById(ValueType structureId, IStructureSchema structureSchema)
         {
             Ensure.That(() => structureSchema).IsNotNull();
 
@@ -154,7 +154,7 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("id", sisoId)))
+            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("id", structureId)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -194,7 +194,7 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public void DeleteWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, IStructureSchema structureSchema)
+        public void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)
         {
             Ensure.That(() => structureSchema).IsNotNull();
 
@@ -203,7 +203,7 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", sisoIdFrom), new DacParameter("idTo", sisoIdTo)))
+            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -290,13 +290,13 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public string GetJsonById(ValueType sisoId, IStructureSchema structureSchema)
+        public string GetJsonById(ValueType structureId, IStructureSchema structureSchema)
         {
             Ensure.That(() => structureSchema).IsNotNull();
 
             var sql = SqlStatements.GetSql("GetById").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("id", sisoId));
+            return ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("id", structureId));
         }
 
         public IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
@@ -320,13 +320,13 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, IStructureSchema structureSchema)
+        public IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)
         {
             Ensure.That(() => structureSchema).IsNotNull();
 
             var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", sisoIdFrom), new DacParameter("idTo", sisoIdTo)))
+            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {

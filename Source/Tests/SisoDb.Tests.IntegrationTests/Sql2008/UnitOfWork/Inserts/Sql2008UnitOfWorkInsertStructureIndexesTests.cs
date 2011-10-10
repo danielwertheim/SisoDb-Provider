@@ -37,11 +37,11 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             {
                 var expectedId = c + 1;
                 var row = table.Rows[c];
-                var id = row["SisoId"];
+                var id = row["StructureId"];
                 var value = row[valueMemberName];
 
                 Assert.AreEqual(expectedId, id);
-                Assert.AreEqual("SisoId-" + expectedId, value);
+                Assert.AreEqual("StructureId-" + expectedId, value);
             }
         }
 
@@ -52,8 +52,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new ItemForInsertStructureIndexesTests
                           {
-                              SisoId = numOfItems + 1,
-                              Value = "SisoId-" + (c + 1)
+                              StructureId = numOfItems + 1,
+                              Value = "StructureId-" + (c + 1)
                           });
 
             return items;
@@ -61,7 +61,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         private class ItemForInsertStructureIndexesTests
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string Value { get; set; }
         }

@@ -85,7 +85,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             IdentityItemForGetQueries itemRefetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                itemRefetched = unitOfWork.GetById<IdentityItemForGetQueries>(item2.SisoId);
+                itemRefetched = unitOfWork.GetById<IdentityItemForGetQueries>(item2.StructureId);
             }
 
             Assert.AreEqual(item2.SortOrder, itemRefetched.SortOrder);
@@ -107,7 +107,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             GuidItemForGetQueries itemRefetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                itemRefetched = unitOfWork.GetById<GuidItemForGetQueries>(item2.SisoId);
+                itemRefetched = unitOfWork.GetById<GuidItemForGetQueries>(item2.StructureId);
             }
 
             Assert.AreEqual(item2.SortOrder, itemRefetched.SortOrder);
@@ -129,10 +129,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             string itemJsonRefetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                itemJsonRefetched = unitOfWork.GetByIdAsJson<IdentityItemForGetQueries>(item2.SisoId);
+                itemJsonRefetched = unitOfWork.GetByIdAsJson<IdentityItemForGetQueries>(item2.StructureId);
             }
 
-            Assert.AreEqual("{\"SisoId\":2,\"SortOrder\":2}", itemJsonRefetched);
+            Assert.AreEqual("{\"StructureId\":2,\"SortOrder\":2}", itemJsonRefetched);
         }
 
         [Test]
@@ -177,10 +177,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             string itemJsonRefetched;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                itemJsonRefetched = unitOfWork.GetByIdAsJson<GuidItemForGetQueries>(item2.SisoId);
+                itemJsonRefetched = unitOfWork.GetByIdAsJson<GuidItemForGetQueries>(item2.StructureId);
             }
 
-            Assert.AreEqual("{\"SisoId\":\"" + item2.SisoId.ToString("N") + "\",\"SortOrder\":2}", itemJsonRefetched);
+            Assert.AreEqual("{\"StructureId\":\"" + item2.StructureId.ToString("N") + "\",\"SortOrder\":2}", itemJsonRefetched);
         }
 
         [Test]
@@ -260,11 +260,11 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 refetched = uow.GetAllAsJson<IdentityItemForGetQueries>(q => q.SortBy(i => i.SortOrder)).ToList();
             }
 
-            Assert.AreEqual("{\"SisoId\":1,\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
-            Assert.AreEqual("{\"SisoId\":2,\"SortOrder\":5,\"StringValue\":\"E\"}", refetched[4]);
-            Assert.AreEqual("{\"SisoId\":3,\"SortOrder\":2,\"StringValue\":\"B\"}", refetched[1]);
-            Assert.AreEqual("{\"SisoId\":4,\"SortOrder\":4,\"StringValue\":\"D\"}", refetched[3]);
-            Assert.AreEqual("{\"SisoId\":5,\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[2]);
+            Assert.AreEqual("{\"StructureId\":1,\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
+            Assert.AreEqual("{\"StructureId\":2,\"SortOrder\":5,\"StringValue\":\"E\"}", refetched[4]);
+            Assert.AreEqual("{\"StructureId\":3,\"SortOrder\":2,\"StringValue\":\"B\"}", refetched[1]);
+            Assert.AreEqual("{\"StructureId\":4,\"SortOrder\":4,\"StringValue\":\"D\"}", refetched[3]);
+            Assert.AreEqual("{\"StructureId\":5,\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[2]);
         }
 
         [Test]
@@ -295,7 +295,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class IdentityItemForGetQueries
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int SortOrder { get; set; }
 
@@ -304,7 +304,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class GuidItemForGetQueries
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public int SortOrder { get; set; }
 

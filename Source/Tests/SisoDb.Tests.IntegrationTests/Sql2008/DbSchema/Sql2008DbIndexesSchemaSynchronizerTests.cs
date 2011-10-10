@@ -34,7 +34,7 @@
 
 //        private class Class_2579AF20_51A0_475A_A24D_8056828DB1DC
 //        {
-//            public Guid SisoId { get; set; }
+//            public Guid StructureId { get; set; }
 
 //            public string IndexableMember1 { get; set; }
 

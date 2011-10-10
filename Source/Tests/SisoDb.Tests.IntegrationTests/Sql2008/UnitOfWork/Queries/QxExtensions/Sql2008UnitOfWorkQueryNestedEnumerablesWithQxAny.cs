@@ -69,7 +69,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries.QxExtensions
 
         public class Root
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public FirstLevelChild Child { get; set; }
 

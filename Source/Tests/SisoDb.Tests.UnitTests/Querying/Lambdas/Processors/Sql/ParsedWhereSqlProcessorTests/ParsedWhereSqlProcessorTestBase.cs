@@ -32,7 +32,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
 
         protected class MyItem
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
             
             public int? NullableInt { get; set; }
 
@@ -72,7 +72,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
 
         protected class MyNestedItem
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int Int1 { get; set; }
 

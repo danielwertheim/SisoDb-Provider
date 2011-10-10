@@ -8,14 +8,14 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
     public class ParsedSortingSqlProcessorTests : ParsedSortingSqlProcessorTestBase
     {
         [Test]
-        public void Process_WhenMemberNameIsId_SqlTranslatesToSisoId()
+        public void Process_WhenMemberNameIsId_SqlTranslatesToStructureId()
         {
-            var parsedLambda = CreateParsedLambda<MyItem>(i => i.SisoId);
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId);
 
             var processor = new ParsedSortingSqlProcessor(new MemberPathGeneratorFake());
             var sorting = processor.Process(parsedLambda);
 
-            const string expectedSql = "si.[SisoId] Asc";
+            const string expectedSql = "si.[StructureId] Asc";
             Assert.AreEqual(expectedSql, sorting.Sql);
         }
 

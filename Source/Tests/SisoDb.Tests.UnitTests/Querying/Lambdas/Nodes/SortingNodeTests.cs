@@ -7,11 +7,11 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
     public class SortingNodeTests : UnitTestBase
     {
         [Test]
-        public void CTor_WhenMemberPathIsSisoId_MemberNameIsTranslated()
+        public void CTor_WhenMemberPathIsStructureId_MemberNameIsTranslated()
         {
-            var node = new SortingNode("SisoId");
+            var node = new SortingNode("StructureId");
 
-            Assert.AreEqual("SisoId", node.MemberPath);
+            Assert.AreEqual("StructureId", node.MemberPath);
         }
 
         [Test]

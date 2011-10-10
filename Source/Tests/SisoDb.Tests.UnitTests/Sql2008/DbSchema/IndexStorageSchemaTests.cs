@@ -24,7 +24,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void SchemaField_SisoId_HasCorrectOrdinal()
+        public void SchemaField_StructureId_HasCorrectOrdinal()
         {
             var field = IndexStorageSchema.Fields.StructureId;
 

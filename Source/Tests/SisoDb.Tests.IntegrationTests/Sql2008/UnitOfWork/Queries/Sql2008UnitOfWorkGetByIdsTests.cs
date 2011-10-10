@@ -84,8 +84,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             }
 
             Assert.AreEqual(2, refetched.Count);
-            Assert.AreEqual("{\"SisoId\":1,\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
-            Assert.AreEqual("{\"SisoId\":3,\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[1]);
+            Assert.AreEqual("{\"StructureId\":1,\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
+            Assert.AreEqual("{\"StructureId\":3,\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[1]);
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIds<GuidItemForGetQueries>(items[0].SisoId, items[2].SisoId).ToList();
+                refetched = uow.GetByIds<GuidItemForGetQueries>(items[0].StructureId, items[2].StructureId).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -155,7 +155,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIds<GuidItemForGetQueries>(items[0].SisoId, items[2].SisoId, nonExistingGuid).ToList();
+                refetched = uow.GetByIds<GuidItemForGetQueries>(items[0].StructureId, items[2].StructureId, nonExistingGuid).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -179,12 +179,12 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIdsAsJson<GuidItemForGetQueries>(items[0].SisoId, items[2].SisoId).ToList();
+                refetched = uow.GetByIdsAsJson<GuidItemForGetQueries>(items[0].StructureId, items[2].StructureId).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
-            Assert.AreEqual("{\"SisoId\":\"" + items[0].SisoId.ToString("N") + "\",\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
-            Assert.AreEqual("{\"SisoId\":\"" + items[2].SisoId.ToString("N") + "\",\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[1]);
+            Assert.AreEqual("{\"StructureId\":\"" + items[0].StructureId.ToString("N") + "\",\"SortOrder\":1,\"StringValue\":\"A\"}", refetched[0]);
+            Assert.AreEqual("{\"StructureId\":\"" + items[2].StructureId.ToString("N") + "\",\"SortOrder\":3,\"StringValue\":\"C\"}", refetched[1]);
         }
 
         [Test]
@@ -198,9 +198,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                       };
             var items = new List<GuidItemForGetQueries>
                         {
-                            new GuidItemForGetQueries {SisoId = ids[0], SortOrder = 1, StringValue = "A"},
-                            new GuidItemForGetQueries {SisoId = ids[1], SortOrder = 2, StringValue = "B"},
-                            new GuidItemForGetQueries {SisoId = ids[2], SortOrder = 3, StringValue = "C"}
+                            new GuidItemForGetQueries {StructureId = ids[0], SortOrder = 1, StringValue = "A"},
+                            new GuidItemForGetQueries {StructureId = ids[1], SortOrder = 2, StringValue = "B"},
+                            new GuidItemForGetQueries {StructureId = ids[2], SortOrder = 3, StringValue = "C"}
                         };
             List<View> refetched;
 
@@ -209,7 +209,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
                 uow.InsertMany(items);
                 uow.Commit();
 
-                refetched = uow.GetByIdsAs<GuidItemForGetQueries, View>(items[0].SisoId, items[2].SisoId).ToList();
+                refetched = uow.GetByIdsAs<GuidItemForGetQueries, View>(items[0].StructureId, items[2].StructureId).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count);
@@ -221,7 +221,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class IdentityItemForGetQueries
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int SortOrder { get; set; }
 
@@ -230,7 +230,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class GuidItemForGetQueries
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public int SortOrder { get; set; }
 

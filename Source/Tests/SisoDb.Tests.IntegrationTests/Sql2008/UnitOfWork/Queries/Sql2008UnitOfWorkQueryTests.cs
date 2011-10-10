@@ -85,8 +85,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             }
 
             Assert.AreEqual(4, refetched.Count());
-            Assert.AreEqual("{\"SisoId\":3,\"SortOrder\":3}", refetched[0]);
-            Assert.AreEqual("{\"SisoId\":6,\"SortOrder\":6}", refetched[3]);
+            Assert.AreEqual("{\"StructureId\":3,\"SortOrder\":3}", refetched[0]);
+            Assert.AreEqual("{\"StructureId\":6,\"SortOrder\":6}", refetched[3]);
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
                 refetched = unitOfWork.QueryAs<SimpleItemForQueries, SimpleItemForQueriesInfo>(
-                    q => q.Where(i => i.SisoId != 0).SortBy(c => c.SortOrder)).ToList();
+                    q => q.Where(i => i.StructureId != 0).SortBy(c => c.SortOrder)).ToList();
             }
 
             Assert.AreEqual(2, refetched.Count());
@@ -134,7 +134,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class SimpleItemForQueries
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int SortOrder { get; set; }
 

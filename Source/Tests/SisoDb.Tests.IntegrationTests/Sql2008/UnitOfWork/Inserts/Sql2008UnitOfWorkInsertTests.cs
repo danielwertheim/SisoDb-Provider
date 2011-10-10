@@ -27,7 +27,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             Root refetched = null;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                refetched = unitOfWork.GetById<Root>(entityGraph.SisoId);
+                refetched = unitOfWork.GetById<Root>(entityGraph.StructureId);
             }
 
             CustomAssert.AreValueEqual(entityGraph, refetched);
@@ -47,7 +47,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             TheChild refetched = null;
             using (var unitOfWork = Database.CreateUnitOfWork())
             {
-                refetched = unitOfWork.GetById<TheChild>(entityGraph.SisoId);
+                refetched = unitOfWork.GetById<TheChild>(entityGraph.StructureId);
             }
 
             CustomAssert.AreValueEqual(entityGraph, refetched);

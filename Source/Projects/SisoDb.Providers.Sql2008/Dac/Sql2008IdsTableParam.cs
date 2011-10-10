@@ -30,7 +30,7 @@ namespace SisoDb.Sql2008.Dac
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
                 Value = ids.Select(id => CreateBigIdentityIdRecord((long)id)),
-                TypeName = "dbo.SisoIdentityIds"
+                TypeName = "dbo.StructureIdentityIds"
             };
         }
 

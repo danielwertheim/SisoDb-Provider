@@ -144,7 +144,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.TransactionScopes
 
         private class IdentityItem
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int Value { get; set; }
         }

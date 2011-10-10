@@ -80,7 +80,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class ItemForQueries
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int SortOrder { get; set; }
 

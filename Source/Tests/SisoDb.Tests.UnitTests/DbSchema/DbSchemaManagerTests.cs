@@ -56,7 +56,7 @@ namespace SisoDb.Tests.UnitTests.DbSchema
 
         private class Class_53966417_B25D_49E1_966B_58754110781C
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string IndexableMember1 { get; set; }
 

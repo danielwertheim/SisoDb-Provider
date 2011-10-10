@@ -141,7 +141,7 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[SisoId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([SisoId]),
+[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
@@ -178,33 +178,33 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
   </data>
   <data name="DeleteById" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where SisoId = @id;
-delete from [dbo].[{1}] where SisoId = @id;
-delete from [dbo].[{2}] where SisoId = @id;</value>
+delete from [dbo].[{0}] where StructureId = @id;
+delete from [dbo].[{1}] where StructureId = @id;
+delete from [dbo].[{2}] where StructureId = @id;</value>
   </data>
   <data name="DeleteByIds" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where SisoId in (select Id from @ids);
-delete from [dbo].[{1}] where SisoId in (select Id from @ids);
-delete from [dbo].[{2}] where SisoId in (select Id from @ids);</value>
+delete from [dbo].[{0}] where StructureId in (select Id from @ids);
+delete from [dbo].[{1}] where StructureId in (select Id from @ids);
+delete from [dbo].[{2}] where StructureId in (select Id from @ids);</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
 declare @ids table (id {4});
 
 insert into @ids (id)
-select si.SisoId from [dbo].[{0}] as si
+select si.StructureId from [dbo].[{0}] as si
 where {3};
 
-delete from [dbo].[{0}] where SisoId in(select id from @ids);
-delete from [dbo].[{1}] where SisoId in(select id from @ids);
-delete from [dbo].[{2}] where SisoId in(select id from @ids);</value>
+delete from [dbo].[{0}] where StructureId in(select id from @ids);
+delete from [dbo].[{1}] where StructureId in(select id from @ids);
+delete from [dbo].[{2}] where StructureId in(select id from @ids);</value>
   </data>
   <data name="DeleteWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where SisoId &gt;= @idFrom and SisoId &lt;= @idTo;
-delete from [dbo].[{1}] where SisoId &gt;= @idFrom and SisoId &lt;= @idTo;
-delete from [dbo].[{2}] where SisoId &gt;= @idFrom and SisoId &lt;= @idTo;</value>
+delete from [dbo].[{0}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;
+delete from [dbo].[{1}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;
+delete from [dbo].[{2}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
   </data>
   <data name="DropColumns" xml:space="preserve">
     <value>alter table [dbo].[{0}]
@@ -230,15 +230,15 @@ select json from [dbo].[{0}];</value>
   </data>
   <data name="GetAllById" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] order by [SisoId];</value>
+select json from [dbo].[{0}] order by [StructureId];</value>
   </data>
   <data name="GetById" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] where SisoId =@id;</value>
+select json from [dbo].[{0}] where StructureId =@id;</value>
   </data>
   <data name="GetByIds" xml:space="preserve">
     <value>set nocount on;
-select Json from [dbo].[{0}] where SisoId in (select Id from @ids);</value>
+select Json from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
   </data>
   <data name="GetColumns" xml:space="preserve">
     <value>set nocount on;
@@ -253,7 +253,7 @@ end</value>
   </data>
   <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
-select Json from [dbo].[{0}] where SisoId between @idFrom and @idTo;</value>
+select Json from [dbo].[{0}] where StructureId between @idFrom and @idTo;</value>
   </data>
   <data name="RebuildIndexes" xml:space="preserve">
     <value>set nocount on;
@@ -295,9 +295,9 @@ begin
 create type dbo.SisoGuidIds as table (Id uniqueidentifier primary key not null)	
 end
 
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIdentityIds') is null
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'StructureIdentityIds') is null
 begin
-create type dbo.SisoIdentityIds as table (Id bigint primary key not null)	
+create type dbo.StructureIdentityIds as table (Id bigint primary key not null)	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">

@@ -145,7 +145,7 @@
     <value>Supported generic collections on model are: implementations of either IEnumerable&lt;T&gt; or IList&lt;T&gt;.</value>
   </data>
   <data name="Structure_DuplicateUniques" xml:space="preserve">
-    <value>Duplicate Unique-index found for '{0}'.\r\nSisoId: '{1}';Name: '{2}';Value: '{3}';</value>
+    <value>Duplicate Unique-index found for '{0}'.\r\nStructureId: '{1}';Name: '{2}';Value: '{3}';</value>
   </data>
   <data name="Id_IdentityIsOutOfRange" xml:space="preserve">
     <value>You must provide a positive identity.</value>
@@ -159,10 +159,10 @@
   <data name="ExpressionEvaluator_EvaluateMemberExpression_NotSupported" xml:space="preserve">
     <value>Direct memberaccess of node: '{0}'; with with membertype: '{1}'; is not supported!</value>
   </data>
-  <data name="SisoIdFactory_MissingIdentityValue" xml:space="preserve">
+  <data name="StructureIdFactory_MissingIdentityValue" xml:space="preserve">
     <value>When using Identities the Id-property of the entity must be assigned before structure is created.</value>
   </data>
-  <data name="SisoIdFactory_UnSupportedIdentityType" xml:space="preserve">
+  <data name="StructureIdFactory_UnSupportedIdentityType" xml:space="preserve">
     <value>The identity type: '{0}' is not supported.</value>
   </data>
   <data name="IdAccessor_UnsupportedPropertyType" xml:space="preserve">
@@ -238,7 +238,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="UniqueModesCantBeMapped" xml:space="preserve">
     <value>The UniqueModes '{0}' is unknow and cant be mapped.</value>
   </data>
-  <data name="SisoIdFactory_MissingGuidValue" xml:space="preserve">
+  <data name="StructureIdFactory_MissingGuidValue" xml:space="preserve">
     <value>When using Guids the Id-property of the entity must be assigned before structure is created.</value>
   </data>
   <data name="WhereParser_QxEnumerables_OperatorNotSupported" xml:space="preserve">

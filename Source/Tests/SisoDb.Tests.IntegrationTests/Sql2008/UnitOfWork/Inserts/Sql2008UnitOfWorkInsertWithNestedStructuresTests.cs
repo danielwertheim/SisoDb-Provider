@@ -32,8 +32,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Insert(rootStructure);
                 uow.Commit();
 
-                var json = uow.GetByIdAsJson<MyFirstStructure>(rootStructure.SisoId);
-                Assert.AreEqual("{\"SisoId\":\"" + rootStructure.SisoId.ToString("N") + "\",\"Value\":\"My first structure.\",\"NestedObject\":{\"Value\":\"My value object.\"}}", json);
+                var json = uow.GetByIdAsJson<MyFirstStructure>(rootStructure.StructureId);
+                Assert.AreEqual("{\"StructureId\":\"" + rootStructure.StructureId.ToString("N") + "\",\"Value\":\"My first structure.\",\"NestedObject\":{\"Value\":\"My value object.\"}}", json);
             }
         }
 
@@ -44,11 +44,11 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             var idForNested = new Guid("6244FB01-EECA-4EBC-806E-61A22D74D454");
             var rootStructure = new MyFirstStructure
                                 {
-                                    SisoId = idForRoot,
+                                    StructureId = idForRoot,
                                     Value = "My first structure.",
                                     NestedStructure = new MySecondStructure
                                                       {
-                                                          SisoId = idForNested,
+                                                          StructureId = idForNested,
                                                           Value = "My second structure."
                                                       },
                                     NestedObject =  new MyValueObject{Value = "My value object."}
@@ -75,11 +75,11 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             var idForNested = new Guid("6244FB01-EECA-4EBC-806E-61A22D74D454");
             var rootStructure = new MyFirstStructure
                                 {
-                                    SisoId = idForRoot,
+                                    StructureId = idForRoot,
                                     Value = "My first structure.",
                                     NestedStructure = new MySecondStructure
                                                       {
-                                                          SisoId = idForNested,
+                                                          StructureId = idForNested,
                                                           Value = "My second structure."
                                                       },
                                     NestedObject = new MyValueObject { Value = "My value object." }
@@ -97,7 +97,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         private class MyFirstStructure
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string Value { get; set; }
 
@@ -108,7 +108,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         private class MySecondStructure
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string Value { get; set; }
         }

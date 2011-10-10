@@ -44,10 +44,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             var sql =
                 string.Format("create procedure [dbo].[{0}] as begin "
                 + "select Json, "
-                + "(select cs1.Json from dbo.GenreStructure as cs1 where cs1.SisoId = I.{1}) as Genre, "
-                + "(select cs2.Json from dbo.ArtistStructure as cs2 where cs2.SisoId = I.{2}) as Artist, "
-                + "(select cs3.Json from dbo.ArtistStructure as cs3 where cs3.SisoId = I.{3}) as SecondArtist "
-                + "from dbo.IAlbumDataStructure as S inner join dbo.IAlbumDataIndexes as I on I.SisoId = S.SisoId "
+                + "(select cs1.Json from dbo.GenreStructure as cs1 where cs1.StructureId = I.{1}) as Genre, "
+                + "(select cs2.Json from dbo.ArtistStructure as cs2 where cs2.StructureId = I.{2}) as Artist, "
+                + "(select cs3.Json from dbo.ArtistStructure as cs3 where cs3.StructureId = I.{3}) as SecondArtist "
+                + "from dbo.IAlbumDataStructure as S inner join dbo.IAlbumDataIndexes as I on I.StructureId = S.StructureId "
                 + "order by I.[{4}];"
                 + "end", ProcedureName, hashForGenreId, hashForArtistId, hashForSecondArtistId, hashForName);
 
@@ -65,10 +65,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
             var sql =
                 string.Format("create procedure [dbo].[{0}] as begin "
                 + "select Json, "
-                + "(select cs1.Json from dbo.IGenreDataStructure as cs1 where cs1.SisoId = I.{1}) as Genre, "
-                + "(select cs2.Json from dbo.IArtistDataStructure as cs2 where cs2.SisoId = I.{2}) as Artist, "
-                + "(select cs3.Json from dbo.IArtistDataStructure as cs3 where cs3.SisoId = I.{3}) as SecondArtist "
-                + "from dbo.IAlbumDataStructure as S inner join dbo.IAlbumDataIndexes as I on I.SisoId = S.SisoId "
+                + "(select cs1.Json from dbo.IGenreDataStructure as cs1 where cs1.StructureId = I.{1}) as Genre, "
+                + "(select cs2.Json from dbo.IArtistDataStructure as cs2 where cs2.StructureId = I.{2}) as Artist, "
+                + "(select cs3.Json from dbo.IArtistDataStructure as cs3 where cs3.StructureId = I.{3}) as SecondArtist "
+                + "from dbo.IAlbumDataStructure as S inner join dbo.IAlbumDataIndexes as I on I.StructureId = S.StructureId "
                 + "order by I.[{4}];"
                 + "end", ProcedureNameForInterfaces, hashForGenreId, hashForArtistId, hashForSecondArtistId, hashForName);
 
@@ -149,7 +149,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private interface IAlbumData
         {
-            int SisoId { get; set; }
+            int StructureId { get; set; }
             int? GenreId { get; }
             int? ArtistId { get; }
             int? SecondArtistId { get; }
@@ -158,38 +158,38 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private interface IGenreData
         {
-            int SisoId { get; set; }
+            int StructureId { get; set; }
 
             string Name { get; }
         }
 
         private interface IArtistData
         {
-            int SisoId { get; set; }
+            int StructureId { get; set; }
 
             string Name { get; }
         }
 
         private class Album : IAlbumData
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int? GenreId
             {
-                get { return Genre != null ? (int?)Genre.SisoId : null; }
-                set { Genre.SisoId = value.Value; }
+                get { return Genre != null ? (int?)Genre.StructureId : null; }
+                set { Genre.StructureId = value.Value; }
             }
 
             public int? ArtistId
             {
-                get { return Artist != null ? (int?)Artist.SisoId : null; }
-                set { Artist.SisoId = value.Value; }
+                get { return Artist != null ? (int?)Artist.StructureId : null; }
+                set { Artist.StructureId = value.Value; }
             }
 
             public int? SecondArtistId
             {
-                get { return SecondArtist != null ? (int?)SecondArtist.SisoId : null; }
-                set { SecondArtist.SisoId = value.Value; }
+                get { return SecondArtist != null ? (int?)SecondArtist.StructureId : null; }
+                set { SecondArtist.StructureId = value.Value; }
             }
 
             public string Name { get; set; }
@@ -210,14 +210,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class Genre : IGenreData
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string Name { get; set; }
         }
 
         private class Artist : IArtistData
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string Name { get; set; }
         }

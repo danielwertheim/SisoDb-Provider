@@ -353,7 +353,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries.QxExtensions
 
         private class QxItemForQueries
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string[] Strings { get; set; }
 

@@ -68,7 +68,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         public class Level1
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public Level2[] Level2Items { get; set; }
 

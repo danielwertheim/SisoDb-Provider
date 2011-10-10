@@ -20,7 +20,7 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
         public IList<ISqlInclude> Process(IParsedLambda lambda)
         {
             var sqlIncludes = new List<ISqlInclude>();
-            const string sqlFormat = "(select cs{0}.[json] from [dbo].[{1}] as cs{0} where si.[{2}] = cs{0}.SisoId) as [{3}]";
+            const string sqlFormat = "(select cs{0}.[json] from [dbo].[{1}] as cs{0} where si.[{2}] = cs{0}.StructureId) as [{3}]";
 
             foreach (var includeNode in lambda.Nodes.Cast<IncludeNode>())
             {

@@ -8,45 +8,45 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
     public class MemberNodeTests : UnitTestBase
     {
         [Test]
-        public void CTor_WhenMemberNameIsSisoId_MemberNameIsTranslated()
+        public void CTor_WhenMemberNameIsStructureId_MemberNameIsTranslated()
         {
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.SisoId);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.StructureId);
 
             var node = new MemberNode(null, memberExpression);
 
-            Assert.AreEqual("SisoId", node.Name);
+            Assert.AreEqual("StructureId", node.Name);
         }
 
         [Test]
-        public void CTor_WhenMemberNameIsSisoId_MemberPathIsTranslated()
+        public void CTor_WhenMemberNameIsStructureId_MemberPathIsTranslated()
         {
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.SisoId);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.StructureId);
 
             var node = new MemberNode(null, memberExpression);
 
-            Assert.AreEqual("SisoId", node.Path);
+            Assert.AreEqual("StructureId", node.Path);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameIsSisoId_MemberNameIsTranslated()
+        public void CTor_WhenNestedMemberNameIsStructureId_MemberNameIsTranslated()
         {
             var parentExpression = Reflect<MyClass>.MemberFrom(x => x.Child);
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.SisoId);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.StructureId);
 
             var parentNode = new MemberNode(null, parentExpression);
             var node = new MemberNode(parentNode, memberExpression);
 
-            Assert.AreEqual("SisoId", node.Name);
+            Assert.AreEqual("StructureId", node.Name);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberNameIsSisoId_MemberPathIsTranslated()
+        public void CTor_WhenNestedMemberNameIsStructureId_MemberPathIsTranslated()
         {
-            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.SisoId);
+            var memberExpression = Reflect<MyClass>.MemberFrom(x => x.Child.StructureId);
 
             var node = new MemberNode(null, memberExpression);
 
-            Assert.AreEqual("Child.SisoId", node.Path);
+            Assert.AreEqual("Child.StructureId", node.Path);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
 
         private class MyClass
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int TmpId { get; set; }
 
@@ -126,7 +126,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
 
         private class MyChildClass
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int TmpId { get; set; }
 

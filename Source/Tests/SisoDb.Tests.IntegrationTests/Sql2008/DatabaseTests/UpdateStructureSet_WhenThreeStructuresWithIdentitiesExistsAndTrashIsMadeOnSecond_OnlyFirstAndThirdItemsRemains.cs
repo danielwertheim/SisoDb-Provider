@@ -29,14 +29,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DatabaseTests
             }
             Database.StructureSchemas.RemoveSchema(TypeFor<ItemForPropChange>.Type);
 
-            var id1 = orgItem1.SisoId;
-            var id2 = orgItem2.SisoId;
-            var id3 = orgItem3.SisoId;
+            var id1 = orgItem1.StructureId;
+            var id2 = orgItem2.StructureId;
+            var id3 = orgItem3.StructureId;
             Database.UpdateStructureSet<ItemForPropChange, StructureSetUpdaterTests.ModelNew.ItemForPropChange>(
                 (oldItem, newItem) =>
                 {
                     newItem.NewString1 = oldItem.String1;
-                    return oldItem.SisoId.Equals(id2)
+                    return oldItem.StructureId.Equals(id2)
                                ? StructureSetUpdaterStatuses.Trash
                                : StructureSetUpdaterStatuses.Keep;
                 });
@@ -58,7 +58,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DatabaseTests
 
         private class ItemForUpsertStructureSet
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string Temp
             {

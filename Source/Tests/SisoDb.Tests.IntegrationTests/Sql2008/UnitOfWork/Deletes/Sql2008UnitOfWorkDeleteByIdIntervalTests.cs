@@ -88,7 +88,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
                 uow.InsertMany(items);
                 uow.Commit();
 
-                uow.DeleteByIdInterval<GuidItem>(items[0].SisoId, items[2].SisoId);
+                uow.DeleteByIdInterval<GuidItem>(items[0].StructureId, items[2].StructureId);
                 uow.Commit();
 
                 refetched = uow.GetAll<GuidItem>().ToList();
@@ -139,10 +139,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
                         };
             var items = new List<GuidItem>
                         {
-                            new GuidItem{SisoId = guids[0], SortOrder = 1, Value = "A"},
-                            new GuidItem{SisoId = guids[1], SortOrder = 2, Value = "B"},
-                            new GuidItem{SisoId = guids[2], SortOrder = 3, Value = "C"},
-                            new GuidItem{SisoId = guids[3], SortOrder = 4, Value = "D"},
+                            new GuidItem{StructureId = guids[0], SortOrder = 1, Value = "A"},
+                            new GuidItem{StructureId = guids[1], SortOrder = 2, Value = "B"},
+                            new GuidItem{StructureId = guids[2], SortOrder = 3, Value = "C"},
+                            new GuidItem{StructureId = guids[3], SortOrder = 4, Value = "D"},
                         };
 
             IList<GuidItem> refetched;
@@ -163,7 +163,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
 
         private class IdentityItem
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int SortOrder { get; set; }
 
@@ -172,7 +172,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
 
         private class GuidItem
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public int SortOrder { get; set; }
 

@@ -71,13 +71,13 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
         [Test]
         public void Parse_WhenNestedMemberExpressionIsPassed_HasCorrectParentMemberNode()
         {
-            var lambda = Reflect<Master>.LambdaFrom(m => m.Child.GrandChild.SisoId);
+            var lambda = Reflect<Master>.LambdaFrom(m => m.Child.GrandChild.StructureId);
 
             var parser = new IncludeParser();
             var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
             var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
-            Assert.AreEqual("Child.GrandChild.SisoId", includeNode.IdReferencePath);
+            Assert.AreEqual("Child.GrandChild.StructureId", includeNode.IdReferencePath);
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
 
         private class Master
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public int Int1 { get; set; }
 
@@ -105,7 +105,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
 
         private class ChildWithGuidId
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
         }
 
         private class Child
@@ -115,7 +115,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
 
         private class GrandChild
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
         }
     }
 }

@@ -43,7 +43,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008
             Assert.IsTrue(identitiesTableExists, "SisoDbIdentities table was not created");
 
             var guidIdsTypeExists = DbHelper.TypeExists("SisoGuidIds");
-            var identityIdsTypeExists = DbHelper.TypeExists("SisoIdentityIds");
+            var identityIdsTypeExists = DbHelper.TypeExists("StructureIdentityIds");
             Assert.IsTrue(guidIdsTypeExists);
             Assert.IsTrue(identityIdsTypeExists);
         }

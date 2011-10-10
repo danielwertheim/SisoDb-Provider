@@ -23,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
 
         protected class MyItem
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
             public int Int1 { get; set; }
             public decimal Decimal1 { get; set; }
             public bool Bool1 { get; set; }

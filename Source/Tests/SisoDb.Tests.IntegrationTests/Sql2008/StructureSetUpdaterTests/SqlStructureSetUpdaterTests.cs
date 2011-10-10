@@ -32,7 +32,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
             updater.Process((oldItem, newItem) =>
             {
-                Assert.AreEqual(orgItem.SisoId, oldItem.SisoId);
+                Assert.AreEqual(orgItem.StructureId, oldItem.StructureId);
                 Assert.AreEqual(33, oldItem.Int1);
                 Assert.AreEqual("Daniel", oldItem.String1);
 
@@ -43,7 +43,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem = uow.GetById<ModelNew.ItemForPropChange>(orgItem.SisoId);
+                var newItem = uow.GetById<ModelNew.ItemForPropChange>(orgItem.StructureId);
                 Assert.AreEqual("Daniel", newItem.NewString1);
             }
         }
@@ -64,7 +64,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem = uow.GetById<ModelNew.ItemForPropChange>(orgItem.SisoId);
+                var newItem = uow.GetById<ModelNew.ItemForPropChange>(orgItem.StructureId);
                 Assert.IsNotNull(newItem);
             }
         }
@@ -85,7 +85,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem.SisoId);
+                var newItem = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem.StructureId);
                 Assert.IsNotNull(newItem);
             }
         }
@@ -105,7 +105,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
-                    newItem.SisoId = 0;
+                    newItem.StructureId = 0;
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
@@ -127,7 +127,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
-                    newItem.SisoId = Guid.Empty;
+                    newItem.StructureId = Guid.Empty;
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
@@ -152,10 +152,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             var ex = Assert.Throws<SisoDbException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
-                    newItem.SisoId = oldItem.SisoId + 1;
+                    newItem.StructureId = oldItem.StructureId + 1;
 
-                    oldIdForAssert = oldItem.SisoId;
-                    newIdForAssert = newItem.SisoId;
+                    oldIdForAssert = oldItem.StructureId;
+                    newIdForAssert = newItem.StructureId;
 
                     return StructureSetUpdaterStatuses.Keep;
                 }));
@@ -181,8 +181,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             var ex = Assert.Throws<SisoDbException>(
                 () => updater.Process((oldItem, newItem) =>
                                           {
-                                              oldIdForAssert = oldItem.SisoId;
-                                              newItem.SisoId = newIdForAssert;
+                                              oldIdForAssert = oldItem.StructureId;
+                                              newItem.StructureId = newIdForAssert;
 
                                               return StructureSetUpdaterStatuses.Keep;
                                           }));
@@ -204,14 +204,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 
             var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem)
-                => oldItem.SisoId.Equals(orgItem2.SisoId) ? StructureSetUpdaterStatuses.Trash : StructureSetUpdaterStatuses.Keep);
+                => oldItem.StructureId.Equals(orgItem2.StructureId) ? StructureSetUpdaterStatuses.Trash : StructureSetUpdaterStatuses.Keep);
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem1.SisoId);
+                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem1.StructureId);
                 Assert.IsNotNull(newItem1);
 
-                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem2.SisoId);
+                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem2.StructureId);
                 Assert.IsNull(newItem2);
             }
         }
@@ -233,21 +233,21 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             updater.Process((oldItem, newItem) =>
             {
                 newItem.NewString1 = oldItem.String1;
-                return oldItem.SisoId.Equals(orgItem2.SisoId)
+                return oldItem.StructureId.Equals(orgItem2.StructureId)
                             ? StructureSetUpdaterStatuses.Trash
                             : StructureSetUpdaterStatuses.Keep;
             });
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem1.SisoId);
+                var newItem1 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem1.StructureId);
                 Assert.IsNotNull(newItem1);
                 Assert.AreEqual("A", newItem1.NewString1);
 
-                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem2.SisoId);
+                var newItem2 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem2.StructureId);
                 Assert.IsNull(newItem2);
 
-                var newItem3 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem3.SisoId);
+                var newItem3 = uow.GetById<ModelNew.GuidItemForPropChange>(orgItem3.StructureId);
                 Assert.IsNotNull(newItem3);
                 Assert.AreEqual("C", newItem3.NewString1);
             }
@@ -266,15 +266,15 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             }
             Database.StructureSchemas.RemoveSchema(TypeFor<ModelOld.ItemForPropChange>.Type);
 
-            var id1 = orgItem1.SisoId;
-            var id2 = orgItem2.SisoId;
-            var id3 = orgItem3.SisoId;
+            var id1 = orgItem1.StructureId;
+            var id2 = orgItem2.StructureId;
+            var id3 = orgItem3.StructureId;
 
             var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
             updater.Process((oldItem, newItem) =>
             {
                 newItem.NewString1 = oldItem.String1;
-                return oldItem.SisoId.Equals(id2)
+                return oldItem.StructureId.Equals(id2)
                             ? StructureSetUpdaterStatuses.Trash
                             : StructureSetUpdaterStatuses.Keep;
             });
@@ -308,17 +308,17 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 
             var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
             updater.Process((oldItem, newItem)
-                            => oldItem.SisoId.Equals(orgItem1.SisoId) ? StructureSetUpdaterStatuses.Keep : StructureSetUpdaterStatuses.Abort);
+                            => oldItem.StructureId.Equals(orgItem1.StructureId) ? StructureSetUpdaterStatuses.Keep : StructureSetUpdaterStatuses.Abort);
 
             Database.StructureSchemas.RemoveSchema(TypeFor<ModelNew.GuidItemForPropChange>.Type);
             using (var uow = Database.CreateUnitOfWork())
             {
-                var refetchedOrgItem1 = uow.GetById<ModelOld.GuidItemForPropChange>(orgItem1.SisoId);
+                var refetchedOrgItem1 = uow.GetById<ModelOld.GuidItemForPropChange>(orgItem1.StructureId);
                 Assert.IsNotNull(refetchedOrgItem1);
                 Assert.AreEqual(10, refetchedOrgItem1.Int1);
                 Assert.AreEqual("Arbitrary string1", refetchedOrgItem1.String1);
 
-                var refetchedOrgItem2 = uow.GetById<ModelOld.GuidItemForPropChange>(orgItem2.SisoId);
+                var refetchedOrgItem2 = uow.GetById<ModelOld.GuidItemForPropChange>(orgItem2.StructureId);
                 Assert.IsNotNull(refetchedOrgItem2);
                 Assert.AreEqual(20, refetchedOrgItem2.Int1);
                 Assert.AreEqual("Arbitrary string2", refetchedOrgItem2.String1);
@@ -343,7 +343,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
     {
         public class ItemForPropChange
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string String1 { get; set; }
 
@@ -352,7 +352,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 
         public class GuidItemForPropChange
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string String1 { get; set; }
 
@@ -364,14 +364,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
     {
         public class ItemForPropChange
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string NewString1 { get; set; }
         }
 
         public class GuidItemForPropChange
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string NewString1 { get; set; }
         }

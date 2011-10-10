@@ -25,7 +25,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId where si.[Int1] = 42;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId where si.[Int1] = 42;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -40,7 +40,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId order by si.[Int1] Asc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId order by si.[Int1] Asc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -55,7 +55,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId where si.[Int1] = 42 order by si.[Int1] Desc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId where si.[Int1] = 42 order by si.[Int1] Desc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -70,7 +70,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -85,7 +85,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId order by si.[Int1] Desc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId order by si.[Int1] Desc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -100,7 +100,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
-                                       + "inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId where si.[Int1] = 42 order by si.[Int1] Desc;";
+                                       + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId where si.[Int1] = 42 order by si.[Int1] Desc;";
             Assert.AreEqual(expectedSql, sqlQuery.Sql);
         }
 
@@ -116,7 +116,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
 
             const string expectedSql =
                 "with pagedRs as (select s.Json,row_number() over ( order by si.[Int1] Desc) RowNum "
-                + "from [dbo].[MyClassStructure] as s inner join [dbo].[MyClassIndexes] as si on si.SisoId = s.SisoId "
+                + "from [dbo].[MyClassStructure] as s inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId "
                 + "where si.[Int1] = 42)select Json from pagedRs where RowNum between @pagingFrom and @pagingTo;";
                 
             Assert.AreEqual(expectedSql, sqlQuery.Sql);

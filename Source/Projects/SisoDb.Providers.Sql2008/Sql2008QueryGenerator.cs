@@ -58,7 +58,7 @@ namespace SisoDb.Sql2008
 
         private static ISqlCommandInfo CreateSqlCommandInfo(SqlCommandBuildInfo sqlCommandBuildInfo)
         {
-            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.SisoId = s.SisoId{4}{5};",
+            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.StructureId = s.StructureId{4}{5};",
                 sqlCommandBuildInfo.TakeSql,
                 sqlCommandBuildInfo.IncludesSql,
                 sqlCommandBuildInfo.StructureTableName, 
@@ -72,12 +72,12 @@ namespace SisoDb.Sql2008
         private static ISqlCommandInfo CreateSqlCommandInfoForPaging(SqlCommandBuildInfo sqlCommandBuildInfo, Paging paging)
         {
             var orderBySql = string.IsNullOrWhiteSpace(sqlCommandBuildInfo.OrderBySql)
-                ? "order by s.SisoId"
+                ? "order by s.StructureId"
                 : sqlCommandBuildInfo.OrderBySql;
 
             const string sqlFormat = "with pagedRs as ({0}){1};";
             
-            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.SisoId = s.SisoId{5}",
+            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.StructureId = s.StructureId{5}",
                 sqlCommandBuildInfo.TakeSql,
                 sqlCommandBuildInfo.IncludesSql,
                 orderBySql,

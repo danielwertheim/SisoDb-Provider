@@ -27,7 +27,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Insert<IMyItem>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.SisoId);
+                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.StructureId);
             }
 
             Assert.AreNotEqual(item.Stream.Length, fetched.Stream.Length);
@@ -49,7 +49,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Insert<IMyItem>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.SisoId);
+                fetched = uow.GetByIdAs<IMyItem, MyItem>(item.StructureId);
             }
 
             Assert.AreEqual(item.Name, fetched.Name);
@@ -67,7 +67,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Insert<IMyItem>(item);
                 uow.Commit();
 
-                fetched = uow.GetByIdAs<IMyItem, MyItemInfo>(item.SisoId);
+                fetched = uow.GetByIdAs<IMyItem, MyItemInfo>(item.StructureId);
             }
 
             Assert.AreEqual(item.Name, fetched.Name);
@@ -122,14 +122,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         public interface IMyItem
         {
-            int SisoId { get; set; }
+            int StructureId { get; set; }
 
             string Name { get; }
         }
 
         public class MyItem : IMyItem
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string Name { get; set; }
 
@@ -143,9 +143,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         public class MyItemInfo : IMyItem
         {
-            int IMyItem.SisoId { get; set; }
+            int IMyItem.StructureId { get; set; }
 
-            public int SisoId { get; private set; }
+            public int StructureId { get; private set; }
 
             public string Name { get; private set; }
         }

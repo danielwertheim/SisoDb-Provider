@@ -153,7 +153,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private interface IAlbumData
         {
-            int SisoId { get; set; }
+            int StructureId { get; set; }
             int? GenreId { get; }
             int? ArtistId { get; }
             int? SecondArtistId { get; }
@@ -162,38 +162,38 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private interface IGenreData
         {
-            int SisoId { get; set; }
+            int StructureId { get; set; }
 
             string Name { get; }
         }
 
         private interface IArtistData
         {
-            int SisoId { get; set; }
+            int StructureId { get; set; }
 
             string Name { get; }
         }
 
         private class Album : IAlbumData
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int? GenreId
             {
-                get { return Genre != null ? (int?)Genre.SisoId : null; }
-                set { Genre.SisoId = value.Value; }
+                get { return Genre != null ? (int?)Genre.StructureId : null; }
+                set { Genre.StructureId = value.Value; }
             }
 
             public int? ArtistId
             {
-                get { return Artist != null ? (int?)Artist.SisoId : null; }
-                set { Artist.SisoId = value.Value; }
+                get { return Artist != null ? (int?)Artist.StructureId : null; }
+                set { Artist.StructureId = value.Value; }
             }
 
             public int? SecondArtistId
             {
-                get { return SecondArtist != null ? (int?)SecondArtist.SisoId : null; }
-                set { SecondArtist.SisoId = value.Value; }
+                get { return SecondArtist != null ? (int?)SecondArtist.StructureId : null; }
+                set { SecondArtist.StructureId = value.Value; }
             }
 
             public string Name { get; set; }
@@ -214,14 +214,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private class Genre : IGenreData
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string Name { get; set; }
         }
 
         private class Artist : IArtistData
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string Name { get; set; }
         }

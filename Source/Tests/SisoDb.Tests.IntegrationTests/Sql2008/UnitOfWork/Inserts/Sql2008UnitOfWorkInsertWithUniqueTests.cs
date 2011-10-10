@@ -66,7 +66,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId is null;");
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqStructureId is null;");
             Assert.AreEqual(1, table.Rows.Count);
             Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("OrderNo_"));
             Assert.AreEqual("O123", table.AsEnumerable().First()["UqValue"]);
@@ -89,7 +89,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.StructureId));
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqStructureId = '{0}';".Inject(order.StructureId));
             Assert.AreEqual(1, table.Rows.Count);
             Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
             Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);
@@ -128,7 +128,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqSisoId = '{0}';".Inject(order.StructureId));
+                "select UqName, UqValue from dbo.UniqueOrderUniques where UqStructureId = '{0}';".Inject(order.StructureId));
             Assert.AreEqual(1, table.Rows.Count);
             Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
             Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);

@@ -91,7 +91,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.QueryEngine
 
             using (var qe = Database.CreateQueryEngine())
             {
-                refetched = qe.GetByIdInterval<GuidItem>(items[0].SisoId, items[2].SisoId).ToList();
+                refetched = qe.GetByIdInterval<GuidItem>(items[0].StructureId, items[2].StructureId).ToList();
             }
 
             Assert.AreEqual(3, refetched.Count);
@@ -102,7 +102,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.QueryEngine
         
         private class IdentityItem
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int SortOrder { get; set; }
 
@@ -111,7 +111,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.QueryEngine
 
         private class GuidItem
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public int SortOrder { get; set; }
 

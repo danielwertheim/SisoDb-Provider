@@ -307,27 +307,27 @@ namespace SisoDb.Resources {
         /// <summary>
         ///   Looks up a localized string similar to When using Guids the Id-property of the entity must be assigned before structure is created..
         /// </summary>
-        public static string SisoIdFactory_MissingGuidValue {
+        public static string StructureIdFactory_MissingGuidValue {
             get {
-                return ResourceManager.GetString("SisoIdFactory_MissingGuidValue", resourceCulture);
+                return ResourceManager.GetString("StructureIdFactory_MissingGuidValue", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to When using Identities the Id-property of the entity must be assigned before structure is created..
         /// </summary>
-        public static string SisoIdFactory_MissingIdentityValue {
+        public static string StructureIdFactory_MissingIdentityValue {
             get {
-                return ResourceManager.GetString("SisoIdFactory_MissingIdentityValue", resourceCulture);
+                return ResourceManager.GetString("StructureIdFactory_MissingIdentityValue", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The identity type: &apos;{0}&apos; is not supported..
         /// </summary>
-        public static string SisoIdFactory_UnSupportedIdentityType {
+        public static string StructureIdFactory_UnSupportedIdentityType {
             get {
-                return ResourceManager.GetString("SisoIdFactory_UnSupportedIdentityType", resourceCulture);
+                return ResourceManager.GetString("StructureIdFactory_UnSupportedIdentityType", resourceCulture);
             }
         }
         
@@ -404,7 +404,7 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate Unique-index found for &apos;{0}&apos;.\r\nSisoId: &apos;{1}&apos;;Name: &apos;{2}&apos;;Value: &apos;{3}&apos;;.
+        ///   Looks up a localized string similar to Duplicate Unique-index found for &apos;{0}&apos;.\r\nStructureId: &apos;{1}&apos;;Name: &apos;{2}&apos;;Value: &apos;{3}&apos;;.
         /// </summary>
         public static string Structure_DuplicateUniques {
             get {

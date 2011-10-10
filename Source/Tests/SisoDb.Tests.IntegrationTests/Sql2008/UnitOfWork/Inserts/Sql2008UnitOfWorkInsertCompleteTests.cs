@@ -185,7 +185,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         public abstract class ItemForInsert<T> : IEquatable<ItemForInsert<T>>
         {
-            public T SisoId { get; set; }
+            public T StructureId { get; set; }
 
             public int IntValue { get; set; }
 
@@ -207,14 +207,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return Equals(other.SisoId, SisoId) && other.IntValue == IntValue && Equals(other.StringValue, StringValue) && Equals(other.Nested, Nested);
+                return Equals(other.StructureId, StructureId) && other.IntValue == IntValue && Equals(other.StringValue, StringValue) && Equals(other.Nested, Nested);
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    int result = SisoId.GetHashCode();
+                    int result = StructureId.GetHashCode();
                     result = (result * 397) ^ IntValue;
                     result = (result * 397) ^ StringValue.GetHashCode();
                     result = (result * 397) ^ Nested.GetHashCode();

@@ -115,7 +115,7 @@ namespace SisoDb.Profiling
         {
             using (var unitOfWork = database.CreateUnitOfWork())
             {
-                return unitOfWork.Where<Customer>(c => c.SisoId == c.SisoId).ToList();
+                return unitOfWork.Where<Customer>(c => c.StructureId == c.StructureId).ToList();
             }
         }
 
@@ -123,7 +123,7 @@ namespace SisoDb.Profiling
         {
             using (var unitOfWork = database.CreateUnitOfWork())
             {
-                return unitOfWork.WhereAsJson<Customer>(c => c.SisoId == c.SisoId).ToList();
+                return unitOfWork.WhereAsJson<Customer>(c => c.StructureId == c.StructureId).ToList();
             }
         }
 

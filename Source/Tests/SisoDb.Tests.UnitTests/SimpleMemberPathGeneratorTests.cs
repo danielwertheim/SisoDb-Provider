@@ -14,9 +14,9 @@ namespace SisoDb.Tests.UnitTests
         }
 
         [Test]
-        public void Generate_WhenPassedValueIsSisoId_NoHashIsAppended()
+        public void Generate_WhenPassedValueIsStructureId_NoHashIsAppended()
         {
-            var inputValue = "SisoId";
+            var inputValue = "StructureId";
             var memberName = _generator.Generate(inputValue);
 
             Assert.AreEqual(inputValue, memberName);

@@ -25,19 +25,19 @@ namespace SisoDb.Dac
 
         void Drop(IStructureSchema structureSchema);
         void RebuildIndexes(IStructureSchema structureSchema);
-        void DeleteById(ValueType sisoId, IStructureSchema structureSchema);
+        void DeleteById(ValueType structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
         void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, IStructureSchema structureSchema);
-        void DeleteWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, IStructureSchema structureSchema);
+        void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
         bool TableExists(string name);
         IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip);
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, ISqlCommandInfo cmdInfo);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
         IEnumerable<string> GetJson(IStructureSchema structureSchema);
-        string GetJsonById(ValueType sisoId, IStructureSchema structureSchema);
+        string GetJsonById(ValueType structureId, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
-        IEnumerable<string> GetJsonWhereIdIsBetween(ValueType sisoIdFrom, ValueType sisoIdTo, IStructureSchema structureSchema);
+        IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
 
         void SingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
     }

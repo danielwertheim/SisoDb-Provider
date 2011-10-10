@@ -154,7 +154,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork
 
         private class Root
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int Int1 { get; set; }
 

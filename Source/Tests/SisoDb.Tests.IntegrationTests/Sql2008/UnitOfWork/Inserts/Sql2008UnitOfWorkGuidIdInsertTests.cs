@@ -30,7 +30,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 item = uow.GetAll<ItemForGuidIdInsertsWithPrivateSetter>().Single();
             }
 
-            Assert.AreNotEqual(id, item.SisoId);
+            Assert.AreNotEqual(id, item.StructureId);
         }
 
         [Test]
@@ -46,10 +46,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                item = uow.GetById<ItemForGuidIdInsertsWithPrivateSetter>(item.SisoId);
+                item = uow.GetById<ItemForGuidIdInsertsWithPrivateSetter>(item.StructureId);
             }
 
-            Assert.AreNotEqual(Guid.Empty, item.SisoId);
+            Assert.AreNotEqual(Guid.Empty, item.StructureId);
         }
 
         [Test]
@@ -65,16 +65,16 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                item = uow.GetById<ItemForNullableGuidIdInsertsWithPrivateSetter>(item.SisoId.Value);
+                item = uow.GetById<ItemForNullableGuidIdInsertsWithPrivateSetter>(item.StructureId.Value);
             }
 
-            Assert.IsNotNull(item.SisoId);
-            Assert.AreNotEqual(Guid.Empty, item.SisoId);
+            Assert.IsNotNull(item.StructureId);
+            Assert.AreNotEqual(Guid.Empty, item.StructureId);
         }
 
         private class ItemForGuidIdInsertsWithPrivateSetter
         {
-            public Guid SisoId { get; private set; }
+            public Guid StructureId { get; private set; }
 
             public string Temp
             {
@@ -88,13 +88,13 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
             internal ItemForGuidIdInsertsWithPrivateSetter(Guid id)
             {
-                SisoId = id;
+                StructureId = id;
             }
         }
 
         private class ItemForNullableGuidIdInsertsWithPrivateSetter
         {
-            public Guid? SisoId { get; private set; }
+            public Guid? StructureId { get; private set; }
 
             public string Temp
             {

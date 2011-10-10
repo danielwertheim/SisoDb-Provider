@@ -37,7 +37,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
 
         private class Class_12E6E3A7_482C_4E1A_88BE_393D29253203
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string IndexableMember1 { get; set; }
 

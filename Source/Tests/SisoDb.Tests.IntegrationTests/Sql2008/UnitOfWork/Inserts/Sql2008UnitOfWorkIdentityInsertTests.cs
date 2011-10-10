@@ -18,7 +18,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         public void Insert_WhenIdHasBeenManuallyAssigned_IdIsReassigned()
         {
             var originalId = 33;
-            var item = new ItemForIdentityInserts { SisoId = 33 };
+            var item = new ItemForIdentityInserts { StructureId = 33 };
 
             using(var uow = Database.CreateUnitOfWork())
             {
@@ -26,7 +26,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Commit();
             }
 
-            Assert.AreNotEqual(originalId, item.SisoId);
+            Assert.AreNotEqual(originalId, item.StructureId);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 item = uow.GetById<ItemForIdentityInsertsWithPrivateSetter>(assignedId);
             }
 
-            Assert.AreEqual(assignedId, item.SisoId);
+            Assert.AreEqual(assignedId, item.StructureId);
         }
 
         [Test]
@@ -79,16 +79,16 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
             using (var uow = Database.CreateUnitOfWork())
             {
-                item = uow.GetById<ItemForNullableIdentityInsertsWithPrivateSetter>(item.SisoId.Value);
+                item = uow.GetById<ItemForNullableIdentityInsertsWithPrivateSetter>(item.StructureId.Value);
             }
 
-            Assert.IsNotNull(item.SisoId);
-            Assert.AreEqual(1, item.SisoId);
+            Assert.IsNotNull(item.StructureId);
+            Assert.AreEqual(1, item.StructureId);
         }
 
         private class ItemForIdentityInserts
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string Temp
             {
@@ -98,7 +98,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         private class ItemForIdentityInsertsWithPrivateSetter
         {
-            public int SisoId { get; private set; }
+            public int StructureId { get; private set; }
 
             public string Temp
             {
@@ -108,7 +108,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         private class ItemForNullableIdentityInsertsWithPrivateSetter
         {
-            public int? SisoId { get; private set; }
+            public int? StructureId { get; private set; }
 
             public string Temp
             {

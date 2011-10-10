@@ -48,8 +48,8 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
         [Test]
         public void Insert_WhenIdentityMemberHasValue_ValueIsNotInjectedToMember()
         {
-            var sisoId = 123;
-            var json = string.Format("{{\"SisoId\":{0}}}", sisoId);
+            var structureId = 123;
+            var json = string.Format("{{\"StructureId\":{0}}}", structureId);
 
             using (var uow = Database.CreateUnitOfWork())
             {
@@ -57,15 +57,15 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Commit();
 
                 var item = uow.GetAll<MyClass>().Single();
-                Assert.AreNotEqual(sisoId, item.SisoId);
+                Assert.AreNotEqual(structureId, item.StructureId);
             }
         }
 
         [Test]
         public void Insert_WhenGuidIdMemberHasValue_ValueIsNotInjectedToMember()
         {
-            var sisoId = SequentialGuid.NewSqlCompatibleGuid();
-            var json = string.Format("{{\"SisoId\":{0}}}", sisoId);
+            var structureId = SequentialGuid.NewSqlCompatibleGuid();
+            var json = string.Format("{{\"StructureId\":{0}}}", structureId);
 
             using (var uow = Database.CreateUnitOfWork())
             {
@@ -73,13 +73,13 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
                 uow.Commit();
 
                 var item = uow.GetAll<MyGuidClass>().Single();
-                Assert.AreNotEqual(sisoId, item.SisoId);
+                Assert.AreNotEqual(structureId, item.StructureId);
             }
         }
 
         private class MyClass
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string String1 { get; set; }
 
@@ -90,7 +90,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         private class MyGuidClass
         {
-            public Guid SisoId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string String1 { get; set; }
 

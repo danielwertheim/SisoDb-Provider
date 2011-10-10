@@ -159,10 +159,10 @@ namespace SisoDb.Sql2008
             bulkInserter.Insert(StructureSchemaNew, structures);
         }
 
-        protected virtual void OnTrash(IStructureId sisoId)
+        protected virtual void OnTrash(IStructureId structureId)
         {
-            _deleteIdFrom = _deleteIdFrom ?? sisoId;
-            _deleteIdTo = sisoId;
+            _deleteIdFrom = _deleteIdFrom ?? structureId;
+            _deleteIdTo = structureId;
         }
 
         protected virtual void DequeueStructuresToTrash(IDbClient dbClient)

@@ -5,7 +5,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.TestModel
     [Serializable]
     public class Customer
     {
-        public int SisoId { get; set; }
+        public int StructureId { get; set; }
 
         public int CustomerNo { get; set; }
 

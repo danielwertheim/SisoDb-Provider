@@ -112,7 +112,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.QueryEngine
 
         private class ItemForCountTests
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public int SortOrder { get; set; }
 
