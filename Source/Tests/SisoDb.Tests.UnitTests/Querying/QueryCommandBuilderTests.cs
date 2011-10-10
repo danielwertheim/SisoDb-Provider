@@ -49,7 +49,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         {
             var builder = CreateBuilderWithFakes();
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => builder.Take(0));
+            Assert.Throws<ArgumentException>(() => builder.Take(0));
         }
 
         [Test]

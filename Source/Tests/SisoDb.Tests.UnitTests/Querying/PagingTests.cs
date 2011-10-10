@@ -8,19 +8,19 @@ namespace SisoDb.Tests.UnitTests.Querying
     public class PagingTests : UnitTestBase
     {
         [Test]
-        public void CTor_WhenNegativePageIndex_ThrowsArgumentOutOfRangeException()
+        public void Ctor_WhenNegativePageIndex_ThrowsArgumentOutOfRangeException()
         {
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Paging(-1, 1));
+            var ex = Assert.Throws<ArgumentException>(() => new Paging(-1, 1));
 
-            Assert.AreEqual("value '-1' is not >= limit '0'.\r\nParameter name: pageIndex", ex.Message);
+            Assert.AreEqual("pageIndex", ex.ParamName);
         }
 
         [Test]
-        public void CTor_WhenZeroPageSize_ThrowsArgumentOutOfRangeException()
+        public void Ctor_WhenZeroPageSize_ThrowsArgumentOutOfRangeException()
         {
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Paging(pageIndex: 0, pageSize: 0));
+            var ex = Assert.Throws<ArgumentException>(() => new Paging(pageIndex: 0, pageSize: 0));
 
-            Assert.AreEqual("value '0' is <= limit '0'.\r\nParameter name: pageSize", ex.Message);
+            Assert.AreEqual("pageSize", ex.ParamName);
         }
     }
 }

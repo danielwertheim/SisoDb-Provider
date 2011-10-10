@@ -1,6 +1,5 @@
 using NCore;
 using NUnit.Framework;
-using SisoDb.Resources;
 using SisoDb.Sql2008;
 using SisoDb.Sql2008.Resources;
 using SisoDb.TestUtils;
@@ -14,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         public void Ctor_WhenWrongProviderType_ThrowsSisoDbException()
         {
             var connectionInfoStub = Stub.This<IConnectionString>(
-                o => o.Setup(s => s.Provider).Returns("Funny bunny"));
+                o => o.Setup(s => s.Provider).Returns(StorageProviders.SqlCe4.ToString));
 
             var ex = Assert.Throws<SisoDbException>(() => new Sql2008ConnectionInfo(connectionInfoStub));
 

@@ -11,7 +11,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         private readonly IJsonSerializer _jsonSerializer = new ServiceStackJsonSerializer();
 
         [Test]
-        public void ToJsonOrEmptyString_WhenNullEntity_ReturnsEmptyString()
+        public void Serialize_WhenNullEntity_ReturnsEmptyString()
         {
             var json = _jsonSerializer.Serialize<JsonEntity>(null);
 
@@ -19,7 +19,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         }
 
         [Test]
-        public void ToJsonOrEmptyString_WhenPrivateGetterExists_ReturnsEmptyJson()
+        public void Serialize_WhenPrivateGetterExists_ReturnsEmptyJson()
         {
             var entity = new JsonEntityWithPrivateGetter { Name = "Daniel" };
 
@@ -29,7 +29,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         }
 
         [Test]
-        public void ToJsonOrEmptyString_WhenPrivateSetterExists_IsSerialized()
+        public void Serialize_WhenPrivateSetterExists_IsSerialized()
         {
             var entity = new JsonEntity();
             entity.SetName("Daniel");
@@ -40,7 +40,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         }
 
         [Test]
-        public void ToItemOrNull_WhenPrivateSetterExists_IsDeserialized()
+        public void Deserialize_WhenPrivateSetterExists_IsDeserialized()
         {
             var json = @"{""Name"":""Daniel""}";
 
@@ -50,7 +50,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
         }
 
         [Test]
-        public void ToJsonOrEmptyString_WhenItemIsYButSerializedAsX_OnlyXMembersAreSerialized()
+        public void Serialize_WhenItemIsYButSerializedAsX_OnlyXMembersAreSerialized()
         {
             var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)) };
 
@@ -60,18 +60,18 @@ namespace SisoDb.Tests.UnitTests.Serialization
         }
 
         [Test]
-        public void ToJsonOrEmptyString_WhenReferencingOtherStructure_ReferencedStructureIsNotRepresentedInJson()
+        public void Serialize_WhenReferencingOtherStructure_ReferencedStructureIsNotRepresentedInJson()
         {
             var structure = new Structure
             {
-                ReferencedSisoId = 999,
+                ReferencedStructureId = 999,
                 ReferencedStructure = {OtherStructureString = "Not to be included"},
                 Item = {String1 = "To be included"}
             };
 
             var json = _jsonSerializer.Serialize(structure);
 
-            const string expectedJson = "{\"SisoId\":0,\"ReferencedSisoId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
+            const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);
         }
 
@@ -113,12 +113,12 @@ namespace SisoDb.Tests.UnitTests.Serialization
 
         private class Structure
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
-            public int ReferencedSisoId 
+            public int ReferencedStructureId 
             {
-                get { return ReferencedStructure.SisoId; }
-                set { ReferencedStructure.SisoId = value; }
+                get { return ReferencedStructure.StructureId; }
+                set { ReferencedStructure.StructureId = value; }
             }
 
             public OtherStructure ReferencedStructure { get; set; }
@@ -134,7 +134,7 @@ namespace SisoDb.Tests.UnitTests.Serialization
 
         private class OtherStructure
         {
-            public int SisoId { get; set; }
+            public int StructureId { get; set; }
 
             public string OtherStructureString { get; set; }
         }

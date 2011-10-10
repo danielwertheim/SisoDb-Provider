@@ -19,15 +19,15 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void SchemaField_SisoId_HasCorrectName()
+        public void SchemaField_StructureId_HasCorrectName()
         {
             var field = UniqueStorageSchema.Fields.StructureId;
 
-            Assert.AreEqual("SisoId", field.Name);
+            Assert.AreEqual("StructureId", field.Name);
         }
 
         [Test]
-        public void SchemaField_SisoId_HasCorrectOrdinal()
+        public void SchemaField_StructureId_HasCorrectOrdinal()
         {
             var field = UniqueStorageSchema.Fields.StructureId;
 
@@ -35,15 +35,15 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void SchemaField_UqSisoId_HasCorrectName()
+        public void SchemaField_UqStructureId_HasCorrectName()
         {
             var field = UniqueStorageSchema.Fields.UqStructureId;
 
-            Assert.AreEqual("UqSisoId", field.Name);
+            Assert.AreEqual("UqStructureId", field.Name);
         }
 
         [Test]
-        public void SchemaField_UqSisoId_HasCorrectOrdinal()
+        public void SchemaField_UqStructureId_HasCorrectOrdinal()
         {
             var field = UniqueStorageSchema.Fields.UqStructureId;
 
@@ -89,7 +89,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 
             var uniqueStorageSchema = new UniqueStorageSchema(structureSchema);
 
-            CollectionAssert.AreEqual("[SisoId],[UqSisoId],[UqName],[UqValue]", uniqueStorageSchema.GetFieldsAsDelimitedOrderedString());
+            CollectionAssert.AreEqual("[StructureId],[UqStructureId],[UqName],[UqValue]", uniqueStorageSchema.GetFieldsAsDelimitedOrderedString());
         }
 
         [Test]

@@ -32,69 +32,88 @@ namespace SisoDb.Tests.UnitTests
             Assert.AreEqual("A provider", cnString.Provider);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
-        public void CnString_IsNull_ThrowsArgumentNullException()
+        [Test]
+        public void CnString_IsNull_ThrowsArgumentException()
         {
-            new ConnectionString(null);
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString(null));
+
+            Assert.AreEqual("value", ex.ParamName);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
-        public void CnString_IsWhiteSpaced_ThrowsArgumentNullException()
+        [Test]
+        public void CnString_IsWhiteSpaced_ThrowsArgumentException()
         {
-            new ConnectionString(" ");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString(" "));
+
+            Assert.AreEqual("value", ex.ParamName);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
-        public void CnString_HasNoDelim_ThrowsArgumentNullException()
+        [Test]
+        public void CnString_HasNoDelim_ThrowsArgumentException()
         {
-            new ConnectionString("Arbitrary string");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("arbitrary string"));
+
+            Assert.AreEqual(
+                "The connectionstring should have exactly two parts ('sisodb:' and 'plain:'). " + 
+                "Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException), ExpectedMessage =
-            "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
-            " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.")]
+        [Test]
         public void CnString_HasDelim_ThrowsArgumentException()
         {
-            new ConnectionString("||");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("||"));
+
+            Assert.AreEqual(
+                "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
+                " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException), ExpectedMessage =
-            "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
-            " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.")]
+        [Test]
         public void CnString_HasDelimWithLeftValue_ThrowsArgumentException()
         {
-            new ConnectionString("A||");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("A||"));
+
+            Assert.AreEqual(
+                "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
+                " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException), ExpectedMessage =
-            "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
-            " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.")]
+        [Test]
         public void CnString_HasDelimWithRightValue_ThrowsArgumentException()
         {
-            new ConnectionString("||A");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("||A"));
+
+            Assert.AreEqual(
+                "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
+                " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException), ExpectedMessage =
-            "The connectionstring is missing the SisoDb-part, indicated by 'sisodb:'." +
-            " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.")]
-        public void CnString_HasTwoPartsButMissesSisoDbMarker_ThrowsArgmentException()
+        [Test]
+        public void CnString_HasTwoPartsButMissesSisoDbMarker_ThrowsArgumentException()
         {
-            new ConnectionString("A||plain:x");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("A||plain:x"));
+
+            Assert.AreEqual(
+                "The connectionstring is missing the SisoDb-part, indicated by 'sisodb:'." +
+                " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException), ExpectedMessage =
-            "The connectionstring is missing the Plain-part, indicated by 'plain:'." +
-            " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.")]
-        public void CnString_HasTwoPartsButMissesPlainMarker_ThrowsArgmentException()
+        [Test]
+        public void CnString_HasTwoPartsButMissesPlainMarker_ThrowsArgumentException()
         {
-            new ConnectionString("sisodb:A||x");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("sisodb:A||x"));
+
+            Assert.AreEqual(
+                "The connectionstring is missing the Plain-part, indicated by 'plain:'." +
+                " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
         }
 
-        [Test, ExpectedException(typeof(ArgumentException), ExpectedMessage =
-            "The SisoDb-part is missing required key: 'provider'.")]
-        public void CnString_SisoDbPartMissesStorageProviderKey_ThrowsAgumentException()
+        [Test]
+        public void CnString_SisoDbPartMissesStorageProviderKey_ThrowsArgumentException()
         {
-            new ConnectionString("sisodb:k1=v1||plain:x");
+            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("sisodb:k1=v1||plain:x"));
+
+            Assert.AreEqual("The SisoDb-part is missing required key: 'provider'.", ex.Message);
         }
     }
 }

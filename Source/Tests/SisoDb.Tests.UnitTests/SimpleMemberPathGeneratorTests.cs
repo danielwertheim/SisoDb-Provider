@@ -23,17 +23,17 @@ namespace SisoDb.Tests.UnitTests
         }
 
         [Test]
-        public void Generate_WhenCalledWithNull_ThrowsArgumentNullException()
+        public void Generate_WhenCalledWithNull_ThrowsArgumentException()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _generator.Generate(null));
+            var ex = Assert.Throws<ArgumentException>(() => _generator.Generate(null));
 
             Assert.AreEqual("memberPath", ex.ParamName);
         }
 
         [Test]
-        public void Generate_WhenCalledWithWhiteSpaceString_ThrowsArgumentNullException()
+        public void Generate_WhenCalledWithWhiteSpaceString_ThrowsArgumentException()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _generator.Generate("   "));
+            var ex = Assert.Throws<ArgumentException>(() => _generator.Generate("   "));
 
             Assert.AreEqual("memberPath", ex.ParamName);
         }

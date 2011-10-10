@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EnsureThat;
 using NCore;
 using SisoDb.Core;
 using SisoDb.Resources;
@@ -27,8 +28,7 @@ namespace SisoDb
 
         public ConnectionString(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentNullException("value");
+            Ensure.That(() => value).IsNotNullOrWhiteSpace();
 
             var parts = GetParts(value);
 

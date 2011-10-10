@@ -22,16 +22,16 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
-        public void Parse_WhenNullExpressions_ThrowsArgumentNullException()
+        public void Parse_WhenNullExpressions_ThrowsArgumentException()
         {
-            Assert.Throws<ArgumentNullException>(
+            Assert.Throws<ArgumentException>(
                 () => new IncludeParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, null));
         }
 
         [Test]
-        public void Parse_WhenEmptyExpressions_ThrowsArgumentNullException()
+        public void Parse_WhenEmptyExpressions_ThrowsArgumentException()
         {
-            Assert.Throws<ArgumentNullException>(
+            Assert.Throws<ArgumentException>(
                 () => new IncludeParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new LambdaExpression[0]));
         }
 

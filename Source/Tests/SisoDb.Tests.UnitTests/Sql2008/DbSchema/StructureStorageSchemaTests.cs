@@ -21,7 +21,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         {
             var field = StructureStorageSchema.Fields.Id;
 
-            Assert.AreEqual("SisoId", field.Name);
+            Assert.AreEqual("StructureId", field.Name);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 
             var structureStorageSchema = new StructureStorageSchema(structureSchema);
 
-            Assert.AreEqual("[SisoId],[Json]", structureStorageSchema.GetFieldsAsDelimitedOrderedString());
+            Assert.AreEqual("[StructureId],[Json]", structureStorageSchema.GetFieldsAsDelimitedOrderedString());
         }
 
         [Test]

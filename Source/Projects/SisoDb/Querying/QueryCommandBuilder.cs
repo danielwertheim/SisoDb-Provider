@@ -29,7 +29,7 @@ namespace SisoDb.Querying
 
         public IQueryCommandBuilder<T> Take(int numOfStructures)
         {
-            Ensure.That(() => numOfStructures).IsGte(0);
+            Ensure.That(() => numOfStructures).IsGt(0);
 
             Command.TakeNumOfStructures = numOfStructures;
 

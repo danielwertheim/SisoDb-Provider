@@ -16,11 +16,11 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void SchemaField_SisoId_HasCorrectName()
+        public void SchemaField_StructureId_HasCorrectName()
         {
             var field = IndexStorageSchema.Fields.StructureId;
 
-            Assert.AreEqual("SisoId", field.Name);
+            Assert.AreEqual("StructureId", field.Name);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 
             var indexStorageSchema = new IndexStorageSchema(structureSchema);
 
-            Assert.AreEqual("[SisoId],[Plain1],[Plain2],[Unique1],[Unique2]", indexStorageSchema.GetFieldsAsDelimitedOrderedString());
+            Assert.AreEqual("[StructureId],[Plain1],[Plain2],[Unique1],[Unique2]", indexStorageSchema.GetFieldsAsDelimitedOrderedString());
         }
 
         [Test]
