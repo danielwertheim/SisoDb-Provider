@@ -66,9 +66,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqStructureId is null;");
+                "select UqMemberPath, UqValue from dbo.UniqueOrderUniques where UqStructureId is null;");
             Assert.AreEqual(1, table.Rows.Count);
-            Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("OrderNo_"));
+            Assert.IsTrue(table.AsEnumerable().First()["UqMemberPath"].ToString().StartsWith("OrderNo_"));
             Assert.AreEqual("O123", table.AsEnumerable().First()["UqValue"]);
         }
 
@@ -89,9 +89,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqStructureId = '{0}';".Inject(order.StructureId));
+                "select UqMemberPath, UqValue from dbo.UniqueOrderUniques where UqStructureId = '{0}';".Inject(order.StructureId));
             Assert.AreEqual(1, table.Rows.Count);
-            Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
+            Assert.IsTrue(table.AsEnumerable().First()["UqMemberPath"].ToString().StartsWith("Lines.ProductNo_"));
             Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);
         }
 
@@ -128,9 +128,9 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
             }
 
             var table = DbHelper.GetTableBySql(
-                "select UqName, UqValue from dbo.UniqueOrderUniques where UqStructureId = '{0}';".Inject(order.StructureId));
+                "select UqMemberPath, UqValue from dbo.UniqueOrderUniques where UqStructureId = '{0}';".Inject(order.StructureId));
             Assert.AreEqual(1, table.Rows.Count);
-            Assert.IsTrue(table.AsEnumerable().First()["UqName"].ToString().StartsWith("Lines.ProductNo_"));
+            Assert.IsTrue(table.AsEnumerable().First()["UqMemberPath"].ToString().StartsWith("Lines.ProductNo_"));
             Assert.AreEqual("<$P123$>", table.AsEnumerable().First()["UqValue"]);
         }
 

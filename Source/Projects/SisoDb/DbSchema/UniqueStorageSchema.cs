@@ -11,11 +11,11 @@ namespace SisoDb.DbSchema
         {
             public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
             public static readonly SchemaField UqStructureId = new SchemaField(1, "UqStructureId");
-            public static readonly SchemaField UqName = new SchemaField(2, "UqName");
+            public static readonly SchemaField UqMemberPath = new SchemaField(2, "UqMemberPath");
             public static readonly SchemaField UqValue = new SchemaField(3, "UqValue");
         }
 
-        public static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId, Fields.UqStructureId, Fields.UqName, Fields.UqValue };
+        public static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId, Fields.UqStructureId, Fields.UqMemberPath, Fields.UqValue };
 
         public UniqueStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetUniquesTableName())

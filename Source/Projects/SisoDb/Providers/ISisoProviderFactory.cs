@@ -12,7 +12,6 @@ namespace SisoDb.Providers
         IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
         IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional);
         IDbSchemaManager GetDbSchemaManager();
-        IDbColumnGenerator GetDbColumnGenerator();
         IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient);
         IDbQueryGenerator GetDbQueryGenerator();
         IDbBulkInserter GetDbBulkInserter(IDbClient dbClient);

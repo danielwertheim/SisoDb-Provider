@@ -7,10 +7,11 @@ C=Bug fixes
 v4.0
 [Updated]    SisoId is now StructureId both in classes as well as in storage schema.
 [Updated]    Storage schema for Indexes are now key-value.
+[Updated]    Storage schema for Uniques now have UqMemberPath instead of UqName
 [Updated]    All members of QueryEngine and UnitOfWork taking Enumerable of Ids, now takes param array of ids instead. E.g. GetByIds, DeleteByIds etc
-[Updated]           DeleteByIdInterval is only supported by identities
-[Updated]    The support for how Uniques are handled has been changed.
-[New]               The Id (previous SisoId) now StructureId does support Guid, int, long and Nullable<Guid>, Nullable<int>, Nullable<long>
+*[Updated]    DeleteByIdInterval is only supported by identities
+*[Updated]    The support for how Uniques are handled has been changed.
+[New]        The Id (previous SisoId) now StructureId does support Guid, int, long and Nullable<Guid>, Nullable<int>, Nullable<long>
 
 v3.1
 [Fixed]		Single Insert method on UnitOfWork does not forward call to InsertMany anymore. Hence for "UoW.Insert" no bulk insert is performed, which leads to less overhead; while "UoW.InsertMany" still makes use of bulkinserts.

@@ -105,11 +105,8 @@
     <Compile Include="Dac\BulkInserts\StructuresReader.cs" />
     <Compile Include="Dac\BulkInserts\UniquesReader.cs" />
     <Compile Include="DbSchema\IndexStorageSchema.cs" />
-    <Compile Include="DbSchema\ISqlDbSchemaUpserter.cs" />
-    <Compile Include="DbSchema\SchemaChange.cs" />
-    <Compile Include="DbSchema\SchemaChanges.cs" />
     <Compile Include="DbSchema\SchemaField.cs" />
-    <Compile Include="DbSchema\DbColumn.cs" />
+    <Compile Include="Dac\DbColumn.cs" />
     <Compile Include="DbSchema\StorageSchemaBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
@@ -123,7 +120,6 @@
     <Compile Include="Querying\Lambdas\Parsers\IWhereParser.cs" />
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
     <Compile Include="Querying\Lambdas\Parsers\ISortingParser.cs" />
-    <Compile Include="DbSchema\IDbSchemaDropper.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="SequentialGuid.cs" />
@@ -183,7 +179,6 @@
     <Compile Include="Querying\INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
-    <Compile Include="DbSchema\IDbColumnGenerator.cs" />
     <Compile Include="DbSchema\IDbSchemaBuilder.cs" />
     <Compile Include="DbSchema\IDbSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\IDbSchemaManager.cs" />

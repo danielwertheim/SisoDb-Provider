@@ -14,7 +14,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 
             Assert.AreEqual(UniqueStorageSchema.Fields.StructureId, fields[0]);
             Assert.AreEqual(UniqueStorageSchema.Fields.UqStructureId, fields[1]);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqName, fields[2]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqMemberPath, fields[2]);
             Assert.AreEqual(UniqueStorageSchema.Fields.UqValue, fields[3]);
         }
 
@@ -51,17 +51,17 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void SchemaField_UqName_HasCorrectName()
+        public void SchemaField_UqMemberPath_HasCorrectName()
         {
-            var field = UniqueStorageSchema.Fields.UqName;
+            var field = UniqueStorageSchema.Fields.UqMemberPath;
 
-            Assert.AreEqual("UqName", field.Name);
+            Assert.AreEqual("UqMemberPath", field.Name);
         }
 
         [Test]
-        public void SchemaField_UqName_HasCorrectOrdinal()
+        public void SchemaField_UqMemberPath_HasCorrectOrdinal()
         {
-            var field = UniqueStorageSchema.Fields.UqName;
+            var field = UniqueStorageSchema.Fields.UqMemberPath;
 
             Assert.AreEqual(2, field.Ordinal);
         }
@@ -83,16 +83,6 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void GetFieldsAsDelimitedOrderedString_WhenPlainAndUniquesExistsInSchema_FieldsFromSchemaAreNotReturned()
-        {
-            var structureSchema = CreateStructureSchemaFakeWithPlainAndUniques();
-
-            var uniqueStorageSchema = new UniqueStorageSchema(structureSchema);
-
-            CollectionAssert.AreEqual("[StructureId],[UqStructureId],[UqName],[UqValue]", uniqueStorageSchema.GetFieldsAsDelimitedOrderedString());
-        }
-
-        [Test]
         public void GetFieldsOrderedByIndex_WhenPlainAndUniquesExistsInSchema_FieldsAreReturnedInCorrectOrder()
         {
             var structureSchema = CreateStructureSchemaFakeWithPlainAndUniques();
@@ -110,7 +100,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
             Assert.AreEqual(UniqueStorageSchema.Fields.UqStructureId.Name, fieldsByIndex[1].Name);
 
             Assert.AreEqual(2, fieldsByIndex[2].Ordinal);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqName.Name, fieldsByIndex[2].Name);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqMemberPath.Name, fieldsByIndex[2].Name);
 
             Assert.AreEqual(3, fieldsByIndex[3].Ordinal);
             Assert.AreEqual(UniqueStorageSchema.Fields.UqValue.Name, fieldsByIndex[3].Name);

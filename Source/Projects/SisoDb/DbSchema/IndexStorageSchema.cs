@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using PineCone.Structures.Schemas;
 using SisoDb.Providers;
 
@@ -16,10 +15,19 @@ namespace SisoDb.DbSchema
             public static readonly SchemaField IntegerValue = new SchemaField(3, "IntegerValue");
             public static readonly SchemaField FractalValue = new SchemaField(4, "FractalValue");
             public static readonly SchemaField DateTimeValue = new SchemaField(5, "DateTimeValue");
-            public static readonly SchemaField BitValue = new SchemaField(6, "BitValue");
+            public static readonly SchemaField BoolValue = new SchemaField(6, "BoolValue");
         }
 
-        public static readonly SchemaField[] OrderedFields = new[] { Fields.StructureId, Fields.MemberPath, Fields.StringValue, Fields.IntegerValue, Fields.FractalValue, Fields.DateTimeValue, Fields.BitValue };
+        public static readonly SchemaField[] OrderedFields = new[]
+        {
+            Fields.StructureId,
+            Fields.MemberPath,
+            Fields.StringValue,
+            Fields.IntegerValue,
+            Fields.FractalValue,
+            Fields.DateTimeValue,
+            Fields.BoolValue
+        };
 
         public IndexStorageSchema(IStructureSchema structureSchema)
             : base(structureSchema, structureSchema.GetIndexesTableName())

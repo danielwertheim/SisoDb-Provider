@@ -27,7 +27,7 @@ namespace SisoDb.Dac.BulkInserts
                 return Enumerator.Current.StructureId.Value;
             }
 
-            if (schemaField.Name == UniqueStorageSchema.Fields.UqName.Name)
+            if (schemaField.Name == UniqueStorageSchema.Fields.UqMemberPath.Name)
                 return Enumerator.Current.Path;
 
             if (schemaField.Name == UniqueStorageSchema.Fields.UqValue.Name)

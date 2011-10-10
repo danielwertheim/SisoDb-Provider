@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SisoDb.DbSchema
+namespace SisoDb.Dac
 {
     [Serializable]
     public class DbColumn

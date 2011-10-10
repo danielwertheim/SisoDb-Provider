@@ -28,15 +28,14 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
             uniqueIndexAccessorFake2.Setup(x => x.Path).Returns("Unique2");
             uniqueIndexAccessorFake2.Setup(x => x.IsUnique).Returns(true);
 
-            return new StructureSchema(
-                "FakeName",
-                "FakeHash",
-                idAccessorFake.Object,
+            return new StructureSchema("FakeName", "FakeHash", idAccessorFake.Object,
                 new[]
-                    {
-                        indexAccessorFake1.Object, indexAccessorFake2.Object,
-                        uniqueIndexAccessorFake1.Object, uniqueIndexAccessorFake2.Object
-                    });
+                {
+                    indexAccessorFake1.Object,
+                    indexAccessorFake2.Object,
+                    uniqueIndexAccessorFake1.Object,
+                    uniqueIndexAccessorFake2.Object
+                });
         }
     }
 }

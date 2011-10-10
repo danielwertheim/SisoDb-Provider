@@ -49,16 +49,6 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void GetFieldsAsDelimitedOrderedString_WhenPlainAndUniquesExistsInSchema_FieldsFromSchemaAreNotReturned()
-        {
-            var structureSchema = CreateStructureSchemaFakeWithPlainAndUniques();
-
-            var structureStorageSchema = new StructureStorageSchema(structureSchema);
-
-            Assert.AreEqual("[StructureId],[Json]", structureStorageSchema.GetFieldsAsDelimitedOrderedString());
-        }
-
-        [Test]
         public void GetFieldsOrderedByIndex_WhenPlainAndUniquesExistsInSchema_FieldsAreReturnedInCorrectOrder()
         {
             var structureSchema = CreateStructureSchemaFakeWithPlainAndUniques();

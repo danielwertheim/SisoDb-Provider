@@ -128,14 +128,24 @@ alter database [{0}] set recovery simple;</value>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
 [StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([StructureId]),
-{2});
+[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](max) null,
+[IntegerValue] [varchar](bigint) null,
+[FractalValue] [varchar](real) null,
+[DateTimeValue] [varchar](datetime) null,
+[BoolValue] [varchar](bit) null,);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[StructureId] [bigint] not null constraint [PK_{0}] primary key clustered ([StructureId]),
-{2});
+[StructureId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
+[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](max) null,
+[IntegerValue] [varchar](bigint) null,
+[FractalValue] [varchar](real) null,
+[DateTimeValue] [varchar](datetime) null,
+[BoolValue] [varchar](bit) null,);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
@@ -146,7 +156,7 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[StructureId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
+[StructureId] [int] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
 insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
@@ -155,10 +165,10 @@ insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHa
     <value>create table dbo.[{0}] (
 [StructureId] [uniqueidentifier] not null,
 [UqStructureId] [uniqueidentifier] null,
-[UqName] [varchar](250) not null,
+[UqMemberPath] [varchar](250) not null,
 [UqValue] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqName], [UqValue]);
+create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
@@ -166,10 +176,10 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
     <value>create table dbo.[{0}] (
 [StructureId] [bigint] not null,
 [UqStructureId] [int] null,
-[UqName] [varchar](250) not null,
+[UqMemberpath] [varchar](250) not null,
 [UqValue] [nvarchar](100) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqName], [UqValue]);
+create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
@@ -254,6 +264,14 @@ end</value>
   <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
 select Json from [dbo].[{0}] where StructureId between @idFrom and @idTo;</value>
+  </data>
+  <data name="IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
+    <value>set nocount on;
+delete from [dbo].[{0}] where [{1}] in({2});</value>
+  </data>
+  <data name="IndexesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
+    <value>set nocount on;
+select distinct [{0}] from [dbo].[{1}];</value>
   </data>
   <data name="RebuildIndexes" xml:space="preserve">
     <value>set nocount on;

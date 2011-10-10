@@ -28,14 +28,9 @@ namespace SisoDb.Sql2008
             return new DbSchemaManager();
         }
 
-        public IDbColumnGenerator GetDbColumnGenerator()
-        {
-            return new SqlDbColumnGenerator();
-        }
-
         public IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
         {
-            return new Sql2008DbSchemaUpserter(dbClient);
+            return new SqlDbSchemaUpserter(dbClient);
         }
 
         public IDbQueryGenerator GetDbQueryGenerator()

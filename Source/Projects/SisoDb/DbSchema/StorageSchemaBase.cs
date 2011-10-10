@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NCore;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
@@ -11,7 +10,6 @@ namespace SisoDb.DbSchema
     {
         private readonly Dictionary<int, SchemaField> _fieldsByIndex;
         private readonly Dictionary<string, SchemaField> _fieldsByName;
-        private readonly string _fieldsAsDelimitedString;
 
         public SchemaField this[int index]
         {
@@ -27,16 +25,15 @@ namespace SisoDb.DbSchema
 
         protected StorageSchemaBase(IStructureSchema structureSchema, string storageSchemaName)
         {
+            Name = storageSchemaName;
+
             _fieldsByIndex = new Dictionary<int, SchemaField>();
             _fieldsByName = new Dictionary<string, SchemaField>();
-            Name = storageSchemaName;
             
             InitializeFields(structureSchema);
-
-            _fieldsAsDelimitedString = string.Join(",", _fieldsByIndex.Values.Select(f => "[{0}]".Inject(f.Name)));
         }
 
-        protected void InitializeFields(IStructureSchema structureSchema)
+        private void InitializeFields(IStructureSchema structureSchema)
         {
             var fields = GetSchemaFields(structureSchema);
 
@@ -57,11 +54,6 @@ namespace SisoDb.DbSchema
         public IEnumerable<SchemaField> GetFieldsOrderedByIndex()
         {
             return _fieldsByIndex.Values;
-        }
-
-        public string GetFieldsAsDelimitedOrderedString()
-        {
-            return _fieldsAsDelimitedString;
         }
     }
 }

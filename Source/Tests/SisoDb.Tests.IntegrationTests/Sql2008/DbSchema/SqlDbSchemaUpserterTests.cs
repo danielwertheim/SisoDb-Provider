@@ -8,7 +8,7 @@ using SisoDb.Sql2008.DbSchema;
 namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
 {
     [TestFixture]
-    public class Sql2008DbSchemaUpserterTests : Sql2008IntegrationTestBase
+    public class SqlDbSchemaUpserterTests : Sql2008IntegrationTestBase
     {
         private IStructureSchema _structureSchema;
         private string _structureSetPrefix;
@@ -49,7 +49,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         {
             using(var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
-                var upserter = new Sql2008DbSchemaUpserter(dbClient);
+                var upserter = new SqlDbSchemaUpserter(dbClient);
                 upserter.Upsert(_structureSchema);   
             }
 
@@ -69,7 +69,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
 
             using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
-                var upserter = new Sql2008DbSchemaUpserter(dbClient);
+                var upserter = new SqlDbSchemaUpserter(dbClient);
 
                 upserter.Upsert(_structureSchema);
 
@@ -88,7 +88,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
             var hashForObsoleteColumn = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("ExtraColumn");
             using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
-                var upserter = new Sql2008DbSchemaUpserter(dbClient);
+                var upserter = new SqlDbSchemaUpserter(dbClient);
 
                 upserter.Upsert(_structureSchema);
 

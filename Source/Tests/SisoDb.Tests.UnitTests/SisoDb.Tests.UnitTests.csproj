@@ -127,7 +127,6 @@
     <Compile Include="Querying\QueryCommandTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="SisoConnectionInfoTests.cs" />
-    <Compile Include="Sql2008\DbSchema\Sql2008DbColumnGeneratorTests.cs" />
     <Compile Include="Sql2008\DbSchema\SqlDbDataTypeTranslatorTests.cs" />
     <Compile Include="Sql2008\SqlStructureSchemaExtensionsTests.cs" />
     <Compile Include="TestFactories\StructureSchemaTestFactory.cs" />

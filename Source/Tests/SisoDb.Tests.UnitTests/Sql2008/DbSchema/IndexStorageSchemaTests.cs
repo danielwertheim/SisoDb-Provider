@@ -13,6 +13,12 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
             var fields = IndexStorageSchema.OrderedFields;
 
             Assert.AreEqual(IndexStorageSchema.Fields.StructureId, fields[0]);
+            Assert.AreEqual(IndexStorageSchema.Fields.MemberPath, fields[1]);
+            Assert.AreEqual(IndexStorageSchema.Fields.StringValue, fields[2]);
+            Assert.AreEqual(IndexStorageSchema.Fields.IntegerValue, fields[3]);
+            Assert.AreEqual(IndexStorageSchema.Fields.FractalValue, fields[4]);
+            Assert.AreEqual(IndexStorageSchema.Fields.DateTimeValue, fields[5]);
+            Assert.AreEqual(IndexStorageSchema.Fields.BoolValue, fields[6]);
         }
 
         [Test]
@@ -32,13 +38,99 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void GetFieldsAsDelimitedOrderedString_WhenPlainAndUniquesExistsInSchema_FixedFieldsPlusDynamicFieldsFromSchemaAreReturned()
+        public void SchemaField_MemberPath_HasCorrectName()
         {
-            var structureSchema = CreateStructureSchemaFakeWithPlainAndUniques();
+            var field = IndexStorageSchema.Fields.MemberPath;
 
-            var indexStorageSchema = new IndexStorageSchema(structureSchema);
+            Assert.AreEqual("MemberPath", field.Name);
+        }
 
-            Assert.AreEqual("[StructureId],[Plain1],[Plain2],[Unique1],[Unique2]", indexStorageSchema.GetFieldsAsDelimitedOrderedString());
+        [Test]
+        public void SchemaField_MemberPath_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.MemberPath;
+
+            Assert.AreEqual(1, field.Ordinal);
+        }
+
+        [Test]
+        public void SchemaField_StringValue_HasCorrectName()
+        {
+            var field = IndexStorageSchema.Fields.StringValue;
+
+            Assert.AreEqual("StringValue", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_StringValue_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.StringValue;
+
+            Assert.AreEqual(2, field.Ordinal);
+        }
+
+        [Test]
+        public void SchemaField_IntegerValue_HasCorrectName()
+        {
+            var field = IndexStorageSchema.Fields.IntegerValue;
+
+            Assert.AreEqual("IntegerValue", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_IntegerValue_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.IntegerValue;
+
+            Assert.AreEqual(3, field.Ordinal);
+        }
+
+        [Test]
+        public void SchemaField_FractalValue_HasCorrectName()
+        {
+            var field = IndexStorageSchema.Fields.FractalValue;
+
+            Assert.AreEqual("FractalValue", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_FractalValue_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.FractalValue;
+
+            Assert.AreEqual(4, field.Ordinal);
+        }
+
+        [Test]
+        public void SchemaField_DateTimeValue_HasCorrectName()
+        {
+            var field = IndexStorageSchema.Fields.DateTimeValue;
+
+            Assert.AreEqual("DateTimeValue", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_DateTimeValue_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.DateTimeValue;
+
+            Assert.AreEqual(5, field.Ordinal);
+        }
+
+        [Test]
+        public void SchemaField_BoolValue_HasCorrectName()
+        {
+            var field = IndexStorageSchema.Fields.BoolValue;
+
+            Assert.AreEqual("BoolValue", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_BitValue_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.BoolValue;
+
+            Assert.AreEqual(6, field.Ordinal);
         }
 
         [Test]
@@ -50,22 +142,28 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 
             var fieldsByIndex = indexStorageSchema.GetFieldsOrderedByIndex().ToList();
 
-            Assert.AreEqual(5, fieldsByIndex.Count);
+            Assert.AreEqual(7, fieldsByIndex.Count);
 
             Assert.AreEqual(0, fieldsByIndex[0].Ordinal);
             Assert.AreEqual(IndexStorageSchema.Fields.StructureId.Name, fieldsByIndex[0].Name);
 
             Assert.AreEqual(1, fieldsByIndex[1].Ordinal);
-            Assert.AreEqual("Plain1", fieldsByIndex[1].Name);
+            Assert.AreEqual(IndexStorageSchema.Fields.MemberPath.Name, fieldsByIndex[1].Name);
 
             Assert.AreEqual(2, fieldsByIndex[2].Ordinal);
-            Assert.AreEqual("Plain2", fieldsByIndex[2].Name);
+            Assert.AreEqual(IndexStorageSchema.Fields.StringValue.Name, fieldsByIndex[2].Name);
 
             Assert.AreEqual(3, fieldsByIndex[3].Ordinal);
-            Assert.AreEqual("Unique1", fieldsByIndex[3].Name);
+            Assert.AreEqual(IndexStorageSchema.Fields.IntegerValue.Name, fieldsByIndex[3].Name);
 
             Assert.AreEqual(4, fieldsByIndex[4].Ordinal);
-            Assert.AreEqual("Unique2", fieldsByIndex[4].Name);
+            Assert.AreEqual(IndexStorageSchema.Fields.FractalValue.Name, fieldsByIndex[4].Name);
+
+            Assert.AreEqual(5, fieldsByIndex[5].Ordinal);
+            Assert.AreEqual(IndexStorageSchema.Fields.DateTimeValue.Name, fieldsByIndex[5].Name);
+
+            Assert.AreEqual(6, fieldsByIndex[6].Ordinal);
+            Assert.AreEqual(IndexStorageSchema.Fields.BoolValue.Name, fieldsByIndex[6].Name);
         }
     }
 }

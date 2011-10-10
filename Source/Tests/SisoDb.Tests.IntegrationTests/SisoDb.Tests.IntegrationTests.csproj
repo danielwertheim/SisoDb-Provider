@@ -110,7 +110,7 @@
     <Compile Include="Sql2008\UnitOfWork\Queries\QxExtensions\Sql2008UnitOfWorkQueryNestedEnumerablesWithQxAny.cs" />
     <Compile Include="Sql2008\Sql2008DbUtils.cs" />
     <Compile Include="Sql2008\Dac\Sql2008DbClientDropTests.cs" />
-    <Compile Include="Sql2008\DbSchema\Sql2008DbSchemaUpserterTests.cs" />
+    <Compile Include="Sql2008\DbSchema\SqlDbSchemaUpserterTests.cs" />
     <Compile Include="Sql2008\DbSchema\Sql2008DbIndexesSchemaSynchronizerTests.cs" />
     <Compile Include="Sql2008\QueryEngine\Sql2008QueryEngineCountTests.cs" />
     <Compile Include="Sql2008\QueryEngine\Sql2008QueryEngineGetByIdIntervalTests.cs" />
