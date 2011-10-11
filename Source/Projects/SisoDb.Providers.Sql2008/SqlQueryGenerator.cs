@@ -14,13 +14,13 @@ using SisoDb.Resources;
 
 namespace SisoDb.Sql2008
 {
-    public class Sql2008QueryGenerator : IDbQueryGenerator
+    public class SqlQueryGenerator : IDbQueryGenerator
     {
         private readonly IParsedLambdaProcessor<ISqlWhere> _parsedWhereProcessor;
         private readonly IParsedLambdaProcessor<ISqlSorting> _parsedSortingProcessor;
         private readonly IParsedLambdaProcessor<IList<ISqlInclude>> _parsedIncludeProcessor;
 
-        public Sql2008QueryGenerator(
+        public SqlQueryGenerator(
             IParsedLambdaProcessor<ISqlWhere> parsedWhereProcessor,
             IParsedLambdaProcessor<ISqlSorting> parsedSortingProcessor,
             IParsedLambdaProcessor<IList<ISqlInclude>> parsedIncludeProcessor)

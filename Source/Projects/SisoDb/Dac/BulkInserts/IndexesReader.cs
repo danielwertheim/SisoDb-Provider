@@ -8,14 +8,25 @@ namespace SisoDb.Dac.BulkInserts
 {
     public class IndexesReader : SingleResultReaderBase<IStructureIndex>
     {
+        private bool ValueIsConsumedForCurrent { get; set; }
+
         public IndexesReader(IndexStorageSchema storageSchema, IEnumerable<IStructureIndex> items)
             : base(storageSchema, items)
         {
         }
 
+        public override bool Read()
+        {
+            ValueIsConsumedForCurrent = false;
+
+            return base.Read();
+        }
+
         public override object GetValue(int ordinal)
         {
-            //TODO: Extract to NCore and cache.!!!!
+            if (ValueIsConsumedForCurrent)
+                return DBNull.Value;
+
             if (ordinal == 0)
                 return Enumerator.Current.StructureId.Value;
 
@@ -23,38 +34,38 @@ namespace SisoDb.Dac.BulkInserts
             
             if (schemaField.Name == IndexStorageSchema.Fields.MemberPath.Name)
                 return Enumerator.Current.Path;
+            
+            var dataType = Enumerator.Current.DataType;
 
-            var dataType = Enumerator.Current.Value.GetType();
-
-            if (schemaField.Name == IndexStorageSchema.Fields.StringValue.Name && (dataType.IsStringType() || dataType.IsEnumType() || dataType.IsNullableEnumType() ))
+            if (schemaField.Name == IndexStorageSchema.Fields.StringValue.Name && (dataType.IsStringType() || dataType.IsAnyEnumType()))
+            {
+                ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
+            }
 
-            if (schemaField.Name == IndexStorageSchema.Fields.IntegerValue.Name && (dataType.IsIntType() || dataType.IsNullableIntType()))
+            if (schemaField.Name == IndexStorageSchema.Fields.IntegerValue.Name && dataType.IsIntegerNumberType())
+            {
+                ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
+            }
 
-            if (schemaField.Name == IndexStorageSchema.Fields.IntegerValue.Name && (dataType.IsLongType() || dataType.IsNullableLongType()))
+            if (schemaField.Name == IndexStorageSchema.Fields.FractalValue.Name && dataType.IsFractalNumberType())
+            {
+                ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
-
-            if (schemaField.Name == IndexStorageSchema.Fields.IntegerValue.Name && (dataType.IsShortType() || dataType.IsNullableShortType()))
-                return Enumerator.Current.Value;
-
-            if (schemaField.Name == IndexStorageSchema.Fields.FractalValue.Name && (dataType.IsSingleType() || dataType.IsNullableSingleType()))
-                return Enumerator.Current.Value;
-
-            if (schemaField.Name == IndexStorageSchema.Fields.FractalValue.Name && (dataType.IsFloatType() || dataType.IsNullableFloatType()))
-                return Enumerator.Current.Value;
-
-            if (schemaField.Name == IndexStorageSchema.Fields.FractalValue.Name && (dataType.IsDecimalType() || dataType.IsNullableDecimalType()))
-                return Enumerator.Current.Value;
-
-            if (schemaField.Name == IndexStorageSchema.Fields.FractalValue.Name && (dataType.IsFloatType() || dataType.IsNullableFloatType()))
-                return Enumerator.Current.Value;
+            }
 
             if (schemaField.Name == IndexStorageSchema.Fields.DateTimeValue.Name && (dataType.IsDateTimeType() || dataType.IsNullableDateTimeType()))
+            {
+                ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
+            }
 
             if (schemaField.Name == IndexStorageSchema.Fields.BoolValue.Name && (dataType.IsBoolType() || dataType.IsNullableBoolType()))
+            {
+                ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
+            }
 
             return DBNull.Value;
         }

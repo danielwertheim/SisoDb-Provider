@@ -131,7 +131,7 @@ namespace SisoDb.Sql2008
 
             var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
 
-            var updater = new Sql2008StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _structureBuilder);
+            var updater = new SqlStructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _structureBuilder);
             updater.Process(onProcess);
         }
 

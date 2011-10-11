@@ -145,7 +145,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             return stub.Object;
         }
 
-        private static Sql2008QueryGenerator GetIsolatedQueryGenerator(string fakeWhere, string fakeSorting)
+        private static SqlQueryGenerator GetIsolatedQueryGenerator(string fakeWhere, string fakeSorting)
         {
             var sqlWhereFake = new Mock<ISqlWhere>();
             sqlWhereFake.Setup(x => x.Sql).Returns(fakeWhere);
@@ -166,7 +166,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             var includesProcessorFake = new Mock<IParsedLambdaProcessor<IList<ISqlInclude>>>();
             includesProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(new[] { sqlIncludeFake.Object });
 
-            return new Sql2008QueryGenerator(
+            return new SqlQueryGenerator(
                                          whereProcessorFake.Object,
                                          sortingsProcessorFake.Object,
                                          includesProcessorFake.Object);

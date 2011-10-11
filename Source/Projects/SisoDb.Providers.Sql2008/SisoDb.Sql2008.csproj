@@ -51,12 +51,13 @@
     <Reference Include="EnsureThat">
       <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.3.0.44, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.17.0\lib\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.17.0.45, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.4.0.46, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.17.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.19.0\lib\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.19.0.47, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.19.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -93,9 +94,9 @@
     <Compile Include="SqlCommandInfo.cs" />
     <Compile Include="Dac\Sql2008DbClient.cs" />
     <Compile Include="Sql2008QueryEngine.cs" />
-    <Compile Include="Sql2008QueryGenerator.cs" />
+    <Compile Include="SqlQueryGenerator.cs" />
     <Compile Include="Dac\Sql2008ServerClient.cs" />
-    <Compile Include="Sql2008StructureSetUpdater.cs" />
+    <Compile Include="SqlStructureSetUpdater.cs" />
     <Compile Include="Sql2008UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

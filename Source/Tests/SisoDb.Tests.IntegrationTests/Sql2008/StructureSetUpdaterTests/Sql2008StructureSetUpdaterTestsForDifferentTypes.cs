@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 {
     [TestFixture]
-    public class Sql2008StructureSetUpdaterTestsForDifferentTypes : Sql2008IntegrationTestBase
+    public class SqlStructureSetUpdaterTestsForDifferentTypes : Sql2008IntegrationTestBase
     {
         protected override void OnTestFinalize()
         {

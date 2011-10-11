@@ -37,7 +37,7 @@ namespace SisoDb.Sql2008
         {
             var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
 
-            return new Sql2008QueryGenerator(
+            return new SqlQueryGenerator(
                 new ParsedWhereSqlProcessor(memberPathGenerator),
                 new ParsedSortingSqlProcessor(memberPathGenerator),
                 new ParsedIncludeSqlProcessor(memberPathGenerator));
