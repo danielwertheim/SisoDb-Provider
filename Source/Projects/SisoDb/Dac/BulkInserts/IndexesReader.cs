@@ -55,13 +55,19 @@ namespace SisoDb.Dac.BulkInserts
                 return Enumerator.Current.Value;
             }
 
-            if (schemaField.Name == IndexStorageSchema.Fields.DateTimeValue.Name && (dataType.IsDateTimeType() || dataType.IsNullableDateTimeType()))
+            if (schemaField.Name == IndexStorageSchema.Fields.DateTimeValue.Name && dataType.IsAnyDateTimeType())
             {
                 ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
             }
 
-            if (schemaField.Name == IndexStorageSchema.Fields.BoolValue.Name && (dataType.IsBoolType() || dataType.IsNullableBoolType()))
+            if (schemaField.Name == IndexStorageSchema.Fields.BoolValue.Name && dataType.IsAnyBoolType())
+            {
+                ValueIsConsumedForCurrent = true;
+                return Enumerator.Current.Value;
+            }
+
+            if (schemaField.Name == IndexStorageSchema.Fields.GuidValue.Name && dataType.IsAnyGuidType())
             {
                 ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
