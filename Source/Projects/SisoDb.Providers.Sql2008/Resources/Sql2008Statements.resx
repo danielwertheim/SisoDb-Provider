@@ -127,25 +127,33 @@ alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [StringValue] [nvarchar](max) null,
 [IntegerValue] [bigint] null,
 [FractalValue] [real] null,
 [DateTimeValue] [datetime] null,
-[BoolValue] [bit] null);
+[BoolValue] [bit] null,
+[GuidValue] [uniqueidentifier] null);
+
+create index [IX_{0}] on [{0}] ([MemberPath]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [StringValue] [nvarchar](max) null,
 [IntegerValue] [bigint] null,
 [FractalValue] [real] null,
 [DateTimeValue] [datetime] null,
-[BoolValue] [bit] null);
+[BoolValue] [bit] null,
+[GuidValue] [uniqueidentifier] null);
+
+create index [IX_{0}] on [{0}] ([MemberPath]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
   </data>
