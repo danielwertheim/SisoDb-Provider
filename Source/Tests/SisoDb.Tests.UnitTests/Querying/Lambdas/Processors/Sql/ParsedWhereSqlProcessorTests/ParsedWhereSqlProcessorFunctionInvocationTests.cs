@@ -14,7 +14,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12"));
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[DateTime1] = @p0";
@@ -26,7 +26,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12"));
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", new DateTime(2010, 11, 12)) };
@@ -38,7 +38,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12", SisoEnvironment.Formatting.DateTimeFormatProvider));
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[DateTime1] = @p0";
@@ -50,7 +50,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Parse("2010-11-12", SisoEnvironment.Formatting.DateTimeFormatProvider));
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", new DateTime(2010, 11, 12)) };
@@ -63,7 +63,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var dateTime = new DateTime(2010, 11, 12);
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == dateTime.ToString(SisoEnvironment.Formatting.DateTimeFormatProvider));
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] = @p0";
@@ -76,7 +76,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var dateTime = new DateTime(2010, 11, 12);
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == dateTime.ToString(SisoEnvironment.Formatting.DateTimeFormatProvider));
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", "2010-11-12 00:00:00") };

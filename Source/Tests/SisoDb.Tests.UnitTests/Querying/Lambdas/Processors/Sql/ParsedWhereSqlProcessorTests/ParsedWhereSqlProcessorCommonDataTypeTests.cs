@@ -15,7 +15,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[StructureId] = @p0";
@@ -27,7 +27,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
@@ -39,7 +39,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[NestedItem.StructureId] = @p0";
@@ -51,7 +51,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
@@ -63,7 +63,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] = @p0";
@@ -75,7 +75,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
@@ -88,7 +88,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = 42;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NullableInt == value);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[NullableInt] = @p0";
@@ -101,7 +101,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = 42;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NullableInt == value);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
@@ -113,7 +113,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == -42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] = @p0";
@@ -125,7 +125,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == -42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", -42) };
@@ -137,7 +137,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 != 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] <> @p0";
@@ -149,7 +149,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 != 42);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
@@ -161,7 +161,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Decimal1 == 3.14M);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Decimal1] = @p0";
@@ -173,7 +173,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Decimal1 == 3.14M);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 3.14M) };
@@ -185,7 +185,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == false);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Bool1] = @p0";
@@ -197,7 +197,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == false);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", false) };
@@ -209,7 +209,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == true);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Bool1] = @p0";
@@ -221,7 +221,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == true);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", true) };
@@ -233,7 +233,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != true);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Bool1] <> @p0";
@@ -245,7 +245,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != true);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", true) };
@@ -257,7 +257,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != false);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Bool1] <> @p0";
@@ -269,7 +269,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != false);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", false) };
@@ -282,7 +282,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var guid = Guid.Empty;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == guid);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Guid1] = @p0";
@@ -295,7 +295,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var guid = Guid.Empty;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == guid);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", guid) };
@@ -307,7 +307,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == Guid.Empty);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Guid1] = @p0";
@@ -319,7 +319,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == Guid.Empty);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", Guid.Empty) };
@@ -332,7 +332,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var dateTime = new DateTime(2010, 2, 3, 12, 13, 14);
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == dateTime);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[DateTime1] = @p0";
@@ -345,7 +345,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var dateTime = new DateTime(2010, 2, 3, 12, 13, 14);
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == dateTime);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", dateTime) };
@@ -357,7 +357,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Now);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[DateTime1] = @p0";
@@ -369,7 +369,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Now);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameter = new DacParameter("@p0", DateTime.Now);
@@ -384,7 +384,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == "Adam");
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] = @p0";
@@ -396,7 +396,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == "Adam");
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", "Adam") };
@@ -408,7 +408,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != "Adam");
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] <> @p0";
@@ -420,7 +420,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != "Adam");
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", "Adam") };
@@ -432,7 +432,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == string.Empty);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] = @p0";
@@ -444,7 +444,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == string.Empty);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", string.Empty) };
@@ -456,7 +456,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == null);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] is null";
@@ -468,7 +468,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == null);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             Assert.AreEqual(0, query.Parameters.Count);
@@ -479,7 +479,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != null);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] is not null";
@@ -491,7 +491,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != null);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             Assert.AreEqual(0, query.Parameters.Count);
@@ -503,7 +503,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] = @p0";
@@ -516,7 +516,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", value) };
@@ -529,7 +529,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             const string value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[String1] = @p0";
@@ -542,7 +542,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             const string value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedWhereSqlProcessor();
             var query = processor.Process(parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", value) };

@@ -61,8 +61,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
                 var schema = Database.StructureSchemas.GetSchema(TypeFor<MyFirstStructure>.Type);
                 var valueColumnExistsForNestedInFirstStructure = DbHelper.ColumnsExist(
-                    schema.GetIndexesTableName(),
-                    SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("NestedStructure.Value"));
+                    schema.GetIndexesTableName(), "NestedStructure.Value");
 
                 Assert.IsFalse(valueColumnExistsForNestedInFirstStructure);
             }

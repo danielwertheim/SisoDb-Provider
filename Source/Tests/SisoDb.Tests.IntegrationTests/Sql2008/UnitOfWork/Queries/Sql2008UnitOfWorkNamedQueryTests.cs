@@ -48,13 +48,12 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private void CreateStoredProcedure()
         {
-            var hashForSortOrder = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("SortOrder");
             var sql =
                 string.Format("create procedure [dbo].[{0}] @minId int, @maxId int as begin "
                 + "select Json from dbo.ItemForNamedQueriesStructure as S inner join dbo.ItemForNamedQueriesIndexes as I on I.StructureId = S.StructureId "
                 + "where I.[StructureId] between @minId and @maxId "
-                + "order by I.[{1}];"
-                + "end", ProcedureName, hashForSortOrder);
+                + "order by I.[SortOrder];"
+                + "end", ProcedureName);
 
             DbHelper.CreateProcedure(sql);
         }

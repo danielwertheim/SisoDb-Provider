@@ -13,7 +13,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var lambda = Reflect<Master>.LambdaFrom(m => m.ChildOneId);
             var parsedLambda = CreateParsedLambda<ChildTypeA>(lambda);
 
-            var processor = new ParsedIncludeSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedIncludeSqlProcessor();
             var includes = processor.Process(parsedLambda);
 
             const string expectedSql = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
@@ -27,7 +27,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var lambda2 = Reflect<Master>.LambdaFrom(m => m.ChildTwoId);
             var parsedLambda = CreateParsedLambda<ChildTypeA>(lambda1, lambda2);
 
-            var processor = new ParsedIncludeSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedIncludeSqlProcessor();
             var includes = processor.Process(parsedLambda);
 
             const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
@@ -43,7 +43,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var lambda2 = Reflect<Master>.LambdaFrom(m => m.NestedItem.UnknownChildId);
             var parsedLambda = CreateParsedLambda<ChildTypeA>(lambda1, lambda2);
 
-            var processor = new ParsedIncludeSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedIncludeSqlProcessor();
             var includes = processor.Process(parsedLambda);
 
             const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
@@ -61,7 +61,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var parsedLambda2 = CreateParsedLambda<ChildTypeB>(lambda2);
             var parsedLambda = parsedLambda1.MergeAsNew(parsedLambda2);
 
-            var processor = new ParsedIncludeSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedIncludeSqlProcessor();
             var includes = processor.Process(parsedLambda);
 
             const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";

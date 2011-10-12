@@ -35,11 +35,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private void CreateStoredProcedure()
         {
-            var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
-            var hashForName = memberPathGenerator.Generate("Name");
-            var hashForGenreId = memberPathGenerator.Generate("GenreId");
-            var hashForArtistId = memberPathGenerator.Generate("ArtistId");
-            var hashForSecondArtistId = memberPathGenerator.Generate("SecondArtistId");
+            var hashForName = "Name";
+            var hashForGenreId = "GenreId";
+            var hashForArtistId = "ArtistId";
+            var hashForSecondArtistId = "SecondArtistId";
 
             var sql =
                 string.Format("create procedure [dbo].[{0}] as begin "
@@ -56,21 +55,15 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private void CreateStoredProcedureForInterfaces()
         {
-            var memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
-            var hashForName = memberPathGenerator.Generate("Name");
-            var hashForGenreId = memberPathGenerator.Generate("GenreId");
-            var hashForArtistId = memberPathGenerator.Generate("ArtistId");
-            var hashForSecondArtistId = memberPathGenerator.Generate("SecondArtistId");
-
             var sql =
                 string.Format("create procedure [dbo].[{0}] as begin "
                 + "select Json, "
-                + "(select cs1.Json from dbo.IGenreDataStructure as cs1 where cs1.StructureId = I.{1}) as Genre, "
-                + "(select cs2.Json from dbo.IArtistDataStructure as cs2 where cs2.StructureId = I.{2}) as Artist, "
-                + "(select cs3.Json from dbo.IArtistDataStructure as cs3 where cs3.StructureId = I.{3}) as SecondArtist "
+                + "(select cs1.Json from dbo.IGenreDataStructure as cs1 where cs1.StructureId = I.GenreId) as Genre, "
+                + "(select cs2.Json from dbo.IArtistDataStructure as cs2 where cs2.StructureId = I.ArtistId) as Artist, "
+                + "(select cs3.Json from dbo.IArtistDataStructure as cs3 where cs3.StructureId = I.SecondArtistId) as SecondArtist "
                 + "from dbo.IAlbumDataStructure as S inner join dbo.IAlbumDataIndexes as I on I.StructureId = S.StructureId "
-                + "order by I.[{4}];"
-                + "end", ProcedureNameForInterfaces, hashForGenreId, hashForArtistId, hashForSecondArtistId, hashForName);
+                + "order by I.[Name];"
+                + "end", ProcedureNameForInterfaces);
 
             DbHelper.CreateProcedure(sql);
         }

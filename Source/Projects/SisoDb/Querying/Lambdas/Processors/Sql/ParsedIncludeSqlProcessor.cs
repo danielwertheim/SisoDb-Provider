@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EnsureThat;
 using NCore;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
@@ -9,14 +8,6 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
 {
     public class ParsedIncludeSqlProcessor : IParsedLambdaProcessor<IList<ISqlInclude>>
     {
-        public IMemberPathGenerator MemberPathGenerator { private get; set; }
-
-        public ParsedIncludeSqlProcessor(IMemberPathGenerator memberPathGenerator)
-        {
-            Ensure.That(() => memberPathGenerator).IsNotNull();
-            MemberPathGenerator = memberPathGenerator;
-        }
-
         public IList<ISqlInclude> Process(IParsedLambda lambda)
         {
             var sqlIncludes = new List<ISqlInclude>();
@@ -25,7 +16,7 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
             foreach (var includeNode in lambda.Nodes.Cast<IncludeNode>())
             {
                 var includeCount = sqlIncludes.Count;
-                var parentMemberPath = MemberPathGenerator.Generate(includeNode.IdReferencePath);
+                var parentMemberPath = includeNode.IdReferencePath;
                 var sql = sqlFormat.Inject(
                     includeCount,
                     includeNode.ChildStructureName + "Structure",

@@ -12,7 +12,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId);
 
-            var processor = new ParsedSortingSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedSortingSqlProcessor();
             var sorting = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[StructureId] Asc";
@@ -24,7 +24,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1);
 
-            var processor = new ParsedSortingSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedSortingSqlProcessor();
             var sorting = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] Asc";
@@ -36,7 +36,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.SuperNestedItem.Int1);
 
-            var processor = new ParsedSortingSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedSortingSqlProcessor();
             var sorting = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[NestedItem.SuperNestedItem.Int1] Asc";
@@ -48,7 +48,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1.Asc());
 
-            var processor = new ParsedSortingSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedSortingSqlProcessor();
             var sorting = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] Asc";
@@ -60,7 +60,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1.Desc());
 
-            var processor = new ParsedSortingSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedSortingSqlProcessor();
             var sorting = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] Desc";
@@ -72,7 +72,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1.Desc(), i => i.DateTime1);
 
-            var processor = new ParsedSortingSqlProcessor(new MemberPathGeneratorFake());
+            var processor = new ParsedSortingSqlProcessor();
             var sorting = processor.Process(parsedLambda);
 
             const string expectedSql = "si.[Int1] Desc, si.[DateTime1] Asc";

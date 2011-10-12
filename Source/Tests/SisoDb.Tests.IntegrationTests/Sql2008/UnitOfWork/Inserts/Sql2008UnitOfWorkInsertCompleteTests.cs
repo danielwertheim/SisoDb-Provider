@@ -9,7 +9,6 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
     [TestFixture]
     public class Sql2008UnitOfWorkInsertCompleteTests : Sql2008IntegrationTestBase
     {
-        private readonly IMemberPathGenerator _memberPathGenerator;
         private readonly string _rootIntValueName;
         private readonly string _rootStringValueName;
         private readonly string _nestedIntName;
@@ -23,11 +22,10 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 
         public Sql2008UnitOfWorkInsertCompleteTests()
         {
-            _memberPathGenerator = SisoEnvironment.Resources.ResolveMemberPathGenerator();
-            _rootIntValueName = _memberPathGenerator.Generate("IntValue");
-            _rootStringValueName = _memberPathGenerator.Generate("StringValue");
-            _nestedIntName = _memberPathGenerator.Generate("Nested.NestedInt");
-            _nestedStringName = _memberPathGenerator.Generate("Nested.NestedString");
+            _rootIntValueName = "IntValue";
+            _rootStringValueName = "StringValue";
+            _nestedIntName = "Nested.NestedInt";
+            _nestedStringName = "Nested.NestedString";
         }
 
         protected override void OnTestFinalize()

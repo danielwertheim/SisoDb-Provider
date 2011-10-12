@@ -92,13 +92,8 @@
     <Compile Include="Dac\BulkInserts\IDbBulkInserter.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
-    <Compile Include="SimpleMemberPathGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Querying\Lambdas\Processors\Sql\SqlBuilder.cs" />
     <Compile Include="IConnectionString.cs" />
-    <Compile Include="IMemberPathGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="Dac\BulkInserts\IndexesReader.cs" />

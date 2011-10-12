@@ -65,40 +65,37 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.DbSchema
         [Test]
         public void Upsert_WhenClassHasOneNewMember_ColumnIsAddedToIndexesTable()
         {
-            var hashForColumn = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("IndexableMember2");
-
             using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(dbClient);
 
                 upserter.Upsert(_structureSchema);
 
-                DbHelper.DropColumns(_indexesTableName, hashForColumn);
+                DbHelper.DropColumns(_indexesTableName, "IndexableMember2");
 
                 upserter.Upsert(_structureSchema);
             }
-            
-            var columnExists = DbHelper.ColumnsExist(_indexesTableName, hashForColumn);
+
+            var columnExists = DbHelper.ColumnsExist(_indexesTableName, "IndexableMember2");
             Assert.IsTrue(columnExists);
         }
 
         [Test]
         public void Upsert_WhenDbHasOneObsoleteMember_ColumnIsDroppedFromIndexesTable()
         {
-            var hashForObsoleteColumn = SisoEnvironment.Resources.ResolveMemberPathGenerator().Generate("ExtraColumn");
             using (var dbClient = new Sql2008DbClient((Sql2008ConnectionInfo)_sqlDb.ConnectionInfo, false))
             {
                 var upserter = new SqlDbSchemaUpserter(dbClient);
 
                 upserter.Upsert(_structureSchema);
 
-                var obsoleteColumnDefinition = string.Format("[{0}] [int] sparse null", hashForObsoleteColumn);
+                var obsoleteColumnDefinition = "[ExtraColumn] [int] sparse null";
                 DbHelper.AddColumns(_indexesTableName, obsoleteColumnDefinition);
 
                 upserter.Upsert(_structureSchema);
             }
 
-            var columnExists = DbHelper.ColumnsExist(_indexesTableName, hashForObsoleteColumn);
+            var columnExists = DbHelper.ColumnsExist(_indexesTableName, "ExtraColumn");
             Assert.IsFalse(columnExists);
         }
     }
