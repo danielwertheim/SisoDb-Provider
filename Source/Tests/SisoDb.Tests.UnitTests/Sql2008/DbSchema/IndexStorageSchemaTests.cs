@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using SisoDb.DbSchema;
 
@@ -19,6 +20,57 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
             Assert.AreEqual(IndexStorageSchema.Fields.FractalValue, fields[4]);
             Assert.AreEqual(IndexStorageSchema.Fields.DateTimeValue, fields[5]);
             Assert.AreEqual(IndexStorageSchema.Fields.BoolValue, fields[6]);
+            Assert.AreEqual(IndexStorageSchema.Fields.GuidValue, fields[7]);
+        }
+
+        [Test,
+        TestCase(typeof(int)),
+        TestCase(typeof(long)),
+        TestCase(typeof(short)),
+        TestCase(typeof(byte))]
+        public void GetValueSchemaFieldForType_WhenIntegerNumericTypes_ReturnsIntegerValueSchemaField(Type type)
+        {
+            Assert.AreEqual(IndexStorageSchema.Fields.IntegerValue.Name,
+                            IndexStorageSchema.GetValueSchemaFieldForType(type).Name);
+        }
+
+        [Test,
+        TestCase(typeof(decimal)),
+        TestCase(typeof(double)),
+        TestCase(typeof(Single)),
+        TestCase(typeof(float))]
+        public void GetValueSchemaFieldForType_WhenFractalNumericTypes_ReturnsIntegerValueSchemaField(Type type)
+        {
+            Assert.AreEqual(IndexStorageSchema.Fields.FractalValue.Name,
+                            IndexStorageSchema.GetValueSchemaFieldForType(type).Name);
+        }
+
+        [Test]
+        public void GetValueSchemaFieldForType_WhenStringType_ReturnsStringValueSchemaField()
+        {
+            Assert.AreEqual(IndexStorageSchema.Fields.StringValue.Name,
+                            IndexStorageSchema.GetValueSchemaFieldForType(typeof(string)).Name);
+        }
+
+        [Test]
+        public void GetValueSchemaFieldForType_WhenGuidType_ReturnsStringValueSchemaField()
+        {
+            Assert.AreEqual(IndexStorageSchema.Fields.GuidValue.Name,
+                            IndexStorageSchema.GetValueSchemaFieldForType(typeof(Guid)).Name);
+        }
+
+        [Test]
+        public void GetValueSchemaFieldForType_WhenDateTimeType_ReturnsDateTimeValueSchemaField()
+        {
+            Assert.AreEqual(IndexStorageSchema.Fields.DateTimeValue.Name,
+                            IndexStorageSchema.GetValueSchemaFieldForType(typeof(DateTime)).Name);
+        }
+
+        [Test]
+        public void GetValueSchemaFieldForType_WhenBoolType_ReturnsBoolValueSchemaField()
+        {
+            Assert.AreEqual(IndexStorageSchema.Fields.BoolValue.Name,
+                            IndexStorageSchema.GetValueSchemaFieldForType(typeof(bool)).Name);
         }
 
         [Test]
@@ -126,11 +178,27 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
         }
 
         [Test]
-        public void SchemaField_BitValue_HasCorrectOrdinal()
+        public void SchemaField_BoolValue_HasCorrectOrdinal()
         {
             var field = IndexStorageSchema.Fields.BoolValue;
 
             Assert.AreEqual(6, field.Ordinal);
+        }
+
+        [Test]
+        public void SchemaField_GuidValue_HasCorrectName()
+        {
+            var field = IndexStorageSchema.Fields.GuidValue;
+
+            Assert.AreEqual("GuidValue", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_GuidValue_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.GuidValue;
+
+            Assert.AreEqual(7, field.Ordinal);
         }
 
         [Test]
@@ -142,7 +210,7 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 
             var fieldsByIndex = indexStorageSchema.GetFieldsOrderedByIndex().ToList();
 
-            Assert.AreEqual(7, fieldsByIndex.Count);
+            Assert.AreEqual(8, fieldsByIndex.Count);
 
             Assert.AreEqual(0, fieldsByIndex[0].Ordinal);
             Assert.AreEqual(IndexStorageSchema.Fields.StructureId.Name, fieldsByIndex[0].Name);
@@ -164,6 +232,9 @@ namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 
             Assert.AreEqual(6, fieldsByIndex[6].Ordinal);
             Assert.AreEqual(IndexStorageSchema.Fields.BoolValue.Name, fieldsByIndex[6].Name);
+
+            Assert.AreEqual(7, fieldsByIndex[7].Ordinal);
+            Assert.AreEqual(IndexStorageSchema.Fields.GuidValue.Name, fieldsByIndex[7].Name);
         }
     }
 }

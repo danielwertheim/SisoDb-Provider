@@ -196,6 +196,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There&apos;s no index storage schema value column matching the type &apos;{0}&apos;..
+        /// </summary>
+        public static string IndexStorageSchema_MissingValueSchemaField {
+            get {
+                return ResourceManager.GetString("IndexStorageSchema_MissingValueSchemaField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The operator type &apos;{0}&apos; can not be converted to &apos;IsNotNullOperatpr&apos; or &apos;NullOperator&apos;..
         /// </summary>
         public static string LambdaOperator_IsOrIsNot_NotSupported {
@@ -305,33 +314,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When using Guids the Id-property of the entity must be assigned before structure is created..
-        /// </summary>
-        public static string StructureIdFactory_MissingGuidValue {
-            get {
-                return ResourceManager.GetString("StructureIdFactory_MissingGuidValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to When using Identities the Id-property of the entity must be assigned before structure is created..
-        /// </summary>
-        public static string StructureIdFactory_MissingIdentityValue {
-            get {
-                return ResourceManager.GetString("StructureIdFactory_MissingIdentityValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The identity type: &apos;{0}&apos; is not supported..
-        /// </summary>
-        public static string StructureIdFactory_UnSupportedIdentityType {
-            get {
-                return ResourceManager.GetString("StructureIdFactory_UnSupportedIdentityType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The only supported methods for marking sortings are Asc() and Desc()..
         /// </summary>
         public static string SortingParser_UnsupportedMethodForSortingDirection {
@@ -418,6 +400,33 @@ namespace SisoDb.Resources {
         public static string StructureBuilderOptionsFactory_Create {
             get {
                 return ResourceManager.GetString("StructureBuilderOptionsFactory_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When using Guids the Id-property of the entity must be assigned before structure is created..
+        /// </summary>
+        public static string StructureIdFactory_MissingGuidValue {
+            get {
+                return ResourceManager.GetString("StructureIdFactory_MissingGuidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When using Identities the Id-property of the entity must be assigned before structure is created..
+        /// </summary>
+        public static string StructureIdFactory_MissingIdentityValue {
+            get {
+                return ResourceManager.GetString("StructureIdFactory_MissingIdentityValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The identity type: &apos;{0}&apos; is not supported..
+        /// </summary>
+        public static string StructureIdFactory_UnSupportedIdentityType {
+            get {
+                return ResourceManager.GetString("StructureIdFactory_UnSupportedIdentityType", resourceCulture);
             }
         }
         

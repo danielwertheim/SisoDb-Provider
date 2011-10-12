@@ -259,4 +259,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="StructureBuilderOptionsFactory_Create" xml:space="preserve">
     <value>Can not create StructureBuilderOptions for StructureIdType '{0}'.</value>
   </data>
+  <data name="IndexStorageSchema_MissingValueSchemaField" xml:space="preserve">
+    <value>There's no index storage schema value column matching the type '{0}'.</value>
+  </data>
 </root>

@@ -19,14 +19,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
         private readonly Stack<MemberExpression> _virtualPrefixMembers;
         private NodesContainer _nodesContainer;
 
-        /// <summary>
-        /// Due to SisoDb is flattening object hierarchies items
-        /// that are enumerable will be denormalized and store
-        /// many values as string in one field. This means when
-        /// using enumerables in a lambda the sub-members needs
-        /// to use the complete hierarchy of the members in the
-        /// lambda.
-        /// </summary>
         private bool IsFlatteningMembers
         {
             get { return _virtualPrefixMembers.Count > 0; }
@@ -35,10 +27,10 @@ namespace SisoDb.Querying.Lambdas.Parsers
         static WhereParser()
         {
             SupportedEnumerableQxOperators = new HashSet<ExpressionType>
-                                             {
-                                                 ExpressionType.Equal, ExpressionType.NotEqual,
-                                                 ExpressionType.OrElse, ExpressionType.AndAlso
-                                             };
+            {
+                ExpressionType.Equal, ExpressionType.NotEqual,
+                ExpressionType.OrElse, ExpressionType.AndAlso
+            };
         }
 
         public WhereParser()
@@ -138,41 +130,28 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 return e;
             }
 
-            var value = e.Value;
-
-            if (IsFlatteningMembers)
-            {
-                if (!(value is string))
-                    value = SisoEnvironment.StringConverter.AsString(value);
-
-                value = "%<${0}$>%".Inject(value); //TODO: Not ok
-            }
-
-            _nodesContainer.AddNode(new ValueNode(value));
+            _nodesContainer.AddNode(new ValueNode(e.Value));
 
             return e;
         }
 
         protected override Expression VisitMember(MemberExpression e)
         {
-            ConstantExpression constantExpression = null;
-
             try
             {
                 var value = _expressionEvaluator.Evaluate(e);
-                constantExpression = Expression.Constant(value);
+
+                var constantExpression = Expression.Constant(value);
+
+                return Visit(constantExpression);
             }
             catch
             {
+                var memberNode = CreateNewMemberNode(e);
+                _nodesContainer.AddNode(memberNode);
+
+                return e;
             }
-
-            if(constantExpression != null)
-                return Visit(constantExpression);
-
-            var memberNode = CreateNewMemberNode(e);
-            _nodesContainer.AddNode(memberNode);
-
-            return e;
         }
 
         private MemberNode CreateNewMemberNode(MemberExpression e)
@@ -192,7 +171,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 lastNode = newNode;
             }
 
-            if (lastNode.MemberType.IsEnumerableBytesType()) //TODO: Hmm
+            if (lastNode != null && lastNode.MemberType.IsEnumerableBytesType())
                 throw new NotSupportedException(ExceptionMessages.LambdaParser_MemberIsBytes.Inject(lastNode.Path));
 
             return lastNode;
@@ -215,8 +194,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             catch (Exception ex)
             {
                 throw new NotSupportedException(
-                    ExceptionMessages.LambdaParser_UnsupportedMethodCall
-                    .Inject(e.ToString()), ex);
+                    ExceptionMessages.LambdaParser_UnsupportedMethodCall.Inject(e.ToString()), ex);
             }
 
             return e;
