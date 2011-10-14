@@ -1,16 +1,16 @@
 ﻿using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.DbSchema;
 using SisoDb.Providers;
+using SisoDb.Structures;
 
-namespace SisoDb.Sql2008.DbSchema
+namespace SisoDb.DbSchema
 {
-    public class SqlDbIndexesSchemaBuilder : IDbSchemaBuilder
+    public class SqlDbUniquesSchemaBuilder : IDbSchemaBuilder
     {
         private readonly ISqlStatements _sqlStatements;
 
-        public SqlDbIndexesSchemaBuilder(ISqlStatements sqlStatements)
+        public SqlDbUniquesSchemaBuilder(ISqlStatements sqlStatements)
         {
             _sqlStatements = sqlStatements;
         }
@@ -18,11 +18,11 @@ namespace SisoDb.Sql2008.DbSchema
         public string GenerateSql(IStructureSchema structureSchema)
         {
             var sql = structureSchema.IdAccessor.IdType == StructureIdTypes.Guid
-                          ? _sqlStatements.GetSql("CreateIndexesGuid")
-                          : _sqlStatements.GetSql("CreateIndexesIdentity");
+                          ? _sqlStatements.GetSql("CreateUniquesGuid")
+                          : _sqlStatements.GetSql("CreateUniquesIdentity");
 
             return sql.Inject(
-                structureSchema.GetIndexesTableName(),
+                structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
         }
     }

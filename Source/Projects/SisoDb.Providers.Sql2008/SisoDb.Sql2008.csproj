@@ -73,12 +73,6 @@
     <Compile Include="Dac\Sql2008IdsTableParam.cs" />
     <Compile Include="Dac\Sql2008DbBulkInserter.cs" />
     <Compile Include="DbSchema\Sql2008DataTypeTranslator.cs" />
-    <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
-    <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
-    <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
-    <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
-    <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
-    <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Sql2008Exceptions.Designer.cs">
       <AutoGen>True</AutoGen>

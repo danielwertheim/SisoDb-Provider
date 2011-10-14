@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.Dac;
-using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConverterTests
 {
     [TestFixture]
-    public abstract class ParsedWhereSqlProcessorTestBase : UnitTestBase
+    public abstract class LambdaToSqlWhereConverterTestBase : UnitTestBase
     {
         private readonly IWhereParser _whereParser;
 
-        protected ParsedWhereSqlProcessorTestBase()
+        protected LambdaToSqlWhereConverterTestBase()
         {
             _whereParser = new WhereParser();
         }

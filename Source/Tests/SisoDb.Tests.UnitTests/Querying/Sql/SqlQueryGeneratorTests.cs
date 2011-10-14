@@ -5,11 +5,10 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
-using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Sql;
-using SisoDb.Sql2008;
 
-namespace SisoDb.Tests.UnitTests.Sql2008
+namespace SisoDb.Tests.UnitTests.Querying.Sql
 {
     [TestFixture]
     public class SqlQueryGeneratorTests : UnitTestBase

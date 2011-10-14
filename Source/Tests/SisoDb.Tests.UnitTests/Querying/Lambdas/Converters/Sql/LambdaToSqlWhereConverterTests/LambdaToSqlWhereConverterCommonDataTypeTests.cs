@@ -2,14 +2,13 @@
 using System.Linq;
 using NUnit.Framework;
 using SisoDb.Dac;
-using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Tests.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConverterTests
 {
     [TestFixture]
-    public class ParsedWhereSqlProcessorCommonDataTypeTests : ParsedWhereSqlProcessorTestBase
+    public class LambdaToSqlWhereConverterCommonDataTypeTests : LambdaToSqlWhereConverterTestBase
     {
         [Test]
         public void Process_WhenMemberNameIsId_SqlQueryHasTranslatedId()

@@ -3,10 +3,10 @@ using NUnit.Framework;
 using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
+namespace SisoDb.Tests.UnitTests.DbSchema
 {
     [TestFixture]
-    public abstract class StorageSchemaTests : UnitTestBase
+    public abstract class StorageSchemaTestBase : UnitTestBase
     {
         protected static IStructureSchema CreateStructureSchemaFakeWithPlainAndUniques()
         {

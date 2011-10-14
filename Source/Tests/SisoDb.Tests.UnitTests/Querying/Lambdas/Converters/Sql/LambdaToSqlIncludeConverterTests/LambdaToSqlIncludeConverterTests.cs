@@ -1,12 +1,12 @@
 using NUnit.Framework;
-using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.TestUtils;
 using SisoDb.Tests.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeConverterTests
 {
     [TestFixture]
-    public class ParsedIncludeSqlProcessorTests : ParsedIncludeSqlProcessorTestBase
+    public class LambdaToSqlIncludeConverterTests : LambdaToSqlIncludeConverterTestBase
     {
         [Test]
         public void Process_WhenFirstLevelMember_GeneratesCorrectSql()

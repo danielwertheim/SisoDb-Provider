@@ -1,6 +1,6 @@
 using PineCone.Structures.Schemas;
 
-namespace SisoDb.Querying.Lambdas.Processors
+namespace SisoDb.Querying.Lambdas.Converters
 {
     public interface IParsedLambdaConverter<out T>
     {

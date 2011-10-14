@@ -5,7 +5,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 
-namespace SisoDb.Querying.Lambdas.Processors.Sql
+namespace SisoDb.Querying.Lambdas.Converters.Sql
 {
     public class LambdaToSqlIncludeConverter : ILambdaToSqlIncludeConverter
     {

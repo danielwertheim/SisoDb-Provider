@@ -1,14 +1,13 @@
 ﻿using System;
 using NUnit.Framework;
 using SisoDb.Dac;
-using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Tests.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConverterTests
 {
     [TestFixture]
-    public class ParsedWhereSqlProcessorFunctionInvocationTests : ParsedWhereSqlProcessorTestBase
+    public class LambdaToSqlWhereConverterFunctionInvocationTests : LambdaToSqlWhereConverterTestBase
     {
         [Test]
         public void Process_WhenStaticFunction_GeneratesCorrectSqlQuery()

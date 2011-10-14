@@ -4,10 +4,10 @@ using System.Linq;
 using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Providers;
+using SisoDb.Structures;
 
-namespace SisoDb.Sql2008.DbSchema
+namespace SisoDb.DbSchema
 {
     public class SqlDbUniquesSchemaSynchronizer : IDbSchemaSynchronizer
     {

@@ -4,14 +4,14 @@ using NUnit.Framework;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeConverterTests
 {
     [TestFixture]
-    public abstract class ParsedIncludeSqlProcessorTestBase : UnitTestBase
+    public abstract class LambdaToSqlIncludeConverterTestBase : UnitTestBase
     {
         private readonly IIncludeParser _includeParser;
 
-        protected ParsedIncludeSqlProcessorTestBase()
+        protected LambdaToSqlIncludeConverterTestBase()
         {
             _includeParser = new IncludeParser();
         }

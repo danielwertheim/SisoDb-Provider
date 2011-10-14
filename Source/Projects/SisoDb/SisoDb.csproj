@@ -91,6 +91,12 @@
     <Compile Include="Dac\BulkInserts\IDbBulkInserter.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
+    <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
+    <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
+    <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
+    <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
+    <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
+    <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
     <Compile Include="Querying\Sql\SqlQuery.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\ILambdaToSqlIncludeConverter.cs" />
@@ -112,7 +118,7 @@
     <Compile Include="Providers\ISisoProviderFactories.cs" />
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Dac\AdoNetExtensions.cs" />
-    <Compile Include="Providers\SqlStructureSchemaExtensions.cs" />
+    <Compile Include="Structures\StructureSchemaExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />

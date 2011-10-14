@@ -7,7 +7,7 @@ using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 
-namespace SisoDb.Querying.Lambdas.Processors.Sql
+namespace SisoDb.Querying.Lambdas.Converters.Sql
 {
     public class LambdaToSqlSortingConverter : ILambdaToSqlSortingConverter
     {

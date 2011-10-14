@@ -9,7 +9,7 @@ using SisoDb.Providers;
 using SisoDb.Resources;
 using SisoDb.Serialization;
 
-namespace SisoDb.Sql2008
+namespace SisoDb
 {
     public class SqlStructureSetUpdater<TOld, TNew>
         where TOld : class

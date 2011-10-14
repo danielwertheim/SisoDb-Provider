@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using EnsureThat;
 using SisoDb.Dac;
-using SisoDb.Providers;
-using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Processors.Sql;
-using SisoDb.Querying.Sql;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Resources;
+using SisoDb.Structures;
 
-namespace SisoDb.Sql2008
+namespace SisoDb.Querying.Sql
 {
     public class SqlQueryGenerator : IDbQueryGenerator
     {

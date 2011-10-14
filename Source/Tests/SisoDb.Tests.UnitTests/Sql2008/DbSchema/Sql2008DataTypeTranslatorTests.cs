@@ -10,7 +10,7 @@ using SisoDb.Sql2008.Resources;
 namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
 {
     [TestFixture]
-    public class SqlDbDataTypeTranslatorTests : UnitTestBase
+    public class Sql2008DataTypeTranslatorTests : UnitTestBase
     {
         private Sql2008DataTypeTranslator _translator;
 

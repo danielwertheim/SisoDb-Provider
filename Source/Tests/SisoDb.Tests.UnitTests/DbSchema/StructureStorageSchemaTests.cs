@@ -2,10 +2,10 @@
 using NUnit.Framework;
 using SisoDb.DbSchema;
 
-namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
+namespace SisoDb.Tests.UnitTests.DbSchema
 {
     [TestFixture]
-    public class StructureStorageSchemaTests : StorageSchemaTests
+    public class StructureStorageSchemaTests : StorageSchemaTestBase
     {
         [Test]
         public void OrderedFields_ShouldBeReturnedInCorrectSequenece()

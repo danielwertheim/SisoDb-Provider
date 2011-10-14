@@ -14,6 +14,7 @@ using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Sql2008.DbSchema;
+using SisoDb.Structures;
 
 namespace SisoDb.Sql2008.Dac
 {

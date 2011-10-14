@@ -1,6 +1,7 @@
 ﻿using System;
 using PineCone.Structures.Schemas;
 using SisoDb.Providers;
+using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
 {

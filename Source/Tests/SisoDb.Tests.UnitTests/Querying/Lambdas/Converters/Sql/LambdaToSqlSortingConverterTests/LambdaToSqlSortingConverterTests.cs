@@ -1,12 +1,12 @@
 using NUnit.Framework;
 using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Tests.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverterTests
 {
     [TestFixture]
-    public class ParsedSortingSqlProcessorTests : ParsedSortingSqlProcessorTestBase
+    public class LambdaToSqlSortingConverterTests : LambdaToSqlSortingConverterTestBase
     {
         [Test]
         public void Process_WhenMemberNameIsId_SqlTranslatesToStructureId()

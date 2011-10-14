@@ -1,12 +1,12 @@
 using Moq;
 using NUnit.Framework;
 using PineCone.Structures.Schemas;
-using SisoDb.Providers;
+using SisoDb.Structures;
 
-namespace SisoDb.Tests.UnitTests.Sql2008
+namespace SisoDb.Tests.UnitTests.Structures
 {
     [TestFixture]
-    public class SqlStructureSchemaExtensionsTests : UnitTestBase
+    public class StructureSchemaExtensionsTests : UnitTestBase
     {
         [Test]
         public void GetStructureTableName_ForStructure_ReturnsCorrectName()

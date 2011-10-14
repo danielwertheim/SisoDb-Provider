@@ -8,8 +8,9 @@ using SisoDb.Providers;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Querying.Sql;
+using SisoDb.Structures;
 
-namespace SisoDb.Querying.Lambdas.Processors.Sql
+namespace SisoDb.Querying.Lambdas.Converters.Sql
 {
     public class LambdaToSqlWhereConverter : ILambdaToSqlWhereConverter
     {

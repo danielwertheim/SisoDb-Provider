@@ -4,6 +4,7 @@ using NCore.Reflections;
 using PineCone.Structures.Schemas;
 using SisoDb.Providers;
 using SisoDb.Resources;
+using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
 {

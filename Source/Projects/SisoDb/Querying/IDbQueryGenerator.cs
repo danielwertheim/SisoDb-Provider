@@ -1,4 +1,6 @@
-﻿namespace SisoDb.Querying.Sql
+﻿using SisoDb.Querying.Sql;
+
+namespace SisoDb.Querying
 {
     public interface IDbQueryGenerator
     {

@@ -1,8 +1,8 @@
 ﻿using PineCone.Structures.Schemas;
 
-namespace SisoDb.Providers
+namespace SisoDb.Structures
 {
-    public static class SqlStructureSchemaExtensions
+    public static class StructureSchemaExtensions
     {
         public static string GetStructureTableName(this IStructureSchema structureSchema)
         {

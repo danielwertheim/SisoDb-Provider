@@ -13,6 +13,7 @@ using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Serialization;
+using SisoDb.Structures;
 
 namespace SisoDb.Sql2008
 {

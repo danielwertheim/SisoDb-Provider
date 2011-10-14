@@ -1,12 +1,12 @@
 ﻿using NUnit.Framework;
 using SisoDb.Dac;
-using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Tests.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
+namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConverterTests
 {
     [TestFixture]
-    public class ParsedWhereSqlProcessorHierarchyTests : ParsedWhereSqlProcessorTestBase
+    public class LambdaToSqlWhereConverterHierarchyTests : LambdaToSqlWhereConverterTestBase
     {
         [Test]
         public void Process_WhenFirstLevel_ExtractsCorrectParameters()
