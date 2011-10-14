@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
+using NCore.Reflections;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Resources;
@@ -42,7 +43,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     }
                 }
 
-                var sortingNode = new SortingNode(memberExpression.Path(), sortDirection);
+                var memberType = memberExpression.Type;
+                if (memberType.IsEnumerableType())
+                    memberType = memberType.GetEnumerableElementType();
+
+                var sortingNode = new SortingNode(memberExpression.Path(), memberType, sortDirection);
                 nodesContainer.AddNode(sortingNode);
             }
 

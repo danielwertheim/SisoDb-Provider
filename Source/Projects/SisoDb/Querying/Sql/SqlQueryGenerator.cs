@@ -42,14 +42,16 @@ namespace SisoDb.Querying.Sql
         private SqlQuery CreateSqlCommandInfo(IQueryCommand queryCommand)
         {
             var whereSql = GenerateWhereStringAndParams(queryCommand);
+            var sortingSql = GenerateSortingString(queryCommand);
 
-            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.StructureId = s.StructureId{4}{5};",
+            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.StructureId = s.StructureId{4}{5}{6};",
                 GenerateTakeString(queryCommand),
                 GenerateIncludesString(queryCommand),
                 queryCommand.StructureSchema.GetStructureTableName(), 
-                queryCommand.StructureSchema.GetIndexesTableName(), 
-                whereSql.Sql, 
-                GenerateSortingString(queryCommand).Sql);
+                queryCommand.StructureSchema.GetIndexesTableName(),
+                sortingSql.SortingJoins,
+                whereSql.Sql,
+                sortingSql.Sorting);
 
             return new SqlQuery(sql, whereSql.Parameters);
         }
@@ -58,18 +60,17 @@ namespace SisoDb.Querying.Sql
         {
             var includesSql = GenerateIncludesString(queryCommand);
             var whereSql = GenerateWhereStringAndParams(queryCommand);
-            var sortingSql = GenerateSortingString(queryCommand);
-            if (sortingSql.IsEmpty)
-                sortingSql = new SqlSorting("order by s.StructureId");
-
+            var sortingSql = GenerateSortingString(queryCommand, defaultSort: "s.StructureId");
+            
             const string sqlFormat = "with pagedRs as ({0}){1};";
             
-            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.StructureId = s.StructureId{5}",
+            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.StructureId = s.StructureId{5}{6}",
                 GenerateTakeString(queryCommand),
                 includesSql,
-                sortingSql.Sql,
+                sortingSql.Sorting,
                 queryCommand.StructureSchema.GetStructureTableName(),
                 queryCommand.StructureSchema.GetIndexesTableName(),
+                sortingSql.SortingJoins,
                 whereSql.Sql);
             
             var outerSelect = string.Format("select Json{0} from pagedRs where RowNum between @pagingFrom and @pagingTo", includesSql);
@@ -108,15 +109,16 @@ namespace SisoDb.Querying.Sql
             return new SqlWhere(sql, where.Parameters);
         }
 
-        private SqlSorting GenerateSortingString(IQueryCommand queryCommand)
+        private SqlSorting GenerateSortingString(IQueryCommand queryCommand, string defaultSort = null)
         {
             if (!queryCommand.HasSortings)
-                return SqlSorting.Empty();
+                return defaultSort == null ? SqlSorting.Empty() : new SqlSorting(" order by " + defaultSort);
 
             var sorting = _sortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
-            return string.IsNullOrWhiteSpace(sorting.Sql)
+
+            return sorting.IsEmpty
                 ? SqlSorting.Empty()
-                : new SqlSorting(" order by " + sorting.Sql);
+                : new SqlSorting(sorting.SortingJoins, " order by " + sorting.Sorting);
         }
 
         private string GenerateIncludesString(IQueryCommand queryCommand)

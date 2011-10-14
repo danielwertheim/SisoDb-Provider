@@ -4,7 +4,6 @@ using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Providers;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Querying.Sql;
@@ -54,6 +53,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
         public SqlWhere Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(lambda, "lambda").IsNotNull();
 
             var session = new Session(structureSchema);
 

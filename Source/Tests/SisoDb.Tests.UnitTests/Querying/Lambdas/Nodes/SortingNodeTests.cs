@@ -7,41 +7,51 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
     public class SortingNodeTests : UnitTestBase
     {
         [Test]
-        public void CTor_WhenMemberPathIsStructureId_MemberNameIsTranslated()
+        public void Ctor_WhenTypeIsSpecified_MemberTypeIsAssigned()
         {
-            var node = new SortingNode("StructureId");
+            var node1 = new SortingNode("GOOFY", typeof (int));
+            var node2 = new SortingNode("GOOFY", typeof(string));
+
+            Assert.AreEqual(typeof(int), node1.MemberType);
+            Assert.AreEqual(typeof(string), node2.MemberType);
+        }
+
+        [Test]
+        public void Ctor_WhenMemberPathIsStructureId_MemberNameIsTranslated()
+        {
+            var node = new SortingNode("StructureId", typeof(int));
 
             Assert.AreEqual("StructureId", node.MemberPath);
         }
 
         [Test]
-        public void CTor_WhenMemberPathIsId_MemberNameIsTranslated()
+        public void Ctor_WhenMemberPathIsId_MemberNameIsTranslated()
         {
-            var node = new SortingNode("Id");
+            var node = new SortingNode("Id", typeof(int));
 
             Assert.AreEqual("Id", node.MemberPath);
         }
 
         [Test]
-        public void CTor_WhenMemberPathStartsWithId_MemberNameIsTranslated()
+        public void Ctor_WhenMemberPathStartsWithId_MemberNameIsTranslated()
         {
-            var node = new SortingNode("IdTmp");
+            var node = new SortingNode("IdTmp", typeof(int));
 
             Assert.AreEqual("IdTmp", node.MemberPath);
         }
 
         [Test]
-        public void CTor_WhenMemberPathEndsWithId_MemberNameIsTranslated()
+        public void Ctor_WhenMemberPathEndsWithId_MemberNameIsTranslated()
         {
-            var node = new SortingNode("TmpId");
+            var node = new SortingNode("TmpId", typeof(int));
 
             Assert.AreEqual("TmpId", node.MemberPath);
         }
 
         [Test]
-        public void CTor_WhenNestedMemberPathIsId_MemberNameIsTranslated()
+        public void Ctor_WhenNestedMemberPathIsId_MemberNameIsTranslated()
         {
-            var node = new SortingNode("Nested.Id");
+            var node = new SortingNode("Nested.Id", typeof(int));
 
             Assert.AreEqual("Nested.Id", node.MemberPath);
         }
@@ -49,7 +59,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         [Test]
         public void CTor_WhenNestedMemberPathStartsWithId_MemberNameIsTranslated()
         {
-            var node = new SortingNode("Nested.IdTmp");
+            var node = new SortingNode("Nested.IdTmp", typeof(int));
 
             Assert.AreEqual("Nested.IdTmp", node.MemberPath);
         }
@@ -57,7 +67,7 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
         [Test]
         public void CTor_WhenNestedMemberPathEndsWithId_MemberNameIsTranslated()
         {
-            var node = new SortingNode("Nested.TmpId");
+            var node = new SortingNode("Nested.TmpId", typeof(int));
 
             Assert.AreEqual("Nested.TmpId", node.MemberPath);
         }

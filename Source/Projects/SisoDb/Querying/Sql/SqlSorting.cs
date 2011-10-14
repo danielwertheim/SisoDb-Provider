@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using EnsureThat;
 
 namespace SisoDb.Querying.Sql
@@ -7,28 +6,36 @@ namespace SisoDb.Querying.Sql
     [Serializable]
     public class SqlSorting
     {
-        public virtual string[] SortingJoins { get; private set; }
+        public virtual string SortingJoins { get; private set; }
 
-        public virtual string SortingSql { get; private set; }
+        public virtual string Sorting { get; private set; }
 
         public virtual bool IsEmpty
         {
-            get { return SortingJoins.Length < 1 && string.IsNullOrWhiteSpace(SortingSql); }
+            get { return string.IsNullOrWhiteSpace(SortingJoins) && string.IsNullOrWhiteSpace(Sorting); }
         }
 
-        public SqlSorting(string[] sortingJoins, string sortingSql)
+        public SqlSorting(string sorting)
         {
-            Ensure.That(sortingJoins, "sortingJoins").HasItems();
-            Ensure.That(sortingSql, "sortingSql").IsNotNullOrWhiteSpace();
+            Ensure.That(sorting, "sorting").IsNotNullOrWhiteSpace();
+
+            SortingJoins = string.Empty;
+            Sorting = sorting;
+        }
+
+        public SqlSorting(string sorting, string sortingJoins)
+        {
+            Ensure.That(sorting, "sorting").IsNotNullOrWhiteSpace();
+            Ensure.That(sortingJoins, "sortingJoins").IsNotNullOrWhiteSpace();
 
             SortingJoins = sortingJoins;
-            SortingSql = sortingSql;
+            Sorting = sorting;
         }
 
         protected SqlSorting()
         {
-            SortingJoins = Enumerable.Empty<string>().ToArray(); 
-            SortingSql = string.Empty;
+            SortingJoins = string.Empty; 
+            Sorting = string.Empty;
         }
 
         public static SqlSorting Empty()

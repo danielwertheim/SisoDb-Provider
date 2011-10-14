@@ -48,8 +48,8 @@ namespace SisoDb.Sql2008.Dac
             ProviderType = connectionInfo.ProviderType;
             ConnectionString = connectionInfo.ConnectionString;
 
-            SqlStatements = Sql2008Statements.Instance;
-            DbDataTypeTranslator = new Sql2008DataTypeTranslator();
+            SqlStatements = Sql2008Statements.Instance; //TODO: ProviderFactory
+            DbDataTypeTranslator = new Sql2008DataTypeTranslator(); //TODO: ProviderFactory
 
             _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();
