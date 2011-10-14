@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using EnsureThat;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas;
 
 namespace SisoDb.Querying
@@ -7,6 +9,8 @@ namespace SisoDb.Querying
     [Serializable]
     public class QueryCommand : IQueryCommand
     {
+        public IStructureSchema StructureSchema { get; private set; }
+
         public int TakeNumOfStructures { get; set; }
 
         public Paging Paging { get; set; }
@@ -42,9 +46,13 @@ namespace SisoDb.Querying
             get { return Includes != null && Includes.Count > 0; }
         }
 
-        public QueryCommand(IEnumerable<IParsedLambda> includes = null)
+        public QueryCommand(IStructureSchema structureSchema)
         {
-            Includes = includes == null ? new List<IParsedLambda>() : new List<IParsedLambda>(includes);
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            StructureSchema = structureSchema;
+
+            Includes = new List<IParsedLambda>();
         }
     }
 }

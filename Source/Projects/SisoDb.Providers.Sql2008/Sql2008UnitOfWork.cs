@@ -137,9 +137,9 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            var commandBuilder = CommandBuilderFactory.CreateQueryCommandBuilder<T>();
+            var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
             var queryCommand = commandBuilder.Where(expression).Command;
-            var sql = QueryGenerator.GenerateWhere(queryCommand);
+            var sql = QueryGenerator.GenerateWhereQuery(queryCommand);
             DbClientNonTrans.DeleteByQuery(sql, structureSchema.IdAccessor.DataType, structureSchema);
         }
 

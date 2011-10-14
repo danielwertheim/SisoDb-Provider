@@ -1,26 +1,22 @@
 ﻿using System;
-using System.Linq.Expressions;
 using EnsureThat;
-using SisoDb.Core.Expressions;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
     [Serializable]
     public class MemberNode : INode
     {
-        public string Name { get; private set; }
-
         public string Path { get; private set;  }
 
         public Type MemberType { get; private set; }
 
-        public MemberNode(MemberNode parent, MemberExpression member)
+        public MemberNode(string memberPath, Type memberType)
         {
-            Ensure.That(() => member).IsNotNull();
+            Ensure.That(memberPath, "memberPath").IsNotNullOrWhiteSpace();
+            Ensure.That(memberType, "memberType").IsNotNull();
 
-            Name = member.Member.Name;
-            Path = parent == null ? member.Path() : parent.Path + "." + member.Path();
-            MemberType = member.Type;
+            Path = memberPath;
+            MemberType = memberType;
         }
 
         public override string ToString()

@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Tests.UnitTests.TestFactories;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSqlProcessorTests
 {
@@ -12,11 +13,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId);
 
-            var processor = new ParsedSortingSqlProcessor();
-            var sorting = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlSortingConverter();
+            var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[StructureId] Asc";
-            Assert.AreEqual(expectedSql, sorting.Sql);
+            Assert.AreEqual("si.[StructureId] Asc", sorting.Sql);
         }
 
         [Test]
@@ -24,11 +24,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1);
 
-            var processor = new ParsedSortingSqlProcessor();
-            var sorting = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlSortingConverter();
+            var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Int1] Asc";
-            Assert.AreEqual(expectedSql, sorting.Sql);
+            Assert.AreEqual("si.[Int1] Asc", sorting.Sql);
         }
 
         [Test]
@@ -36,11 +35,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.SuperNestedItem.Int1);
 
-            var processor = new ParsedSortingSqlProcessor();
-            var sorting = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlSortingConverter();
+            var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[NestedItem.SuperNestedItem.Int1] Asc";
-            Assert.AreEqual(expectedSql, sorting.Sql);
+            Assert.AreEqual("si.[NestedItem.SuperNestedItem.Int1] Asc", sorting.Sql);
         }
 
         [Test]
@@ -48,11 +46,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1.Asc());
 
-            var processor = new ParsedSortingSqlProcessor();
-            var sorting = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlSortingConverter();
+            var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Int1] Asc";
-            Assert.AreEqual(expectedSql, sorting.Sql);
+            Assert.AreEqual("si.[Int1] Asc", sorting.Sql);
         }
 
         [Test]
@@ -60,11 +57,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1.Desc());
 
-            var processor = new ParsedSortingSqlProcessor();
-            var sorting = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlSortingConverter();
+            var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Int1] Desc";
-            Assert.AreEqual(expectedSql, sorting.Sql);
+            Assert.AreEqual("si.[Int1] Desc", sorting.Sql);
         }
 
         [Test]
@@ -72,11 +68,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedSortingSq
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1.Desc(), i => i.DateTime1);
 
-            var processor = new ParsedSortingSqlProcessor();
-            var sorting = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlSortingConverter();
+            var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Int1] Desc, si.[DateTime1] Asc";
-            Assert.AreEqual(expectedSql, sorting.Sql);
+            Assert.AreEqual("si.[Int1] Desc, si.[DateTime1] Asc", sorting.Sql);
         }
     }
 }

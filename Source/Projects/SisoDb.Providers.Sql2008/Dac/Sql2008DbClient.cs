@@ -8,10 +8,10 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Commands;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
+using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Sql2008.DbSchema;
 
@@ -176,7 +176,7 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, IStructureSchema structureSchema)
+        public void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema)
         {
             Ensure.That(() => structureSchema).IsNotNull();
 
@@ -185,10 +185,10 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName(),
-                cmdInfo.Sql,
+                query.Sql,
                 sqlDataType);
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, cmdInfo.Parameters.ToArray()))
+            using (var cmd = CreateCommand(CommandType.Text, sql, query.Parameters.ToArray()))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -249,15 +249,15 @@ namespace SisoDb.Sql2008.Dac
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
-        public int RowCountByQuery(IStructureSchema structureSchema, ISqlCommandInfo cmdInfo)
+        public int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query)
         {
             Ensure.That(() => structureSchema).IsNotNull();
 
             var sql = SqlStatements.GetSql("RowCountByQuery").Inject(
                 structureSchema.GetIndexesTableName(),
-                cmdInfo.Sql);
+                query.Sql);
 
-            return ExecuteScalar<int>(CommandType.Text, sql, cmdInfo.Parameters.ToArray());
+            return ExecuteScalar<int>(CommandType.Text, sql, query.Parameters.ToArray());
         }
 
         public long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)

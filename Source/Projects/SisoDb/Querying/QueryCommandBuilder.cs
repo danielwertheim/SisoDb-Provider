@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using EnsureThat;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
 
@@ -14,8 +15,9 @@ namespace SisoDb.Querying
 
         public IQueryCommand Command { get; private set; }
 
-        public QueryCommandBuilder(IWhereParser whereParser, ISortingParser sortingParser, IIncludeParser includeParser)
+        public QueryCommandBuilder(IStructureSchema structureSchema, IWhereParser whereParser, ISortingParser sortingParser, IIncludeParser includeParser)
         {
+            Ensure.That(() => structureSchema).IsNotNull();
             Ensure.That(() => whereParser).IsNotNull();
             Ensure.That(() => sortingParser).IsNotNull();
             Ensure.That(() => includeParser).IsNotNull();
@@ -24,7 +26,7 @@ namespace SisoDb.Querying
             SortingParser = sortingParser;
             IncludeParser = includeParser;
 
-            Command = new QueryCommand();
+            Command = new QueryCommand(structureSchema);
         }
 
         public IQueryCommandBuilder<T> Take(int numOfStructures)

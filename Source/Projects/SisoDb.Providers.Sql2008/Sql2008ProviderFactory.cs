@@ -1,8 +1,10 @@
-﻿using SisoDb.Dac;
+﻿using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 using SisoDb.Querying.Sql;
 using SisoDb.Sql2008.Dac;
@@ -36,9 +38,9 @@ namespace SisoDb.Sql2008
         public IDbQueryGenerator GetDbQueryGenerator()
         {
             return new SqlQueryGenerator(
-                new ParsedWhereSqlProcessor(),
-                new ParsedSortingSqlProcessor(),
-                new ParsedIncludeSqlProcessor());
+                new LambdaToSqlWhereConverter(),
+                new LambdaToSqlSortingConverter(),
+                new LambdaToSqlIncludeConverter());
         }
 
         public IDbBulkInserter GetDbBulkInserter(IDbClient dbClient)
@@ -46,9 +48,20 @@ namespace SisoDb.Sql2008
             return new Sql2008DbBulkInserter(dbClient);
         }
 
-        public ICommandBuilderFactory GetCommandBuilderFactory()
+        public IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class
         {
-            return new CommandBuilderFactory();
+            return new GetCommandBuilder<T>(
+                new SortingParser(),
+                new IncludeParser());
+        }
+
+        public IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class
+        {
+            return new QueryCommandBuilder<T>(
+                structureSchema,
+                new WhereParser(),
+                new SortingParser(),
+                new IncludeParser());
         }
 
         public IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)

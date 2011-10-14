@@ -4,6 +4,7 @@ using NUnit.Framework;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Tests.UnitTests.TestFactories;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
 {
@@ -15,8 +16,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             const string expectedSql = "si.[StructureId] = @p0";
             Assert.AreEqual(expectedSql, query.Sql);
@@ -27,8 +28,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -39,11 +40,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[NestedItem.StructureId] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='NestedItem.StructureId' and si.[IntegerValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -51,8 +51,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NestedItem.StructureId == 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -63,11 +63,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Int1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -75,8 +74,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -88,11 +87,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = 42;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NullableInt == value);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[NullableInt] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='NullableInt' and si.[IntegerValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -101,8 +99,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = 42;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.NullableInt == value);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -113,11 +111,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == -42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Int1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -125,8 +122,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 == -42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", -42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -137,11 +134,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 != 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Int1] <> @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] <> @p0)", query.Sql);
         }
 
         [Test]
@@ -149,8 +145,100 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 != 42);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
+            AssertQueryParameters(expectedParameters, query.Parameters);
+        }
+
+        [Test]
+        public void Process_WhenIntGreaterThanEqualTo_GeneratesCorrectSqlQuery()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 >= 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] >= @p0)", query.Sql);
+        }
+
+        [Test]
+        public void Process_WhenIntGreaterThanEqualTo_ExtractsCorrectParameters()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 >= 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
+            AssertQueryParameters(expectedParameters, query.Parameters);
+        }
+
+        [Test]
+        public void Process_WhenIntLowerThanEqualTo_GeneratesCorrectSqlQuery()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 <= 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] <= @p0)", query.Sql);
+        }
+
+        [Test]
+        public void Process_WhenIntLowerThanEqualTo_ExtractsCorrectParameters()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 <= 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
+            AssertQueryParameters(expectedParameters, query.Parameters);
+        }
+
+        [Test]
+        public void Process_WhenIntGreaterThan_GeneratesCorrectSqlQuery()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 > 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] > @p0)", query.Sql);
+        }
+
+        [Test]
+        public void Process_WhenIntGreaterThan_ExtractsCorrectParameters()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 > 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            var expectedParameters = new[] { new DacParameter("@p0", 42) };
+            AssertQueryParameters(expectedParameters, query.Parameters);
+        }
+
+        [Test]
+        public void Process_WhenIntLowerThan_GeneratesCorrectSqlQuery()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 < 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
+
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] < @p0)", query.Sql);
+        }
+
+        [Test]
+        public void Process_WhenIntLowerThan_ExtractsCorrectParameters()
+        {
+            var parsedLambda = CreateParsedLambda<MyItem>(i => i.Int1 < 42);
+
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 42) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -161,11 +249,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Decimal1 == 3.14M);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Decimal1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Decimal1' and si.[FractalValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -173,8 +260,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Decimal1 == 3.14M);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", 3.14M) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -185,11 +272,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == false);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Bool1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -197,8 +283,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == false);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", false) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -209,11 +295,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == true);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Bool1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -221,8 +306,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 == true);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", true) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -233,11 +318,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != true);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Bool1] <> @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] <> @p0)", query.Sql);
         }
 
         [Test]
@@ -245,8 +329,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != true);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", true) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -257,11 +341,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != false);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Bool1] <> @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] <> @p0)", query.Sql);
         }
 
         [Test]
@@ -269,8 +352,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Bool1 != false);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", false) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -282,11 +365,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var guid = Guid.Empty;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == guid);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Guid1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Guid1' and si.[GuidValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -295,8 +377,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var guid = Guid.Empty;
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == guid);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", guid) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -307,11 +389,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == Guid.Empty);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[Guid1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Guid1' and si.[GuidValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -319,8 +400,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.Guid1 == Guid.Empty);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", Guid.Empty) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -332,11 +413,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var dateTime = new DateTime(2010, 2, 3, 12, 13, 14);
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == dateTime);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[DateTime1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -345,8 +425,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var dateTime = new DateTime(2010, 2, 3, 12, 13, 14);
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == dateTime);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", dateTime) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -357,11 +437,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Now);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[DateTime1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -369,8 +448,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.DateTime1 == DateTime.Now);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameter = new DacParameter("@p0", DateTime.Now);
             var actualParameter = query.Parameters.Single();
@@ -384,11 +463,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == "Adam");
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[String1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -396,8 +474,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == "Adam");
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", "Adam") };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -408,11 +486,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != "Adam");
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[String1] <> @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] <> @p0)", query.Sql);
         }
 
         [Test]
@@ -420,8 +497,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != "Adam");
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", "Adam") };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -432,11 +509,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == string.Empty);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[String1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -444,8 +520,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == string.Empty);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", string.Empty) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -456,11 +532,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == null);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[String1] is null";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] is null)", query.Sql);
         }
 
         [Test]
@@ -468,8 +543,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == null);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             Assert.AreEqual(0, query.Parameters.Count);
         }
@@ -479,11 +554,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != null);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[String1] is not null";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] is not null)", query.Sql);
         }
 
         [Test]
@@ -491,8 +565,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 != null);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             Assert.AreEqual(0, query.Parameters.Count);
         }
@@ -503,11 +577,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[String1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -516,8 +589,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             var value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", value) };
             AssertQueryParameters(expectedParameters, query.Parameters);
@@ -529,11 +602,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             const string value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "si.[String1] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
         }
 
         [Test]
@@ -542,8 +614,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
             const string value = "Adam";
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.String1 == value);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[] { new DacParameter("@p0", value) };
             AssertQueryParameters(expectedParameters, query.Parameters);

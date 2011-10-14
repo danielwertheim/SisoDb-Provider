@@ -7,6 +7,14 @@ namespace SisoDb.Tests.UnitTests.TestFactories
 {
     internal static class StructureSchemaTestFactory
     {
+        internal static IStructureSchema Stub(string name = "Temp")
+        {
+            var schemaStub = new Mock<IStructureSchema>();
+            schemaStub.Setup(s => s.Name).Returns(name);
+
+            return schemaStub.Object;
+        }
+
         internal static IStructureSchema Stub<T>(bool generateIdAccessor = false, string[] indexAccessorsPaths = null) where T : class
         {
             var schemaStub = new Mock<IStructureSchema>();

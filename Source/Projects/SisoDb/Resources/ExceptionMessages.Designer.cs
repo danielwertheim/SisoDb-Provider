@@ -223,15 +223,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Byte arrays are not supported for member: &apos;{0}&apos;..
-        /// </summary>
-        public static string LambdaParser_MemberIsBytes {
-            get {
-                return ResourceManager.GetString("LambdaParser_MemberIsBytes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true).
         /// </summary>
         public static string LambdaParser_NoMemberExpressions {

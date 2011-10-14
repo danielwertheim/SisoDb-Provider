@@ -4,9 +4,9 @@ using System.Data;
 using System.Data.SqlClient;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Commands;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
+using SisoDb.Querying.Sql;
 
 namespace SisoDb.Dac
 {
@@ -27,12 +27,12 @@ namespace SisoDb.Dac
         void RebuildIndexes(IStructureSchema structureSchema);
         void DeleteById(ValueType structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
-        void DeleteByQuery(ISqlCommandInfo cmdInfo, Type idType, IStructureSchema structureSchema);
+        void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema);
         void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
         bool TableExists(string name);
         IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip);
         int RowCount(IStructureSchema structureSchema);
-        int RowCountByQuery(IStructureSchema structureSchema, ISqlCommandInfo cmdInfo);
+        int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
         IEnumerable<string> GetJson(IStructureSchema structureSchema);
         string GetJsonById(ValueType structureId, IStructureSchema structureSchema);

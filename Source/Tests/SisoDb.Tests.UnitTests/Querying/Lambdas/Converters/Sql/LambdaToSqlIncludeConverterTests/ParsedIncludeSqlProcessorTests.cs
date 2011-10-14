@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Processors.Sql;
 using SisoDb.TestUtils;
+using SisoDb.Tests.UnitTests.TestFactories;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSqlProcessorTests
 {
@@ -13,8 +14,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var lambda = Reflect<Master>.LambdaFrom(m => m.ChildOneId);
             var parsedLambda = CreateParsedLambda<ChildTypeA>(lambda);
 
-            var processor = new ParsedIncludeSqlProcessor();
-            var includes = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlIncludeConverter();
+            var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
             const string expectedSql = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
             Assert.AreEqual(expectedSql, includes[0].Sql);
@@ -27,8 +28,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var lambda2 = Reflect<Master>.LambdaFrom(m => m.ChildTwoId);
             var parsedLambda = CreateParsedLambda<ChildTypeA>(lambda1, lambda2);
 
-            var processor = new ParsedIncludeSqlProcessor();
-            var includes = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlIncludeConverter();
+            var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
             const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
             const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[ChildTwoId] = cs1.StructureId) as [ChildTwo]";
@@ -43,8 +44,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var lambda2 = Reflect<Master>.LambdaFrom(m => m.NestedItem.UnknownChildId);
             var parsedLambda = CreateParsedLambda<ChildTypeA>(lambda1, lambda2);
 
-            var processor = new ParsedIncludeSqlProcessor();
-            var includes = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlIncludeConverter();
+            var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
             const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
             const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.StructureId) as [NestedItem.UnknownChild]";
@@ -61,8 +62,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedIncludeSq
             var parsedLambda2 = CreateParsedLambda<ChildTypeB>(lambda2);
             var parsedLambda = parsedLambda1.MergeAsNew(parsedLambda2);
 
-            var processor = new ParsedIncludeSqlProcessor();
-            var includes = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlIncludeConverter();
+            var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
             const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
             const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeBStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.StructureId) as [NestedItem.UnknownChild]";

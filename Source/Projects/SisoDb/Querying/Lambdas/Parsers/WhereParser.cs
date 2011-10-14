@@ -99,7 +99,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if (ExpressionUtils.IsNullConstant(e.Right))
                 _nodesContainer.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
-                AddOperator(isGroupExpression, e.NodeType);
+                _nodesContainer.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
 
             Visit(e.Right);
 
@@ -109,24 +109,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
-        private void AddOperator(bool isGroupExpression, ExpressionType nodeType)
-        {
-            if (!isGroupExpression && IsFlatteningMembers)
-            {
-                if (nodeType == ExpressionType.NotEqual)
-                    _nodesContainer.AddNode(new OperatorNode(Operator.Create(ExpressionType.Not)));
-
-                _nodesContainer.AddNode(new OperatorNode(Operator.Like()));
-            }
-            else
-                _nodesContainer.AddNode(new OperatorNode(Operator.Create(nodeType)));
-        }
-
         protected override Expression VisitConstant(ConstantExpression e)
         {
             if (ExpressionUtils.IsNullConstant(e))
             {
-                _nodesContainer.AddNode(new NullValueNode());
+                _nodesContainer.AddNode(new NullNode());
                 return e;
             }
 
@@ -157,24 +144,27 @@ namespace SisoDb.Querying.Lambdas.Parsers
         private MemberNode CreateNewMemberNode(MemberExpression e)
         {
             var graphLine = new List<MemberExpression> {e};
-            MemberNode lastNode = null;
-
+            
             if (IsFlatteningMembers)
                 graphLine.InsertRange(0, _virtualPrefixMembers.Reverse().Where(vir => !graphLine.Any(gl => gl.Equals(vir))));
 
             if (graphLine.Count < 1)
                 return null;
 
-            foreach (var memberExpression in graphLine)
+            MemberNode previousNode = null;
+            for (var c = 0; c < graphLine.Count; c++)
             {
-                var newNode = new MemberNode(lastNode, memberExpression);
-                lastNode = newNode;
+                var memberExpression = graphLine[c];
+                var isLast = c == (graphLine.Count - 1);
+                var path = previousNode == null ? memberExpression.Path() : string.Format("{0}.{1}", previousNode.Path, memberExpression.Path());
+
+                if (isLast && memberExpression.Type.IsEnumerableType())
+                    previousNode = new MemberNode(path, memberExpression.Type.GetEnumerableElementType());
+                else
+                    previousNode = new MemberNode(path, memberExpression.Type);
             }
 
-            if (lastNode != null && lastNode.MemberType.IsEnumerableBytesType())
-                throw new NotSupportedException(ExceptionMessages.LambdaParser_MemberIsBytes.Inject(lastNode.Path));
-
-            return lastNode;
+            return previousNode;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression e)

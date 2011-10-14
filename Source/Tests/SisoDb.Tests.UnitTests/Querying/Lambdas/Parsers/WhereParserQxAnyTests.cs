@@ -68,8 +68,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
             var operatorNode = (OperatorNode)listOfNodes[1];
             var operandNode = (ValueNode) listOfNodes[2];
             Assert.AreEqual("ChildA.Items.Value", memberNode.Path);
-            Assert.AreEqual("like", operatorNode.Operator.ToString());
-            Assert.AreEqual("%<$42$>%", operandNode.Value);
+            Assert.AreEqual("=", operatorNode.Operator.ToString());
+            Assert.AreEqual(42, operandNode.Value);
         }
 
         [Test]
@@ -82,13 +82,11 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
 
             var listOfNodes = parsedLambda.Nodes.ToList();
             var memberNode = (MemberNode)listOfNodes[0];
-            var operatorNode1 = (OperatorNode)listOfNodes[1];
-            var operatorNode2 = (OperatorNode)listOfNodes[2];
-            var operandNode = (ValueNode)listOfNodes[3];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
             Assert.AreEqual("ChildA.Items.Value", memberNode.Path);
-            Assert.AreEqual("not", operatorNode1.Operator.ToString());
-            Assert.AreEqual("like", operatorNode2.Operator.ToString());
-            Assert.AreEqual("%<$42$>%", operandNode.Value);
+            Assert.AreEqual("<>", operatorNode.Operator.ToString());
+            Assert.AreEqual(42, operandNode.Value);
         }
 
         [Test]
@@ -104,8 +102,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
             var operatorNode = (OperatorNode)listOfNodes[1];
             var operandNode = (ValueNode)listOfNodes[2];
             Assert.AreEqual("ChildA.Items.Values", memberNode.Path);
-            Assert.AreEqual("like", operatorNode.Operator.ToString());
-            Assert.AreEqual("%<$42$>%", operandNode.Value);
+            Assert.AreEqual("=", operatorNode.Operator.ToString());
+            Assert.AreEqual(42, operandNode.Value);
         }
 
         [Test]
@@ -127,12 +125,12 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
             var operandNode2 = (ValueNode)listOfNodes[7];
             var endGroupNode = (EndGroupNode)listOfNodes[8];
             Assert.AreEqual("ChildA.Items.Values", memberNode1.Path);
-            Assert.AreEqual("like", operatorNode1.Operator.ToString());
-            Assert.AreEqual("%<$42$>%", operandNode1.Value);
+            Assert.AreEqual("=", operatorNode1.Operator.ToString());
+            Assert.AreEqual(42, operandNode1.Value);
             Assert.AreEqual("or", groupOperatorNode.Operator.ToString());
             Assert.AreEqual("ChildA.Items.Values", memberNode2.Path);
-            Assert.AreEqual("like", operatorNode2.Operator.ToString());
-            Assert.AreEqual("%<$142$>%", operandNode2.Value);
+            Assert.AreEqual("=", operatorNode2.Operator.ToString());
+            Assert.AreEqual(142, operandNode2.Value);
         }
 
         [Test]
@@ -147,23 +145,19 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
             var startGroupNode = (StartGroupNode)listOfNodes[0];
             var memberNode1 = (MemberNode)listOfNodes[1];
             var isNotOperatorNode1 = (OperatorNode)listOfNodes[2];
-            var operatorNode1 = (OperatorNode)listOfNodes[3];
-            var operandNode1 = (ValueNode)listOfNodes[4];
-            var groupOperatorNode = (OperatorNode)listOfNodes[5];
-            var memberNode2 = (MemberNode)listOfNodes[6];
-            var isNotOperatorNode2 = (OperatorNode)listOfNodes[7];
-            var operatorNode2 = (OperatorNode)listOfNodes[8];
-            var operandNode2 = (ValueNode)listOfNodes[9];
-            var endGroupNode = (EndGroupNode)listOfNodes[10];
+            var operandNode1 = (ValueNode)listOfNodes[3];
+            var groupOperatorNode = (OperatorNode)listOfNodes[4];
+            var memberNode2 = (MemberNode)listOfNodes[5];
+            var isNotOperatorNode2 = (OperatorNode)listOfNodes[6];
+            var operandNode2 = (ValueNode)listOfNodes[7];
+            var endGroupNode = (EndGroupNode)listOfNodes[8];
             Assert.AreEqual("ChildA.Items.Values", memberNode1.Path);
-            Assert.AreEqual("not", isNotOperatorNode1.Operator.ToString());
-            Assert.AreEqual("like", operatorNode1.Operator.ToString());
-            Assert.AreEqual("%<$42$>%", operandNode1.Value);
+            Assert.AreEqual("<>", isNotOperatorNode1.Operator.ToString());
+            Assert.AreEqual(42, operandNode1.Value);
             Assert.AreEqual("and", groupOperatorNode.Operator.ToString());
             Assert.AreEqual("ChildA.Items.Values", memberNode2.Path);
-            Assert.AreEqual("not", isNotOperatorNode2.Operator.ToString());
-            Assert.AreEqual("like", operatorNode2.Operator.ToString());
-            Assert.AreEqual("%<$142$>%", operandNode2.Value);
+            Assert.AreEqual("<>", isNotOperatorNode2.Operator.ToString());
+            Assert.AreEqual(142, operandNode2.Value);
         }
 
         public class Root

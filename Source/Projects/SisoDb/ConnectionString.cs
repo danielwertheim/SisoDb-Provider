@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
 using NCore;
-using SisoDb.Core;
 using SisoDb.Resources;
 
 namespace SisoDb

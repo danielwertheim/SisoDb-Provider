@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Text;
 using NCore;
+using PineCone.Structures.Schemas;
+using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 
 namespace SisoDb.Querying.Lambdas.Processors.Sql
 {
-    public class ParsedSortingSqlProcessor : IParsedLambdaProcessor<ISqlSorting>
+    public class LambdaToSqlSortingConverter : ILambdaToSqlSortingConverter
     {
-        public ISqlSorting Process(IParsedLambda lambda)
+        public SqlSorting Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             var sql = new StringBuilder();
 
@@ -21,7 +23,9 @@ namespace SisoDb.Querying.Lambdas.Processors.Sql
                 if (node is SortingNode)
                 {
                     var sortingNode = (SortingNode) node;
-                    sql.AppendFormat("si.[{0}] {1}", sortingNode.MemberPath, sortingNode.Direction);
+                    sql.AppendFormat("si.[{0}]='{1}' {2}", 
+                        IndexStorageSchema.Fields.MemberPath.Name,
+                        sortingNode.MemberPath, sortingNode.Direction);
 
                     if (i != lastIndex)
                         sql.Append(", ");

@@ -196,9 +196,6 @@
     <value>Could not evaluate the method call: '{0}'.
 Specific supported method exists as extensionmethods and are prefixed with 'Qx'. Import namespace 'SisoDb.Querying' to enable them.</value>
   </data>
-  <data name="LambdaParser_MemberIsBytes" xml:space="preserve">
-    <value>Byte arrays are not supported for member: '{0}'.</value>
-  </data>
   <data name="SortingParser_UnsupportedMethodForSortingDirection" xml:space="preserve">
     <value>The only supported methods for marking sortings are Asc() and Desc().</value>
   </data>

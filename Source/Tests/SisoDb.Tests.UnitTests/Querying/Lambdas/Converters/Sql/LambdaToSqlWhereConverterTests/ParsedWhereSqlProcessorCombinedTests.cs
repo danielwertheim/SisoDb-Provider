@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using SisoDb.Dac;
-using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Processors.Sql;
+using SisoDb.Tests.UnitTests.TestFactories;
 
 namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlProcessorTests
 {
@@ -16,10 +16,10 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
                 (i.Int1 == 11 && i.String1 == "AA") ||
                 i.Int1 == 99);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            const string expectedSql = "(((si.[Int1] = @p0 and si.[String1] = @p1) or (si.[Int1] = @p2 and si.[String1] = @p3)) or si.[Int1] = @p4)";
+            const string expectedSql = "((((si.[MemberPath]='Int1' and si.[IntegerValue] = @p0) and (si.[MemberPath]='String1' and si.[StringValue] = @p1)) or ((si.[MemberPath]='Int1' and si.[IntegerValue] = @p2) and (si.[MemberPath]='String1' and si.[StringValue] = @p3))) or (si.[MemberPath]='Int1' and si.[IntegerValue] = @p4))";
             Assert.AreEqual(expectedSql, query.Sql);
         }
 
@@ -31,8 +31,8 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Processors.Sql.ParsedWhereSqlP
                 (i.Int1 == 11 && i.String1 == "AA") ||
                 i.Int1 == 99);
 
-            var processor = new ParsedWhereSqlProcessor();
-            var query = processor.Process(parsedLambda);
+            var processor = new LambdaToSqlWhereConverter();
+            var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             var expectedParameters = new[]
             {

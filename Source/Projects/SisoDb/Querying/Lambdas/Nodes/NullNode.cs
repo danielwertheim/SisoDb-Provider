@@ -3,7 +3,7 @@
 namespace SisoDb.Querying.Lambdas.Nodes
 {
     [Serializable]
-    public class NullValueNode : INode
+    public class NullNode : INode
     {
         public override string ToString()
         {

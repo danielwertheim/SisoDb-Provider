@@ -6,6 +6,7 @@ using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.TestUtils;
+using SisoDb.Tests.UnitTests.TestFactories;
 
 namespace SisoDb.Tests.UnitTests.Querying
 {
@@ -78,7 +79,7 @@ namespace SisoDb.Tests.UnitTests.Querying
             var sortingParserFake = new Mock<ISortingParser>();
             var includesParserFake = new Mock<IIncludeParser>();
 
-            return new QueryCommandBuilder<MyClass>(whereParserFake.Object, sortingParserFake.Object, includesParserFake.Object);
+            return new QueryCommandBuilder<MyClass>(StructureSchemaTestFactory.Stub<MyClass>(), whereParserFake.Object, sortingParserFake.Object, includesParserFake.Object);
         }
 
         private class MyClass

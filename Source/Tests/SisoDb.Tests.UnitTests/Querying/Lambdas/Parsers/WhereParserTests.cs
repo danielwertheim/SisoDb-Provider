@@ -36,18 +36,6 @@ namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
                 ex.Message);
         }
 
-        [Test]
-        public void Parse_WhenByteArray_NotSupportedException()
-        {
-            var parser = new WhereParser();
-            var expression = Reflect<MyClass>.LambdaFrom(i => i.Bytes1 == new byte[] {1, 2});
-
-            var ex = Assert.Throws<NotSupportedException>(
-                () => parser.Parse(expression));
-
-            Assert.AreEqual(ExceptionMessages.LambdaParser_MemberIsBytes.Inject("Bytes1"), ex.Message);
-        }
-
         private class MyClass
         {
             public int Int1 { get; set; }

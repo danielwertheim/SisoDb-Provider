@@ -26,7 +26,6 @@ namespace SisoDb.Sql2008
         protected IStructureSchemas StructureSchemas { get; private set; }
         protected IDbQueryGenerator QueryGenerator { get; private set; }
         protected IJsonSerializer JsonSerializer { get; private set; }
-        protected ICommandBuilderFactory CommandBuilderFactory { get; private set; }
 
         protected internal Sql2008QueryEngine(
             ISisoConnectionInfo connectionInfo,
@@ -44,7 +43,6 @@ namespace SisoDb.Sql2008
             DbClientNonTrans = ProviderFactory.GetDbClient(connectionInfo, false);
             DbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(DbClientNonTrans);
             QueryGenerator = ProviderFactory.GetDbQueryGenerator();
-            CommandBuilderFactory = ProviderFactory.GetCommandBuilderFactory();
             DbSchemaManager = dbSchemaManager;
             StructureSchemas = structureSchemas;
             JsonSerializer = jsonSerializer;
@@ -80,9 +78,9 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            var commandBuilder = CommandBuilderFactory.CreateQueryCommandBuilder<T>();
+            var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
             var queryCommand = commandBuilder.Where(expression).Command;
-            var whereSql = QueryGenerator.GenerateWhere(queryCommand);
+            var whereSql = QueryGenerator.GenerateWhereQuery(queryCommand);
 
             return DbClientNonTrans.RowCountByQuery(structureSchema, whereSql);
         }
@@ -149,7 +147,7 @@ namespace SisoDb.Sql2008
 
         public IEnumerable<T> GetAll<T>(Action<IGetCommandBuilder<T>> commandInitializer) where T : class
         {
-            var commandBuilder = CommandBuilderFactory.CreateGetCommandBuilder<T>();
+            var commandBuilder = ProviderFactory.CreateGetCommandBuilder<T>();
             commandInitializer(commandBuilder);
 
             return JsonSerializer.DeserializeMany<T>(GetAllAsJson<T>(commandBuilder.Command));
@@ -166,7 +164,7 @@ namespace SisoDb.Sql2008
             where TContract : class
             where TOut : class
         {
-            var commandBuilder = CommandBuilderFactory.CreateGetCommandBuilder<TContract>();
+            var commandBuilder = ProviderFactory.CreateGetCommandBuilder<TContract>();
             commandInitializer(commandBuilder);
 
             return JsonSerializer.DeserializeMany<TOut>(GetAllAsJson<TContract>(commandBuilder.Command));
@@ -174,14 +172,14 @@ namespace SisoDb.Sql2008
 
         public IEnumerable<string> GetAllAsJson<T>() where T : class
         {
-            var commandBuilder = CommandBuilderFactory.CreateGetCommandBuilder<T>();
+            var commandBuilder = ProviderFactory.CreateGetCommandBuilder<T>();
 
             return GetAllAsJson<T>(commandBuilder.Command);
         }
 
         public IEnumerable<string> GetAllAsJson<T>(Action<IGetCommandBuilder<T>> commandInitializer) where T : class
         {
-            var commandBuilder = CommandBuilderFactory.CreateGetCommandBuilder<T>();
+            var commandBuilder = ProviderFactory.CreateGetCommandBuilder<T>();
             commandInitializer(commandBuilder);
 
             return GetAllAsJson<T>(commandBuilder.Command);
@@ -198,8 +196,12 @@ namespace SisoDb.Sql2008
             string sql;
             if (getCommand.HasSortings || getCommand.HasIncludes)
             {
-                var queryCommand = new QueryCommand(getCommand.Includes) { Sortings = getCommand.Sortings };
-                var query = QueryGenerator.Generate(queryCommand, structureSchema);
+                var queryCommand = new QueryCommand(structureSchema)
+                {
+                    Includes = getCommand.Includes,
+                    Sortings = getCommand.Sortings
+                };
+                var query = QueryGenerator.GenerateQuery(queryCommand);
                 sql = query.Sql;
             }
             else
@@ -257,38 +259,44 @@ namespace SisoDb.Sql2008
         public IEnumerable<T> Query<T>(Action<IQueryCommandBuilder<T>> commandInitializer)
             where T : class
         {
-            var commandBuilder = CommandBuilderFactory.CreateQueryCommandBuilder<T>();
+            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            UpsertStructureSet(structureSchema);
+
+            var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
             commandInitializer(commandBuilder);
 
-            return JsonSerializer.DeserializeMany<T>(QueryAsJson<T>(commandBuilder.Command));
+            return JsonSerializer.DeserializeMany<T>(QueryAsJson(commandBuilder.Command));
         }
 
         public IEnumerable<TOut> QueryAs<TContract, TOut>(Action<IQueryCommandBuilder<TContract>> commandInitializer)
             where TContract : class
             where TOut : class
         {
-            var commandBuilder = CommandBuilderFactory.CreateQueryCommandBuilder<TContract>();
+            var structureSchema = StructureSchemas.GetSchema(TypeFor<TContract>.Type);
+            UpsertStructureSet(structureSchema);
+
+            var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<TContract>(structureSchema);
             commandInitializer(commandBuilder);
 
-            return JsonSerializer.DeserializeMany<TOut>(QueryAsJson<TContract>(commandBuilder.Command));
+            return JsonSerializer.DeserializeMany<TOut>(QueryAsJson(commandBuilder.Command));
         }
 
         public IEnumerable<string> QueryAsJson<T>(Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
         {
-            var commandBuilder = CommandBuilderFactory.CreateQueryCommandBuilder<T>();
-            commandInitializer(commandBuilder);
-
-            return QueryAsJson<T>(commandBuilder.Command);
-        }
-
-        private IEnumerable<string> QueryAsJson<T>(IQueryCommand queryCommand) where T : class
-        {
-            Ensure.That(() => queryCommand).IsNotNull();
-
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
             UpsertStructureSet(structureSchema);
 
-            var query = QueryGenerator.Generate(queryCommand, structureSchema);
+            var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
+            commandInitializer(commandBuilder);
+
+            return QueryAsJson(commandBuilder.Command);
+        }
+
+        private IEnumerable<string> QueryAsJson(IQueryCommand queryCommand)
+        {
+            Ensure.That(() => queryCommand).IsNotNull();
+
+            var query = QueryGenerator.GenerateQuery(queryCommand);
             var parameters = query.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
             using (var cmd = DbClientNonTrans.CreateCommand(CommandType.Text, query.Sql, parameters))

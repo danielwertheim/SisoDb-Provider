@@ -11,26 +11,26 @@ namespace SisoDb.Profiling
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
-            Console.ReadKey();
-            return;
+            //Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
+            //Console.ReadKey();
+            //return;
 
-            //var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
-            //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
-            //db.EnsureNewDatabase();
+            var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
+            var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
+            db.EnsureNewDatabase();
 
             //ProfilingInserts(db, 1000000, 2);
 
-            //InsertCustomers(1, 100000, db);
+            InsertCustomers(1, 5, db);
             //ProfilingQueries(db, GetAllCustomers);
             //ProfilingQueries(db, GetAllCustomersAsJson);
-            //ProfilingQueries(db, GetAllCustomersViaIndexesTable);
+            ProfilingQueries(db, GetAllCustomersViaIndexesTable);
             //ProfilingQueries(db, GetAllCustomersAsJsonViaIndexesTable);
 
             //ProfilingUpdateStructureSet(db);
 
-            //Console.WriteLine("---- Done ----");
-            //Console.ReadKey();
+            Console.WriteLine("---- Done ----");
+            Console.ReadKey();
         }
 
         private static void ProfilingUpdateStructureSet(ISisoDatabase database)

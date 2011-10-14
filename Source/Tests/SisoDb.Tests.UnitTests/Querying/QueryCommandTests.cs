@@ -5,6 +5,7 @@ using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
+using SisoDb.Tests.UnitTests.TestFactories;
 
 namespace SisoDb.Tests.UnitTests.Querying
 {
@@ -14,7 +15,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         [Test]
         public void HasPaging_WhenNullPagingExists_ReturnsFalse()
         {
-            var cmd = new QueryCommand { Paging = null };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Paging = null };
 
             Assert.IsFalse(cmd.HasPaging);
         }
@@ -22,7 +23,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         [Test]
         public void HasPaging_WhenPagingExists_ReturnsTrue()
         {
-            var cmd = new QueryCommand { Paging = new Paging(0, 1)};
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Paging = new Paging(0, 1) };
 
             Assert.IsTrue(cmd.HasPaging);
         }
@@ -30,7 +31,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         [Test]
         public void HasWhere_WhenNullWhereExists_ReturnsFalse()
         {
-            var cmd = new QueryCommand { Where = null };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Where = null };
 
             Assert.IsFalse(cmd.HasWhere);
         }
@@ -41,7 +42,7 @@ namespace SisoDb.Tests.UnitTests.Querying
             var whereFake = new Mock<IParsedLambda>();
             whereFake.Setup(f => f.Nodes).Returns(GetFakeNodes(0));
 
-            var cmd = new QueryCommand { Where = whereFake.Object };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Where = whereFake.Object };
 
             Assert.IsFalse(cmd.HasWhere);
         }
@@ -52,7 +53,7 @@ namespace SisoDb.Tests.UnitTests.Querying
             var whereFake = new Mock<IParsedLambda>();
             whereFake.Setup(f => f.Nodes).Returns(GetFakeNodes(1));
 
-            var cmd = new QueryCommand { Where = whereFake.Object };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Where = whereFake.Object };
 
             Assert.IsTrue(cmd.HasWhere);
         }
@@ -60,7 +61,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         [Test]
         public void HasIncludes_WhenNullIncludes_ReturnsFalse()
         {
-            var cmd = new QueryCommand { Includes = null };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Includes = null };
 
             Assert.IsFalse(cmd.HasIncludes);
         }
@@ -68,7 +69,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         [Test]
         public void HasIncludes_WhenEmptyIncludes_ReturnsFalse()
         {
-            var cmd = new QueryCommand();
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub());
             cmd.Includes.Clear();
 
             Assert.IsFalse(cmd.HasIncludes);
@@ -77,7 +78,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         [Test]
         public void HasIncludes_WhenIncludesExists_ReturnsTrue()
         {
-            var cmd = new QueryCommand
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub())
             {
                 Includes = new List<IParsedLambda> { new Mock<IParsedLambda>().Object }
             };
@@ -88,7 +89,7 @@ namespace SisoDb.Tests.UnitTests.Querying
         [Test]
         public void HasSortings_WhenNullSortingsExists_ReturnsFalse()
         {
-            var cmd = new QueryCommand { Sortings = null };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Sortings = null };
 
             Assert.IsFalse(cmd.HasSortings);
         }
@@ -99,7 +100,7 @@ namespace SisoDb.Tests.UnitTests.Querying
             var sortingsFake = new Mock<IParsedLambda>();
             sortingsFake.Setup(f => f.Nodes).Returns(GetFakeNodes(0));
 
-            var cmd = new QueryCommand { Sortings = sortingsFake.Object };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Sortings = sortingsFake.Object };
             
             Assert.IsFalse(cmd.HasSortings);
         }
@@ -110,7 +111,7 @@ namespace SisoDb.Tests.UnitTests.Querying
             var sortingsFake = new Mock<IParsedLambda>();
             sortingsFake.Setup(f => f.Nodes).Returns(GetFakeNodes(1));
 
-            var cmd = new QueryCommand { Sortings = sortingsFake.Object };
+            var cmd = new QueryCommand(StructureSchemaTestFactory.Stub()) { Sortings = sortingsFake.Object };
 
             Assert.IsTrue(cmd.HasSortings);
         }

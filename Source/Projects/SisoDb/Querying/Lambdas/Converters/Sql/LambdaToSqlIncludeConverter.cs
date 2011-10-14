@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NCore;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 
 namespace SisoDb.Querying.Lambdas.Processors.Sql
 {
-    public class ParsedIncludeSqlProcessor : IParsedLambdaProcessor<IList<ISqlInclude>>
+    public class LambdaToSqlIncludeConverter : ILambdaToSqlIncludeConverter
     {
-        public IList<ISqlInclude> Process(IParsedLambda lambda)
+        public IList<SqlInclude> Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
-            var sqlIncludes = new List<ISqlInclude>();
+            var sqlIncludes = new List<SqlInclude>();
             const string sqlFormat = "(select cs{0}.[json] from [dbo].[{1}] as cs{0} where si.[{2}] = cs{0}.StructureId) as [{3}]";
 
             foreach (var includeNode in lambda.Nodes.Cast<IncludeNode>())

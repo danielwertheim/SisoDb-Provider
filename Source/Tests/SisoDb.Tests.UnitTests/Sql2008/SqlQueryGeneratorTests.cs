@@ -5,7 +5,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
-using SisoDb.Querying.Lambdas.Processors;
+using SisoDb.Querying.Lambdas.Processors.Sql;
 using SisoDb.Querying.Sql;
 using SisoDb.Sql2008;
 
@@ -17,12 +17,10 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         [Test]
         public void Generate_WithWhere_GeneratesCorrectSql()
         {
-            var schemaFake = new Mock<IStructureSchema>();
-            schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub(hasWhere: true, hasSortings: false);
+            var queryCommand = GetQueryCommandStub(structureName: "MyClass", hasWhere: true, hasSortings: false);
             var generator = GetIsolatedQueryGenerator(fakeWhere: "si.[Int1] = 42", fakeSorting: string.Empty);
 
-            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+            var sqlQuery = generator.GenerateQuery(queryCommand);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId where si.[Int1] = 42;";
@@ -32,12 +30,10 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         [Test]
         public void Generate_WithSorting_GeneratesCorrectSql()
         {
-            var schemaFake = new Mock<IStructureSchema>();
-            schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub(hasWhere: false, hasSortings: true);
+            var queryCommand = GetQueryCommandStub(structureName: "MyClass", hasWhere: false, hasSortings: true);
             var generator = GetIsolatedQueryGenerator(fakeWhere: string.Empty, fakeSorting: "si.[Int1] Asc");
 
-            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+            var sqlQuery = generator.GenerateQuery(queryCommand);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId order by si.[Int1] Asc;";
@@ -47,12 +43,10 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         [Test]
         public void Generate_WithWhereAndSorting_GeneratesCorrectSql()
         {
-            var schemaFake = new Mock<IStructureSchema>();
-            schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub(hasWhere: true, hasSortings: true);
+            var queryCommand = GetQueryCommandStub(structureName: "MyClass", hasWhere: true, hasSortings: true);
             var generator = GetIsolatedQueryGenerator(fakeWhere: "si.[Int1] = 42", fakeSorting: "si.[Int1] Desc");
 
-            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+            var sqlQuery = generator.GenerateQuery(queryCommand);
 
             const string expectedSql = "select s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId where si.[Int1] = 42 order by si.[Int1] Desc;";
@@ -62,12 +56,10 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         [Test]
         public void Generate_WhenTakeWithOutWhereAndSorting_GeneratesCorrectSql()
         {
-            var schemaFake = new Mock<IStructureSchema>();
-            schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub(hasWhere: false, hasSortings: false, takeNumOfStructures: 11);
+            var queryCommand = GetQueryCommandStub(structureName: "MyClass", hasWhere: false, hasSortings: false, takeNumOfStructures: 11);
             var generator = GetIsolatedQueryGenerator(fakeWhere: null, fakeSorting: null);
 
-            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+            var sqlQuery = generator.GenerateQuery(queryCommand);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId;";
@@ -77,12 +69,10 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         [Test]
         public void Generate_WithTakeAndSorting_GeneratesCorrectSql()
         {
-            var schemaFake = new Mock<IStructureSchema>();
-            schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub(hasWhere: false, hasSortings: true, takeNumOfStructures: 11);
+            var queryCommand = GetQueryCommandStub(structureName: "MyClass", hasWhere: false, hasSortings: true, takeNumOfStructures: 11);
             var generator = GetIsolatedQueryGenerator(fakeWhere: null, fakeSorting: "si.[Int1] Desc");
 
-            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+            var sqlQuery = generator.GenerateQuery(queryCommand);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId order by si.[Int1] Desc;";
@@ -92,12 +82,10 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         [Test]
         public void Generate_WithTakeAndWhereAndSorting_GeneratesCorrectSql()
         {
-            var schemaFake = new Mock<IStructureSchema>();
-            schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub(hasWhere: true, hasSortings: true, takeNumOfStructures: 11);
+            var queryCommand = GetQueryCommandStub(structureName: "MyClass", hasWhere: true, hasSortings: true, takeNumOfStructures: 11);
             var generator = GetIsolatedQueryGenerator(fakeWhere: "si.[Int1] = 42", fakeSorting: "si.[Int1] Desc");
 
-            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+            var sqlQuery = generator.GenerateQuery(queryCommand);
 
             const string expectedSql = "select top(11) s.Json from [dbo].[MyClassStructure] as s "
                                        + "inner join [dbo].[MyClassIndexes] as si on si.StructureId = s.StructureId where si.[Int1] = 42 order by si.[Int1] Desc;";
@@ -107,12 +95,10 @@ namespace SisoDb.Tests.UnitTests.Sql2008
         [Test]
         public void Generate_WithPagingAndWhereAndSorting_GeneratesCorrectSql()
         {
-            var schemaFake = new Mock<IStructureSchema>();
-            schemaFake.Setup(x => x.Name).Returns("MyClass");
-            var queryCommand = GetQueryCommandStub(hasWhere: true, hasSortings: true, paging: new Paging(0, 10));
+            var queryCommand = GetQueryCommandStub(structureName: "MyClass", hasWhere: true, hasSortings: true, paging: new Paging(0, 10));
             var generator = GetIsolatedQueryGenerator(fakeWhere: "si.[Int1] = 42", fakeSorting: "si.[Int1] Desc");
 
-            var sqlQuery = generator.Generate(queryCommand, schemaFake.Object);
+            var sqlQuery = generator.GenerateQuery(queryCommand);
 
             const string expectedSql =
                 "with pagedRs as (select s.Json,row_number() over ( order by si.[Int1] Desc) RowNum "
@@ -126,9 +112,13 @@ namespace SisoDb.Tests.UnitTests.Sql2008
             Assert.AreEqual(10, sqlQuery.Parameters[1].Value);
         }
 
-        private static IQueryCommand GetQueryCommandStub(bool hasWhere, bool hasSortings, Paging paging = null, int? takeNumOfStructures = null)
+        private static IQueryCommand GetQueryCommandStub(string structureName, bool hasWhere, bool hasSortings, Paging paging = null, int? takeNumOfStructures = null)
         {
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.Setup(x => x.Name).Returns(structureName);
+
             var stub = new Mock<IQueryCommand>();
+            stub.Setup(s => s.StructureSchema).Returns(schemaFake.Object);
             stub.Setup(s => s.HasWhere).Returns(hasWhere);
             stub.Setup(s => s.HasSortings).Returns(hasSortings);
             stub.Setup(s => s.HasPaging).Returns(paging != null);
@@ -147,24 +137,24 @@ namespace SisoDb.Tests.UnitTests.Sql2008
 
         private static SqlQueryGenerator GetIsolatedQueryGenerator(string fakeWhere, string fakeSorting)
         {
-            var sqlWhereFake = new Mock<ISqlWhere>();
+            var sqlWhereFake = new Mock<SqlWhere>();
             sqlWhereFake.Setup(x => x.Sql).Returns(fakeWhere);
             sqlWhereFake.Setup(x => x.Parameters).Returns(new List<IDacParameter>());
 
-            var sqlSortingFake = new Mock<ISqlSorting>();
+            var sqlSortingFake = new Mock<SqlSorting>();
             sqlSortingFake.Setup(x => x.Sql).Returns(fakeSorting);
 
-            var sqlIncludeFake = new Mock<ISqlInclude>();
+            var sqlIncludeFake = new Mock<SqlInclude>();
             sqlIncludeFake.Setup(x => x.Sql).Returns("");
 
-            var whereProcessorFake = new Mock<IParsedLambdaProcessor<ISqlWhere>>();
-            whereProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(sqlWhereFake.Object);
+            var whereProcessorFake = new Mock<ILambdaToSqlWhereConverter>();
+            whereProcessorFake.Setup(x => x.Convert(It.IsAny<IStructureSchema>(), It.IsAny<IParsedLambda>())).Returns(sqlWhereFake.Object);
 
-            var sortingsProcessorFake = new Mock<IParsedLambdaProcessor<ISqlSorting>>();
-            sortingsProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(sqlSortingFake.Object);
+            var sortingsProcessorFake = new Mock<ILambdaToSqlSortingConverter>();
+            sortingsProcessorFake.Setup(x => x.Convert(It.IsAny<IStructureSchema>(), It.IsAny<IParsedLambda>())).Returns(sqlSortingFake.Object);
 
-            var includesProcessorFake = new Mock<IParsedLambdaProcessor<IList<ISqlInclude>>>();
-            includesProcessorFake.Setup(x => x.Process(It.IsAny<IParsedLambda>())).Returns(new[] { sqlIncludeFake.Object });
+            var includesProcessorFake = new Mock<ILambdaToSqlIncludeConverter>();
+            includesProcessorFake.Setup(x => x.Convert(It.IsAny<IStructureSchema>(), It.IsAny<IParsedLambda>())).Returns(new[] { sqlIncludeFake.Object });
 
             return new SqlQueryGenerator(
                                          whereProcessorFake.Object,

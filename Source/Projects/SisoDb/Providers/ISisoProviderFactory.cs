@@ -1,3 +1,4 @@
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -15,7 +16,8 @@ namespace SisoDb.Providers
         IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient);
         IDbQueryGenerator GetDbQueryGenerator();
         IDbBulkInserter GetDbBulkInserter(IDbClient dbClient);
-        ICommandBuilderFactory GetCommandBuilderFactory();
+        IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class;
+        IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class;
         IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
     }
 }
