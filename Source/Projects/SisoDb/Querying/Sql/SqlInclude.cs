@@ -29,10 +29,5 @@ namespace SisoDb.Querying.Sql
         {
             return new SqlInclude();
         }
-
-        public override string ToString()
-        {
-            return Sql;
-        }
     }
 }

@@ -43,10 +43,5 @@ namespace SisoDb.Querying.Sql
         {
             return new SqlQuery();
         }
-
-        public override string ToString()
-        {
-            return Sql;
-        }
     }
 }

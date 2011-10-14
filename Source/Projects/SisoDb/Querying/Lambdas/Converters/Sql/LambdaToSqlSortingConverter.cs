@@ -14,6 +14,8 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
         public SqlSorting Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             var sql = new StringBuilder();
+            var joinFormat = "left join dbo.[{0}] siSort1 on siSort1.[{1}] = s.[{2}]] and siSort1.[{3}]='{4}'";
+            var orderByFormat = "order by si1.StringValue, si2.integervalue desc";
 
             var lastIndex = lambda.Nodes.Count - 1;
             for (var i = 0; i < lambda.Nodes.Count; i++)
