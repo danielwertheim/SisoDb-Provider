@@ -70,7 +70,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 return;
             }
 
-            const string joinFormat = "left join dbo.[{0}] siSort{1} on siSort{1}.[{2}] = s.[{3}]] and siSort{1}.[{4}]='{5}'";
+            const string joinFormat = "left join [dbo].[{0}] as siSort{1} on siSort{1}.[{2}] = s.[{3}] and siSort{1}.[{4}]='{5}'";
 
             var joinTableNum = session.Joins.Count + 1;
 
