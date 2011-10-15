@@ -19,5 +19,7 @@ namespace SisoDb.Providers
         IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class;
         IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class;
         IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
+        IDbDataTypeTranslator GetDbDataTypeTranslator();
+        ISqlStatements GetSqlStatements();
     }
 }

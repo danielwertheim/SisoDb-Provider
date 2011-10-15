@@ -5,7 +5,6 @@ using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
-using SisoDb.Sql2008.DbSchema;
 
 namespace SisoDb.Sql2008.Dac
 {
@@ -15,6 +14,7 @@ namespace SisoDb.Sql2008.Dac
     /// </summary>
     public class Sql2008ServerClient : IServerClient
     {
+        private readonly ISisoProviderFactory _providerFactory;
         private SqlConnection _connection;
 
         public StorageProviders ProviderType { get; private set; }
@@ -29,11 +29,13 @@ namespace SisoDb.Sql2008.Dac
         {
             Ensure.That(() => connectionInfo).IsNotNull();
 
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
+
             ProviderType = connectionInfo.ProviderType;
             ConnectionString = connectionInfo.ServerConnectionString;
 
-            SqlStatements = Sql2008Statements.Instance;//TODO: ProviderFactory
-            DbDataTypeTranslator = new Sql2008DataTypeTranslator();//TODO: ProviderFactory
+            SqlStatements = _providerFactory.GetSqlStatements();
+            DbDataTypeTranslator = _providerFactory.GetDbDataTypeTranslator();
 
             _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();

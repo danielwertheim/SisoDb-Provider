@@ -65,6 +65,19 @@ namespace SisoDb
         void DropStructureSet<T>() where T : class;
 
         /// <summary>
+        /// Drops the structure set, meaning all tables associated with
+        /// the structure type.
+        /// </summary>
+        /// <param name="type"></param>
+        void DropStructureSet(Type type);
+
+        /// <summary>
+        /// Drops ALL structure sets.
+        /// </summary>
+        /// <remarks>NOTE!!! ALL SETS ARE DROPPED</remarks>
+        void DropStructureSets();
+
+        /// <summary>
         /// Manually upserts a structure set, meaning all tables for
         /// the structure type will be created.
         /// </summary>
@@ -73,6 +86,13 @@ namespace SisoDb
         /// This is done automatically.</remarks>
         /// <typeparam name="T"></typeparam>
         void UpsertStructureSet<T>() where T : class;
+
+        /// <summary>
+        /// Manually upserts a structure set, meaning all tables for
+        /// the structure type will be created.
+        /// </summary>
+        /// <param name="type"></param>
+        void UpsertStructureSet(Type type);
 
         /// <summary>
         /// Lets you handle complex model updates.

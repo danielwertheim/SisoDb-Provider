@@ -64,8 +64,7 @@
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.4.0.46, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.19.0\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.20.0\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
@@ -73,9 +72,9 @@
     <Reference Include="nunit.mocks">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.19.0.47, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.20.0.48, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.19.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.20.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="pnunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
@@ -97,11 +96,30 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyInitalizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IntegrationTestBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LocalConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <Compile Include="Sql2008\Dac\Sql2008DbClientTests.cs" />
+    <Compile Include="Sql2008\Dac\Sql2008ServerClientTests.cs" />
+    <Compile Include="Sql2008\Sql2008DbUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sql2008\Sql2008IntegrationTestBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sql2008\Sql2008TembDbIntegrationTestBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Projects\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj">
@@ -124,6 +142,10 @@
       <Project>{5CAC205F-5470-44A6-878F-F33768415D25}</Project>
       <Name>SisoDb.TestUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

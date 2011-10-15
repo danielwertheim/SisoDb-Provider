@@ -1,4 +1,5 @@
-﻿using PineCone.Structures.Schemas;
+﻿using System;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -15,6 +16,13 @@ namespace SisoDb.Sql2008
 {
     public class Sql2008ProviderFactory : ISisoProviderFactory
     {
+        private readonly Lazy<ISqlStatements> _sqlStatements;
+
+        public Sql2008ProviderFactory()
+        {
+            _sqlStatements = new Lazy<ISqlStatements>(() => new Sql2008Statements());
+        }
+
         public IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
             return new Sql2008ServerClient(connectionInfo);
@@ -33,6 +41,16 @@ namespace SisoDb.Sql2008
         public IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
         {
             return new SqlDbSchemaUpserter(dbClient);
+        }
+
+        public IDbDataTypeTranslator GetDbDataTypeTranslator()
+        {
+            return new Sql2008DataTypeTranslator();
+        }
+
+        public ISqlStatements GetSqlStatements()
+        {
+            return _sqlStatements.Value;
         }
 
         public IDbQueryGenerator GetDbQueryGenerator()

@@ -98,24 +98,49 @@ namespace SisoDb.Sql2008
 
         public void DropStructureSet<T>() where T : class
         {
+            DropStructureSet(TypeFor<T>.Type);
+        }
+
+        public void DropStructureSet(Type type)
+        {
             using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
             {
-                var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
+                var structureSchema = _structureSchemas.GetSchema(type);
 
                 _dbSchemaManager.DropStructureSet(structureSchema, dbClient);
 
-                _structureSchemas.RemoveSchema(TypeFor<T>.Type);
+                dbClient.Flush();
+            }
+
+            _structureSchemas.RemoveSchema(type);
+        }
+
+        public void DropStructureSets()
+        {
+            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
+            {
+                foreach (var structureSchema in StructureSchemas.GetSchemas())
+                {
+                    _dbSchemaManager.DropStructureSet(structureSchema, dbClient);
+                }
 
                 dbClient.Flush();
             }
+
+            StructureSchemas.Clear();
         }
 
         public void UpsertStructureSet<T>() where T : class
         {
+            UpsertStructureSet(TypeFor<T>.Type);
+        }
+
+        public void UpsertStructureSet(Type type)
+        {
             using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
             {
                 var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClient);
-                var structureSchema = _structureSchemas.GetSchema(TypeFor<T>.Type);
+                var structureSchema = _structureSchemas.GetSchema(type);
                 _dbSchemaManager.UpsertStructureSet(structureSchema, dbSchemaUpserter);
 
                 dbClient.Flush();
