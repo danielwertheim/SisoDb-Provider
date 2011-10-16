@@ -1,4 +1,4 @@
-namespace SisoDb.Specifications
+namespace SisoDb.Testing
 {
     public interface ITestContext
     {

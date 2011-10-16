@@ -3,6 +3,7 @@ using Machine.Specifications;
 using PineCone.Structures.Schemas;
 using SisoDb.Sql2008.Dac;
 using SisoDb.Structures;
+using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Sql2008.Database
 {

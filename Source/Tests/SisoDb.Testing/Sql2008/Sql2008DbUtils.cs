@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.Common;
 using NCore;
 
-namespace SisoDb.Specifications.Sql2008
+namespace SisoDb.Testing.Sql2008
 {
     public class Sql2008TestDbUtils : ITestDbUtils
     {

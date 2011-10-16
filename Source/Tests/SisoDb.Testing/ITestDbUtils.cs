@@ -1,6 +1,4 @@
-using System.Data;
-
-namespace SisoDb.Specifications
+namespace SisoDb.Testing
 {
     public interface ITestDbUtils
     {

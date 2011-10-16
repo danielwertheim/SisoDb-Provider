@@ -13,6 +13,9 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("58833c9a-16a2-488f-8433-4506f9b105b0")]
 
+[assembly: InternalsVisibleTo("SisoDb.IntegrationTests")]
+[assembly: InternalsVisibleTo("SisoDb.Specifications")]
+[assembly: InternalsVisibleTo("SisoDb.Testing")]
 [assembly: InternalsVisibleTo("SisoDb.TestUtils")]
 [assembly: InternalsVisibleTo("SisoDb.Tests.IntegrationTests")]
 [assembly: InternalsVisibleTo("SisoDb.Tests.UnitTests")]

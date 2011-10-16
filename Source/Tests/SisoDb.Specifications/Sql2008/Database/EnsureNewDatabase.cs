@@ -1,5 +1,6 @@
 ﻿using Machine.Specifications;
 using SisoDb.Sql2008;
+using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Sql2008.Database.EnsureNewDatabase
 {

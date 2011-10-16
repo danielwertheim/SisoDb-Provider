@@ -1,6 +1,6 @@
 ﻿using SisoDb.Sql2008;
 
-namespace SisoDb.Specifications.Sql2008
+namespace SisoDb.Testing.Sql2008
 {
     public class Sql2008TestContext : TestContextBase
     {

@@ -1,4 +1,5 @@
 using Machine.Specifications;
+using SisoDb.Testing;
 
 namespace SisoDb.Specifications
 {

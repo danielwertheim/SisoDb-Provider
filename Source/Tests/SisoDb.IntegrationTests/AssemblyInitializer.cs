@@ -1,7 +1,8 @@
 ﻿using Machine.Specifications;
 using SisoDb.Sql2008;
+using SisoDb.Testing;
 
-namespace SisoDb.Specifications
+namespace SisoDb.IntegrationTests
 {
     public class AssemblyInitializer : IAssemblyContext
     {
@@ -24,7 +25,7 @@ namespace SisoDb.Specifications
 
         private static void EnsureSql2008DbExists()
         {
-            var connectionInfo = new Sql2008ConnectionInfo(LocalConstants.ConnectionStringNameForSql2008);
+            var connectionInfo = new Sql2008ConnectionInfo(TestConstants.ConnectionStringNameForSql2008);
             var database = new Sql2008DbFactory().CreateDatabase(connectionInfo);
             database.EnsureNewDatabase();
         }
