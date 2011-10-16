@@ -39,7 +39,7 @@ namespace SisoDb.Sql2008
 
         protected internal Sql2008Database(ISisoConnectionInfo connectionInfo)
         {
-            Ensure.That(() => connectionInfo).IsNotNull();
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
             _connectionInfo = connectionInfo;
             _providerFactory = SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);

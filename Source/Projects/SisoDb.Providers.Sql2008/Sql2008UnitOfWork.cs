@@ -28,7 +28,7 @@ namespace SisoDb.Sql2008
             IStructureBuilder structureBuilder)
             : base(connectionInfo, dbSchemaManager, structureSchemas, jsonSerializer)
         {
-            Ensure.That(() => structureBuilder).IsNotNull();
+            Ensure.That(structureBuilder, "structureBuilder").IsNotNull();
 
             StructureBuilder = structureBuilder;
             IdentityStructureIdGenerator = ProviderFactory.GetIdentityStructureIdGenerator(DbClientNonTrans);
@@ -131,7 +131,7 @@ namespace SisoDb.Sql2008
 
         public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
-            Ensure.That(() => expression).IsNotNull();
+            Ensure.That(expression, "expression").IsNotNull();
 
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
 

@@ -10,7 +10,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
     {
         public IParsedLambda Parse(string includedStructureTypeName, LambdaExpression[] includeExpressions)
         {
-            Ensure.That(() => includeExpressions).HasItems();
+            Ensure.That(includeExpressions, "includeExpressions").HasItems();
 
             var nodes = new NodesContainer();
 

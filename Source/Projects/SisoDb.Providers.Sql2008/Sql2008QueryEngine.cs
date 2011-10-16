@@ -34,10 +34,10 @@ namespace SisoDb.Sql2008
             IStructureSchemas structureSchemas,
             IJsonSerializer jsonSerializer)
         {
-            Ensure.That(() => connectionInfo).IsNotNull();
-            Ensure.That(() => dbSchemaManager).IsNotNull();
-            Ensure.That(() => structureSchemas).IsNotNull();
-            Ensure.That(() => jsonSerializer).IsNotNull();
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+            Ensure.That(dbSchemaManager, "dbSchemaManager").IsNotNull();
+            Ensure.That(structureSchemas, "structureSchemas").IsNotNull();
+            Ensure.That(jsonSerializer, "jsonSerializer").IsNotNull();
 
             ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
             DbClientTrans = ProviderFactory.GetDbClient(connectionInfo, true);
@@ -188,7 +188,7 @@ namespace SisoDb.Sql2008
 
         private IEnumerable<string> GetAllAsJson<T>(IGetCommand getCommand) where T : class
         {
-            Ensure.That(() => getCommand).IsNotNull();
+            Ensure.That(getCommand, "getCommand").IsNotNull();
 
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
 
@@ -295,7 +295,7 @@ namespace SisoDb.Sql2008
 
         private IEnumerable<string> QueryAsJson(IQueryCommand queryCommand)
         {
-            Ensure.That(() => queryCommand).IsNotNull();
+            Ensure.That(queryCommand, "queryCommand").IsNotNull();
 
             var query = QueryGenerator.GenerateQuery(queryCommand);
             var parameters = query.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();

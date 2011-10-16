@@ -19,7 +19,7 @@ namespace SisoDb.DbSchema
 
         public SqlDbSchemaUpserter(IDbClient dbClient)
         {
-            Ensure.That(() => dbClient).IsNotNull();
+            Ensure.That(dbClient, "dbClient").IsNotNull();
 
             _dbClient = dbClient;
 

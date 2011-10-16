@@ -27,7 +27,7 @@ namespace SisoDb.Sql2008.Dac
 
         public Sql2008ServerClient(ISisoConnectionInfo connectionInfo)
         {
-            Ensure.That(() => connectionInfo).IsNotNull();
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
             _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
 

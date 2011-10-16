@@ -11,8 +11,8 @@ namespace SisoDb.Querying
 
         public Paging(int pageIndex, int pageSize)
         {
-            Ensure.That(() => pageIndex).IsGte(0);
-            Ensure.That(() => pageSize).IsGt(0);
+            Ensure.That(pageIndex, "pageIndex").IsGte(0);
+            Ensure.That(pageSize, "pageSize").IsGt(0);
             PageIndex = pageIndex;
             PageSize = pageSize;
         }

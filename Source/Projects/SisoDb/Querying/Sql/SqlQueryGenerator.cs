@@ -21,9 +21,9 @@ namespace SisoDb.Querying.Sql
             ILambdaToSqlSortingConverter sortingConverter,
             ILambdaToSqlIncludeConverter includeConverter)
         {
-            Ensure.That(() => whereConverter).IsNotNull();
-            Ensure.That(() => sortingConverter).IsNotNull();
-            Ensure.That(() => includeConverter).IsNotNull();
+            Ensure.That(whereConverter, "whereConverter").IsNotNull();
+            Ensure.That(sortingConverter, "sortingConverter").IsNotNull();
+            Ensure.That(includeConverter, "includeConverter").IsNotNull();
 
             _whereConverter = whereConverter;
             _sortingConverter = sortingConverter;
@@ -32,7 +32,7 @@ namespace SisoDb.Querying.Sql
 
         public SqlQuery GenerateQuery(IQueryCommand queryCommand)
         {
-            Ensure.That(() => queryCommand).IsNotNull();
+            Ensure.That(queryCommand, "queryCommand").IsNotNull();
 
             return queryCommand.HasPaging
                 ? CreateSqlCommandInfoForPaging(queryCommand)
@@ -143,7 +143,7 @@ namespace SisoDb.Querying.Sql
 
         public SqlQuery GenerateWhereQuery(IQueryCommand queryCommand)
         {
-            Ensure.That(() => queryCommand).IsNotNull();
+            Ensure.That(queryCommand, "queryCommand").IsNotNull();
 
             if (!queryCommand.HasWhere)
                 throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);

@@ -27,7 +27,7 @@ namespace SisoDb
 
         public ConnectionString(string value)
         {
-            Ensure.That(() => value).IsNotNullOrWhiteSpace();
+            Ensure.That(value, "value").IsNotNullOrWhiteSpace();
 
             var parts = GetParts(value);
 

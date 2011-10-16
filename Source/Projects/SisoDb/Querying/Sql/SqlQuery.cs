@@ -26,8 +26,8 @@ namespace SisoDb.Querying.Sql
 
         public SqlQuery(string sql, IEnumerable<IDacParameter> parameters)
         {
-            Ensure.That(() => sql).IsNotNullOrWhiteSpace();
-            Ensure.That(() => parameters).IsNotNull();
+            Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
+            Ensure.That(parameters, "parameters").IsNotNull();
 
             Sql = sql;
             _parameters = new ReadOnlyCollection<IDacParameter>(parameters.Distinct().ToList());

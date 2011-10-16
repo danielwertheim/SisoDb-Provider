@@ -15,8 +15,8 @@ namespace SisoDb.Querying
 
         public GetCommandBuilder(ISortingParser sortingParser, IIncludeParser includeParser)
         {
-            Ensure.That(() => sortingParser).IsNotNull();
-            Ensure.That(() => includeParser).IsNotNull();
+            Ensure.That(sortingParser, "sortingParser").IsNotNull();
+            Ensure.That(includeParser, "includeParser").IsNotNull();
 
             SortingParser = sortingParser;
             IncludeParser = includeParser;
@@ -26,7 +26,7 @@ namespace SisoDb.Querying
 
         public IGetCommandBuilder<T> SortBy(params Expression<Func<T, object>>[] sortings)
         {
-            Ensure.That(() => sortings).HasItems();
+            Ensure.That(sortings, "sortings").HasItems();
 
             if (Command.Sortings != null)
                 throw new SisoDbException(ExceptionMessages.GetCommand_SortingsAllreadyInitialized);
@@ -38,7 +38,7 @@ namespace SisoDb.Querying
 
         public IGetCommandBuilder<T> Include<TInclude>(params Expression<Func<T, object>>[] includes) where TInclude : class
         {
-            Ensure.That(() => includes).HasItems();
+            Ensure.That(includes, "includes").HasItems();
 
             Command.Includes.Add(IncludeParser.Parse(StructureTypeNameFor<TInclude>.Name, includes));
 

@@ -13,7 +13,7 @@ namespace SisoDb.Querying.Lambdas
 
         public ParsedLambda(INode[] nodes)
         {
-            Ensure.That(() => nodes).HasItems();
+            Ensure.That(nodes, "nodes").HasItems();
 
             Nodes = new ReadOnlyCollection<INode>(nodes.ToList());
         }

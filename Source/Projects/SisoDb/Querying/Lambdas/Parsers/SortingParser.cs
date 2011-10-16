@@ -13,7 +13,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
     {
         public IParsedLambda Parse(LambdaExpression[] sortingExpressions)
         {
-            Ensure.That(() => sortingExpressions).HasItems();
+            Ensure.That(sortingExpressions, "sortingExpressions").HasItems();
 
             var nodesContainer = new NodesContainer();
             foreach (var lambda in sortingExpressions)

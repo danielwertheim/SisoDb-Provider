@@ -44,7 +44,7 @@ namespace SisoDb.Sql2008.Dac
 
         public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
-            Ensure.That(() => connectionInfo).IsNotNull();
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
             _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
 
@@ -136,7 +136,7 @@ namespace SisoDb.Sql2008.Dac
 
         public void RebuildIndexes(IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("RebuildIndexes").Inject(
                 structureSchema.GetStructureTableName(),
@@ -151,7 +151,7 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteById(ValueType structureId, IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("DeleteById").Inject(
                 structureSchema.GetIndexesTableName(),
@@ -166,7 +166,7 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("DeleteByIds").Inject(
                 structureSchema.GetIndexesTableName(),
@@ -182,7 +182,7 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
             var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
@@ -200,7 +200,7 @@ namespace SisoDb.Sql2008.Dac
 
         public void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
                 structureSchema.GetIndexesTableName(),
@@ -215,7 +215,7 @@ namespace SisoDb.Sql2008.Dac
 
         public bool TableExists(string name)
         {
-            Ensure.That(() => name).IsNotNullOrWhiteSpace();
+            Ensure.That(name, "name").IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("TableExists");
             var value = ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("tableName", name));
@@ -225,7 +225,7 @@ namespace SisoDb.Sql2008.Dac
 
         public IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip)
         {
-            Ensure.That(() => tableName).IsNotNullOrWhiteSpace();
+            Ensure.That(tableName, "tableName").IsNotNullOrWhiteSpace();
 
             var tmpNamesToSkip = new HashSet<string>(namesToSkip);
             var dbColumns = new List<DbColumn>();
@@ -246,7 +246,7 @@ namespace SisoDb.Sql2008.Dac
 
         public int RowCount(IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("RowCount").Inject(structureSchema.GetStructureTableName());
 
@@ -255,7 +255,7 @@ namespace SisoDb.Sql2008.Dac
 
         public int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("RowCountByQuery").Inject(
                 structureSchema.GetIndexesTableName(),
@@ -266,7 +266,7 @@ namespace SisoDb.Sql2008.Dac
 
         public long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
         {
-            Ensure.That(() => entityHash).IsNotNullOrWhiteSpace();
+            Ensure.That(entityHash, "entityHash").IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
@@ -277,7 +277,7 @@ namespace SisoDb.Sql2008.Dac
 
         public IEnumerable<string> GetJson(IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("GetAllById").Inject(structureSchema.GetStructureTableName());
 
@@ -296,7 +296,7 @@ namespace SisoDb.Sql2008.Dac
 
         public string GetJsonById(ValueType structureId, IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("GetById").Inject(structureSchema.GetStructureTableName());
 
@@ -305,7 +305,7 @@ namespace SisoDb.Sql2008.Dac
 
         public IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName());
 
@@ -326,7 +326,7 @@ namespace SisoDb.Sql2008.Dac
 
         public IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)
         {
-            Ensure.That(() => structureSchema).IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
 

@@ -20,7 +20,7 @@ namespace SisoDb
 
         protected SisoConnectionInfo(IConnectionString connectionString)
         {
-            Ensure.That(() => connectionString).IsNotNull();
+            Ensure.That(connectionString, "connectionString").IsNotNull();
 
             ConnectionString = connectionString;
 
@@ -29,7 +29,7 @@ namespace SisoDb
 
         protected static IConnectionString GetConnectionString(string connectionStringOrName)
         {
-            Ensure.That(() => connectionStringOrName).IsNotNullOrWhiteSpace();
+            Ensure.That(connectionStringOrName, "connectionStringOrName").IsNotNullOrWhiteSpace();
 
             var config = ConfigurationManager.ConnectionStrings[connectionStringOrName];
 

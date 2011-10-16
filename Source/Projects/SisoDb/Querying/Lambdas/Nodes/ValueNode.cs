@@ -10,7 +10,7 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public ValueNode(object value)
         {
-            Ensure.That(() => value).IsNotNull();
+            Ensure.That(value, "value").IsNotNull();
 
             Value = value;
         }

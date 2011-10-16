@@ -36,10 +36,10 @@ namespace SisoDb
 
         public SqlStructureSetUpdater(ISisoConnectionInfo connectionInfo, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilder structureBuilder)
         {
-            Ensure.That(() => connectionInfo).IsNotNull();
-            Ensure.That(() => structureSchemaOld).IsNotNull();
-            Ensure.That(() => structureSchemaNew).IsNotNull();
-            Ensure.That(() => structureBuilder).IsNotNull();
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+            Ensure.That(structureSchemaOld, "structureSchemaOld").IsNotNull();
+            Ensure.That(structureSchemaNew, "structureSchemaNew").IsNotNull();
+            Ensure.That(structureBuilder, "structureBuilder").IsNotNull();
 
             ConnectionInfo = connectionInfo;
             StructureSchemaOld = structureSchemaOld;

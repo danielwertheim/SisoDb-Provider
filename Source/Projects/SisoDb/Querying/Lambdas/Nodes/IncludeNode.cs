@@ -14,9 +14,9 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public IncludeNode(string childStructureName, string idReferencePath, string objectReferencePath)
         {
-            Ensure.That(() => childStructureName).IsNotNullOrWhiteSpace();
-            Ensure.That(() => idReferencePath).IsNotNullOrWhiteSpace();
-            Ensure.That(() => objectReferencePath).IsNotNullOrWhiteSpace();
+            Ensure.That(childStructureName, "childStructureName").IsNotNullOrWhiteSpace();
+            Ensure.That(idReferencePath, "idReferencePath").IsNotNullOrWhiteSpace();
+            Ensure.That(objectReferencePath, "objectReferencePath").IsNotNullOrWhiteSpace();
 
             ChildStructureName = childStructureName;
             IdReferencePath = idReferencePath;

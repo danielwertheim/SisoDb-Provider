@@ -15,7 +15,7 @@ namespace SisoDb.Querying.Sql
 
         public SqlInclude(string sql)
         {
-            Ensure.That(() => sql).IsNotNullOrWhiteSpace();
+            Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
 
             Sql = sql;
         }

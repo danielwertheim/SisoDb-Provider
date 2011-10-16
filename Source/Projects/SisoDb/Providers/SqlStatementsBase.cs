@@ -11,8 +11,8 @@ namespace SisoDb.Providers
 
         protected SqlStatementsBase(Assembly assembly, string resxPath)
         {
-            Ensure.That(() => assembly).IsNotNull();
-            Ensure.That(() => resxPath).IsNotNullOrWhiteSpace();
+            Ensure.That(assembly, "assembly").IsNotNull();
+            Ensure.That(resxPath, "resxPath").IsNotNullOrWhiteSpace();
 
             var extension = Path.GetExtension(resxPath);
             if (!string.IsNullOrWhiteSpace(extension) && extension == ".resx")

@@ -12,7 +12,7 @@ namespace SisoDb.Structures
 
         public IdentityStructureIdGenerator(IDbClient dbClient)
         {
-            Ensure.That(() => dbClient).IsNotNull();
+            Ensure.That(dbClient, "dbClient").IsNotNull();
 
             _dbClient = dbClient;
         }
