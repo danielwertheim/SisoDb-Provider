@@ -4,7 +4,7 @@ using SisoDb.Sql2008;
 using SisoDb.Sql2008.Resources;
 using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Sql2008
+namespace SisoDb.UnitTests.Sql2008
 {
     [TestFixture]
     public class Sql2008ConnectionInfoTests : UnitTestBase

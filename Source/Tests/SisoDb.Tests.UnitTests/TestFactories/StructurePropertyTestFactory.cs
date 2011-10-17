@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using PineCone.Structures.Schemas;
 
-namespace SisoDb.Tests.UnitTests.TestFactories
+namespace SisoDb.UnitTests.TestFactories
 {
     internal static class StructurePropertyTestFactory
     {

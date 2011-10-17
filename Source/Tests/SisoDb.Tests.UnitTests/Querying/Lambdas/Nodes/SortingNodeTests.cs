@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Nodes;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Nodes
+namespace SisoDb.UnitTests.Querying.Lambdas.Nodes
 {
     [TestFixture]
     public class SortingNodeTests : UnitTestBase

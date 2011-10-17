@@ -3,7 +3,7 @@ using NUnit.Framework;
 using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Tests.UnitTests.DbSchema
+namespace SisoDb.UnitTests.DbSchema
 {
     [TestFixture]
     public abstract class StorageSchemaTestBase : UnitTestBase

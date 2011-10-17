@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas
+namespace SisoDb.UnitTests.Querying.Lambdas
 {
     [TestFixture]
     public class ParsedLambdaTests : UnitTestBase

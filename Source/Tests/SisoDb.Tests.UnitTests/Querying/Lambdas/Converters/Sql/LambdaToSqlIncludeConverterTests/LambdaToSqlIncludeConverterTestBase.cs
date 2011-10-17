@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeConverterTests
+namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeConverterTests
 {
     [TestFixture]
     public abstract class LambdaToSqlIncludeConverterTestBase : UnitTestBase

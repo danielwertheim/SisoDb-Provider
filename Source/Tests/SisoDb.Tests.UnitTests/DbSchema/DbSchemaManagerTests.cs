@@ -4,9 +4,9 @@ using NUnit.Framework;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Tests.UnitTests.TestFactories;
+using SisoDb.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.DbSchema
+namespace SisoDb.UnitTests.DbSchema
 {
     [TestFixture]
     public class DbSchemaManagerTests : UnitTestBase

@@ -3,7 +3,7 @@ using System.IO;
 using NUnit.Framework;
 using SisoDb.Serialization;
 
-namespace SisoDb.Tests.UnitTests.Serialization
+namespace SisoDb.UnitTests.Serialization
 {
     [TestFixture]
     public class ServiceStackJsonSerializerTests : UnitTestBase

@@ -1,9 +1,9 @@
 using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
-using SisoDb.Tests.UnitTests.TestFactories;
+using SisoDb.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverterTests
+namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverterTests
 {
     [TestFixture]
     public class LambdaToSqlSortingConverterTests : LambdaToSqlSortingConverterTestBase

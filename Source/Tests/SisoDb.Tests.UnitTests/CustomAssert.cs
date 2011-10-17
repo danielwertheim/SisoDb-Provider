@@ -6,11 +6,11 @@ using NCore;
 using NCore.Reflections;
 using NUnit.Framework;
 
-namespace SisoDb.TestUtils
+namespace SisoDb.UnitTests
 {
-    public static class CustomAssert
+    internal static class CustomAssert
     {
-        public static void IsEmpty<T>(IEnumerable<T> source)
+        internal static void IsEmpty<T>(IEnumerable<T> source)
         {
             var isEmpty = source.Count() < 1;
 
@@ -18,7 +18,7 @@ namespace SisoDb.TestUtils
                 throw new AssertionException("The enumerable was not empty");
         }
 
-        public static void IsNotEmpty<T>(IEnumerable<T> source)
+        internal static void IsNotEmpty<T>(IEnumerable<T> source)
         {
             var isEmpty = source.Count() < 1;
 
@@ -26,12 +26,12 @@ namespace SisoDb.TestUtils
                 throw new AssertionException("The enumerable was empty");
         }
 
-        public static void Count<T>(int expectedCount, IEnumerable<T> elements)
+        internal static void Count<T>(int expectedCount, IEnumerable<T> elements)
         {
             Assert.AreEqual(expectedCount, elements.Count());
         }
 
-        public static void Exists<T>(IEnumerable<T> elements, Func<T, bool> predicate)
+        internal static void Exists<T>(IEnumerable<T> elements, Func<T, bool> predicate)
         {
             var element = elements.SingleOrDefault(predicate);
 
@@ -39,7 +39,7 @@ namespace SisoDb.TestUtils
                 throw new AssertionException("No element matches the predicate.");
         }
 
-        public static void ForAll<T>(IEnumerable<T> elements, Func<T, bool> predicate)
+        internal static void ForAll<T>(IEnumerable<T> elements, Func<T, bool> predicate)
         {
             var allCount = elements.Count();
             var predicateCount = elements.Count(predicate);
@@ -48,7 +48,7 @@ namespace SisoDb.TestUtils
                 throw new AssertionException("All items did not meet the predicate.");
         }
 
-        public static void AreEqual<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, Func<T, T, bool> comparer)
+        internal static void AreEqual<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, Func<T, T, bool> comparer)
         {
             Assert.AreEqual(expectedItems.Count(), actualItems.Count(), "Different numer of elements.");
 
@@ -64,12 +64,12 @@ namespace SisoDb.TestUtils
             }
         }
 
-        public static void AreValueEqual<T>(T expected, T actual) where T : class
+        internal static void AreValueEqual<T>(T expected, T actual) where T : class
         {
             AreValueEqual(typeof(T), expected, actual);
         }
 
-        public static void KeyValueEquality(IDictionary<string, object> expected, IDictionary<string, object> actual)
+        internal static void KeyValueEquality(IDictionary<string, object> expected, IDictionary<string, object> actual)
         {
             foreach (var expectedKV in expected)
             {

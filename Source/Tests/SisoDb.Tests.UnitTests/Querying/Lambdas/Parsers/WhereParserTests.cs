@@ -3,9 +3,8 @@ using NCore;
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
-using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Parsers
+namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 {
     [TestFixture]
     public class WhereParserTests : UnitTestBase

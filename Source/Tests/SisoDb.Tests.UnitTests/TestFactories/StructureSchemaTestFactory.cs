@@ -3,7 +3,7 @@ using Moq;
 using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.MemberAccessors;
 
-namespace SisoDb.Tests.UnitTests.TestFactories
+namespace SisoDb.UnitTests.TestFactories
 {
     internal static class StructureSchemaTestFactory
     {

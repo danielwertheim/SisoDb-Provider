@@ -1,9 +1,8 @@
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Converters.Sql;
-using SisoDb.TestUtils;
-using SisoDb.Tests.UnitTests.TestFactories;
+using SisoDb.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeConverterTests
+namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeConverterTests
 {
     [TestFixture]
     public class LambdaToSqlIncludeConverterTests : LambdaToSqlIncludeConverterTestBase

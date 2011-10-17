@@ -7,7 +7,7 @@ using PineCone.Structures.Schemas.MemberAccessors;
 using SisoDb.Sql2008.DbSchema;
 using SisoDb.Sql2008.Resources;
 
-namespace SisoDb.Tests.UnitTests.Sql2008.DbSchema
+namespace SisoDb.UnitTests.Sql2008.DbSchema
 {
     [TestFixture]
     public class Sql2008DataTypeTranslatorTests : UnitTestBase

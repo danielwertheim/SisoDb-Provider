@@ -5,9 +5,8 @@ using NUnit.Framework;
 using SisoDb.Dac;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConverterTests
+namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConverterTests
 {
     [TestFixture]
     public abstract class LambdaToSqlWhereConverterTestBase : UnitTestBase

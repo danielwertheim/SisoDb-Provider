@@ -3,7 +3,7 @@ using NUnit.Framework;
 using PineCone.Structures.Schemas;
 using SisoDb.Structures;
 
-namespace SisoDb.Tests.UnitTests.Structures
+namespace SisoDb.UnitTests.Structures
 {
     [TestFixture]
     public class StructureSchemaExtensionsTests : UnitTestBase

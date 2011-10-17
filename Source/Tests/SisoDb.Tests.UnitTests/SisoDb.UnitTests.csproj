@@ -96,6 +96,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ConnectionStringTests.cs" />
+    <Compile Include="CustomAssert.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="DbSchema\DbSchemaManagerTests.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Reflect.cs" />
     <Compile Include="Sql2008\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />

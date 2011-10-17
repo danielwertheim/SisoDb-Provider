@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using SisoDb.Querying;
 
-namespace SisoDb.Tests.UnitTests.Querying
+namespace SisoDb.UnitTests.Querying
 {
     [TestFixture]
     public class PagingTests : UnitTestBase

@@ -4,9 +4,9 @@ using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;
-using SisoDb.Tests.UnitTests.TestFactories;
+using SisoDb.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying.Sql
+namespace SisoDb.UnitTests.Querying.Sql
 {
     [TestFixture]
     public class SqlQueryGeneratorTests : UnitTestBase

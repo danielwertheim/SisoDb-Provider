@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using SisoDb.Dynamic;
-using SisoDb.TestUtils;
 
-namespace SisoDb.Tests.UnitTests.Dynamic
+namespace SisoDb.UnitTests.Dynamic
 {
     [TestFixture]
     public class DynamicStructureTests : UnitTestBase

@@ -5,10 +5,9 @@ using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.TestUtils;
-using SisoDb.Tests.UnitTests.TestFactories;
+using SisoDb.UnitTests.TestFactories;
 
-namespace SisoDb.Tests.UnitTests.Querying
+namespace SisoDb.UnitTests.Querying
 {
     [TestFixture]
     public class QueryCommandBuilderTests : UnitTestBase

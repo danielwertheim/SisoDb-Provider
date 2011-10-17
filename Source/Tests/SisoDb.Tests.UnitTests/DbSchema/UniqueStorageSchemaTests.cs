@@ -2,7 +2,7 @@ using System.Linq;
 using NUnit.Framework;
 using SisoDb.DbSchema;
 
-namespace SisoDb.Tests.UnitTests.DbSchema
+namespace SisoDb.UnitTests.DbSchema
 {
     [TestFixture]
     public class UniqueStorageSchemaTests : StorageSchemaTestBase
