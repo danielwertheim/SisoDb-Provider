@@ -3,7 +3,6 @@ using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
-using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 
 namespace SisoDb.Providers

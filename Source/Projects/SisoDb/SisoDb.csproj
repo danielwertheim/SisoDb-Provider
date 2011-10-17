@@ -131,7 +131,7 @@
     <Compile Include="ResourceContainer.cs" />
     <Compile Include="Providers\SisoProviderFactories.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
-    <Compile Include="SqlStructureSetUpdater.cs" />
+    <Compile Include="StructureSetUpdater.cs" />
     <Compile Include="StructureSetUpdaterStatuses.cs" />
     <Compile Include="Querying\GetCommandBuilder.cs" />
     <Compile Include="Querying\IGetCommandBuilder.cs" />

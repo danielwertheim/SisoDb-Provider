@@ -323,7 +323,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             }
         }
 
-        private SqlStructureSetUpdater<TOld, TNew> CreateUpserterFor<TOld, TNew>()
+        private StructureSetUpdater<TOld, TNew> CreateUpserterFor<TOld, TNew>()
             where TOld : class
             where TNew : class
         {
@@ -331,7 +331,7 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             Database.StructureSchemas.RemoveSchema(TypeFor<TOld>.Type);
 
             var structureSchemaNew = Database.StructureSchemas.GetSchema(TypeFor<TNew>.Type);
-            var updater = new SqlStructureSetUpdater<TOld, TNew>(Database.ConnectionInfo, structureSchemaOld, structureSchemaNew, Database.StructureBuilder);
+            var updater = new StructureSetUpdater<TOld, TNew>(Database.ConnectionInfo, structureSchemaOld, structureSchemaNew, Database.StructureBuilder);
 
             return updater;
         }

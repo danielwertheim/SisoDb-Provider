@@ -11,7 +11,7 @@ using SisoDb.Serialization;
 
 namespace SisoDb
 {
-    public class SqlStructureSetUpdater<TOld, TNew>
+    internal class StructureSetUpdater<TOld, TNew>
         where TOld : class
         where TNew : class
     {
@@ -34,7 +34,7 @@ namespace SisoDb
 
         protected IStructureBuilder StructureBuilder { get; private set; }
 
-        public SqlStructureSetUpdater(ISisoConnectionInfo connectionInfo, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilder structureBuilder)
+        internal StructureSetUpdater(ISisoConnectionInfo connectionInfo, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilder structureBuilder)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(structureSchemaOld, "structureSchemaOld").IsNotNull();
