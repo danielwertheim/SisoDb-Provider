@@ -32,7 +32,7 @@ namespace SisoDb.DbSchema
         {
             var inString = string.Join(",", names.Select(n => "'" + n + "'"));
             var sql = _sqlStatements.GetSql("IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
-                .Inject(structureSchema.GetUniquesTableName(), IndexStorageSchema.Fields.MemberPath.Name, inString);
+                .Inject(structureSchema.GetIndexesTableName(), IndexStorageSchema.Fields.MemberPath.Name, inString);
 
             using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
             {

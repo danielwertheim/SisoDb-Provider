@@ -12,10 +12,10 @@ namespace SisoDb.Specifications.Sql2008.Database
         {
             Establish context = () =>
             {
-                _testContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
                 var orgItem = new ModelComplexUpdates.Person { Name = "Daniel Wertheim", Address = "The Street 1\r\n12345\r\nThe City" };
-                using (var uow = _testContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.CreateUnitOfWork())
                 {
                     uow.Insert(orgItem);
                     uow.Commit();
@@ -25,7 +25,7 @@ namespace SisoDb.Specifications.Sql2008.Database
             };
 
             Because of = () =>
-                _testContext.Database.UpdateStructureSet<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
+                TestContext.Database.UpdateStructureSet<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
                 {
                     var names = p.Name.Split(' ');
                     sp.Firstname = names[0];
@@ -41,7 +41,7 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             It should_have_removed_the_person = () =>
             {
-                using (var q = _testContext.Database.CreateQueryEngine())
+                using (var q = TestContext.Database.CreateQueryEngine())
                 {
                     q.Count<ModelComplexUpdates.Person>().ShouldEqual(0);
                 }
@@ -49,7 +49,7 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             It should_have_created_a_salesperson_from_the_person = () =>
             {
-                using (var q = _testContext.Database.CreateQueryEngine())
+                using (var q = TestContext.Database.CreateQueryEngine())
                 {
                     var refetchedSalesPerson = q.GetById<ModelComplexUpdates.SalesPerson>(_personId);
                     refetchedSalesPerson.Firstname.ShouldEqual("Daniel");
@@ -60,7 +60,6 @@ namespace SisoDb.Specifications.Sql2008.Database
                 }
             };
 
-            private static ITestContext _testContext;
             private static Guid _personId;
         }
 
@@ -84,11 +83,11 @@ namespace SisoDb.Specifications.Sql2008.Database
                 _orgItem2Id = orgItem2.StructureId;
                 _orgItem3Id = orgItem3.StructureId;
 
-                _testContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
             };
 
-            private Because of = () => 
-                _testContext.Database.UpdateStructureSet<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
+            private Because of = () =>
+                TestContext.Database.UpdateStructureSet<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
                 (oldItem, newItem) =>
                 {
                     newItem.NewString1 = oldItem.String1;
@@ -101,7 +100,7 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             It should_have_kept_and_updated_the_first_and_last_items = () =>
             {
-                using (var q = _testContext.Database.CreateQueryEngine())
+                using (var q = TestContext.Database.CreateQueryEngine())
                 {
                     var newItem1 = q.GetById<ModelNew.ItemForPropChange>(_orgItem1Id);
                     newItem1.ShouldNotBeNull();
@@ -118,14 +117,13 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             It should_have_removed_the_second_item = () =>
             {
-                using (var q = _testContext.Database.CreateQueryEngine())
+                using (var q = TestContext.Database.CreateQueryEngine())
                 {
                     var newItem2 = q.GetById<ModelNew.ItemForPropChange>(_orgItem2Id);
                     newItem2.ShouldBeNull();
                 }
             };
 
-            private static ITestContext _testContext;
             private static int _orgItem1Id, _orgItem2Id, _orgItem3Id;
         }
 
