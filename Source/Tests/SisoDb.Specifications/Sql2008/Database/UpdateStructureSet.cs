@@ -127,6 +127,70 @@ namespace SisoDb.Specifications.Sql2008.Database
             private static int _orgItem1Id, _orgItem2Id, _orgItem3Id;
         }
 
+        [Subject(typeof(Sql2008Database), "Update structure set")]
+        public class when_three_structures_with_guids_exists_and_trash_is_made_on_second : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                var orgItem1 = new ModelOld.GuidItemForPropChange { String1 = "A" };
+                var orgItem2 = new ModelOld.GuidItemForPropChange { String1 = "B" };
+                var orgItem3 = new ModelOld.GuidItemForPropChange { String1 = "C" };
+
+                var testContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                using (var uow = testContext.Database.CreateUnitOfWork())
+                {
+                    uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
+                    uow.Commit();
+                }
+
+                _orgItem1Id = orgItem1.StructureId;
+                _orgItem2Id = orgItem2.StructureId;
+                _orgItem3Id = orgItem3.StructureId;
+
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+            };
+
+            private Because of = () =>
+                TestContext.Database.UpdateStructureSet<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
+                (oldItem, newItem) =>
+                {
+                    newItem.NewString1 = oldItem.String1;
+
+                    if (oldItem.StructureId == _orgItem2Id)
+                        return StructureSetUpdaterStatuses.Trash;
+
+                    return StructureSetUpdaterStatuses.Keep;
+                });
+
+            It should_have_kept_and_updated_the_first_and_last_items = () =>
+            {
+                using (var q = TestContext.Database.CreateQueryEngine())
+                {
+                    var newItem1 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem1Id);
+                    newItem1.ShouldNotBeNull();
+                    newItem1.NewString1 = "A";
+
+                    var newItem2 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem2Id);
+                    newItem2.ShouldBeNull();
+
+                    var newItem3 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem3Id);
+                    newItem3.ShouldNotBeNull();
+                    newItem3.NewString1 = "C";
+                }
+            };
+
+            It should_have_removed_the_second_item = () =>
+            {
+                using (var q = TestContext.Database.CreateQueryEngine())
+                {
+                    var newItem2 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem2Id);
+                    newItem2.ShouldBeNull();
+                }
+            };
+
+            private static Guid _orgItem1Id, _orgItem2Id, _orgItem3Id;
+        }
+
         namespace ModelComplexUpdates
         {
             public class Person
