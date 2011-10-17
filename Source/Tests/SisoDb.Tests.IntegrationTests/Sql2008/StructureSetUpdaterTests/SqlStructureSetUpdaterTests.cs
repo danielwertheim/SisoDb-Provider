@@ -100,14 +100,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             Database.StructureSchemas.RemoveSchema(TypeFor<ModelOld.ItemForPropChange>.Type);
 
             var updater = CreateUpserterFor<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>();
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(
+            var ex = Assert.Throws<SisoDbException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
                     newItem.StructureId = 0;
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
-            Assert.AreEqual(ExceptionMessages.Id_IdentityIsOutOfRange + "\r\nParameter name: value", ex.Message);
+            Assert.AreEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(0, orgItem.StructureId), ex.Message);
         }
 
         [Test]
@@ -122,14 +122,14 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
             Database.StructureSchemas.RemoveSchema(TypeFor<ModelOld.GuidItemForPropChange>.Type);
 
             var updater = CreateUpserterFor<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>();
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(
+            var ex = Assert.Throws<SisoDbException>(
                 () => updater.Process((oldItem, newItem) =>
                 {
                     newItem.StructureId = Guid.Empty;
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
-            Assert.AreEqual(ExceptionMessages.Id_GuidIsMissingValue + "\r\nParameter name: value", ex.Message);
+            Assert.AreEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(Guid.Empty, orgItem.StructureId), ex.Message);
         }
 
         [Test]

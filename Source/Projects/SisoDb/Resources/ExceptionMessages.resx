@@ -120,9 +120,6 @@
   <data name="AutoSchemaBuilder_MissingIdMember" xml:space="preserve">
     <value>The Item of type '{0}' has no Id member specified. A Guid or Int property named 'Id' was expected.</value>
   </data>
-  <data name="Id_GuidIsMissingValue" xml:space="preserve">
-    <value>You must provide an unique guid to the GuidId.</value>
-  </data>
   <data name="SisoDbFactory_UnknownStorageProvider" xml:space="preserve">
     <value>The provided StorageProvider '{0}' is not supported.</value>
   </data>
@@ -146,9 +143,6 @@
   </data>
   <data name="Structure_DuplicateUniques" xml:space="preserve">
     <value>Duplicate Unique-index found for '{0}'.\r\nStructureId: '{1}';Name: '{2}';Value: '{3}';</value>
-  </data>
-  <data name="Id_IdentityIsOutOfRange" xml:space="preserve">
-    <value>You must provide a positive identity.</value>
   </data>
   <data name="AutoSchemaBuilder_UnsupportedIdAccessorType" xml:space="preserve">
     <value>The id property: '{0}'; is not of suported type. Only Guid and Int is accepted.</value>
