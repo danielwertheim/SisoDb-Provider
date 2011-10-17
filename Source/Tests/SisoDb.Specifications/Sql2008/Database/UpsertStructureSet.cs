@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Sql2008.Database
 {
     namespace UpsertStructureSet
     {
-        [Subject(typeof(Sql2008DbClient), "Upsert structureset")]
+        [Subject(typeof(Sql2008DbClient), "Upsert structure set")]
         public class when_using_generics_and_no_set_exists : SpecificationBase
         {
             Establish context = () =>

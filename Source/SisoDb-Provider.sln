@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Tests.UnitTests", "Tests\SisoDb.Tests.UnitTests\SisoDb.Tests.UnitTests.csproj", "{73C5C30B-36DE-4A5E-A64D-CD06A63A601C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.UnitTests", "Tests\SisoDb.Tests.UnitTests\SisoDb.UnitTests.csproj", "{73C5C30B-36DE-4A5E-A64D-CD06A63A601C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Tests.IntegrationTests", "Tests\SisoDb.Tests.IntegrationTests\SisoDb.Tests.IntegrationTests.csproj", "{E347A655-DB90-41A6-B062-36F5F8B59C55}"
 EndProject

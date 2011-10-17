@@ -1,9 +1,7 @@
 using System;
 using NCore;
 using NUnit.Framework;
-using SisoDb.Core;
 using SisoDb.Resources;
-using SisoDb.Sql2008;
 
 namespace SisoDb.Tests.IntegrationTests.Sql2008.StructureSetUpdaterTests
 {

@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Sql2008.Database
 {
     namespace DropStructureSet
     {
-        [Subject(typeof(Sql2008DbClient), "Drop structureset")]
+        [Subject(typeof(Sql2008DbClient), "Drop structure set")]
         public class when_set_exists : SpecificationBase
         {
             Establish context = () =>

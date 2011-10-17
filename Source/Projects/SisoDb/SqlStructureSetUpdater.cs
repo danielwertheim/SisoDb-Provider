@@ -77,42 +77,46 @@ namespace SisoDb
 
         private bool ItterateStructures(IDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            foreach (var json in GetAllJson())
+            using (var dbClientNonTrans = ProviderFactory.GetDbClient(ConnectionInfo, false))
             {
-                var oldStructure = _jsonSerializer.Deserialize<TOld>(json);
-                var oldId = GetStructureId(oldStructure);
-                if (oldId == null)
-                    throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_OldIdDoesNotExist);
-
-                var newStructure = _jsonSerializer.Deserialize<TNew>(json);
-
-                var status = onProcess(oldStructure, newStructure);
-
-                var newId = GetStructureId(newStructure);
-                if (newId == null)
-                    throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotExist);
-
-                if (!newId.Value.Equals(oldId.Value))
-                    throw new SisoDbException(
-                        ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(newId.Value, oldId.Value));
-
-                switch (status)
+                foreach (var json in dbClientNonTrans.GetJson(StructureSchemaOld))
                 {
-                    case StructureSetUpdaterStatuses.Keep:
-                        OnTrash(newId);
-                        OnKeep(newStructure);
-                        break;
-                    case StructureSetUpdaterStatuses.Trash:
-                        OnTrash(newId);
-                        break;
-                    case StructureSetUpdaterStatuses.Abort:
-                        return false;
-                }
+                    var oldStructure = _jsonSerializer.Deserialize<TOld>(json);
+                    var oldId = GetStructureId(oldStructure);
+                    if (oldId == null)
+                        throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_OldIdDoesNotExist);
 
-                if (KeepQueue.Count == MaxKeepQueueSize)
-                {
-                    DequeueStructuresToTrash(dbClient);
-                    DequeueStructuresToKeep(dbClient);
+                    var newStructure = _jsonSerializer.Deserialize<TNew>(json);
+
+                    var status = onProcess(oldStructure, newStructure);
+
+                    var newId = GetStructureId(newStructure);
+                    if (newId == null)
+                        throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotExist);
+
+                    if (!newId.Value.Equals(oldId.Value))
+                        throw new SisoDbException(
+                            ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(newId.Value,
+                                                                                                   oldId.Value));
+
+                    switch (status)
+                    {
+                        case StructureSetUpdaterStatuses.Keep:
+                            OnTrash(newId);
+                            OnKeep(newStructure);
+                            break;
+                        case StructureSetUpdaterStatuses.Trash:
+                            OnTrash(newId);
+                            break;
+                        case StructureSetUpdaterStatuses.Abort:
+                            return false;
+                    }
+
+                    if (KeepQueue.Count == MaxKeepQueueSize)
+                    {
+                        DequeueStructuresToTrash(dbClient);
+                        DequeueStructuresToKeep(dbClient);
+                    }
                 }
             }
 
@@ -120,14 +124,6 @@ namespace SisoDb
             DequeueStructuresToKeep(dbClient);
 
             return true;
-        }
-
-        private IEnumerable<string> GetAllJson()
-        {
-            using (var dbClient = ProviderFactory.GetDbClient(ConnectionInfo, false))
-            {
-                return dbClient.GetJson(StructureSchemaOld);
-            }
         }
 
         private IStructureId GetStructureId<T>(T item)

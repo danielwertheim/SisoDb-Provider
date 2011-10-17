@@ -56,7 +56,7 @@ namespace SisoDb.DbSchema
                 CommandType.Text,
                 _sqlStatements.GetSql("IndexesSchemaSynchronizer_GetKeyNames").Inject(
                     IndexStorageSchema.Fields.MemberPath.Name,
-                    structureSchema.GetUniquesTableName()),
+                    structureSchema.GetIndexesTableName()),
                     dr => dbColumns.Add(dr.GetString(0)));
 
             return dbColumns;
