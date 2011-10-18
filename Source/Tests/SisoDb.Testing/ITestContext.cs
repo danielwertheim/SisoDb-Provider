@@ -1,11 +1,14 @@
+using SisoDb.Dac;
+
 namespace SisoDb.Testing
 {
     public interface ITestContext
     {
+        ISisoDatabase Database { get; }
         ITestDbUtils DbHelper { get; }
         ITestDbUtils DbHelperForServer { get; }
-        ISisoDatabase Database { get; }
 
         void Cleanup();
+        IDbClient CreateNonTransactionalDbClient();
     }
 }

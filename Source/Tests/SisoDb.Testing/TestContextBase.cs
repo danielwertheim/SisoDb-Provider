@@ -1,23 +1,29 @@
-using SisoDb.Testing.Sql2008;
+using SisoDb.Dac;
+using SisoDb.Providers;
 
 namespace SisoDb.Testing
 {
     public abstract class TestContextBase : ITestContext
     {
-        public ITestDbUtils DbHelper { get; private set; }
-        public ITestDbUtils DbHelperForServer { get; private set; }
         public ISisoDatabase Database { get; private set; }
-        
-        protected TestContextBase(ISisoDbFactory dbFactory, ISisoConnectionInfo connectionInfo)
+        protected ISisoProviderFactory ProviderFactory { get; private set; }
+        public ITestDbUtils DbHelper { get; protected set; }
+        public ITestDbUtils DbHelperForServer { get; protected set; }
+
+        protected TestContextBase(ISisoDbFactory dbFactory, ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory)
         {
             Database = dbFactory.CreateDatabase(connectionInfo);
-            DbHelper = new Sql2008TestDbUtils(Database.ConnectionInfo.ConnectionString.PlainString);
-            DbHelperForServer = new Sql2008TestDbUtils(Database.ConnectionInfo.ServerConnectionString.PlainString);
+            ProviderFactory = providerFactory;
         }
 
         public void Cleanup()
         {
             Database.DropStructureSets();
+        }
+
+        public IDbClient CreateNonTransactionalDbClient()
+        {
+            return ProviderFactory.GetDbClient(Database.ConnectionInfo, false);
         }
     }
 }
