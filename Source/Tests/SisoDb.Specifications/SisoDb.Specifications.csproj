@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +68,7 @@
     <Compile Include="Sql2008\Database\CreateIfNotExists.cs" />
     <Compile Include="Sql2008\QueryEngine\Count.cs" />
     <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
+    <Compile Include="Sql2008\UnitOfWork\TransactionScopes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
