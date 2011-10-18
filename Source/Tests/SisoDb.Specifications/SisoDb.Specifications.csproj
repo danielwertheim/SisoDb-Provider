@@ -66,6 +66,7 @@
     <Compile Include="Sql2008\Database\InitializeExisting.cs" />
     <Compile Include="Sql2008\Database\CreateIfNotExists.cs" />
     <Compile Include="Sql2008\QueryEngine\Count.cs" />
+    <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
