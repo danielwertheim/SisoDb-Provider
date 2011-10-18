@@ -155,30 +155,30 @@ namespace SisoDb.Testing.Sql2008
             }
         }
 
-//        public T ExecuteScalar<T>(CommandType commandType, string sql)
-//        {
-//            T retVal;
+        private T ExecuteScalar<T>(CommandType commandType, string sql)
+        {
+            T retVal;
 
-//            using (var cn = CreateConnection())
-//            {
-//                cn.Open();
-//                using (var cmd = cn.CreateCommand())
-//                {
-//                    cmd.CommandType = commandType;
-//                    cmd.CommandText = sql;
+            using (var cn = CreateConnection())
+            {
+                cn.Open();
+                using (var cmd = cn.CreateCommand())
+                {
+                    cmd.CommandType = commandType;
+                    cmd.CommandText = sql;
 
-//                    var value = cmd.ExecuteScalar();
+                    var value = cmd.ExecuteScalar();
 
-//                    if (value == null || value == DBNull.Value)
-//                        retVal = default(T);
-//                    else
-//                        retVal = (T)Convert.ChangeType(value, typeof(T));
-//                }
-//                cn.Close();
-//            }
+                    if (value == null || value == DBNull.Value)
+                        retVal = default(T);
+                    else
+                        retVal = (T)Convert.ChangeType(value, typeof(T));
+                }
+                cn.Close();
+            }
 
-//            return retVal;
-//        }
+            return retVal;
+        }
 
         public T? ExecuteNullableScalar<T>(CommandType commandType, string sql) where T : struct
         {
@@ -234,12 +234,12 @@ namespace SisoDb.Testing.Sql2008
 //            return ExecuteScalar<bool>(CommandType.Text, sql);
 //        }
 
-//        public int RowCount(string tableName, string where = null)
-//        {
-//            where = where ?? "1 = 1";
-//            var sql = "select count(*) from dbo.[{0}] where {1};".Inject(tableName, where);
+        public int RowCount(string tableName, string where = null)
+        {
+            where = where ?? "1 = 1";
+            var sql = "select count(*) from dbo.[{0}] where {1};".Inject(tableName, where);
 
-//            return ExecuteScalar<int>(CommandType.Text, sql);
-//        }
+            return ExecuteScalar<int>(CommandType.Text, sql);
+        }
     }
 }

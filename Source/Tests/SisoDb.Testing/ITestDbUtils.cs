@@ -16,6 +16,6 @@ namespace SisoDb.Testing
         //T ExecuteScalar<T>(CommandType commandType, string sql);
         //T? ExecuteNullableScalar<T>(CommandType commandType, string sql) where T : struct;
         //bool IndexExists(string tableName, string indexName);
-        //int RowCount(string tableName, string where = null);
+        int RowCount(string tableName, string where = null);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Machine.Specifications;
+using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
@@ -62,6 +63,38 @@ namespace SisoDb.Specifications.Sql2008.Database
             private static IStructureSchema _structureSchema;
         }
 
+        [Subject(typeof (Sql2008Database), "Upsert structureset")]
+        public class when_model_has_dropped_column : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                TestContext.Database.UpsertStructureSet<OrgModel.MyClass>();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
+
+                using(var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.Insert(new OrgModel.MyClass
+                    {
+                        IndexableMember1 = "My string", IndexableMember2 = 42
+                    });
+                    uow.Commit();
+                }
+
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+            };
+
+            Because of = 
+                () => TestContext.Database.UpsertStructureSet<DroppedColumnModel.MyClass>();
+
+            It should_have_dropped_all_indexes_for_dropped_member = 
+                () => TestContext.DbHelper.RowCount(
+                    _structureSchema.GetIndexesTableName(),
+                    "[{0}]='IndexableMember1'".Inject(IndexStorageSchema.Fields.MemberPath.Name)).ShouldEqual(0);
+
+            private static IStructureSchema _structureSchema;
+        }
+
         [Subject(typeof(Sql2008Database), "Upsert structureset")]
         public class when_structure_has_new_structure_id_type : SpecificationBase
         {
@@ -70,6 +103,8 @@ namespace SisoDb.Specifications.Sql2008.Database
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
                 TestContext.Database.UpsertStructureSet<OrgModel.MyClass>();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
+
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
             };
 
             Because of =
@@ -156,6 +191,16 @@ namespace SisoDb.Specifications.Sql2008.Database
                 public int StructureId { get; set; }
 
                 public string IndexableMember1 { get; set; }
+
+                public int IndexableMember2 { get; set; }
+            }
+        }
+
+        namespace DroppedColumnModel
+        {
+            public class MyClass
+            {
+                public int StructureId { get; set; }
 
                 public int IndexableMember2 { get; set; }
             }
