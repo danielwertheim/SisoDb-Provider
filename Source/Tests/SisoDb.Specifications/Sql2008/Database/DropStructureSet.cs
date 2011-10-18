@@ -1,7 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
 using PineCone.Structures.Schemas;
-using SisoDb.Sql2008.Dac;
+using SisoDb.Sql2008;
 using SisoDb.Structures;
 using SisoDb.Testing;
 
@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Sql2008.Database
 {
     namespace DropStructureSet
     {
-        [Subject(typeof(Sql2008DbClient), "Drop structure set")]
+        [Subject(typeof(Sql2008Database), "Drop structure set")]
         public class when_set_exists : SpecificationBase
         {
             Establish context = () =>

@@ -1,7 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
 using PineCone.Structures.Schemas;
-using SisoDb.Sql2008.Dac;
+using SisoDb.Sql2008;
 using SisoDb.Structures;
 using SisoDb.Testing;
 
@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Sql2008.Database
 {
     namespace UpsertStructureSet
     {
-        [Subject(typeof(Sql2008DbClient), "Upsert structure set")]
+        [Subject(typeof(Sql2008Database), "Upsert structure set")]
         public class when_using_generics_and_no_set_exists : SpecificationBase
         {
             Establish context = () =>
@@ -19,7 +19,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<MyClass>();
             };
 
-            Because of = 
+            Because of =
                 () => TestContext.Database.UpsertStructureSet<MyClass>();
 
             It should_have_created_structure_table =
@@ -32,18 +32,9 @@ namespace SisoDb.Specifications.Sql2008.Database
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
 
             private static IStructureSchema _structureSchema;
-
-            private class MyClass
-            {
-                public Guid StructureId { get; set; }
-
-                public string IndexableMember1 { get; set; }
-
-                public int IndexableMember2 { get; set; }
-            }
         }
 
-        [Subject(typeof(Sql2008DbClient), "Upsert structureset")]
+        [Subject(typeof(Sql2008Database), "Upsert structureset")]
         public class when_using_type_and_no_set_exists : SpecificationBase
         {
             Establish context = () =>
@@ -66,15 +57,15 @@ namespace SisoDb.Specifications.Sql2008.Database
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
 
             private static IStructureSchema _structureSchema;
+        }
 
-            private class MyClass
-            {
-                public Guid StructureId { get; set; }
+        public class MyClass
+        {
+            public Guid StructureId { get; set; }
 
-                public string IndexableMember1 { get; set; }
+            public string IndexableMember1 { get; set; }
 
-                public int IndexableMember2 { get; set; }
-            }
+            public int IndexableMember2 { get; set; }
         }
     }
 }
