@@ -47,7 +47,7 @@ namespace SisoDb.Sql2008
 
             var structure = StructureBuilder.CreateStructure(item, structureSchema, CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType));
 
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClientNonTrans);
+            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClientTrans);
             bulkInserter.Insert(structureSchema, new[] { structure });
         }
 
@@ -64,7 +64,7 @@ namespace SisoDb.Sql2008
 
             var structureBuilderOptions = CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType);
             
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClientNonTrans);
+            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClientTrans);
 
             foreach (var batchOfStructures in StructureBuilder.CreateStructureBatches(items, structureSchema, BatchSize, structureBuilderOptions))
                 bulkInserter.Insert(structureSchema, batchOfStructures);
@@ -93,7 +93,7 @@ namespace SisoDb.Sql2008
 
             DeleteById(structureSchema, updatedStructure.Id.Value);
 
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClientNonTrans);
+            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClientTrans);
             bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 
@@ -108,7 +108,7 @@ namespace SisoDb.Sql2008
 
         private void DeleteById(IStructureSchema structureSchema, ValueType structureId)
         {
-            DbClientNonTrans.DeleteById(structureId, structureSchema);
+            DbClientTrans.DeleteById(structureId, structureSchema);
         }
 
         public void DeleteByIds<T>(params ValueType[] ids) where T : class
@@ -117,7 +117,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            DbClientNonTrans.DeleteByIds(ids, structureSchema.IdAccessor.IdType, structureSchema);
+            DbClientTrans.DeleteByIds(ids, structureSchema.IdAccessor.IdType, structureSchema);
         }
 
         public void DeleteByIdInterval<T>(ValueType idFrom, ValueType idTo) where T : class
@@ -126,7 +126,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            DbClientNonTrans.DeleteWhereIdIsBetween(idFrom, idTo, structureSchema);
+            DbClientTrans.DeleteWhereIdIsBetween(idFrom, idTo, structureSchema);
         }
 
         public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
@@ -140,7 +140,7 @@ namespace SisoDb.Sql2008
             var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
             var queryCommand = commandBuilder.Where(expression).Command;
             var sql = QueryGenerator.GenerateWhereQuery(queryCommand);
-            DbClientNonTrans.DeleteByQuery(sql, structureSchema.IdAccessor.DataType, structureSchema);
+            DbClientTrans.DeleteByQuery(sql, structureSchema.IdAccessor.DataType, structureSchema);
         }
 
         protected StructureBuilderOptions CreateStructureBuilderOptions(StructureIdTypes structureIdType)

@@ -65,6 +65,7 @@
     <Compile Include="Sql2008\Database\EnsureNewDatabase.cs" />
     <Compile Include="Sql2008\Database\InitializeExisting.cs" />
     <Compile Include="Sql2008\Database\CreateIfNotExists.cs" />
+    <Compile Include="Sql2008\QueryEngine\Count.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
