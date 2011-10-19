@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.Sql2008.Database
     namespace InitializeExisting
     {
         [Subject(typeof (Sql2008Database), "Initialize existing")]
-        public class when_blank_database_exists
+        public class when_blank_database_exists : SpecificationBase
         {
             Establish context = () =>
             {
@@ -34,7 +34,7 @@ namespace SisoDb.Specifications.Sql2008.Database
         }
 
         [Subject(typeof (Sql2008Database), "Initialize existing")]
-        public class when_no_database_exists
+        public class when_no_database_exists : SpecificationBase
         {
             Establish context = () =>
             {
@@ -42,12 +42,13 @@ namespace SisoDb.Specifications.Sql2008.Database
                 _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
             };
 
-            Because of = () => _exception = Catch.Exception(() => _testContext.Database.InitializeExisting());
+            Because of = 
+                () => CaughtException = Catch.Exception(() => _testContext.Database.InitializeExisting());
 
-            It should_fail = () => _exception.ShouldBeOfType<SisoDbException>();
+            It should_fail = 
+                () => CaughtException.ShouldBeOfType<SisoDbException>();
 
             private static ITestContext _testContext;
-            private static Exception _exception;
         }
     }
 }

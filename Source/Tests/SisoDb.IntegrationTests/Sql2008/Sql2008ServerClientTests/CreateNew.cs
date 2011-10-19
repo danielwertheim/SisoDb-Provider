@@ -3,9 +3,9 @@ using SisoDb.Dac;
 using SisoDb.Sql2008.Dac;
 using SisoDb.Testing;
 
-namespace SisoDb.IntegrationTests.Sql2008.Dac
+namespace SisoDb.IntegrationTests.Sql2008.Sql2008ServerClientTests
 {
-    namespace Sql2008ServerClientTests
+    namespace CreateNew
     {
         [Subject(typeof(Sql2008ServerClient), "Create new")]
         public class when_database_exists : SpecificationBase

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Machine.Specifications;
 using SisoDb.Sql2008;
 using SisoDb.Testing;
+using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.Sql2008.UnitOfWork
 {
@@ -28,7 +28,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_two_items_left<GuidItem>();
+                () => TestContext.Database.should_only_have_X_items_left<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -55,7 +55,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_two_items_left<IdentityItem>();
+                () => TestContext.Database.should_only_have_X_items_left<IdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -83,7 +83,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_two_items_left<GuidItem>();
+                () => TestContext.Database.should_only_have_X_items_left<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -111,7 +111,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_two_items_left<IdentityItem>();
+                () => TestContext.Database.should_only_have_X_items_left<IdentityItem>(2);
 
             It should_have_first_and_last_item_left = 
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -139,7 +139,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_two_items_left<BigIdentityItem>();
+                () => TestContext.Database.should_only_have_X_items_left<BigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -147,135 +147,48 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static IList<BigIdentityItem> _structures;
         }
 
-        public static class Establishments
+        [Subject(typeof(Sql2008UnitOfWork), "Delete by id")]
+        public class when_guiditem_and_deleting_item_by_id_in_empty_set : SpecificationBase
         {
-            public static IList<GuidItem> InsertGuidItems(this ISisoDatabase db, int numOfItems)
+            Establish context = 
+                () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+            
+            Because of = () =>
             {
-                var items = new List<GuidItem>(numOfItems);
-
-                for (var c = 0; c < numOfItems; c++)
-                    items.Add(new GuidItem { Value = c + 1 });
-
-                using (var uow = db.CreateUnitOfWork())
+                CaughtException = Catch.Exception(() => 
                 {
-                    uow.InsertMany(items);
-                    uow.Commit();
-                }
-
-                return items;
-            }
-
-            public static IList<IdentityItem> InsertIdentityItems(this ISisoDatabase db, int numOfItems)
-            {
-                var items = new List<IdentityItem>(numOfItems);
-
-                for (var c = 0; c < numOfItems; c++)
-                    items.Add(new IdentityItem { Value = c + 1 });
-
-                using (var uow = db.CreateUnitOfWork())
-                {
-                    uow.InsertMany(items);
-                    uow.Commit();
-                }
-
-                return items;
-            }
-
-            public static IList<BigIdentityItem> InsertBigIdentityItems(this ISisoDatabase db, int numOfItems)
-            {
-                var items = new List<BigIdentityItem>(numOfItems);
-
-                for (var c = 0; c < numOfItems; c++)
-                    items.Add(new BigIdentityItem { Value = c + 1 });
-
-                using (var uow = db.CreateUnitOfWork())
-                {
-                    uow.InsertMany(items);
-                    uow.Commit();
-                }
-
-                return items;
-            }
-        }
-
-        public static class Shoulds
-        {
-            public static It should_only_have_two_items_left<T>(this ISisoDatabase db) where T : class 
-            {
-                It it = () =>
-                {
-                    using (var qe = db.CreateQueryEngine())
-                        qe.Count<T>().ShouldEqual(2);
-                };
-
-                return it;
-            }
-
-            public static It should_have_first_and_last_item_left(this ISisoDatabase db, IList<GuidItem> structures) 
-            {
-                It it = () =>
-                {
-                    using (var qe = db.CreateQueryEngine())
+                    using (var uow = TestContext.Database.CreateUnitOfWork())
                     {
-                        var items = qe.GetAll<GuidItem>().ToList();
-                        items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                        items[1].StructureId.ShouldEqual(structures[3].StructureId);
+                        uow.DeleteById<GuidItem>(Guid.Parse("F875F861-24DC-420C-988A-196977A21C43"));
+                        uow.Commit();
                     }
-                };
+                });
+            };
 
-                return it;
-            }
+            It should_not_have_failed =
+                () => CaughtException.ShouldBeNull();
+        }
 
-            public static It should_have_first_and_last_item_left(this ISisoDatabase db, IList<IdentityItem> structures)
+        [Subject(typeof(Sql2008UnitOfWork), "Delete by id")]
+        public class when_identityitem_and_deleting_item_by_id_in_empty_set : SpecificationBase
+        {
+            Establish context =
+                () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+
+            Because of = () =>
             {
-                It it = () =>
+                CaughtException = Catch.Exception(() =>
                 {
-                    using (var qe = db.CreateQueryEngine())
+                    using (var uow = TestContext.Database.CreateUnitOfWork())
                     {
-                        var items = qe.GetAll<IdentityItem>().ToList();
-                        items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                        items[1].StructureId.ShouldEqual(structures[3].StructureId);
+                        uow.DeleteById<IdentityItem>(1);
+                        uow.Commit();
                     }
-                };
+                });
+            };
 
-                return it;
-            }
-
-            public static It should_have_first_and_last_item_left(this ISisoDatabase db, IList<BigIdentityItem> structures)
-            {
-                It it = () =>
-                {
-                    using (var qe = db.CreateQueryEngine())
-                    {
-                        var items = qe.GetAll<BigIdentityItem>().ToList();
-                        items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                        items[1].StructureId.ShouldEqual(structures[3].StructureId);
-                    }
-                };
-
-                return it;
-            }
-        }
-
-        public class IdentityItem
-        {
-            public int StructureId { get; set; }
-
-            public int Value { get; set; }
-        }
-
-        public class BigIdentityItem
-        {
-            public long StructureId { get; set; }
-
-            public int Value { get; set; }
-        }
-
-        public class GuidItem
-        {
-            public Guid StructureId { get; set; }
-
-            public int Value { get; set; }
+            It should_not_have_failed =
+                () => CaughtException.ShouldBeNull();
         }
     }
 }

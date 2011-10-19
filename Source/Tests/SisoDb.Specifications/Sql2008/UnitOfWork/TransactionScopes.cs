@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Transactions;
+﻿using System.Transactions;
 using Machine.Specifications;
 using SisoDb.Sql2008;
 using SisoDb.Testing;
+using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.Sql2008.UnitOfWork
 {
@@ -90,13 +90,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                     qe.Count<IdentityItem>().ShouldEqual(6);
                 }
             };
-        }
-
-        public class IdentityItem
-        {
-            public int StructureId { get; set; }
-
-            public int Value { get; set; }
         }
     }
 }

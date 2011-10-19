@@ -278,7 +278,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
             };
 
-            Because of = () => _exception = Catch.Exception(() =>
+            Because of = () => CaughtException = Catch.Exception(() =>
                 TestContext.Database.UpdateStructureSet<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
                 (oldItem, newItem) =>
                 {
@@ -290,10 +290,10 @@ namespace SisoDb.Specifications.Sql2008.Database
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
-            It should_have_failed = () => _exception.ShouldNotBeNull();
+            It should_have_failed = () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                _exception.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(0, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(0, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
@@ -316,7 +316,6 @@ namespace SisoDb.Specifications.Sql2008.Database
             };
 
             private static int _orgItem1Id, _orgItem2Id;
-            private static Exception _exception;
         }
 
         [Subject(typeof(Sql2008Database), "Update structure set")]
@@ -340,7 +339,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
             };
 
-            Because of = () => _exception = Catch.Exception(() =>
+            Because of = () => CaughtException = Catch.Exception(() =>
                 TestContext.Database.UpdateStructureSet<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
                 (oldItem, newItem) =>
                 {
@@ -352,10 +351,11 @@ namespace SisoDb.Specifications.Sql2008.Database
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
-            It should_have_failed = () => _exception.ShouldNotBeNull();
+            It should_have_failed = 
+                () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                _exception.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(Guid.Empty, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(Guid.Empty, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
@@ -378,7 +378,6 @@ namespace SisoDb.Specifications.Sql2008.Database
             };
 
             private static Guid _orgItem1Id, _orgItem2Id;
-            private static Exception _exception;
         }
 
         [Subject(typeof(Sql2008Database), "Update structure set")]
@@ -403,7 +402,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
             };
 
-            Because of = () => _exception = Catch.Exception(() =>
+            Because of = () => CaughtException = Catch.Exception(() =>
                 TestContext.Database.UpdateStructureSet<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>(
                 (oldItem, newItem) =>
                 {
@@ -415,10 +414,11 @@ namespace SisoDb.Specifications.Sql2008.Database
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
-            It should_have_failed = () => _exception.ShouldNotBeNull();
+            It should_have_failed = 
+                () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                _exception.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
@@ -442,7 +442,6 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             private static int _orgItem1Id, _orgItem2Id;
             private static int _newItem2Id;
-            private static Exception _exception;
         }
 
         [Subject(typeof(Sql2008Database), "Update structure set")]
@@ -467,7 +466,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
             };
 
-            Because of = () => _exception = Catch.Exception(() =>
+            Because of = () => CaughtException = Catch.Exception(() =>
                 TestContext.Database.UpdateStructureSet<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>(
                 (oldItem, newItem) =>
                 {
@@ -479,10 +478,11 @@ namespace SisoDb.Specifications.Sql2008.Database
                     return StructureSetUpdaterStatuses.Keep;
                 }));
 
-            It should_have_failed = () => _exception.ShouldNotBeNull();
+            It should_have_failed = 
+                () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                _exception.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
@@ -506,7 +506,6 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             private static Guid _orgItem1Id, _orgItem2Id;
             private static Guid _newItem2Id;
-            private static Exception _exception;
         }
 
         namespace ModelComplexUpdates

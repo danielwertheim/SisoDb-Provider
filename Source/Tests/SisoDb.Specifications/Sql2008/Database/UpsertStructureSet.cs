@@ -168,8 +168,6 @@ namespace SisoDb.Specifications.Sql2008.Database
             };
 
             private static IStructureSchema _structureSchema;
-
-            private static Exception _exception;
         }
 
         namespace OrgModel
