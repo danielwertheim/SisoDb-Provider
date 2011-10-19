@@ -68,6 +68,7 @@
     <Compile Include="Sql2008\Database\CreateIfNotExists.cs" />
     <Compile Include="Sql2008\QueryEngine\Count.cs" />
     <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
+    <Compile Include="Sql2008\UnitOfWork\Deletes.cs" />
     <Compile Include="Sql2008\UnitOfWork\TransactionScopes.cs" />
   </ItemGroup>
   <ItemGroup>

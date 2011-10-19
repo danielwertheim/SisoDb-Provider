@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SisoDb.Core;
 using SisoDb.Providers;
+using SisoDb.Structures;
 
 namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Inserts
 {

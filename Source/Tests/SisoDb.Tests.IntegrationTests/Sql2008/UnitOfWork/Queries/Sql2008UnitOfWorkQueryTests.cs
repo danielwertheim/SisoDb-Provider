@@ -129,7 +129,13 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 
         private static IList<SimpleItemForQueries> CreateItems(int numOfItems)
         {
-            return ListExtensions.New<SimpleItemForQueries>(numOfItems, (index, item) => item.SortOrder = index + 1);
+            var items = new List<SimpleItemForQueries>();
+            for (var i = 0; i < numOfItems; i++)
+            {
+                var item = new SimpleItemForQueries {SortOrder = i + 1};
+                items.Add(item);
+            }
+            return items;
         }
 
         private class SimpleItemForQueries

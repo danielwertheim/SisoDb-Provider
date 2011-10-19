@@ -99,23 +99,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyInitalizer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IntegrationTestBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="LocalConstants.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sql2008\Sql2008DbUtils.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Sql2008\Sql2008IntegrationTestBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Sql2008\Sql2008TembDbIntegrationTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Projects\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj">
@@ -140,7 +124,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

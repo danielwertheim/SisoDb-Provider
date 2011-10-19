@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.TestModel;
 
 namespace SisoDb.IntegrationTests.SqlProvider.UnitOfWork.TestModel
 {

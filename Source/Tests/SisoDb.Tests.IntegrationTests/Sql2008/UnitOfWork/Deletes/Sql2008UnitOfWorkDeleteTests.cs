@@ -18,60 +18,6 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Deletes
         }
 
         [Test]
-        public void DeleteByQuery_WhenGuidIdAndTargettingTwoOutOfFourItems_TargetedTwoItemsGetsDeleted()
-        {
-            var items = new List<SimpleGuidItem>
-            {
-                new SimpleGuidItem {Key = "A"},
-                new SimpleGuidItem {Key = "B"},
-                new SimpleGuidItem {Key = "C"},
-                new SimpleGuidItem {Key = "D"}
-            };
-
-            IList<SimpleGuidItem> refetched = null;
-            using(var uow = Database.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-
-                uow.DeleteByQuery<SimpleGuidItem>(x => x.Key == "B" || x.Key == "C");
-                uow.Commit();
-
-                refetched = uow.GetAll<SimpleGuidItem>(q => q.SortBy(s => s.Key)).ToList();
-            }
-
-            CustomAssert.AreValueEqual(items[0], refetched[0]);
-            CustomAssert.AreValueEqual(items[3], refetched[1]);
-        }
-
-        [Test]
-        public void DeleteByQuery_WhenIdentityIdAndTargettingTwoOutOfFourItems_TargetedTwoItemsGetsDeleted()
-        {
-            var items = new List<SimpleIdentityItem>
-            {
-                new SimpleIdentityItem {Key = "A"},
-                new SimpleIdentityItem {Key = "B"},
-                new SimpleIdentityItem {Key = "C"},
-                new SimpleIdentityItem {Key = "D"}
-            };
-
-            IList<SimpleIdentityItem> refetched = null;
-            using (var uow = Database.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-
-                uow.DeleteByQuery<SimpleIdentityItem>(x => x.Key == "B" || x.Key == "C");
-                uow.Commit();
-
-                refetched = uow.GetAll<SimpleIdentityItem>(q => q.SortBy(s => s.Key)).ToList();
-            }
-
-            CustomAssert.AreValueEqual(items[0], refetched[0]);
-            CustomAssert.AreValueEqual(items[3], refetched[1]);
-        }
-
-        [Test]
         public void DeleteByGuidId_WhenItemDoesNotExist_DoesNotFail()
         {
             using (var unitOfWork = Database.CreateUnitOfWork())
