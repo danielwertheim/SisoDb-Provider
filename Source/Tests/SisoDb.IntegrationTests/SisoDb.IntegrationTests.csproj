@@ -60,7 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql2008\Sql2008DbClientTests\CreateNew.cs" />
     <Compile Include="Sql2008\Sql2008ServerClientTests\CreateNew.cs" />
-    <Compile Include="Sql2008\Sql2008UnitOfWorkTests\Deletes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -17,10 +17,22 @@ namespace SisoDb.Sql2008.Dac
             if(idType == StructureIdTypes.Guid)
                 return CreateGuidIdsTableParam(ids);
 
-            if(idType.IsIdentity())
+            if(idType == StructureIdTypes.Identity)
+                return CreateIdentityIdsTableParam(ids);
+
+            if(idType == StructureIdTypes.BigIdentity)
                 return CreateBigIdentityIdsTableParam(ids);
 
             throw new SisoDbException(Sql2008Exceptions.SqlIdsTableParam_CreateIdsTableParam.Inject(idType));
+        }
+
+        private static SqlParameter CreateIdentityIdsTableParam(IEnumerable<ValueType> ids)
+        {
+            return new SqlParameter("@ids", SqlDbType.Structured)
+            {
+                Value = ids.Select(id => CreateBigIdentityIdRecord((int)id)),
+                TypeName = "dbo.StructureIdentityIds"
+            };
         }
 
         private static SqlParameter CreateBigIdentityIdsTableParam(IEnumerable<ValueType> ids)
