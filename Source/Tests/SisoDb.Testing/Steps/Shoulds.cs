@@ -10,7 +10,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Structures;
 
-namespace SisoDb.Testing.TestModel
+namespace SisoDb.Testing.Steps
 {
     public static class Shoulds
     {

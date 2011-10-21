@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using SisoDb.Testing.TestModel;
 
-namespace SisoDb.Testing.TestModel
+namespace SisoDb.Testing.Steps
 {
     public static class Establishments
     {

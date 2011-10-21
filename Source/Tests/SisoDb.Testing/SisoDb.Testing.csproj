@@ -69,7 +69,7 @@
     <Compile Include="TestModel\BigIdentityItem.cs" />
     <Compile Include="TestModel\BigIdentityItemWithNullableId.cs" />
     <Compile Include="TestModel\BigIdentityItemWithPrivateIdSetter.cs" />
-    <Compile Include="TestModel\Establishments.cs" />
+    <Compile Include="Steps\Establishments.cs" />
     <Compile Include="TestModel\GuidItem.cs" />
     <Compile Include="TestModel\GuidItemWithNullableId.cs" />
     <Compile Include="TestModel\GuidItemWithPrivateIdSetter.cs" />
@@ -81,7 +81,7 @@
     <Compile Include="TestModel\MyItem.cs" />
     <Compile Include="TestModel\MyItemBase.cs" />
     <Compile Include="TestModel\MyItemWithInterface.cs" />
-    <Compile Include="TestModel\Shoulds.cs" />
+    <Compile Include="Steps\Shoulds.cs" />
     <Compile Include="TestModel\UniqueBigIdentityItem.cs" />
     <Compile Include="TestModel\UniqueGuidItem.cs" />
     <Compile Include="TestModel\UniqueIdentityItem.cs" />
