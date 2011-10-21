@@ -71,7 +71,8 @@
     <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
     <Compile Include="Sql2008\UnitOfWork\Deletes.cs" />
     <Compile Include="Sql2008\UnitOfWork\Inserts.cs" />
-    <Compile Include="Sql2008\UnitOfWork\InsertsOfBaseClasses.cs" />
+    <Compile Include="Sql2008\UnitOfWork\InsertsUsingBaseClasses.cs" />
+    <Compile Include="Sql2008\UnitOfWork\InsertsUsingInterfaces.cs" />
     <Compile Include="Sql2008\UnitOfWork\TransactionScopes.cs" />
     <Compile Include="Sql2008\UnitOfWork\Updates.cs" />
   </ItemGroup>

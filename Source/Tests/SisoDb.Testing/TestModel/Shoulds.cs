@@ -7,6 +7,7 @@ using Machine.Specifications;
 using NCore;
 using NCore.Expressions;
 using PineCone.Structures.Schemas;
+using SisoDb.DbSchema;
 using SisoDb.Structures;
 
 namespace SisoDb.Testing.TestModel
@@ -15,32 +16,32 @@ namespace SisoDb.Testing.TestModel
     {
         public static void should_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
         {
-            db.RowCount(structureSchema.GetStructureTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(0);
+            db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(0);
         }
 
         public static void should_not_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
         {
-            db.RowCount(structureSchema.GetStructureTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(1);
+            db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(1);
         }
 
         public static void should_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
         {
-            db.RowCount(structureSchema.GetIndexesTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(0);
+            db.RowCount(structureSchema.GetIndexesTableName(), "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(0);
         }
 
         public static void should_not_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
         {
-            db.RowCount(structureSchema.GetIndexesTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(1);
+            db.RowCount(structureSchema.GetIndexesTableName(), "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(1);
         }
 
         public static void should_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
         {
-            db.RowCount(structureSchema.GetUniquesTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(0);
+            db.RowCount(structureSchema.GetUniquesTableName(), "{0} = '{1}'".Inject(UniqueStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(0);
         }
 
         public static void should_not_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
         {
-            db.RowCount(structureSchema.GetUniquesTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(1);
+            db.RowCount(structureSchema.GetUniquesTableName(), "{0} = '{1}'".Inject(UniqueStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(1);
         }
 
         public static void should_have_X_num_of_items<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
@@ -116,22 +117,7 @@ namespace SisoDb.Testing.TestModel
             structureJson.ShouldNotBeEmpty();
 
             foreach (var part in parts.Select(GetMemberPath))
-                structureJson.Contains(part).ShouldBeTrue();
-        }
-
-        public static void should_have_one_structure_with_json_not_containing<T>(this ISisoDatabase db, params Expression<Func<T, object>>[] parts) where T : class
-        {
-            var structureJson = string.Empty;
-
-            using (var qe = db.CreateQueryEngine())
-            {
-                structureJson = qe.GetAllAsJson<T>().SingleOrDefault();
-            }
-
-            structureJson.ShouldNotBeEmpty();
-
-            foreach (var part in parts.Select(GetMemberPath))
-                structureJson.Contains(part).ShouldBeFalse();
+                structureJson.Contains("\"{0}\"".Inject(part)).ShouldBeTrue();
         }
 
         public static void should_have_one_structure_with_json_not_containing<T1, T2>(this ISisoDatabase db, params Expression<Func<T2, object>>[] parts) where T1 : class where T2 : class 
@@ -146,7 +132,7 @@ namespace SisoDb.Testing.TestModel
             structureJson.ShouldNotBeEmpty();
 
             foreach (var part in parts.Select(GetMemberPath))
-                structureJson.Contains(part).ShouldBeFalse();
+                structureJson.Contains("\"{0}\"".Inject(part)).ShouldBeFalse();
         }
 
         private static string GetMemberPath<T>(Expression<Func<T, object>> e)

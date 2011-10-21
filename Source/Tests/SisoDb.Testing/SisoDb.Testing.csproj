@@ -77,8 +77,10 @@
     <Compile Include="ShouldExtensions.cs" />
     <Compile Include="TestModel\IdentityItemWithNullableId.cs" />
     <Compile Include="TestModel\IdentityItemWithPrivateIdSetter.cs" />
+    <Compile Include="TestModel\IMyItemInterface.cs" />
     <Compile Include="TestModel\MyItem.cs" />
     <Compile Include="TestModel\MyItemBase.cs" />
+    <Compile Include="TestModel\MyItemWithInterface.cs" />
     <Compile Include="TestModel\Shoulds.cs" />
     <Compile Include="TestModel\UniqueBigIdentityItem.cs" />
     <Compile Include="TestModel\UniqueGuidItem.cs" />
