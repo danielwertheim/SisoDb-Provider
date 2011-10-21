@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Machine.Specifications;
 using NCore;
 using NCore.Reflections;
@@ -25,7 +26,8 @@ namespace SisoDb.Testing
 
             if (type.IsEnumerableType())
             {
-                if (type.GetElementType().IsSimpleType())
+                var elementType = type.GetEnumerableElementType();
+                if (elementType != null && elementType.IsSimpleType())
                 {
                     var array1 = a as Array;
                     array1.ShouldNotBeNull();
@@ -38,6 +40,18 @@ namespace SisoDb.Testing
                         var v1 = array1.GetValue(i);
                         var v2 = array2.GetValue(i);
                         AreValueEqual(v1.GetType(), v1, v2);
+                    }
+                }
+                else
+                {
+                    var enum1 = (a as IEnumerable).GetEnumerator();
+                    var enum2 = (b as IEnumerable).GetEnumerator();
+
+                    while (enum1.MoveNext())
+                    {
+                        enum2.MoveNext();
+
+                        AreValueEqual(enum1.Current.GetType(), enum1.Current, enum2.Current);
                     }
                 }
                 return;

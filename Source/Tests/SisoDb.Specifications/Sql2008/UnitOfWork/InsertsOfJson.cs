@@ -11,7 +11,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
 {
     namespace InsertsOfJson
     {
-        [Subject(typeof(Sql2008UnitOfWork), "Insert Json")]
+        [Subject(typeof(Sql2008UnitOfWork), "Insert (json)")]
         public class when_json_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -62,7 +62,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static string _json;
         }
 
-        [Subject(typeof(Sql2008UnitOfWork), "Insert Json")]
+        [Subject(typeof(Sql2008UnitOfWork), "Insert (json)")]
         public class when_json_with_value_for_id_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -101,7 +101,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static string _idString;
         }
 
-        [Subject(typeof(Sql2008UnitOfWork), "Insert Json")]
+        [Subject(typeof(Sql2008UnitOfWork), "Insert (json)")]
         public class when_json_with_wrong_member_casing_is_inserted : SpecificationBase
         {
             Establish context = () =>

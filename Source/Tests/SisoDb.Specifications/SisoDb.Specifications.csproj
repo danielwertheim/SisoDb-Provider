@@ -70,6 +70,7 @@
     <Compile Include="Sql2008\QueryEngine\Count.cs" />
     <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
     <Compile Include="Sql2008\UnitOfWork\Deletes.cs" />
+    <Compile Include="Sql2008\UnitOfWork\InsertsComplete.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsIdBehavior.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsOfJson.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsUsingBaseClasses.cs" />
