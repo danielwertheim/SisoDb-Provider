@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
 {
     namespace InsertsUsingBaseClasses
     {
-        [Subject(typeof(Sql2008UnitOfWork), "Insert using base classes")]
+        [Subject(typeof(Sql2008UnitOfWork), "Insert (base classes)")]
         public class when_inserting_subclass_as_subclass : SpecificationBase
         {
             Establish context = () =>
@@ -50,7 +50,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static MyItem _structure;
         }
 
-        [Subject(typeof(Sql2008UnitOfWork), "Insert using base classes")]
+        [Subject(typeof(Sql2008UnitOfWork), "Insert (base classes)")]
         public class when_inserting_subclass_as_baseclass : SpecificationBase
         {
             Establish context = () =>

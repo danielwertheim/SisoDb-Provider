@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
 {
     namespace InsertsUsingInterfaces
     {
-        [Subject(typeof(Sql2008UnitOfWork), "Insert using interfaces")]
+        [Subject(typeof(Sql2008UnitOfWork), "Insert (interfaces)")]
         public class when_inserting_subclass_as_subclass : SpecificationBase
         {
             Establish context = () =>
@@ -50,7 +50,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static MyItemWithInterface _structure;
         }
 
-        [Subject(typeof(Sql2008UnitOfWork), "Insert using interfaces")]
+        [Subject(typeof(Sql2008UnitOfWork), "Insert (interfaces)")]
         public class when_inserting_subclass_as_interface : SpecificationBase
         {
             Establish context = () =>

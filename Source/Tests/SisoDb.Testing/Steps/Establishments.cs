@@ -1,10 +1,63 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Testing.Steps
 {
     public static class Establishments
     {
+        public static IList<string> InsertJsonItems<T>(this ISisoDatabase db, int numOfItems) where T : class
+        {
+            var itemsAsJson = new List<string>(numOfItems);
+            var serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+
+            for (var c = 0; c < numOfItems; c++)
+            {
+                itemsAsJson.Add(serializer.Serialize(new JsonItem
+                {
+                    Int1 = c + 1,
+                    String1 = (c + 1).ToString(),
+                    Decimal1 = (decimal)(c + 1) / (numOfItems * 10),
+                    DateTime1 = new DateTime(2000 + c, 1, 1),
+                    Ints = Enumerable.Range(1, c + 1).ToArray()
+                }));
+            }
+
+            using (var uow = db.CreateUnitOfWork())
+            {
+                uow.InsertManyJson<T>(itemsAsJson);
+                uow.Commit();
+            }
+
+            return itemsAsJson;
+        }
+
+        public static IList<JsonItem> InsertJsonItems(this ISisoDatabase db, int numOfItems)
+        {
+            var items = new List<JsonItem>(numOfItems);
+
+            for (var c = 0; c < numOfItems; c++)
+            {
+                items.Add(new JsonItem
+                {
+                    Int1 = c + 1,
+                    String1 = (c + 1).ToString(),
+                    Decimal1 = (decimal)(c + 1) / (numOfItems * 10),
+                    DateTime1 = new DateTime(2000 + c, 1, 1),
+                    Ints = Enumerable.Range(1, c + 1).ToArray()
+                });
+            }
+
+            using (var uow = db.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+            }
+
+            return items;
+        }
+
         public static IList<GuidItem> InsertGuidItems(this ISisoDatabase db, int numOfItems)
         {
             var items = new List<GuidItem>(numOfItems);

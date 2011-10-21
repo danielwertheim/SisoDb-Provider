@@ -77,6 +77,17 @@ namespace SisoDb.Testing.Steps
             }
         }
 
+        public static void should_not_have_ids<T>(this ISisoDatabase db, params ValueType[] ids) where T : class
+        {
+            Ensure.That(ids, "ids").HasItems();
+
+            using (var qe = db.CreateQueryEngine())
+            {
+                foreach (var id in ids)
+                    qe.GetById<T>(id).ShouldBeNull();
+            }
+        }
+
         public static void should_have_identical_structures<T>(this ISisoDatabase db, params T[] structures) where T : class
         {
             Ensure.That(structures, "structures").HasItems();
