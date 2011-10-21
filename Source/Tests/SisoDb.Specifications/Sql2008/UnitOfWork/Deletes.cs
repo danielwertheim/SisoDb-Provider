@@ -30,7 +30,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -83,7 +83,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<IdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -137,7 +137,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -191,7 +191,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<UniqueGuidItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueGuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -257,7 +257,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<IdentityItem>(2);
 
             It should_have_first_and_last_item_left = 
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -311,7 +311,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<UniqueIdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -377,7 +377,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<BigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -431,7 +431,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<UniqueBigIdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueBigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -540,7 +540,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -593,7 +593,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<IdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -646,7 +646,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<BigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -699,7 +699,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -752,7 +752,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<IdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -805,7 +805,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(2);
+                () => TestContext.Database.should_have_X_num_of_items<BigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);

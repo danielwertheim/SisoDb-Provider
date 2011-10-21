@@ -1,7 +1,12 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Linq.Expressions;
 using NCore;
+using NCore.Expressions;
+using PineCone.Structures.Schemas;
+using SisoDb.DbSchema;
+using SisoDb.Structures;
 
 namespace SisoDb.Testing.Sql2008
 {
@@ -155,7 +160,7 @@ namespace SisoDb.Testing.Sql2008
             }
         }
 
-        private T ExecuteScalar<T>(CommandType commandType, string sql)
+        public T ExecuteScalar<T>(CommandType commandType, string sql)
         {
             T retVal;
 
@@ -240,6 +245,23 @@ namespace SisoDb.Testing.Sql2008
             var sql = "select count(*) from dbo.[{0}] where {1};".Inject(tableName, where);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
+        }
+
+        public bool IndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
+        {
+            var memberPath = GetMemberPath(member);
+            return RowCount(structureSchema.GetIndexesTableName(), "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0;
+        }
+
+        public bool UniquesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
+        {
+            var memberPath = GetMemberPath(member);
+            return RowCount(structureSchema.GetUniquesTableName(), "[{0}] = '{1}'".Inject(UniqueStorageSchema.Fields.UqMemberPath.Name, memberPath)) > 0;
+        }
+
+        private static string GetMemberPath<T>(Expression<Func<T, object>> e)
+        {
+            return e.GetRightMostMember().ToPath();
         }
     }
 }

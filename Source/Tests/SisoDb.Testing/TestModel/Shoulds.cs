@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using EnsureThat;
 using Machine.Specifications;
 using NCore;
+using NCore.Expressions;
 using PineCone.Structures.Schemas;
 using SisoDb.Structures;
 
@@ -41,7 +43,7 @@ namespace SisoDb.Testing.TestModel
             db.RowCount(structureSchema.GetUniquesTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(1);
         }
 
-        public static void should_have_X_items_left<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
+        public static void should_have_X_num_of_items<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
         {
             using (var qe = db.CreateQueryEngine())
                 qe.Count<T>().ShouldEqual(numOfItemsLeft);
@@ -91,22 +93,65 @@ namespace SisoDb.Testing.TestModel
             }
         }
 
-        public static void should_have_valid_structures<T>(this ISisoDatabase db, Action<int, T, T> validationRule, params T[] structures) where T : class
+        public static void should_have_valid_structures<T>(this ISisoDatabase db, Action<T> validationRule) where T : class
         {
-            Ensure.That(structures, "structures").HasItems();
+            using (var qe = db.CreateQueryEngine())
+            {
+                foreach (var structure in qe.GetAll<T>())
+                {
+                    validationRule(structure);
+                }
+            }
+        }
 
-            var structureSchema = db.StructureSchemas.GetSchema<T>();
+        public static void should_have_one_structure_with_json_containing<T>(this ISisoDatabase db, params Expression<Func<T, object>>[] parts) where T : class
+        {
+            var structureJson = string.Empty;
 
             using (var qe = db.CreateQueryEngine())
             {
-                for (var c = 0; c < structures.Length; c++)
-                {
-                    var structure = structures[c];
-                    var id = structureSchema.IdAccessor.GetValue(structure);
-                    var refetched = qe.GetById<T>(id.Value);
-                    validationRule(c, structure, refetched);
-                }
+                structureJson = qe.GetAllAsJson<T>().SingleOrDefault();
             }
+
+            structureJson.ShouldNotBeEmpty();
+
+            foreach (var part in parts.Select(GetMemberPath))
+                structureJson.Contains(part).ShouldBeTrue();
+        }
+
+        public static void should_have_one_structure_with_json_not_containing<T>(this ISisoDatabase db, params Expression<Func<T, object>>[] parts) where T : class
+        {
+            var structureJson = string.Empty;
+
+            using (var qe = db.CreateQueryEngine())
+            {
+                structureJson = qe.GetAllAsJson<T>().SingleOrDefault();
+            }
+
+            structureJson.ShouldNotBeEmpty();
+
+            foreach (var part in parts.Select(GetMemberPath))
+                structureJson.Contains(part).ShouldBeFalse();
+        }
+
+        public static void should_have_one_structure_with_json_not_containing<T1, T2>(this ISisoDatabase db, params Expression<Func<T2, object>>[] parts) where T1 : class where T2 : class 
+        {
+            var structureJson = string.Empty;
+
+            using (var qe = db.CreateQueryEngine())
+            {
+                structureJson = qe.GetAllAsJson<T1>().SingleOrDefault();
+            }
+
+            structureJson.ShouldNotBeEmpty();
+
+            foreach (var part in parts.Select(GetMemberPath))
+                structureJson.Contains(part).ShouldBeFalse();
+        }
+
+        private static string GetMemberPath<T>(Expression<Func<T, object>> e)
+        {
+            return e.GetRightMostMember().ToPath();
         }
     }
 }

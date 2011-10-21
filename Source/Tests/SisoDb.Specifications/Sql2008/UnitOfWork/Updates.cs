@@ -2,7 +2,6 @@
 using System.Linq;
 using Machine.Specifications;
 using NCore.Reflections;
-using PineCone.Structures.Schemas;
 using SisoDb.Sql2008;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
@@ -21,8 +20,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertGuidItems(4);
                 _orgItem1 = CopyObject.Deep(_structures[1]);
                 _orgItem2 = CopyObject.Deep(_structures[2]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<GuidItem>();
             };
 
             Because of = () =>
@@ -38,7 +35,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<GuidItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -52,7 +49,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_not_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures[0], _orgItem1, _orgItem2, _structures[3]);
 
-            private static IStructureSchema _structureSchema;
             private static IList<GuidItem> _structures;
             private static GuidItem _orgItem1, _orgItem2;
         }
@@ -67,8 +63,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertIdentityItems(4);
                 _orgItem1 = CopyObject.Deep(_structures[1]);
                 _orgItem2 = CopyObject.Deep(_structures[2]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<IdentityItem>();
             };
 
             Because of = () =>
@@ -84,7 +78,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<IdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<IdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -98,7 +92,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_not_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures[0], _orgItem1, _orgItem2, _structures[3]);
 
-            private static IStructureSchema _structureSchema;
             private static IList<IdentityItem> _structures;
             private static IdentityItem _orgItem1, _orgItem2;
         }
@@ -113,8 +106,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertBigIdentityItems(4);
                 _orgItem1 = CopyObject.Deep(_structures[1]);
                 _orgItem2 = CopyObject.Deep(_structures[2]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<BigIdentityItem>();
             };
 
             Because of = () =>
@@ -130,7 +121,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<BigIdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -144,7 +135,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_not_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures[0], _orgItem1, _orgItem2, _structures[3]);
 
-            private static IStructureSchema _structureSchema;
             private static IList<BigIdentityItem> _structures;
             private static BigIdentityItem _orgItem1, _orgItem2;
         }
@@ -159,8 +149,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertGuidItems(4);
                 _orgItem1 = CopyObject.Deep(_structures[1]);
                 _orgItem2 = CopyObject.Deep(_structures[2]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<GuidItem>();
             };
 
             Because of = () =>
@@ -177,7 +165,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<GuidItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -191,7 +179,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
 
-            private static IStructureSchema _structureSchema;
             private static IList<GuidItem> _structures;
             private static GuidItem _orgItem1, _orgItem2;
         }
@@ -206,8 +193,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertIdentityItems(4);
                 _orgItem1 = CopyObject.Deep(_structures[1]);
                 _orgItem2 = CopyObject.Deep(_structures[2]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<IdentityItem>();
             };
 
             Because of = () =>
@@ -224,7 +209,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<IdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<IdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -238,7 +223,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
 
-            private static IStructureSchema _structureSchema;
             private static IList<IdentityItem> _structures;
             private static IdentityItem _orgItem1, _orgItem2;
         }
@@ -253,8 +237,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertBigIdentityItems(4);
                 _orgItem1 = CopyObject.Deep(_structures[1]);
                 _orgItem2 = CopyObject.Deep(_structures[2]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<BigIdentityItem>();
             };
 
             Because of = () =>
@@ -271,7 +253,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<BigIdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -285,7 +267,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
 
-            private static IStructureSchema _structureSchema;
             private static IList<BigIdentityItem> _structures;
             private static BigIdentityItem _orgItem1, _orgItem2;
         }
@@ -300,8 +281,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertUniqueGuidItems(2);
                 _orgItem1 = CopyObject.Deep(_structures[0]);
                 _orgItem2 = CopyObject.Deep(_structures[1]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueGuidItem>();
             };
 
             Because of = () =>
@@ -321,7 +300,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 () => CaughtException.ShouldNotBeNull();
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<UniqueGuidItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueGuidItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -335,7 +314,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_not_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_orgItem1, _orgItem2);
 
-            private static IStructureSchema _structureSchema;
             private static IList<UniqueGuidItem> _structures;
             private static UniqueGuidItem _orgItem1, _orgItem2;
         }
@@ -350,8 +328,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertUniqueIdentityItems(2);
                 _orgItem1 = CopyObject.Deep(_structures[0]);
                 _orgItem2 = CopyObject.Deep(_structures[1]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueIdentityItem>();
             };
 
             Because of = () =>
@@ -371,7 +347,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 () => CaughtException.ShouldNotBeNull();
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<UniqueIdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueIdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -385,7 +361,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_not_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_orgItem1, _orgItem2);
 
-            private static IStructureSchema _structureSchema;
             private static IList<UniqueIdentityItem> _structures;
             private static UniqueIdentityItem _orgItem1, _orgItem2;
         }
@@ -400,8 +375,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertUniqueBigIdentityItems(2);
                 _orgItem1 = CopyObject.Deep(_structures[0]);
                 _orgItem2 = CopyObject.Deep(_structures[1]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueBigIdentityItem>();
             };
 
             Because of = () =>
@@ -421,7 +394,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 () => CaughtException.ShouldNotBeNull();
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<UniqueBigIdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueBigIdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -435,7 +408,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_not_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_orgItem1, _orgItem2);
 
-            private static IStructureSchema _structureSchema;
             private static IList<UniqueBigIdentityItem> _structures;
             private static UniqueBigIdentityItem _orgItem1, _orgItem2;
         }
@@ -450,8 +422,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertUniqueGuidItems(2);
                 _orgItem1 = CopyObject.Deep(_structures[0]);
                 _orgItem2 = CopyObject.Deep(_structures[1]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueGuidItem>();
             };
 
             Because of = () =>
@@ -465,7 +435,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<UniqueGuidItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueGuidItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -479,7 +449,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
 
-            private static IStructureSchema _structureSchema;
             private static IList<UniqueGuidItem> _structures;
             private static UniqueGuidItem _orgItem1, _orgItem2;
         }
@@ -494,8 +463,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertUniqueIdentityItems(2);
                 _orgItem1 = CopyObject.Deep(_structures[0]);
                 _orgItem2 = CopyObject.Deep(_structures[1]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueIdentityItem>();
             };
 
             Because of = () =>
@@ -509,7 +476,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<UniqueIdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueIdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -523,7 +490,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
 
-            private static IStructureSchema _structureSchema;
             private static IList<UniqueIdentityItem> _structures;
             private static UniqueIdentityItem _orgItem1, _orgItem2;
         }
@@ -538,8 +504,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                 _structures = TestContext.Database.InsertUniqueBigIdentityItems(2);
                 _orgItem1 = CopyObject.Deep(_structures[0]);
                 _orgItem2 = CopyObject.Deep(_structures[1]);
-
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueBigIdentityItem>();
             };
 
             Because of = () =>
@@ -553,7 +517,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_have_the_same_number_of_structures_in_database =
-                () => TestContext.Database.should_have_X_items_left<UniqueBigIdentityItem>(_structures.Count);
+                () => TestContext.Database.should_have_X_num_of_items<UniqueBigIdentityItem>(_structures.Count);
 
             It should_not_have_changed_ids_of_the_structures_in_memory = () =>
             {
@@ -567,7 +531,6 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
 
-            private static IStructureSchema _structureSchema;
             private static IList<UniqueBigIdentityItem> _structures;
             private static UniqueBigIdentityItem _orgItem1, _orgItem2;
         }
