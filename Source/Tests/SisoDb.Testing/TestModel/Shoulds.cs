@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EnsureThat;
 using Machine.Specifications;
 using NCore;
 using PineCone.Structures.Schemas;
@@ -40,59 +41,71 @@ namespace SisoDb.Testing.TestModel
             db.RowCount(structureSchema.GetUniquesTableName(), "StructureId = '{0}'".Inject(structureId)).ShouldEqual(1);
         }
 
-        public static void should_only_have_X_items_left<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
+        public static void should_have_X_items_left<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
         {
             using (var qe = db.CreateQueryEngine())
                 qe.Count<T>().ShouldEqual(numOfItemsLeft);
         }
 
-        public static void should_have_first_and_last_item_left(this ISisoDatabase db, IList<GuidItem> structures)
+        public static void should_have_first_and_last_item_left<T>(this ISisoDatabase db, IList<T> structures) where T : class 
         {
+            var structureScema = db.StructureSchemas.GetSchema<T>();
+
             using (var qe = db.CreateQueryEngine())
             {
-                var items = qe.GetAll<GuidItem>().ToList();
-                items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                items[1].StructureId.ShouldEqual(structures[3].StructureId);
+                var items = qe.GetAll<T>().ToList();
+                
+                structureScema.IdAccessor.GetValue(items[0]).Value.ShouldEqual(
+                    structureScema.IdAccessor.GetValue(structures[0]).Value);
+
+                structureScema.IdAccessor.GetValue(items[1]).Value.ShouldEqual(
+                    structureScema.IdAccessor.GetValue(structures[3]).Value);
             }
         }
 
-        public static void should_have_first_and_last_item_left(this ISisoDatabase db, IList<UniqueGuidItem> structures)
+        public static void should_have_ids<T>(this ISisoDatabase db, params ValueType[] ids) where T : class
         {
+            Ensure.That(ids, "ids").HasItems();
+
             using (var qe = db.CreateQueryEngine())
             {
-                var items = qe.GetAll<UniqueGuidItem>().ToList();
-                items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                items[1].StructureId.ShouldEqual(structures[3].StructureId);
+                foreach (var id in ids)
+                    qe.GetById<T>(id).ShouldNotBeNull();
             }
         }
 
-        public static void should_have_first_and_last_item_left(this ISisoDatabase db, IList<IdentityItem> structures)
+        public static void should_have_identical_structures<T>(this ISisoDatabase db, params T[] structures) where T : class
         {
+            Ensure.That(structures, "structures").HasItems();
+
+            var structureSchema = db.StructureSchemas.GetSchema(typeof(T));
+
             using (var qe = db.CreateQueryEngine())
             {
-                var items = qe.GetAll<IdentityItem>().ToList();
-                items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                items[1].StructureId.ShouldEqual(structures[3].StructureId);
+                foreach (var structure in structures)
+                {
+                    var id = structureSchema.IdAccessor.GetValue(structure);
+                    var refetched = qe.GetById<T>(id.Value);
+                    refetched.ShouldBeValueEqualTo(structure);
+                }
             }
         }
 
-        public static void should_have_first_and_last_item_left(this ISisoDatabase db, IList<UniqueIdentityItem> structures)
+        public static void should_have_valid_structures<T>(this ISisoDatabase db, Action<int, T, T> validationRule, params T[] structures) where T : class
         {
-            using (var qe = db.CreateQueryEngine())
-            {
-                var items = qe.GetAll<UniqueIdentityItem>().ToList();
-                items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                items[1].StructureId.ShouldEqual(structures[3].StructureId);
-            }
-        }
+            Ensure.That(structures, "structures").HasItems();
 
-        public static void should_have_first_and_last_item_left(this ISisoDatabase db, IList<BigIdentityItem> structures)
-        {
+            var structureSchema = db.StructureSchemas.GetSchema<T>();
+
             using (var qe = db.CreateQueryEngine())
             {
-                var items = qe.GetAll<BigIdentityItem>().ToList();
-                items[0].StructureId.ShouldEqual(structures[0].StructureId);
-                items[1].StructureId.ShouldEqual(structures[3].StructureId);
+                for (var c = 0; c < structures.Length; c++)
+                {
+                    var structure = structures[c];
+                    var id = structureSchema.IdAccessor.GetValue(structure);
+                    var refetched = qe.GetById<T>(id.Value);
+                    validationRule(c, structure, refetched);
+                }
             }
         }
     }

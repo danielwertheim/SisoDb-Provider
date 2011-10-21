@@ -63,8 +63,9 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.4.0.46, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.20.0\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.5.0.48, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.5.0.48\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
@@ -72,9 +73,9 @@
     <Reference Include="nunit.mocks">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.20.0.48, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.21.0.50, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.20.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.21.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="pnunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
@@ -117,10 +118,6 @@
     <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SisoDb.TestUtils\SisoDb.TestUtils.csproj">
-      <Project>{5CAC205F-5470-44A6-878F-F33768415D25}</Project>
-      <Name>SisoDb.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

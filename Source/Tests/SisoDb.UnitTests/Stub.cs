@@ -1,7 +1,7 @@
 using System;
 using Moq;
 
-namespace SisoDb.TestUtils
+namespace SisoDb.UnitTests
 {
     public static class Stub
     {

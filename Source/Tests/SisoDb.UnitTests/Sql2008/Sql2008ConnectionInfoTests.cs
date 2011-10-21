@@ -2,7 +2,6 @@ using NCore;
 using NUnit.Framework;
 using SisoDb.Sql2008;
 using SisoDb.Sql2008.Resources;
-using SisoDb.TestUtils;
 
 namespace SisoDb.UnitTests.Sql2008
 {

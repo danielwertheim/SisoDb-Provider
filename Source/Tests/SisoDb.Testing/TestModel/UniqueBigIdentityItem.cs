@@ -4,11 +4,11 @@ using PineCone.Annotations;
 namespace SisoDb.Testing.TestModel
 {
     [Serializable]
-    public class UniqueGuidItem
+    public class UniqueBigIdentityItem
     {
-        public Guid StructureId { get; set; }
+        public long StructureId { get; set; }
 
         [Unique(UniqueModes.PerType)]
-        public int UniqueValue { get; set; }
+        public long UniqueValue { get; set; }
     }
 }

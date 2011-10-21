@@ -25,7 +25,7 @@ namespace SisoDb.Testing.TestModel
             var items = new List<UniqueGuidItem>(numOfItems);
 
             for (var c = 0; c < numOfItems; c++)
-                items.Add(new UniqueGuidItem { Value = c + 1 });
+                items.Add(new UniqueGuidItem { UniqueValue = c + 1 });
 
             using (var uow = db.CreateUnitOfWork())
             {
@@ -57,7 +57,7 @@ namespace SisoDb.Testing.TestModel
             var items = new List<UniqueIdentityItem>(numOfItems);
 
             for (var c = 0; c < numOfItems; c++)
-                items.Add(new UniqueIdentityItem { Value = c + 1 });
+                items.Add(new UniqueIdentityItem { UniqueValue = c + 1 });
 
             using (var uow = db.CreateUnitOfWork())
             {
@@ -74,6 +74,22 @@ namespace SisoDb.Testing.TestModel
 
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new BigIdentityItem { Value = c + 1 });
+
+            using (var uow = db.CreateUnitOfWork())
+            {
+                uow.InsertMany(items);
+                uow.Commit();
+            }
+
+            return items;
+        }
+
+        public static IList<UniqueBigIdentityItem> InsertUniqueBigIdentityItems(this ISisoDatabase db, int numOfItems)
+        {
+            var items = new List<UniqueBigIdentityItem>(numOfItems);
+
+            for (var c = 0; c < numOfItems; c++)
+                items.Add(new UniqueBigIdentityItem { UniqueValue = c + 1 });
 
             using (var uow = db.CreateUnitOfWork())
             {

@@ -37,11 +37,13 @@
     <Reference Include="Machine.Specifications">
       <HintPath>..\..\packages\Machine.Specifications.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\PineCone.0.20.0\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.5.0.48, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.5.0.48\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.20.0\lib\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.21.0.50, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.21.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,7 +70,9 @@
     <Compile Include="TestModel\Establishments.cs" />
     <Compile Include="TestModel\GuidItem.cs" />
     <Compile Include="TestModel\IdentityItem.cs" />
+    <Compile Include="ShouldExtensions.cs" />
     <Compile Include="TestModel\Shoulds.cs" />
+    <Compile Include="TestModel\UniqueBigIdentityItem.cs" />
     <Compile Include="TestModel\UniqueGuidItem.cs" />
     <Compile Include="TestModel\UniqueIdentityItem.cs" />
   </ItemGroup>

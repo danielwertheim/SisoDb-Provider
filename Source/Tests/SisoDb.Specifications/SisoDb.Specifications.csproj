@@ -37,11 +37,13 @@
     <Reference Include="Machine.Specifications, Version=0.4.24.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Machine.Specifications.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.4.0.46, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.20.0\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.5.0.48, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.5.0.48\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.20.0.48, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.20.0\lib\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.21.0.50, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.21.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,6 +71,7 @@
     <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
     <Compile Include="Sql2008\UnitOfWork\Deletes.cs" />
     <Compile Include="Sql2008\UnitOfWork\TransactionScopes.cs" />
+    <Compile Include="Sql2008\UnitOfWork\Updates.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

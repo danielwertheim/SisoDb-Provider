@@ -30,7 +30,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -83,7 +83,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -137,7 +137,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -170,7 +170,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static IList<GuidItem> _structures;
         }
 
-        [Subject(typeof(Sql2008UnitOfWork), "Delete by id")]
+        [Subject(typeof(Sql2008UnitOfWork), "Delete by id (uniques)")]
         public class when_uniqueguiditem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -191,7 +191,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<UniqueGuidItem>(2);
+                () => TestContext.Database.should_have_X_items_left<UniqueGuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -257,7 +257,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
 
             It should_have_first_and_last_item_left = 
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -290,7 +290,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static IList<IdentityItem> _structures;
         }
 
-        [Subject(typeof(Sql2008UnitOfWork), "Delete by id")]
+        [Subject(typeof(Sql2008UnitOfWork), "Delete by id (uniques)")]
         public class when_uniqueidentityitem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -311,7 +311,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<UniqueIdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<UniqueIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -377,7 +377,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<BigIdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -408,6 +408,72 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
 
             private static IStructureSchema _structureSchema;
             private static IList<BigIdentityItem> _structures;
+        }
+
+        [Subject(typeof(Sql2008UnitOfWork), "Delete by id (uniques)")]
+        public class when_uniquebigidentityitem_and_deleting_two_of_four_items_using_id : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.InsertUniqueBigIdentityItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueBigIdentityItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.DeleteById<UniqueBigIdentityItem>(_structures[1].StructureId);
+                    uow.DeleteById<UniqueBigIdentityItem>(_structures[2].StructureId);
+                    uow.Commit();
+                }
+            };
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_items_left<UniqueBigIdentityItem>(2);
+
+            It should_have_first_and_last_item_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_not_have_deleted_first_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+
+            It should_not_have_deleted_first_item_from_uniques_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_uniques_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_uniques_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_uniques_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<UniqueBigIdentityItem> _structures;
         }
 
         [Subject(typeof(Sql2008UnitOfWork), "Delete by id")]
@@ -474,7 +540,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -527,7 +593,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -580,7 +646,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<BigIdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -633,7 +699,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<GuidItem>(2);
+                () => TestContext.Database.should_have_X_items_left<GuidItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -686,7 +752,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<IdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<IdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
@@ -739,7 +805,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             It should_only_have_two_items_left =
-                () => TestContext.Database.should_only_have_X_items_left<BigIdentityItem>(2);
+                () => TestContext.Database.should_have_X_items_left<BigIdentityItem>(2);
 
             It should_have_first_and_last_item_left =
                 () => TestContext.Database.should_have_first_and_last_item_left(_structures);
