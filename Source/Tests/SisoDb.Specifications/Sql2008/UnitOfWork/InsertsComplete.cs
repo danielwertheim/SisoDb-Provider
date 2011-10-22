@@ -171,7 +171,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                         },
                         ValuesInArray = new[] { new Value { Is = 1 }, new Value { Is = 2 }, new Value { Is = 3 } },
                         //ValuesInISet = new HashSet<Value> { new Value { Is = 11 }, new Value { Is = 12 }, new Value { Is = 13 } },
-                        //ValuesHashSet = new HashSet<Value> { new Value { Is = 21 }, new Value { Is = 22 }, new Value { Is = 23 } },
+                        ValuesInHashSet = new HashSet<Value> { new Value { Is = 21 }, new Value { Is = 22 }, new Value { Is = 23 } },
                         ValuesInIList = new List<Value> { new Value { Is = 31 }, new Value { Is = 32 }, new Value { Is = 33 } },
                         ValuesInList = new List<Value> { new Value { Is = 41 }, new Value { Is = 42 }, new Value { Is = 43 } },
                         //ValuesInIDictionary = new Dictionary<int, Value>
@@ -224,7 +224,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
 
             //public ISet<Value> ValuesInISet { get; set; }
 
-            //public HashSet<Value> ValuesHashSet { get; set; }
+            public HashSet<Value> ValuesInHashSet { get; set; }
 
             //public IDictionary<int, Value> ValuesInIDictionary { get; set; }
 
