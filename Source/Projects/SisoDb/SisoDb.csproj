@@ -130,7 +130,6 @@
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="Querying\Sql\SqlQueryGenerator.cs" />
-    <Compile Include="SequentialGuid.cs" />
     <Compile Include="ResourceContainer.cs" />
     <Compile Include="Providers\SisoProviderFactories.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
