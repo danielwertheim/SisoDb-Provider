@@ -53,13 +53,13 @@
     <Reference Include="EnsureThat">
       <HintPath>..\..\packages\Ensure.That.0.3.0\lib\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.13.0.56, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.14.0.57, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.23.0\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.24.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.23.0.52, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.24.0.53, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.23.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.24.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=2.2.6.19660, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

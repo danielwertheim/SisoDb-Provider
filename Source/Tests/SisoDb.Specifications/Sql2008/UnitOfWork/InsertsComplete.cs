@@ -175,10 +175,11 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
                         ValuesInIList = new List<Value> { new Value { Is = 31 }, new Value { Is = 32 }, new Value { Is = 33 } },
                         ValuesInList = new List<Value> { new Value { Is = 41 }, new Value { Is = 42 }, new Value { Is = 43 } },
                         KeyValuesInDictionary = new Dictionary<string, int> { { "A", 44 }, { "B", 45 }, { "C", 46 } },
-                        //ValuesInIDictionary = new Dictionary<int, Value>
-                        //    {
-                        //        { 51, new Value { Is = 51 } }, { 52, new Value { Is = 52 } }, { 53, new Value { Is = 53 } }
-                        //    },
+                        KeyValuesInIDictionary = new Dictionary<string, int> { { "A", 44 }, { "B", 45 }, { "C", 46 } },
+                        ValuesInIDictionary = new Dictionary<int, Value>
+                        {
+                            { 51, new Value { Is = 51 } }, { 52, new Value { Is = 52 } }, { 53, new Value { Is = 53 } }
+                        },
                         ValuesInDictionary = new Dictionary<int, Value>
                         {
                             { 61, new Value { Is = 61 } }, { 62, new Value { Is = 62 } }, { 63, new Value { Is = 63 } }
@@ -227,11 +228,11 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
 
             public HashSet<Value> ValuesInHashSet { get; set; }
 
-            //public IDictionary<string, int> KeyValuesInIDictionary { get; set; }
+            public IDictionary<string, int> KeyValuesInIDictionary { get; set; }
 
             public Dictionary<string, int> KeyValuesInDictionary { get; set; }
 
-            //public IDictionary<int, Value> ValuesInIDictionary { get; set; }
+            public IDictionary<int, Value> ValuesInIDictionary { get; set; }
 
             public Dictionary<int, Value> ValuesInDictionary { get; set; }
         }
