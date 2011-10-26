@@ -31,7 +31,7 @@ namespace SisoDb.Dac.BulkInserts
                 return Enumerator.Current.Path;
 
             if (schemaField.Name == UniqueStorageSchema.Fields.UqValue.Name)
-                return SisoEnvironment.StringConverter.AsString(Enumerator.Current.Value);
+                return SisoEnvironment.HashService.GenerateHash(SisoEnvironment.StringConverter.AsString(Enumerator.Current.Value));
 
             throw new NotSupportedException();
         }

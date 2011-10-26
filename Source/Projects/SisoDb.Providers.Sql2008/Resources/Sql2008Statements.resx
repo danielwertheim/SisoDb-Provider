@@ -174,7 +174,7 @@ insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHa
 [StructureId] [uniqueidentifier] not null,
 [UqStructureId] [uniqueidentifier] null,
 [UqMemberPath] [varchar](250) not null,
-[UqValue] [nvarchar](100) not null);
+[UqValue] [nvarchar](10) not null);
 
 create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
@@ -185,7 +185,7 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
 [StructureId] [bigint] not null,
 [UqStructureId] [bigint] null,
 [UqMemberPath] [varchar](250) not null,
-[UqValue] [nvarchar](100) not null);
+[UqValue] [nvarchar](10) not null);
 
 create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
