@@ -73,7 +73,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     Visit(e.Operand);
                     break;
                 case ExpressionType.Convert:
-                    if (!e.Type.IsNullableValueType())
+                    if (!e.Type.IsNullablePrimitiveType())
                         throw new NotSupportedException(ExceptionMessages.LambdaParser_VisitUnary_InvalidConvert);
                     Visit(e.Operand);
                     break;

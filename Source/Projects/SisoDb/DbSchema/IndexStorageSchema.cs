@@ -40,10 +40,10 @@ namespace SisoDb.DbSchema
             if (dataType.IsStringType())
                 return Fields.StringValue;
 
-            if (dataType.IsIntegerNumberType())
+            if (dataType.IsAnyIntegerNumberType())
                 return Fields.IntegerValue;
 
-            if (dataType.IsFractalNumberType())
+            if (dataType.IsAnyFractalNumberType())
                 return Fields.FractalValue;
 
             if (dataType.IsAnyDateTimeType())

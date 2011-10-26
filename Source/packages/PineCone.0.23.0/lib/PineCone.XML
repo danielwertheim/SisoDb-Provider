@@ -101,6 +101,11 @@
               Looks up a localized string similar to You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc..
             </summary>
         </member>
+        <member name="P:PineCone.Resources.ExceptionMessages.StructureProperty_Setter_IsReadOnly">
+            <summary>
+              Looks up a localized string similar to Property &apos;{0}&apos; is read-only..
+            </summary>
+        </member>
         <member name="P:PineCone.Resources.ExceptionMessages.UniqueModesCantBeMapped">
             <summary>
               Looks up a localized string similar to The UniqueModes &apos;{0}&apos; is unknow and cant be mapped..

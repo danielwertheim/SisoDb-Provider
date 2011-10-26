@@ -43,13 +43,13 @@ namespace SisoDb.Dac.BulkInserts
                 return Enumerator.Current.Value;
             }
 
-            if (schemaField.Name == IndexStorageSchema.Fields.IntegerValue.Name && dataType.IsIntegerNumberType())
+            if (schemaField.Name == IndexStorageSchema.Fields.IntegerValue.Name && dataType.IsAnyIntegerNumberType())
             {
                 ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
             }
 
-            if (schemaField.Name == IndexStorageSchema.Fields.FractalValue.Name && dataType.IsFractalNumberType())
+            if (schemaField.Name == IndexStorageSchema.Fields.FractalValue.Name && dataType.IsAnyFractalNumberType())
             {
                 ValueIsConsumedForCurrent = true;
                 return Enumerator.Current.Value;
