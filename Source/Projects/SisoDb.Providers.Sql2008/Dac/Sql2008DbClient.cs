@@ -13,7 +13,6 @@ using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
-using SisoDb.Sql2008.DbSchema;
 using SisoDb.Structures;
 
 namespace SisoDb.Sql2008.Dac
@@ -114,11 +113,11 @@ namespace SisoDb.Sql2008.Dac
             return _connection.CreateCommand(_transaction, commandType, sql, parameters);
         }
 
-        public SqlBulkCopy GetBulkCopy(bool keepIdentities)
+        public IDbBulkCopy GetBulkCopy(bool keepIdentities)
         {
             var options = keepIdentities ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
 
-            return new SqlBulkCopy(_connection, options, _transaction);
+            return new Sql2008DbBulkCopy(_connection, options, _transaction);
         }
 
         public void Drop(IStructureSchema structureSchema)

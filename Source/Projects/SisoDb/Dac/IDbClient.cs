@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
@@ -21,7 +20,7 @@ namespace SisoDb.Dac
         void Flush();
         
         IDbCommand CreateCommand(CommandType commandType, string sql, params IDacParameter[] parameters);
-        SqlBulkCopy GetBulkCopy(bool keepIdentities);
+        IDbBulkCopy GetBulkCopy(bool keepIdentities);
 
         void Drop(IStructureSchema structureSchema);
         void RebuildIndexes(IStructureSchema structureSchema);

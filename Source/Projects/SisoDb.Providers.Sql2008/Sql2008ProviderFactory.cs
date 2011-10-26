@@ -63,7 +63,7 @@ namespace SisoDb.Sql2008
 
         public IDbBulkInserter GetDbBulkInserter(IDbClient dbClient)
         {
-            return new Sql2008DbBulkInserter(dbClient);
+            return new DbBulkInserter(dbClient);
         }
 
         public IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class

@@ -2,17 +2,15 @@
 using System.Linq;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Dac;
-using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 
-namespace SisoDb.Sql2008.Dac
+namespace SisoDb.Dac.BulkInserts
 {
-    public class Sql2008DbBulkInserter : IDbBulkInserter
+    public class DbBulkInserter : IDbBulkInserter
     {
         private readonly IDbClient _dbClient;
 
-        public Sql2008DbBulkInserter(IDbClient dbClient)
+        public DbBulkInserter(IDbClient dbClient)
         {
             _dbClient = dbClient;
         }
@@ -49,13 +47,11 @@ namespace SisoDb.Sql2008.Dac
             {
                 bulkInserter.BatchSize = structures.RecordsAffected;
                 bulkInserter.DestinationTableName = structures.StorageSchema.Name;
-                bulkInserter.NotifyAfter = 0;
-
+                
                 foreach (var field in structures.StorageSchema.GetFieldsOrderedByIndex())
-                    bulkInserter.ColumnMappings.Add(field.Name, field.Name);
+                    bulkInserter.AddColumnMapping(field.Name, field.Name);
 
-                bulkInserter.WriteToServer(structures);
-                bulkInserter.Close();
+                bulkInserter.Write(structures);
             }
         }
 
@@ -65,13 +61,11 @@ namespace SisoDb.Sql2008.Dac
             {
                 bulkInserter.BatchSize = indexes.RecordsAffected;
                 bulkInserter.DestinationTableName = indexes.StorageSchema.Name;
-                bulkInserter.NotifyAfter = 0;
 
                 foreach (var field in indexes.StorageSchema.GetFieldsOrderedByIndex())
-                    bulkInserter.ColumnMappings.Add(field.Name, field.Name);
+                    bulkInserter.AddColumnMapping(field.Name, field.Name);
 
-                bulkInserter.WriteToServer(indexes);
-                bulkInserter.Close();
+                bulkInserter.Write(indexes);
             }
         }
 
@@ -81,13 +75,11 @@ namespace SisoDb.Sql2008.Dac
             {
                 bulkInserter.BatchSize = uniques.RecordsAffected;
                 bulkInserter.DestinationTableName = uniques.StorageSchema.Name;
-                bulkInserter.NotifyAfter = 0;
 
                 foreach (var field in uniques.StorageSchema.GetFieldsOrderedByIndex())
-                    bulkInserter.ColumnMappings.Add(field.Name, field.Name);
+                    bulkInserter.AddColumnMapping(field.Name, field.Name);
 
-                bulkInserter.WriteToServer(uniques);
-                bulkInserter.Close();
+                bulkInserter.Write(uniques);
             }
         }
     }
