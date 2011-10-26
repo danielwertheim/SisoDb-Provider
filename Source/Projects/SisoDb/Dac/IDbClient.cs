@@ -29,7 +29,6 @@ namespace SisoDb.Dac
         void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema);
         void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
         bool TableExists(string name);
-        IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip);
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);

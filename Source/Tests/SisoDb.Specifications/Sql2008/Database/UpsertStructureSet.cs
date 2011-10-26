@@ -115,12 +115,9 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             It should_still_have_original_structureid_in_structures_table = () =>
             {
-                DbColumn column;
-                using (var dbClient = TestContext.CreateNonTransactionalDbClient())
-                {
-                    var columns = dbClient.GetColumns(_structureSchema.GetStructureTableName());
-                    column = columns.SingleOrDefault(c => c.Name == StructureStorageSchema.Fields.Id.Name);
-                }
+                var columns = TestContext.DbHelper.GetColumns(_structureSchema.GetUniquesTableName());
+                var column = columns.SingleOrDefault(c => c.Name == StructureStorageSchema.Fields.Id.Name);
+
                 column.ShouldNotBeNull();
                 column.DbDataType.ShouldEqual("uniqueidentifier");
             };
@@ -130,12 +127,9 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             It should_still_have_original_structureid_in_indexes_table = () =>
             {
-                DbColumn column;
-                using (var dbClient = TestContext.CreateNonTransactionalDbClient())
-                {
-                    var columns = dbClient.GetColumns(_structureSchema.GetIndexesTableName());
-                    column = columns.SingleOrDefault(c => c.Name == IndexStorageSchema.Fields.StructureId.Name);
-                }
+                var columns = TestContext.DbHelper.GetColumns(_structureSchema.GetUniquesTableName());
+                var column = columns.SingleOrDefault(c => c.Name == IndexStorageSchema.Fields.StructureId.Name);
+                
                 column.ShouldNotBeNull();
                 column.DbDataType.ShouldEqual("uniqueidentifier");
             };
@@ -145,24 +139,18 @@ namespace SisoDb.Specifications.Sql2008.Database
 
             It should_still_have_original_structureid_in_uniques_table = () =>
             {
-                DbColumn column;
-                using (var dbClient = TestContext.CreateNonTransactionalDbClient())
-                {
-                    var columns = dbClient.GetColumns(_structureSchema.GetUniquesTableName());
-                    column = columns.SingleOrDefault(c => c.Name == UniqueStorageSchema.Fields.StructureId.Name);
-                }
+                var columns = TestContext.DbHelper.GetColumns(_structureSchema.GetUniquesTableName());
+                var column = columns.SingleOrDefault(c => c.Name == UniqueStorageSchema.Fields.StructureId.Name);
+
                 column.ShouldNotBeNull();
                 column.DbDataType.ShouldEqual("uniqueidentifier");
             };
 
             It should_still_have_original_uqstructureid_in_uniques_table = () =>
             {
-                DbColumn column;
-                using (var dbClient = TestContext.CreateNonTransactionalDbClient())
-                {
-                    var columns = dbClient.GetColumns(_structureSchema.GetUniquesTableName());
-                    column = columns.SingleOrDefault(c => c.Name == UniqueStorageSchema.Fields.UqStructureId.Name);
-                }
+                var columns = TestContext.DbHelper.GetColumns(_structureSchema.GetUniquesTableName());
+                var column = columns.SingleOrDefault(c => c.Name == UniqueStorageSchema.Fields.UqStructureId.Name);
+                
                 column.ShouldNotBeNull();
                 column.DbDataType.ShouldEqual("uniqueidentifier");
             };

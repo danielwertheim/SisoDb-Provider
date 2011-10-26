@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using PineCone.Structures.Schemas;
@@ -11,6 +12,7 @@ namespace SisoDb.Testing
         void EnsureDbExists(string name);
         bool TableExists(string name);
         bool TypeExists(string name);
+        IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip);
         //void CreateProcedure(string spSql);
         //void DropProcedure(string spName);
         //void AddColumns(string tableName, params string[] columns);

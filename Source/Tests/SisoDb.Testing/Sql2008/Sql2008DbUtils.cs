@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
+using EnsureThat;
 using NCore;
 using NCore.Expressions;
 using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Structures;
 
@@ -52,6 +55,35 @@ namespace SisoDb.Testing.Sql2008
             var sql = "select 1 from sys.table_types where name = '{0}';".Inject(name);
 
             return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
+        }
+
+        public IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip)
+        {
+            Ensure.That(tableName, "tableName").IsNotNullOrWhiteSpace();
+
+            var tmpNamesToSkip = new HashSet<string>(namesToSkip);
+            var dbColumns = new List<DbColumn>();
+
+            const string sql = @"set nocount on;
+                        if (select OBJECT_ID(@tableName, 'U')) is not null
+                        begin
+                        select
+                        COLUMN_NAME,
+                        DATA_TYPE
+                        from INFORMATION_SCHEMA.COLUMNS
+                        where TABLE_NAME = @tableName;
+                        end";
+
+            ExecuteSingleResultSequentialReader(CommandType.Text, sql,
+                dr =>
+                {
+                    var name = dr.GetString(0);
+                    if (!tmpNamesToSkip.Contains(name))
+                        dbColumns.Add(new DbColumn(name, dr.GetString(1)));
+                },
+                new DacParameter("tableName", tableName));
+
+            return dbColumns;
         }
 
 //        public void CreateProcedure(string spSql)
@@ -119,30 +151,30 @@ namespace SisoDb.Testing.Sql2008
 //            return table;
 //        }
 
-//        private void ExecuteSingleResultReader(CommandType commandType, string sql, Action<IDataRecord> recordCallback)
-//        {
-//            using (var cn = CreateConnection())
-//            {
-//                cn.Open();
+        private void ExecuteSingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
+        {
+            using (var cn = CreateConnection())
+            {
+                cn.Open();
 
-//                using (var cmd = cn.CreateCommand())
-//                {
-//                    cmd.CommandType = commandType;
-//                    cmd.CommandText = sql;
+                using (var cmd = cn.CreateCommand(commandType, sql, parameters))
+                {
+                    cmd.CommandType = commandType;
+                    cmd.CommandText = sql;
 
-//                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
-//                    {
-//                        while (reader.Read())
-//                        {
-//                            recordCallback(reader);
-//                        }
-//                        reader.Close();
-//                    }
-//                }
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                    {
+                        while (reader.Read())
+                        {
+                            recordCallback(reader);
+                        }
+                        reader.Close();
+                    }
+                }
 
-//                cn.Close();
-//            }
-//        }
+                cn.Close();
+            }
+        }
 
         private void ExecuteSql(CommandType commandType, string sql)
         {

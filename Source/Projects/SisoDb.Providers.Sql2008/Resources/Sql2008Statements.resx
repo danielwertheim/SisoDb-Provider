@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddColumns" xml:space="preserve">
-    <value>alter table [dbo].[{0}]
-add {1};</value>
-  </data>
   <data name="CreateDatabase" xml:space="preserve">
     <value>create database [{0}];
 alter database [{0}] set recovery simple;</value>
@@ -224,10 +220,6 @@ delete from [dbo].[{0}] where StructureId &gt;= @idFrom and StructureId &lt;= @i
 delete from [dbo].[{1}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;
 delete from [dbo].[{2}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
   </data>
-  <data name="DropColumns" xml:space="preserve">
-    <value>alter table [dbo].[{0}]
-drop column {1};</value>
-  </data>
   <data name="DropDatabase" xml:space="preserve">
     <value>if (select DB_ID('{0}')) is not null
 begin
@@ -257,17 +249,6 @@ select json from [dbo].[{0}] where StructureId =@id;</value>
   <data name="GetByIds" xml:space="preserve">
     <value>set nocount on;
 select Json from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
-  </data>
-  <data name="GetColumns" xml:space="preserve">
-    <value>set nocount on;
-if (select OBJECT_ID(@tableName, 'U')) is not null
-begin
-select
-COLUMN_NAME,
-DATA_TYPE
-from INFORMATION_SCHEMA.COLUMNS
-where TABLE_NAME = @tableName;
-end</value>
   </data>
   <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;

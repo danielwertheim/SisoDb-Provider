@@ -113,7 +113,6 @@
     <Compile Include="Dac\BulkInserts\UniquesReader.cs" />
     <Compile Include="DbSchema\IndexStorageSchema.cs" />
     <Compile Include="DbSchema\SchemaField.cs" />
-    <Compile Include="Dac\DbColumn.cs" />
     <Compile Include="DbSchema\StorageSchemaBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />

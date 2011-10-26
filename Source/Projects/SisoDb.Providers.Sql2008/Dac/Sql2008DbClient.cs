@@ -222,27 +222,6 @@ namespace SisoDb.Sql2008.Dac
             return !string.IsNullOrWhiteSpace(value);
         }
 
-        public IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip)
-        {
-            Ensure.That(tableName, "tableName").IsNotNullOrWhiteSpace();
-
-            var tmpNamesToSkip = new HashSet<string>(namesToSkip);
-            var dbColumns = new List<DbColumn>();
-
-            var sql = SqlStatements.GetSql("GetColumns");
-
-            SingleResultSequentialReader(CommandType.Text, sql,
-                dr =>
-                {
-                    var name = dr.GetString(0);
-                    if (!tmpNamesToSkip.Contains(name))
-                        dbColumns.Add(new DbColumn(name, dr.GetString(1)));
-                },
-                new DacParameter("tableName", tableName));
-
-            return dbColumns;
-        }
-
         public int RowCount(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

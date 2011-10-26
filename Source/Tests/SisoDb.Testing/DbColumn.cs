@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SisoDb.Dac
+namespace SisoDb.Testing
 {
     [Serializable]
     public class DbColumn

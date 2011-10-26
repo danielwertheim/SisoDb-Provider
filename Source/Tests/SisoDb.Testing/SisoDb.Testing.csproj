@@ -57,6 +57,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DbColumn.cs" />
     <Compile Include="ITestContext.cs" />
     <Compile Include="ITestDbUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
