@@ -73,6 +73,7 @@
     <Compile Include="Sql2008\UnitOfWork\InsertsComplete.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsIdBehavior.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsOfJson.cs" />
+    <Compile Include="Sql2008\UnitOfWork\InsertsOfUniques.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsUsingBaseClasses.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsUsingInterfaces.cs" />
     <Compile Include="Sql2008\UnitOfWork\TransactionScopes.cs" />

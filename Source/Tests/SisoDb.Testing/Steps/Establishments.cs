@@ -69,6 +69,17 @@ namespace SisoDb.Testing.Steps
             return items;
         }
 
+        public static T Insert<T>(this ISisoDatabase db, T item) where T : class
+        {
+            using (var uow = db.CreateUnitOfWork())
+            {
+                uow.Insert(item);
+                uow.Commit();
+            }
+
+            return item;
+        }
+
         public static IList<GuidItem> InsertGuidItems(this ISisoDatabase db, int numOfItems)
         {
             var items = new List<GuidItem>(numOfItems);
