@@ -24,11 +24,7 @@ namespace SisoDb.Testing.Steps
                 }));
             }
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertManyJson<T>(itemsAsJson);
-                uow.Commit();
-            }
+            db.UoW().InsertManyJson<T>(itemsAsJson);
 
             return itemsAsJson;
         }
@@ -49,35 +45,7 @@ namespace SisoDb.Testing.Steps
                 });
             }
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
-        }
-
-        public static IList<T> InsertMany<T>(this ISisoDatabase db, IList<T> items) where T : class 
-        {
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
-        }
-
-        public static T Insert<T>(this ISisoDatabase db, T item) where T : class
-        {
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.Insert(item);
-                uow.Commit();
-            }
-
-            return item;
+            return db.UoW().InsertMany(items);
         }
 
         public static IList<GuidItem> InsertGuidItems(this ISisoDatabase db, int numOfItems)
@@ -87,13 +55,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new GuidItem { Value = c + 1 });
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
+            return db.UoW().InsertMany(items);
         }
 
         public static IList<UniqueGuidItem> InsertUniqueGuidItems(this ISisoDatabase db, int numOfItems)
@@ -103,13 +65,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueGuidItem { UniqueValue = c + 1 });
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
+            return db.UoW().InsertMany(items);
         }
 
         public static IList<IdentityItem> InsertIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -119,13 +75,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new IdentityItem { Value = c + 1 });
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
+            return db.UoW().InsertMany(items);
         }
 
         public static IList<UniqueIdentityItem> InsertUniqueIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -135,13 +85,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueIdentityItem { UniqueValue = c + 1 });
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
+            return db.UoW().InsertMany(items);
         }
 
         public static IList<BigIdentityItem> InsertBigIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -151,13 +95,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new BigIdentityItem { Value = c + 1 });
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
+            return db.UoW().InsertMany(items);
         }
 
         public static IList<UniqueBigIdentityItem> InsertUniqueBigIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -167,13 +105,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueBigIdentityItem { UniqueValue = c + 1 });
 
-            using (var uow = db.CreateUnitOfWork())
-            {
-                uow.InsertMany(items);
-                uow.Commit();
-            }
-
-            return items;
+            return db.UoW().InsertMany(items);
         }
     }
 }

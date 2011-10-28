@@ -113,6 +113,8 @@ namespace SisoDb.Sql2008
 
         public void DeleteByIds<T>(params ValueType[] ids) where T : class
         {
+            Ensure.That(ids, "ids").HasItems();
+
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             UpsertStructureSet(structureSchema);

@@ -2,7 +2,6 @@ using System.Linq;
 using NCore;
 using NUnit.Framework;
 using SisoDb.Querying;
-using SisoDb.TestUtils;
 
 namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
 {

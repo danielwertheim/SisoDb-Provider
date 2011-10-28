@@ -26,8 +26,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="item"></param>
-        void Insert<T>(T item) 
-            where T : class;
+        void Insert<T>(T item) where T : class;
 
         /// <summary>
         /// Inserts Json strcutures using the <typeparamref name="T"/> as
@@ -46,8 +45,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="items"></param>
-        void InsertMany<T>(IList<T> items) 
-            where T : class;
+        void InsertMany<T>(IList<T> items) where T : class;
 
         /// <summary>
         /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
@@ -67,8 +65,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="item"></param>
-        void Update<T>(T item) 
-            where T : class;
+        void Update<T>(T item) where T : class;
 
         /// <summary>
         /// Deletes structure by id.
@@ -76,8 +73,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
-        void DeleteById<T>(ValueType id) 
-            where T : class;
+        void DeleteById<T>(ValueType id) where T : class;
 
         /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>
@@ -85,8 +81,7 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
-        void DeleteByIds<T>(params ValueType[] ids)
-            where T : class;
+        void DeleteByIds<T>(params ValueType[] ids) where T : class;
 
         /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>
@@ -95,9 +90,8 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="idFrom"></param>
         /// <param name="idTo"></param>
-        /// <remarks>EXTREMLY IMPORTANT THAT YOU HAVE NOT USED OWN NON SEQUENTIAL GUIDS!</remarks>
-        void DeleteByIdInterval<T>(ValueType idFrom, ValueType idTo)
-            where T : class;
+        /// <remarks>ONLY SUPPORTED BY IDENTITIES! If not sequenced ids are used, you are doomed!</remarks>
+        void DeleteByIdInterval<T>(ValueType idFrom, ValueType idTo) where T : class;
 
         /// <summary>
         /// Deletes one or more structures matchings the sent
@@ -106,7 +100,6 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="expression"></param>
-        void DeleteByQuery<T>(Expression<Func<T, bool>> expression) 
-            where T : class;
+        void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
     }
 }

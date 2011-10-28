@@ -48,8 +48,8 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _idFrom = SequentialGuid.NewSqlCompatibleGuid();
-                _idTo = Enumerable.Repeat(SequentialGuid.NewSqlCompatibleGuid(), 10).Last();
+                _idFrom = SequentialGuid.New();
+                _idTo = Enumerable.Repeat(SequentialGuid.New(), 10).Last();
             };
 
             Because of = () =>
