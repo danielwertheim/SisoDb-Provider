@@ -18,12 +18,12 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _result = qe.GetByIdInterval<MyIdentityClass>(1, 3).ToList();
+                    _result = qe.GetByIdInterval<QueryIdentityItem>(1, 3).ToList();
             };
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
-            private static IList<MyIdentityClass> _result;
+            private static IList<QueryIdentityItem> _result;
         }
 
         [Subject(typeof(Sql2008QueryEngine), "Get by Id interval")]
@@ -34,12 +34,12 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _result = qe.GetByIdInterval<MyBigIdentityClass>(1, 3).ToList();
+                    _result = qe.GetByIdInterval<QueryBigIdentityItem>(1, 3).ToList();
             };
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
-            private static IList<MyBigIdentityClass> _result;
+            private static IList<QueryBigIdentityItem> _result;
         }
 
         [Subject(typeof(Sql2008QueryEngine), "Get by Id interval")]
@@ -55,13 +55,13 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _result = qe.GetByIdInterval<MyGuidClass>(_idFrom, _idTo).ToList();
+                    _result = qe.GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
             };
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
             private static Guid _idFrom, _idTo;
-            private static IList<MyGuidClass> _result;
+            private static IList<QueryGuidItem> _result;
         }
 
         [Subject(typeof(Sql2008QueryEngine), "Get by Id interval")]
@@ -74,10 +74,10 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new MyIdentityClass{SortOrder = 1, Value = "A"},
-                        new MyIdentityClass{SortOrder = 2, Value = "B"},
-                        new MyIdentityClass{SortOrder = 3, Value = "C"},
-                        new MyIdentityClass{SortOrder = 4, Value = "D"},
+                        new QueryIdentityItem{IntValue = 1, StringValue = "A"},
+                        new QueryIdentityItem{IntValue = 2, StringValue = "B"},
+                        new QueryIdentityItem{IntValue = 3, StringValue = "C"},
+                        new QueryIdentityItem{IntValue = 4, StringValue = "D"},
                     });
 
                     uow.Commit();
@@ -87,18 +87,18 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _result = qe.GetByIdInterval<MyIdentityClass>(2, 3).ToList();
+                    _result = qe.GetByIdInterval<QueryIdentityItem>(2, 3).ToList();
             };
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 
             It should_have_subset_containing_the_two_middle_items = () =>
             {
-                _result.First().SortOrder.ShouldEqual(2);
-                _result.Last().SortOrder.ShouldEqual(3);
+                _result.First().IntValue.ShouldEqual(2);
+                _result.Last().IntValue.ShouldEqual(3);
             };
 
-            private static IList<MyIdentityClass> _result;
+            private static IList<QueryIdentityItem> _result;
         }
 
         [Subject(typeof(Sql2008QueryEngine), "Get by Id interval")]
@@ -111,10 +111,10 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new MyBigIdentityClass{SortOrder = 1, Value = "A"},
-                        new MyBigIdentityClass{SortOrder = 2, Value = "B"},
-                        new MyBigIdentityClass{SortOrder = 3, Value = "C"},
-                        new MyBigIdentityClass{SortOrder = 4, Value = "D"},
+                        new QueryBigIdentityItem{IntValue = 1, StringValue = "A"},
+                        new QueryBigIdentityItem{IntValue = 2, StringValue = "B"},
+                        new QueryBigIdentityItem{IntValue = 3, StringValue = "C"},
+                        new QueryBigIdentityItem{IntValue = 4, StringValue = "D"},
                     });
 
                     uow.Commit();
@@ -124,18 +124,18 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _result = qe.GetByIdInterval<MyBigIdentityClass>(2, 3).ToList();
+                    _result = qe.GetByIdInterval<QueryBigIdentityItem>(2, 3).ToList();
             };
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 
             It should_have_subset_containing_the_two_middle_items = () =>
             {
-                _result.First().SortOrder.ShouldEqual(2);
-                _result.Last().SortOrder.ShouldEqual(3);
+                _result.First().IntValue.ShouldEqual(2);
+                _result.Last().IntValue.ShouldEqual(3);
             };
 
-            private static IList<MyBigIdentityClass> _result;
+            private static IList<QueryBigIdentityItem> _result;
         }
 
         [Subject(typeof(Sql2008QueryEngine), "Get by Id interval")]
@@ -147,10 +147,10 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
 
                 var items = new[]
                     {
-                        new MyGuidClass{SortOrder = 1, Value = "A"},
-                        new MyGuidClass{SortOrder = 2, Value = "B"},
-                        new MyGuidClass{SortOrder = 3, Value = "C"},
-                        new MyGuidClass{SortOrder = 4, Value = "D"},
+                        new QueryGuidItem{IntValue = 1, StringValue = "A"},
+                        new QueryGuidItem{IntValue = 2, StringValue = "B"},
+                        new QueryGuidItem{IntValue = 3, StringValue = "C"},
+                        new QueryGuidItem{IntValue = 4, StringValue = "D"},
                     };
 
                 using (var uow = TestContext.Database.CreateUnitOfWork())
@@ -166,46 +166,19 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _result = qe.GetByIdInterval<MyGuidClass>(_idFrom, _idTo).ToList();
+                    _result = qe.GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
             };
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 
             It should_have_subset_containing_the_two_middle_items = () =>
             {
-                _result.First().SortOrder.ShouldEqual(2);
-                _result.Last().SortOrder.ShouldEqual(3);
+                _result.First().IntValue.ShouldEqual(2);
+                _result.Last().IntValue.ShouldEqual(3);
             };
 
             private static Guid _idFrom, _idTo;
-            private static IList<MyGuidClass> _result;
-        }
-
-        public class MyGuidClass
-        {
-            public Guid StructureId { get; set; }
-
-            public int SortOrder { get; set; }
-
-            public string Value { get; set; }
-        }
-
-        public class MyIdentityClass
-        {
-            public int StructureId { get; set; }
-
-            public int SortOrder { get; set; }
-
-            public string Value { get; set; }
-        }
-
-        public class MyBigIdentityClass
-        {
-            public long StructureId { get; set; }
-
-            public int SortOrder { get; set; }
-
-            public string Value { get; set; }
+            private static IList<QueryGuidItem> _result;
         }
     }
 }
