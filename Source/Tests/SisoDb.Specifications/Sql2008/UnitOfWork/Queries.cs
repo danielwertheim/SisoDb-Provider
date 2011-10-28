@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
-using NCore;
+using SisoDb.Specifications.Sql2008.QueryEngine;
 using SisoDb.Sql2008;
 using SisoDb.Testing;
 
@@ -11,7 +10,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
     namespace Queries
     {
         [Subject(typeof(Sql2008UnitOfWork), "Count")]
-        public class when_counting_using_expression_matching_two_of_four_items_that_is_in_uncommitted_mode : SpecificationBase
+        public class when_counting_using_expression_matching_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
@@ -19,9 +18,9 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             {
                 using (var uow = TestContext.Database.CreateUnitOfWork())
                 {
-                    uow.InsertMany(QueryGuidItem.CreateItems());
+                    uow.InsertMany(QueryGuidItem.CreateFourItems());
 
-                    _count = uow.Count<QueryGuidItem>(x => x.IntValue >= 3);
+                    _count = uow.Count<QueryGuidItem>(x => x.SortOrder >= 3);
                 }
             };
 
@@ -31,12 +30,12 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         }
 
         [Subject(typeof(Sql2008UnitOfWork), "Get by Id interval")]
-        public class when_id_interval_matches_two_of_four_items_that_is_in_uncommitted_mode : SpecificationBase
+        public class when_id_interval_matches_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = QueryGuidItem.CreateItems();
+                _structures = QueryGuidItem.CreateFourItems();
             };
 
             Because of = () =>
@@ -63,12 +62,12 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         }
 
         [Subject(typeof(Sql2008UnitOfWork), "Get by Ids")]
-        public class when_id_set_matches_two_of_four_items_that_is_in_uncommitted_mode : SpecificationBase
+        public class when_id_set_matches_two_of_four_items_that_is_are_uncommitted_mode : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = QueryGuidItem.CreateItems();
+                _structures = QueryGuidItem.CreateFourItems();
             };
 
             Because of = () =>
@@ -95,12 +94,12 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         }
 
         [Subject(typeof(Sql2008UnitOfWork), "Get by Ids as Json")]
-        public class when_id_set_matches_two_of_four_json_items_that_is_in_uncommitted_mode : SpecificationBase
+        public class when_id_set_matches_two_of_four_json_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = QueryGuidItem.CreateItems();
+                _structures = QueryGuidItem.CreateFourItems();
             };
 
             Because of = () =>
@@ -126,31 +125,72 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static IList<string> _fetchedStructures;
         }
 
-        public class QueryGuidItem
+        [Subject(typeof(Sql2008UnitOfWork), "Get all")]
+        public class when_set_contains_four_items_that_are_in_uncommitted_mode : SpecificationBase
         {
-            public const string JsonFormat = "{{\"StructureId\":\"{0}\",\"IntValue\":{1},\"StringValue\":\"{2}\"}}";
-
-            public static IList<QueryGuidItem> CreateItems()
+            Establish context = () =>
             {
-                return new[]
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = QueryGuidItem.CreateFourItems();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
                 {
-                    new QueryGuidItem{IntValue = 1, StringValue = "A"},
-                    new QueryGuidItem{IntValue = 2, StringValue = "B"},
-                    new QueryGuidItem{IntValue = 3, StringValue = "C"},
-                    new QueryGuidItem{IntValue = 4, StringValue = "D"},
-                };
-            }
+                    uow.InsertMany(_structures);
 
-            public Guid StructureId { get; set; }
+                    _fetchedStructures = uow.GetAll<QueryGuidItem>().ToList();
+                }
+            };
 
-            public int IntValue { get; set; }
+            It should_fetch_all_4_structures =
+                () => _fetchedStructures.Count.ShouldEqual(4);
 
-            public string StringValue { get; set; }
-
-            public string AsJson()
+            It should_fetch_the_two_middle_structures = () =>
             {
-                return JsonFormat.Inject(StructureId.ToString("N"), IntValue, StringValue);
-            }
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[2].ShouldBeValueEqualTo(_structures[2]);
+                _fetchedStructures[3].ShouldBeValueEqualTo(_structures[3]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008UnitOfWork), "Get all as Json")]
+        public class when_set_contains_four_json_items_that_are_in_uncommitted_mode : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = QueryGuidItem.CreateFourItems();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.InsertMany(_structures);
+
+                    _fetchedStructures = uow.GetAllAsJson<QueryGuidItem>().ToList();
+                }
+            };
+
+            It should_fetch_all_4_structures =
+                () => _fetchedStructures.Count.ShouldEqual(4);
+
+            It should_fetch_the_two_middle_structures = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0].AsJson());
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[1].AsJson());
+                _fetchedStructures[2].ShouldBeValueEqualTo(_structures[2].AsJson());
+                _fetchedStructures[3].ShouldBeValueEqualTo(_structures[3].AsJson());
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<string> _fetchedStructures;
         }
     }
 }

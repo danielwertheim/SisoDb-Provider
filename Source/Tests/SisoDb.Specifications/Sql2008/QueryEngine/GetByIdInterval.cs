@@ -74,10 +74,10 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new QueryIdentityItem{IntValue = 1, StringValue = "A"},
-                        new QueryIdentityItem{IntValue = 2, StringValue = "B"},
-                        new QueryIdentityItem{IntValue = 3, StringValue = "C"},
-                        new QueryIdentityItem{IntValue = 4, StringValue = "D"},
+                        new QueryIdentityItem{SortOrder = 1, StringValue = "A"},
+                        new QueryIdentityItem{SortOrder = 2, StringValue = "B"},
+                        new QueryIdentityItem{SortOrder = 3, StringValue = "C"},
+                        new QueryIdentityItem{SortOrder = 4, StringValue = "D"},
                     });
 
                     uow.Commit();
@@ -94,8 +94,8 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
 
             It should_have_subset_containing_the_two_middle_items = () =>
             {
-                _result.First().IntValue.ShouldEqual(2);
-                _result.Last().IntValue.ShouldEqual(3);
+                _result.First().SortOrder.ShouldEqual(2);
+                _result.Last().SortOrder.ShouldEqual(3);
             };
 
             private static IList<QueryIdentityItem> _result;
@@ -111,10 +111,10 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new QueryBigIdentityItem{IntValue = 1, StringValue = "A"},
-                        new QueryBigIdentityItem{IntValue = 2, StringValue = "B"},
-                        new QueryBigIdentityItem{IntValue = 3, StringValue = "C"},
-                        new QueryBigIdentityItem{IntValue = 4, StringValue = "D"},
+                        new QueryBigIdentityItem{SortOrder = 1, StringValue = "A"},
+                        new QueryBigIdentityItem{SortOrder = 2, StringValue = "B"},
+                        new QueryBigIdentityItem{SortOrder = 3, StringValue = "C"},
+                        new QueryBigIdentityItem{SortOrder = 4, StringValue = "D"},
                     });
 
                     uow.Commit();
@@ -131,8 +131,8 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
 
             It should_have_subset_containing_the_two_middle_items = () =>
             {
-                _result.First().IntValue.ShouldEqual(2);
-                _result.Last().IntValue.ShouldEqual(3);
+                _result.First().SortOrder.ShouldEqual(2);
+                _result.Last().SortOrder.ShouldEqual(3);
             };
 
             private static IList<QueryBigIdentityItem> _result;
@@ -147,10 +147,10 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
 
                 var items = new[]
                     {
-                        new QueryGuidItem{IntValue = 1, StringValue = "A"},
-                        new QueryGuidItem{IntValue = 2, StringValue = "B"},
-                        new QueryGuidItem{IntValue = 3, StringValue = "C"},
-                        new QueryGuidItem{IntValue = 4, StringValue = "D"},
+                        new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                        new QueryGuidItem{SortOrder = 2, StringValue = "B"},
+                        new QueryGuidItem{SortOrder = 3, StringValue = "C"},
+                        new QueryGuidItem{SortOrder = 4, StringValue = "D"},
                     };
 
                 using (var uow = TestContext.Database.CreateUnitOfWork())
@@ -173,8 +173,8 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
 
             It should_have_subset_containing_the_two_middle_items = () =>
             {
-                _result.First().IntValue.ShouldEqual(2);
-                _result.Last().IntValue.ShouldEqual(3);
+                _result.First().SortOrder.ShouldEqual(2);
+                _result.Last().SortOrder.ShouldEqual(3);
             };
 
             private static Guid _idFrom, _idTo;

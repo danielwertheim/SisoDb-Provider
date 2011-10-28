@@ -4,30 +4,33 @@ using NCore;
 
 namespace SisoDb.Specifications.Sql2008.QueryEngine
 {
-    public class QueryGuidItem
+    public class QueryGuidItem : QueryXItem<Guid>
     {
-        public const string JsonFormat = "{{\"StructureId\":\"{0}\",\"IntValue\":{1},\"StringValue\":\"{2}\"}}";
-
-        public static IList<QueryGuidItem> CreateItems()
+        public static IList<QueryGuidItem> CreateFourItems()
         {
             return new[]
             {
-                new QueryGuidItem{IntValue = 1, StringValue = "A"},
-                new QueryGuidItem{IntValue = 2, StringValue = "B"},
-                new QueryGuidItem{IntValue = 3, StringValue = "C"},
-                new QueryGuidItem{IntValue = 4, StringValue = "D"},
+                new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                new QueryGuidItem{SortOrder = 2, StringValue = "B"},
+                new QueryGuidItem{SortOrder = 3, StringValue = "C"},
+                new QueryGuidItem{SortOrder = 4, StringValue = "D"},
             };
         }
 
-        public Guid StructureId { get; set; }
-
-        public int IntValue { get; set; }
-
-        public string StringValue { get; set; }
-
-        public string AsJson()
+        public static IList<QueryGuidItem> CreateFourUnorderedItems()
         {
-            return JsonFormat.Inject(StructureId.ToString("N"), IntValue, StringValue);
+            return new[]
+            {
+                new QueryGuidItem{SortOrder = 2, StringValue = "B"},
+                new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                new QueryGuidItem{SortOrder = 4, StringValue = "D"},
+                new QueryGuidItem{SortOrder = 3, StringValue = "C"},
+            };
+        }
+
+        public override string AsJson()
+        {
+            return JsonFormat.Inject(StructureId.ToString("N"), SortOrder, StringValue);
         }
     }
 }

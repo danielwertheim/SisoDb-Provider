@@ -15,7 +15,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems());
             };
 
             Because of = () => 
@@ -40,7 +40,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems());
                 _nonMatchingId = Guid.Parse("DA2809E1-17A2-4D6C-8546-E2A86D29CF2B");
             };
 
@@ -67,7 +67,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems());
             };
 
             Because of = () =>
@@ -92,7 +92,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems());
                 _nonMatchingId = Guid.Parse("81EC4983-F58B-4459-84F8-0D000F06F43D");
             };
 

@@ -69,11 +69,13 @@
     <Compile Include="Sql2008\Database\InitializeExisting.cs" />
     <Compile Include="Sql2008\Database\CreateIfNotExists.cs" />
     <Compile Include="Sql2008\QueryEngine\Count.cs" />
+    <Compile Include="Sql2008\QueryEngine\GetAll.cs" />
     <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
     <Compile Include="Sql2008\QueryEngine\GetByIds.cs" />
     <Compile Include="Sql2008\QueryEngine\QueryBigIdentityItem.cs" />
     <Compile Include="Sql2008\QueryEngine\QueryGuidItem.cs" />
     <Compile Include="Sql2008\QueryEngine\QueryIdentityItem.cs" />
+    <Compile Include="Sql2008\QueryEngine\QueryXItem.cs" />
     <Compile Include="Sql2008\UnitOfWork\Deletes.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsComplete.cs" />
     <Compile Include="Sql2008\UnitOfWork\InsertsIdBehavior.cs" />

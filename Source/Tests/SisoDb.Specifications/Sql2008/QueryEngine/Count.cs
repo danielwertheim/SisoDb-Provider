@@ -49,8 +49,8 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new QueryGuidItem{IntValue = 1, StringValue = "A"},
-                        new QueryGuidItem{IntValue = 2, StringValue = "B"}
+                        new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                        new QueryGuidItem{SortOrder = 2, StringValue = "B"}
                     });
                 }
             };
@@ -76,8 +76,8 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new QueryGuidItem{IntValue = 1, StringValue = "A"},
-                        new QueryGuidItem{IntValue = 2, StringValue = "B"}
+                        new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                        new QueryGuidItem{SortOrder = 2, StringValue = "B"}
                     });
 
                     uow.Commit();
@@ -105,9 +105,9 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new QueryGuidItem{IntValue = 1, StringValue = "A"},
-                        new QueryGuidItem{IntValue = 2, StringValue = "B"},
-                        new QueryGuidItem{IntValue = 3, StringValue = "C"}
+                        new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                        new QueryGuidItem{SortOrder = 2, StringValue = "B"},
+                        new QueryGuidItem{SortOrder = 3, StringValue = "C"}
                     });
 
                     uow.Commit();
@@ -117,7 +117,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>(x => x.IntValue > 1);
+                    _itemsCount = qe.Count<QueryGuidItem>(x => x.SortOrder > 1);
             };
 
             It should_be_2 = () => _itemsCount.ShouldEqual(2);
@@ -135,9 +135,9 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 {
                     uow.InsertMany(new[]
                     {
-                        new QueryGuidItem{IntValue = 1, StringValue = "A"},
-                        new QueryGuidItem{IntValue = 2, StringValue = "B"},
-                        new QueryGuidItem{IntValue = 3, StringValue = "C"}
+                        new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                        new QueryGuidItem{SortOrder = 2, StringValue = "B"},
+                        new QueryGuidItem{SortOrder = 3, StringValue = "C"}
                     });
 
                     uow.Commit();
@@ -147,7 +147,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>(x => x.IntValue < 1);
+                    _itemsCount = qe.Count<QueryGuidItem>(x => x.SortOrder < 1);
             };
 
             It should_be_0 = () => _itemsCount.ShouldEqual(0);
