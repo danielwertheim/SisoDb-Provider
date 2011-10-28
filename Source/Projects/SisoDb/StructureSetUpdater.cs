@@ -15,10 +15,10 @@ namespace SisoDb
         where TOld : class
         where TNew : class
     {
-        protected const int MaxKeepQueueSize = 500;
+        protected const int MaxKeepQueueSize = 100;
 
-        private IStructureId _deleteIdFrom;
-        private IStructureId _deleteIdTo;
+        private IStructureId _deleteIdentityIdFrom;
+        private IStructureId _deleteIdentityIdTo;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly StructureBuilderOptions _structureBuilderOptions;
 
@@ -53,6 +53,10 @@ namespace SisoDb
                 Serializer = new SerializerForStructureBuilder(),
                 KeepStructureId = true
             };
+
+            if (StructureSchemaNew.IdAccessor.IdType != StructureSchemaOld.IdAccessor.IdType)
+                throw new SisoDbException(ExceptionMessages.StructureSetUpdater_MissmatchInIdTypes);
+
             KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
         }
 
@@ -92,12 +96,11 @@ namespace SisoDb
 
                     var newId = GetStructureId(newStructure);
                     if (newId == null)
-                        throw new SisoDbException(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotExist);
+                        throw new SisoDbException(ExceptionMessages.StructureSetUpdater_NewIdDoesNotExist);
 
                     if (!newId.Value.Equals(oldId.Value))
-                        throw new SisoDbException(
-                            ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(newId.Value,
-                                                                                                   oldId.Value));
+                        throw new SisoDbException(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId
+                            .Inject(newId.Value, oldId.Value));
 
                     switch (status)
                     {
@@ -114,14 +117,14 @@ namespace SisoDb
 
                     if (KeepQueue.Count == MaxKeepQueueSize)
                     {
-                        DequeueStructuresToTrash(dbClient);
-                        DequeueStructuresToKeep(dbClient);
+                        ProcessTrashQueue(dbClient);
+                        ProcessKeepQueue(dbClient);
                     }
                 }
             }
 
-            DequeueStructuresToTrash(dbClient);
-            DequeueStructuresToKeep(dbClient);
+            ProcessTrashQueue(dbClient);
+            ProcessKeepQueue(dbClient);
 
             return true;
         }
@@ -139,7 +142,7 @@ namespace SisoDb
             KeepQueue.Enqueue(newStructure);
         }
 
-        protected virtual void DequeueStructuresToKeep(IDbClient dbClient)
+        private void ProcessKeepQueue(IDbClient dbClient)
         {
             if (KeepQueue.Count < 1)
                 return;
@@ -157,19 +160,19 @@ namespace SisoDb
 
         protected virtual void OnTrash(IStructureId structureId)
         {
-            _deleteIdFrom = _deleteIdFrom ?? structureId;
-            _deleteIdTo = structureId;
+            _deleteIdentityIdFrom = _deleteIdentityIdFrom ?? structureId;
+            _deleteIdentityIdTo = structureId;
         }
 
-        protected virtual void DequeueStructuresToTrash(IDbClient dbClient)
+        private void ProcessTrashQueue(IDbClient dbClient)
         {
-            if (_deleteIdFrom == null)
+            if (_deleteIdentityIdFrom == null)
                 return;
 
-            dbClient.DeleteWhereIdIsBetween(_deleteIdFrom.Value, _deleteIdTo.Value, StructureSchemaOld);
+            dbClient.DeleteWhereIdIsBetween(_deleteIdentityIdFrom.Value, _deleteIdentityIdTo.Value, StructureSchemaOld);
 
-            _deleteIdFrom = null;
-            _deleteIdTo = null;
+            _deleteIdentityIdFrom = null;
+            _deleteIdentityIdTo = null;
         }
     }
 }

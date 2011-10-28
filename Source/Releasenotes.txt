@@ -13,9 +13,8 @@ Reworked internals to become more generic to simplify writings of additional pro
 [Updated]   Storage schema for Indexes are now key-value.
 [Updated]   Storage schema for Uniques now have UqMemberPath instead of UqName
 [Updated]   All members of QueryEngine and UnitOfWork taking Enumerable of Ids, now takes param array of ids instead. E.g. GetByIds, DeleteByIds etc
-[Updated]   StructureSetUpdater should be used via Database. 
+[Updated]   StructureSetUpdater should be used via Database.UpdateStructureSet.
 [Updated]   The support for how Uniques are handled has been changed. The property marked as unique is turned into a hashed string before stored. That way we get uniformed lenght strings.
-*[Updated]  DeleteByIdInterval is only supported by identities.
 [New]       The Id (previous SisoId) now StructureId now does support Guid, int, long and Nullable<Guid>, Nullable<int>, Nullable<long>
 [New]       HashSets and Dictionaries are now supported
 [New]       Extensionpoints for QueryEngine and UnitOfWork now exists on ISisoDataBase via Query() and Uow(). These simpliefies working with QueryEngine/UnitOfWorks BUT SHOULD ONLY BE USED WHEN DOING ONE OPERATION AGAINST QueryEngine or UnitOfWork.

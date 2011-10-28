@@ -130,6 +130,19 @@ namespace SisoDb.Sql2008
             StructureSchemas.Clear();
         }
 
+        public void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
+            where TOld : class
+            where TNew : class
+        {
+            var structureSchemaOld = _structureSchemas.GetSchema(TypeFor<TOld>.Type);
+            _structureSchemas.RemoveSchema(TypeFor<TOld>.Type);
+
+            var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
+
+            var updater = new StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _structureBuilder);
+            updater.Process(onProcess);
+        }
+
         public void UpsertStructureSet<T>() where T : class
         {
             UpsertStructureSet(TypeFor<T>.Type);
@@ -145,19 +158,6 @@ namespace SisoDb.Sql2008
 
                 dbClient.Flush();
             }
-        }
-
-        public void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
-            where TOld : class
-            where TNew : class
-        {
-            var structureSchemaOld = _structureSchemas.GetSchema(TypeFor<TOld>.Type);
-            _structureSchemas.RemoveSchema(TypeFor<TOld>.Type);
-
-            var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
-
-            var updater = new StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _structureBuilder);
-            updater.Process(onProcess);
         }
 
         public IQueryEngine CreateQueryEngine()

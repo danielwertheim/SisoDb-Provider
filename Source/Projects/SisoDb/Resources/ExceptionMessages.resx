@@ -214,13 +214,13 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SqlDbClient_Flus_NonTransactional" xml:space="preserve">
     <value>You can not flush a non transational DbClient.</value>
   </data>
-  <data name="SqlStructureSetUpdater_NewIdDoesNotExist" xml:space="preserve">
-    <value>No Id could be extracted from the new structure.</value>
+  <data name="StructureSetUpdater_NewIdDoesNotExist" xml:space="preserve">
+    <value>Can not update structure set. No Id could be extracted from the new structure.</value>
   </data>
   <data name="SqlStructureSetUpdater_OldIdDoesNotExist" xml:space="preserve">
     <value>No Id could be extracted from the old structure.</value>
   </data>
-  <data name="SqlStructureSetUpdater_NewIdDoesNotMatchOldId" xml:space="preserve">
+  <data name="StructureSetUpdater_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id of the new structure '{0}' does not match the Id of the old structure '{1}'.</value>
   </data>
   <data name="IdAccessor_GetIdValue_InvalidLevel" xml:space="preserve">
@@ -252,5 +252,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="IndexStorageSchema_MissingValueSchemaField" xml:space="preserve">
     <value>There's no index storage schema value column matching the type '{0}'.</value>
+  </data>
+  <data name="StructureSetUpdater_MissmatchInIdTypes" xml:space="preserve">
+    <value>Can not update structure set when Id type has changed.</value>
   </data>
 </root>

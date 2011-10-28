@@ -293,7 +293,7 @@ namespace SisoDb.Specifications.Sql2008.Database
             It should_have_failed = () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(0, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(0, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
@@ -355,7 +355,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(Guid.Empty, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(Guid.Empty, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
@@ -418,7 +418,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
@@ -482,7 +482,7 @@ namespace SisoDb.Specifications.Sql2008.Database
                 () => CaughtException.ShouldNotBeNull();
 
             It should_have_descriptive_message = () =>
-                CaughtException.Message.ShouldEqual(ExceptionMessages.SqlStructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
 
             It should_have_kept_old_items_untouched = () =>
             {
