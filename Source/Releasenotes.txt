@@ -18,6 +18,7 @@ Reworked internals to become more generic to simplify writings of additional pro
 *[Updated]  DeleteByIdInterval is only supported by identities.
 [New]       The Id (previous SisoId) now StructureId now does support Guid, int, long and Nullable<Guid>, Nullable<int>, Nullable<long>
 [New]       HashSets and Dictionaries are now supported
+[New]       Extensionpoints for QueryEngine and UnitOfWork now exists on ISisoDataBase via Query() and Uow(). These simpliefies working with QueryEngine/UnitOfWorks BUT SHOULD ONLY BE USED WHEN DOING ONE OPERATION AGAINST QueryEngine or UnitOfWork.
 *[New]      In additon to NamedQuery (which is stored procedures) there is now RawQuery which lets you run queries using raw SQL. Good luck!
 
 v3.1

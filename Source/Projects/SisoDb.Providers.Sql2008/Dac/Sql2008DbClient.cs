@@ -27,14 +27,12 @@ namespace SisoDb.Sql2008.Dac
         private SqlTransaction _transaction;
         private TransactionScope _ts;
 
-        public string DbName
+        public ISisoConnectionInfo ConnectionInfo { get; private set; }
+
+        public bool IsTransactional 
         {
-            get { return _connection.Database; }
+            get { return _transaction != null || _ts != null; }
         }
-
-        public StorageProviders ProviderType { get; private set; }
-
-        public IConnectionString ConnectionString { get; private set; }
 
         public ISqlStatements SqlStatements { get; private set; }
 
@@ -42,14 +40,13 @@ namespace SisoDb.Sql2008.Dac
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
-            _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
+            ConnectionInfo = connectionInfo;
 
-            ProviderType = connectionInfo.ProviderType;
-            ConnectionString = connectionInfo.ConnectionString;
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
 
             SqlStatements = _providerFactory.GetSqlStatements();
 
-            _connection = new SqlConnection(ConnectionString.PlainString);
+            _connection = new SqlConnection(ConnectionInfo.ConnectionString.PlainString);
             _connection.Open();
 
             if (Transaction.Current == null)

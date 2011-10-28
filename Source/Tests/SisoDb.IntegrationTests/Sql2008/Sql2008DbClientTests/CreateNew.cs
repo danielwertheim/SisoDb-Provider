@@ -16,13 +16,13 @@ namespace SisoDb.IntegrationTests.Sql2008.Sql2008DbClientTests
             Because of = () => _dbClient = new Sql2008DbClient(TestContext.Database.ConnectionInfo, false);
 
             It should_get_correct_connection_string =
-                () => _dbClient.ConnectionString.PlainString.ShouldEqual(@"data source=.\sqlexpress;initial catalog=SisoDbTests;integrated security=SSPI;");
+                () => _dbClient.ConnectionInfo.ConnectionString.PlainString.ShouldEqual(@"data source=.\sqlexpress;initial catalog=SisoDbTests;integrated security=SSPI;");
 
             It should_get_correct_provider_type =
-                () => _dbClient.ProviderType.ShouldEqual(StorageProviders.Sql2008);
+                () => _dbClient.ConnectionInfo.ProviderType.ShouldEqual(StorageProviders.Sql2008);
 
             It should_have_connection_against_specified_db =
-                () => _dbClient.DbName.ShouldEqual("SisoDbTests");
+                () => _dbClient.ConnectionInfo.DbName.ShouldEqual("SisoDbTests");
 
             private static IDbClient _dbClient;
         }

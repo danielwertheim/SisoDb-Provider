@@ -10,9 +10,8 @@ namespace SisoDb.Dac
 {
     public interface IDbClient : IDisposable
     {
-        string DbName { get; }
-        StorageProviders ProviderType { get; }
-        IConnectionString ConnectionString { get; }
+        ISisoConnectionInfo ConnectionInfo { get; }
+        bool IsTransactional { get; }
         ISqlStatements SqlStatements { get; }
 
         void Flush();

@@ -11,7 +11,6 @@ using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
-using SisoDb.Querying.Sql;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 
@@ -20,7 +19,8 @@ namespace SisoDb.Sql2008
     public class Sql2008QueryEngine : IQueryEngine
     {
         protected ISisoProviderFactory ProviderFactory { get; private set; }
-        protected IDbClient DbClientTrans { get; private set; }
+
+        protected IDbClient DbClient { get; private set; }
         protected IDbClient DbClientNonTrans { get; private set; }
         protected IDbSchemaManager DbSchemaManager { get; private set; }
         protected IDbSchemaUpserter DbSchemaUpserter { get; private set; }
@@ -28,8 +28,16 @@ namespace SisoDb.Sql2008
         protected IDbQueryGenerator QueryGenerator { get; private set; }
         protected IJsonSerializer JsonSerializer { get; private set; }
 
-        protected internal Sql2008QueryEngine(
+        internal Sql2008QueryEngine(
             ISisoConnectionInfo connectionInfo,
+            IDbSchemaManager dbSchemaManager,
+            IStructureSchemas structureSchemas,
+            IJsonSerializer jsonSerializer) 
+            : this(connectionInfo, false, dbSchemaManager, structureSchemas, jsonSerializer) {}
+
+        protected Sql2008QueryEngine(
+            ISisoConnectionInfo connectionInfo,
+            bool transactional,
             IDbSchemaManager dbSchemaManager,
             IStructureSchemas structureSchemas,
             IJsonSerializer jsonSerializer)
@@ -40,8 +48,8 @@ namespace SisoDb.Sql2008
             Ensure.That(jsonSerializer, "jsonSerializer").IsNotNull();
 
             ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
-            DbClientTrans = ProviderFactory.GetDbClient(connectionInfo, true);
-            DbClientNonTrans = ProviderFactory.GetDbClient(connectionInfo, false);
+            DbClient = ProviderFactory.GetDbClient(connectionInfo, transactional);
+            DbClientNonTrans = !DbClient.IsTransactional ? DbClient : ProviderFactory.GetDbClient(connectionInfo, false);
             DbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(DbClientNonTrans);
             QueryGenerator = ProviderFactory.GetDbQueryGenerator();
             DbSchemaManager = dbSchemaManager;
@@ -51,16 +59,25 @@ namespace SisoDb.Sql2008
 
         public void Dispose()
         {
-            if (DbClientTrans != null)
+            if (ReferenceEquals(DbClient, DbClientNonTrans))
             {
-                DbClientTrans.Dispose();
-                DbClientTrans = null;
+                (DbClient ?? DbClientNonTrans).Dispose();
+                DbClient = null;
+                DbClientNonTrans = null;
+
+                return;
             }
 
             if (DbClientNonTrans != null)
             {
                 DbClientNonTrans.Dispose();
                 DbClientNonTrans = null;
+            }
+
+            if (DbClient != null)
+            {
+                DbClient.Dispose();
+                DbClient = null;
             }
         }
 
@@ -70,7 +87,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return DbClientNonTrans.RowCount(structureSchema);
+            return DbClient.RowCount(structureSchema);
         }
 
         public int Count<T>(Expression<Func<T, bool>> expression) where T : class
@@ -83,7 +100,7 @@ namespace SisoDb.Sql2008
             var queryCommand = commandBuilder.Where(expression).Command;
             var whereSql = QueryGenerator.GenerateWhereQuery(queryCommand);
 
-            return DbClientNonTrans.RowCountByQuery(structureSchema, whereSql);
+            return DbClient.RowCountByQuery(structureSchema, whereSql);
         }
 
         public T GetById<T>(ValueType id) where T : class
@@ -103,7 +120,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return JsonSerializer.DeserializeMany<T>(DbClientNonTrans.GetJsonWhereIdIsBetween(idFrom, idTo, structureSchema));
+            return JsonSerializer.DeserializeMany<T>(DbClient.GetJsonWhereIdIsBetween(idFrom, idTo, structureSchema));
         }
 
         public TOut GetByIdAs<TContract, TOut>(ValueType id)
@@ -127,7 +144,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return DbClientNonTrans.GetJsonById(id, structureSchema);
+            return DbClient.GetJsonById(id, structureSchema);
         }
 
         public IEnumerable<string> GetByIdsAsJson<T>(params ValueType[] ids) where T : class
@@ -136,7 +153,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            return DbClientNonTrans.GetJsonByIds(ids, structureSchema.IdAccessor.IdType, structureSchema);
+            return DbClient.GetJsonByIds(ids, structureSchema.IdAccessor.IdType, structureSchema);
         }
 
         public IEnumerable<T> GetAll<T>() where T : class
@@ -206,9 +223,9 @@ namespace SisoDb.Sql2008
                 sql = query.Sql;
             }
             else
-                sql = DbClientNonTrans.SqlStatements.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
+                sql = DbClient.SqlStatements.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = DbClientNonTrans.CreateCommand(CommandType.Text, sql))
+            using (var cmd = DbClient.CreateCommand(CommandType.Text, sql))
             {
                 return ConsumeReader(cmd);
             }
@@ -232,7 +249,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            using (var cmd = DbClientNonTrans.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
+            using (var cmd = DbClient.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
             {
                 return ConsumeReader(cmd);
             }
@@ -300,7 +317,7 @@ namespace SisoDb.Sql2008
             var query = QueryGenerator.GenerateQuery(queryCommand);
             var parameters = query.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
-            using (var cmd = DbClientNonTrans.CreateCommand(CommandType.Text, query.Sql, parameters))
+            using (var cmd = DbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
             {
                 return ConsumeReader(cmd);
             }

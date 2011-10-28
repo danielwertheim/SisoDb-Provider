@@ -11,24 +11,6 @@ namespace SisoDb.Tests.IntegrationTests.Sql2008.UnitOfWork.Queries
         }
 
         [Test]
-        public void Count_WhenNoItemsExists_ReturnsZero()
-        {
-            using(var uow = Database.CreateUnitOfWork())
-            {
-                Assert.AreEqual(0, uow.Count<ItemForCountTests>());
-            }
-        }
-
-        [Test]
-        public void Count_UsingExpressionWhenNoItemsExists_ReturnsZero()
-        {
-            using (var uow = Database.CreateUnitOfWork())
-            {
-                Assert.AreEqual(0, uow.Count<ItemForCountTests>(i => i.SortOrder == 0));
-            }
-        }
-
-        [Test]
         public void Count_WhenTwoItemsExistsInUnCommittedUnitOfWork_ReturnsTwo()
         {
             var items = new[]
