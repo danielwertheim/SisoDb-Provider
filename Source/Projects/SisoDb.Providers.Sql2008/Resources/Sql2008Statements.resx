@@ -135,7 +135,7 @@ alter database [{0}] set recovery simple;</value>
 
 create index [IX_{0}] on [{0}] ([MemberPath]);
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
@@ -151,7 +151,7 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
 
 create index [IX_{0}] on [{0}] ([MemberPath]);
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
@@ -174,7 +174,7 @@ insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHa
 
 create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
@@ -185,40 +185,27 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
 
 create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
-alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete no action;</value>
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="DatabaseExists" xml:space="preserve">
     <value>select DB_ID(@dbName);</value>
   </data>
   <data name="DeleteById" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where StructureId = @id;
-delete from [dbo].[{1}] where StructureId = @id;
-delete from [dbo].[{2}] where StructureId = @id;</value>
+delete from [dbo].[{0}] where StructureId = @id;</value>
   </data>
   <data name="DeleteByIds" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where StructureId in (select Id from @ids);
-delete from [dbo].[{1}] where StructureId in (select Id from @ids);
-delete from [dbo].[{2}] where StructureId in (select Id from @ids);</value>
+delete from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
-declare @ids table (id {4});
 
-insert into @ids (id)
-select si.StructureId from [dbo].[{0}] as si
-where {3};
-
-delete from [dbo].[{0}] where StructureId in(select id from @ids);
-delete from [dbo].[{1}] where StructureId in(select id from @ids);
-delete from [dbo].[{2}] where StructureId in(select id from @ids);</value>
+delete from [dbo].[{0}] where StructureId in(select si.StructureId from [dbo].[{1}] as si where {2});</value>
   </data>
   <data name="DeleteWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;
-delete from [dbo].[{1}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;
-delete from [dbo].[{2}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
+delete from [dbo].[{0}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
   </data>
   <data name="DropDatabase" xml:space="preserve">
     <value>if (select DB_ID('{0}')) is not null

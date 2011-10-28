@@ -1,5 +1,4 @@
 using System;
-using SisoDb.DbSchema;
 using SisoDb.Providers;
 
 namespace SisoDb.Dac
@@ -8,7 +7,6 @@ namespace SisoDb.Dac
     {
         StorageProviders ProviderType { get; }
         IConnectionString ConnectionString { get; }
-        IDbDataTypeTranslator DbDataTypeTranslator { get; }
         ISqlStatements SqlStatements { get; }
         bool DatabaseExists(string name);
         void CreateDatabase(string name);

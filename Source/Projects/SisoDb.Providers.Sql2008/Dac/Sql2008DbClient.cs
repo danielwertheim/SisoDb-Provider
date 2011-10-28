@@ -9,7 +9,6 @@ using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
@@ -37,8 +36,6 @@ namespace SisoDb.Sql2008.Dac
 
         public IConnectionString ConnectionString { get; private set; }
 
-        public IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
-
         public ISqlStatements SqlStatements { get; private set; }
 
         public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
@@ -51,7 +48,6 @@ namespace SisoDb.Sql2008.Dac
             ConnectionString = connectionInfo.ConnectionString;
 
             SqlStatements = _providerFactory.GetSqlStatements();
-            DbDataTypeTranslator = _providerFactory.GetDbDataTypeTranslator();
 
             _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();
@@ -153,8 +149,6 @@ namespace SisoDb.Sql2008.Dac
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("DeleteById").Inject(
-                structureSchema.GetIndexesTableName(),
-                structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("id", structureId)))
@@ -168,8 +162,6 @@ namespace SisoDb.Sql2008.Dac
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("DeleteByIds").Inject(
-                structureSchema.GetIndexesTableName(),
-                structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
             using (var cmd = CreateCommand(CommandType.Text, sql))
@@ -183,13 +175,10 @@ namespace SisoDb.Sql2008.Dac
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sqlDataType = DbDataTypeTranslator.ToDbType(idType);
             var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
-                structureSchema.GetIndexesTableName(),
-                structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName(),
-                query.Sql,
-                sqlDataType);
+                structureSchema.GetIndexesTableName(),
+                query.Sql);
 
             using (var cmd = CreateCommand(CommandType.Text, sql, query.Parameters.ToArray()))
             {
@@ -202,8 +191,6 @@ namespace SisoDb.Sql2008.Dac
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
-                structureSchema.GetIndexesTableName(),
-                structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
             using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))

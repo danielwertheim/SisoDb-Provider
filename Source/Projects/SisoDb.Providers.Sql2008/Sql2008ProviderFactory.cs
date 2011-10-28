@@ -9,7 +9,6 @@ using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;
 using SisoDb.Sql2008.Dac;
-using SisoDb.Sql2008.DbSchema;
 using SisoDb.Structures;
 
 namespace SisoDb.Sql2008
@@ -41,11 +40,6 @@ namespace SisoDb.Sql2008
         public IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
         {
             return new SqlDbSchemaUpserter(dbClient);
-        }
-
-        public IDbDataTypeTranslator GetDbDataTypeTranslator()
-        {
-            return new Sql2008DataTypeTranslator();
         }
 
         public ISqlStatements GetSqlStatements()

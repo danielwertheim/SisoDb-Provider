@@ -177,7 +177,6 @@
     <Compile Include="Querying\Lambdas\Converters\IParsedLambdaConverter.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortDirections.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
-    <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverter.cs" />

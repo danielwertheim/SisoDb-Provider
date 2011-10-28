@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 
@@ -14,7 +13,6 @@ namespace SisoDb.Dac
         string DbName { get; }
         StorageProviders ProviderType { get; }
         IConnectionString ConnectionString { get; }
-        IDbDataTypeTranslator DbDataTypeTranslator { get; }
         ISqlStatements SqlStatements { get; }
 
         void Flush();

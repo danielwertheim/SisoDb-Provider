@@ -3,7 +3,6 @@ using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Providers;
 
 namespace SisoDb.Sql2008.Dac
@@ -21,8 +20,6 @@ namespace SisoDb.Sql2008.Dac
 
         public IConnectionString ConnectionString { get; private set; }
 
-        public IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
-
         public ISqlStatements SqlStatements { get; private set; }
 
         public Sql2008ServerClient(ISisoConnectionInfo connectionInfo)
@@ -35,7 +32,6 @@ namespace SisoDb.Sql2008.Dac
             ConnectionString = connectionInfo.ServerConnectionString;
 
             SqlStatements = _providerFactory.GetSqlStatements();
-            DbDataTypeTranslator = _providerFactory.GetDbDataTypeTranslator();
 
             _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();
