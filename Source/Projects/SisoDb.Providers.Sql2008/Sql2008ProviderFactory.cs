@@ -7,7 +7,6 @@ using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.Querying.Sql;
 using SisoDb.Sql2008.Dac;
 using SisoDb.Structures;
 
@@ -49,7 +48,7 @@ namespace SisoDb.Sql2008
 
         public IDbQueryGenerator GetDbQueryGenerator()
         {
-            return new SqlQueryGenerator(
+            return new Sql2008QueryGenerator(
                 new LambdaToSqlWhereConverter(),
                 new LambdaToSqlSortingConverter(),
                 new LambdaToSqlIncludeConverter());

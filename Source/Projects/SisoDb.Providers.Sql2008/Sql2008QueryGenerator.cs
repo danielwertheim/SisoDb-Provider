@@ -4,19 +4,21 @@ using System.Linq;
 using System.Text;
 using EnsureThat;
 using SisoDb.Dac;
+using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
+using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Structures;
 
-namespace SisoDb.Querying.Sql
+namespace SisoDb.Sql2008
 {
-    public class SqlQueryGenerator : IDbQueryGenerator
+    public class Sql2008QueryGenerator : IDbQueryGenerator
     {
         private readonly ILambdaToSqlWhereConverter _whereConverter;
         private readonly ILambdaToSqlSortingConverter _sortingConverter;
         private readonly ILambdaToSqlIncludeConverter _includeConverter;
 
-        public SqlQueryGenerator(
+        public Sql2008QueryGenerator(
             ILambdaToSqlWhereConverter whereConverter,
             ILambdaToSqlSortingConverter sortingConverter,
             ILambdaToSqlIncludeConverter includeConverter)

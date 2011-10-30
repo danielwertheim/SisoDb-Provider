@@ -1,9 +1,9 @@
 using System;
 using NUnit.Framework;
+using SisoDb.Sql2008;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.Querying.Sql;
 using SisoDb.UnitTests.TestFactories;
 
 namespace SisoDb.UnitTests.Querying.Sql
@@ -172,9 +172,9 @@ namespace SisoDb.UnitTests.Querying.Sql
             return builder.Command;
         }
 
-        private static SqlQueryGenerator GetQueryGenerator()
+        private static IDbQueryGenerator GetQueryGenerator()
         {
-            return new SqlQueryGenerator(
+            return new Sql2008QueryGenerator(
                 new LambdaToSqlWhereConverter(), 
                 new LambdaToSqlSortingConverter(), 
                 new LambdaToSqlIncludeConverter());

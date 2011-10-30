@@ -88,6 +88,7 @@
     <Compile Include="Sql2008QueryEngine.cs" />
     <Compile Include="Dac\Sql2008ServerClient.cs" />
     <Compile Include="Sql2008UnitOfWork.cs" />
+    <Compile Include="Sql2008QueryGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Sql2008Exceptions.resx">

@@ -12,8 +12,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
         public class when_set_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-
-
+            
             Because of = () =>
                 _fetchedStructures = TestContext.Database.Query().GetAll<QueryGuidItem>().ToList();
 
@@ -44,7 +43,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of = 
@@ -71,7 +70,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of =
@@ -98,7 +97,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
             };
 
             Because of =
@@ -125,7 +124,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems());
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
             };
 
             Because of =
