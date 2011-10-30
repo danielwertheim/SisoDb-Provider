@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
 
-namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverterTests
+namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter
 {
     [TestFixture]
     public abstract class LambdaToSqlSortingConverterTestBase : UnitTestBase

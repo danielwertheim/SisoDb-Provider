@@ -115,8 +115,8 @@
     <Compile Include="Querying\Lambdas\Parsers\WhereParserQxAnyTests.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlIncludeConverterTests\LambdaToSqlIncludeConverterTestBase.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlIncludeConverterTests\LambdaToSqlIncludeConverterTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverterTests\LambdaToSqlSortingConverterTestBase.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverterTests\LambdaToSqlSortingConverterTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTestBase.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserTests.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterCombinedTests.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterEnumerableQueryExtensionsTests.cs" />

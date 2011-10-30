@@ -7,7 +7,6 @@ using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.Querying.Lambdas.Converters.Sql
 {
@@ -26,7 +25,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
 
             public string GetJoinsString()
             {
-                return string.Join(" ", Joins);
+                return string.Format("({0})", string.Join(" or ", Joins));
             }
 
             public string GetSortingPartsString()
@@ -70,20 +69,14 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 return;
             }
 
-            const string joinFormat = "left join [dbo].[{0}] as siSort{1} on siSort{1}.[{2}] = s.[{3}] and siSort{1}.[{4}]='{5}'";
-
-            var joinTableNum = session.Joins.Count + 1;
+            const string joinFormat = "si.[{0}]='{1}'";
 
             session.Joins.Add(string.Format(joinFormat,
-                session.StructureSchema.GetIndexesTableName(),
-                joinTableNum,
-                IndexStorageSchema.Fields.StructureId.Name,
-                StructureStorageSchema.Fields.Id.Name,
                 IndexStorageSchema.Fields.MemberPath.Name,
                 sortingNode.MemberPath));
 
             session.SortingParts.Add(string.Format(
-                "siSort{0}.[{1}] {2}", joinTableNum, IndexStorageSchema.GetValueSchemaFieldForType(sortingNode.MemberType).Name, sortingNode.Direction));
+                "min(si.[{0}]) {1}", IndexStorageSchema.GetValueSchemaFieldForType(sortingNode.MemberType).Name, sortingNode.Direction));
         }
     }
 }
