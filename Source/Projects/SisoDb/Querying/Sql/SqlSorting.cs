@@ -6,21 +6,32 @@ namespace SisoDb.Querying.Sql
     [Serializable]
     public class SqlSorting
     {
-        public virtual string SortingJoins { get; private set; }
+        private readonly string _sortingJoins;
+        private readonly string _sorting;
+        private readonly bool _isEmpty;
 
-        public virtual string Sorting { get; private set; }
+        public virtual string SortingJoins
+        {
+            get { return _sortingJoins; }
+        }
+
+        public virtual string Sorting
+        {
+            get { return _sorting; }
+        }
 
         public virtual bool IsEmpty
         {
-            get { return string.IsNullOrWhiteSpace(SortingJoins) && string.IsNullOrWhiteSpace(Sorting); }
+            get { return _isEmpty; }
         }
 
         public SqlSorting(string sorting)
         {
             Ensure.That(sorting, "sorting").IsNotNullOrWhiteSpace();
 
-            SortingJoins = string.Empty;
-            Sorting = sorting;
+            _isEmpty = false;
+            _sortingJoins = string.Empty;
+            _sorting = sorting;
         }
 
         public SqlSorting(string sorting, string sortingJoins)
@@ -28,14 +39,16 @@ namespace SisoDb.Querying.Sql
             Ensure.That(sorting, "sorting").IsNotNullOrWhiteSpace();
             Ensure.That(sortingJoins, "sortingJoins").IsNotNullOrWhiteSpace();
 
-            SortingJoins = sortingJoins;
-            Sorting = sorting;
+            _isEmpty = false;
+            _sortingJoins = sortingJoins;
+            _sorting = sorting;
         }
 
         protected SqlSorting()
         {
-            SortingJoins = string.Empty; 
-            Sorting = string.Empty;
+            _isEmpty = true;
+            _sortingJoins = string.Empty; 
+            _sorting = string.Empty;
         }
 
         public static SqlSorting Empty()

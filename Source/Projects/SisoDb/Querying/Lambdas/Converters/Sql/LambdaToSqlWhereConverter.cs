@@ -20,7 +20,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
 
             public readonly IStructureSchema StructureSchema;
             public StringBuilder Sql = new StringBuilder();
-            public readonly ISet<DacParameter> Params;
+            public readonly ISet<IDacParameter> Params;
             public string PreviousMemberPath;
             public bool HasWrittenMember;
             public bool HasWrittenValue;
@@ -28,7 +28,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
             public Session(IStructureSchema structureSchema)
             {
                 StructureSchema = structureSchema;
-                Params = new HashSet<DacParameter>();
+                Params = new HashSet<IDacParameter>();
             }
 
             public void Flush()

@@ -21,7 +21,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
 
                 nodes.AddNode(
-                    new IncludeNode(includedStructureTypeName, idReferencePath, objectReferencePath));    
+                    new IncludeNode(includedStructureTypeName, idReferencePath, objectReferencePath, memberExpression.Type));    
             }
 
             return new ParsedLambda(nodes.ToArray());

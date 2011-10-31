@@ -6,23 +6,40 @@ namespace SisoDb.Querying.Sql
     [Serializable]
     public class SqlInclude
     {
-        public virtual string Sql { get; private set; }
+        private readonly string _jsonOutputDefinition;
+        private readonly string _join;
+        private readonly bool _isEmpty;
+
+        public virtual string JsonOutputDefinition
+        {
+            get { return _jsonOutputDefinition; }
+        }
+
+        public virtual string Join
+        {
+            get { return _join; }
+        }
 
         public virtual bool IsEmpty
         {
-            get { return string.IsNullOrWhiteSpace(Sql); }
+            get { return _isEmpty; }
         }
 
-        public SqlInclude(string sql)
+        public SqlInclude(string jsonOutputDefinition, string @join)
         {
-            Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
+            Ensure.That(jsonOutputDefinition, "jsonOutputDefinition").IsNotNullOrWhiteSpace();
+            Ensure.That(@join, "join").IsNotNullOrWhiteSpace();
 
-            Sql = sql;
+            _isEmpty = false;
+            _jsonOutputDefinition = jsonOutputDefinition;
+            _join = @join;
         }
 
         protected SqlInclude()
         {
-            Sql = string.Empty;
+            _isEmpty = true;
+            _jsonOutputDefinition = string.Empty;
+            _join = string.Empty;
         }
 
         public static SqlInclude Empty()

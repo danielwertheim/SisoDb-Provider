@@ -10,9 +10,14 @@ namespace SisoDb.Querying.Sql
     [Serializable]
     public class SqlQuery
     {
+        private readonly string _sql;
         private readonly ReadOnlyCollection<IDacParameter> _parameters;
+        private readonly bool _isEmpty;
 
-        public virtual string Sql { get; private set; }
+        public virtual string Sql 
+        {
+            get { return _sql; }
+        }
 
         public virtual IList<IDacParameter> Parameters
         {
@@ -21,21 +26,23 @@ namespace SisoDb.Querying.Sql
 
         public virtual bool IsEmpty
         {
-            get { return string.IsNullOrWhiteSpace(Sql); }
+            get { return _isEmpty; }
         }
 
-        public SqlQuery(string sql, IEnumerable<IDacParameter> parameters)
+        public SqlQuery(string sql, ICollection<IDacParameter> parameters)
         {
             Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
             Ensure.That(parameters, "parameters").IsNotNull();
 
-            Sql = sql;
+            _isEmpty = false;
+            _sql = sql;
             _parameters = new ReadOnlyCollection<IDacParameter>(parameters.Distinct().ToList());
         }
 
         protected SqlQuery()
         {
-            Sql = string.Empty;
+            _isEmpty = true;
+            _sql = string.Empty;
             _parameters = new ReadOnlyCollection<IDacParameter>(new List<IDacParameter>());
         }
 

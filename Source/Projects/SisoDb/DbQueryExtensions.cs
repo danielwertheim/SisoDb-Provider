@@ -45,7 +45,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<T> GetByIds<T>(this DbQueryExtensionPoint db, params ValueType[] ids) where T : class
+        public static IList<T> GetByIds<T>(this DbQueryExtensionPoint db, params ValueType[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 
@@ -55,7 +55,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<TOut> GetByIdsAs<TContract, TOut>(this DbQueryExtensionPoint db, params ValueType[] ids)
+        public static IList<TOut> GetByIdsAs<TContract, TOut>(this DbQueryExtensionPoint db, params ValueType[] ids)
             where TContract : class
             where TOut : class
         {
@@ -67,7 +67,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<T> GetByIdInterval<T>(this DbQueryExtensionPoint db, ValueType idFrom, ValueType idTo) where T : class
+        public static IList<T> GetByIdInterval<T>(this DbQueryExtensionPoint db, ValueType idFrom, ValueType idTo) where T : class
         {
             using (var qe = db.Instance.CreateQueryEngine())
             {
@@ -83,7 +83,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<string> GetByIdsAsJson<T>(this DbQueryExtensionPoint db, params ValueType[] ids) where T : class
+        public static IList<string> GetByIdsAsJson<T>(this DbQueryExtensionPoint db, params ValueType[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 
@@ -93,7 +93,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<T> GetAll<T>(this DbQueryExtensionPoint db) where T : class
+        public static IList<T> GetAll<T>(this DbQueryExtensionPoint db) where T : class
         {
             using (var qe = db.Instance.CreateQueryEngine())
             {
@@ -101,7 +101,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<T> GetAll<T>(this DbQueryExtensionPoint db, Action<IGetCommandBuilder<T>> commandInitializer) where T : class
+        public static IList<T> GetAll<T>(this DbQueryExtensionPoint db, Action<IGetCommandBuilder<T>> commandInitializer) where T : class
         {
             Ensure.That(commandInitializer, "commandInitializer").IsNotNull();
 
@@ -111,7 +111,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<TOut> GetAllAs<TContract, TOut>(this DbQueryExtensionPoint db)
+        public static IList<TOut> GetAllAs<TContract, TOut>(this DbQueryExtensionPoint db)
             where TContract : class
             where TOut : class
         {
@@ -121,7 +121,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<TOut> GetAllAs<TContract, TOut>(this DbQueryExtensionPoint db, Action<IGetCommandBuilder<TContract>> commandInitializer)
+        public static IList<TOut> GetAllAs<TContract, TOut>(this DbQueryExtensionPoint db, Action<IGetCommandBuilder<TContract>> commandInitializer)
             where TContract : class
             where TOut : class
         {
@@ -133,7 +133,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<string> GetAllAsJson<T>(this DbQueryExtensionPoint db) where T : class
+        public static IList<string> GetAllAsJson<T>(this DbQueryExtensionPoint db) where T : class
         {
             using (var qe = db.Instance.CreateQueryEngine())
             {
@@ -141,7 +141,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<string> GetAllAsJson<T>(this DbQueryExtensionPoint db, Action<IGetCommandBuilder<T>> commandInitializer) where T : class
+        public static IList<string> GetAllAsJson<T>(this DbQueryExtensionPoint db, Action<IGetCommandBuilder<T>> commandInitializer) where T : class
         {
             Ensure.That(commandInitializer, "commandInitializer").IsNotNull();
 
@@ -151,7 +151,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<T> NamedQuery<T>(this DbQueryExtensionPoint db, INamedQuery query) where T : class
+        public static IList<T> NamedQuery<T>(this DbQueryExtensionPoint db, INamedQuery query) where T : class
         {
             Ensure.That(query, "query").IsNotNull();
 
@@ -161,7 +161,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<TOut> NamedQueryAs<TContract, TOut>(this DbQueryExtensionPoint db, INamedQuery query)
+        public static IList<TOut> NamedQueryAs<TContract, TOut>(this DbQueryExtensionPoint db, INamedQuery query)
             where TContract : class
             where TOut : class
         {
@@ -173,7 +173,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<string> NamedQueryAsJson<T>(this DbQueryExtensionPoint db, INamedQuery query) where T : class
+        public static IList<string> NamedQueryAsJson<T>(this DbQueryExtensionPoint db, INamedQuery query) where T : class
         {
             Ensure.That(query, "query").IsNotNull();
 
@@ -183,7 +183,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<T> Where<T>(this DbQueryExtensionPoint db, Expression<Func<T, bool>> expression) where T : class
+        public static IList<T> Where<T>(this DbQueryExtensionPoint db, Expression<Func<T, bool>> expression) where T : class
         {
             Ensure.That(expression, "expression").IsNotNull();
 
@@ -193,7 +193,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<TOut> WhereAs<TContract, TOut>(this DbQueryExtensionPoint db, Expression<Func<TContract, bool>> expression)
+        public static IList<TOut> WhereAs<TContract, TOut>(this DbQueryExtensionPoint db, Expression<Func<TContract, bool>> expression)
             where TContract : class
             where TOut : class
         {
@@ -205,7 +205,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<string> WhereAsJson<T>(this DbQueryExtensionPoint db, Expression<Func<T, bool>> expression) where T : class
+        public static IList<string> WhereAsJson<T>(this DbQueryExtensionPoint db, Expression<Func<T, bool>> expression) where T : class
         {
             Ensure.That(expression, "expression").IsNotNull();
 
@@ -215,7 +215,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<T> Query<T>(this DbQueryExtensionPoint db, Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
+        public static IList<T> Query<T>(this DbQueryExtensionPoint db, Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
         {
             Ensure.That(commandInitializer, "commandInitializer").IsNotNull();
 
@@ -225,7 +225,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<TOut> QueryAs<TContract, TOut>(this DbQueryExtensionPoint db, Action<IQueryCommandBuilder<TContract>> commandInitializer)
+        public static IList<TOut> QueryAs<TContract, TOut>(this DbQueryExtensionPoint db, Action<IQueryCommandBuilder<TContract>> commandInitializer)
             where TContract : class
             where TOut : class
         {
@@ -237,7 +237,7 @@ namespace SisoDb
             }
         }
 
-        public static IEnumerable<string> QueryAsJson<T>(this DbQueryExtensionPoint db, Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
+        public static IList<string> QueryAsJson<T>(this DbQueryExtensionPoint db, Action<IQueryCommandBuilder<T>> commandInitializer) where T : class
         {
             Ensure.That(commandInitializer, "commandInitializer").IsNotNull();
 
