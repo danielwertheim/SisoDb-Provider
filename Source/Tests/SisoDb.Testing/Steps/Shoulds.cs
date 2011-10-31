@@ -46,7 +46,7 @@ namespace SisoDb.Testing.Steps
 
         public static void should_have_X_num_of_items<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
         {
-            db.Query().Count<T>().ShouldEqual(numOfItemsLeft);
+            db.FetchVia().Count<T>().ShouldEqual(numOfItemsLeft);
         }
 
         public static void should_have_first_and_last_item_left<T>(this ISisoDatabase db, IList<T> structures) where T : class 
@@ -115,7 +115,7 @@ namespace SisoDb.Testing.Steps
 
         public static void should_have_one_structure_with_json_containing<T>(this ISisoDatabase db, params Expression<Func<T, object>>[] parts) where T : class
         {
-            var structureJson = db.Query().GetAllAsJson<T>().SingleOrDefault();
+            var structureJson = db.FetchVia().GetAllAsJson<T>().SingleOrDefault();
             
             structureJson.ShouldNotBeEmpty();
 
@@ -125,7 +125,7 @@ namespace SisoDb.Testing.Steps
 
         public static void should_have_one_structure_with_json_not_containing<T1, T2>(this ISisoDatabase db, params Expression<Func<T2, object>>[] parts) where T1 : class where T2 : class 
         {
-            var structureJson = db.Query().GetAllAsJson<T1>().SingleOrDefault();
+            var structureJson = db.FetchVia().GetAllAsJson<T1>().SingleOrDefault();
 
             structureJson.ShouldNotBeEmpty();
 

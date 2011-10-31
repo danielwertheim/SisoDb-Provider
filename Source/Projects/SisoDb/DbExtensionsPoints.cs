@@ -2,7 +2,7 @@ namespace SisoDb
 {
     public static class DbExtensionsPoints
     {
-        public static DbQueryExtensionPoint Query(this ISisoDatabase db)
+        public static DbQueryExtensionPoint FetchVia(this ISisoDatabase db)
         {
             return new DbQueryExtensionPoint(db);
         }

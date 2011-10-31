@@ -19,7 +19,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of = () => 
-                _fetchedStructures = TestContext.Database.Query().GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
             
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -45,7 +45,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.Query().GetByIds<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().GetByIds<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -71,7 +71,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.Query().GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -97,7 +97,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.Query().GetByIdsAsJson<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().GetByIdsAsJson<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

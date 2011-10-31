@@ -17,7 +17,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .Where<QueryGuidItem>(i => i.SortOrder < 0).ToList();
 
             It should_not_have_fetched_any_structures =
@@ -35,7 +35,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .WhereAsJson<QueryGuidItem>(i => i.SortOrder < 0).ToList();
 
             It should_not_have_fetched_any_structures =
@@ -53,7 +53,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .WhereAs<QueryGuidItem, QueryItemInfo>(i => i.SortOrder < 0).ToList();
 
             It should_not_have_fetched_any_structures =
@@ -71,7 +71,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .Where<QueryGuidItem>(i => i.SortOrder >= 2 && i.SortOrder <= 3).ToList();
 
             It should_have_fetched_two_structures =
@@ -96,7 +96,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .WhereAsJson<QueryGuidItem>(i => i.SortOrder >= 2 && i.SortOrder <= 3).ToList();
 
             It should_have_fetched_two_structures =
@@ -121,7 +121,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .WhereAs<QueryGuidItem, QueryItemInfo>(i => i.SortOrder >= 2 && i.SortOrder <= 3).ToList();
 
             It should_have_fetched_two_structures =
@@ -146,7 +146,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .Where<QueryGuidItem>(i => i.SortOrder >= _structures[1].SortOrder && i.SortOrder <= _structures[2].SortOrder).ToList();
 
             It should_have_fetched_two_structures =
@@ -171,7 +171,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .WhereAsJson<QueryGuidItem>(i => i.SortOrder >= _structures[1].SortOrder && i.SortOrder <= _structures[2].SortOrder).ToList();
 
             It should_have_fetched_two_structures =
@@ -196,7 +196,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.Query()
+            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
                     .WhereAs<QueryGuidItem, QueryItemInfo>(i => i.SortOrder >= _structures[1].SortOrder && i.SortOrder <= _structures[2].SortOrder).ToList();
 
             It should_have_fetched_two_structures =
@@ -225,7 +225,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 const int @from = 2;
                 const int @to = 3;
-                _fetchedStructures = TestContext.Database.Query().Where<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().Where<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -254,7 +254,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 const int @from = 2;
                 const int @to = 3;
-                _fetchedStructures = TestContext.Database.Query().WhereAsJson<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().WhereAsJson<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -283,7 +283,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 const int @from = 2;
                 const int @to = 3;
-                _fetchedStructures = TestContext.Database.Query().WhereAs<QueryGuidItem, QueryItemInfo>(i => i.SortOrder >= @from && i.SortOrder <= to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().WhereAs<QueryGuidItem, QueryItemInfo>(i => i.SortOrder >= @from && i.SortOrder <= to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -312,7 +312,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 var @from = 2;
                 var @to = 3;
-                _fetchedStructures = TestContext.Database.Query().Where<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().Where<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -341,7 +341,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 var @from = 2;
                 var @to = 3;
-                _fetchedStructures = TestContext.Database.Query().WhereAsJson<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().WhereAsJson<QueryGuidItem>(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -370,7 +370,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 var @from = 2;
                 var @to = 3;
-                _fetchedStructures = TestContext.Database.Query().WhereAs<QueryGuidItem, QueryItemInfo>(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().WhereAs<QueryGuidItem, QueryItemInfo>(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -399,7 +399,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 var @from = 12;
                 var @to = 13;
-                _fetchedStructures = TestContext.Database.Query().Where<QueryNestedGuidItem>(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().Where<QueryNestedGuidItem>(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -428,7 +428,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 var @from = 12;
                 var @to = 13;
-                _fetchedStructures = TestContext.Database.Query().WhereAsJson<QueryNestedGuidItem>(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().WhereAsJson<QueryNestedGuidItem>(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -457,7 +457,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             {
                 var @from = 12;
                 var @to = 13;
-                _fetchedStructures = TestContext.Database.Query().WhereAs<QueryNestedGuidItem, QueryNestedItemInfo>(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
+                _fetchedStructures = TestContext.Database.FetchVia().WhereAs<QueryNestedGuidItem, QueryNestedItemInfo>(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
