@@ -231,4 +231,39 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             private static IList<string> _fetchedStructures;
         }
     }
+
+    namespace Where
+    {
+        [Subject(typeof(Sql2008UnitOfWork), "Where")]
+        public class when_expression_matches_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.InsertMany(_structures);
+
+                    _fetchedStructures = uow.Where<QueryGuidItem>(x => x.SortOrder >= _structures[1].SortOrder && x.SortOrder <= _structures[2].SortOrder).ToList();
+                }
+            };
+
+            It should_fetch_2_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_fetch_the_two_middle_structures = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+    }
 }
