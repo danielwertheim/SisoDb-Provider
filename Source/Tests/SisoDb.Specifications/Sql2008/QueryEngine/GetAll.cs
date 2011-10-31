@@ -144,5 +144,32 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             private static IList<QueryGuidItem> _structures;
             private static IList<string> _fetchedStructures;
         }
+
+        [Subject(typeof(Sql2008UnitOfWork), "Get all, with multiple sorting")]
+        public class when_set_contains_four_items_inserted_unordered_and_sorted_by_two_criterias : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+            };
+
+            Because of =
+                () => _fetchedStructures = TestContext.Database.Query().GetAll<QueryGuidItem>(q => q.SortBy(i => i.SortOrder, i => i.StringValue)).ToList();
+
+            It should_fetch_all_4_structures =
+                () => _fetchedStructures.Count.ShouldEqual(4);
+
+            It should_fetch_all_structures_in_correct_order = () =>
+            {
+                var orderedStructures = _structures.OrderBy(s => s.SortOrder).OrderBy(s => s.StringValue).ToArray();
+
+                for (var c = 0; c < 4; c++)
+                    _fetchedStructures[c].ShouldBeValueEqualTo(orderedStructures[c]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
     }
 }

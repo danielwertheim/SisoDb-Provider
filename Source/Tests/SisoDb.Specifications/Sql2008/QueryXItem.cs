@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SisoDb.Specifications.Sql2008.QueryEngine
+namespace SisoDb.Specifications.Sql2008
 {
     public abstract class QueryXItem<T> where T : struct
     {

@@ -1,7 +1,7 @@
 using System;
 using NCore;
 
-namespace SisoDb.Specifications.Sql2008.QueryEngine
+namespace SisoDb.Specifications.Sql2008
 {
     public class QueryGuidItem : QueryXItem<Guid>
     {

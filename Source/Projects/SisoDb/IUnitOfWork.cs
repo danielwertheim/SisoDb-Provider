@@ -90,7 +90,7 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="idFrom"></param>
         /// <param name="idTo"></param>
-        /// <remarks>ONLY SUPPORTED BY IDENTITIES! If not sequenced ids are used, you are doomed!</remarks>
+        /// <remarks>ONLY SUPPORTED BY IDENTITIES! If not sequenced ids are used, you could be doomed!</remarks>
         void DeleteByIdInterval<T>(ValueType idFrom, ValueType idTo) where T : class;
 
         /// <summary>
