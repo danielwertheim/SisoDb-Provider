@@ -155,7 +155,7 @@ namespace SisoDb.Sql2008
 
             return sorting.IsEmpty
                 ? new SqlSorting(" order by s.[StructureId]")
-                : new SqlSorting(" order by " + sorting.Sorting,  " and " + sorting.SortingJoins);
+                : new SqlSorting(" order by " + sorting.Sorting); //,  " and " + sorting.SortingJoins);
         }
     }
 }

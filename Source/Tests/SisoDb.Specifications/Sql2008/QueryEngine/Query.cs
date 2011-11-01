@@ -472,5 +472,155 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             private static IList<QueryNestedGuidItem> _structures;
             private static IList<QueryNestedItemInfo> _fetchedStructures;
         }
+
+        [Subject(typeof(Sql2008QueryEngine), "Query with Take")]
+        public class when_query_matches_the_three_last_structures_of_four_and_take_is_two : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>(q => 
+                q.Where(i => i.SortOrder >= 2 && i.SortOrder <= 4).Take(2)).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_middle_structures = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Query as Json with Take")]
+        public class when_query_matches_the_three_last_json_structures_of_four_and_take_is_two : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAsJson<QueryGuidItem>(q => 
+                q.Where(i => i.SortOrder >= 2 && i.SortOrder <= 4).Take(2)).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_middle_structures = () =>
+            {
+                _fetchedStructures[0].ShouldEqual(_structures[1].AsJson());
+                _fetchedStructures[1].ShouldEqual(_structures[2].AsJson());
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<string> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Query as X with Take")]
+        public class when_query_matches_the_three_last_structures_of_four_and_take_is_two_as_X : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAs<QueryGuidItem, QueryItemInfo>(
+                q => q.Where(i => i.SortOrder >= 2 && i.SortOrder <= 4).Take(2)).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_middle_structures = () =>
+            {
+                _fetchedStructures[0].Matches(_structures[1]).ShouldBeTrue();
+                _fetchedStructures[1].Matches(_structures[2]).ShouldBeTrue();
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryItemInfo> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Query with Take and Sort")]
+        public class when_set_is_unsorted_and_query_matches_three_of_four_structures_and_take_is_two : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>(q =>
+                q.Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).SortBy(i => i.StringValue)).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[0]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Query as Json with Take and Sort")]
+        public class when_set_is_unsorted_and_query_matches_three_of_four_json_structures_and_take_is_two : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAsJson<QueryGuidItem>(q =>
+                q.Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).SortBy(i => i.StringValue)).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
+            {
+                _fetchedStructures[0].ShouldEqual(_structures[1].AsJson());
+                _fetchedStructures[1].ShouldEqual(_structures[0].AsJson());
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<string> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Query as X with Take and Sort")]
+        public class when_set_is_unsorted_and_query_matches_three_of_four_structures_and_take_is_two_as_X : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAs<QueryGuidItem, QueryItemInfo>(q =>
+                q.Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).SortBy(i => i.StringValue)).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
+            {
+                _fetchedStructures[0].Matches(_structures[1]).ShouldBeTrue();
+                _fetchedStructures[1].Matches(_structures[0]).ShouldBeTrue();
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryItemInfo> _fetchedStructures;
+        }
     }
 }
