@@ -24,7 +24,7 @@ namespace SisoDb.Testing.Steps
                 }));
             }
 
-            db.UoW().InsertManyJson<T>(itemsAsJson);
+            db.WriteOnce().InsertManyJson<T>(itemsAsJson);
 
             return itemsAsJson;
         }
@@ -45,7 +45,7 @@ namespace SisoDb.Testing.Steps
                 });
             }
 
-            return db.UoW().InsertMany(items);
+            return db.WriteOnce().InsertMany(items);
         }
 
         public static IList<GuidItem> InsertGuidItems(this ISisoDatabase db, int numOfItems)
@@ -55,7 +55,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new GuidItem { Value = c + 1 });
 
-            return db.UoW().InsertMany(items);
+            return db.WriteOnce().InsertMany(items);
         }
 
         public static IList<UniqueGuidItem> InsertUniqueGuidItems(this ISisoDatabase db, int numOfItems)
@@ -65,7 +65,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueGuidItem { UniqueValue = c + 1 });
 
-            return db.UoW().InsertMany(items);
+            return db.WriteOnce().InsertMany(items);
         }
 
         public static IList<IdentityItem> InsertIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -75,7 +75,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new IdentityItem { Value = c + 1 });
 
-            return db.UoW().InsertMany(items);
+            return db.WriteOnce().InsertMany(items);
         }
 
         public static IList<UniqueIdentityItem> InsertUniqueIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -85,7 +85,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueIdentityItem { UniqueValue = c + 1 });
 
-            return db.UoW().InsertMany(items);
+            return db.WriteOnce().InsertMany(items);
         }
 
         public static IList<BigIdentityItem> InsertBigIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -95,7 +95,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new BigIdentityItem { Value = c + 1 });
 
-            return db.UoW().InsertMany(items);
+            return db.WriteOnce().InsertMany(items);
         }
 
         public static IList<UniqueBigIdentityItem> InsertUniqueBigIdentityItems(this ISisoDatabase db, int numOfItems)
@@ -105,7 +105,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueBigIdentityItem { UniqueValue = c + 1 });
 
-            return db.UoW().InsertMany(items);
+            return db.WriteOnce().InsertMany(items);
         }
     }
 }

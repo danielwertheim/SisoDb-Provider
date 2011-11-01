@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
     namespace Includes
     {
         [Subject(typeof(Sql2008QueryEngine), "Includes using Get all as X")]
-        public class when_including_different_firstlevel_members : SpecificationBase
+        public class when_getting_all_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
             {
@@ -35,7 +35,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 });
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.FetchVia()
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
                 .GetAllAs<IAlbumData, Album>(q => q
                     .Include<Genre>(a => a.GenreId)
                     .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
@@ -44,6 +44,132 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
                 () => _fetchedStructures.Count.ShouldEqual(1);
 
             It should_have_fetched_album = 
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+
+            private static Album _structure;
+            private static IList<Album> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Includes using Get all as X")]
+        public class when_getting_all_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+
+                var genre = new Genre { Name = "Rock" };
+                var artist = new Artist { Name = "Bruce" };
+                var secondArtist = new Artist { Name = "e-street" };
+                _structure = new Album
+                {
+                    Name = "Born to run",
+                    Genre = genre,
+                    Artist = artist,
+                    SecondArtist = secondArtist
+                };
+
+                TestContext.Database.WithUnitOfWork(uow =>
+                {
+                    uow.Insert<IGenreData>(genre);
+                    uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
+                    uow.Insert<IAlbumData>(_structure);
+                    uow.Commit();
+                });
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+                .GetAllAs<IAlbumData, Album>(q => q
+                    .Include<IGenreData>(a => a.GenreId)
+                    .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
+
+            It should_have_fetched_1_album =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_album =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+
+            private static Album _structure;
+            private static IList<Album> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Includes using Query as X")]
+        public class when_querying_and_including_different_firstlevel_members : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+
+                var genre = new Genre { Name = "Rock" };
+                var artist = new Artist { Name = "Bruce" };
+                var secondArtist = new Artist { Name = "e-street" };
+                _structure = new Album
+                {
+                    Name = "Born to run",
+                    Genre = genre,
+                    Artist = artist,
+                    SecondArtist = secondArtist
+                };
+
+                TestContext.Database.WithUnitOfWork(uow =>
+                {
+                    uow.Insert(genre);
+                    uow.InsertMany(new[] { artist, secondArtist });
+                    uow.Insert<IAlbumData>(_structure);
+                    uow.Commit();
+                });
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+                .QueryAs<IAlbumData, Album>(q => q
+                    .Include<Genre>(a => a.GenreId)
+                    .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
+
+            It should_have_fetched_1_album =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_album =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+
+            private static Album _structure;
+            private static IList<Album> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Includes using Query as X")]
+        public class when_querying_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+
+                var genre = new Genre { Name = "Rock" };
+                var artist = new Artist { Name = "Bruce" };
+                var secondArtist = new Artist { Name = "e-street" };
+                _structure = new Album
+                {
+                    Name = "Born to run",
+                    Genre = genre,
+                    Artist = artist,
+                    SecondArtist = secondArtist
+                };
+
+                TestContext.Database.WithUnitOfWork(uow =>
+                {
+                    uow.Insert<IGenreData>(genre);
+                    uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
+                    uow.Insert<IAlbumData>(_structure);
+                    uow.Commit();
+                });
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+                .QueryAs<IAlbumData, Album>(q => q
+                    .Include<IGenreData>(a => a.GenreId)
+                    .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
+
+            It should_have_fetched_1_album =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_album =
                 () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
 
             private static Album _structure;

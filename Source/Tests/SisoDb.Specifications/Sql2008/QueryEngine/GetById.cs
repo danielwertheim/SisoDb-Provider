@@ -14,7 +14,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of = () =>
-                _fetchedStructure = TestContext.Database.FetchVia().GetById<QueryGuidItem>(Guid.Parse("ABF5FC75-1E74-4564-B55A-DB3594394BE3"));
+                _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryGuidItem>(Guid.Parse("ABF5FC75-1E74-4564-B55A-DB3594394BE3"));
 
             It should_not_fetch_any_structure =
                 () => _fetchedStructure.ShouldBeNull();
@@ -28,7 +28,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of = () =>
-                _fetchedStructure = TestContext.Database.FetchVia().GetById<QueryIdentityItem>(42);
+                _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryIdentityItem>(42);
 
             It should_not_fetch_any_structure =
                 () => _fetchedStructure.ShouldBeNull();
@@ -42,7 +42,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of = () =>
-                _fetchedStructure = TestContext.Database.FetchVia().GetById<QueryBigIdentityItem>(42);
+                _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryBigIdentityItem>(42);
 
             It should_not_fetch_any_structure =
                 () => _fetchedStructure.ShouldBeNull();
@@ -56,7 +56,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of = () =>
-                _fetchedStructure = TestContext.Database.FetchVia().GetByIdAsJson<QueryGuidItem>(Guid.Parse("ABF5FC75-1E74-4564-B55A-DB3594394BE3"));
+                _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryGuidItem>(Guid.Parse("ABF5FC75-1E74-4564-B55A-DB3594394BE3"));
 
             It should_not_fetch_any_structure =
                 () => _fetchedStructure.ShouldBeNull();
@@ -70,7 +70,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of = () =>
-                _fetchedStructure = TestContext.Database.FetchVia().GetByIdAsJson<QueryIdentityItem>(42);
+                _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryIdentityItem>(42);
 
             It should_not_fetch_any_structure =
                 () => _fetchedStructure.ShouldBeNull();
@@ -84,7 +84,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of = () =>
-                _fetchedStructure = TestContext.Database.FetchVia().GetByIdAsJson<QueryBigIdentityItem>(42);
+                _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryBigIdentityItem>(42);
 
             It should_not_fetch_any_structure =
                 () => _fetchedStructure.ShouldBeNull();
@@ -98,11 +98,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of =
-                () => _fetchedStructure = TestContext.Database.FetchVia().GetById<QueryGuidItem>(_structures[1].StructureId);
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryGuidItem>(_structures[1].StructureId);
 
             It should_fetch_the_structure = 
                 () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
@@ -117,11 +117,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
             };
 
             Because of =
-                () => _fetchedStructure = TestContext.Database.FetchVia().GetById<QueryIdentityItem>(_structures[1].StructureId);
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryIdentityItem>(_structures[1].StructureId);
 
             It should_fetch_the_structure =
                 () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
@@ -136,11 +136,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
             };
 
             Because of =
-                () => _fetchedStructure = TestContext.Database.FetchVia().GetById<QueryBigIdentityItem>(_structures[1].StructureId);
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryBigIdentityItem>(_structures[1].StructureId);
 
             It should_fetch_the_structure =
                 () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
@@ -155,11 +155,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of =
-                () => _fetchedStructure = TestContext.Database.FetchVia().GetByIdAsJson<QueryGuidItem>(_structures[1].StructureId);
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryGuidItem>(_structures[1].StructureId);
 
             It should_fetch_the_structure =
                 () => _fetchedStructure.ShouldEqual(_structures[1].AsJson());
@@ -174,11 +174,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
             };
 
             Because of =
-                () => _fetchedStructure = TestContext.Database.FetchVia().GetByIdAsJson<QueryIdentityItem>(_structures[1].StructureId);
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryIdentityItem>(_structures[1].StructureId);
 
             It should_fetch_the_structure =
                 () => _fetchedStructure.ShouldEqual(_structures[1].AsJson());
@@ -193,11 +193,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
             };
 
             Because of =
-                () => _fetchedStructure = TestContext.Database.FetchVia().GetByIdAsJson<QueryBigIdentityItem>(_structures[1].StructureId);
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryBigIdentityItem>(_structures[1].StructureId);
 
             It should_fetch_the_structure =
                 () => _fetchedStructure.ShouldEqual(_structures[1].AsJson());

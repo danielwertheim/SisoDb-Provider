@@ -13,7 +13,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
         public IList<SqlInclude> Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             var sqlIncludes = new List<SqlInclude>();
-            const string jsonColumnDefinitionFormat = "min(cs{0}.{1}) as {2}";
+            const string jsonColumnDefinitionFormat = "min(cs{0}.{1}) as [{2}]";
             const string joinFormat = "left join [dbo].[{0}] as cs{1} on cs{1}.[{2}] = si.[{3}] and si.[{4}]='{5}'";
 
             foreach (var includeNode in lambda.Nodes.Cast<IncludeNode>())
@@ -24,7 +24,6 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 var jsonColumnDefinition = jsonColumnDefinitionFormat.Inject(
                     includeCount,
                     StructureStorageSchema.Fields.Json.Name,
-                    StructureStorageSchema.Fields.Id.Name,
                     includeNode.ObjectReferencePath);
 
                 var join = joinFormat.Inject(

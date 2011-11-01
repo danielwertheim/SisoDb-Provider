@@ -65,9 +65,9 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.16.0.61, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.17.0.62, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.25.0\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\NCore.0.17.0.62\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>

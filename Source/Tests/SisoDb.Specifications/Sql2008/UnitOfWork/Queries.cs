@@ -109,7 +109,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of = () =>

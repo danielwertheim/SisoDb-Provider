@@ -16,7 +16,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of = 
-                () => _result = TestContext.Database.FetchVia().GetByIdInterval<QueryIdentityItem>(1, 3).ToList();
+                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryIdentityItem>(1, 3).ToList();
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
             Because of =
-                () => _result = TestContext.Database.FetchVia().GetByIdInterval<QueryBigIdentityItem>(1, 3).ToList();
+                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryBigIdentityItem>(1, 3).ToList();
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
@@ -47,7 +47,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of = 
-                () => _result = TestContext.Database.FetchVia().GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
+                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
@@ -76,7 +76,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of = 
-                () => _result = TestContext.Database.FetchVia().GetByIdInterval<QueryIdentityItem>(2, 3).ToList();
+                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryIdentityItem>(2, 3).ToList();
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 
@@ -110,7 +110,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of =
-                () => _result = TestContext.Database.FetchVia().GetByIdInterval<QueryBigIdentityItem>(2, 3).ToList();
+                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryBigIdentityItem>(2, 3).ToList();
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 
@@ -149,7 +149,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             };
 
             Because of = 
-                () => _result = TestContext.Database.FetchVia().GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
+                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 

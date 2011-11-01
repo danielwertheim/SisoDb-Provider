@@ -20,7 +20,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.UoW().InsertMany(new[] { _structure });
+                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteGuidEntity>(1);
@@ -41,7 +41,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.UoW().InsertMany(_structures);
+                () => TestContext.Database.WriteOnce().InsertMany(_structures);
 
             It should_have_inserted_both =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteGuidEntity>(2);
@@ -62,7 +62,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.UoW().InsertMany(new[] { _structure });
+                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteIdentityEntity>(1);
@@ -83,7 +83,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.UoW().InsertMany(_structures);
+                () => TestContext.Database.WriteOnce().InsertMany(_structures);
 
             It should_have_inserted_both =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteIdentityEntity>(2);
@@ -104,7 +104,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.UoW().InsertMany(new[] { _structure });
+                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteBigIdentityEntity>(1);
@@ -125,7 +125,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.UoW().InsertMany(_structures);
+                () => TestContext.Database.WriteOnce().InsertMany(_structures);
 
             It should_have_inserted_both =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteBigIdentityEntity>(2);

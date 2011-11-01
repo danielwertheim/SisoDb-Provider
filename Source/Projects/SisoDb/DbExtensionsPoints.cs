@@ -11,7 +11,7 @@ namespace SisoDb
         /// <param name="db"></param>
         /// <returns></returns>
         /// <remarks>If you need to do multiple queries, use <see cref="ISisoDatabase.CreateQueryEngine"/> instead.</remarks>
-        public static DbQueryExtensionPoint FetchVia(this ISisoDatabase db)
+        public static DbQueryExtensionPoint ReadOnce(this ISisoDatabase db)
         {
             return new DbQueryExtensionPoint(db);
         }
@@ -24,7 +24,7 @@ namespace SisoDb
         /// <returns></returns>
         /// <remarks>If you need to do multiple operations in the <see cref="IUnitOfWork"/>,
         /// use <see cref="ISisoDatabase.CreateUnitOfWork"/> instead.</remarks>
-        public static DbUoWExtensionPoint UoW(this ISisoDatabase db)
+        public static DbUoWExtensionPoint WriteOnce(this ISisoDatabase db)
         {
             return new DbUoWExtensionPoint(db);
         }

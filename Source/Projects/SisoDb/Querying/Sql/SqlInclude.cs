@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EnsureThat;
 
 namespace SisoDb.Querying.Sql
@@ -45,6 +47,16 @@ namespace SisoDb.Querying.Sql
         public static SqlInclude Empty()
         {
             return new SqlInclude();
+        }
+
+        public static string ToColumnDefinitionString(IEnumerable<SqlInclude> includes)
+        {
+            return string.Join(", ", includes.Select(inc => inc.JsonOutputDefinition));
+        }
+
+        public static string ToJoinString(IEnumerable<SqlInclude> includes)
+        {
+            return string.Join(" ", includes.Select(inc => inc.Join));
         }
     }
 }

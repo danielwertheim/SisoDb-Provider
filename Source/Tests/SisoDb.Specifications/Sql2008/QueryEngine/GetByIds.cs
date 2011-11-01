@@ -15,11 +15,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of = () => 
-                _fetchedStructures = TestContext.Database.FetchVia().GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
             
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -40,12 +40,12 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
                 _nonMatchingId = Guid.Parse("DA2809E1-17A2-4D6C-8546-E2A86D29CF2B");
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.FetchVia().GetByIds<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -67,11 +67,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.FetchVia().GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.ReadOnce().GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -92,12 +92,12 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
                 _nonMatchingId = Guid.Parse("81EC4983-F58B-4459-84F8-0D000F06F43D");
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.FetchVia().GetByIdsAsJson<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.ReadOnce().GetByIdsAsJson<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

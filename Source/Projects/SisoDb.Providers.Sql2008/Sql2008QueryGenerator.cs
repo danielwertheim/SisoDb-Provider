@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EnsureThat;
+using NCore;
 using SisoDb.Dac;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
@@ -41,16 +42,31 @@ namespace SisoDb.Sql2008
                 : CreateSqlCommandInfo(queryCommand);
         }
 
+        public SqlQuery GenerateWhereQuery(IQueryCommand queryCommand)
+        {
+            Ensure.That(queryCommand, "queryCommand").IsNotNull();
+
+            if (!queryCommand.HasWhere)
+                throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);
+
+            var where = _whereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
+            var queryParameters = where.Parameters;
+
+            return new SqlQuery(where.Sql, queryParameters);
+        }
+
         private SqlQuery CreateSqlCommandInfo(IQueryCommand queryCommand)
         {
-            var whereSql = GenerateWhereStringAndParams(queryCommand);
-            var sortingSql = GenerateSortingString(queryCommand);
+            var includes = GenerateIncludes(queryCommand);
+            var whereSql = GenerateWhere(queryCommand);
+            var sortingSql = GenerateSorting(queryCommand);
 
-            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.[StructureId] = s.[StructureId]{4}{5} group by s.[StructureId], s.[Json]{6};",
+            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.[StructureId] = s.[StructureId]{4}{5}{6} group by s.[StructureId], s.[Json]{7};",
                 GenerateTakeString(queryCommand),
-                GenerateIncludesString(queryCommand),
+                SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
                 queryCommand.StructureSchema.GetStructureTableName(), 
                 queryCommand.StructureSchema.GetIndexesTableName(),
+                SqlInclude.ToJoinString(includes),
                 sortingSql.SortingJoins,
                 whereSql.Sql,
                 sortingSql.Sorting);
@@ -60,22 +76,24 @@ namespace SisoDb.Sql2008
 
         private SqlQuery CreateSqlCommandInfoForPaging(IQueryCommand queryCommand)
         {
-            var includesSql = GenerateIncludesString(queryCommand);
-            var whereSql = GenerateWhereStringAndParams(queryCommand);
-            var sortingSql = GenerateSortingString(queryCommand);
+            var includes = GenerateIncludes(queryCommand);
+            var whereSql = GenerateWhere(queryCommand);
+            var sortingSql = GenerateSorting(queryCommand);
             
             const string sqlFormat = "with pagedRs as ({0}){1};";
 
-            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.[StructureId] = s.[StructureId]{5}{6} group by s.[StructureId], s.[Json]",
+            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.[StructureId] = s.[StructureId]{5}{6}{7} group by s.[StructureId], s.[Json]",
                 GenerateTakeString(queryCommand),
-                includesSql,
+                SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
                 sortingSql.Sorting,
                 queryCommand.StructureSchema.GetStructureTableName(),
                 queryCommand.StructureSchema.GetIndexesTableName(),
+                SqlInclude.ToJoinString(includes),
                 sortingSql.SortingJoins,
                 whereSql.Sql);
-            
-            var outerSelect = string.Format("select Json{0} from pagedRs where RowNum between @pagingFrom and @pagingTo", includesSql);
+
+            var outerSelect = string.Format("select Json{0} from pagedRs where RowNum between @pagingFrom and @pagingTo", 
+                SqlInclude.ToColumnDefinitionString(includes).PrependWith(","));
             
             var sql = string.Format(sqlFormat, innerSelect, outerSelect);
 
@@ -98,7 +116,24 @@ namespace SisoDb.Sql2008
             return string.Format("top({0}) ", queryCommand.TakeNumOfStructures);
         }
 
-        private SqlWhere GenerateWhereStringAndParams(IQueryCommand queryCommand)
+        private IList<SqlInclude> GenerateIncludes(IQueryCommand queryCommand)
+        {
+            if (!queryCommand.HasIncludes)
+                return new List<SqlInclude>();
+
+            IParsedLambda mergedIncludes = null;
+            foreach (var include in queryCommand.Includes)
+            {
+                if (mergedIncludes == null)
+                    mergedIncludes = include;
+                else
+                    mergedIncludes = mergedIncludes.MergeAsNew(include);
+            }
+
+            return _includeConverter.Convert(queryCommand.StructureSchema, mergedIncludes);
+        }
+
+        private SqlWhere GenerateWhere(IQueryCommand queryCommand)
         {
             if (!queryCommand.HasWhere)
                 return SqlWhere.Empty();
@@ -111,7 +146,7 @@ namespace SisoDb.Sql2008
             return new SqlWhere(sql, where.Parameters);
         }
 
-        private SqlSorting GenerateSortingString(IQueryCommand queryCommand)
+        private SqlSorting GenerateSorting(IQueryCommand queryCommand)
         {
             if (!queryCommand.HasSortings)
                 return new SqlSorting(" order by s.[StructureId]");
@@ -121,39 +156,6 @@ namespace SisoDb.Sql2008
             return sorting.IsEmpty
                 ? new SqlSorting(" order by s.[StructureId]")
                 : new SqlSorting(" order by " + sorting.Sorting,  " and " + sorting.SortingJoins);
-        }
-
-        private string GenerateIncludesString(IQueryCommand queryCommand)
-        {
-            if (!queryCommand.HasIncludes)
-                return string.Empty;
-
-            var sb = new StringBuilder();
-            var sqls = queryCommand.Includes
-                .Select(parsedLambda => _includeConverter.Convert(queryCommand.StructureSchema, parsedLambda))
-                .SelectMany(includes => includes.Select(include => include.Sql)).ToList();
-
-            for (var c = 0; c < sqls.Count; c++)
-            {
-                sb.Append(sqls[c]);
-                if (c < (sqls.Count - 1))
-                    sb.Append(", ");
-            }
-
-            return sb.Length > 0 ? ", " + sb : string.Empty;
-        }
-
-        public SqlQuery GenerateWhereQuery(IQueryCommand queryCommand)
-        {
-            Ensure.That(queryCommand, "queryCommand").IsNotNull();
-
-            if (!queryCommand.HasWhere)
-                throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);
-
-            var where = _whereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
-            var queryParameters = where.Parameters;
-
-            return new SqlQuery(where.Sql, queryParameters);
         }
     }
 }

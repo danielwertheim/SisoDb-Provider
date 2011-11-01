@@ -16,8 +16,8 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeCon
             var processor = new LambdaToSqlIncludeConverter();
             var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
-            const string expectedSql = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
-            Assert.AreEqual(expectedSql, includes[0].Sql);
+            Assert.AreEqual("min(cs0.Json) as [ChildOne]", includes[0].JsonOutputDefinition);
+            Assert.AreEqual("left join [dbo].[ChildTypeAStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='ChildOneId'", includes[0].Join);
         }
 
         [Test]
@@ -30,10 +30,10 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeCon
             var processor = new LambdaToSqlIncludeConverter();
             var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
-            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
-            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[ChildTwoId] = cs1.StructureId) as [ChildTwo]";
-            Assert.AreEqual(expectedSql1, includes[0].Sql);
-            Assert.AreEqual(expectedSql2, includes[1].Sql);
+            Assert.AreEqual("min(cs0.Json) as [ChildOne]", includes[0].JsonOutputDefinition);
+            Assert.AreEqual("left join [dbo].[ChildTypeAStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='ChildOneId'", includes[0].Join);
+            Assert.AreEqual("min(cs1.Json) as [ChildTwo]", includes[1].JsonOutputDefinition);
+            Assert.AreEqual("left join [dbo].[ChildTypeAStructure] as cs1 on cs1.[StructureId] = si.[GuidValue] and si.[MemberPath]='ChildTwoId'", includes[1].Join);
         }
 
         [Test]
@@ -46,10 +46,10 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeCon
             var processor = new LambdaToSqlIncludeConverter();
             var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
-            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
-            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeAStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.StructureId) as [NestedItem.UnknownChild]";
-            Assert.AreEqual(expectedSql1, includes[0].Sql);
-            Assert.AreEqual(expectedSql2, includes[1].Sql);
+            Assert.AreEqual("min(cs0.Json) as [ChildOne]", includes[0].JsonOutputDefinition);
+            Assert.AreEqual("left join [dbo].[ChildTypeAStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='ChildOneId'", includes[0].Join);
+            Assert.AreEqual("min(cs1.Json) as [NestedItem.UnknownChild]", includes[1].JsonOutputDefinition);
+            Assert.AreEqual("left join [dbo].[ChildTypeAStructure] as cs1 on cs1.[StructureId] = si.[GuidValue] and si.[MemberPath]='NestedItem.UnknownChildId'", includes[1].Join);
         }
 
         [Test]
@@ -64,10 +64,10 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlIncludeCon
             var processor = new LambdaToSqlIncludeConverter();
             var includes = processor.Convert(StructureSchemaTestFactory.Stub<ChildTypeA>(), parsedLambda);
 
-            const string expectedSql1 = "(select cs0.[json] from [dbo].[ChildTypeAStructure] as cs0 where si.[ChildOneId] = cs0.StructureId) as [ChildOne]";
-            const string expectedSql2 = "(select cs1.[json] from [dbo].[ChildTypeBStructure] as cs1 where si.[NestedItem.UnknownChildId] = cs1.StructureId) as [NestedItem.UnknownChild]";
-            Assert.AreEqual(expectedSql1, includes[0].Sql);
-            Assert.AreEqual(expectedSql2, includes[1].Sql);
+            Assert.AreEqual("min(cs0.Json) as [ChildOne]", includes[0].JsonOutputDefinition);
+            Assert.AreEqual("left join [dbo].[ChildTypeAStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='ChildOneId'", includes[0].Join);
+            Assert.AreEqual("min(cs1.Json) as [NestedItem.UnknownChild]", includes[1].JsonOutputDefinition);
+            Assert.AreEqual("left join [dbo].[ChildTypeBStructure] as cs1 on cs1.[StructureId] = si.[GuidValue] and si.[MemberPath]='NestedItem.UnknownChildId'", includes[1].Join);
         }
     }
 }

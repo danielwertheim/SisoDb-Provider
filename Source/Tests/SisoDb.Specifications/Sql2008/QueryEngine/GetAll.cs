@@ -14,7 +14,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
             
             Because of = () =>
-                _fetchedStructures = TestContext.Database.FetchVia().GetAll<QueryGuidItem>().ToList();
+                _fetchedStructures = TestContext.Database.ReadOnce().GetAll<QueryGuidItem>().ToList();
 
             It should_fetch_0_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
 
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.FetchVia().GetAllAsJson<QueryGuidItem>().ToList();
+                _fetchedStructures = TestContext.Database.ReadOnce().GetAllAsJson<QueryGuidItem>().ToList();
 
             It should_fetch_0_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -43,11 +43,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of = 
-                () =>_fetchedStructures = TestContext.Database.FetchVia().GetAll<QueryGuidItem>().ToList();
+                () =>_fetchedStructures = TestContext.Database.ReadOnce().GetAll<QueryGuidItem>().ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -70,11 +70,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
             Because of =
-                () => _fetchedStructures = TestContext.Database.FetchVia().GetAllAsJson<QueryGuidItem>().ToList();
+                () => _fetchedStructures = TestContext.Database.ReadOnce().GetAllAsJson<QueryGuidItem>().ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -97,11 +97,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
             };
 
             Because of =
-                () => _fetchedStructures = TestContext.Database.FetchVia().GetAll<QueryGuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();
+                () => _fetchedStructures = TestContext.Database.ReadOnce().GetAll<QueryGuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -124,11 +124,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
             };
 
             Because of =
-                () => _fetchedStructures = TestContext.Database.FetchVia().GetAllAsJson<QueryGuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();
+                () => _fetchedStructures = TestContext.Database.ReadOnce().GetAllAsJson<QueryGuidItem>(q => q.SortBy(i => i.SortOrder)).ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -151,11 +151,11 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-                _structures = TestContext.Database.UoW().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
             };
 
             Because of =
-                () => _fetchedStructures = TestContext.Database.FetchVia().GetAll<QueryGuidItem>(q => q.SortBy(i => i.SortOrder, i => i.StringValue)).ToList();
+                () => _fetchedStructures = TestContext.Database.ReadOnce().GetAll<QueryGuidItem>(q => q.SortBy(i => i.SortOrder, i => i.StringValue)).ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);

@@ -16,7 +16,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-            Because of = () => _structure = TestContext.Database.UoW().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
+            Because of = () => _structure = TestContext.Database.WriteOnce().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
 
@@ -30,7 +30,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-            Because of = () => _structures = TestContext.Database.UoW().InsertMany(new[]
+            Because of = () => _structures = TestContext.Database.WriteOnce().InsertMany(new[]
             {
                 new VehicleWithGuidId { VehRegNo = "ABC123" }, 
                 new VehicleWithGuidId { VehRegNo = "ABC321" }
@@ -50,11 +50,11 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-                _orgStructure = TestContext.Database.UoW().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
+                _orgStructure = TestContext.Database.WriteOnce().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
             };
 
             Because of =
-                () => CaughtException = Catch.Exception(() => TestContext.Database.UoW().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" }));
+                () => CaughtException = Catch.Exception(() => TestContext.Database.WriteOnce().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" }));
 
 
             It should_have_failed = () =>
@@ -75,7 +75,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-            Because of = () => _structure = TestContext.Database.UoW().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
+            Because of = () => _structure = TestContext.Database.WriteOnce().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
 
@@ -89,7 +89,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-            Because of = () => _structures = TestContext.Database.UoW().InsertMany(new[]
+            Because of = () => _structures = TestContext.Database.WriteOnce().InsertMany(new[]
             {
                 new VehicleWithIdentityId { VehRegNo = "ABC123" }, 
                 new VehicleWithIdentityId { VehRegNo = "ABC321" }
@@ -109,11 +109,11 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-                _orgStructure = TestContext.Database.UoW().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
+                _orgStructure = TestContext.Database.WriteOnce().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
             };
 
             Because of =
-                () => CaughtException = Catch.Exception(() => TestContext.Database.UoW().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" }));
+                () => CaughtException = Catch.Exception(() => TestContext.Database.WriteOnce().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" }));
 
 
             It should_have_failed = () =>
@@ -134,7 +134,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-            Because of = () => _structure = TestContext.Database.UoW().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
+            Because of = () => _structure = TestContext.Database.WriteOnce().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
 
@@ -148,7 +148,7 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-            Because of = () => _structures = TestContext.Database.UoW().InsertMany(new[]
+            Because of = () => _structures = TestContext.Database.WriteOnce().InsertMany(new[]
             {
                 new VehicleWithBigIdentityId { VehRegNo = "ABC123" }, 
                 new VehicleWithBigIdentityId { VehRegNo = "ABC321" }
@@ -168,11 +168,11 @@ namespace SisoDb.Specifications.Sql2008.UnitOfWork
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-                _orgStructure = TestContext.Database.UoW().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
+                _orgStructure = TestContext.Database.WriteOnce().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
             };
 
             Because of =
-                () => CaughtException = Catch.Exception(() => TestContext.Database.UoW().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" }));
+                () => CaughtException = Catch.Exception(() => TestContext.Database.WriteOnce().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" }));
 
 
             It should_have_failed = () =>
