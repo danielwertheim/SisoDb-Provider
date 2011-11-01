@@ -27,7 +27,6 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
         {
             Establish context = () => TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
 
-
             Because of = () =>
                 _fetchedStructures = TestContext.Database.ReadOnce().GetAllAsJson<QueryGuidItem>().ToList();
 

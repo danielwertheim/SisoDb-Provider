@@ -66,7 +66,7 @@ namespace SisoDb.Sql2008
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
                 queryCommand.StructureSchema.GetStructureTableName(), 
                 queryCommand.StructureSchema.GetIndexesTableName(),
-                SqlInclude.ToJoinString(includes),
+                SqlInclude.ToJoinString(includes).PrependWith(" "),
                 sortingSql.SortingJoins,
                 whereSql.Sql,
                 sortingSql.Sorting);
@@ -88,7 +88,7 @@ namespace SisoDb.Sql2008
                 sortingSql.Sorting,
                 queryCommand.StructureSchema.GetStructureTableName(),
                 queryCommand.StructureSchema.GetIndexesTableName(),
-                SqlInclude.ToJoinString(includes),
+                SqlInclude.ToJoinString(includes).PrependWith(" "),
                 sortingSql.SortingJoins,
                 whereSql.Sql);
 

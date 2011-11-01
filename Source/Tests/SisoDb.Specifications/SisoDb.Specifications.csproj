@@ -76,6 +76,7 @@
     <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
     <Compile Include="Sql2008\QueryEngine\GetByIds.cs" />
     <Compile Include="Sql2008\QueryEngine\Includes.cs" />
+    <Compile Include="Sql2008\QueryEngine\NamedQueries.cs" />
     <Compile Include="Sql2008\QueryEngine\Where.cs" />
     <Compile Include="Sql2008\QueryGuidItem.cs" />
     <Compile Include="Sql2008\QueryIdentityItem.cs" />
