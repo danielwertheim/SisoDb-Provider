@@ -14,20 +14,8 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
     {
         private class Session
         {
-            public readonly IStructureSchema StructureSchema;
-            public readonly List<string> Joins = new List<string>();
             public readonly List<string> SortingParts = new List<string>();
-
-            public Session(IStructureSchema structureSchema)
-            {
-                StructureSchema = structureSchema;
-            }
-
-            public string GetJoinsString()
-            {
-                return string.Format("({0})", string.Join(" or ", Joins));
-            }
-
+            
             public string GetSortingPartsString()
             {
                 return string.Join(", ", SortingParts);
@@ -39,7 +27,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
             Ensure.That(lambda, "lambda").IsNotNull();
 
-            var session = new Session(structureSchema);
+            var session = new Session();
 
             foreach (var node in lambda.Nodes)
             {
@@ -53,12 +41,10 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                     ExceptionMessages.ParsedSortingLambdaSqlProcessor_NotSupportedNodeType.Inject(node.GetType().Name));
             }
 
-            if(session.Joins.Count == 0 && session.SortingParts.Count == 0)
+            if(session.SortingParts.Count == 0)
                 return SqlSorting.Empty();
 
-            return session.Joins.Count == 0 
-                ? new SqlSorting(session.GetSortingPartsString())
-                : new SqlSorting(session.GetSortingPartsString(), session.GetJoinsString());
+            return new SqlSorting(session.GetSortingPartsString());
         }
 
         private static void Add(Session session, SortingNode sortingNode)
@@ -68,12 +54,6 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 session.SortingParts.Add(string.Format("s.[{0}] {1}", sortingNode.MemberPath, sortingNode.Direction));
                 return;
             }
-
-            const string joinFormat = "si.[{0}]='{1}'";
-
-            session.Joins.Add(string.Format(joinFormat,
-                IndexStorageSchema.Fields.MemberPath.Name,
-                sortingNode.MemberPath));
 
             session.SortingParts.Add(string.Format(
                 "min(si.[{0}]) {1}", IndexStorageSchema.GetValueSchemaFieldForType(sortingNode.MemberType).Name, sortingNode.Direction));

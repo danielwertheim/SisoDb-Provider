@@ -15,7 +15,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var processor = new SisoDb.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter();
             var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual(string.Empty, sorting.SortingJoins);
             Assert.AreEqual("s.[StructureId] Asc", sorting.Sorting);
         }
 
@@ -27,7 +26,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var processor = new SisoDb.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter();
             var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1')", sorting.SortingJoins);
             Assert.AreEqual("min(si.[IntegerValue]) Asc", sorting.Sorting);
         }
 
@@ -39,7 +37,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var processor = new SisoDb.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter();
             var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='NestedItem.SuperNestedItem.Int1')", sorting.SortingJoins);
             Assert.AreEqual("min(si.[IntegerValue]) Asc", sorting.Sorting);
         }
 
@@ -51,7 +48,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var processor = new SisoDb.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter();
             var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1')", sorting.SortingJoins);
             Assert.AreEqual("min(si.[IntegerValue]) Asc", sorting.Sorting);
         }
 
@@ -63,7 +59,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var processor = new SisoDb.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter();
             var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1')", sorting.SortingJoins);
             Assert.AreEqual("min(si.[IntegerValue]) Desc", sorting.Sorting);
         }
 
@@ -75,7 +70,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var processor = new SisoDb.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter();
             var sorting = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' or si.[MemberPath]='DateTime1')", sorting.SortingJoins);
             Assert.AreEqual("min(si.[IntegerValue]) Desc, min(si.[DateTimeValue]) Asc", sorting.Sorting);
         }
     }

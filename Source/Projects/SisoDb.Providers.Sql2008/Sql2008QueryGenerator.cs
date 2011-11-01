@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using EnsureThat;
 using NCore;
 using SisoDb.Dac;
@@ -61,13 +60,12 @@ namespace SisoDb.Sql2008
             var whereSql = GenerateWhere(queryCommand);
             var sortingSql = GenerateSorting(queryCommand);
 
-            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.[StructureId] = s.[StructureId]{4}{5}{6} group by s.[StructureId], s.[Json]{7};",
+            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.[StructureId] = s.[StructureId]{4}{5} group by s.[StructureId], s.[Json]{6};",
                 GenerateTakeString(queryCommand),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
                 queryCommand.StructureSchema.GetStructureTableName(), 
                 queryCommand.StructureSchema.GetIndexesTableName(),
                 SqlInclude.ToJoinString(includes).PrependWith(" "),
-                sortingSql.SortingJoins,
                 whereSql.Sql,
                 sortingSql.Sorting);
 
@@ -82,14 +80,13 @@ namespace SisoDb.Sql2008
             
             const string sqlFormat = "with pagedRs as ({0}){1};";
 
-            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.[StructureId] = s.[StructureId]{5}{6}{7} group by s.[StructureId], s.[Json]",
+            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.[StructureId] = s.[StructureId]{5}{6} group by s.[StructureId], s.[Json]",
                 GenerateTakeString(queryCommand),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
                 sortingSql.Sorting,
                 queryCommand.StructureSchema.GetStructureTableName(),
                 queryCommand.StructureSchema.GetIndexesTableName(),
                 SqlInclude.ToJoinString(includes).PrependWith(" "),
-                sortingSql.SortingJoins,
                 whereSql.Sql);
 
             var outerSelect = string.Format("select Json{0} from pagedRs where RowNum between @pagingFrom and @pagingTo", 
@@ -155,7 +152,7 @@ namespace SisoDb.Sql2008
 
             return sorting.IsEmpty
                 ? new SqlSorting(" order by s.[StructureId]")
-                : new SqlSorting(" order by " + sorting.Sorting); //,  " and " + sorting.SortingJoins);
+                : new SqlSorting(" order by " + sorting.Sorting);
         }
     }
 }
