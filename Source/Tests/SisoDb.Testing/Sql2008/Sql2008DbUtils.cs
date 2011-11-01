@@ -86,15 +86,15 @@ namespace SisoDb.Testing.Sql2008
             return dbColumns;
         }
 
-//        public void CreateProcedure(string spSql)
-//        {
-//            ExecuteSql(CommandType.Text, spSql);
-//        }
+        public void CreateProcedure(string spSql)
+        {
+            ExecuteSql(CommandType.Text, spSql);
+        }
 
-//        public void DropProcedure(string spName)
-//        {
-//            ExecuteSql(CommandType.Text, "if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end".Inject(spName));
-//        }
+        public void DropProcedure(string spName)
+        {
+            ExecuteSql(CommandType.Text, "if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end".Inject(spName));
+        }
 
 //        public void AddColumns(string tableName, params string[] columns)
 //        {

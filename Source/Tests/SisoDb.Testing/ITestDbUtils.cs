@@ -13,8 +13,8 @@ namespace SisoDb.Testing
         bool TableExists(string name);
         bool TypeExists(string name);
         IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip);
-        //void CreateProcedure(string spSql);
-        //void DropProcedure(string spName);
+        void CreateProcedure(string spSql);
+        void DropProcedure(string spName);
         //void AddColumns(string tableName, params string[] columns);
         //void DropColumns(string tableName, params string[] columnNames);
         //bool ColumnsExist(string tableName, params string[] columnNames);

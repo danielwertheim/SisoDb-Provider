@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
+using SisoDb.Querying;
 using SisoDb.Sql2008;
 using SisoDb.Testing;
 
@@ -14,25 +15,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-
-                var genre = new Genre { Name = "Rock" };
-                var artist = new Artist { Name = "Bruce" };
-                var secondArtist = new Artist { Name = "e-street" };
-                _structure = new Album
-                {
-                    Name = "Born to run",
-                    Genre = genre,
-                    Artist = artist,
-                    SecondArtist = secondArtist
-                };
-
-                TestContext.Database.WithUnitOfWork(uow =>
-                {
-                    uow.Insert(genre);
-                    uow.InsertMany(new[]{artist, secondArtist});
-                    uow.Insert<IAlbumData>(_structure);
-                    uow.Commit();
-                });
+                _structure = Establishments.SetupStructuresForIncludes(TestContext);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -56,25 +39,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-
-                var genre = new Genre { Name = "Rock" };
-                var artist = new Artist { Name = "Bruce" };
-                var secondArtist = new Artist { Name = "e-street" };
-                _structure = new Album
-                {
-                    Name = "Born to run",
-                    Genre = genre,
-                    Artist = artist,
-                    SecondArtist = secondArtist
-                };
-
-                TestContext.Database.WithUnitOfWork(uow =>
-                {
-                    uow.Insert<IGenreData>(genre);
-                    uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
-                    uow.Insert<IAlbumData>(_structure);
-                    uow.Commit();
-                });
+                _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -98,25 +63,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-
-                var genre = new Genre { Name = "Rock" };
-                var artist = new Artist { Name = "Bruce" };
-                var secondArtist = new Artist { Name = "e-street" };
-                _structure = new Album
-                {
-                    Name = "Born to run",
-                    Genre = genre,
-                    Artist = artist,
-                    SecondArtist = secondArtist
-                };
-
-                TestContext.Database.WithUnitOfWork(uow =>
-                {
-                    uow.Insert(genre);
-                    uow.InsertMany(new[] { artist, secondArtist });
-                    uow.Insert<IAlbumData>(_structure);
-                    uow.Commit();
-                });
+                _structure = Establishments.SetupStructuresForIncludes(TestContext);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -140,25 +87,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
-
-                var genre = new Genre { Name = "Rock" };
-                var artist = new Artist { Name = "Bruce" };
-                var secondArtist = new Artist { Name = "e-street" };
-                _structure = new Album
-                {
-                    Name = "Born to run",
-                    Genre = genre,
-                    Artist = artist,
-                    SecondArtist = secondArtist
-                };
-
-                TestContext.Database.WithUnitOfWork(uow =>
-                {
-                    uow.Insert<IGenreData>(genre);
-                    uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
-                    uow.Insert<IAlbumData>(_structure);
-                    uow.Commit();
-                });
+                _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -174,6 +103,115 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine
 
             private static Album _structure;
             private static IList<Album> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Includes using Named Query")]
+        public class when_named_query_including_different_firstlevel_members : SpecificationBase, ICleanupAfterEveryContextInAssembly
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structure = Establishments.SetupStructuresForIncludes(TestContext);
+                TestContext.DbHelper.CreateProcedure(@"create procedure [dbo].[" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [Genre], min(cs1.Json) as [Artist], min(cs2.Json) as [SecondArtist] from [dbo].[IAlbumDataStructure] as s inner join [dbo].[IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId]left join [dbo].[GenreStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [dbo].[ArtistStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [dbo].[ArtistStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+            };
+
+            public void AfterContextCleanup()
+            {
+                TestContext.DbHelper.DropProcedure(ProcedureName);
+            }
+
+            Because of =
+                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName)).ToList();
+
+            It should_have_fetched_1_album =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_album =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+
+            private const string ProcedureName = "NamedQueryIncludeTest";
+            private static Album _structure;
+            private static IList<Album> _fetchedStructures;
+        }
+
+        [Subject(typeof(Sql2008QueryEngine), "Includes using Named Query")]
+        public class when_named_query_using_interfaces_including_different_firstlevel_members : SpecificationBase, ICleanupAfterEveryContextInAssembly
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create(StorageProviders.Sql2008);
+                _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
+                TestContext.DbHelper.CreateProcedure(@"create procedure [dbo].[" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [Genre], min(cs1.Json) as [Artist], min(cs2.Json) as [SecondArtist] from [dbo].[IAlbumDataStructure] as s inner join [dbo].[IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId]left join [dbo].[IGenreDataStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [dbo].[IArtistDataStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [dbo].[IArtistDataStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+            };
+
+            public void AfterContextCleanup()
+            {
+                TestContext.DbHelper.DropProcedure(ProcedureName);
+            }
+
+            Because of =
+                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName)).ToList();
+
+            It should_have_fetched_1_album =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_album =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+
+            private const string ProcedureName = "NamedQueryIncludeTestInterfaces";
+            private static Album _structure;
+            private static IList<Album> _fetchedStructures;
+        }
+
+        internal static class Establishments
+        {
+            internal static Album SetupStructuresForIncludes(ITestContext testContext)
+            {
+                var genre = new Genre { Name = "Rock" };
+                var artist = new Artist { Name = "Bruce" };
+                var secondArtist = new Artist { Name = "e-street" };
+                var album = new Album
+                {
+                    Name = "Born to run",
+                    Genre = genre,
+                    Artist = artist,
+                    SecondArtist = secondArtist
+                };
+
+                testContext.Database.WithUnitOfWork(uow =>
+                {
+                    uow.Insert(genre);
+                    uow.InsertMany(new[] { artist, secondArtist });
+                    uow.Insert<IAlbumData>(album);
+                    uow.Commit();
+                });
+
+                return album;
+            }
+
+            internal static Album SetupStructuresUsingInterfacesForIncludes(ITestContext testContext)
+            {
+                var genre = new Genre { Name = "Rock" };
+                var artist = new Artist { Name = "Bruce" };
+                var secondArtist = new Artist { Name = "e-street" };
+                var album = new Album
+                {
+                    Name = "Born to run",
+                    Genre = genre,
+                    Artist = artist,
+                    SecondArtist = secondArtist
+                };
+
+                testContext.Database.WithUnitOfWork(uow =>
+                {
+                    uow.Insert<IGenreData>(genre);
+                    uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
+                    uow.Insert<IAlbumData>(album);
+                    uow.Commit();
+                });
+
+                return album;
+            }
         }
 
         public interface IAlbumData
