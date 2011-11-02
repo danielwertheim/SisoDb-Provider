@@ -65,12 +65,11 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="NCore, Version=0.17.0.62, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NCore.0.17.0.62\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.26.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.25.0.59, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.26.0.60, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.25.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.26.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.0.1.41944, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace SisoDb
 {
@@ -11,6 +12,7 @@ namespace SisoDb
         /// <param name="db"></param>
         /// <returns></returns>
         /// <remarks>If you need to do multiple queries, use <see cref="ISisoDatabase.CreateQueryEngine"/> instead.</remarks>
+        [DebuggerStepThrough]
         public static DbQueryExtensionPoint ReadOnce(this ISisoDatabase db)
         {
             return new DbQueryExtensionPoint(db);
@@ -24,6 +26,7 @@ namespace SisoDb
         /// <returns></returns>
         /// <remarks>If you need to do multiple operations in the <see cref="IUnitOfWork"/>,
         /// use <see cref="ISisoDatabase.CreateUnitOfWork"/> instead.</remarks>
+        [DebuggerStepThrough]
         public static DbUoWExtensionPoint WriteOnce(this ISisoDatabase db)
         {
             return new DbUoWExtensionPoint(db);
@@ -34,6 +37,7 @@ namespace SisoDb
         /// </summary>
         /// <param name="db"></param>
         /// <param name="consumer"></param>
+        [DebuggerStepThrough]
         public static void WithUnitOfWork(this ISisoDatabase db, Action<IUnitOfWork> consumer)
         {
             using (var uow = db.CreateUnitOfWork())

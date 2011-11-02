@@ -48,7 +48,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine.QxStringExtensions
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
                     .Where<QueryGuidItem>(i => i.StringValue.QxEndsWith("ha")).ToList();
 
-            It should_not_have_fetched_two_structures =
+            It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
 
             It should_have_fetched_the_two_first_structures = () =>
@@ -77,7 +77,7 @@ namespace SisoDb.Specifications.Sql2008.QueryEngine.QxStringExtensions
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
                     .Where<QueryGuidItem>(i => i.StringValue.QxEndsWith("Alpha")).ToList();
 
-            It should_not_have_fetched_two_structures =
+            It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
 
             It should_have_fetched_the_two_first_structures = () =>

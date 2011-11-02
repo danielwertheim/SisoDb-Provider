@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace SisoDb
 {
+    [DebuggerStepThrough]
     public class DbUoWExtensionPoint
     {
         public readonly ISisoDatabase Instance;

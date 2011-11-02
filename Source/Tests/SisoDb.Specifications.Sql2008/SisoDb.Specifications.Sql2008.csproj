@@ -39,12 +39,11 @@
       <HintPath>..\..\packages\Machine.Specifications.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.17.0.62, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NCore.0.17.0.62\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.26.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.25.0.59, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.26.0.60, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.25.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.26.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,6 +59,9 @@
     </Compile>
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="ContextCleanup.cs" />
+    <Compile Include="Model\ChildItem.cs" />
+    <Compile Include="Model\GrandChildItem.cs" />
+    <Compile Include="Model\QueryItemForQxAnyQueries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="Database\UpdateStructureSet.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="QueryEngine\GetByIds.cs" />
     <Compile Include="QueryEngine\Includes.cs" />
     <Compile Include="QueryEngine\NamedQueries.cs" />
+    <Compile Include="QueryEngine\QxEnumerableExtensions\QxAny.cs" />
     <Compile Include="QueryEngine\QxStringExtensions\QxContains.cs" />
     <Compile Include="QueryEngine\QxStringExtensions\QxEndsWith.cs" />
     <Compile Include="QueryEngine\QxStringExtensions\QxLike.cs" />
@@ -130,6 +133,7 @@
       <Name>SisoDb.Testing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
