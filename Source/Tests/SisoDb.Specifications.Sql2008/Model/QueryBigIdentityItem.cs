@@ -1,8 +1,8 @@
 using NCore;
 
-namespace SisoDb.Specifications.Sql2008
+namespace SisoDb.Specifications.Sql2008.Model
 {
-    public class QueryIdentityItem : QueryXItem<int>
+    public class QueryBigIdentityItem : QueryXItem<long>
     {
         public override string AsJson()
         {

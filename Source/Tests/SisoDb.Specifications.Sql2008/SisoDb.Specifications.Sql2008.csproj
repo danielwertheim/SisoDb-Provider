@@ -8,8 +8,8 @@
     <ProjectGuid>{B0BA31B9-166E-40C1-A6EB-104018363FF3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SisoDb.Specifications</RootNamespace>
-    <AssemblyName>SisoDb.Specifications</AssemblyName>
+    <RootNamespace>SisoDb.Specifications.Sql2008</RootNamespace>
+    <AssemblyName>SisoDb.Specifications.Sql2008</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -61,40 +61,44 @@
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="ContextCleanup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sql2008\Container.cs" />
-    <Compile Include="Sql2008\Database\UpdateStructureSet.cs" />
-    <Compile Include="Sql2008\Database\UpsertStructureSet.cs" />
-    <Compile Include="Sql2008\Database\DropStructureSet.cs" />
-    <Compile Include="Sql2008\Database\DeleteIfExists.cs" />
-    <Compile Include="Sql2008\Database\EnsureNewDatabase.cs" />
-    <Compile Include="Sql2008\Database\InitializeExisting.cs" />
-    <Compile Include="Sql2008\Database\CreateIfNotExists.cs" />
-    <Compile Include="Sql2008\QueryBigIdentityItem.cs" />
-    <Compile Include="Sql2008\QueryEngine\Query.cs" />
-    <Compile Include="Sql2008\QueryEngine\Count.cs" />
-    <Compile Include="Sql2008\QueryEngine\GetAll.cs" />
-    <Compile Include="Sql2008\QueryEngine\GetById.cs" />
-    <Compile Include="Sql2008\QueryEngine\GetByIdInterval.cs" />
-    <Compile Include="Sql2008\QueryEngine\GetByIds.cs" />
-    <Compile Include="Sql2008\QueryEngine\Includes.cs" />
-    <Compile Include="Sql2008\QueryEngine\NamedQueries.cs" />
-    <Compile Include="Sql2008\QueryEngine\Where.cs" />
-    <Compile Include="Sql2008\QueryGuidItem.cs" />
-    <Compile Include="Sql2008\QueryIdentityItem.cs" />
-    <Compile Include="Sql2008\QueryItemInfo.cs" />
-    <Compile Include="Sql2008\QueryNestedGuidItem.cs" />
-    <Compile Include="Sql2008\QueryNestedItemInfo.cs" />
-    <Compile Include="Sql2008\QueryXItem.cs" />
-    <Compile Include="Sql2008\UnitOfWork\Deletes.cs" />
-    <Compile Include="Sql2008\UnitOfWork\InsertsComplete.cs" />
-    <Compile Include="Sql2008\UnitOfWork\InsertsIdBehavior.cs" />
-    <Compile Include="Sql2008\UnitOfWork\InsertsOfJson.cs" />
-    <Compile Include="Sql2008\UnitOfWork\InsertsOfUniques.cs" />
-    <Compile Include="Sql2008\UnitOfWork\InsertsUsingBaseClasses.cs" />
-    <Compile Include="Sql2008\UnitOfWork\InsertsUsingInterfaces.cs" />
-    <Compile Include="Sql2008\UnitOfWork\Queries.cs" />
-    <Compile Include="Sql2008\UnitOfWork\TransactionScopes.cs" />
-    <Compile Include="Sql2008\UnitOfWork\Updates.cs" />
+    <Compile Include="Container.cs" />
+    <Compile Include="Database\UpdateStructureSet.cs" />
+    <Compile Include="Database\UpsertStructureSet.cs" />
+    <Compile Include="Database\DropStructureSet.cs" />
+    <Compile Include="Database\DeleteIfExists.cs" />
+    <Compile Include="Database\EnsureNewDatabase.cs" />
+    <Compile Include="Database\InitializeExisting.cs" />
+    <Compile Include="Database\CreateIfNotExists.cs" />
+    <Compile Include="Model\QueryBigIdentityItem.cs" />
+    <Compile Include="QueryEngine\Query.cs" />
+    <Compile Include="QueryEngine\Count.cs" />
+    <Compile Include="QueryEngine\GetAll.cs" />
+    <Compile Include="QueryEngine\GetById.cs" />
+    <Compile Include="QueryEngine\GetByIdInterval.cs" />
+    <Compile Include="QueryEngine\GetByIds.cs" />
+    <Compile Include="QueryEngine\Includes.cs" />
+    <Compile Include="QueryEngine\NamedQueries.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxContains.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxEndsWith.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxLike.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxStartsWith.cs" />
+    <Compile Include="QueryEngine\Where.cs" />
+    <Compile Include="Model\QueryGuidItem.cs" />
+    <Compile Include="Model\QueryIdentityItem.cs" />
+    <Compile Include="Model\QueryItemInfo.cs" />
+    <Compile Include="Model\QueryNestedGuidItem.cs" />
+    <Compile Include="Model\QueryNestedItemInfo.cs" />
+    <Compile Include="Model\QueryXItem.cs" />
+    <Compile Include="UnitOfWork\Deletes.cs" />
+    <Compile Include="UnitOfWork\InsertsComplete.cs" />
+    <Compile Include="UnitOfWork\InsertsIdBehavior.cs" />
+    <Compile Include="UnitOfWork\InsertsOfJson.cs" />
+    <Compile Include="UnitOfWork\InsertsOfUniques.cs" />
+    <Compile Include="UnitOfWork\InsertsUsingBaseClasses.cs" />
+    <Compile Include="UnitOfWork\InsertsUsingInterfaces.cs" />
+    <Compile Include="UnitOfWork\Queries.cs" />
+    <Compile Include="UnitOfWork\TransactionScopes.cs" />
+    <Compile Include="UnitOfWork\Updates.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

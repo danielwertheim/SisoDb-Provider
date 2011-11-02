@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NCore;
 
-namespace SisoDb.Specifications.Sql2008
+namespace SisoDb.Specifications.Sql2008.Model
 {
     public class QueryNestedGuidItem
     {

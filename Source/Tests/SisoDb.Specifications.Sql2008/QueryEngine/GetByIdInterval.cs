@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using PineCone.Structures;
+using SisoDb.Specifications.Sql2008.Model;
 using SisoDb.Sql2008;
 using SisoDb.Testing;
 

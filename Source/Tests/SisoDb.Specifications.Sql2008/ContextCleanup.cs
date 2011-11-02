@@ -1,6 +1,6 @@
 using Machine.Specifications;
 
-namespace SisoDb.Specifications
+namespace SisoDb.Specifications.Sql2008
 {
     public class ContextCleanup : ICleanupAfterEveryContextInAssembly
     {

@@ -2,7 +2,7 @@
 using SisoDb.Sql2008;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications
+namespace SisoDb.Specifications.Sql2008
 {
     public class AssemblyInitializer : IAssemblyContext
     {

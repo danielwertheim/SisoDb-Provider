@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Sql2008", "Projects\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Dynamic", "Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj", "{A6AEE197-668A-4A08-98A7-F0CB76D359C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications", "Tests\SisoDb.Specifications\SisoDb.Specifications.csproj", "{B0BA31B9-166E-40C1-A6EB-104018363FF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications.Sql2008", "Tests\SisoDb.Specifications.Sql2008\SisoDb.Specifications.Sql2008.csproj", "{B0BA31B9-166E-40C1-A6EB-104018363FF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.IntegrationTests", "Tests\SisoDb.IntegrationTests\SisoDb.IntegrationTests.csproj", "{021DBA00-9EE8-4F1B-B3A1-50102FCCB88B}"
 EndProject

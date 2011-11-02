@@ -3,6 +3,7 @@ using System.Linq;
 using Machine.Specifications;
 using SisoDb.Dac;
 using SisoDb.Querying;
+using SisoDb.Specifications.Sql2008.Model;
 using SisoDb.Sql2008;
 using SisoDb.Testing;
 

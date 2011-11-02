@@ -1,10 +1,27 @@
+using System;
 using System.Collections.Generic;
 
-namespace SisoDb.Specifications.Sql2008
+namespace SisoDb.Specifications.Sql2008.Model
 {
     public abstract class QueryXItem<T> where T : struct
     {
         public const string JsonFormat = "{{\"StructureId\":{0},\"SortOrder\":{1},\"StringValue\":\"{2}\"}}";
+
+        public static IList<TItem> CreateItems<TItem>(int numOfItems, Action<int, TItem> initializer) where TItem : new()
+        {
+            var items = new List<TItem>();
+
+            for (var c = 0; c < numOfItems; c++)
+            {
+                var item = new TItem();
+                
+                initializer.Invoke(c, item);
+
+                items.Add(item);
+            }
+
+            return items;
+        }
 
         public static IList<TItem> CreateFourItems<TItem>() where TItem : QueryXItem<T>, new()
         {
