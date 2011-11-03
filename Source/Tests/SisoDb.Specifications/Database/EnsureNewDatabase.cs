@@ -6,28 +6,28 @@ namespace SisoDb.Specifications.Database
     namespace EnsureNewDatabase
     {
         [Subject(typeof (ISisoDatabase), "Ensure new database")]
-        public class when_no_database_exists
+        public class when_no_database_exists : SpecificationBase
         {
             Establish context = () =>
             {
-                _testContext = TestContextFactory.CreateTemp();
-                _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
+                TestContext = TestContextFactory.CreateTemp();
+                TestContext.DbHelperForServer.DropDatabaseIfExists(TestContext.Database.Name);
             };
 
-            Because of = () => _testContext.Database.EnsureNewDatabase();
+            Because of = 
+                () => TestContext.Database.EnsureNewDatabase();
 
-            It should_get_created = () => _testContext.Database.Exists();
+            It should_get_created = 
+                () => TestContext.Database.Exists();
 
             It should_have_created_identities_table =
-                () => _testContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
+                () => TestContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
 
             It should_have_created_custom_ids_data_types = () =>
             {
-                _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
-                _testContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
+                TestContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
+                TestContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
             };
-
-            private static ITestContext _testContext;
         }
     }
 }

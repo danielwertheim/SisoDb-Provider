@@ -10,25 +10,23 @@ namespace SisoDb.Specifications.Database
         {
             Establish context = () =>
             {
-                _testContext = TestContextFactory.CreateTemp();
-                _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
-                _testContext.DbHelperForServer.EnsureDbExists(_testContext.Database.Name);
+                TestContext = TestContextFactory.CreateTemp();
+                TestContext.DbHelperForServer.DropDatabaseIfExists(TestContext.Database.Name);
+                TestContext.DbHelperForServer.EnsureDbExists(TestContext.Database.Name);
             };
 
-            Because of = () => _testContext.Database.InitializeExisting();
+            Because of = () => TestContext.Database.InitializeExisting();
 
-            It should_get_created = () => _testContext.Database.Exists();
+            It should_get_created = () => TestContext.Database.Exists();
 
             It should_have_created_identities_table =
-                () => _testContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
+                () => TestContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
 
             It should_have_created_custom_ids_data_types = () =>
             {
-                _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
-                _testContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
+                TestContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
+                TestContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
             };
-
-            private static ITestContext _testContext;
         }
 
         [Subject(typeof (ISisoDatabase), "Initialize existing")]
@@ -36,17 +34,15 @@ namespace SisoDb.Specifications.Database
         {
             Establish context = () =>
             {
-                _testContext = TestContextFactory.CreateTemp();
-                _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
+                TestContext = TestContextFactory.CreateTemp();
+                TestContext.DbHelperForServer.DropDatabaseIfExists(TestContext.Database.Name);
             };
 
             Because of = 
-                () => CaughtException = Catch.Exception(() => _testContext.Database.InitializeExisting());
+                () => CaughtException = Catch.Exception(() => TestContext.Database.InitializeExisting());
 
             It should_fail = 
                 () => CaughtException.ShouldBeOfType<SisoDbException>();
-
-            private static ITestContext _testContext;
         }
     }
 }

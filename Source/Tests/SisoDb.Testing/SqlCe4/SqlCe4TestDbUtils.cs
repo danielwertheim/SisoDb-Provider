@@ -21,7 +21,7 @@ namespace SisoDb.Testing.SqlCe4
         public SqlCe4TestDbUtils(string connectionString)
         {
             _connectionString = connectionString;
-            _factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
+            _factory = DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0");
         }
 
         public void DropDatabaseIfExists(string name)

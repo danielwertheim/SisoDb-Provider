@@ -226,10 +226,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\License-ServiceStack.txt">
-      <Link>License-ServiceStack.txt</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\..\License-SisoDb.txt">
       <Link>License-SisoDb.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
