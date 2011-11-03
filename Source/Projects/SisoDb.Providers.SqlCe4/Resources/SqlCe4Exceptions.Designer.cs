@@ -59,23 +59,5 @@ namespace SisoDb.SqlCe4.Resources {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The database &apos;{0}&apos; doesn&apos;t exist..
-        /// </summary>
-        public static string SqlCe4Database_InitializeExisting_DbDoesNotExist {
-            get {
-                return ResourceManager.GetString("SqlCe4Database_InitializeExisting_DbDoesNotExist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. When consuming a SqlCE4-database the storageprovider should be: &apos;{1}&apos;..
-        /// </summary>
-        public static string SqlCe4Database_UnsupportedProviderSpecified {
-            get {
-                return ResourceManager.GetString("SqlCe4Database_UnsupportedProviderSpecified", resourceCulture);
-            }
-        }
     }
 }

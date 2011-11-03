@@ -6,6 +6,7 @@ using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.SqlCe4.Dac;
 using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4
@@ -21,8 +22,7 @@ namespace SisoDb.SqlCe4
 
         public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            throw new NotImplementedException();
-            //return new SqlCe4ServerClient(connectionInfo);
+            return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo);
         }
 
         public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)

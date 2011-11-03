@@ -9,8 +9,13 @@ namespace SisoDb.SqlCe4
     [Serializable]
     public class SqlCe4ConnectionInfo : SisoConnectionInfo
     {
-        private string _filePath, _dbName;
+        private string _serverPath, _filePath, _dbName;
         private IConnectionString _serverConnectionString;
+
+        public string ServerPath
+        {
+            get { return _serverPath; }
+        }
 
         public string FilePath
         {
@@ -53,7 +58,9 @@ namespace SisoDb.SqlCe4
             if (string.IsNullOrWhiteSpace(_dbName))
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
 
-            cnStringBuilder.DataSource = Path.GetDirectoryName(FilePath);
+            _serverPath = Path.GetDirectoryName(_filePath);
+
+            cnStringBuilder.DataSource = _serverPath;
 
             _serverConnectionString = ConnectionString.ReplacePlain(cnStringBuilder.ConnectionString);
         }

@@ -63,8 +63,8 @@
     <Compile Include="SpecificationBase.cs" />
     <Compile Include="Sql2008\Sql2008DbUtils.cs" />
     <Compile Include="Sql2008\Sql2008TestContext.cs" />
-    <Compile Include="SqlCe4\Sql2008DbUtils.cs" />
-    <Compile Include="SqlCe4\Sql2008TestContext.cs" />
+    <Compile Include="SqlCe4\SqlCe4TestDbUtils.cs" />
+    <Compile Include="SqlCe4\SqlCe4TestContext.cs" />
     <Compile Include="TestConstants.cs" />
     <Compile Include="TestContextBase.cs" />
     <Compile Include="TestModel\BigIdentityItem.cs" />

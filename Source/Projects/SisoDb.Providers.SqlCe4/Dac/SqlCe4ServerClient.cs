@@ -1,93 +1,86 @@
-﻿using System.Data;
-using System.Data.SqlClient;
+﻿using System;
+using System.Data;
+using System.Data.SqlServerCe;
 using EnsureThat;
 using NCore;
+using SisoDb.Core.Io;
 using SisoDb.Dac;
 using SisoDb.Providers;
+using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4.Dac
 {
     public class SqlCe4ServerClient : IServerClient
     {
+        private readonly SqlCe4ConnectionInfo _connectionInfo;
         private readonly ISisoProviderFactory _providerFactory;
-        private SqlConnection _connection;
+        private readonly ISqlStatements _sqlStatements;
 
-        public StorageProviders ProviderType { get; private set; }
-
-        public IConnectionString ConnectionString { get; private set; }
-
-        public ISqlStatements SqlStatements { get; private set; }
-
-        public SqlCe4ServerClient(ISisoConnectionInfo connectionInfo)
+        public SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
-            _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
-
-            ProviderType = connectionInfo.ProviderType;
-            ConnectionString = connectionInfo.ServerConnectionString;
-
-            SqlStatements = _providerFactory.GetSqlStatements();
-
-            _connection = new SqlConnection(ConnectionString.PlainString);
-            _connection.Open();
+            _connectionInfo = connectionInfo;
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
+            _sqlStatements = _providerFactory.GetSqlStatements();
         }
 
-        public void Dispose()
+        private void WithConnection(Action<SqlCeConnection> cnConsumer)
         {
-            if (_connection == null)
+            using (var cn = new SqlCeConnection(_connectionInfo.ConnectionString.PlainString))
+            {
+                cn.Open();
+
+                cnConsumer.Invoke(cn);
+
+                if (cn.State == ConnectionState.Open)
+                    cn.Close();
+            }
+        }
+
+        public void EnsureNewDb()
+        {
+            DropDbIfItExists();
+            CreateDbIfDoesNotExists();
+        }
+
+        public void CreateDbIfDoesNotExists()
+        {
+            if(DbExists())
                 return;
 
-            if (_connection.State != ConnectionState.Closed)
-                _connection.Close();
-
-            _connection.Dispose();
-            _connection = null;
-        }
-
-        public bool DatabaseExists(string name)
-        {
-            var sql = SqlStatements.GetSql("DatabaseExists");
-
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sql, new DacParameter("dbName", name)))
+            using (var engine = new SqlCeEngine(_connectionInfo.ConnectionString.PlainString))
             {
-                return cmd.GetScalarResult<int>() > 0;
-            }
-        }
-
-        public void CreateDatabase(string name)
-        {
-            var sql = SqlStatements.GetSql("CreateDatabase").Inject(name);
-
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
-            {
-                cmd.ExecuteNonQuery();
+                engine.CreateDatabase();
             }
 
-            InitializeExistingDb(name);
+            InitializeExistingDb();
         }
 
-        public void InitializeExistingDb(string name)
+        public void InitializeExistingDb()
         {
-            var sqlCreateIdentitiesTables = SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
+            if (!DbExists())
+                throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.FilePath));
 
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sqlCreateIdentitiesTables))
+            WithConnection(cn =>
             {
-                cmd.ExecuteNonQuery();
+                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("Sys_Identities_Exists")) > 0;
 
-                //cmd.CommandText = SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(name);
-                //cmd.ExecuteNonQuery();
-            }
+                if (exists)
+                    return;
+
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Identities_Create").Inject(_connectionInfo.DbName));
+            });
         }
 
-        public void DropDatabaseIfExists(string name)
+        public bool DbExists()
         {
-            var sql = SqlStatements.GetSql("DropDatabase").Inject(name);
+            return IoHelper.FileExists(_connectionInfo.FilePath);
+        }
 
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
-            {
-                cmd.ExecuteNonQuery();
-            }
+        public void DropDbIfItExists()
+        {
+            IoHelper.DeleteIfFileExists(_connectionInfo.FilePath);
         }
     }
 }

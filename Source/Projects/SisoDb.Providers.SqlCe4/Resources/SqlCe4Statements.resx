@@ -118,12 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Sys_Identities_Create" xml:space="preserve">
-    <value>create table SisoDbIdentities
+    <value>create table [SisoDbIdentities]
 (
-	EntityHash nvarchar(8) NOT NULL,
-	EntityName nvarchar(100) NOT NULL,
-	CurrentId int NOT NULL default(0),
-	constraint PK_SisoDbIdentities primary key(EntityHash)
+	[EntityHash] [nvarchar](8) NOT NULL,
+	[EntityName] [nvarchar](100) NOT NULL,
+	[CurrentId] [bigint] NOT NULL default(0),
+	constraint [PK_SisoDbIdentities] primary key([EntityHash])
 );</value>
+  </data>
+  <data name="Sys_Identities_Exists" xml:space="preserve">
+    <value>select count(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_NAME='SisoDbIdentities';</value>
   </data>
 </root>

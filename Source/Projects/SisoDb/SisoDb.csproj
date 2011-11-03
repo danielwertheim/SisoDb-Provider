@@ -124,6 +124,7 @@
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="DbUnitOfWorkExtensions.cs" />
+    <Compile Include="SisoDatabase.cs" />
     <Compile Include="Structures\StructureSchemaExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />

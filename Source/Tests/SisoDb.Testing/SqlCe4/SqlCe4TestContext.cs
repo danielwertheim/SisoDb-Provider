@@ -1,11 +1,11 @@
-﻿using SisoDb.Sql2008;
+﻿using SisoDb.SqlCe4;
 
 namespace SisoDb.Testing.SqlCe4
 {
     public class SqlCe4TestContext : TestContextBase
     {
         public SqlCe4TestContext(string connectionStringName)
-            : base(new Sql2008DbFactory(), new Sql2008ConnectionInfo(connectionStringName), new Sql2008ProviderFactory())
+            : base(new SqlCe4DbFactory(), new SqlCe4ConnectionInfo(connectionStringName), new SqlCe4ProviderFactory())
         {
             DbHelper = new SqlCe4TestDbUtils(Database.ConnectionInfo.ConnectionString.PlainString);
             DbHelperForServer = new SqlCe4TestDbUtils(Database.ConnectionInfo.ServerConnectionString.PlainString);

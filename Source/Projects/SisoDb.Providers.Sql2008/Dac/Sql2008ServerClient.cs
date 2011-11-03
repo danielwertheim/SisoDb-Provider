@@ -1,93 +1,107 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
 using SisoDb.Dac;
 using SisoDb.Providers;
+using SisoDb.Resources;
 
 namespace SisoDb.Sql2008.Dac
 {
     public class Sql2008ServerClient : IServerClient
     {
+        private readonly Sql2008ConnectionInfo _connectionInfo;
         private readonly ISisoProviderFactory _providerFactory;
-        private SqlConnection _connection;
+        private readonly ISqlStatements _sqlStatements;
 
-        public StorageProviders ProviderType { get; private set; }
-
-        public IConnectionString ConnectionString { get; private set; }
-
-        public ISqlStatements SqlStatements { get; private set; }
-
-        public Sql2008ServerClient(ISisoConnectionInfo connectionInfo)
+        public Sql2008ServerClient(Sql2008ConnectionInfo connectionInfo)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
-            _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
-
-            ProviderType = connectionInfo.ProviderType;
-            ConnectionString = connectionInfo.ServerConnectionString;
-
-            SqlStatements = _providerFactory.GetSqlStatements();
-
-            _connection = new SqlConnection(ConnectionString.PlainString);
-            _connection.Open();
+            _connectionInfo = connectionInfo;
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
+            _sqlStatements = _providerFactory.GetSqlStatements();
         }
 
-        public void Dispose()
+        private void WithConnection(Action<SqlConnection> cnConsumer)
         {
-            if (_connection == null)
-                return;
-
-            if (_connection.State != ConnectionState.Closed)
-                _connection.Close();
-
-            _connection.Dispose();
-            _connection = null;
-        }
-
-        public bool DatabaseExists(string name)
-        {
-            var sql = SqlStatements.GetSql("DatabaseExists");
-
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sql, new DacParameter("dbName", name)))
+            using (var cn = new SqlConnection(_connectionInfo.ServerConnectionString.PlainString))
             {
-                return cmd.GetScalarResult<int>() > 0;
+                cn.Open();
+
+                cnConsumer.Invoke(cn);
+
+                if(cn.State == ConnectionState.Open)
+                    cn.Close();
             }
         }
 
-        public void CreateDatabase(string name)
+        private T WithConnection<T>(Func<SqlConnection, T> cnConsumer)
         {
-            var sql = SqlStatements.GetSql("CreateDatabase").Inject(name);
+            T result;
 
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
+            using (var cn = new SqlConnection(_connectionInfo.ServerConnectionString.PlainString))
             {
-                cmd.ExecuteNonQuery();
+                cn.Open();
+
+                result = cnConsumer.Invoke(cn);
+
+                if (cn.State == ConnectionState.Open)
+                    cn.Close();
             }
 
-            InitializeExistingDb(name);
+            return result;
         }
 
-        public void InitializeExistingDb(string name)
+        public void EnsureNewDb()
         {
-            var sqlCreateIdentitiesTables = SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
-
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sqlCreateIdentitiesTables))
+            WithConnection(cn =>
             {
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(name);
-                cmd.ExecuteNonQuery();
-            }
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("DropDatabase").Inject(_connectionInfo.DbName));
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("CreateDatabase").Inject(_connectionInfo.DbName));
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(_connectionInfo.DbName));
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(_connectionInfo.DbName));
+            });
         }
 
-        public void DropDatabaseIfExists(string name)
+        public void CreateDbIfDoesNotExists()
         {
-            var sql = SqlStatements.GetSql("DropDatabase").Inject(name);
-
-            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
+            WithConnection(cn =>
             {
-                cmd.ExecuteNonQuery();
-            }
+                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
+
+                if(exists)
+                    return;
+                
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("CreateDatabase").Inject(_connectionInfo.DbName));
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(_connectionInfo.DbName));
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(_connectionInfo.DbName));
+            });
+        }
+
+        public void InitializeExistingDb()
+        {
+            WithConnection(cn =>
+            {
+                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
+
+                if (!exists)
+                    throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.DbName));
+
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(_connectionInfo.DbName));
+                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(_connectionInfo.DbName));
+            });
+        }
+
+        public bool DbExists()
+        {
+            return WithConnection(cn => cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0);
+        }
+
+        public void DropDbIfItExists()
+        {
+            WithConnection(cn => cn.ExecuteNonQuery(_sqlStatements.GetSql("DropDatabase").Inject(_connectionInfo.DbName)));
         }
     }
 }

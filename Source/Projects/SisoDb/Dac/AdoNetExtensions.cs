@@ -52,5 +52,21 @@ namespace SisoDb.Dac
 
             cmd.Parameters.Add(p);
         }
+
+        internal static void ExecuteNonQuery(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+        {
+            using(var cmd = connection.CreateCommand(CommandType.Text, sql, parameters))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        internal static T ExecuteScalarResult<T>(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+        {
+            using (var cmd = connection.CreateCommand(CommandType.Text, sql, parameters))
+            {
+                return cmd.GetScalarResult<T>();
+            }
+        }
     }
 }

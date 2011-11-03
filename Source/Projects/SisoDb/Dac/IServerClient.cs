@@ -1,16 +1,11 @@
-using System;
-using SisoDb.Providers;
-
 namespace SisoDb.Dac
 {
-    public interface IServerClient : IDisposable
+    public interface IServerClient
     {
-        StorageProviders ProviderType { get; }
-        IConnectionString ConnectionString { get; }
-        ISqlStatements SqlStatements { get; }
-        bool DatabaseExists(string name);
-        void CreateDatabase(string name);
-        void InitializeExistingDb(string name);
-        void DropDatabaseIfExists(string name);
+        void EnsureNewDb();
+        void CreateDbIfDoesNotExists();
+        void InitializeExistingDb();
+        bool DbExists();
+        void DropDbIfItExists();
     }
 }

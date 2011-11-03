@@ -23,7 +23,7 @@ namespace SisoDb.Sql2008
 
         public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008ServerClient(connectionInfo);
+            return new Sql2008ServerClient((Sql2008ConnectionInfo)connectionInfo);
         }
 
         public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)

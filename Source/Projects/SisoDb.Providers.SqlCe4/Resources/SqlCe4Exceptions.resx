@@ -117,10 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SqlCe4Database_InitializeExisting_DbDoesNotExist" xml:space="preserve">
-    <value>The database '{0}' doesn't exist.</value>
-  </data>
-  <data name="SqlCe4Database_UnsupportedProviderSpecified" xml:space="preserve">
-    <value>Storageprovider '{0}' is unsupported. When consuming a SqlCE4-database the storageprovider should be: '{1}'.</value>
-  </data>
 </root>
