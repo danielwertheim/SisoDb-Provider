@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("f4a3a647-0355-4a16-9f21-6b041e8aa186")]
 
-[assembly: InternalsVisibleTo("SisoDb.SqlDynamic")]
+[assembly: InternalsVisibleTo("SisoDb.Dynamic")]
 [assembly: InternalsVisibleTo("SisoDb.Sql2008")]
 [assembly: InternalsVisibleTo("SisoDb.SqlAzure")]
 [assembly: InternalsVisibleTo("SisoDb.SqlCe4")]
@@ -21,6 +21,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("SisoDb.IntegrationTests")]
 [assembly: InternalsVisibleTo("SisoDb.Specifications")]
 [assembly: InternalsVisibleTo("SisoDb.Testing")]
-[assembly: InternalsVisibleTo("SisoDb.TestUtils")]
-[assembly: InternalsVisibleTo("SisoDb.Tests.IntegrationTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

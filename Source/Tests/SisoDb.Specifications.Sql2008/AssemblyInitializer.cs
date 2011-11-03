@@ -6,7 +6,7 @@ namespace SisoDb.Specifications.Sql2008
 {
     public class AssemblyInitializer : IAssemblyContext
     {
-        private static bool _isInitialized = false;
+        private static bool _isInitialized;
 
         public void OnAssemblyStart()
         {
@@ -15,26 +15,18 @@ namespace SisoDb.Specifications.Sql2008
 
             _isInitialized = true;
 
-            EnsureSql2008DbExists();
-            EnsureSqlCe4DbExists();
+            EnsureDbExists();
         }
 
         public void OnAssemblyComplete()
         {
         }
 
-        private static void EnsureSql2008DbExists()
+        private static void EnsureDbExists()
         {
             var connectionInfo = new Sql2008ConnectionInfo(TestConstants.ConnectionStringNameForSql2008);
             var database = new Sql2008DbFactory().CreateDatabase(connectionInfo);
             database.EnsureNewDatabase();
-        }
-
-        private static void EnsureSqlCe4DbExists()
-        {
-            //var connectionInfo = new SisoConnectionInfo(LocalConstants.ConnectionStringNameForSqlCe4);
-            //var database = new SqlCe4DbFactory().CreateDatabase(connectionInfo);
-            //database.EnsureNewDatabase();
         }
     }
 }

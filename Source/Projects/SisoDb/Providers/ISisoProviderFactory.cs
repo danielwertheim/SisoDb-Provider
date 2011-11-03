@@ -13,11 +13,11 @@ namespace SisoDb.Providers
         IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional);
         IDbSchemaManager GetDbSchemaManager();
         IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient);
-        IDbQueryGenerator GetDbQueryGenerator();
+        ISqlStatements GetSqlStatements();
+        IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
         IDbBulkInserter GetDbBulkInserter(IDbClient dbClient);
+        IDbQueryGenerator GetDbQueryGenerator();
         IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class;
         IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class;
-        IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
-        ISqlStatements GetSqlStatements();
     }
 }

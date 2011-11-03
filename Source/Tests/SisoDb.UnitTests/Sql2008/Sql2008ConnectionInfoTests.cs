@@ -1,7 +1,7 @@
 using NCore;
 using NUnit.Framework;
+using SisoDb.Resources;
 using SisoDb.Sql2008;
-using SisoDb.Sql2008.Resources;
 
 namespace SisoDb.UnitTests.Sql2008
 {
@@ -16,8 +16,7 @@ namespace SisoDb.UnitTests.Sql2008
 
             var ex = Assert.Throws<SisoDbException>(() => new Sql2008ConnectionInfo(connectionInfoStub));
 
-            Assert.AreEqual(
-                Sql2008Exceptions.ConnectionInfo_UnsupportedProviderSpecified
+            Assert.AreEqual(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified
                     .Inject(connectionInfoStub.Provider, StorageProviders.Sql2008), ex.Message);
         }
 
@@ -28,7 +27,7 @@ namespace SisoDb.UnitTests.Sql2008
 
             var ex = Assert.Throws<SisoDbException>(() => new Sql2008ConnectionInfo(cnString));
 
-            Assert.AreEqual(Sql2008Exceptions.ConnectionInfo_MissingName, ex.Message);
+            Assert.AreEqual(ExceptionMessages.ConnectionInfo_MissingName, ex.Message);
         }
 
         [Test]

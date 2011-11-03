@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using NCore;
-using SisoDb.Sql2008.Resources;
+using SisoDb.Resources;
 
 namespace SisoDb.Sql2008
 {
@@ -21,13 +21,15 @@ namespace SisoDb.Sql2008
             get { return _serverConnectionString; }
         }
 
-        public Sql2008ConnectionInfo(string connectionStringOrName) : this(GetConnectionString(connectionStringOrName)) 
+        public Sql2008ConnectionInfo(string connectionStringOrName) 
+            : this(GetConnectionString(connectionStringOrName)) 
         { }
 
-        public Sql2008ConnectionInfo(IConnectionString connectionString) : base(connectionString)
+        public Sql2008ConnectionInfo(IConnectionString connectionString) 
+            : base(connectionString)
         {
             if (ProviderType != StorageProviders.Sql2008)
-                throw new SisoDbException(Sql2008Exceptions.ConnectionInfo_UnsupportedProviderSpecified.Inject(ProviderType, StorageProviders.Sql2008));
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(ProviderType, StorageProviders.Sql2008));
 
             InitializeDbNameAndServerConnectionString();
         }
@@ -39,7 +41,7 @@ namespace SisoDb.Sql2008
             _dbName = cnStringBuilder.InitialCatalog;
 
             if (string.IsNullOrWhiteSpace(_dbName))
-                throw new SisoDbException(Sql2008Exceptions.ConnectionInfo_MissingName);
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
 
             cnStringBuilder.InitialCatalog = string.Empty;
 

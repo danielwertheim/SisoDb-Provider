@@ -15,7 +15,8 @@ namespace SisoDb
 
         public abstract IConnectionString ServerConnectionString { get; }
 
-        protected SisoConnectionInfo(string connectionStringOrName) : this(GetConnectionString(connectionStringOrName))
+        protected SisoConnectionInfo(string connectionStringOrName) 
+            : this(GetConnectionString(connectionStringOrName))
         { }
 
         protected SisoConnectionInfo(IConnectionString connectionString)

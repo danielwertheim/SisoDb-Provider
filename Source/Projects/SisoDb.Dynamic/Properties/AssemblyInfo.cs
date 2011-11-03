@@ -14,9 +14,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("58833c9a-16a2-488f-8433-4506f9b105b0")]
 
 [assembly: InternalsVisibleTo("SisoDb.UnitTests")]
-[assembly: InternalsVisibleTo("SisoDb.IntegrationTests")]
-[assembly: InternalsVisibleTo("SisoDb.Specifications")]
 [assembly: InternalsVisibleTo("SisoDb.Testing")]
-[assembly: InternalsVisibleTo("SisoDb.TestUtils")]
-[assembly: InternalsVisibleTo("SisoDb.Tests.IntegrationTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

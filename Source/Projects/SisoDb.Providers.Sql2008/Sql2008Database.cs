@@ -12,7 +12,7 @@ namespace SisoDb.Sql2008
     public class Sql2008Database : ISisoDatabase
     {
         private readonly ISisoProviderFactory _providerFactory;
-        private readonly ISisoConnectionInfo _connectionInfo;
+        private readonly Sql2008ConnectionInfo _connectionInfo;
         private readonly IDbSchemaManager _dbSchemaManager;
         private readonly IStructureSchemas _structureSchemas;
         private readonly IStructureBuilder _structureBuilder;
@@ -37,7 +37,7 @@ namespace SisoDb.Sql2008
             get { return _structureBuilder; }
         }
 
-        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo)
+        protected internal Sql2008Database(Sql2008ConnectionInfo connectionInfo)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 

@@ -10,9 +10,9 @@ namespace SisoDb
     {
         private readonly IJsonSerializer _defaultJsonSerializer;
         
-        public readonly Func<IJsonSerializer> ResolveJsonSerializer;
-        public readonly Func<IStructureSchemas> ResolveStructureSchemas;
-        public readonly Func<IStructureBuilder> ResolveStructureBuilder;
+        public Func<IJsonSerializer> ResolveJsonSerializer;
+        public Func<IStructureSchemas> ResolveStructureSchemas;
+        public Func<IStructureBuilder> ResolveStructureBuilder;
 
         public ResourceContainer()
         {

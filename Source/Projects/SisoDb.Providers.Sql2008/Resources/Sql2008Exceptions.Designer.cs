@@ -61,24 +61,6 @@ namespace SisoDb.Sql2008.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The name of the database could not be extracted from the connection-info..
-        /// </summary>
-        public static string ConnectionInfo_MissingName {
-            get {
-                return ResourceManager.GetString("ConnectionInfo_MissingName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. When consuming an Sql-database the storageprovider should be: &apos;{1}&apos;..
-        /// </summary>
-        public static string ConnectionInfo_UnsupportedProviderSpecified {
-            get {
-                return ResourceManager.GetString("ConnectionInfo_UnsupportedProviderSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Can not create Id-Table parameter for IdType: &apos;{0}&apos;..
         /// </summary>
         public static string SqlIdsTableParam_CreateIdsTableParam {

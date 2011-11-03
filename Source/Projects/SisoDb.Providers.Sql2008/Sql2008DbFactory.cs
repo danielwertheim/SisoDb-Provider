@@ -7,9 +7,9 @@
             SisoEnvironment.ProviderFactories.Register(StorageProviders.Sql2008, new Sql2008ProviderFactory());
         }
 
-        public ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
+        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008Database(connectionInfo);
+            return new Sql2008Database((Sql2008ConnectionInfo)connectionInfo);
         }
     }
 }

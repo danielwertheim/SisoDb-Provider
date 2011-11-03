@@ -1,52 +1,60 @@
 using System;
 using System.Data.SqlServerCe;
-using SisoDb.Core;
+using EnsureThat;
+using NCore;
+using PineCone.Structures;
+using PineCone.Structures.Schemas;
 using SisoDb.Core.Io;
 using SisoDb.DbSchema;
-using SisoDb.SqlCe4.Dac;
-using SisoDb.SqlCe4.Resources;
-using SisoDb.Structures;
-using SisoDb.Structures.Schemas;
+using SisoDb.Providers;
+using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4
 {
     public class SqlCe4Database : ISisoDatabase
     {
-        private readonly SqlCe4ConnectionInfo _innerConnectionInfo;
+        private readonly ISisoProviderFactory _providerFactory;
+        private readonly SqlCe4ConnectionInfo _connectionInfo;
+        private readonly IDbSchemaManager _dbSchemaManager;
+        private readonly IStructureSchemas _structureSchemas;
+        private readonly IStructureBuilder _structureBuilder;
 
-        public string Name 
+        public string Name
         {
-            get { return _innerConnectionInfo.Name; }
-        }
-
-        public string FilePath
-        {
-            get { return _innerConnectionInfo.FilePath; }
+            get { return _connectionInfo.DbName; }
         }
 
         public ISisoConnectionInfo ConnectionInfo
         {
-            get { return _innerConnectionInfo; }
+            get { return _connectionInfo; }
         }
 
-        public IStructureSchemas StructureSchemas { get; set; }
-
-        public IStructureBuilder StructureBuilder { get; set; }
-
-        public IDbSchemaManager DbSchemaManager { get; set; }
-
-        internal SqlCe4Database(ISisoConnectionInfo connectionInfo)
+        public IStructureSchemas StructureSchemas
         {
-            _innerConnectionInfo = new SqlCe4ConnectionInfo(connectionInfo.AssertNotNull("connectionInfo"));
+            get { return _structureSchemas; }
+        }
 
-            StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
-            StructureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
-            DbSchemaManager = SisoEnvironment.Resources.ResolveDbSchemaManager();
+        public IStructureBuilder StructureBuilder
+        {
+            get { return _structureBuilder; }
+        }
+
+        protected internal SqlCe4Database(SqlCe4ConnectionInfo connectionInfo)
+        {
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+
+            _connectionInfo = connectionInfo;
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
+
+            _dbSchemaManager = _providerFactory.GetDbSchemaManager();
+            _structureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
+            _structureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
         }
 
         public void EnsureNewDatabase()
         {
-            IoHelper.DeleteIfFileExists(_innerConnectionInfo.FilePath);
+            IoHelper.DeleteIfFileExists(_connectionInfo.FilePath);
 
             using (var engine = new SqlCeEngine(ConnectionInfo.ConnectionString.PlainString))
             {
@@ -56,66 +64,139 @@ namespace SisoDb.SqlCe4
             InitializeExisting();
         }
 
-        public void CreateIfNotExists()
+        //public virtual void EnsureNewDatabase()
+        //{
+        //    using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
+        //    {
+        //        serverClient.DropDatabaseIfExists(Name);
+
+        //        serverClient.CreateDatabase(Name);
+        //    }
+        //}
+
+        public virtual void CreateIfNotExists()
         {
-            if(IoHelper.FileExists(_innerConnectionInfo.FilePath))
-                return;
-
-            using (var engine = new SqlCeEngine(ConnectionInfo.ConnectionString.PlainString))
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
             {
-                engine.CreateDatabase();
-            }
-
-            InitializeExisting();
-        }
-
-        public void InitializeExisting()
-        {
-            if (!IoHelper.FileExists(_innerConnectionInfo.FilePath))
-                throw new SisoDbException(SqlCe4Exceptions.SqlCe4Database_InitializeExisting_DbDoesNotExist.Inject(Name));
-
-            using (var serverClient = new SqlCe4ServerClient(_innerConnectionInfo))
-            {
-                serverClient.InitializeExistingDb();
+                if (!serverClient.DatabaseExists(Name))
+                    serverClient.CreateDatabase(Name);
             }
         }
 
-        public void DeleteIfExists()
+        public virtual void InitializeExisting()
         {
-            IoHelper.DeleteIfFileExists(_innerConnectionInfo.FilePath);
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
+            {
+                if (!serverClient.DatabaseExists(Name))
+                    throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(Name));
+
+                serverClient.InitializeExistingDb(Name);
+            }
         }
 
-        public bool Exists()
+        public virtual void DeleteIfExists()
         {
-            return IoHelper.FileExists(_innerConnectionInfo.FilePath);
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
+            {
+                serverClient.DropDatabaseIfExists(Name);
+            }
+        }
+
+        public virtual bool Exists()
+        {
+            using (var serverClient = _providerFactory.GetServerClient(_connectionInfo))
+            {
+                return serverClient.DatabaseExists(Name);
+            }
         }
 
         public void DropStructureSet<T>() where T : class
         {
-            throw new NotImplementedException();
+            DropStructureSet(TypeFor<T>.Type);
         }
 
-        public void UpsertStructureSet<T>() where T : class
+        public void DropStructureSet(Type type)
         {
-            throw new NotImplementedException();
+            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
+            {
+                var structureSchema = _structureSchemas.GetSchema(type);
+
+                _dbSchemaManager.DropStructureSet(structureSchema, dbClient);
+
+                dbClient.Flush();
+            }
+
+            _structureSchemas.RemoveSchema(type);
+        }
+
+        public void DropStructureSets()
+        {
+            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
+            {
+                foreach (var structureSchema in StructureSchemas.GetSchemas())
+                {
+                    _dbSchemaManager.DropStructureSet(structureSchema, dbClient);
+                }
+
+                dbClient.Flush();
+            }
+
+            StructureSchemas.Clear();
         }
 
         public void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
             where TOld : class
             where TNew : class
         {
-            throw new NotImplementedException();
+            var structureSchemaOld = _structureSchemas.GetSchema(TypeFor<TOld>.Type);
+            _structureSchemas.RemoveSchema(TypeFor<TOld>.Type);
+
+            var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
+
+            var updater = new StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _structureBuilder);
+            updater.Process(onProcess);
+        }
+
+        public void UpsertStructureSet<T>() where T : class
+        {
+            UpsertStructureSet(TypeFor<T>.Type);
+        }
+
+        public void UpsertStructureSet(Type type)
+        {
+            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
+            {
+                var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClient);
+                var structureSchema = _structureSchemas.GetSchema(type);
+                _dbSchemaManager.UpsertStructureSet(structureSchema, dbSchemaUpserter);
+
+                dbClient.Flush();
+            }
         }
 
         public IQueryEngine CreateQueryEngine()
         {
             throw new NotImplementedException();
+            //var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+
+            //return new Sql2008QueryEngine(
+            //    _connectionInfo,
+            //    _dbSchemaManager,
+            //    _structureSchemas,
+            //    jsonSerializer);
         }
 
         public IUnitOfWork CreateUnitOfWork()
         {
             throw new NotImplementedException();
-            //return new SqlCe4UnitOfWork();
+            //var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+
+            //return new Sql2008UnitOfWork(
+            //    _connectionInfo,
+            //    _dbSchemaManager,
+            //    _structureSchemas,
+            //    jsonSerializer,
+            //    _structureBuilder);
         }
     }
 }

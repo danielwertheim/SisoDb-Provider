@@ -21,32 +21,42 @@ namespace SisoDb.Sql2008
             _sqlStatements = new Lazy<ISqlStatements>(() => new Sql2008Statements());
         }
 
-        public IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+        public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
             return new Sql2008ServerClient(connectionInfo);
         }
 
-        public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+        public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
             return new Sql2008DbClient(connectionInfo, transactional);
         }
 
-        public IDbSchemaManager GetDbSchemaManager()
+        public virtual IDbSchemaManager GetDbSchemaManager()
         {
             return new DbSchemaManager();
         }
 
-        public IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
+        public virtual IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
         {
             return new SqlDbSchemaUpserter(dbClient);
         }
 
-        public ISqlStatements GetSqlStatements()
+        public virtual ISqlStatements GetSqlStatements()
         {
             return _sqlStatements.Value;
         }
 
-        public IDbQueryGenerator GetDbQueryGenerator()
+        public virtual IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
+        {
+            return new IdentityStructureIdGenerator(dbClient);
+        }
+
+        public virtual IDbBulkInserter GetDbBulkInserter(IDbClient dbClient)
+        {
+            return new DbBulkInserter(dbClient);
+        }
+
+        public virtual IDbQueryGenerator GetDbQueryGenerator()
         {
             return new Sql2008QueryGenerator(
                 new LambdaToSqlWhereConverter(),
@@ -54,30 +64,20 @@ namespace SisoDb.Sql2008
                 new LambdaToSqlIncludeConverter());
         }
 
-        public IDbBulkInserter GetDbBulkInserter(IDbClient dbClient)
-        {
-            return new DbBulkInserter(dbClient);
-        }
-
-        public IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class
+        public virtual IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class
         {
             return new GetCommandBuilder<T>(
                 new SortingParser(),
                 new IncludeParser());
         }
 
-        public IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class
+        public virtual IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class
         {
             return new QueryCommandBuilder<T>(
                 structureSchema,
                 new WhereParser(),
                 new SortingParser(),
                 new IncludeParser());
-        }
-
-        public IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
-        {
-            return new IdentityStructureIdGenerator(dbClient);
         }
     }
 }

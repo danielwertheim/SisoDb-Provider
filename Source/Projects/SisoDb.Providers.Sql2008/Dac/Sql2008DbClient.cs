@@ -16,10 +16,6 @@ using SisoDb.Structures;
 
 namespace SisoDb.Sql2008.Dac
 {
-    /// <summary>
-    /// Performs the ADO.Net communication for the Sql2008-provider for a
-    /// specific database.
-    /// </summary>
     public class Sql2008DbClient : IDbClient
     {
         private readonly ISisoProviderFactory _providerFactory;

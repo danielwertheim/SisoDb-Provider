@@ -7,10 +7,6 @@ using SisoDb.Providers;
 
 namespace SisoDb.Sql2008.Dac
 {
-    /// <summary>
-    /// Performs the ADO.Net communication for the Sql-provider and
-    /// executes command against the server not a specific database.
-    /// </summary>
     public class Sql2008ServerClient : IServerClient
     {
         private readonly ISisoProviderFactory _providerFactory;

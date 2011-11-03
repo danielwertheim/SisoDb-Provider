@@ -7,9 +7,9 @@ namespace SisoDb.SqlCe4
             SisoEnvironment.ProviderFactories.Register(StorageProviders.SqlCe4, new SqlCe4ProviderFactory());
         }
 
-        public ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
+        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
         {
-            return new SqlCe4Database(connectionInfo);
+            return new SqlCe4Database((SqlCe4ConnectionInfo)connectionInfo);
         }
     }
 }

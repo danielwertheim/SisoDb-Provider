@@ -50,7 +50,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -64,9 +63,10 @@
     <Compile Include="SpecificationBase.cs" />
     <Compile Include="Sql2008\Sql2008DbUtils.cs" />
     <Compile Include="Sql2008\Sql2008TestContext.cs" />
+    <Compile Include="SqlCe4\Sql2008DbUtils.cs" />
+    <Compile Include="SqlCe4\Sql2008TestContext.cs" />
     <Compile Include="TestConstants.cs" />
     <Compile Include="TestContextBase.cs" />
-    <Compile Include="TestContextFactory.cs" />
     <Compile Include="TestModel\BigIdentityItem.cs" />
     <Compile Include="TestModel\BigIdentityItemWithNullableId.cs" />
     <Compile Include="TestModel\BigIdentityItemWithPrivateIdSetter.cs" />

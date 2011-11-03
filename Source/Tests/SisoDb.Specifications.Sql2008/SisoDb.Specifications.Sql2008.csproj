@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Sql2008Provider</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;Sql2008Provider</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -49,7 +49,6 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -57,72 +56,147 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\CreateIfNotExists.cs">
+      <Link>Database\CreateIfNotExists.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\DeleteIfExists.cs">
+      <Link>Database\DeleteIfExists.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\DropStructureSet.cs">
+      <Link>Database\DropStructureSet.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\EnsureNewDatabase.cs">
+      <Link>Database\EnsureNewDatabase.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
+      <Link>Database\InitializeExisting.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\UpdateStructureSet.cs">
+      <Link>Database\UpdateStructureSet.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
+      <Link>Database\UpsertStructureSet.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\ChildItem.cs">
+      <Link>Model\ChildItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\Container.cs">
+      <Link>Model\Container.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\GrandChildItem.cs">
+      <Link>Model\GrandChildItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryBigIdentityItem.cs">
+      <Link>Model\QueryBigIdentityItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryGuidItem.cs">
+      <Link>Model\QueryGuidItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryIdentityItem.cs">
+      <Link>Model\QueryIdentityItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryItemForQxAnyQueries.cs">
+      <Link>Model\QueryItemForQxAnyQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryItemInfo.cs">
+      <Link>Model\QueryItemInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryNestedGuidItem.cs">
+      <Link>Model\QueryNestedGuidItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryNestedItemInfo.cs">
+      <Link>Model\QueryNestedItemInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryXItem.cs">
+      <Link>Model\QueryXItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Count.cs">
+      <Link>QueryEngine\Count.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetAll.cs">
+      <Link>QueryEngine\GetAll.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
+      <Link>QueryEngine\GetById.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIdInterval.cs">
+      <Link>QueryEngine\GetByIdInterval.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIds.cs">
+      <Link>QueryEngine\GetByIds.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Includes.cs">
+      <Link>QueryEngine\Includes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\NamedQueries.cs">
+      <Link>QueryEngine\NamedQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Query.cs">
+      <Link>QueryEngine\Query.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxEnumerableExtensions\QxAny.cs">
+      <Link>QueryEngine\QxEnumerableExtensions\QxAny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxContains.cs">
+      <Link>QueryEngine\QxStringExtensions\QxContains.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxEndsWith.cs">
+      <Link>QueryEngine\QxStringExtensions\QxEndsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxLike.cs">
+      <Link>QueryEngine\QxStringExtensions\QxLike.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxStartsWith.cs">
+      <Link>QueryEngine\QxStringExtensions\QxStartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Where.cs">
+      <Link>QueryEngine\Where.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
+      <Link>TestContextFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Deletes.cs">
+      <Link>UnitOfWork\Deletes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsComplete.cs">
+      <Link>UnitOfWork\InsertsComplete.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsIdBehavior.cs">
+      <Link>UnitOfWork\InsertsIdBehavior.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsOfJson.cs">
+      <Link>UnitOfWork\InsertsOfJson.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsOfUniques.cs">
+      <Link>UnitOfWork\InsertsOfUniques.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingBaseClasses.cs">
+      <Link>UnitOfWork\InsertsUsingBaseClasses.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingInterfaces.cs">
+      <Link>UnitOfWork\InsertsUsingInterfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries.cs">
+      <Link>UnitOfWork\Queries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
+      <Link>UnitOfWork\TransactionScopes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Updates.cs">
+      <Link>UnitOfWork\Updates.cs</Link>
+    </Compile>
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="ContextCleanup.cs" />
-    <Compile Include="Model\ChildItem.cs" />
-    <Compile Include="Model\GrandChildItem.cs" />
-    <Compile Include="Model\QueryItemForQxAnyQueries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Container.cs" />
-    <Compile Include="Database\UpdateStructureSet.cs" />
-    <Compile Include="Database\UpsertStructureSet.cs" />
-    <Compile Include="Database\DropStructureSet.cs" />
-    <Compile Include="Database\DeleteIfExists.cs" />
-    <Compile Include="Database\EnsureNewDatabase.cs" />
-    <Compile Include="Database\InitializeExisting.cs" />
-    <Compile Include="Database\CreateIfNotExists.cs" />
-    <Compile Include="Model\QueryBigIdentityItem.cs" />
-    <Compile Include="QueryEngine\Query.cs" />
-    <Compile Include="QueryEngine\Count.cs" />
-    <Compile Include="QueryEngine\GetAll.cs" />
-    <Compile Include="QueryEngine\GetById.cs" />
-    <Compile Include="QueryEngine\GetByIdInterval.cs" />
-    <Compile Include="QueryEngine\GetByIds.cs" />
-    <Compile Include="QueryEngine\Includes.cs" />
-    <Compile Include="QueryEngine\NamedQueries.cs" />
-    <Compile Include="QueryEngine\QxEnumerableExtensions\QxAny.cs" />
-    <Compile Include="QueryEngine\QxStringExtensions\QxContains.cs" />
-    <Compile Include="QueryEngine\QxStringExtensions\QxEndsWith.cs" />
-    <Compile Include="QueryEngine\QxStringExtensions\QxLike.cs" />
-    <Compile Include="QueryEngine\QxStringExtensions\QxStartsWith.cs" />
-    <Compile Include="QueryEngine\Where.cs" />
-    <Compile Include="Model\QueryGuidItem.cs" />
-    <Compile Include="Model\QueryIdentityItem.cs" />
-    <Compile Include="Model\QueryItemInfo.cs" />
-    <Compile Include="Model\QueryNestedGuidItem.cs" />
-    <Compile Include="Model\QueryNestedItemInfo.cs" />
-    <Compile Include="Model\QueryXItem.cs" />
-    <Compile Include="UnitOfWork\Deletes.cs" />
-    <Compile Include="UnitOfWork\InsertsComplete.cs" />
-    <Compile Include="UnitOfWork\InsertsIdBehavior.cs" />
-    <Compile Include="UnitOfWork\InsertsOfJson.cs" />
-    <Compile Include="UnitOfWork\InsertsOfUniques.cs" />
-    <Compile Include="UnitOfWork\InsertsUsingBaseClasses.cs" />
-    <Compile Include="UnitOfWork\InsertsUsingInterfaces.cs" />
-    <Compile Include="UnitOfWork\Queries.cs" />
-    <Compile Include="UnitOfWork\TransactionScopes.cs" />
-    <Compile Include="UnitOfWork\Updates.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
-      <Project>{A6AEE197-668A-4A08-98A7-F0CB76D359C0}</Project>
-      <Name>SisoDb.Dynamic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlAzure\SisoDb.SqlAzure.csproj">
-      <Project>{BE01AA89-F64C-4CDF-B936-EC973868E0F8}</Project>
-      <Name>SisoDb.SqlAzure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlCe4\SisoDb.SqlCe4.csproj">
-      <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
-      <Name>SisoDb.SqlCe4</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>

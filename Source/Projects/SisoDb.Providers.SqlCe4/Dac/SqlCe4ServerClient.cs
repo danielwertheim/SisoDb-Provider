@@ -1,39 +1,35 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlServerCe;
-using SisoDb.Core;
+﻿using System.Data;
+using System.Data.SqlClient;
+using EnsureThat;
+using NCore;
+using SisoDb.Dac;
 using SisoDb.Providers;
 
 namespace SisoDb.SqlCe4.Dac
 {
-    /// <summary>
-    /// Performs the ADO.Net communication for the Sql-provider and
-    /// executes command against the server not a specific database.
-    /// </summary>
-    internal class SqlCe4ServerClient : IDisposable
+    public class SqlCe4ServerClient : IServerClient
     {
-        private readonly SqlCe4ConnectionInfo _connectionInfo;
+        private readonly ISisoProviderFactory _providerFactory;
+        private SqlConnection _connection;
 
-        //private SqlCeEngine _sqlCeEngine;
+        public StorageProviders ProviderType { get; private set; }
 
-        private SqlCeConnection _connection;
+        public IConnectionString ConnectionString { get; private set; }
 
-        //internal StorageProviders ProviderType { get; private set; }
+        public ISqlStatements SqlStatements { get; private set; }
 
-        //internal IConnectionString ConnectionString { get; private set; }
-
-        //internal IDbDataTypeTranslator DbDataTypeTranslator { get; private set; }
-
-        internal ISqlStatements SqlStatements { get; private set; }
-
-        internal SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo)
+        public SqlCe4ServerClient(ISisoConnectionInfo connectionInfo)
         {
-            _connectionInfo = connectionInfo.AssertNotNull("connectionInfo");
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
-            SqlStatements = SqlCe4Statements.Instance;
-            //DbDataTypeTranslator = new TSqlDbDataTypeTranslator();
+            _providerFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
 
-            _connection = new SqlCeConnection(_connectionInfo.ConnectionString.PlainString);
+            ProviderType = connectionInfo.ProviderType;
+            ConnectionString = connectionInfo.ServerConnectionString;
+
+            SqlStatements = _providerFactory.GetSqlStatements();
+
+            _connection = new SqlConnection(ConnectionString.PlainString);
             _connection.Open();
         }
 
@@ -49,19 +45,48 @@ namespace SisoDb.SqlCe4.Dac
             _connection = null;
         }
 
-        internal void InitializeExistingDb()
+        public bool DatabaseExists(string name)
         {
-            var sqlCreateIdentitiesTables = SqlStatements.GetSql("Sys_Identities_Create");
-            
-            using (var cmd = _connection.CreateCommand())
-            {
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = sqlCreateIdentitiesTables;
+            var sql = SqlStatements.GetSql("DatabaseExists");
 
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sql, new DacParameter("dbName", name)))
+            {
+                return cmd.GetScalarResult<int>() > 0;
+            }
+        }
+
+        public void CreateDatabase(string name)
+        {
+            var sql = SqlStatements.GetSql("CreateDatabase").Inject(name);
+
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
+            {
+                cmd.ExecuteNonQuery();
+            }
+
+            InitializeExistingDb(name);
+        }
+
+        public void InitializeExistingDb(string name)
+        {
+            var sqlCreateIdentitiesTables = SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(name);
+
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sqlCreateIdentitiesTables))
+            {
                 cmd.ExecuteNonQuery();
 
-                //cmd.CommandText = SqlStatements.GetSql("Sys_Types_Create");
+                //cmd.CommandText = SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(name);
                 //cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DropDatabaseIfExists(string name)
+        {
+            var sql = SqlStatements.GetSql("DropDatabase").Inject(name);
+
+            using (var cmd = _connection.CreateCommand(CommandType.Text, sql))
+            {
+                cmd.ExecuteNonQuery();
             }
         }
     }

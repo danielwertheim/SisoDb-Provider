@@ -256,4 +256,10 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="StructureSetUpdater_MissmatchInIdTypes" xml:space="preserve">
     <value>Can not update structure set when Id type has changed.</value>
   </data>
+  <data name="ConnectionInfo_UnsupportedProviderSpecified" xml:space="preserve">
+    <value>Storageprovider '{0}' is unsupported. The storageprovider should be: '{1}'.</value>
+  </data>
+  <data name="ConnectionInfo_MissingName" xml:space="preserve">
+    <value>The name of the database could not be extracted from the connection-info.</value>
+  </data>
 </root>
