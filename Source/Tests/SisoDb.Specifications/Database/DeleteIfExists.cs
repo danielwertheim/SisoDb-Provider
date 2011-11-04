@@ -6,16 +6,21 @@ namespace SisoDb.Specifications.Database
     namespace DeleteIfExists
     {
         [Subject(typeof (ISisoDatabase), "Delete if exists")]
-        public class when_database_exists : SpecificationBase
+        public class when_database_exists
         {
             Establish context = () =>
             {
-                TestContext = TestContextFactory.CreateTemp();
+                _testContext = TestContextFactory.CreateTemp();
+                _testContext.Database.CreateIfNotExists();
             };
 
-            Because of = () => TestContext.Database.DeleteIfExists();
+            Because of =
+                () => _testContext.Database.DeleteIfExists();
 
-            It should_get_dropped = () => TestContext.Database.Exists().ShouldBeFalse();
+            It should_get_dropped = 
+                () => _testContext.Database.Exists().ShouldBeFalse();
+
+            private static ITestContext _testContext;
         }
     }
 }

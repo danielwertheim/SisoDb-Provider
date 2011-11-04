@@ -59,6 +59,15 @@
     <Compile Include="..\SisoDb.Specifications\Database\CreateIfNotExists.cs">
       <Link>Database\CreateIfNotExists.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\DeleteIfExists.cs">
+      <Link>Database\DeleteIfExists.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\EnsureNewDatabase.cs">
+      <Link>Database\EnsureNewDatabase.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
+      <Link>Database\InitializeExisting.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
     </Compile>

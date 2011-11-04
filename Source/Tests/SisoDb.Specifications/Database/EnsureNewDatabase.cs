@@ -6,28 +6,38 @@ namespace SisoDb.Specifications.Database
     namespace EnsureNewDatabase
     {
         [Subject(typeof (ISisoDatabase), "Ensure new database")]
-        public class when_no_database_exists : SpecificationBase
+        public class when_no_database_exists
         {
             Establish context = () =>
             {
-                TestContext = TestContextFactory.CreateTemp();
-                TestContext.DbHelperForServer.DropDatabaseIfExists(TestContext.Database.Name);
+                _testContext = TestContextFactory.CreateTemp();
+                _testContext.Database.DeleteIfExists();
             };
 
-            Because of = 
-                () => TestContext.Database.EnsureNewDatabase();
+            Because of =
+                () => _testContext.Database.EnsureNewDatabase();
 
-            It should_get_created = 
-                () => TestContext.Database.Exists();
+            It should_get_created =
+                () => _testContext.Database.Exists();
 
             It should_have_created_identities_table =
-                () => TestContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
+                () => _testContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
 
+#if Sql2008Provider
             It should_have_created_custom_ids_data_types = () =>
             {
-                TestContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
-                TestContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
+                _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
+                _testContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
             };
+#endif
+#if SqlCe4Provider
+            It should_not_have_created_custom_ids_data_types = () =>
+            {
+                _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeFalse();
+                _testContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeFalse();
+            };
+#endif
+            private static ITestContext _testContext;
         }
     }
 }

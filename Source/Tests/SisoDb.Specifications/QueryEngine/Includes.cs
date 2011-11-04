@@ -104,6 +104,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
+#if Sql2008Provider
         [Subject(typeof(IQueryEngine), "Includes using Named Query")]
         public class when_named_query_including_different_firstlevel_members : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
@@ -161,6 +162,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static Album _structure;
             private static IList<Album> _fetchedStructures;
         }
+#endif
 
         internal static class Establishments
         {

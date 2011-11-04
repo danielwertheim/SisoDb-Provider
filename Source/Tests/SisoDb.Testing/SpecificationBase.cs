@@ -11,7 +11,9 @@ namespace SisoDb.Testing
 
         Cleanup after = () => 
         {
-            TestContext.Cleanup();
+            if(TestContext != null)
+                TestContext.Cleanup();
+
             CaughtException = null;
         };
     }
