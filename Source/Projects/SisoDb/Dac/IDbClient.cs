@@ -22,7 +22,7 @@ namespace SisoDb.Dac
         IDbBulkCopy GetBulkCopy(bool keepIdentities);
 
         void Drop(IStructureSchema structureSchema);
-        void RebuildIndexes(IStructureSchema structureSchema);
+        void RefreshIndexes(IStructureSchema structureSchema);
         void DeleteById(ValueType structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
         void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema);

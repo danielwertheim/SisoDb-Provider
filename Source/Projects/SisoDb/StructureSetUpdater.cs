@@ -69,7 +69,7 @@ namespace SisoDb
                 if (ItterateStructures(dbClient, onProcess))
                     dbClient.Flush();
 
-                dbClient.RebuildIndexes(StructureSchemaNew);
+                dbClient.RefreshIndexes(StructureSchemaNew);
             }
         }
 

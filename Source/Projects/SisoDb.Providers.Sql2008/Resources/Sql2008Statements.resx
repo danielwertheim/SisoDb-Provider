@@ -248,7 +248,7 @@ delete from [dbo].[{0}] where [{1}] in({2});</value>
     <value>set nocount on;
 select distinct [{0}] from [dbo].[{1}];</value>
   </data>
-  <data name="RebuildIndexes" xml:space="preserve">
+  <data name="RefreshIndexes" xml:space="preserve">
     <value>set nocount on;
 ALTER INDEX [PK_{0}] ON dbo.[{0}] REBUILD;
 ALTER INDEX [PK_{1}] ON dbo.[{1}] REBUILD;

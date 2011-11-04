@@ -28,14 +28,12 @@ namespace SisoDb.Dac.BulkInserts
                 using (var indexesReader = new IndexesReader(indexesStorageSchema, structures.SelectMany(s => s.Indexes)))
                 {
                     InsertStructures(structuresReader, keepIdentities);
-                    InsertIndexes(indexesReader, keepIdentities);
+                    InsertIndexes(indexesReader);
 
                     var uniques = structures.SelectMany(s => s.Uniques).ToArray();
                     if (uniques.Length <= 0)
                         return;
-                    using (var uniquesReader = new UniquesReader(
-                        uniquesStorageSchema,
-                        uniques))
+                    using (var uniquesReader = new UniquesReader(uniquesStorageSchema, uniques))
                     {
                         InsertUniques(uniquesReader);
                     }
@@ -57,9 +55,9 @@ namespace SisoDb.Dac.BulkInserts
             }
         }
 
-        private void InsertIndexes(IndexesReader indexes, bool keepIdentities)
+        private void InsertIndexes(IndexesReader indexes)
         {
-            using (var bulkInserter = _dbClient.GetBulkCopy(keepIdentities))
+            using (var bulkInserter = _dbClient.GetBulkCopy(false))
             {
                 bulkInserter.BatchSize = indexes.RecordsAffected;
                 bulkInserter.DestinationTableName = indexes.StorageSchema.Name;

@@ -59,7 +59,7 @@ namespace SisoDb.Querying
             var whereSql = GenerateWhere(queryCommand);
             var sortingSql = GenerateSorting(queryCommand);
 
-            var sql = string.Format("select {0}s.Json{1} from [dbo].[{2}] as s inner join [dbo].[{3}] as si on si.[StructureId] = s.[StructureId]{4}{5} group by s.[StructureId], s.[Json]{6};",
+            var sql = string.Format("select {0}s.Json{1} from [{2}] as s inner join [{3}] as si on si.[StructureId] = s.[StructureId]{4}{5} group by s.[StructureId], s.[Json]{6};",
                 GenerateTakeString(queryCommand),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
                 queryCommand.StructureSchema.GetStructureTableName(), 
@@ -79,7 +79,7 @@ namespace SisoDb.Querying
             
             const string sqlFormat = "with pagedRs as ({0}){1};";
 
-            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [dbo].[{3}] as s inner join [dbo].[{4}] as si on si.[StructureId] = s.[StructureId]{5}{6} group by s.[StructureId], s.[Json]",
+            var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [{3}] as s inner join [{4}] as si on si.[StructureId] = s.[StructureId]{5}{6} group by s.[StructureId], s.[Json]",
                 GenerateTakeString(queryCommand),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
                 sortingSql.Sorting,

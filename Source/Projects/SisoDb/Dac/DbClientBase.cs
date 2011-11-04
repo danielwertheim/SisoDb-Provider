@@ -111,7 +111,7 @@ namespace SisoDb.Dac
 
         public abstract void Drop(IStructureSchema structureSchema);
 
-        public abstract void RebuildIndexes(IStructureSchema structureSchema);
+        public abstract void RefreshIndexes(IStructureSchema structureSchema);
 
         public abstract void DeleteById(ValueType structureId, IStructureSchema structureSchema);
 

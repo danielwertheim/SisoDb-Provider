@@ -71,8 +71,44 @@
     <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
       <Link>Database\UpsertStructureSet.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\ChildItem.cs">
+      <Link>Model\ChildItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\Container.cs">
+      <Link>Model\Container.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\GrandChildItem.cs">
+      <Link>Model\GrandChildItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryBigIdentityItem.cs">
+      <Link>Model\QueryBigIdentityItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryGuidItem.cs">
+      <Link>Model\QueryGuidItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryIdentityItem.cs">
+      <Link>Model\QueryIdentityItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryItemForQxAnyQueries.cs">
+      <Link>Model\QueryItemForQxAnyQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryItemInfo.cs">
+      <Link>Model\QueryItemInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryNestedGuidItem.cs">
+      <Link>Model\QueryNestedGuidItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryNestedItemInfo.cs">
+      <Link>Model\QueryNestedItemInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryXItem.cs">
+      <Link>Model\QueryXItem.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsIdBehavior.cs">
+      <Link>UnitOfWork\InsertsIdBehavior.cs</Link>
     </Compile>
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="ContextCleanup.cs" />

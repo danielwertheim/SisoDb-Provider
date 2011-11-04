@@ -183,17 +183,49 @@ create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
+  <data name="DeleteById" xml:space="preserve">
+    <value>delete from [{0}] where StructureId = @id;</value>
+  </data>
+  <data name="DeleteByQuery" xml:space="preserve">
+    <value>delete from [{0}] where StructureId in(select si.StructureId from [{1}] as si where {2});</value>
+  </data>
   <data name="DeleteStructureFromSisoDbIdentitiesTable" xml:space="preserve">
     <value>delete from [SisoDbIdentities] where [EntityHash] = @entityHash;</value>
   </data>
+  <data name="DeleteWhereIdIsBetween" xml:space="preserve">
+    <value>delete from [{0}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
+  </data>
   <data name="DropTable" xml:space="preserve">
     <value>drop table [{0}];</value>
+  </data>
+  <data name="GetAll" xml:space="preserve">
+    <value>select json from [{0}] order by [StructureId];</value>
+  </data>
+  <data name="GetAllById" xml:space="preserve">
+    <value>select json from [{0}] order by [StructureId];</value>
+  </data>
+  <data name="GetById" xml:space="preserve">
+    <value>select json from [{0}] where StructureId =@id;</value>
+  </data>
+  <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
+    <value>select Json from [{0}] where StructureId between @idFrom and @idTo;</value>
   </data>
   <data name="IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
     <value>delete from [{0}] where [{1}] in({2});</value>
   </data>
   <data name="IndexesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
     <value>select distinct [{0}] from [{1}];</value>
+  </data>
+  <data name="RefreshIndexes" xml:space="preserve">
+    <value>UPDATE STATISTICS ON [{0}].[PK_{0}] WITH FULLSCAN;
+UPDATE STATISTICS ON [{1}].[IX_{1}_MemberPath] WITH FULLSCAN;
+UPDATE STATISTICS ON [{2}].[UQ_{2}] WITH FULLSCAN;</value>
+  </data>
+  <data name="RowCount" xml:space="preserve">
+    <value>select count(*) from [{0}];</value>
+  </data>
+  <data name="RowCountByQuery" xml:space="preserve">
+    <value>select count(*) from [{0}] si where {1}; </value>
   </data>
   <data name="Sys_Identities_Create" xml:space="preserve">
     <value>create table [SisoDbIdentities]
@@ -206,6 +238,12 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="Sys_Identities_Exists" xml:space="preserve">
     <value>select count(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_NAME='SisoDbIdentities';</value>
+  </data>
+  <data name="Sys_Identities_GetNext" xml:space="preserve">
+    <value>select ([CurrentId] + 1) from [SisoDbIdentities] where [EntityHash] = @entityHash;</value>
+  </data>
+  <data name="Sys_Identities_Increase" xml:space="preserve">
+    <value>update [SisoDbIdentities] set [CurrentId] = ([CurrentId] + @numOfIds) where [EntityHash] = @entityHash;</value>
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>select count(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@tableName;</value>

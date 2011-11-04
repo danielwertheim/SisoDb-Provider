@@ -40,11 +40,11 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public override void RebuildIndexes(IStructureSchema structureSchema)
+        public override void RefreshIndexes(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("RebuildIndexes").Inject(
+            var sql = SqlStatements.GetSql("RefreshIndexes").Inject(
                 structureSchema.GetStructureTableName(),
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName());

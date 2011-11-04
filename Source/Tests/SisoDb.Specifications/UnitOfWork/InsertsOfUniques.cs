@@ -59,7 +59,7 @@ namespace SisoDb.Specifications.UnitOfWork
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.Message.StartsWith("Cannot insert duplicate key row in object 'dbo.VehicleUniques' with unique index 'UQ_VehicleUniques'.");
+                CaughtException.Message.StartsWith("Cannot insert duplicate key row in object 'VehicleUniques' with unique index 'UQ_VehicleUniques'.");
             };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
@@ -118,7 +118,7 @@ namespace SisoDb.Specifications.UnitOfWork
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.Message.StartsWith("Cannot insert duplicate key row in object 'dbo.VehicleUniques' with unique index 'UQ_VehicleUniques'.");
+                CaughtException.Message.StartsWith("Cannot insert duplicate key row in object 'VehicleUniques' with unique index 'UQ_VehicleUniques'.");
             };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
@@ -177,7 +177,7 @@ namespace SisoDb.Specifications.UnitOfWork
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.Message.StartsWith("Cannot insert duplicate key row in object 'dbo.VehicleUniques' with unique index 'UQ_VehicleUniques'.");
+                CaughtException.Message.StartsWith("Cannot insert duplicate key row in object 'VehicleUniques' with unique index 'UQ_VehicleUniques'.");
             };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);

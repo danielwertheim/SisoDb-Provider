@@ -25,7 +25,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_have_updated_identities_table_in_database = 
                 () => TestContext.DbHelper
-                            .ExecuteScalar<int>(CommandType.Text, "select CurrentId from dbo.SisoDbIdentities where EntityName = 'IdentityItem';")
+                            .ExecuteScalar<int>(CommandType.Text, "select CurrentId from SisoDbIdentities where EntityName = 'IdentityItem';")
                             .ShouldEqual(4);
         }
 
@@ -45,7 +45,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_have_updated_identities_table_in_database =
                 () => TestContext.DbHelper
-                            .ExecuteScalar<int>(CommandType.Text, "select CurrentId from dbo.SisoDbIdentities where EntityName = 'BigIdentityItem';")
+                            .ExecuteScalar<int>(CommandType.Text, "select CurrentId from SisoDbIdentities where EntityName = 'BigIdentityItem';")
                             .ShouldEqual(4);
         }
 

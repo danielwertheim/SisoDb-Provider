@@ -69,19 +69,16 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        public override void RebuildIndexes(IStructureSchema structureSchema)
+        public override void RefreshIndexes(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("RebuildIndexes").Inject(
+            var sql = SqlStatements.GetSql("RefreshIndexes").Inject(
                 structureSchema.GetStructureTableName(),
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName());
 
-            using (var cmd = CreateCommand(sql))
-            {
-                cmd.ExecuteNonQuery();
-            }
+            ExecuteNonQuery(sql);
         }
 
         public override void DeleteById(ValueType structureId, IStructureSchema structureSchema)
@@ -91,10 +88,7 @@ namespace SisoDb.SqlCe4.Dac
             var sql = SqlStatements.GetSql("DeleteById").Inject(
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(sql, new DacParameter("id", structureId)))
-            {
-                cmd.ExecuteNonQuery();
-            }
+            ExecuteNonQuery(sql, new DacParameter("id", structureId));
         }
 
         public override void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
@@ -121,10 +115,7 @@ namespace SisoDb.SqlCe4.Dac
                 structureSchema.GetIndexesTableName(),
                 query.Sql);
 
-            using (var cmd = CreateCommand(sql, query.Parameters.ToArray()))
-            {
-                cmd.ExecuteNonQuery();
-            }
+            ExecuteNonQuery(sql, query.Parameters.ToArray());
         }
 
         public override void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)
@@ -134,10 +125,7 @@ namespace SisoDb.SqlCe4.Dac
             var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
-            {
-                cmd.ExecuteNonQuery();
-            }
+            ExecuteNonQuery(sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo));
         }
 
         public override bool TableExists(string name)
@@ -174,11 +162,13 @@ namespace SisoDb.SqlCe4.Dac
         {
             Ensure.That(entityHash, "entityHash").IsNotNullOrWhiteSpace();
 
-            var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
+            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityHash", entityHash));
 
-            return ExecuteScalar<long>(sql,
+            ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
                 new DacParameter("entityHash", entityHash),
                 new DacParameter("numOfIds", numOfIds));
+
+            return nextId;
         }
 
         public override IEnumerable<string> GetJson(IStructureSchema structureSchema)

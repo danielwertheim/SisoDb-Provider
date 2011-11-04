@@ -274,7 +274,7 @@ namespace SisoDb.Testing.Sql2008
         public int RowCount(string tableName, string where = null)
         {
             where = where ?? "1 = 1";
-            var sql = "select count(*) from dbo.[{0}] where {1};".Inject(tableName, where);
+            var sql = "select count(*) from [{0}] where {1};".Inject(tableName, where);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
         }

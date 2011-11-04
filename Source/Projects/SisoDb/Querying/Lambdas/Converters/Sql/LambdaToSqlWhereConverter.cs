@@ -108,7 +108,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 if (member.Path == StructureSchema.IdMemberName)
                 {
                     session.Sql = session.Sql.Replace(Session.ValueMarker, string.Format("si.[{0}]", StructureSchema.IdMemberName));
-
+                    
                     session.HasWrittenValue = true;
 
                     return;
@@ -116,12 +116,12 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
 
                 if(member.Path == session.PreviousMemberPath)
                     session.Sql = session.Sql.Replace(Session.ValueMarker,
-                        string.Format("(select sub.[{0}] from [dbo].[{1}] sub where sub.[RowId]=si.[RowId])",
+                        string.Format("(select sub.[{0}] from [{1}] sub where sub.[RowId]=si.[RowId])",
                             IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
                             session.StructureSchema.GetIndexesTableName()));
                 else
                     session.Sql = session.Sql.Replace(Session.ValueMarker,
-                    string.Format("(select sub.[{0}] from [dbo].[{1}] sub where sub.[MemberPath]='{2}')",
+                    string.Format("(select sub.[{0}] from [{1}] sub where sub.[MemberPath]='{2}')",
                         IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
                         session.StructureSchema.GetIndexesTableName(),
                         member.Path));
