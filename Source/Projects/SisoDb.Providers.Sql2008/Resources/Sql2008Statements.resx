@@ -200,7 +200,6 @@ delete from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
-
 delete from [dbo].[{0}] where StructureId in(select si.StructureId from [dbo].[{1}] as si where {2});</value>
   </data>
   <data name="DeleteWhereIdIsBetween" xml:space="preserve">
@@ -286,12 +285,12 @@ end</value>
 set nocount on;
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuidIds') is null
 begin
-create type dbo.SisoGuidIds as table (Id uniqueidentifier primary key not null)	
+create type dbo.SisoGuidIds as table (Id uniqueidentifier primary key not null);	
 end
 
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'StructureIdentityIds') is null
 begin
-create type dbo.StructureIdentityIds as table (Id bigint primary key not null)	
+create type dbo.StructureIdentityIds as table (Id bigint primary key not null);	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">

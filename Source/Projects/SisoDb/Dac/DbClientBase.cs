@@ -92,17 +92,19 @@ namespace SisoDb.Dac
             Transaction = Connection.BeginTransaction();
         }
 
-        protected virtual T ExecuteScalar<T>(CommandType commandType, string sql, params IDacParameter[] parameters)
+        public virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
         {
-            using (var cmd = CreateCommand(commandType, sql, parameters))
-            {
-                return cmd.GetScalarResult<T>();
-            }
+            return Connection.CreateCommand(Transaction, CommandType.Text, sql, parameters);
         }
 
-        public IDbCommand CreateCommand(CommandType commandType, string sql, params IDacParameter[] parameters)
+        public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
-            return Connection.CreateCommand(Transaction, commandType, sql, parameters);
+            Connection.ExecuteNonQuery(Transaction, sql, parameters);
+        }
+
+        public virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
+        {
+            return Connection.CreateCommand(Transaction, CommandType.StoredProcedure, sp, parameters);
         }
 
         public abstract IDbBulkCopy GetBulkCopy(bool keepIdentities);
@@ -135,10 +137,17 @@ namespace SisoDb.Dac
 
         public abstract IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
 
-        public virtual void SingleResultSequentialReader(CommandType commandType, string sql,
-            Action<IDataRecord> callback, params IDacParameter[] parameters)
+        protected virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
         {
-            using (var cmd = CreateCommand(commandType, sql, parameters))
+            using (var cmd = CreateCommand(sql, parameters))
+            {
+                return cmd.GetScalarResult<T>();
+            }
+        }
+
+        public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
+        {
+            using (var cmd = CreateCommand(sql, parameters))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {

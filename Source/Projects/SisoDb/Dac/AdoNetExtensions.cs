@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 
 namespace SisoDb.Dac
 {
@@ -58,6 +59,26 @@ namespace SisoDb.Dac
             using(var cmd = connection.CreateCommand(CommandType.Text, sql, parameters))
             {
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        internal static void ExecuteNonQuery(this IDbConnection connection, IDbTransaction transaction, string sql, params IDacParameter[] parameters)
+        {
+            using (var cmd = connection.CreateCommand(transaction, CommandType.Text, sql, parameters))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        internal static void ExecuteNonQuery(this IDbConnection connection, IDbTransaction transaction, string[] sqls, params IDacParameter[] parameters)
+        {
+            using (var cmd = connection.CreateCommand(transaction, CommandType.Text, string.Empty, parameters))
+            {
+                foreach (var sqlStatement in sqls.Where(statement => !string.IsNullOrWhiteSpace(statement))) 
+                {
+                    cmd.CommandText = sqlStatement.Trim();
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 

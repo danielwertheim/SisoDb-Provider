@@ -34,7 +34,7 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("entityHash", structureSchema.Hash)))
+            using (var cmd = CreateCommand(sql, new DacParameter("entityHash", structureSchema.Hash)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -49,7 +49,7 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetIndexesTableName(),
                 structureSchema.GetUniquesTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
+            using (var cmd = CreateCommand(sql))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -62,7 +62,7 @@ namespace SisoDb.Sql2008.Dac
             var sql = SqlStatements.GetSql("DeleteById").Inject(
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("id", structureId)))
+            using (var cmd = CreateCommand(sql, new DacParameter("id", structureId)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -75,7 +75,7 @@ namespace SisoDb.Sql2008.Dac
             var sql = SqlStatements.GetSql("DeleteByIds").Inject(
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
+            using (var cmd = CreateCommand(sql))
             {
                 cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
                 cmd.ExecuteNonQuery();
@@ -91,7 +91,7 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetIndexesTableName(),
                 query.Sql);
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, query.Parameters.ToArray()))
+            using (var cmd = CreateCommand(sql, query.Parameters.ToArray()))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -104,7 +104,7 @@ namespace SisoDb.Sql2008.Dac
             var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
+            using (var cmd = CreateCommand(sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -115,7 +115,7 @@ namespace SisoDb.Sql2008.Dac
             Ensure.That(name, "name").IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("tableName", name));
+            var value = ExecuteScalar<string>(sql, new DacParameter("tableName", name));
 
             return !string.IsNullOrWhiteSpace(value);
         }
@@ -126,7 +126,7 @@ namespace SisoDb.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("RowCount").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<int>(CommandType.Text, sql);
+            return ExecuteScalar<int>(sql);
         }
 
         public override int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query)
@@ -137,7 +137,7 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetIndexesTableName(),
                 query.Sql);
 
-            return ExecuteScalar<int>(CommandType.Text, sql, query.Parameters.ToArray());
+            return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
 
         public override long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
@@ -146,7 +146,7 @@ namespace SisoDb.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
-            return ExecuteScalar<long>(CommandType.Text, sql,
+            return ExecuteScalar<long>(sql,
                 new DacParameter("entityHash", entityHash),
                 new DacParameter("numOfIds", numOfIds));
         }
@@ -157,7 +157,7 @@ namespace SisoDb.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("GetAllById").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
+            using (var cmd = CreateCommand(sql))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
                 {
@@ -176,7 +176,7 @@ namespace SisoDb.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("GetById").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("id", structureId));
+            return ExecuteScalar<string>(sql, new DacParameter("id", structureId));
         }
 
         public override IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
@@ -185,7 +185,7 @@ namespace SisoDb.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
+            using (var cmd = CreateCommand(sql))
             {
                 cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
 
@@ -206,7 +206,7 @@ namespace SisoDb.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
+            using (var cmd = CreateCommand(sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {

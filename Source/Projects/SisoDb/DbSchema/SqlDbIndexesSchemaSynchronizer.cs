@@ -34,7 +34,7 @@ namespace SisoDb.DbSchema
             var sql = _sqlStatements.GetSql("IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
                 .Inject(structureSchema.GetIndexesTableName(), IndexStorageSchema.Fields.MemberPath.Name, inString);
 
-            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
+            using (var cmd = _dbClient.CreateCommand(sql))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -53,7 +53,6 @@ namespace SisoDb.DbSchema
             var dbColumns = new List<string>();
 
             _dbClient.SingleResultSequentialReader(
-                CommandType.Text,
                 _sqlStatements.GetSql("IndexesSchemaSynchronizer_GetKeyNames").Inject(
                     IndexStorageSchema.Fields.MemberPath.Name,
                     structureSchema.GetIndexesTableName()),

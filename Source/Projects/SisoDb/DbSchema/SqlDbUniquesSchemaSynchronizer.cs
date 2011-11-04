@@ -34,7 +34,7 @@ namespace SisoDb.DbSchema
             var sql = _sqlStatements.GetSql("UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
                 .Inject(structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.UqMemberPath.Name, inString);
 
-            using (var cmd = _dbClient.CreateCommand(CommandType.Text, sql))
+            using (var cmd = _dbClient.CreateCommand(sql))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -53,7 +53,6 @@ namespace SisoDb.DbSchema
             var dbColumns = new List<string>();
 
             _dbClient.SingleResultSequentialReader(
-                CommandType.Text,
                 _sqlStatements.GetSql("UniquesSchemaSynchronizer_GetKeyNames").Inject(
                     UniqueStorageSchema.Fields.UqMemberPath.Name,
                     structureSchema.GetUniquesTableName()),

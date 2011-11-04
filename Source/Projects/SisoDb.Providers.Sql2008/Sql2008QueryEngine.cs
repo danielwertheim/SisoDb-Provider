@@ -225,7 +225,7 @@ namespace SisoDb.Sql2008
             else
                 sql = DbClient.SqlStatements.GetSql("GetAll").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = DbClient.CreateCommand(CommandType.Text, sql))
+            using (var cmd = DbClient.CreateCommand(sql))
             {
                 return ConsumeReader(cmd);
             }
@@ -249,7 +249,7 @@ namespace SisoDb.Sql2008
 
             UpsertStructureSet(structureSchema);
 
-            using (var cmd = DbClient.CreateCommand(CommandType.StoredProcedure, query.Name, query.Parameters.ToArray()))
+            using (var cmd = DbClient.CreateSpCommand(query.Name, query.Parameters.ToArray()))
             {
                 return ConsumeReader(cmd);
             }
@@ -317,7 +317,7 @@ namespace SisoDb.Sql2008
             var query = QueryGenerator.GenerateQuery(queryCommand);
             var parameters = query.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
-            using (var cmd = DbClient.CreateCommand(CommandType.Text, query.Sql, parameters))
+            using (var cmd = DbClient.CreateCommand(query.Sql, parameters))
             {
                 return ConsumeReader(cmd);
             }

@@ -16,7 +16,9 @@ namespace SisoDb.Dac
 
         void Flush();
         
-        IDbCommand CreateCommand(CommandType commandType, string sql, params IDacParameter[] parameters);
+        IDbCommand CreateCommand(string sql, params IDacParameter[] parameters);
+        IDbCommand CreateSpCommand(string sql, params IDacParameter[] parameters);
+        void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
         IDbBulkCopy GetBulkCopy(bool keepIdentities);
 
         void Drop(IStructureSchema structureSchema);
@@ -34,6 +36,6 @@ namespace SisoDb.Dac
         IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
 
-        void SingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
+        void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
     }
 }
