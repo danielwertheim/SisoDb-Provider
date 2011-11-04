@@ -107,8 +107,23 @@
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsComplete.cs">
+      <Link>UnitOfWork\InsertsComplete.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsIdBehavior.cs">
       <Link>UnitOfWork\InsertsIdBehavior.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsOfJson.cs">
+      <Link>UnitOfWork\InsertsOfJson.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsOfUniques.cs">
+      <Link>UnitOfWork\InsertsOfUniques.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingBaseClasses.cs">
+      <Link>UnitOfWork\InsertsUsingBaseClasses.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingInterfaces.cs">
+      <Link>UnitOfWork\InsertsUsingInterfaces.cs</Link>
     </Compile>
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="ContextCleanup.cs" />
