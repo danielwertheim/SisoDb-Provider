@@ -89,6 +89,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SqlCe4Exceptions.resx</DependentUpon>
     </Compile>
+    <Compile Include="SqlCe4QueryGenerator.cs" />
+    <Compile Include="SqlCe4UnitOfWork.cs" />
+    <Compile Include="SqlCe4QueryEngine.cs" />
     <Compile Include="SqlCe4ConnectionInfo.cs" />
     <Compile Include="SqlCe4Database.cs" />
     <Compile Include="SqlCe4DbFactory.cs" />

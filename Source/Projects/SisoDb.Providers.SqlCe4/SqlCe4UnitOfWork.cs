@@ -3,11 +3,11 @@ using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Serialization;
 
-namespace SisoDb.Sql2008
+namespace SisoDb.SqlCe4
 {
-    public class Sql2008UnitOfWork : DbUnitOfWork
+    public class SqlCe4UnitOfWork : DbUnitOfWork
     {
-        protected internal Sql2008UnitOfWork(
+        protected internal SqlCe4UnitOfWork(
             ISisoConnectionInfo connectionInfo,
             IDbSchemaManager dbSchemaManager,
             IStructureSchemas structureSchemas,

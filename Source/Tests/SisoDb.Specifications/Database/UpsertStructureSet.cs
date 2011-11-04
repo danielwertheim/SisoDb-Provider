@@ -86,8 +86,7 @@ namespace SisoDb.Specifications.Database
                 () => TestContext.Database.UpsertStructureSet<DroppedColumnModel.MyClass>();
 
             It should_have_dropped_all_indexes_for_dropped_member = 
-                () => TestContext.DbHelper.RowCount(
-                    _structureSchema.GetIndexesTableName(),
+                () => TestContext.DbHelper.RowCount(_structureSchema.GetIndexesTableName(),
                     "[{0}]='IndexableMember1'".Inject(IndexStorageSchema.Fields.MemberPath.Name)).ShouldEqual(0);
 
             private static IStructureSchema _structureSchema;

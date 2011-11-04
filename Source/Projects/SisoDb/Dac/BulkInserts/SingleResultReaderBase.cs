@@ -66,7 +66,7 @@ namespace SisoDb.Dac.BulkInserts
 
         public override object this[int ordinal]
         {
-            get { throw new NotSupportedException(); }
+            get { return GetValue(ordinal); }
         }
 
         public override object this[string name]
@@ -81,7 +81,7 @@ namespace SisoDb.Dac.BulkInserts
 
         public override string GetName(int ordinal)
         {
-            throw new NotSupportedException();
+            return StorageSchema[ordinal].Name;
         }
 
         public override DataTable GetSchemaTable()

@@ -189,6 +189,12 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   <data name="DropTable" xml:space="preserve">
     <value>drop table [{0}];</value>
   </data>
+  <data name="IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
+    <value>delete from [{0}] where [{1}] in({2});</value>
+  </data>
+  <data name="IndexesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
+    <value>select distinct [{0}] from [{1}];</value>
+  </data>
   <data name="Sys_Identities_Create" xml:space="preserve">
     <value>create table [SisoDbIdentities]
 (
@@ -203,5 +209,11 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>select count(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@tableName;</value>
+  </data>
+  <data name="UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
+    <value>delete from [{0}] where [{1}] in({2});</value>
+  </data>
+  <data name="UniquesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
+    <value>select distinct [{0}] from [{1}];</value>
   </data>
 </root>

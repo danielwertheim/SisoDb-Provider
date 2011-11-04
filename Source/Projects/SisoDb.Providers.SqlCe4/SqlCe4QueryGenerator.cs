@@ -1,11 +1,11 @@
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
 
-namespace SisoDb.Sql2008
+namespace SisoDb.SqlCe4
 {
-    public class Sql2008QueryGenerator : DbQueryGenerator
+    public class SqlCe4QueryGenerator : DbQueryGenerator
     {
-        public Sql2008QueryGenerator(
+        public SqlCe4QueryGenerator(
             ILambdaToSqlWhereConverter whereConverter,
             ILambdaToSqlSortingConverter sortingConverter,
             ILambdaToSqlIncludeConverter includeConverter) : base(whereConverter, sortingConverter, includeConverter)

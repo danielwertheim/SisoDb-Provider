@@ -2,11 +2,11 @@
 using SisoDb.DbSchema;
 using SisoDb.Serialization;
 
-namespace SisoDb.Sql2008
+namespace SisoDb.SqlCe4
 {
-    public class Sql2008QueryEngine : DbQueryEngine
+    public class SqlCe4QueryEngine : DbQueryEngine
     {
-        internal Sql2008QueryEngine(
+        internal SqlCe4QueryEngine(
             ISisoConnectionInfo connectionInfo,
             IDbSchemaManager dbSchemaManager,
             IStructureSchemas structureSchemas,
@@ -14,7 +14,7 @@ namespace SisoDb.Sql2008
             : base(connectionInfo, false, dbSchemaManager, structureSchemas, jsonSerializer)
         {}
 
-        protected Sql2008QueryEngine(
+        protected SqlCe4QueryEngine(
             ISisoConnectionInfo connectionInfo,
             bool transactional,
             IDbSchemaManager dbSchemaManager,

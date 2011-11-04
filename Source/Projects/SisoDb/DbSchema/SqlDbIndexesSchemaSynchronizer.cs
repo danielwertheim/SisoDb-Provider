@@ -34,10 +34,7 @@ namespace SisoDb.DbSchema
             var sql = _sqlStatements.GetSql("IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
                 .Inject(structureSchema.GetIndexesTableName(), IndexStorageSchema.Fields.MemberPath.Name, inString);
 
-            using (var cmd = _dbClient.CreateCommand(sql))
-            {
-                cmd.ExecuteNonQuery();
-            }
+            _dbClient.ExecuteNonQuery(sql);
         }
 
         private IList<string> GetKeyNamesToDrop(IStructureSchema structureSchema)

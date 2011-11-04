@@ -5,6 +5,7 @@ using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
+using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.SqlCe4.Dac;
 using SisoDb.Structures;
@@ -57,11 +58,10 @@ namespace SisoDb.SqlCe4
 
         public virtual IDbQueryGenerator GetDbQueryGenerator()
         {
-            throw new NotImplementedException();
-            //return new SqlCe4QueryGenerator(
-            //    new LambdaToSqlWhereConverter(),
-            //    new LambdaToSqlSortingConverter(),
-            //    new LambdaToSqlIncludeConverter());
+            return new SqlCe4QueryGenerator(
+                new LambdaToSqlWhereConverter(),
+                new LambdaToSqlSortingConverter(),
+                new LambdaToSqlIncludeConverter());
         }
 
         public virtual IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class

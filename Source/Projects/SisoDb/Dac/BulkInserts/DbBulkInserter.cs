@@ -20,13 +20,15 @@ namespace SisoDb.Dac.BulkInserts
             var structureStorageSchema = new StructureStorageSchema(structureSchema);
             var indexesStorageSchema = new IndexStorageSchema(structureSchema);
             var uniquesStorageSchema = new UniqueStorageSchema(structureSchema);
-            
+
+            var keepIdentities = structureSchema.IdAccessor.IdType.IsIdentity();
+
             using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
             {
                 using (var indexesReader = new IndexesReader(indexesStorageSchema, structures.SelectMany(s => s.Indexes)))
                 {
-                    InsertStructures(structuresReader);
-                    InsertIndexes(indexesReader);
+                    InsertStructures(structuresReader, keepIdentities);
+                    InsertIndexes(indexesReader, keepIdentities);
 
                     var uniques = structures.SelectMany(s => s.Uniques).ToArray();
                     if (uniques.Length <= 0)
@@ -41,9 +43,9 @@ namespace SisoDb.Dac.BulkInserts
             }
         }
 
-        private void InsertStructures(StructuresReader structures)
+        private void InsertStructures(StructuresReader structures, bool keepIdentities)
         {
-            using (var bulkInserter = _dbClient.GetBulkCopy(true))
+            using (var bulkInserter = _dbClient.GetBulkCopy(keepIdentities))
             {
                 bulkInserter.BatchSize = structures.RecordsAffected;
                 bulkInserter.DestinationTableName = structures.StorageSchema.Name;
@@ -55,9 +57,9 @@ namespace SisoDb.Dac.BulkInserts
             }
         }
 
-        private void InsertIndexes(IndexesReader indexes)
+        private void InsertIndexes(IndexesReader indexes, bool keepIdentities)
         {
-            using (var bulkInserter = _dbClient.GetBulkCopy(true))
+            using (var bulkInserter = _dbClient.GetBulkCopy(keepIdentities))
             {
                 bulkInserter.BatchSize = indexes.RecordsAffected;
                 bulkInserter.DestinationTableName = indexes.StorageSchema.Name;
