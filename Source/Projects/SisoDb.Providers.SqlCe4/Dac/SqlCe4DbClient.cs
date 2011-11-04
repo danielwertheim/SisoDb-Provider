@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlServerCe;
 using System.Linq;
 using EnsureThat;
+using ErikEJ.SqlCe;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
@@ -11,31 +12,51 @@ using SisoDb.Dac;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 
-namespace SisoDb.Sql2008.Dac
+namespace SisoDb.SqlCe4.Dac
 {
-    public class Sql2008DbClient : DbClientBase
+    public class SqlCe4DbClient : DbClientBase
     {
-        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional) 
-            : base(connectionInfo, transactional, () => new SqlConnection(connectionInfo.ConnectionString.PlainString))
+        public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+            : base(connectionInfo, transactional, () => new SqlCeConnection(connectionInfo.ConnectionString.PlainString))
         {
         }
 
         public override IDbBulkCopy GetBulkCopy(bool keepIdentities)
         {
-            var options = keepIdentities ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
+            var options = keepIdentities ? SqlCeBulkCopyOptions.KeepIdentity : SqlCeBulkCopyOptions.None;
 
-            return new Sql2008DbBulkCopy((SqlConnection)Connection, options, (SqlTransaction)Transaction);
+            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, options, (SqlCeTransaction)Transaction);
         }
 
         public override void Drop(IStructureSchema structureSchema)
         {
-            var sql = SqlStatements.GetSql("DropStructureTables").Inject(
-                structureSchema.GetIndexesTableName(),
-                structureSchema.GetUniquesTableName(),
-                structureSchema.GetStructureTableName());
+            var indexesTableExists = TableExists(structureSchema.GetIndexesTableName());
+            var uniquesTableExists = TableExists(structureSchema.GetUniquesTableName());
+            var structureTableExists = TableExists(structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql, new DacParameter("entityHash", structureSchema.Hash)))
+            var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
+            
+            using (var cmd = CreateCommand(CommandType.Text, string.Empty, new DacParameter("entityHash", structureSchema.Hash)))
             {
+                if (indexesTableExists)
+                {
+                    cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetIndexesTableName());
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (uniquesTableExists)
+                {
+                    cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetUniquesTableName());
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (structureTableExists)
+                {
+                    cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetStructureTableName());
+                    cmd.ExecuteNonQuery();
+                }
+
+                cmd.CommandText = SqlStatements.GetSql("DeleteStructureFromSisoDbIdentitiesTable");
                 cmd.ExecuteNonQuery();
             }
         }
@@ -70,16 +91,17 @@ namespace SisoDb.Sql2008.Dac
 
         public override void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
         {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            throw new SisoDbNotSupportedByProviderException(StorageProviders.SqlCe4, "DeleteByIds.");
+            //Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("DeleteByIds").Inject(
-                structureSchema.GetStructureTableName());
+            //var sql = SqlStatements.GetSql("DeleteByIds").Inject(
+            //    structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
-            {
-                cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
-                cmd.ExecuteNonQuery();
-            }
+            //using (var cmd = CreateCommand(CommandType.Text, sql))
+            //{
+            //    cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
+            //    cmd.ExecuteNonQuery();
+            //}
         }
 
         public override void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema)
@@ -115,9 +137,9 @@ namespace SisoDb.Sql2008.Dac
             Ensure.That(name, "name").IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<string>(CommandType.Text, sql, new DacParameter("tableName", name));
+            var value = ExecuteScalar<int>(CommandType.Text, sql, new DacParameter("tableName", name));
 
-            return !string.IsNullOrWhiteSpace(value);
+            return value > 0;
         }
 
         public override int RowCount(IStructureSchema structureSchema)
@@ -181,23 +203,24 @@ namespace SisoDb.Sql2008.Dac
 
         public override IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
         {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            throw new SisoDbNotSupportedByProviderException(StorageProviders.SqlCe4, "GetJsonByIds.");
+            //Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName());
+            //var sql = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(CommandType.Text, sql))
-            {
-                cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
+            //using (var cmd = CreateCommand(CommandType.Text, sql))
+            //{
+            //    cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
 
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetString(0);
-                    }
-                    reader.Close();
-                }
-            }
+            //    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+            //    {
+            //        while (reader.Read())
+            //        {
+            //            yield return reader.GetString(0);
+            //        }
+            //        reader.Close();
+            //    }
+            //}
         }
 
         public override IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)

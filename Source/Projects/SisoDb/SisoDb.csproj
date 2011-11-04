@@ -93,6 +93,7 @@
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
+    <Compile Include="Dac\DbClientBase.cs" />
     <Compile Include="DbQueryExtensionPoint.cs" />
     <Compile Include="DbExtensionsPoints.cs" />
     <Compile Include="DbQueryExtensions.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="DbUnitOfWorkExtensions.cs" />
     <Compile Include="SisoDatabase.cs" />
+    <Compile Include="SisoDbNotSupportedByProviderException.cs" />
     <Compile Include="Structures\StructureSchemaExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />

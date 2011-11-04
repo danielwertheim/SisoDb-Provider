@@ -68,6 +68,9 @@
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
+      <Link>Database\UpsertStructureSet.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
     </Compile>

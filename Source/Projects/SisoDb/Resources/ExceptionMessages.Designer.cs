@@ -305,6 +305,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provider: &apos;{0}&apos; does not support operation: {1}..
+        /// </summary>
+        public static string SisoDbNotSupportedByProviderException {
+            get {
+                return ResourceManager.GetString("SisoDbNotSupportedByProviderException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The only supported methods for marking sortings are Asc() and Desc()..
         /// </summary>
         public static string SortingParser_UnsupportedMethodForSortingDirection {

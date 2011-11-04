@@ -27,8 +27,7 @@ namespace SisoDb.SqlCe4
 
         public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
-            throw new NotImplementedException();
-            //return new SqlCe4DbClient(connectionInfo, transactional);
+            return new SqlCe4DbClient(connectionInfo, transactional);
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()
