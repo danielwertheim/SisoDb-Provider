@@ -104,8 +104,47 @@
     <Compile Include="..\SisoDb.Specifications\Model\QueryXItem.cs">
       <Link>Model\QueryXItem.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Count.cs">
+      <Link>QueryEngine\Count.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetAll.cs">
+      <Link>QueryEngine\GetAll.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
+      <Link>QueryEngine\GetById.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIdInterval.cs">
+      <Link>QueryEngine\GetByIdInterval.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Includes.cs">
+      <Link>QueryEngine\Includes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Query.cs">
+      <Link>QueryEngine\Query.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxEnumerableExtensions\QxAny.cs">
+      <Link>QueryEngine\QxEnumerableExtensions\QxAny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxContains.cs">
+      <Link>QueryEngine\QxStringExtensions\QxContains.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxEndsWith.cs">
+      <Link>QueryEngine\QxStringExtensions\QxEndsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxLike.cs">
+      <Link>QueryEngine\QxStringExtensions\QxLike.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxStartsWith.cs">
+      <Link>QueryEngine\QxStringExtensions\QxStartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Where.cs">
+      <Link>QueryEngine\Where.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Deletes.cs">
+      <Link>UnitOfWork\Deletes.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsComplete.cs">
       <Link>UnitOfWork\InsertsComplete.cs</Link>
@@ -124,6 +163,15 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingInterfaces.cs">
       <Link>UnitOfWork\InsertsUsingInterfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries.cs">
+      <Link>UnitOfWork\Queries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
+      <Link>UnitOfWork\TransactionScopes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Updates.cs">
+      <Link>UnitOfWork\Updates.cs</Link>
     </Compile>
     <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="ContextCleanup.cs" />
