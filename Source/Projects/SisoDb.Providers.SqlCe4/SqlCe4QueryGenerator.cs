@@ -16,48 +16,25 @@ namespace SisoDb.SqlCe4
         {
         }
 
-        protected override SqlQuery CreateSqlCommandInfoForPaging(IQueryCommand queryCommand, IList<SqlInclude> includes, SqlWhere whereSql, SqlSorting sortingSql)
+        protected override SqlQuery CreateSqlCommandInfoForPaging(IQueryCommand queryCommand, IList<SqlInclude> includes, SqlWhere whereSql, IList<SqlSorting> sortings)
         {
             var offsetRows = (queryCommand.Paging.PageIndex * queryCommand.Paging.PageSize);
             var takeRows = queryCommand.Paging.PageSize;
 
-            var sql = string.Format("select {0}s.Json{1} from [{2}] as s inner join [{3}] as si on si.[StructureId] = s.[StructureId]{4}{5} group by s.[StructureId], s.[Json]{6}{7};",
-                GenerateTakeString(queryCommand),
-                SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
+            var sql = string.Format("select s.structureid, min(s.Json) Json{0} from [{1}] as s inner join [{2}] as si on si.[StructureId] = s.[StructureId] {3} group by s.[StructureId] order by {4} offset {5} rows fetch next {6} rows only",
+                SqlSorting.ToColumnDefinitionString(sortings, "min({0})".PrependWith(", ")),
                 queryCommand.StructureSchema.GetStructureTableName(),
                 queryCommand.StructureSchema.GetIndexesTableName(),
-                SqlInclude.ToJoinString(includes).PrependWith(" "),
-                whereSql.Sql,
-                sortingSql.Sorting,
-                " OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY".Inject(offsetRows, takeRows));
+                whereSql.Sql.PrependWith("where "),
+                SqlSorting.ToAliasAndDirectionString(sortings),
+                offsetRows,
+                takeRows);
+                
+            var outerSql = string.Format("select rs.json{0} from ({1}) rs;",
+                SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
+                sql);
 
-            return new SqlQuery(sql, whereSql.Parameters);
-
-            //const string sqlFormat = "with pagedRs as ({0}){1};";
-
-            //var innerSelect = string.Format("select {0}s.Json{1},row_number() over ({2}) RowNum from [{3}] as s inner join [{4}] as si on si.[StructureId] = s.[StructureId]{5}{6} group by s.[StructureId], s.[Json]",
-            //    GenerateTakeString(queryCommand),
-            //    SqlInclude.ToColumnDefinitionString(includes).PrependWith(","),
-            //    sortingSql.Sorting,
-            //    queryCommand.StructureSchema.GetStructureTableName(),
-            //    queryCommand.StructureSchema.GetIndexesTableName(),
-            //    SqlInclude.ToJoinString(includes).PrependWith(" "),
-            //    whereSql.Sql);
-
-            //var outerSelect = string.Format("select Json{0} from pagedRs where RowNum between @pagingFrom and @pagingTo",
-            //    SqlInclude.ToColumnDefinitionString(includes).PrependWith(","));
-
-            //var sql = string.Format(sqlFormat, innerSelect, outerSelect);
-
-            //var takeFromRowNum = (queryCommand.Paging.PageIndex * queryCommand.Paging.PageSize) + 1;
-            //var takeToRowNum = (takeFromRowNum + queryCommand.Paging.PageSize) - 1;
-            //var queryParams = new List<IDacParameter>(whereSql.Parameters)
-            //{
-            //    new DacParameter("@pagingFrom", takeFromRowNum),
-            //    new DacParameter("@pagingTo", takeToRowNum)
-            //};
-
-            //return new SqlQuery(sql, queryParams);
+            return new SqlQuery(outerSql, whereSql.Parameters);
         }
     }
 }

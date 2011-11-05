@@ -12,13 +12,17 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
     {
         public IList<SqlInclude> Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
-            var sqlIncludes = new List<SqlInclude>();
+            var includes = new List<SqlInclude>();
+
+            if (lambda == null || lambda.Nodes.Count == 0)
+                return includes;
+
             const string jsonColumnDefinitionFormat = "min(cs{0}.{1}) as [{2}]";
             const string joinFormat = "left join [{0}] as cs{1} on cs{1}.[{2}] = si.[{3}] and si.[{4}]='{5}'";
 
             foreach (var includeNode in lambda.Nodes.Cast<IncludeNode>())
             {
-                var includeCount = sqlIncludes.Count;
+                var includeCount = includes.Count;
                 var parentMemberPath = includeNode.IdReferencePath;
 
                 var jsonColumnDefinition = jsonColumnDefinitionFormat.Inject(
@@ -34,10 +38,10 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                     IndexStorageSchema.Fields.MemberPath.Name,
                     parentMemberPath);
                 
-                sqlIncludes.Add(new SqlInclude(jsonColumnDefinition, join));
+                includes.Add(new SqlInclude(jsonColumnDefinition, join));
             }
 
-            return sqlIncludes;
+            return includes;
         }
     }
 }

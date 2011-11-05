@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using EnsureThat;
 using NCore;
 using PineCone.Structures.Schemas;
@@ -12,51 +11,51 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
 {
     public class LambdaToSqlSortingConverter : ILambdaToSqlSortingConverter
     {
-        private class Session
-        {
-            public readonly List<string> SortingParts = new List<string>();
-            
-            public string GetSortingPartsString()
-            {
-                return string.Join(", ", SortingParts);
-            }
-        }
-
-        public SqlSorting Convert(IStructureSchema structureSchema, IParsedLambda lambda)
+        public IList<SqlSorting> Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
-            Ensure.That(lambda, "lambda").IsNotNull();
+            
+            var sortings = new List<SqlSorting>();
 
-            var session = new Session();
+            if (lambda == null || lambda.Nodes.Count == 0)
+            {
+                sortings.Add(CreateDefaultStructureIdSorting(sortings.Count, SortDirections.Asc));
+
+                return sortings;
+            }
 
             foreach (var node in lambda.Nodes)
             {
-                if (node is SortingNode)
+                if(!(node is SortingNode))
+                    throw new SisoDbException(ExceptionMessages.ParsedSortingLambdaSqlProcessor_NotSupportedNodeType.Inject(node.GetType().Name));
+
+                var sortingNode = (SortingNode)node;
+
+                var isStructureIdMember = (sortingNode.MemberPath == StructureStorageSchema.Fields.Id.Name);
+                if(isStructureIdMember)
                 {
-                    Add(session, (SortingNode)node);
+                    sortings.Add(CreateDefaultStructureIdSorting(sortings.Count, sortingNode.Direction));
                     continue;
                 }
 
-                throw new NotSupportedException(
-                    ExceptionMessages.ParsedSortingLambdaSqlProcessor_NotSupportedNodeType.Inject(node.GetType().Name));
+                var valueField = IndexStorageSchema.GetValueSchemaFieldForType(sortingNode.MemberType);
+                sortings.Add(new SqlSorting(
+                    "si.[{0}]".Inject(valueField.Name),
+                    "[{0}]".Inject(valueField.Name),
+                    "sort{0}".Inject(sortings.Count),
+                    sortingNode.Direction.ToString()));
             }
 
-            if(session.SortingParts.Count == 0)
-                return SqlSorting.Empty();
-
-            return new SqlSorting(session.GetSortingPartsString());
+            return sortings;
         }
 
-        private static void Add(Session session, SortingNode sortingNode)
+        private static SqlSorting CreateDefaultStructureIdSorting(int sortingsCount, SortDirections sortDirection)
         {
-            if(sortingNode.MemberPath == StructureStorageSchema.Fields.Id.Name)
-            {
-                session.SortingParts.Add(string.Format("s.[{0}] {1}", sortingNode.MemberPath, sortingNode.Direction));
-                return;
-            }
-
-            session.SortingParts.Add(string.Format(
-                "min(si.[{0}]) {1}", IndexStorageSchema.GetValueSchemaFieldForType(sortingNode.MemberType).Name, sortingNode.Direction));
+            return new SqlSorting(
+                "s.[{0}]".Inject(StructureStorageSchema.Fields.Id.Name),
+                "[{0}]".Inject(StructureStorageSchema.Fields.Id.Name),
+                "sort{0}".Inject(sortingsCount),
+                sortDirection.ToString());
         }
     }
 }

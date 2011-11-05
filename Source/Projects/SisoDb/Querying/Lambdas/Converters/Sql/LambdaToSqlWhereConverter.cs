@@ -53,7 +53,9 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
         public SqlWhere Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
-            Ensure.That(lambda, "lambda").IsNotNull();
+
+            if (lambda == null)
+                return SqlWhere.Empty();
 
             var session = new Session(structureSchema);
 
