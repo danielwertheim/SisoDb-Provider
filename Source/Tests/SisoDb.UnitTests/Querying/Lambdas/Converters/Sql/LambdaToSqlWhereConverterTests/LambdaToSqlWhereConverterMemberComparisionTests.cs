@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.UnitTests.TestFactories;
 
@@ -15,7 +16,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = (select sub.[IntegerValue] from [TempIndexes] sub where sub.[MemberPath]='Int2'))", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = (select sub.[IntegerValue] from [TempIndexes] sub where sub.[MemberPath]='Int2'))", query.Single().CriteriaString);
         }
 
         [Test]
@@ -26,7 +27,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub(), parsedLambda);
 
-            Assert.AreEqual(0, query.Parameters.Count);
+            Assert.AreEqual(0, query.SelectMany(w => w.Parameters).Count());
         }
     }
 }

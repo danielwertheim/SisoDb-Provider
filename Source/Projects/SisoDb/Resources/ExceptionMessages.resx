@@ -205,8 +205,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="GetCommand_SortingsAllreadyInitialized" xml:space="preserve">
     <value>The Sortings has allready been initialized.</value>
   </data>
-  <data name="SqlQueryGenerator_GenerateWhere" xml:space="preserve">
-    <value>A where clause can not be generated if the query command doesn't contain any where criterias.</value>
+  <data name="DbQueryGenerator_GenerateWhere" xml:space="preserve">
+    <value>A where clause can not be generated if the query command doesn't contain any where criterias and it should only contain a where clause. No sortings, paging etc.</value>
   </data>
   <data name="LambdaParser_VisitUnary_InvalidConvert" xml:space="preserve">
     <value>Conversion of values in expression is only allowed for nullable valuetypes.</value>

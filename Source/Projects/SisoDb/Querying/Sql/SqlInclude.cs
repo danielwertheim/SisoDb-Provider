@@ -9,7 +9,7 @@ namespace SisoDb.Querying.Sql
     public class SqlInclude
     {
         private readonly string _jsonOutputDefinition;
-        private readonly string _join;
+        private readonly string _joinString;
         private readonly bool _isEmpty;
 
         public virtual string JsonOutputDefinition
@@ -17,9 +17,9 @@ namespace SisoDb.Querying.Sql
             get { return _jsonOutputDefinition; }
         }
 
-        public virtual string Join
+        public virtual string JoinString
         {
-            get { return _join; }
+            get { return _joinString; }
         }
 
         public virtual bool IsEmpty
@@ -27,21 +27,21 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlInclude(string jsonOutputDefinition, string @join)
+        public SqlInclude(string jsonOutputDefinition, string joinString)
         {
             Ensure.That(jsonOutputDefinition, "jsonOutputDefinition").IsNotNullOrWhiteSpace();
-            Ensure.That(@join, "join").IsNotNullOrWhiteSpace();
+            Ensure.That(joinString, "JoinString").IsNotNullOrWhiteSpace();
 
             _isEmpty = false;
             _jsonOutputDefinition = jsonOutputDefinition;
-            _join = @join;
+            _joinString = joinString;
         }
 
         protected SqlInclude()
         {
             _isEmpty = true;
             _jsonOutputDefinition = string.Empty;
-            _join = string.Empty;
+            _joinString = string.Empty;
         }
 
         public static SqlInclude Empty()
@@ -56,7 +56,7 @@ namespace SisoDb.Querying.Sql
 
         public static string ToJoinString(IEnumerable<SqlInclude> includes)
         {
-            return string.Join(" ", includes.Select(inc => inc.Join));
+            return string.Join(" ", includes.Select(inc => inc.JoinString));
         }
     }
 }

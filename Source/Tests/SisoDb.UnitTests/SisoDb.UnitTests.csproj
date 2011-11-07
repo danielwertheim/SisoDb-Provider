@@ -114,16 +114,7 @@
     <Compile Include="Querying\Lambdas\Parsers\WhereParserQxAnyTests.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlIncludeConverterTests\LambdaToSqlIncludeConverterTestBase.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlIncludeConverterTests\LambdaToSqlIncludeConverterTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTestBase.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterCombinedTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterEnumerableQueryExtensionsTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterFunctionInvocationTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterHierarchyTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterMemberComparisionTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterTestBase.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterCommonDataTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querying\Sql\SqlQueryGeneratorTests.cs" />
     <Compile Include="Querying\PagingTests.cs" />

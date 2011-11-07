@@ -11,20 +11,26 @@ namespace SisoDb.Querying.Sql
     {
         private readonly static string StructureIdColumnName = string.Format("[{0}]", StructureStorageSchema.Fields.Id.Name);
 
+        private readonly string _memberPath;
         private readonly string _sorting;
-        private readonly string _columnName;
+        private readonly string _indexStorageColumnName;
         private readonly string _alias;
         private readonly string _direction;
         private readonly bool _isEmpty;
         
+        public string MemberPath
+        {
+            get { return _memberPath; }
+        }
+
         public virtual string Sorting
         {
             get { return _sorting; }
         }
 
-        public virtual string ColumnName
+        public virtual string IndexStorageColumnName
         {
-            get { return _columnName; }
+            get { return _indexStorageColumnName; }
         }
 
         public virtual string Alias
@@ -42,16 +48,19 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlSorting(string sorting, string columnName, string alias, string direction)
+        public SqlSorting(string memberPath, string sorting, string indexStorageColumnName, string alias, string direction)
         {
+            Ensure.That(memberPath, "memberPath").IsNotNullOrWhiteSpace();
             Ensure.That(sorting, "sorting").IsNotNullOrWhiteSpace();
-            Ensure.That(columnName, "columnName").IsNotNullOrWhiteSpace();
+            Ensure.That(indexStorageColumnName, "indexStorageColumnName").IsNotNullOrWhiteSpace();
             Ensure.That(alias, "alias").IsNotNullOrWhiteSpace();
             Ensure.That(direction, "direction").IsNotNullOrWhiteSpace();
 
             _isEmpty = false;
+
+            _memberPath = memberPath;
             _sorting = sorting;
-            _columnName = columnName;
+            _indexStorageColumnName = indexStorageColumnName;
             _alias = alias;
             _direction = direction;
         }
@@ -59,8 +68,9 @@ namespace SisoDb.Querying.Sql
         protected SqlSorting()
         {
             _isEmpty = true;
+            _memberPath = string.Empty;
             _sorting = string.Empty;
-            _columnName = string.Empty;
+            _indexStorageColumnName = string.Empty;
             _alias = string.Empty;
             _direction = string.Empty;
         }
@@ -76,7 +86,7 @@ namespace SisoDb.Querying.Sql
 
             foreach(var sorting in sortings)
             {
-                if(sorting.ColumnName == StructureIdColumnName)
+                if(sorting.IndexStorageColumnName == StructureIdColumnName)
                     transformedSortings.Add(string.Format("{0} {1}", sorting.Sorting, sorting.Alias));
                 else
                     transformedSortings.Add(string.Format("{0} {1}", string.Format(decorateSortingWith, sorting.Sorting), sorting.Alias));
@@ -91,7 +101,7 @@ namespace SisoDb.Querying.Sql
 
             foreach (var sorting in sortings)
             {
-                if (sorting.ColumnName == StructureIdColumnName)
+                if (sorting.IndexStorageColumnName == StructureIdColumnName)
                     transformedSortings.Add(string.Format("{0} {1}", sorting.Sorting, sorting.Direction));
                 else
                     transformedSortings.Add(string.Format("{0} {1}", string.Format(decorateSortingWith, sorting.Sorting), sorting.Direction));
@@ -105,6 +115,14 @@ namespace SisoDb.Querying.Sql
             var transformedSortings = sortings.Select(s => string.Format("{0} {1}", s.Alias, s.Direction));
 
             return string.Join(", ", transformedSortings);
+        }
+
+        public static string ToMemberPathString(IEnumerable<SqlSorting> sortings, string decorateSortingWith = null)
+        {
+            if (string.IsNullOrWhiteSpace(decorateSortingWith))
+                return string.Join(", ", sortings.Select(s => s.MemberPath));
+
+            return string.Join(", ", sortings.Select(s => string.Format(decorateSortingWith, s.MemberPath)));
         }
     }
 }

@@ -40,6 +40,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
 
                 var valueField = IndexStorageSchema.GetValueSchemaFieldForType(sortingNode.MemberType);
                 sortings.Add(new SqlSorting(
+                    sortingNode.MemberPath,
                     "si.[{0}]".Inject(valueField.Name),
                     "[{0}]".Inject(valueField.Name),
                     "sort{0}".Inject(sortings.Count),
@@ -52,6 +53,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
         private static SqlSorting CreateDefaultStructureIdSorting(int sortingsCount, SortDirections sortDirection)
         {
             return new SqlSorting(
+                "StructureStorageSchema.Fields.Id.Name",
                 "s.[{0}]".Inject(StructureStorageSchema.Fields.Id.Name),
                 "[{0}]".Inject(StructureStorageSchema.Fields.Id.Name),
                 "sort{0}".Inject(sortingsCount),

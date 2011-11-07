@@ -50,12 +50,14 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
             }
         }
 
-        public SqlWhere Convert(IStructureSchema structureSchema, IParsedLambda lambda)
+        public IList<SqlWhere> Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
+            var wheres = new List<SqlWhere>();
+
             if (lambda == null)
-                return SqlWhere.Empty();
+                return wheres;
 
             var session = new Session(structureSchema);
 
@@ -75,7 +77,8 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 session.Flush();
             }
 
-            return session.Sql.Length > 0 ? new SqlWhere(session.Sql.ToString(), session.Params) : SqlWhere.Empty(); 
+            return wheres;
+            //return session.Sql.Length > 0 ? new SqlWhere(session.Sql.ToString(), session.Params) : SqlWhere.Empty(); 
         }
 
         private static void AddMember(Session session, MemberNode member)

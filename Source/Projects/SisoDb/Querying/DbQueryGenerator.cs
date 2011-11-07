@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EnsureThat;
 using NCore;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Sql;
@@ -14,9 +14,9 @@ namespace SisoDb.Querying
 {
     public abstract class DbQueryGenerator : IDbQueryGenerator
     {
-        private readonly ILambdaToSqlWhereConverter _whereConverter;
-        private readonly ILambdaToSqlSortingConverter _sortingConverter;
-        private readonly ILambdaToSqlIncludeConverter _includeConverter;
+        protected readonly ILambdaToSqlWhereConverter WhereConverter;
+        protected readonly ILambdaToSqlSortingConverter SortingConverter;
+        protected readonly ILambdaToSqlIncludeConverter IncludeConverter;
 
         protected DbQueryGenerator(
             ILambdaToSqlWhereConverter whereConverter,
@@ -27,72 +27,75 @@ namespace SisoDb.Querying
             Ensure.That(sortingConverter, "sortingConverter").IsNotNull();
             Ensure.That(includeConverter, "includeConverter").IsNotNull();
 
-            _whereConverter = whereConverter;
-            _sortingConverter = sortingConverter;
-            _includeConverter = includeConverter;
+            WhereConverter = whereConverter;
+            SortingConverter = sortingConverter;
+            IncludeConverter = includeConverter;
         }
 
         public SqlQuery GenerateQuery(IQueryCommand queryCommand)
         {
             Ensure.That(queryCommand, "queryCommand").IsNotNull();
 
-            var includes = GenerateIncludes(queryCommand);
-            var whereSql = _whereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
-            var sortings = _sortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
-
             return queryCommand.HasPaging
-                ? CreateSqlCommandInfoForPaging(queryCommand, includes, whereSql, sortings)
-                : CreateSqlCommandInfo(queryCommand, includes, whereSql, sortings);
+                ? CreateSqlCommandInfoForPaging(queryCommand)
+                : CreateSqlCommandInfo(queryCommand);
         }
 
         public SqlQuery GenerateWhereQuery(IQueryCommand queryCommand)
         {
             Ensure.That(queryCommand, "queryCommand").IsNotNull();
 
-            if (!queryCommand.HasWhere)
-                throw new ArgumentException(ExceptionMessages.SqlQueryGenerator_GenerateWhere);
+            if (!queryCommand.HasWhere || (queryCommand.HasIncludes || queryCommand.HasSortings || queryCommand.HasPaging || queryCommand.HasTakeNumOfStructures))
+                throw new ArgumentException(ExceptionMessages.DbQueryGenerator_GenerateWhere);
 
-            var where = _whereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
-            var queryParameters = where.Parameters;
-
-            return new SqlQuery(where.Sql, queryParameters);
+            return CreateSqlCommandInfo(queryCommand);
         }
 
-        protected virtual SqlQuery CreateSqlCommandInfo(IQueryCommand queryCommand, IList<SqlInclude> includes, SqlWhere whereSql, IList<SqlSorting> sortings)
+        protected virtual SqlQuery CreateSqlCommandInfo(IQueryCommand queryCommand)
         {
-            var sql = string.Format("select {0}s.Json{1} from [{2}] as s inner join [{3}] as si on si.[StructureId] = s.[StructureId]{4}{5} group by s.[StructureId], s.[Json] order by {6};",
+            var includes = GenerateIncludes(queryCommand);
+            var wheres = WhereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
+            var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
+
+            var sql = string.Format(
+                "select {0}s.Json{1} from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}group by s.[StructureId], s.Json{1}{7};",
                 GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
-                queryCommand.StructureSchema.GetStructureTableName(), 
-                queryCommand.StructureSchema.GetIndexesTableName(),
-                SqlInclude.ToJoinString(includes).PrependWith(" "),
-                whereSql.Sql.PrependWith(" where "),
-                SqlSorting.ToSortingString(sortings, "min({0})"));
-
-            return new SqlQuery(sql, whereSql.Parameters);
-        }
-
-        protected virtual SqlQuery CreateSqlCommandInfoForPaging(IQueryCommand queryCommand, IList<SqlInclude> includes, SqlWhere whereSql, IList<SqlSorting> sortings)
-        {
-            const string sqlFormat = "with pagedRs as ({0}){1};";
-
-            var innerSelect = string.Format("select {0}s.Json{1}, row_number() over (order by {2}) RowNum from [{3}] as s inner join [{4}] as si on si.[StructureId] = s.[StructureId]{5}{6} group by s.[StructureId], s.[Json]",
-                GenerateTakeString(queryCommand).AppendWith(" "),
-                SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
-                SqlSorting.ToSortingString(sortings, "min({0})"),
                 queryCommand.StructureSchema.GetStructureTableName(),
-                queryCommand.StructureSchema.GetIndexesTableName(),
+                SqlWhere.ToJoinString(wheres).PrependWith(" "),
                 SqlInclude.ToJoinString(includes).PrependWith(" "),
-                whereSql.Sql.PrependWith(" where "));
+                queryCommand.StructureSchema.GetIndexesTableName(),
+                GenerateMemberPathsStringForJoin(wheres, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
+                SqlSorting.ToSortingString(sortings, "min({0})").PrependWith(" order by "));
 
-            var outerSelect = string.Format("select pagedRs.Json{0} from pagedRs where pagedRs.RowNum between @pagingFrom and @pagingTo", 
+            return new SqlQuery(sql, wheres.SelectMany(w => w.Parameters).ToArray());
+        }
+
+        protected virtual SqlQuery CreateSqlCommandInfoForPaging(IQueryCommand queryCommand)
+        {
+            var includes = GenerateIncludes(queryCommand);
+            var wheres = WhereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
+            var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
+
+            var innerSelect = string.Format(
+                "select {0}s.Json{1}, row_number() over (order by {7}) as RowNum from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}group by s.[StructureId], s.Json{1}",
+                GenerateTakeString(queryCommand).AppendWith(" "),
+                SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
+                queryCommand.StructureSchema.GetStructureTableName(),
+                SqlWhere.ToJoinString(wheres).PrependWith(" "),
+                SqlInclude.ToJoinString(includes).PrependWith(" "),
+                queryCommand.StructureSchema.GetIndexesTableName(),
+                GenerateMemberPathsStringForJoin(wheres, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
+                queryCommand.HasSortings ? SqlSorting.ToSortingString(sortings, "min({0})") : "s.[StructureId]");
+
+            var sql = string.Format("with pagedRs as ({0}) pagedRs select {1}pagedRs.Json{2} from pagedRs where pagedRs.RowNum between @pagingFrom and @pagingTo;",
+                innerSelect,
+                GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "));
-            
-            var sql = string.Format(sqlFormat, innerSelect, outerSelect);
 
             var takeFromRowNum = (queryCommand.Paging.PageIndex * queryCommand.Paging.PageSize) + 1;
             var takeToRowNum = (takeFromRowNum + queryCommand.Paging.PageSize) - 1;
-            var queryParams = new List<IDacParameter>(whereSql.Parameters)
+            var queryParams = new List<IDacParameter>(wheres.SelectMany(w => w.Parameters).ToArray())
             {
                 new DacParameter("@pagingFrom", takeFromRowNum),
                 new DacParameter("@pagingTo", takeToRowNum)
@@ -109,7 +112,16 @@ namespace SisoDb.Querying
             return string.Format("top({0})", queryCommand.TakeNumOfStructures);
         }
 
-        private IList<SqlInclude> GenerateIncludes(IQueryCommand queryCommand)
+        protected virtual string GenerateMemberPathsStringForJoin(IEnumerable<SqlWhere> wheres, IEnumerable<SqlSorting> sortings)
+        {
+            return string.Join(",", new[]
+            {
+                SqlWhere.ToMemberPathString(wheres, "'{0}'"),
+                SqlSorting.ToMemberPathString(sortings, "'{0}'")
+            });
+        }
+
+        protected virtual IList<SqlInclude> GenerateIncludes(IQueryCommand queryCommand)
         {
             if (!queryCommand.HasIncludes)
                 return new List<SqlInclude>();
@@ -123,7 +135,7 @@ namespace SisoDb.Querying
                     mergedIncludes = mergedIncludes.MergeAsNew(include);
             }
 
-            return _includeConverter.Convert(queryCommand.StructureSchema, mergedIncludes);
+            return IncludeConverter.Convert(queryCommand.StructureSchema, mergedIncludes);
         }
     }
 }

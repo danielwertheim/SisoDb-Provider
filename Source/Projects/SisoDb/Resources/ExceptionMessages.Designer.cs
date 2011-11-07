@@ -142,6 +142,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A where clause can not be generated if the query command doesn&apos;t contain any where criterias and it should only contain a where clause. No sortings, paging etc..
+        /// </summary>
+        public static string DbQueryGenerator_GenerateWhere {
+            get {
+                return ResourceManager.GetString("DbQueryGenerator_GenerateWhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Direct memberaccess of node: &apos;{0}&apos;; with with membertype: &apos;{1}&apos;; is not supported!.
         /// </summary>
         public static string ExpressionEvaluator_EvaluateMemberExpression_NotSupported {
@@ -337,15 +346,6 @@ namespace SisoDb.Resources {
         public static string SqlDbClient_Flus_NonTransactional {
             get {
                 return ResourceManager.GetString("SqlDbClient_Flus_NonTransactional", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A where clause can not be generated if the query command doesn&apos;t contain any where criterias..
-        /// </summary>
-        public static string SqlQueryGenerator_GenerateWhere {
-            get {
-                return ResourceManager.GetString("SqlQueryGenerator_GenerateWhere", resourceCulture);
             }
         }
         
