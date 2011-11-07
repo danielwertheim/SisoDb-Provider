@@ -1,4 +1,3 @@
-using System.Linq;
 using NCore;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
@@ -19,22 +18,23 @@ namespace SisoDb.SqlCe4
         protected override SqlQuery CreateSqlCommandInfo(IQueryCommand queryCommand)
         {
             var includes = GenerateIncludes(queryCommand);
-            var wheres = WhereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
+            var where = WhereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
 
             var sql = string.Format(
-                "select {0}s.Json{1}{2} from [{3}] s{4}{5} inner join [{6}] si on si.[StructureId] = s.[StructureId]{7}group by s.[StructureId], s.Json{2}{8};",
+                "select {0}s.Json{1}{2} from [{3}] s{4}{5} inner join [{6}] si on si.[StructureId] = s.[StructureId]{7}{8} group by s.[StructureId], s.Json{2}{9};",
                 GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
                 SqlSorting.ToColumnDefinitionString(sortings, "min({0})").PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),
-                SqlWhere.ToJoinString(wheres).PrependWith(" "),
+                GenerateWhereJoinsString(queryCommand, where).PrependWith(" "),
                 SqlInclude.ToJoinString(includes).PrependWith(" "),
                 queryCommand.StructureSchema.GetIndexesTableName(),
-                GenerateMemberPathsStringForJoin(wheres, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
+                GenerateMemberPathsStringForJoin(where, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
+                where.CriteriaString.PrependWith(" where "),
                 SqlSorting.ToAliasAndDirectionString(sortings).PrependWith(" order by "));
 
-            return new SqlQuery(sql, wheres.SelectMany(w => w.Parameters).ToArray());
+            return new SqlQuery(sql, where.Parameters);
         }
 
         protected override SqlQuery CreateSqlCommandInfoForPaging(IQueryCommand queryCommand)
@@ -42,25 +42,26 @@ namespace SisoDb.SqlCe4
             //TODO: Turn paging vars to parameters
 
             var includes = GenerateIncludes(queryCommand);
-            var wheres = WhereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
+            var where = WhereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
 
             var offsetRows = (queryCommand.Paging.PageIndex * queryCommand.Paging.PageSize);
             
             var sql = string.Format(
-                "select s.Json{0}{1} from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}group by s.[StructureId], s.Json{1} order by {7} offset {8} rows{9};",
+                "select s.Json{0}{1} from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{7} group by s.[StructureId], s.Json{1} order by {8} offset {9} rows{10};",
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
                 SqlSorting.ToColumnDefinitionString(sortings, "min({0})").PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),
-                SqlWhere.ToJoinString(wheres).PrependWith(" "),
+                GenerateWhereJoinsString(queryCommand, where).PrependWith(" "),
                 SqlInclude.ToJoinString(includes).PrependWith(" "),
                 queryCommand.StructureSchema.GetIndexesTableName(),
-                GenerateMemberPathsStringForJoin(wheres, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
+                GenerateMemberPathsStringForJoin(where, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
+                where.CriteriaString.PrependWith(" where "),
                 queryCommand.HasSortings ? SqlSorting.ToAliasAndDirectionString(sortings) : "s.[StructureId]",
                 offsetRows,
                 GenerateFetchString(queryCommand).AppendWith(" "));
 
-            return new SqlQuery(sql, wheres.SelectMany(w => w.Parameters).ToArray());
+            return new SqlQuery(sql, where.Parameters);
         }
 
         protected virtual string GenerateFetchString(IQueryCommand queryCommand)

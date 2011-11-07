@@ -10,20 +10,14 @@ namespace SisoDb.Querying.Sql
     [Serializable]
     public class SqlWhere
     {
-        private readonly string _memberPath;
-        private readonly string _joinString;
+        private readonly string[] _memberPaths;
         private readonly string _criteriaString;
         private readonly ReadOnlyCollection<IDacParameter> _parameters;
         private readonly bool _isEmpty;
 
-        public virtual string MemberPath
+        public virtual string[] MemberPaths
         {
-            get { return _memberPath; }
-        }
-
-        public virtual string JoinString
-        {
-            get { return _joinString; }
+            get { return _memberPaths; }
         }
 
         public virtual string CriteriaString
@@ -41,16 +35,14 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlWhere(string memberPath, string joinString, string criteriaString, ICollection<IDacParameter> parameters)
+        public SqlWhere(string[] memberPaths, string criteriaString, ICollection<IDacParameter> parameters)
         {
-            Ensure.That(memberPath, "memberPath").IsNotNullOrWhiteSpace();
-            Ensure.That(joinString, "joinString").IsNotNullOrWhiteSpace();
+            Ensure.That(memberPaths, "memberPaths").HasItems();
             Ensure.That(criteriaString, "criteriaString").IsNotNullOrWhiteSpace();
             Ensure.That(parameters, "parameters").IsNotNull();
 
             _isEmpty = false;
-            _memberPath = memberPath;
-            _joinString = joinString;
+            _memberPaths = memberPaths;
             _criteriaString = criteriaString;
             _parameters = new ReadOnlyCollection<IDacParameter>(parameters.Distinct().ToList());
         }
@@ -58,8 +50,7 @@ namespace SisoDb.Querying.Sql
         protected SqlWhere()
         {
             _isEmpty = true;
-            _memberPath = string.Empty;
-            _joinString = string.Empty;
+            _memberPaths = new string[] { };
             _criteriaString = string.Empty;
             _parameters = new ReadOnlyCollection<IDacParameter>(new List<IDacParameter>());
         }
@@ -67,19 +58,6 @@ namespace SisoDb.Querying.Sql
         public static SqlWhere Empty()
         {
             return new SqlWhere();
-        }
-
-        public static string ToMemberPathString(IEnumerable<SqlWhere> wheres, string decorateSortingWith = null)
-        {
-            if(string.IsNullOrWhiteSpace(decorateSortingWith))
-                return string.Join(", ", wheres.Select(w => w.MemberPath));
-
-            return string.Join(", ", wheres.Select(w => string.Format(decorateSortingWith, w.MemberPath)));
-        }
-
-        public static string ToJoinString(IEnumerable<SqlWhere> wheres)
-        {
-            return string.Join(" ", wheres.Select(w => w.JoinString));
         }
     }
 }

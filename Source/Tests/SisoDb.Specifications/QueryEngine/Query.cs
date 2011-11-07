@@ -608,7 +608,7 @@ namespace SisoDb.Specifications.QueryEngine
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAs<QueryGuidItem, QueryItemInfo>(q =>
-                q.Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).SortBy(i => i.StringValue)).ToList();
+                q.Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).SortBy(i => i.StringValue, i => i.SortOrder)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

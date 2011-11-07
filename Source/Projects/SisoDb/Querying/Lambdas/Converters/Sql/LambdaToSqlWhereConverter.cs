@@ -19,6 +19,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
             public const string ValueMarker = "[%VALUE%]";
 
             public readonly IStructureSchema StructureSchema;
+            public readonly List<string> MemberPaths = new List<string>();  
             public StringBuilder Sql = new StringBuilder();
             public readonly ISet<IDacParameter> Params;
             public string PreviousMemberPath;
@@ -50,14 +51,12 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
             }
         }
 
-        public IList<SqlWhere> Convert(IStructureSchema structureSchema, IParsedLambda lambda)
+        public SqlWhere Convert(IStructureSchema structureSchema, IParsedLambda lambda)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var wheres = new List<SqlWhere>();
-
             if (lambda == null)
-                return wheres;
+                return SqlWhere.Empty();
 
             var session = new Session(structureSchema);
 
@@ -77,8 +76,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 session.Flush();
             }
 
-            return wheres;
-            //return session.Sql.Length > 0 ? new SqlWhere(session.Sql.ToString(), session.Params) : SqlWhere.Empty(); 
+            return session.Sql.Length > 0 ? new SqlWhere(session.MemberPaths.ToArray(), session.Sql.ToString(), session.Params) : SqlWhere.Empty(); 
         }
 
         private static void AddMember(Session session, MemberNode member)
@@ -88,16 +86,20 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 if (member.Path == StructureSchema.IdMemberName)
                 {
                     session.Sql.AppendFormat("si.[{0}]{1}{2}", StructureSchema.IdMemberName, Session.OpMarker, Session.ValueMarker);
-
                     session.PreviousMemberPath = member.Path;
                     session.HasWrittenMember = true;
-
                     return;
                 }
 
-                session.Sql.AppendFormat("(si.[{0}]='{1}' and si.[{2}]{3}{4})",
-                    IndexStorageSchema.Fields.MemberPath.Name,
-                    member.Path,
+                var memIndex = session.MemberPaths.IndexOf(member.Path);
+                if (memIndex < 0)
+                {
+                    session.MemberPaths.Add(member.Path);
+                    memIndex = session.MemberPaths.Count - 1;
+                }
+
+                session.Sql.AppendFormat("(mem{0}.[{1}]{2}{3})",
+                    memIndex,
                     IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
                     Session.OpMarker,
                     Session.ValueMarker);
@@ -113,9 +115,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 if (member.Path == StructureSchema.IdMemberName)
                 {
                     session.Sql = session.Sql.Replace(Session.ValueMarker, string.Format("si.[{0}]", StructureSchema.IdMemberName));
-                    
                     session.HasWrittenValue = true;
-
                     return;
                 }
 

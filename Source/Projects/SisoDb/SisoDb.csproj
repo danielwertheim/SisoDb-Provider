@@ -87,7 +87,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ConnectionString.cs" />
+    <Compile Include="Core\Collections\CollectionExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
+    <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Dac\BulkInserts\DbBulkInserter.cs" />
     <Compile Include="Dac\BulkInserts\IDbBulkInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />

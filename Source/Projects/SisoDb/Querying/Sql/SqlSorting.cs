@@ -116,13 +116,5 @@ namespace SisoDb.Querying.Sql
 
             return string.Join(", ", transformedSortings);
         }
-
-        public static string ToMemberPathString(IEnumerable<SqlSorting> sortings, string decorateSortingWith = null)
-        {
-            if (string.IsNullOrWhiteSpace(decorateSortingWith))
-                return string.Join(", ", sortings.Select(s => s.MemberPath));
-
-            return string.Join(", ", sortings.Select(s => string.Format(decorateSortingWith, s.MemberPath)));
-        }
     }
 }
