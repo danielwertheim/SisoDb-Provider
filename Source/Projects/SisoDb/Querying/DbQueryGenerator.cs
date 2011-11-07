@@ -101,7 +101,7 @@ namespace SisoDb.Querying
             return new SqlQuery(sql, queryParams);
         }
 
-        protected static string GenerateTakeString(IQueryCommand queryCommand)
+        protected virtual string GenerateTakeString(IQueryCommand queryCommand)
         {
             if (!queryCommand.HasTakeNumOfStructures)
                 return string.Empty;

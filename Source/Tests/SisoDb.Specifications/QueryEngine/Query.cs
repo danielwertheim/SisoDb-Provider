@@ -615,8 +615,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
             {
-                _fetchedStructures[0].Matches(_structures[1]).ShouldBeTrue();
-                _fetchedStructures[1].Matches(_structures[0]).ShouldBeTrue();
+                _fetchedStructures[0].Matches(_structures[2]).ShouldBeTrue();
+                _fetchedStructures[1].Matches(_structures[1]).ShouldBeTrue();
             };
 
             private static IList<QueryGuidItem> _structures;
