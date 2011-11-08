@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using NCore;
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
@@ -15,7 +16,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             var parser = new IncludeParser();
             var nonMemberExpression = Reflect<Master>.BoolExpressionFrom(m => m.Int1 == 32);
 
-            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(StructureTypeNameFor<Child>.Name, new[] { nonMemberExpression }));
+            var ex = Assert.Throws<NCoreException>(() => parser.Parse(StructureTypeNameFor<Child>.Name, new[] { nonMemberExpression }));
 
             Assert.AreEqual("No MemberExpression found in expression: '(m.Int1 == 32)'.", ex.Message);
         }

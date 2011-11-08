@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
+using NCore.Expressions;
 using NCore.Reflections;
-using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Resources;
 
@@ -21,7 +21,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 if (lambda == null)
                     continue;
 
-                var memberExpression = ExpressionUtils.GetRightMostMember(lambda.Body);
+                var memberExpression = lambda.Body.GetRightMostMember();
 
                 var sortDirection = SortDirections.Asc;
                 var callExpression = (lambda.Body is UnaryExpression)
@@ -47,7 +47,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 if (memberType.IsEnumerableType())
                     memberType = memberType.GetEnumerableElementType();
 
-                var sortingNode = new SortingNode(memberExpression.Path(), memberType, sortDirection);
+                var sortingNode = new SortingNode(memberExpression.ToPath(), memberType, sortDirection);
                 nodesContainer.AddNode(sortingNode);
             }
 

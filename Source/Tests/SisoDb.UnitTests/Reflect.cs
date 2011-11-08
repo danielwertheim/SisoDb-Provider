@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using NCore.Expressions;
 using SisoDb.Core.Expressions;
 
 namespace SisoDb.UnitTests
@@ -30,7 +31,7 @@ namespace SisoDb.UnitTests
 
         internal static MemberExpression MemberFrom<TProp>(Expression<Func<T, TProp>> e)
         {
-            return ExpressionUtils.GetRightMostMember(e.Body);
+            return e.Body.GetRightMostMember();
         }
     }
 }

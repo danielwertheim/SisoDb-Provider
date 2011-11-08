@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NCore;
+using NCore.Expressions;
 using NCore.Reflections;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
@@ -156,7 +157,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             {
                 var memberExpression = graphLine[c];
                 var isLast = c == (graphLine.Count - 1);
-                var path = previousNode == null ? memberExpression.Path() : string.Format("{0}.{1}", previousNode.Path, memberExpression.Path());
+                var path = previousNode == null ? memberExpression.ToPath() : string.Format("{0}.{1}", previousNode.Path, memberExpression.ToPath());
 
                 if (isLast && memberExpression.Type.IsEnumerableType())
                     previousNode = new MemberNode(path, memberExpression.Type.GetEnumerableElementType());

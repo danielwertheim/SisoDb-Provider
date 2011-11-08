@@ -64,8 +64,9 @@
       <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NCore, Version=0.17.0.62, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.26.0\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.19.0.64, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.19.0.64\lib\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone, Version=0.26.0.60, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -87,9 +88,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ConnectionString.cs" />
-    <Compile Include="Core\Collections\CollectionExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
-    <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Dac\BulkInserts\DbBulkInserter.cs" />
     <Compile Include="Dac\BulkInserts\IDbBulkInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
@@ -157,7 +156,6 @@
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParser.cs" />
-    <Compile Include="Core\Expressions\ExpressionExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndGroupNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNode.cs" />

@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
-using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
+using NCore.Expressions;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {
@@ -16,8 +16,8 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             foreach (var includeExpression in includeExpressions)
             {
-                var memberExpression = ExpressionUtils.GetRightMostMember(includeExpression);
-                var idReferencePath = memberExpression.Path();
+                var memberExpression = includeExpression.GetRightMostMember();
+                var idReferencePath = memberExpression.ToPath();
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
 
                 nodes.AddNode(

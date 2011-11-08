@@ -160,15 +160,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No MemberExpression found in expression: &apos;{0}&apos;..
-        /// </summary>
-        public static string ExpressionUtils_GetRightMostMember_NoMemberFound {
-            get {
-                return ResourceManager.GetString("ExpressionUtils_GetRightMostMember_NoMemberFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Sortings has allready been initialized..
         /// </summary>
         public static string GetCommand_SortingsAllreadyInitialized {
