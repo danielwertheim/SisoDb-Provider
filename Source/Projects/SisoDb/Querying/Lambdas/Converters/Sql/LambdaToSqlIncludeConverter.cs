@@ -24,9 +24,9 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 var includeCount = includes.Count;
                 var parentMemberPath = includeNode.IdReferencePath;
 
-                var jsonColumnDefinition = "min(cs{0}.Json) as [{1}Json]".Inject(
-                    includeCount,
-                    includeNode.ObjectReferencePath);
+                var columnDefinition = "cs{0}.Json".Inject(includeCount);
+
+                var jsonColumnDefinition = string.Format("min({0}) as [{1}Json]", columnDefinition, includeNode.ObjectReferencePath);
 
                 var join = joinFormat.Inject(
                     includeNode.ChildStructureName + "Structure",
@@ -35,8 +35,8 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                     IndexStorageSchema.GetValueSchemaFieldForType(includeNode.MemberType).Name,
                     IndexStorageSchema.Fields.MemberPath.Name,
                     parentMemberPath);
-                
-                includes.Add(new SqlInclude(jsonColumnDefinition, join));
+
+                includes.Add(new SqlInclude(columnDefinition, jsonColumnDefinition, join));
             }
 
             return includes;

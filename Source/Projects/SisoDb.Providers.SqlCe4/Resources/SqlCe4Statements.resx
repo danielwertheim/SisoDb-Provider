@@ -187,7 +187,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
     <value>delete from [{0}] where StructureId = @id;</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
-    <value>delete from [{0}] where StructureId in(select si.StructureId from [{1}] as si where {2});</value>
+    <value>delete from [{0}] where StructureId in({1});</value>
   </data>
   <data name="DeleteStructureFromSisoDbIdentitiesTable" xml:space="preserve">
     <value>delete from [SisoDbIdentities] where [EntityHash] = @entityHash;</value>
@@ -225,7 +225,7 @@ UPDATE STATISTICS ON [{2}].[UQ_{2}] WITH FULLSCAN;</value>
     <value>select count(*) from [{0}];</value>
   </data>
   <data name="RowCountByQuery" xml:space="preserve">
-    <value>select count(*) from [{0}] si where {1}; </value>
+    <value>select count(*) from [{0}] s where s.StructureId in({1});</value>
   </data>
   <data name="Sys_Identities_Create" xml:space="preserve">
     <value>create table [SisoDbIdentities]

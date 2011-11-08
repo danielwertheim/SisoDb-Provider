@@ -88,7 +88,6 @@ namespace SisoDb.Sql2008.Dac
 
             var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
                 structureSchema.GetStructureTableName(),
-                structureSchema.GetIndexesTableName(),
                 query.Sql);
 
             using (var cmd = CreateCommand(sql, query.Parameters.ToArray()))
@@ -133,9 +132,7 @@ namespace SisoDb.Sql2008.Dac
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(
-                structureSchema.GetIndexesTableName(),
-                query.Sql);
+            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(structureSchema.GetStructureTableName(), query.Sql);
 
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }

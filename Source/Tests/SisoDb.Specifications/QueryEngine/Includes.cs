@@ -182,7 +182,7 @@ namespace SisoDb.Specifications.QueryEngine
                 testContext.Database.WithUnitOfWork(uow =>
                 {
                     uow.Insert(genre);
-                    uow.InsertMany(new[] { artist, secondArtist });
+                    uow.InsertMany<Artist>(new[] { artist, secondArtist });
                     uow.Insert<IAlbumData>(album);
                     uow.Commit();
                 });

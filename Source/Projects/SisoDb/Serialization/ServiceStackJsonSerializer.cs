@@ -62,7 +62,6 @@ namespace SisoDb.Serialization
     {
         static ServiceStackJsonSerializer()
         {
-
             TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 

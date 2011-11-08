@@ -6,6 +6,6 @@ namespace SisoDb.Querying
     {
         SqlQuery GenerateQuery(IQueryCommand queryCommand);
 
-        SqlQuery GenerateWhereQuery(IQueryCommand queryCommand);
+        SqlQuery GenerateQueryReturningStrutureIds(IQueryCommand queryCommand);
     }
 }

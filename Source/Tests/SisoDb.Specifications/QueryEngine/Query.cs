@@ -565,8 +565,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
             {
-                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
-                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[2]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
             };
 
             private static IList<QueryGuidItem> _structures;
@@ -590,8 +590,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
             {
-                _fetchedStructures[0].ShouldEqual(_structures[1].AsJson());
-                _fetchedStructures[1].ShouldEqual(_structures[0].AsJson());
+                _fetchedStructures[0].ShouldEqual(_structures[2].AsJson());
+                _fetchedStructures[1].ShouldEqual(_structures[1].AsJson());
             };
 
             private static IList<QueryGuidItem> _structures;

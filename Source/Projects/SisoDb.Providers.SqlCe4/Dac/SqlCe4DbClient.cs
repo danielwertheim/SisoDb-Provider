@@ -112,7 +112,6 @@ namespace SisoDb.SqlCe4.Dac
 
             var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
                 structureSchema.GetStructureTableName(),
-                structureSchema.GetIndexesTableName(),
                 query.Sql);
 
             ExecuteNonQuery(sql, query.Parameters.ToArray());
@@ -151,9 +150,7 @@ namespace SisoDb.SqlCe4.Dac
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(
-                structureSchema.GetIndexesTableName(),
-                query.Sql);
+            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(structureSchema.GetStructureTableName(), query.Sql);
 
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }

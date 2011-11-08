@@ -200,7 +200,7 @@ delete from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
-delete from [dbo].[{0}] where StructureId in(select si.StructureId from [dbo].[{1}] as si where {2});</value>
+delete from [dbo].[{0}] where StructureId in({1});</value>
   </data>
   <data name="DeleteWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
@@ -260,7 +260,7 @@ select count(*) from [dbo].[{0}];</value>
   </data>
   <data name="RowCountByQuery" xml:space="preserve">
     <value>set nocount on;
-select count(*) from [dbo].[{0}] si where {1}; </value>
+select count(*) from [dbo].[{0}] s where s.StructureId in({1});</value>
   </data>
   <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
     <value>set nocount on;

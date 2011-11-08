@@ -96,7 +96,7 @@ namespace SisoDb
 
             var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
             var queryCommand = commandBuilder.Where(expression).Command;
-            var whereSql = QueryGenerator.GenerateWhereQuery(queryCommand);
+            var whereSql = QueryGenerator.GenerateQueryReturningStrutureIds(queryCommand);
 
             return DbClient.RowCountByQuery(structureSchema, whereSql);
         }
@@ -319,19 +319,19 @@ namespace SisoDb
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     Func<IDataRecord, IDictionary<int, string>, string> read;
-                    IDictionary<int, string> additionalJsonFields = null;
+                    IDictionary<int, string> jsonFields = null;
 
                     if (reader.FieldCount == 1)
                         read = (dr, af) => dr.GetString(0);
                     else
                     {
-                        additionalJsonFields = GetAdditionalJsonFields(reader);
+                        jsonFields = GetJsonFields(reader);
                         read = GetMergedJsonStructure;
                     }
 
                     while (reader.Read())
                     {
-                        yield return read.Invoke(reader, additionalJsonFields);
+                        yield return read.Invoke(reader, jsonFields);
                     }
 
                     reader.Close();
@@ -339,10 +339,10 @@ namespace SisoDb
             }
         }
 
-        private IDictionary<int, string> GetAdditionalJsonFields(IDataRecord dataRecord)
+        private IDictionary<int, string> GetJsonFields(IDataRecord dataRecord)
         {
             var indices = new Dictionary<int, string>();
-            for(var i = 1; i < dataRecord.FieldCount; i++)
+            for(var i = 0; i < dataRecord.FieldCount; i++)
             {
                 var name = dataRecord.GetName(i); 
                 if(name.Contains(StructureStorageSchema.Fields.Json.Name))
@@ -353,14 +353,14 @@ namespace SisoDb
             return indices;
         }
 
-        private static string GetMergedJsonStructure(IDataRecord dataRecord, IDictionary<int, string> additionalJsonFields)
+        private static string GetMergedJsonStructure(IDataRecord dataRecord, IDictionary<int, string> jsonFields)
         {
             var sb = new StringBuilder();
             sb.Append(dataRecord.GetString(0));
             sb.Remove(sb.Length - 1, 1);
             sb.Append(",");
 
-            foreach (var childJson in ReadChildJson(dataRecord, additionalJsonFields))
+            foreach (var childJson in ReadChildJson(dataRecord, jsonFields))
                 sb.Append(childJson);
 
             sb.Append("}");

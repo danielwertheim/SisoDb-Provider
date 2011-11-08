@@ -146,7 +146,7 @@ namespace SisoDb
 
             var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
             var queryCommand = commandBuilder.Where(expression).Command;
-            var sql = QueryGenerator.GenerateWhereQuery(queryCommand);
+            var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryCommand);
             DbClient.DeleteByQuery(sql, structureSchema.IdAccessor.DataType, structureSchema);
         }
     }
