@@ -16,8 +16,11 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub(), parsedLambda);
 
+            Assert.AreEqual(2, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "Int1"));
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "Int2"));
             Assert.AreEqual(
-                "(si.[MemberPath]='Int1' and si.[IntegerValue] = (select sub.[IntegerValue] from [TempIndexes] sub where sub.[MemberPath]='Int2'))",
+                "(mem0.[IntegerValue] = (mem1.[IntegerValue]))",
                 query.CriteriaString);
         }
 

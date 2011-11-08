@@ -119,17 +119,19 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                     return;
                 }
 
-                if(member.Path == session.PreviousMemberPath)
-                    session.Sql = session.Sql.Replace(Session.ValueMarker,
-                        string.Format("(select sub.[{0}] from [{1}] sub where sub.[RowId]=si.[RowId])",
-                            IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
-                            session.StructureSchema.GetIndexesTableName()));
-                else
-                    session.Sql = session.Sql.Replace(Session.ValueMarker,
-                    string.Format("(select sub.[{0}] from [{1}] sub where sub.[MemberPath]='{2}')",
-                        IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
-                        session.StructureSchema.GetIndexesTableName(),
-                        member.Path));
+                var memIndex = session.MemberPaths.IndexOf(member.Path);
+                if (memIndex < 0)
+                {
+                    session.MemberPaths.Add(member.Path);
+                    memIndex = session.MemberPaths.Count - 1;
+                }
+
+                session.Sql = session.Sql.Replace(Session.ValueMarker, 
+                    string.Format("(mem{0}.[{1}]{2}{3})",
+                    memIndex,
+                    IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
+                    Session.OpMarker,
+                    Session.ValueMarker));
 
                 session.HasWrittenValue = true;
             }
