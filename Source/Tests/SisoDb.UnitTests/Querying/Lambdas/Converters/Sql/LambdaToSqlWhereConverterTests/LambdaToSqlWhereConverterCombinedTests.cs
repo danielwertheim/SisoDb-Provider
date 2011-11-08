@@ -20,7 +20,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             const string expectedSql = "((((si.[MemberPath]='Int1' and si.[IntegerValue] = @p0) and (si.[MemberPath]='String1' and si.[StringValue] = @p1)) or ((si.[MemberPath]='Int1' and si.[IntegerValue] = @p2) and (si.[MemberPath]='String1' and si.[StringValue] = @p3))) or (si.[MemberPath]='Int1' and si.[IntegerValue] = @p4))";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual(expectedSql, query.CriteriaString);
         }
 
         [Test]

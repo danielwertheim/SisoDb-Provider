@@ -105,6 +105,15 @@
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTestBase.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterCombinedTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterCommonDataTypeTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterEnumerableQueryExtensionsTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterFunctionInvocationTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterHierarchyTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterMemberComparisionTests.cs" />
+    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterTestBase.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Sql2008\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />

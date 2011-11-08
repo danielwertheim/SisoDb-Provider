@@ -17,7 +17,6 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
             if (lambda == null || lambda.Nodes.Count == 0)
                 return includes;
 
-            const string jsonColumnDefinitionFormat = "min(cs{0}.{1}) as [{2}]";
             const string joinFormat = "left join [{0}] as cs{1} on cs{1}.[{2}] = si.[{3}] and si.[{4}]='{5}'";
 
             foreach (var includeNode in lambda.Nodes.Cast<IncludeNode>())
@@ -25,9 +24,8 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
                 var includeCount = includes.Count;
                 var parentMemberPath = includeNode.IdReferencePath;
 
-                var jsonColumnDefinition = jsonColumnDefinitionFormat.Inject(
+                var jsonColumnDefinition = "min(cs{0}.Json) as [{1}Json]".Inject(
                     includeCount,
-                    StructureStorageSchema.Fields.Json.Name,
                     includeNode.ObjectReferencePath);
 
                 var join = joinFormat.Inject(

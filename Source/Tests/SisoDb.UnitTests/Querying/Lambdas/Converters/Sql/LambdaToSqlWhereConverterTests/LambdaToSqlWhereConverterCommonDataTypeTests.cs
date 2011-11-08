@@ -19,7 +19,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             const string expectedSql = "si.[StructureId] = @p0";
-            Assert.AreEqual(expectedSql, query.Sql);
+            Assert.AreEqual(expectedSql, query.CriteriaString);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='NestedItem.StructureId' and si.[IntegerValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='NestedItem.StructureId' and si.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='NullableInt' and si.[IntegerValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='NullableInt' and si.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] <> @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] <> @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] >= @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] >= @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] <= @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] <= @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] > @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] > @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -228,7 +228,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] < @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Int1' and si.[IntegerValue] < @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -251,7 +251,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Decimal1' and si.[FractalValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Decimal1' and si.[FractalValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -274,7 +274,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -320,7 +320,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] <> @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] <> @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -343,7 +343,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] <> @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Bool1' and si.[BoolValue] <> @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -367,7 +367,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Guid1' and si.[GuidValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Guid1' and si.[GuidValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -391,7 +391,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='Guid1' and si.[GuidValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='Guid1' and si.[GuidValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -415,7 +415,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -439,7 +439,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -465,7 +465,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -488,7 +488,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] <> @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] <> @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -511,7 +511,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -534,7 +534,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] is null)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] is null)", query.CriteriaString);
         }
 
         [Test]
@@ -556,7 +556,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] is not null)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] is not null)", query.CriteriaString);
         }
 
         [Test]
@@ -579,7 +579,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -604,7 +604,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.Sql);
+            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.CriteriaString);
         }
 
         [Test]

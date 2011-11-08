@@ -20,11 +20,10 @@ namespace SisoDb.UnitTests.Querying.Sql
             var sqlQuery = generator.GenerateQuery(queryCommand);
 
             Assert.AreEqual(
-                "select s.Json from [MyClassStructure] as s " +
-                "inner join [MyClassIndexes] as si on si.[StructureId] = s.[StructureId] " + 
-                "where (si.[MemberPath]='Int1' and si.[IntegerValue] = @p0) " +
-                "group by s.[StructureId], s.[Json] " + 
-                "order by s.[StructureId] Asc;",
+                "select s.Json from [MyClassStructure] s " + 
+                "left join [MyClassIndexes] as mem0 on mem0.[StructureId]=s.[StructureId] and mem0.[MemberPath]='Int1' " + 
+                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in('Int1') " + 
+                "where (mem0.[IntegerValue] = @p0) group by s.[StructureId], s.Json;",
                 sqlQuery.Sql);
         }
 
@@ -37,9 +36,9 @@ namespace SisoDb.UnitTests.Querying.Sql
             var sqlQuery = generator.GenerateQuery(queryCommand);
 
             Assert.AreEqual(
-                "select s.Json from [MyClassStructure] as s " +
-                "inner join [MyClassIndexes] as si on si.[StructureId] = s.[StructureId] " + 
-                "group by s.[StructureId], s.[Json] " +
+                "select s.Json from [MyClassStructure] s " + 
+                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in('Int1') " + 
+                "group by s.[StructureId], s.Json " + 
                 "order by min(si.[IntegerValue]) Asc;",
                 sqlQuery.Sql);
         }
@@ -55,12 +54,13 @@ namespace SisoDb.UnitTests.Querying.Sql
             var generator = GetQueryGenerator();
 
             var sqlQuery = generator.GenerateQuery(queryCommand);
-
+            
             Assert.AreEqual(
-                "select s.Json from [MyClassStructure] as s " + 
-                "inner join [MyClassIndexes] as si on si.[StructureId] = s.[StructureId] " + 
-                "where (si.[MemberPath]='Int1' and si.[IntegerValue] = @p0) " +
-                "group by s.[StructureId], s.[Json] " +
+                "select s.Json from [MyClassStructure] s " +
+                "left join [MyClassIndexes] as mem0 on mem0.[StructureId]=s.[StructureId] and mem0.[MemberPath]='Int1' " +
+                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in('Int1') " +
+                "where (mem0.[IntegerValue] = @p0) " +
+                "group by s.[StructureId], s.Json " +
                 "order by min(si.[IntegerValue]) Asc;",
                 sqlQuery.Sql);
         }
@@ -72,11 +72,8 @@ namespace SisoDb.UnitTests.Querying.Sql
             var generator = GetQueryGenerator();
 
             var sqlQuery = generator.GenerateQuery(queryCommand);
-
             Assert.AreEqual(
-                "select top(11) s.Json from [MyClassStructure] as s " +
-                "inner join [MyClassIndexes] as si on si.[StructureId] = s.[StructureId] " +
-                "group by s.[StructureId], s.[Json] order by s.[StructureId] Asc;",
+                "select top(11) s.Json from [MyClassStructure] s inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId];",
                 sqlQuery.Sql);
         }
 
@@ -93,9 +90,9 @@ namespace SisoDb.UnitTests.Querying.Sql
             var sqlQuery = generator.GenerateQuery(queryCommand);
 
             Assert.AreEqual(
-                "select top(11) s.Json from [MyClassStructure] as s " +
-                "inner join [MyClassIndexes] as si on si.[StructureId] = s.[StructureId] " +
-                "group by s.[StructureId], s.[Json] " +
+                "select top(11) s.Json from [MyClassStructure] s " + 
+                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in('Int1') " + 
+                "group by s.[StructureId], s.Json " + 
                 "order by min(si.[IntegerValue]) Asc;",
                 sqlQuery.Sql);
         }
@@ -114,10 +111,11 @@ namespace SisoDb.UnitTests.Querying.Sql
             var sqlQuery = generator.GenerateQuery(queryCommand);
 
             Assert.AreEqual(
-                "select top(11) s.Json from [MyClassStructure] as s " +
-                "inner join [MyClassIndexes] as si on si.[StructureId] = s.[StructureId] " +
-                "where (si.[MemberPath]='Int1' and si.[IntegerValue] = @p0) " +
-                "group by s.[StructureId], s.[Json] " +
+                "select top(11) s.Json from [MyClassStructure] s " +
+                "left join [MyClassIndexes] as mem0 on mem0.[StructureId]=s.[StructureId] and mem0.[MemberPath]='Int1' " + 
+                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in('Int1') " +
+                "where (mem0.[IntegerValue] = @p0) " +
+                "group by s.[StructureId], s.Json " +
                 "order by min(si.[IntegerValue]) Asc;",
                 sqlQuery.Sql);
         }
@@ -135,12 +133,11 @@ namespace SisoDb.UnitTests.Querying.Sql
 
             var sqlQuery = generator.GenerateQuery(queryCommand);
 
-            Assert.AreEqual(
-                "with pagedRs as (select s.Json, row_number() over (order by min(si.[IntegerValue]) Asc) RowNum " +
-                "from [MyClassStructure] as s " +
-                "inner join [MyClassIndexes] as si on si.[StructureId] = s.[StructureId] " +
-                "where (si.[MemberPath]='Int1' and si.[IntegerValue] = @p0) " +
-                "group by s.[StructureId], s.[Json])" +
+            Assert.AreEqual("with pagedRs as (select s.Json, row_number() over (order by min(si.[IntegerValue]) Asc) as RowNum " + 
+                "from [MyClassStructure] s " + 
+                "left join [MyClassIndexes] as mem0 on mem0.[StructureId]=s.[StructureId] and mem0.[MemberPath]='Int1' " + 
+                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in('Int1') " + 
+                "where (mem0.[IntegerValue] = @p0) group by s.[StructureId], s.Json) pagedRs " + 
                 "select pagedRs.Json from pagedRs where pagedRs.RowNum between @pagingFrom and @pagingTo;",
                 sqlQuery.Sql);
 

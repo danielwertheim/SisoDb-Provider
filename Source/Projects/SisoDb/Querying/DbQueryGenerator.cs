@@ -58,9 +58,9 @@ namespace SisoDb.Querying
             var includes = GenerateIncludes(queryCommand);
             var where = WhereConverter.Convert(queryCommand.StructureSchema, queryCommand.Where);
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
-
+            
             var sql = string.Format(
-                "select {0}s.Json{1} from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{7} group by s.[StructureId], s.Json{1}{8};",
+                "select {0}s.Json{1} from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{7}{8}{9};",
                 GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),
@@ -69,6 +69,7 @@ namespace SisoDb.Querying
                 queryCommand.StructureSchema.GetIndexesTableName(),
                 GenerateMemberPathsStringForJoin(where, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
                 where.CriteriaString.PrependWith(" where "),
+                GenerateGroupingMembersString(queryCommand, includes).PrependWith(" group by "),
                 SqlSorting.ToSortingString(sortings, "min({0})").PrependWith(" order by "));
 
             return new SqlQuery(sql, where.Parameters.ToArray());
@@ -81,7 +82,7 @@ namespace SisoDb.Querying
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
 
             var innerSelect = string.Format(
-                "select {0}s.Json{1}, row_number() over (order by {7}) as RowNum from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{8} group by s.[StructureId], s.Json{1}",
+                "select {0}s.Json{1}, row_number() over (order by {7}) as RowNum from [{2}] s{3}{4} inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{8}{9}",
                 GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),
@@ -90,7 +91,8 @@ namespace SisoDb.Querying
                 queryCommand.StructureSchema.GetIndexesTableName(),
                 GenerateMemberPathsStringForJoin(where, sortings).PrependWith(" and si.[MemberPath] in(").AppendWith(")"),
                 queryCommand.HasSortings ? SqlSorting.ToSortingString(sortings, "min({0})") : "s.[StructureId]",
-                where.CriteriaString.PrependWith(" where "));
+                where.CriteriaString.PrependWith(" where "),
+                GenerateGroupingMembersString(queryCommand, includes).PrependWith(" group by "));
 
             var sql = string.Format("with pagedRs as ({0}) pagedRs select {1}pagedRs.Json{2} from pagedRs where pagedRs.RowNum between @pagingFrom and @pagingTo;",
                 innerSelect,
@@ -106,6 +108,17 @@ namespace SisoDb.Querying
             };
 
             return new SqlQuery(sql, queryParams);
+        }
+
+        protected virtual string GenerateGroupingMembersString(IQueryCommand queryCommand, IList<SqlInclude> includes)
+        {
+            var shouldHaveGrouping = queryCommand.HasIncludes || queryCommand.HasPaging || queryCommand.HasSortings || queryCommand.HasWhere;
+
+            if (!shouldHaveGrouping)
+                return string.Empty;
+
+            return string.Format("s.[StructureId], s.Json{0}",
+                SqlInclude.ToColumnDefinitionString(includes).PrependWith(", "));
         }
 
         protected virtual string GenerateTakeString(IQueryCommand queryCommand)

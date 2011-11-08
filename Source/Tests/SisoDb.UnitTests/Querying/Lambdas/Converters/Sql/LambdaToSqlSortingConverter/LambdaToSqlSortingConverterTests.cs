@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Moq;
 using NUnit.Framework;
 using SisoDb.Querying;
-using SisoDb.Querying.Lambdas;
-using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.UnitTests.TestFactories;
 
 namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter
@@ -12,23 +7,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
     [TestFixture]
     public class LambdaToSqlSortingConverterTests : LambdaToSqlSortingConverterTestBase
     {
-        [Test]
-        public void Process_WhenNoSortingsArePassed_DefaultsToSqlTranslatesToStructureId()
-        {
-            var parsedLambda = new Mock<IParsedLambda>();
-            parsedLambda.Setup(s => s.Nodes).Returns(new ReadOnlyCollection<INode>(new List<INode>()));
-
-            var processor = new SisoDb.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingConverter();
-            var sortings = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda.Object);
-
-            Assert.AreEqual(1, sortings.Count);
-
-            Assert.AreEqual("[StructureId]", sortings[0].ColumnName);
-            Assert.AreEqual("s.[StructureId]", sortings[0].Sorting);
-            Assert.AreEqual("sort0", sortings[0].Alias);
-            Assert.AreEqual("Asc", sortings[0].Direction);
-        }
-
         [Test]
         public void Process_WhenMemberNameIsId_SqlTranslatesToStructureId()
         {
@@ -39,7 +17,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
 
             Assert.AreEqual(1, sortings.Count);
 
-            Assert.AreEqual("[StructureId]", sortings[0].ColumnName);
+            Assert.AreEqual("[StructureId]", sortings[0].IndexStorageColumnName);
             Assert.AreEqual("s.[StructureId]", sortings[0].Sorting);
             Assert.AreEqual("sort0", sortings[0].Alias);
             Assert.AreEqual("Asc", sortings[0].Direction);
@@ -54,7 +32,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var sortings = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             Assert.AreEqual(1, sortings.Count);
-            Assert.AreEqual("[IntegerValue]", sortings[0].ColumnName);
+            Assert.AreEqual("[IntegerValue]", sortings[0].IndexStorageColumnName);
             Assert.AreEqual("si.[IntegerValue]", sortings[0].Sorting);
             Assert.AreEqual("sort0", sortings[0].Alias);
             Assert.AreEqual("Asc", sortings[0].Direction);
@@ -69,7 +47,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var sortings = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             Assert.AreEqual(1, sortings.Count);
-            Assert.AreEqual("[IntegerValue]", sortings[0].ColumnName);
+            Assert.AreEqual("[IntegerValue]", sortings[0].IndexStorageColumnName);
             Assert.AreEqual("si.[IntegerValue]", sortings[0].Sorting);
             Assert.AreEqual("sort0", sortings[0].Alias);
             Assert.AreEqual("Asc", sortings[0].Direction);
@@ -84,7 +62,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var sortings = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             Assert.AreEqual(1, sortings.Count);
-            Assert.AreEqual("[IntegerValue]", sortings[0].ColumnName);
+            Assert.AreEqual("[IntegerValue]", sortings[0].IndexStorageColumnName);
             Assert.AreEqual("si.[IntegerValue]", sortings[0].Sorting);
             Assert.AreEqual("sort0", sortings[0].Alias);
             Assert.AreEqual("Asc", sortings[0].Direction);
@@ -99,7 +77,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var sortings = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             Assert.AreEqual(1, sortings.Count);
-            Assert.AreEqual("[IntegerValue]", sortings[0].ColumnName);
+            Assert.AreEqual("[IntegerValue]", sortings[0].IndexStorageColumnName);
             Assert.AreEqual("si.[IntegerValue]", sortings[0].Sorting);
             Assert.AreEqual("sort0", sortings[0].Alias);
             Assert.AreEqual("Desc", sortings[0].Direction);
@@ -114,13 +92,13 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlSortingCon
             var sortings = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
             Assert.AreEqual(2, sortings.Count);
-            
-            Assert.AreEqual("[IntegerValue]", sortings[0].ColumnName);
+
+            Assert.AreEqual("[IntegerValue]", sortings[0].IndexStorageColumnName);
             Assert.AreEqual("si.[IntegerValue]", sortings[0].Sorting);
             Assert.AreEqual("sort0", sortings[0].Alias);
             Assert.AreEqual("Desc", sortings[0].Direction);
 
-            Assert.AreEqual("[DateTimeValue]", sortings[1].ColumnName);
+            Assert.AreEqual("[DateTimeValue]", sortings[1].IndexStorageColumnName);
             Assert.AreEqual("si.[DateTimeValue]", sortings[1].Sorting);
             Assert.AreEqual("sort1", sortings[1].Alias);
             Assert.AreEqual("Asc", sortings[1].Direction);

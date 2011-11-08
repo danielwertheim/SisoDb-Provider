@@ -18,11 +18,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
             var sortings = new List<SqlSorting>();
 
             if (lambda == null || lambda.Nodes.Count == 0)
-            {
-                sortings.Add(CreateDefaultStructureIdSorting(sortings.Count, SortDirections.Asc));
-
                 return sortings;
-            }
 
             foreach (var node in lambda.Nodes)
             {
@@ -53,7 +49,7 @@ namespace SisoDb.Querying.Lambdas.Converters.Sql
         private static SqlSorting CreateDefaultStructureIdSorting(int sortingsCount, SortDirections sortDirection)
         {
             return new SqlSorting(
-                "StructureStorageSchema.Fields.Id.Name",
+                StructureStorageSchema.Fields.Id.Name,
                 "s.[{0}]".Inject(StructureStorageSchema.Fields.Id.Name),
                 "[{0}]".Inject(StructureStorageSchema.Fields.Id.Name),
                 "sort{0}".Inject(sortingsCount),
