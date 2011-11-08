@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Converters.Sql;
@@ -17,7 +18,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("((si.[MemberPath]='Strings' and si.[StringValue] = @p0) or (si.[MemberPath]='Strings' and si.[StringValue] = @p1))", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "Strings"));
+            Assert.AreEqual("((mem0.[StringValue] = @p0) or (mem0.[StringValue] = @p1))", query.CriteriaString);
         }
 
         [Test]
@@ -40,7 +43,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("((si.[MemberPath]='Decimals' and si.[FractalValue] = @p0) or (si.[MemberPath]='Decimals' and si.[FractalValue] = @p1))", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "Decimals"));
+            Assert.AreEqual("((mem0.[FractalValue] = @p0) or (mem0.[FractalValue] = @p1))", query.CriteriaString);
         }
 
         [Test]
@@ -63,7 +68,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='ListOfIntegers' and si.[IntegerValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "ListOfIntegers"));
+            Assert.AreEqual("(mem0.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -86,7 +93,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("((si.[MemberPath]='ChildItems.Int1' and si.[IntegerValue] = @p0) or (si.[MemberPath]='ChildItems.Int1' and si.[IntegerValue] = @p1))", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "ChildItems.Int1"));
+            Assert.AreEqual("((mem0.[IntegerValue] = @p0) or (mem0.[IntegerValue] = @p1))", query.CriteriaString);
         }
 
         [Test]
@@ -109,7 +118,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='ChildItems.GrandChildItems.Int1' and si.[IntegerValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "ChildItems.GrandChildItems.Int1"));
+            Assert.AreEqual("(mem0.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -132,7 +143,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='ChildItems.Integers' and si.[IntegerValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "ChildItems.Integers"));
+            Assert.AreEqual("(mem0.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]

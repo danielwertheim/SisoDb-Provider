@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using SisoDb.Dac;
 using SisoDb.Querying.Lambdas.Converters.Sql;
@@ -17,7 +18,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "DateTime1"));
+            Assert.AreEqual("(mem0.[DateTimeValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -40,7 +43,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='DateTime1' and si.[DateTimeValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "DateTime1"));
+            Assert.AreEqual("(mem0.[DateTimeValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -64,7 +69,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='String1' and si.[StringValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "String1"));
+            Assert.AreEqual("(mem0.[StringValue] = @p0)", query.CriteriaString);
         }
 
         [Test]

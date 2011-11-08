@@ -29,7 +29,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='NestedItem.Int1' and si.[IntegerValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "NestedItem.Int1"));
+            Assert.AreEqual("(mem0.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
@@ -78,7 +80,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual("(si.[MemberPath]='NestedItem.Int1' and si.[IntegerValue] = @p0)", query.CriteriaString);
+            Assert.AreEqual(1, query.MemberPaths.Length);
+            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "NestedItem.Int1"));
+            Assert.AreEqual("(mem0.[IntegerValue] = @p0)", query.CriteriaString);
         }
 
         [Test]
