@@ -97,8 +97,7 @@ namespace SisoDb.Querying
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
 
             var innerSelect = string.Format(
-                "select {0}s.Json{1}, row_number() over (order by {7}) as RowNum from [{2}] s inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{3}{4}{8}{9}",
-                GenerateTakeString(queryCommand).AppendWith(" "),
+                "select s.Json{0}, row_number() over (order by {6}) as RowNum from [{1}] s inner join [{4}] si on si.[StructureId] = s.[StructureId]{5}{2}{3}{7}{8}",
                 SqlInclude.ToJsonOutputDefinitionString(includes).PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),
                 GenerateWhereJoinsString(queryCommand, where).PrependWith(" "),

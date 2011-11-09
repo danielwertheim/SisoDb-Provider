@@ -318,15 +318,14 @@ namespace SisoDb
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
-                    Func<IDataRecord, IDictionary<int, string>, string> read;
+                    Func<IDataRecord, IDictionary<int, string>, string> read = (dr, af) => dr.GetString(0);
                     IDictionary<int, string> additionalJsonFields = null;
 
-                    if (reader.FieldCount == 1)
-                        read = (dr, af) => dr.GetString(0);
-                    else
+                    if (reader.FieldCount > 1)
                     {
                         additionalJsonFields = GetAdditionalJsonFields(reader);
-                        read = GetMergedJsonStructure;
+                        if (additionalJsonFields.Count > 0)
+                            read = GetMergedJsonStructure;
                     }
 
                     while (reader.Read())

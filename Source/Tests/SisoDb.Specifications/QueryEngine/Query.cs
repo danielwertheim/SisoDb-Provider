@@ -623,8 +623,8 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Query with Take, Sort and Page")]
-        public class when_query_skips_first_and_last_and_then_takes_6_structures_and_creates_pages_of_2_and_asks_for_page_2 : SpecificationBase
+        [Subject(typeof(IQueryEngine), "Query with Sort and Page")]
+        public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page : SpecificationBase
         {
             Establish context = () =>
             {
@@ -635,24 +635,20 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>(q => q
                 .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
                 .SortBy(i => i.SortOrder)
-                .Take(6)
-                .Page(1, 2)).ToList();
+                .Page(1, 7)).ToList();
 
-            It should_have_fetched_two_structures =
-                () => _fetchedStructures.Count.ShouldEqual(2);
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
 
-            It should_have_fetched_the_fourth_and_fifth_structures = () =>
-            {
-                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[3]);
-                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[4]);
-            };
+            It should_have_fetched_the_eight_structure = 
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[8]);
 
             private static IList<QueryGuidItem> _structures;
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Query as Json with Take, Sort and Page")]
-        public class when_query_skips_first_and_last_and_then_takes_6_structures_and_creates_pages_of_2_and_asks_for_page_2_as_json : SpecificationBase
+        [Subject(typeof(IQueryEngine), "Query as Json Sort and Page")]
+        public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page_as_Json : SpecificationBase
         {
             Establish context = () =>
             {
@@ -663,24 +659,20 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAsJson<QueryGuidItem>(q => q
                 .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
                 .SortBy(i => i.SortOrder)
-                .Take(6)
-                .Page(1, 2)).ToList();
+                .Page(1, 7)).ToList();
 
-            It should_have_fetched_two_structures =
-                () => _fetchedStructures.Count.ShouldEqual(2);
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
 
-            It should_have_fetched_the_fourth_and_fifth_structures = () =>
-            {
-                _fetchedStructures[0].ShouldEqual(_structures[3].AsJson());
-                _fetchedStructures[1].ShouldEqual(_structures[4].AsJson());
-            };
+            It should_have_fetched_the_eight_structure = 
+                () => _fetchedStructures[0].ShouldEqual(_structures[8].AsJson());
 
             private static IList<QueryGuidItem> _structures;
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Query as X with Take, Sort and Page")]
-        public class when_query_skips_first_and_last_and_then_takes_6_structures_and_creates_pages_of_2_and_asks_for_page_2_as_X : SpecificationBase
+        [Subject(typeof(IQueryEngine), "Query as X with Sort and Page")]
+        public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page_as_X : SpecificationBase
         {
             Establish context = () =>
             {
@@ -691,92 +683,13 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAs<QueryGuidItem, QueryItemInfo>(q => q
                 .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
                 .SortBy(i => i.SortOrder)
-                .Take(6)
-                .Page(1, 2)).ToList();
-
-            It should_have_fetched_two_structures =
-                () => _fetchedStructures.Count.ShouldEqual(2);
-
-            It should_have_fetched_the_fourth_and_fifth_structures = () =>
-            {
-                _fetchedStructures[0].Matches(_structures[3]).ShouldBeTrue();
-                _fetchedStructures[1].Matches(_structures[4]).ShouldBeTrue();
-            };
-
-            private static IList<QueryGuidItem> _structures;
-            private static IList<QueryItemInfo> _fetchedStructures;
-        }
-
-        [Subject(typeof(IQueryEngine), "Query with Take, Sort and Page")]
-        public class when_query_skips_first_and_last_and_then_takes_5_structures_and_creates_pages_of_2_and_asks_for_last_page : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateTenItems<QueryGuidItem>());
-            };
-
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>(q => q
-                .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
-                .SortBy(i => i.SortOrder)
-                .Take(5)
-                .Page(2, 2)).ToList();
-
-            It should_have_fetched_one_structure =
-                () => _fetchedStructures.Count.ShouldEqual(1);
-
-            It should_have_fetched_the_eight_structure = 
-                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[5]);
-
-            private static IList<QueryGuidItem> _structures;
-            private static IList<QueryGuidItem> _fetchedStructures;
-        }
-
-        [Subject(typeof(IQueryEngine), "Query as Json with Take, Sort and Page")]
-        public class when_query_skips_first_and_last_and_then_takes_5_structures_and_creates_pages_of_2_and_asks_for_last_page_as_json : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateTenItems<QueryGuidItem>());
-            };
-
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAsJson<QueryGuidItem>(q => q
-                .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
-                .SortBy(i => i.SortOrder)
-                .Take(5)
-                .Page(2, 2)).ToList();
-
-            It should_have_fetched_one_structure =
-                () => _fetchedStructures.Count.ShouldEqual(1);
-
-            It should_have_fetched_the_eight_structure = 
-                () => _fetchedStructures[0].ShouldEqual(_structures[5].AsJson());
-
-            private static IList<QueryGuidItem> _structures;
-            private static IList<string> _fetchedStructures;
-        }
-
-        [Subject(typeof(IQueryEngine), "Query as X with Take, Sort and Page")]
-        public class when_query_skips_first_and_last_and_then_takes_5_structures_and_creates_pages_of_2_and_asks_for_last_page_as_X : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateTenItems<QueryGuidItem>());
-            };
-
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().QueryAs<QueryGuidItem, QueryItemInfo>(q => q
-                .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
-                .SortBy(i => i.SortOrder)
-                .Take(5)
-                .Page(2, 2)).ToList();
+                .Page(1, 7)).ToList();
 
             It should_have_fetched_one_structure =
                 () => _fetchedStructures.Count.ShouldEqual(1);
 
             It should_have_fetched_the_eight_structure =
-                () => _fetchedStructures[0].Matches(_structures[5]).ShouldBeTrue();
+                () => _fetchedStructures[0].Matches(_structures[8]).ShouldBeTrue();
 
             private static IList<QueryGuidItem> _structures;
             private static IList<QueryItemInfo> _fetchedStructures;

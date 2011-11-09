@@ -63,7 +63,7 @@ namespace SisoDb.SqlCe4
                 where.CriteriaString.PrependWith(" where "),
                 GenerateGroupingMembersString(queryCommand).PrependWith(" group by "),
                 queryCommand.HasSortings ? SqlSorting.ToAliasAndDirectionString(sortings) : "s.[StructureId]",
-                GenerateFetchString(queryCommand).AppendWith(" "));
+                GenerateFetchString(queryCommand).PrependWith(" "));
 
             var queryParams = new List<IDacParameter>(where.Parameters)
             {
