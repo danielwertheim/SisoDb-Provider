@@ -33,7 +33,7 @@ namespace SisoDb
         }
 
         /// <summary>
-        /// Simplifies usage of Insert, Updates and Deletes against <see cref="IUnitOfWork"/>.
+        /// Simplifies usage of <see cref="IUnitOfWork"/>.
         /// </summary>
         /// <param name="db"></param>
         /// <param name="consumer"></param>
@@ -43,6 +43,20 @@ namespace SisoDb
             using (var uow = db.CreateUnitOfWork())
             {
                 consumer.Invoke(uow);
+            }
+        }
+
+        /// <summary>
+        /// Simplifies usage of <see cref="IQueryEngine"/>.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="consumer"></param>
+        [DebuggerStepThrough]
+        public static void WithQueryEngine(this ISisoDatabase db, Action<IQueryEngine> consumer)
+        {
+            using (var qe = db.CreateQueryEngine())
+            {
+                consumer.Invoke(qe);
             }
         }
     }
