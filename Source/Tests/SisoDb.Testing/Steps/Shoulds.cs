@@ -31,7 +31,7 @@ namespace SisoDb.Testing.Steps
 
         public static void should_not_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
         {
-            db.RowCount(structureSchema.GetIndexesTableName(), "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(1);
+            db.RowCount(structureSchema.GetIndexesTableName(), "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldBeGreaterThan(0);
         }
 
         public static void should_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)

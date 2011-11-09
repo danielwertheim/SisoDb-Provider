@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
 	<metadata>
-		<id>SisoDb.SQL2008</id>    
-		<title>SisoDb.SQL2008 - Simple Structure Oriented Db</title>
-		<version>4.0.0Beta</version>
+		<id>SisoDb.Sql2008</id>    
+		<title>SisoDb.Sql2008 - Simple Structure Oriented Db</title>
+		<version>4.0.0</version>
 		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 		<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
@@ -19,14 +19,14 @@
 		<tags>sisodb, sql, sql server, json, document-oriented database</tags>
 		<dependencies>
 			<dependency id="SisoDb" version="4.0.0" />
-			<dependency id="Ensure.That" version="0.4.0" />
-			<dependency id="PineCone" version="0.25.0" />
-			<dependency id="ServiceStack.Text" version="2.26" />
+			<dependency id="Ensure.That" version="0.5.0" />
+			<dependency id="PineCone" version="0.27.0" />
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="Sisodb*.dll" target="lib" />
-	  <file src="Sisodb*.xml" target="lib" />
-	  <file src="License*.txt" target="lib" />
+	  <file src="SisoDb*.dll" target="lib" />
+	  <file src="SisoDb*.xml" target="lib" />
+	  <file src="NCore*.dll" target="lib" />
+	  <file src="License*.txt" />
 	</files>
 </package>

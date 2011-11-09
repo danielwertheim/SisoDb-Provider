@@ -1,3 +1,7 @@
+============================== DEPENDENCIES LICENSES ==============================
+* SqlCeBulCopy - http://sqlcebulkcopy.codeplex.com/license - Microsoft Public License (Ms-PL)
+* ServiceStack.Text - https://github.com/ServiceStack/ServiceStack.Text/blob/master/LICENSE
+============================== SISODB LICENSE ==============================
 The MIT License (MIT)
 
 Copyright (c) 2011 Daniel Wertheim
