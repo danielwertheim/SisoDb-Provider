@@ -1,0 +1,149 @@
+From v2.0 the following is used for versioning:
+vA.B.C
+A=Major changes
+B=New features and minor changes.
+C=Bug fixes
+
+v4.0
+Major rewrite. The generation of StructureSchemas and Structures (graph of indexes) now lives in project: PineCone. http://github.com/danielwertheim/pinecone
+The querying table (Indexes) is now key-value which will open up for better querying support.
+Reworked internals to become more generic to simplify writings of additional providers.
+
+[Fixed]     A connection could sometimes get left in a open state.
+[Fixed]     Bug when Including other Json documents in the same result (Merged Documents).
+[Updated]   ServiceStack.Text updated from v2.2.7 to v3.0.0.
+[Updated]   SisoId is now StructureId both in classes as well as in storage schema.
+[Updated]   Storage schema for Indexes are now key-value.
+[Updated]   Storage schema for Uniques now have UqMemberPath instead of UqName
+[Updated]   All members of QueryEngine and UnitOfWork taking Enumerable of Ids, now takes param array of ids instead. E.g. GetByIds, DeleteByIds etc
+[Updated]   StructureSetUpdater should not be used individually, but via Database.UpdateStructureSet.
+[Updated]   The support for how Uniques are handled has been changed. The property marked as unique is turned into a hashed string before stored. That way we get uniformed lenght strings.
+[Updated]  As a security precausion, DeleteByIdInterval is now only supported when you use Identities and not Guids.
+[New]       SqlCE4 support, except from TransactionScopes. Support is on its was. NORMAL TRANSACTIONS ARE OF COURSE SUPPORTED THOUGH!
+[New]       The Id (previous SisoId) now StructureId now does support Guid, int, long and Nullable<Guid>, Nullable<int>, Nullable<long>
+[New]       HashSets and Dictionaries are now supported
+[New]       Extensionpoints for QueryEngine and UnitOfWork now exists on ISisoDataBase via ReadOnce() and WriteOnce(). These simpliefies working with QueryEngine/UnitOfWorks BUT SHOULD ONLY BE USED WHEN DOING ONE OPERATION AGAINST QueryEngine or UnitOfWork.
+
+v3.1
+[Fixed]		Single Insert method on UnitOfWork does not forward call to InsertMany anymore. Hence for "UoW.Insert" no bulk insert is performed, which leads to less overhead; while "UoW.InsertMany" still makes use of bulkinserts.
+[New]		Foreign-keys and relations are now used between Structure, Indexes and Uniques table.
+[Updated]	IMPORTANT! Skiped "Providers" in the namespace for each provider plugin and rearranged some internal code.
+[Updated]	Latest release of ServiceStack.Text, which now is resolved as a NuGet package.
+
+v3.0        2011-05-18
+[New]       IMPORTANT! As of now SisoDb has been divided in a core assembly "SisoDb" and a provider assembly "SisoDb.Providers.Sql2008". Other providers are work in progress.
+[New]       NuGet Id for Sql2008 provider is "SisoDb.Sql2008".
+[Fixed]     QxAny now can be used on nested enumerables but it only support operators: (== and !=), if non supported operator is used, a SisoDbException will be thrown.
+
+v2.2
+[New]       SisoDbFactory has been replaced by specific Db-factories lying in the provider of your choice, e.g Sql2008 uses Sql2008DbFactory, which currently is the only finnished provider.
+
+v2.1        - 2011-05-02
+[New]       Now lets you nest UnitOfWorks in TransactionScopes. When doing that, Commit and rollbacks are controlled by the TransactionScope.
+
+v2.0        - 2011-05-01
+[Fixed]     When assigning SisoId values, the parallelization messed up the ordering. This has been corrected. The generation is now sequential.
+[New]       IMPORTANT! When inserting items any assigned SisoId-values will not be preserved. This is done because you shouldn't mess up the sequential order of the Guids or the identities. If you do need to preserve values. Let me know.
+[New]       IMPORTANT! Database.CreateQueryEngine : IQueryEngine - Should be used for querying instead of the UnitOfWork retrieved by Database.CreateUnitOfWork. You should only use the UnitOfWork for querying when you need to query structures within the same transaction.
+[New]       IMPORTANT! Naming conventions on primary keys for Structure-table (PK_CustomerStructure) and Indexes-table (PK_CustomerIndexes). If this isn't applied, Database.UpdateStructureSet below will not work.
+[New]       Database.UpdateStructureSet will now perform a rebuild of primary key indexes after the process is done. This is done since Id-values might be reused during this process.
+
+v1.0.3      - 2011-04-29
+[New]       GetByIds, GetByIdsAsJson, GetByIdsAs - Lets you return multiple structures based on a set of multiple ids. (http://sisodb.com/docs/doc16)
+[New]       GetByIdInterval - Lets you return multiple structures having ids matching a defined interval. (http://sisodb.com/docs/doc16)
+[New]       DeleteByIds - Lets you delete multiple structures by specifying a set of ids to delete. (http://sisodb.com/docs/doc5)
+[New]       DeleteByIdInterval - Lets you delete multiple structures having ids matching a defined interval. (http://sisodb.com/docs/doc5)
+[New]       Count(lambda expression) - Lets you execute a count on structures matching a boolean lambda expression. (http://sisodb.com/docs/doc14)
+
+v1.0.2.1    - 2011-04-19
+[Fixed]    Fixed overconsumption of memory while inserting big batches of items.
+
+v1.0.2      - 2011-04-17
+[New]       You can now specify explicitly what to index or what not to index. This will of course result in that fields not being indexed, is not queryable.
+            This is something you might want to do to get better performance. You can always reindex the data using DataBase.UpdateStructureSet (http://sisodb.com/docs/doc13)
+            NOTE! The values are cached per database.
+            The new functionality lies under Database.StructureSchemas.StructureTypeFactory.Configurations (http://sisodb.com/docs/doc15)
+
+[New]       Redesigned the internals so you can now access. SisoEnvironment.ResourceContainer and assign new resolvers to your specific implementations of some resource.
+
+v1.0.1.1    - 2011-04-12
+[Fixed]     There was an bug in how the Unique constraints where handled. This have been fixed but you need to update all Uniques table.
+
+            You should be able to do this with the db.UpdateStructureSet method (http://sisodb.com/docs/doc13) E.g:
+            1) Drop the Uniques table
+            2) Handle any rows from Structure-table and Indexes-table that might cause an Unique-violation.
+            3) Run: db.UpdateStructureSet<Customer, Customer>((oldCustomer, newCustomer) => StructureSetUpdaterStatuses.Keep);
+            
+            You can also do this via T-Sql. All tables [x]Uniques should now have four columns:
+
+            1) SisoId       int|uniqueidentifier    not null
+            2) UqSisoId     int|uniqueidentifier    null
+            3) UqName       [nvarchar](250)         not null
+            4) UqValue      [varchar](100)          not null
+
+
+v1.0.1      - 2011-04-10
+[Update]    Performance optimizations, not using Reflection to extract values for indexing anymore. Now using ILGeneration instead.
+[Update]    Using NuGet to resolve ServiceStack.Text dependency.
+
+v1.0.0.2    - 2011-04-xx
+[Update]:   Reworked the Property (new name StructureProperty) extraction and value accessing.
+
+v1.0.0.1    - 2011-04-03
+[Update]:   Started to push demand of generics upwards the stack.
+[Added]:    NuGet spec file.
+
+v1.0        - 2011-03-25
+[New]:      IMPORTANT! Demand of property Id of type int or guid has now become "SisoId".
+[Update]:   Moved some namespaces but the ordinary consumer should not be affected about this.
+
+v0.9.2		- 2011-03-21
+[New]:		Query API now supports Paging. Eg. uow.Query<Customer>(q => q.Page(pageIndex: 0, pageSize: 10))
+
+v0.9.1		- 2011-03-20
+[New]:		Query API now supports Take number of structures. Eg. uow.Query<Customer>(q => q.Take(10).Where(c => c.CustomerNo == "12345"))
+[Update]:	Latest version of ServiceStack for Json serialization.
+
+v0.9.0.1,
+v0.9.0.2	- 2011-03-10
+[Update]:	Minor update for not relying on reflection but instead use Func's to extract and set Id's.
+
+v0.9.0.0	- 2011-03-06
+[New]:		If a Structure contains another Structure (one with an Id) it will not be serialized and indexed since this structure should be stored on it's own.
+
+v0.8.5		- 2011-03-01
+[New]:		UnitOfWork now supports Json inserts via: InsertJson, InsertManyJson. NOTE! If you have instances of an entity, it's more effective to pass it in instead of raw json.
+
+v0.8.4		- 2011-02-28
+[New]:		You can now use Database.UpdateStructureSet<TOld, TNew> with completly different types to go from lets say, SalesPerson to SalesMen and a also remap properties.
+
+v0.8.3		- 2011-02-27
+[New]:		Now uses Sequential GUIDs to boost performance.
+
+v0.8.2		- 2011-02-27
+[New]:		UnitOfWork now offers the simplified Where methods again.
+[Update]:	UpdateStructureSet - Better performance by deleting by id-range and not per id. [Update]: set nocount on.
+
+v0.8.1.0	- 2011-02-27
+[New]:		Database.UpdateStructureSet (uses SqlStructureSetUpdater under the hood), which lets you pass in oldmodeldefinition and a new modeldefinition and then you can map new propertynames etc. Changes are performed within a transaction.
+
+v0.8.0.0	- 2011-02-25
+[Fixed]:	IMPORTANT! Identities where not being preserved when issuing an update.
+[Removed]:	IMPORTANT! The UnitOfWork Where methods has been removed. You will have to use the Query API instead. E.g uow.Where<T>(expression) now becomes uow.Query<T>(q => q.Where(expression))
+[New]:		You can now Include firstlevel single child structures in the same resultset from the database so that you don't have to do multiple queries/roundtrips. You can do this via the GetAll and Query methods using the command builder's IncludeMethod. NamedQueries works to. Return several fields with Json, where the first one should be named "Json". After that, alias should be the name of the property in the root structure.
+
+v0.7.1.1	- 2011-02-19
+[New]:		Lambda expressions for querying now supports nullable types.
+
+v0.7.1.0	- 2011-02-18
+[Update]:   The UnitOfWork.Query, QueryAs, QueryAsJson methods, taking an ordinary expression is now called Where, WhereAs, WhereAsJson, since the Query overload taking an IQueryCommand got blured/tangled with the one taking an expression.
+[Update]:   SisoDatabase has been replaced with SisoDbFactory.CreateDatabase
+
+v0.7.0.1	- 2011-02-11
+[Fixed]:    bug of not being able to use lambdas with complex types.
+
+v0.7		- 2011-02-10
+[Fixed]:    You can now query Id'values using Lambdas, since it's now translated to StructureId as the column is named in Indexes-table.
+[Update]:   DeleteById doesn't return bool anymore.
+[New]:      DeleteByQuery - You can now delete other than single item by Id and instead pass a query and delete all items matching that query.
+[New]:      Now able to specify sorting when querying using: Query, QueryAs, QueryAsJson, GetAll, GetAllAs, GetAllAsJson

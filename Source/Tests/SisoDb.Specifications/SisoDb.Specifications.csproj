@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{600055EF-5878-4A48-B503-EBA55A3FECAE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SisoDb.Specifications</RootNamespace>
+    <AssemblyName>SisoDb.Specifications</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnsureThat">
+      <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Specifications">
+      <HintPath>..\..\packages\Machine.Specifications.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
+    </Reference>
+    <Reference Include="NCore, Version=0.19.0.64, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PineCone.0.27.0\lib\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.27.0.61, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.27.0\lib\PineCone.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Database\CreateIfNotExists.cs" />
+    <Compile Include="Database\DeleteIfExists.cs" />
+    <Compile Include="Database\DropStructureSet.cs" />
+    <Compile Include="Database\EnsureNewDatabase.cs" />
+    <Compile Include="Database\InitializeExisting.cs" />
+    <Compile Include="Database\UpdateStructureSet.cs" />
+    <Compile Include="Database\UpsertStructureSet.cs" />
+    <Compile Include="Model\ChildItem.cs" />
+    <Compile Include="Model\Container.cs" />
+    <Compile Include="Model\GrandChildItem.cs" />
+    <Compile Include="Model\QueryBigIdentityItem.cs" />
+    <Compile Include="Model\QueryGuidItem.cs" />
+    <Compile Include="Model\QueryIdentityItem.cs" />
+    <Compile Include="Model\QueryItemForQxAnyQueries.cs" />
+    <Compile Include="Model\QueryItemInfo.cs" />
+    <Compile Include="Model\QueryNestedGuidItem.cs" />
+    <Compile Include="Model\QueryNestedItemInfo.cs" />
+    <Compile Include="Model\QueryXItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryEngine\Count.cs" />
+    <Compile Include="QueryEngine\GetAll.cs" />
+    <Compile Include="QueryEngine\GetById.cs" />
+    <Compile Include="QueryEngine\GetByIdInterval.cs" />
+    <Compile Include="QueryEngine\GetByIds.cs" />
+    <Compile Include="QueryEngine\Includes.cs" />
+    <Compile Include="QueryEngine\NamedQueries.cs" />
+    <Compile Include="QueryEngine\Query.cs" />
+    <Compile Include="QueryEngine\QxEnumerableExtensions\QxAny.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxContains.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxEndsWith.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxLike.cs" />
+    <Compile Include="QueryEngine\QxStringExtensions\QxStartsWith.cs" />
+    <Compile Include="QueryEngine\Where.cs" />
+    <Compile Include="TestContextFactory.cs" />
+    <Compile Include="UnitOfWork\Deletes.cs" />
+    <Compile Include="UnitOfWork\InsertsComplete.cs" />
+    <Compile Include="UnitOfWork\InsertsIdBehavior.cs" />
+    <Compile Include="UnitOfWork\InsertsOfJson.cs" />
+    <Compile Include="UnitOfWork\InsertsOfUniques.cs" />
+    <Compile Include="UnitOfWork\InsertsUsingBaseClasses.cs" />
+    <Compile Include="UnitOfWork\InsertsUsingInterfaces.cs" />
+    <Compile Include="UnitOfWork\Queries.cs" />
+    <Compile Include="UnitOfWork\TransactionScopes.cs" />
+    <Compile Include="UnitOfWork\Updates.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
+      <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
+      <Name>SisoDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SisoDb.Testing\SisoDb.Testing.csproj">
+      <Project>{2C9376C7-514B-4D15-AA63-15AFE8149D40}</Project>
+      <Name>SisoDb.Testing</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

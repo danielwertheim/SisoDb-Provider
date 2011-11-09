@@ -1,0 +1,1 @@
+SqlCeBulCopy - http://sqlcebulkcopy.codeplex.com/license - Microsoft Public License (Ms-PL)

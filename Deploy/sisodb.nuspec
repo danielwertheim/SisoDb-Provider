@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
-  <metadata>
-    <id>SisoDb</id>    
-    <title>SisoDb - Simple Structure Oriented Db</title>
-	<version>3.1</version>
-	<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
-	<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
-	<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
-    <description>
-		This package is up to date, but YOU SHOULD USE THIS INSTEAD. http://nuget.org/List/Packages/SisoDb.SQL2008
-	</description>
-	<projectUrl>http://www.sisodb.com</projectUrl>
-	<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
-	<requireLicenseAcceptance>false</requireLicenseAcceptance>
-	<tags>sisodb, sql, sql server, json, document-oriented database</tags>
-	<dependencies>
-      <dependency id="ServiceStack.Text" version="2.26" />
-    </dependencies>
-    </metadata>
-  <files>
-      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.dll" target="lib" />
-	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.pdb" target="lib" />
-      <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\sisodb*.xml" target="lib" />
-	  <file src="..\Solution\Source\SisoDb.Providers.Sql2008\bin\Deploy\*.txt" target="lib" />
-  </files>
+	<metadata>
+		<id>SisoDb</id>    
+		<title>SisoDb - Simple Structure Oriented Db (core)</title>
+		<version>4.0.0</version>
+		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
+		<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
+		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
+		<description>
+			SisoDb is a document-oriented provider over SQL-Server. This package is Core package. Use specific package instead. E.g SisoDb.Sql2008, SisoDb.SqlCe4
+			It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc.
+			It lets you perform queries against SQL-server, using lambda expressions.
+			It syncs schemachanges on the fly and can assist you to handle more complex model updates.
+		</description>
+		<projectUrl>http://www.sisodb.com</projectUrl>
+		<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<tags>sisodb, sql, sql server, json, document-oriented database</tags>
+		<dependencies>
+			<dependency id="Ensure.That" version="0.5.0" />
+			<dependency id="PineCone" version="0.27.0" />
+			<dependency id="ServiceStack.Text" version="3.0.0" />
+		</dependencies>
+	</metadata>
+	<files>
+	  <file src="SisoDb.dll" target="lib" />
+	  <file src="SisoDb.xml" target="lib" />
+	  <file src="NCore*.dll" target="lib" />
+	  <file src="License*.txt" />
+	</files>
 </package>
