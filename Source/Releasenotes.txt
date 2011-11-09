@@ -19,7 +19,7 @@ Reworked internals to become more generic to simplify writings of additional pro
 [Updated]   StructureSetUpdater should not be used individually, but via Database.UpdateStructureSet.
 [Updated]   The support for how Uniques are handled has been changed. The property marked as unique is turned into a hashed string before stored. That way we get uniformed lenght strings.
 *[Updated]  As a security precausion, DeleteByIdInterval is now only supported when you use Identities and not Guids.
-[New]       SqlCE4 support.
+[New]       SqlCE4 support, except from TransactionScopes. Support is on its was. NORMAL TRANSACTIONS ARE OF COURSE SUPPORTED THOUGH!
 [New]       The Id (previous SisoId) now StructureId now does support Guid, int, long and Nullable<Guid>, Nullable<int>, Nullable<long>
 [New]       HashSets and Dictionaries are now supported
 [New]       Extensionpoints for QueryEngine and UnitOfWork now exists on ISisoDataBase via ReadOnce() and WriteOnce(). These simpliefies working with QueryEngine/UnitOfWorks BUT SHOULD ONLY BE USED WHEN DOING ONE OPERATION AGAINST QueryEngine or UnitOfWork.
