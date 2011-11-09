@@ -10,6 +10,8 @@ The querying table (Indexes) is now key-value which will open up for better quer
 Reworked internals to become more generic to simplify writings of additional providers.
 
 [Fixed]     A connection could sometimes get left in a open state.
+[Fixed]     Bug when Including other Json documents in the same result (Merged Documents).
+[Updated]   ServiceStack.Text updated from v2.2.7 to v3.0.0.
 [Updated]   SisoId is now StructureId both in classes as well as in storage schema.
 [Updated]   Storage schema for Indexes are now key-value.
 [Updated]   Storage schema for Uniques now have UqMemberPath instead of UqName
