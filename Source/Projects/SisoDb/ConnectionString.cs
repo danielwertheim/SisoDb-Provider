@@ -46,7 +46,7 @@ namespace SisoDb
 
         private static string[] GetParts(string value)
         {
-            var parts = value.Split("||".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var parts = value.Split(new string[]{"||"}, StringSplitOptions.RemoveEmptyEntries);
 
             if (parts.Length != 2)
                 throw new ArgumentException(ExceptionMessages.ConnectionString_MissingParts.Inject(SisoDbMarker, PlainMarker, Example));

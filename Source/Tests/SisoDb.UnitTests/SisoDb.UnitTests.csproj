@@ -132,6 +132,7 @@
     <Compile Include="Querying\QueryCommandTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="SisoConnectionInfoTests.cs" />
+    <Compile Include="SqlCe4\SqlCe4ConnectionInfoTests.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
     <Compile Include="Stub.cs" />
     <Compile Include="TestFactories\StructureSchemaTestFactory.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlServerCe;
 using System.IO;
+using System.Web;
 using NCore;
 using SisoDb.Resources;
 
@@ -50,6 +51,14 @@ namespace SisoDb.SqlCe4
             var cnStringBuilder = new SqlCeConnectionStringBuilder(ConnectionString.PlainString);
 
             _filePath = cnStringBuilder.DataSource;
+
+            const string dataDirectorySwitch = "|DataDirectory|";
+            if(_filePath.StartsWith(dataDirectorySwitch, StringComparison.InvariantCultureIgnoreCase))
+            {
+                _filePath = _filePath.Substring(dataDirectorySwitch.Length);
+                if (HttpContext.Current != null)
+                    _filePath = Path.Combine(HttpContext.Current.Server.MapPath("App_Data"), _filePath);
+            }
 
             _dbName = FilePath.Contains(Path.DirectorySeparatorChar.ToString())
                 ? Path.GetFileNameWithoutExtension(FilePath)

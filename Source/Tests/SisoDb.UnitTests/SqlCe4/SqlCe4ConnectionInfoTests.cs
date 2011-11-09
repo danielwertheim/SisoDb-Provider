@@ -1,8 +1,8 @@
+using NCore;
 using NUnit.Framework;
-using SisoDb.Core;
+using SisoDb.Resources;
 using SisoDb.SqlCe4;
-using SisoDb.SqlCe4.Resources;
-using SisoDb.TestUtils;
+using SisoDb.UnitTests;
 
 namespace SisoDb.Tests.UnitTests.SqlCe4
 {
@@ -10,16 +10,27 @@ namespace SisoDb.Tests.UnitTests.SqlCe4
     public class SqlCe4ConnectionInfoTests : UnitTestBase
     {
         [Test]
-        public void Ctor_WhenConnectionInfoHasWrongProviderType_ThrowsSisoDbException()
+        public void Ctor_WhenWrongProviderType_ThrowsSisoDbException()
         {
-            var connectionInfoStub = Stub.This<ISisoConnectionInfo>(
-                o => o.Setup(s => s.ProviderType).Returns(StorageProviders.Sql2008));
+            var connectionInfoStub = Stub.This<IConnectionString>(
+                o => o.Setup(s => s.Provider).Returns(StorageProviders.Sql2008.ToString));
 
             var ex = Assert.Throws<SisoDbException>(() => new SqlCe4ConnectionInfo(connectionInfoStub));
 
-            Assert.AreEqual(
-                SqlCe4Exceptions.SqlCe4Database_UnsupportedProviderSpecified
-                    .Inject(connectionInfoStub.ProviderType, StorageProviders.SqlCe4), ex.Message);
+            Assert.AreEqual(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified
+                    .Inject(connectionInfoStub.Provider, StorageProviders.SqlCe4), ex.Message);
+        }
+
+        [Test]
+        public void Ctor_WhenPassingDataSourceForWithDataDirectory_ItRocks()
+        {
+            var cnString = new ConnectionString(@"sisodb:provider=SqlCe4||plain:data source=|DataDirectory|SisoDbTestsTemp.sdf;");
+
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
+
+            Assert.AreEqual(StorageProviders.SqlCe4, cnInfo.ProviderType);
+            Assert.AreEqual("SisoDbTestsTemp.sdf", cnInfo.DbName);
+            Assert.AreEqual(@"SisoDbTestsTemp.sdf", cnInfo.FilePath);
         }
 
         [Test]
@@ -27,11 +38,7 @@ namespace SisoDb.Tests.UnitTests.SqlCe4
         {
             var cnString = new ConnectionString(@"sisodb:provider=SqlCe4||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;");
 
-            var cnInfoStub = Stub.This<ISisoConnectionInfo>(
-                o => o.Setup(s => s.ProviderType).Returns(StorageProviders.SqlCe4),
-                o => o.Setup(s => s.ConnectionString).Returns(cnString));
-
-            var cnInfo = new SqlCe4ConnectionInfo(cnInfoStub);
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
 
             Assert.AreEqual(StorageProviders.SqlCe4, cnInfo.ProviderType);
         }
@@ -41,11 +48,7 @@ namespace SisoDb.Tests.UnitTests.SqlCe4
         {
             var cnString = new ConnectionString(@"sisodb:provider=SqlCe4||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;");
 
-            var cnInfoStub = Stub.This<ISisoConnectionInfo>(
-                o => o.Setup(s => s.ProviderType).Returns(StorageProviders.SqlCe4),
-                o => o.Setup(s => s.ConnectionString).Returns(cnString));
-
-            var cnInfo = new SqlCe4ConnectionInfo(cnInfoStub);
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
 
             Assert.AreEqual(@"d:\#Temp\SisoDb\SisoDbTestsTemp.sdf", cnInfo.FilePath);
         }
@@ -55,13 +58,9 @@ namespace SisoDb.Tests.UnitTests.SqlCe4
         {
             var cnString = new ConnectionString(@"sisodb:provider=SqlCe4||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;");
 
-            var cnInfoStub = Stub.This<ISisoConnectionInfo>(
-                o => o.Setup(s => s.ProviderType).Returns(StorageProviders.SqlCe4),
-                o => o.Setup(s => s.ConnectionString).Returns(cnString));
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
 
-            var cnInfo = new SqlCe4ConnectionInfo(cnInfoStub);
-
-            Assert.AreEqual("SisoDbTestsTemp", cnInfo.Name);
+            Assert.AreEqual("SisoDbTestsTemp", cnInfo.DbName);
         }
     }
 }
