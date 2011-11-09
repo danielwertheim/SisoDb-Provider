@@ -117,6 +117,9 @@
     <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIdInterval.cs">
       <Link>QueryEngine\GetByIdInterval.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIds.cs">
+      <Link>QueryEngine\GetByIds.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\Includes.cs">
       <Link>QueryEngine\Includes.cs</Link>
     </Compile>

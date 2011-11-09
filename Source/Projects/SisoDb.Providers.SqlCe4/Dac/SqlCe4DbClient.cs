@@ -43,7 +43,7 @@ namespace SisoDb.SqlCe4.Dac
             var structureTableExists = TableExists(structureSchema.GetStructureTableName());
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
-            
+
             using (var cmd = CreateCommand(string.Empty, new DacParameter("entityHash", structureSchema.Hash)))
             {
                 if (indexesTableExists)
@@ -93,17 +93,41 @@ namespace SisoDb.SqlCe4.Dac
 
         public override void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
         {
-            throw new SisoDbNotSupportedByProviderException(StorageProviders.SqlCe4, "DeleteByIds.");
-            //Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            var sqlFormat = SqlStatements.GetSql("DeleteByIds").Inject(
+                structureSchema.GetStructureTableName(), "{0}");
 
-            //var sql = SqlStatements.GetSql("DeleteByIds").Inject(
-            //    structureSchema.GetStructureTableName());
+            using (var cmd = CreateCommand(string.Empty))
+            {
+                foreach (var idsString in ToIdsStrings(ids, idType))
+                {
+                    cmd.CommandText = sqlFormat.Inject(string.Join(",", idsString));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-            //using (var cmd = CreateCommand(CommandType.Text, sql))
-            //{
-            //    cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
-            //    cmd.ExecuteNonQuery();
-            //}
+        private static IEnumerable<string[]> ToIdsStrings(IEnumerable<ValueType> ids, StructureIdTypes idType)
+        {
+            var idFormat = idType.IsIdentity() ? "{0}" : "'{0}'";
+
+            var buff = new List<string>();
+            foreach (var id in ids)
+            {
+                buff.Add(string.Format(idFormat, id));
+
+                if (buff.Count == 10)
+                {
+                    yield return buff.ToArray();
+                    buff.Clear();
+                }
+            }
+
+            if(buff.Count == 0)
+                yield break;
+
+            yield return buff.ToArray();
+            buff.Clear();
         }
 
         public override void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema)
@@ -176,7 +200,7 @@ namespace SisoDb.SqlCe4.Dac
 
             using (var cmd = CreateCommand(sql))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {
@@ -198,24 +222,24 @@ namespace SisoDb.SqlCe4.Dac
 
         public override IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
         {
-            throw new SisoDbNotSupportedByProviderException(StorageProviders.SqlCe4, "GetJsonByIds.");
-            //Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            var sqlFormat = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName(), "{0}");
 
-            //var sql = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName());
-
-            //using (var cmd = CreateCommand(CommandType.Text, sql))
-            //{
-            //    cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
-
-            //    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
-            //    {
-            //        while (reader.Read())
-            //        {
-            //            yield return reader.GetString(0);
-            //        }
-            //        reader.Close();
-            //    }
-            //}
+            using (var cmd = CreateCommand(string.Empty))
+            {
+                foreach (var idsString in ToIdsStrings(ids, idType))
+                {
+                    cmd.CommandText = sqlFormat.Inject(string.Join(",", idsString));
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                    {
+                        while (reader.Read())
+                        {
+                            yield return reader.GetString(0);
+                        }
+                        reader.Close();
+                    }
+                }
+            }
         }
 
         public override IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)

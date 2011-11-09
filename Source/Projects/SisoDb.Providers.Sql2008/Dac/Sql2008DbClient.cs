@@ -156,7 +156,7 @@ namespace SisoDb.Sql2008.Dac
 
             using (var cmd = CreateCommand(sql))
             {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {
@@ -186,7 +186,7 @@ namespace SisoDb.Sql2008.Dac
             {
                 cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(idType, ids));
 
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     while (reader.Read())
                     {

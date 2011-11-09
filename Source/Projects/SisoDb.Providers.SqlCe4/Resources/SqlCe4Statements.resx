@@ -186,6 +186,9 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   <data name="DeleteById" xml:space="preserve">
     <value>delete from [{0}] where StructureId = @id;</value>
   </data>
+  <data name="DeleteByIds" xml:space="preserve">
+    <value>delete from [{0}] where StructureId in ({1});</value>
+  </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>delete from [{0}] where StructureId in({1});</value>
   </data>
@@ -206,6 +209,9 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="GetById" xml:space="preserve">
     <value>select json from [{0}] where StructureId =@id;</value>
+  </data>
+  <data name="GetByIds" xml:space="preserve">
+    <value>select Json from [{0}] where StructureId in ({1});</value>
   </data>
   <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
     <value>select Json from [{0}] where StructureId between @idFrom and @idTo;</value>
