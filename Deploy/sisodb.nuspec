@@ -24,8 +24,8 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="SisoDb*.dll" target="lib" />
-	  <file src="SisoDb*.xml" target="lib" />
+	  <file src="SisoDb.dll" target="lib" />
+	  <file src="SisoDb.xml" target="lib" />
 	  <file src="NCore*.dll" target="lib" />
 	  <file src="License*.txt" />
 	</files>
