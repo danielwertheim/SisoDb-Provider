@@ -24,7 +24,7 @@ namespace SisoDb.SqlCe4
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
 
             var sql = string.Format(
-                "select {0}s.Json{1}{2} from [{3}] s inner join [{6}] si on si.[StructureId] = s.[StructureId]{4}{5}{7}{8}{9}{10};",
+                "select {0}s.Json{1}{2} from [{3}] s inner join [{6}] si on si.[StructureId] = s.[StructureId]{7}{4}{5}{8}{9}{10};",
                 GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToJsonOutputDefinitionString(includes).PrependWith(", "),
                 SqlSorting.ToColumnDefinitionString(sortings, "min({0})").PrependWith(", "),
@@ -52,7 +52,7 @@ namespace SisoDb.SqlCe4
                 takeRows = queryCommand.Paging.PageSize;
 
             var sql = string.Format(
-                "select s.Json{0}{1} from [{2}] s inner join [{5}] si on si.[StructureId] = s.[StructureId]{3}{4}{6}{7}{8} order by {9} offset @offsetRows rows{10};",
+                "select s.Json{0}{1} from [{2}] s inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{3}{4}{7}{8} order by {9} offset @offsetRows rows{10};",
                 SqlInclude.ToJsonOutputDefinitionString(includes).PrependWith(", "),
                 SqlSorting.ToColumnDefinitionString(sortings, "min({0})").PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),

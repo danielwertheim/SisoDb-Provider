@@ -75,7 +75,7 @@ namespace SisoDb.Querying
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
             
             var sql = string.Format(
-                "select {0}s.Json{1} from [{2}] s inner join [{5}] si on si.[StructureId] = s.[StructureId]{3}{4}{6}{7}{8}{9};",
+                "select {0}s.Json{1} from [{2}] s inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{3}{4}{7}{8}{9};",
                 GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToJsonOutputDefinitionString(includes).PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),
@@ -97,7 +97,7 @@ namespace SisoDb.Querying
             var sortings = SortingConverter.Convert(queryCommand.StructureSchema, queryCommand.Sortings);
 
             var innerSelect = string.Format(
-                "select {0}s.Json{1}, row_number() over (order by {7}) as RowNum from [{2}] s inner join [{5}] si on si.[StructureId] = s.[StructureId]{3}{4}{6}{8}{9}",
+                "select {0}s.Json{1}, row_number() over (order by {7}) as RowNum from [{2}] s inner join [{5}] si on si.[StructureId] = s.[StructureId]{6}{3}{4}{8}{9}",
                 GenerateTakeString(queryCommand).AppendWith(" "),
                 SqlInclude.ToJsonOutputDefinitionString(includes).PrependWith(", "),
                 queryCommand.StructureSchema.GetStructureTableName(),

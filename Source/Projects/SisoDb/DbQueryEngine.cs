@@ -319,19 +319,19 @@ namespace SisoDb
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
                     Func<IDataRecord, IDictionary<int, string>, string> read;
-                    IDictionary<int, string> jsonFields = null;
+                    IDictionary<int, string> additionalJsonFields = null;
 
                     if (reader.FieldCount == 1)
                         read = (dr, af) => dr.GetString(0);
                     else
                     {
-                        jsonFields = GetJsonFields(reader);
+                        additionalJsonFields = GetAdditionalJsonFields(reader);
                         read = GetMergedJsonStructure;
                     }
 
                     while (reader.Read())
                     {
-                        yield return read.Invoke(reader, jsonFields);
+                        yield return read.Invoke(reader, additionalJsonFields);
                     }
 
                     reader.Close();
@@ -339,10 +339,10 @@ namespace SisoDb
             }
         }
 
-        private IDictionary<int, string> GetJsonFields(IDataRecord dataRecord)
+        private IDictionary<int, string> GetAdditionalJsonFields(IDataRecord dataRecord)
         {
             var indices = new Dictionary<int, string>();
-            for(var i = 0; i < dataRecord.FieldCount; i++)
+            for(var i = 1; i < dataRecord.FieldCount; i++)
             {
                 var name = dataRecord.GetName(i); 
                 if(name.Contains(StructureStorageSchema.Fields.Json.Name))
@@ -353,15 +353,17 @@ namespace SisoDb
             return indices;
         }
 
-        private static string GetMergedJsonStructure(IDataRecord dataRecord, IDictionary<int, string> jsonFields)
+        private static string GetMergedJsonStructure(IDataRecord dataRecord, IDictionary<int, string> additionalJsonFields)
         {
             var sb = new StringBuilder();
             sb.Append(dataRecord.GetString(0));
-            sb.Remove(sb.Length - 1, 1);
-            sb.Append(",");
-
-            foreach (var childJson in ReadChildJson(dataRecord, jsonFields))
+            sb = sb.Remove(sb.Length - 1, 1);
+            
+            foreach (var childJson in ReadChildJson(dataRecord, additionalJsonFields))
+            {
+                sb.Append(",");
                 sb.Append(childJson);
+            }
 
             sb.Append("}");
 
@@ -370,14 +372,10 @@ namespace SisoDb
 
         private static IEnumerable<string> ReadChildJson(IDataRecord dataRecord, IDictionary<int, string> additionalJsonFields)
         {
-            var lastIndex = additionalJsonFields.Count - 1;
-            foreach (var additionalJsonField in additionalJsonFields)
-            {
-                yield return string.Format("\"{0}\":{1}{2}",
-                    additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
-                    dataRecord.GetString(additionalJsonField.Key),
-                    (additionalJsonField.Key < lastIndex) ? "," : "");
-            }
+            return additionalJsonFields.Select(additionalJsonField => 
+                string.Format("\"{0}\":{1}",
+                additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
+                dataRecord.GetString(additionalJsonField.Key)));
         }
     }
 }

@@ -112,7 +112,7 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 TestContext = TestContextFactory.Create();
                 _structure = Establishments.SetupStructuresForIncludes(TestContext);
-                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [Genre], min(cs1.Json) as [Artist], min(cs2.Json) as [SecondArtist] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [GenreStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [ArtistStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [ArtistStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [GenreStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [ArtistStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [ArtistStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
             public void AfterContextCleanup()
@@ -141,7 +141,7 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 TestContext = TestContextFactory.Create();
                 _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
-                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [Genre], min(cs1.Json) as [Artist], min(cs2.Json) as [SecondArtist] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [IGenreDataStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [IArtistDataStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [IArtistDataStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [IGenreDataStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [IArtistDataStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [IArtistDataStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
             public void AfterContextCleanup()
