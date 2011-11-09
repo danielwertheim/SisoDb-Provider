@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Machine.Specifications;
 using PineCone.Structures.Schemas;
+using SisoDb.Resources;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 using SisoDb.Testing.TestModel;
@@ -680,55 +681,35 @@ namespace SisoDb.Specifications.UnitOfWork
         }
 
         [Subject(typeof(IUnitOfWork), "Delete by id interval")]
-        public class when_guiditem_and_deleting_two_of_four_items_using_id_interval : SpecificationBase
+        public class when_guiditem_throws_not_supported_exception : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = TestContext.Database.InsertGuidItems(4);
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<GuidItem>();
             };
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                CaughtException = Catch.Exception(() =>
                 {
-                    uow.DeleteByIdInterval<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
-                    uow.Commit();
-                }
+                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    {
+                        uow.DeleteByIdInterval<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
+                        uow.Commit();
+                    }
+                });
             };
 
-            It should_only_have_two_items_left =
-                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
+            It should_have_failed = () =>
+            {
+                CaughtException.ShouldNotBeNull();
+                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
 
-            It should_have_first_and_last_item_left =
-                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+                var ex = (SisoDbNotSupportedByProviderException) CaughtException;
+                ex.Message.ShouldContain(ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
+            };
 
-            It should_not_have_deleted_first_item_from_structures_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
-
-            It should_not_have_deleted_last_item_from_structures_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
-
-            It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
-
-            It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
-
-            It should_have_deleted_second_item_from_structures_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
-
-            It should_have_deleted_third_item_from_structures_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
-
-            It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
-
-            It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
-
-            private static IStructureSchema _structureSchema;
             private static IList<GuidItem> _structures;
         }
 

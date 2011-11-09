@@ -262,4 +262,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SisoDbNotSupportedByProviderException" xml:space="preserve">
     <value>The provider: '{0}' does not support operation: {1}.</value>
   </data>
+  <data name="UnitOfWork_DeleteByIdInterval_WrongIdType" xml:space="preserve">
+    <value>DeleteByIdInterval is not supported when using other ID-types than identities.</value>
+  </data>
 </root>

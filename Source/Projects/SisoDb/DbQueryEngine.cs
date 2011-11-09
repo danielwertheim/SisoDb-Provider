@@ -18,8 +18,9 @@ namespace SisoDb
 {
     public abstract class DbQueryEngine : IQueryEngine
     {
+        protected StorageProviders ProviderType { get; private set; }
         protected ISisoProviderFactory ProviderFactory { get; private set; }
-
+        
         protected IDbClient DbClient { get; private set; }
         protected IDbClient DbClientNonTrans { get; private set; }
         protected IDbSchemaManager DbSchemaManager { get; private set; }
@@ -40,7 +41,8 @@ namespace SisoDb
             Ensure.That(structureSchemas, "structureSchemas").IsNotNull();
             Ensure.That(jsonSerializer, "jsonSerializer").IsNotNull();
 
-            ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
+            ProviderType = connectionInfo.ProviderType;
+            ProviderFactory = SisoEnvironment.ProviderFactories.Get(ProviderType);
             DbClient = ProviderFactory.GetDbClient(connectionInfo, transactional);
             DbClientNonTrans = !DbClient.IsTransactional ? DbClient : ProviderFactory.GetDbClient(connectionInfo, false);
             DbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(DbClientNonTrans);

@@ -467,6 +467,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DeleteByIdInterval is not supported when using other ID-types than identities..
+        /// </summary>
+        public static string UnitOfWork_DeleteByIdInterval_WrongIdType {
+            get {
+                return ResourceManager.GetString("UnitOfWork_DeleteByIdInterval_WrongIdType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
         /// </summary>
         public static string UnitOfWork_DoIdentityInsert_RootItemsMissmatch {

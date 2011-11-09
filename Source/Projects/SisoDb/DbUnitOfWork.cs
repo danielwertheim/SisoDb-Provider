@@ -131,6 +131,9 @@ namespace SisoDb
         {
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
 
+            if(!structureSchema.IdAccessor.IdType.IsIdentity())
+                throw new SisoDbNotSupportedByProviderException(ProviderType, ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
+
             UpsertStructureSet(structureSchema);
 
             DbClient.DeleteWhereIdIsBetween(idFrom, idTo, structureSchema);
