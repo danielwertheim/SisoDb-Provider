@@ -16,7 +16,7 @@
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb, sql, sql server, json, document-oriented database</tags>
+		<tags>sisodb, document-database, json, sql, sql-server, sqlce, sqlce4</tags>
 		<dependencies>
 			<dependency id="SisoDb" version="4.0.0" />
 			<dependency id="Ensure.That" version="0.5.0" />
