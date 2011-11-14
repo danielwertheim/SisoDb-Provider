@@ -4,6 +4,10 @@ A=Major changes
 B=New features and minor changes.
 C=Bug fixes
 
+v4.0.1
+[Fixed]    Fixed the SqlCe4 package. Was missing two dependencies.
+[Fixed]	   After rewrite in v4.0, no upper limit existed for the batchsize of Indexes sent to the bulkinserter.
+
 v4.0
 Major rewrite. The generation of StructureSchemas and Structures (graph of indexes) now lives in project: PineCone. http://github.com/danielwertheim/pinecone
 The querying table (Indexes) is now key-value which will open up for better querying support.
@@ -18,7 +22,7 @@ Reworked internals to become more generic to simplify writings of additional pro
 [Updated]   All members of QueryEngine and UnitOfWork taking Enumerable of Ids, now takes param array of ids instead. E.g. GetByIds, DeleteByIds etc
 [Updated]   StructureSetUpdater should not be used individually, but via Database.UpdateStructureSet.
 [Updated]   The support for how Uniques are handled has been changed. The property marked as unique is turned into a hashed string before stored. That way we get uniformed lenght strings.
-[Updated]  As a security precausion, DeleteByIdInterval is now only supported when you use Identities and not Guids.
+[Updated]   As a security precausion, DeleteByIdInterval is now only supported when you use Identities and not Guids.
 [New]       SqlCE4 support, except from TransactionScopes. Support is on its was. NORMAL TRANSACTIONS ARE OF COURSE SUPPORTED THOUGH!
 [New]       The Id (previous SisoId) now StructureId now does support Guid, int, long and Nullable<Guid>, Nullable<int>, Nullable<long>
 [New]       HashSets and Dictionaries are now supported

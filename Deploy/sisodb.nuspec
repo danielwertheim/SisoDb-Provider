@@ -16,7 +16,7 @@
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb, document-database, json, sql, sql-server, sqlce, sqlce4</tags>
+		<tags>sisodb,document-database,json,sql,sql-server,sqlce,sqlce4</tags>
 		<dependencies>
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="0.27.0" />

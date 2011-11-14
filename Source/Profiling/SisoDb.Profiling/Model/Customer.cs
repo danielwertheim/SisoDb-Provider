@@ -5,7 +5,7 @@ namespace SisoDb.Profiling.Model
     [Serializable]
     public class Customer
     {
-        public long StructureId { get; set; }
+        public Guid StructureId { get; set; }
 
         public int CustomerNo { get; set; }
 
