@@ -11,8 +11,6 @@ _there's also no proxies_ etc. **It's just storage of your entities made simple*
 ## NuGet
 SisoDb is available via [NuGet](http://nuget.org/List/Search?packageType=Packages&searchCategory=All+Categories&searchTerm=sisodb).
 
-or simply just run:
-
 ### PM> Install-Package SisoDb.Sql2008
 
 ### PM> Install-Package SisoDb.SqlCe4
@@ -20,7 +18,7 @@ or simply just run:
 ## More information
 Follow [@danielwertheim](http://twitter.com/danielwertheim) and [@sisodb](http://twitter.com/sisodb)
 
-For documentation, news etc, goto: <http://www.sisodb.com>
+For documentation, news etc, look under the wiki or goto: http://www.sisodb.com
 
 ## License
 The MIT License (MIT)
