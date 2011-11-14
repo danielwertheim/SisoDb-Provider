@@ -6,6 +6,7 @@ v5.0.0
 [Updated]   GetByIdInterval is not supported if Id-type is not Guid.
 [Updated]   Moved NamedQuery methods to QueryEngine.Advanced
 [Updated]   NO MORE CLIENT PROFILE
+[Updated]   Updated ServiceStack.Text to last version.
 
 v4.0
 Major rewrite. The generation of StructureSchemas and Structures (graph of indexes) now lives in project: PineCone. http://github.com/danielwertheim/pinecone
