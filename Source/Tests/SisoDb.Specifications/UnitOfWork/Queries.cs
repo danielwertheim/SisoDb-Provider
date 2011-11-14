@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
+using PineCone.Structures;
+using SisoDb.Resources;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
@@ -132,7 +135,7 @@ namespace SisoDb.Specifications.UnitOfWork
     namespace GetByIdInterval
     {
         [Subject(typeof(IUnitOfWork), "Get by Id interval")]
-        public class when_id_interval_matches_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
+        public class when_getting_for_guids : SpecificationBase
         {
             Establish context = () =>
             {
@@ -142,21 +145,24 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                CaughtException = Catch.Exception(() =>
                 {
-                    uow.InsertMany(_structures);
+                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    {
+                        uow.InsertMany(_structures);
 
-                    _fetchedStructures = uow.GetByIdInterval<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
-                }
+                        _fetchedStructures = uow.GetByIdInterval<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                    }
+                });
             };
 
-            It should_fetch_2_structures =
-                () => _fetchedStructures.Count.ShouldEqual(2);
-
-            It should_fetch_the_two_middle_structures = () =>
+            It should_have_failed = () =>
             {
-                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
-                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+                CaughtException.ShouldNotBeNull();
+                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
+
+                var ex = (SisoDbNotSupportedByProviderException)CaughtException;
+                ex.Message.ShouldContain(ExceptionMessages.QueryEngine_GetByIdInterval_WrongIdType);
             };
 
             private static IList<QueryGuidItem> _structures;

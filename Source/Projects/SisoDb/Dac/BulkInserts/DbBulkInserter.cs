@@ -8,6 +8,10 @@ namespace SisoDb.Dac.BulkInserts
 {
     public class DbBulkInserter : IDbBulkInserter
     {
+        private const int MaxStructureBatchSize = 1000;
+        private const int MaxIndexesBatchSize = 6000;
+        private const int MaxUniquesBatchSize = 6000;
+
         private readonly IDbClient _dbClient;
 
         public DbBulkInserter(IDbClient dbClient)
@@ -45,7 +49,7 @@ namespace SisoDb.Dac.BulkInserts
         {
             using (var bulkInserter = _dbClient.GetBulkCopy(keepIdentities))
             {
-                bulkInserter.BatchSize = structures.RecordsAffected;
+                bulkInserter.BatchSize = structures.RecordsAffected > MaxStructureBatchSize ? MaxStructureBatchSize : structures.RecordsAffected;
                 bulkInserter.DestinationTableName = structures.StorageSchema.Name;
                 
                 foreach (var field in structures.StorageSchema.GetFieldsOrderedByIndex())
@@ -59,7 +63,7 @@ namespace SisoDb.Dac.BulkInserts
         {
             using (var bulkInserter = _dbClient.GetBulkCopy(false))
             {
-                bulkInserter.BatchSize = indexes.RecordsAffected;
+                bulkInserter.BatchSize = indexes.RecordsAffected > MaxIndexesBatchSize ? MaxIndexesBatchSize : indexes.RecordsAffected;
                 bulkInserter.DestinationTableName = indexes.StorageSchema.Name;
 
                 foreach (var field in indexes.StorageSchema.GetFieldsOrderedByIndex())
@@ -73,7 +77,7 @@ namespace SisoDb.Dac.BulkInserts
         {
             using (var bulkInserter = _dbClient.GetBulkCopy(false))
             {
-                bulkInserter.BatchSize = uniques.RecordsAffected;
+                bulkInserter.BatchSize = uniques.RecordsAffected > MaxUniquesBatchSize ? MaxUniquesBatchSize : uniques.RecordsAffected;
                 bulkInserter.DestinationTableName = uniques.StorageSchema.Name;
 
                 foreach (var field in uniques.StorageSchema.GetFieldsOrderedByIndex())

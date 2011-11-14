@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.Sql2008</id>    
 		<title>SisoDb.Sql2008 - Simple Structure Oriented Db</title>
-		<version>4.0.0</version>
+		<version>5.0.0</version>
 		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 		<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
@@ -16,9 +16,9 @@
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb, sql, sql server, json, document-oriented database</tags>
+		<tags>sisodb,document-database,json,sql,sql-server,sql2008,mssql2008</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="4.0.0" />
+			<dependency id="SisoDb" version="5.0.0" />
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="0.27.0" />
 		</dependencies>

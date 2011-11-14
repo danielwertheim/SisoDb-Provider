@@ -6,21 +6,24 @@ using System.Linq.Expressions;
 using System.Text;
 using EnsureThat;
 using NCore;
+using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
+using SisoDb.Resources;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 
 namespace SisoDb
 {
-    public abstract class DbQueryEngine : IQueryEngine
+    public abstract class DbQueryEngine : IQueryEngine, IAdvancedQueryEngine
     {
         protected StorageProviders ProviderType { get; private set; }
         protected ISisoProviderFactory ProviderFactory { get; private set; }
         
+        public IAdvancedQueryEngine Advanced { get; private set; }
         protected IDbClient DbClient { get; private set; }
         protected IDbClient DbClientNonTrans { get; private set; }
         protected IDbSchemaManager DbSchemaManager { get; private set; }
@@ -50,6 +53,7 @@ namespace SisoDb
             DbSchemaManager = dbSchemaManager;
             StructureSchemas = structureSchemas;
             JsonSerializer = jsonSerializer;
+            Advanced = this;
         }
 
         public void Dispose()
@@ -79,6 +83,25 @@ namespace SisoDb
         protected void UpsertStructureSet(IStructureSchema structureSchema)
         {
             DbSchemaManager.UpsertStructureSet(structureSchema, DbSchemaUpserter);
+        }
+
+        IEnumerable<T> IAdvancedQueryEngine.NamedQuery<T>(INamedQuery query)
+        {
+            return JsonSerializer.DeserializeMany<T>(((IAdvancedQueryEngine)this).NamedQueryAsJson<T>(query));
+        }
+
+        IEnumerable<TOut> IAdvancedQueryEngine.NamedQueryAs<TContract, TOut>(INamedQuery query)
+        {
+            return JsonSerializer.DeserializeMany<TOut>(((IAdvancedQueryEngine)this).NamedQueryAsJson<TContract>(query));
+        }
+
+        IEnumerable<string> IAdvancedQueryEngine.NamedQueryAsJson<T>(INamedQuery query)
+        {
+            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+
+            UpsertStructureSet(structureSchema);
+
+            return ConsumeReader(query.Name, true, query.Parameters.ToArray());
         }
 
         public virtual int Count<T>() where T : class
@@ -117,6 +140,9 @@ namespace SisoDb
         public virtual IEnumerable<T> GetByIdInterval<T>(ValueType idFrom, ValueType idTo) where T : class
         {
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+
+            if (!structureSchema.IdAccessor.IdType.IsIdentity())
+                throw new SisoDbNotSupportedByProviderException(ProviderType, ExceptionMessages.QueryEngine_GetByIdInterval_WrongIdType);
 
             UpsertStructureSet(structureSchema);
 
@@ -201,27 +227,6 @@ namespace SisoDb
             commandInitializer(commandBuilder);
 
             return GetAllAsJson<T>(commandBuilder.Command);
-        }
-
-        public virtual IEnumerable<T> NamedQuery<T>(INamedQuery query) where T : class
-        {
-            return JsonSerializer.DeserializeMany<T>(NamedQueryAsJson<T>(query));
-        }
-
-        public virtual IEnumerable<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query)
-            where TContract : class
-            where TOut : class
-        {
-            return JsonSerializer.DeserializeMany<TOut>(NamedQueryAsJson<TContract>(query));
-        }
-
-        public virtual IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
-        {
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
-
-            UpsertStructureSet(structureSchema);
-
-            return ConsumeReader(query.Name, true, query.Parameters.ToArray());
         }
 
         public virtual IEnumerable<T> Where<T>(Expression<Func<T, bool>> expression)

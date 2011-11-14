@@ -265,4 +265,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="UnitOfWork_DeleteByIdInterval_WrongIdType" xml:space="preserve">
     <value>DeleteByIdInterval is not supported when using other ID-types than identities.</value>
   </data>
+  <data name="QueryEngine_GetByIdInterval_WrongIdType" xml:space="preserve">
+    <value>GetByIdInterval is not supported when using other ID-types than identities.</value>
+  </data>
 </root>

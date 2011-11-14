@@ -11,7 +11,8 @@
     <RootNamespace>SisoDb.Profiling</RootNamespace>
     <AssemblyName>SisoDb.Profiling</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -40,22 +41,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Release\SisoDb.Profiling.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
-    <OutputPath>bin\Deploy\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -100,6 +85,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlCe4\SisoDb.SqlCe4.csproj">
+      <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
+      <Name>SisoDb.SqlCe4</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>

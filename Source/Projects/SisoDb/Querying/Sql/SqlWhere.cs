@@ -37,7 +37,7 @@ namespace SisoDb.Querying.Sql
 
         public SqlWhere(string[] memberPaths, string criteriaString, ICollection<IDacParameter> parameters)
         {
-            Ensure.That(memberPaths, "memberPaths").HasItems();
+            //Ensure.That(memberPaths, "memberPaths").HasItems();
             Ensure.That(criteriaString, "criteriaString").IsNotNullOrWhiteSpace();
             Ensure.That(parameters, "parameters").IsNotNull();
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using SisoDb.Profiling.Model;
 using SisoDb.Sql2008;
+using SisoDb.SqlCe4;
 
 namespace SisoDb.Profiling
 {
@@ -15,11 +16,17 @@ namespace SisoDb.Profiling
             Console.ReadKey();
             return;
 
-            //var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;Initial catalog=SisoDb.Profiling;Integrated security=SSPI;");
+            //********* SQL2008 ***********
+            //var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;");
             //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
+
+            //********* SQLCE4 ***********
+            //var cnInfo = new SqlCe4ConnectionInfo(@"sisodb:provider=SqlCe4||plain:Data source=D:\Temp\SisoDb.Profiling.sdf;");
+            //var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
+
             //db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 1000000, 2);
+            //ProfilingInserts(db, 5000, 5);
 
             //InsertCustomers(1, 10000, db);
             //ProfilingQueries(db, GetAllCustomers);

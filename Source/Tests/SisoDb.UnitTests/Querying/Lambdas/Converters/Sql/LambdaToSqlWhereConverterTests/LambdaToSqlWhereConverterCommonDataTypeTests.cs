@@ -11,22 +11,20 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Converters.Sql.LambdaToSqlWhereConve
     public class LambdaToSqlWhereConverterCommonDataTypeTests : LambdaToSqlWhereConverterTestBase
     {
         [Test]
-        [Ignore] //Until PineCone indexes StructureId as well
-        public void Process_WhenMemberNameIsId_SqlQueryHasTranslatedId()
+        public void Process_WhenMemberNameIsStructureId_SqlQueryHasTranslatedId()
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId == 42);
 
             var processor = new LambdaToSqlWhereConverter();
             var query = processor.Convert(StructureSchemaTestFactory.Stub<MyItem>(), parsedLambda);
 
-            Assert.AreEqual(1, query.MemberPaths.Length);
-            Assert.IsNotNull(query.MemberPaths.SingleOrDefault(m => m == "StructureId"));
+            Assert.AreEqual(0, query.MemberPaths.Length);
+            Assert.IsNull(query.MemberPaths.SingleOrDefault(m => m == "StructureId"));
             Assert.AreEqual("si.[StructureId] = @p0", query.CriteriaString);
         }
 
         [Test]
-        [Ignore] //Until PineCone indexes StructureId as well
-        public void Process_WhenMemberNameIsId_ExtractsCorrectParameters()
+        public void Process_WhenMemberNameIsStructureId_ExtractsCorrectParameters()
         {
             var parsedLambda = CreateParsedLambda<MyItem>(i => i.StructureId == 42);
 

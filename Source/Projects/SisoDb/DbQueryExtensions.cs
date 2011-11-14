@@ -157,7 +157,7 @@ namespace SisoDb
 
             using (var qe = db.Instance.CreateQueryEngine())
             {
-                return qe.NamedQuery<T>(query).ToList();
+                return qe.Advanced.NamedQuery<T>(query).ToList();
             }
         }
 
@@ -169,7 +169,7 @@ namespace SisoDb
 
             using (var qe = db.Instance.CreateQueryEngine())
             {
-                return qe.NamedQueryAs<TContract, TOut>(query).ToList();
+                return qe.Advanced.NamedQueryAs<TContract, TOut>(query).ToList();
             }
         }
 
@@ -179,7 +179,7 @@ namespace SisoDb
 
             using (var qe = db.Instance.CreateQueryEngine())
             {
-                return qe.NamedQueryAsJson<T>(query).ToList();
+                return qe.Advanced.NamedQueryAsJson<T>(query).ToList();
             }
         }
 
