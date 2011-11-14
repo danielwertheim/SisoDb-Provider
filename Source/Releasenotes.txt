@@ -1,12 +1,11 @@
-From v2.0 the following is used for versioning:
-vA.B.C
-A=Major changes
-B=New features and minor changes.
-C=Bug fixes
+Semantic versioning is used. See http://semver.org for more info.
 
-v4.0.1
-[Fixed]    Fixed the SqlCe4 package. Was missing two dependencies.
-[Fixed]	   After rewrite in v4.0, no upper limit existed for the batchsize of Indexes sent to the bulkinserter.
+v5.0.0
+[Fixed]     Fixed the SqlCe4 package, it was missing two dependencies.
+[Fixed]	    After rewrite in v4.0, no upper limit existed for the batchsize of Indexes sent to the bulkinserter.
+[Updated]   GetByIdInterval is not supported if Id-type is not Guid.
+[Updated]   Moved NamedQuery methods to QueryEngine.Advanced
+[Updated]   NO MORE CLIENT PROFILE
 
 v4.0
 Major rewrite. The generation of StructureSchemas and Structures (graph of indexes) now lives in project: PineCone. http://github.com/danielwertheim/pinecone
