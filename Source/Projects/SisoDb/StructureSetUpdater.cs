@@ -147,14 +147,15 @@ namespace SisoDb
             if (KeepQueue.Count < 1)
                 return;
 
-            var structures = new List<IStructure>(KeepQueue.Count);
+            var structures = new IStructure[KeepQueue.Count];
+            var i = 0;
             while (KeepQueue.Count > 0)
             {
                 var structureToKeep = KeepQueue.Dequeue();
                 var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew, _structureBuilderOptions);
-                structures.Add(structureItem);
+                structures[i++] = structureItem;
             }
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(dbClient);
+            var bulkInserter = ProviderFactory.GetDbStructureInserter(dbClient);
             bulkInserter.Insert(StructureSchemaNew, structures);
         }
 

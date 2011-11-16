@@ -51,9 +51,9 @@ namespace SisoDb.SqlCe4
             return new IdentityStructureIdGenerator(dbClient);
         }
 
-        public virtual IDbBulkInserter GetDbBulkInserter(IDbClient dbClient)
+        public virtual IDbStructureInserter GetDbStructureInserter(IDbClient dbClient)
         {
-            return new DbBulkInserter(dbClient);
+            return new DbStructureInserter(dbClient);
         }
 
         public virtual IDbQueryGenerator GetDbQueryGenerator()

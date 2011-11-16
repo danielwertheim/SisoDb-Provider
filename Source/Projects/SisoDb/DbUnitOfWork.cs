@@ -52,7 +52,7 @@ namespace SisoDb
 
             var structure = StructureBuilder.CreateStructure(item, structureSchema, CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType));
 
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
+            var bulkInserter = ProviderFactory.GetDbStructureInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { structure });
         }
 
@@ -69,8 +69,7 @@ namespace SisoDb
 
             var structureBuilderOptions = CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType);
             
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
-
+            var bulkInserter = ProviderFactory.GetDbStructureInserter(DbClient);
             foreach (var batchOfStructures in StructureBuilder.CreateStructureBatches(items, structureSchema, BatchSize, structureBuilderOptions))
                 bulkInserter.Insert(structureSchema, batchOfStructures);
         }
@@ -98,7 +97,7 @@ namespace SisoDb
 
             DeleteById(structureSchema, updatedStructure.Id.Value);
 
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(DbClient);
+            var bulkInserter = ProviderFactory.GetDbStructureInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 

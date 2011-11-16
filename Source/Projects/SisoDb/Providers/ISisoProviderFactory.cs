@@ -15,7 +15,7 @@ namespace SisoDb.Providers
         IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient);
         ISqlStatements GetSqlStatements();
         IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
-        IDbBulkInserter GetDbBulkInserter(IDbClient dbClient);
+        IDbStructureInserter GetDbStructureInserter(IDbClient dbClient);
         IDbQueryGenerator GetDbQueryGenerator();
         IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class;
         IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class;
