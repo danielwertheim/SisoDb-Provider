@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.Linq;
 using EnsureThat;
@@ -10,7 +9,6 @@ using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 
@@ -18,8 +16,8 @@ namespace SisoDb.SqlCe4.Dac
 {
     public class SqlCe4DbClient : DbClientBase
     {
-        public SqlCe4DbClient(ISisoProviderFactory providerFactory, bool transactional, Func<DbConnection> connectionFunc)
-            : base(providerFactory, transactional, connectionFunc)
+        public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+            : base(connectionInfo, transactional)
         {
         }
 

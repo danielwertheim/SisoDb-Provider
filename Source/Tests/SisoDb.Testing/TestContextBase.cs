@@ -1,4 +1,3 @@
-using SisoDb.Dac;
 using SisoDb.Providers;
 
 namespace SisoDb.Testing
@@ -19,11 +18,6 @@ namespace SisoDb.Testing
         public void Cleanup()
         {
             Database.DropStructureSets();
-        }
-
-        public IDbClient CreateNonTransactionalDbClient()
-        {
-            return ProviderFactory.GetDbClient(Database.ConnectionInfo, false);
         }
     }
 }

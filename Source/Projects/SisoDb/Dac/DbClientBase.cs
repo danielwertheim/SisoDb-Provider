@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Transactions;
 using EnsureThat;
 using PineCone.Structures;
@@ -15,8 +14,8 @@ namespace SisoDb.Dac
     public abstract class DbClientBase : IDbClient
     {
         protected readonly ISisoProviderFactory ProviderFactory;
-        protected DbConnection Connection;
-        protected DbTransaction Transaction;
+        protected IDbConnection Connection;
+        protected IDbTransaction Transaction;
         protected TransactionScope Ts;
 
         public bool IsTransactional 
@@ -26,16 +25,14 @@ namespace SisoDb.Dac
 
         public ISqlStatements SqlStatements { get; private set; }
 
-        protected DbClientBase(ISisoProviderFactory providerFactory, bool transactional, Func<DbConnection> connectionFunc)
+        protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional)
         {
-            Ensure.That(providerFactory, "providerFactory").IsNotNull();
-            Ensure.That(connectionFunc, "connectionFunc").IsNotNull();
+            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             
-            ProviderFactory = providerFactory;
+            ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
             SqlStatements = ProviderFactory.GetSqlStatements();
 
-            Connection = connectionFunc.Invoke();
-            Connection.Open();
+            Connection = ProviderFactory.GetOpenConnection(connectionInfo);
 
             if (System.Transactions.Transaction.Current == null)
                 Transaction = transactional ? Connection.BeginTransaction() : null;
@@ -61,10 +58,8 @@ namespace SisoDb.Dac
             if (Connection == null)
                 return;
 
-            if (Connection.State != ConnectionState.Closed)
-                Connection.Close();
+            ProviderFactory.ReleaseConnection(Connection);
 
-            Connection.Dispose();
             Connection = null;
         }
 

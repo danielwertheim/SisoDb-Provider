@@ -83,7 +83,7 @@ namespace SisoDb
 
         public virtual void DropStructureSet(Type type)
         {
-            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
+            using (var dbClient = _providerFactory.GetTransactionalDbClient(_connectionInfo))
             {
                 var structureSchema = _structureSchemas.GetSchema(type);
 
@@ -97,7 +97,7 @@ namespace SisoDb
 
         public virtual void DropStructureSets()
         {
-            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
+            using (var dbClient = _providerFactory.GetTransactionalDbClient(_connectionInfo))
             {
                 foreach (var structureSchema in StructureSchemas.GetSchemas())
                 {
@@ -130,7 +130,7 @@ namespace SisoDb
 
         public virtual void UpsertStructureSet(Type type)
         {
-            using (var dbClient = _providerFactory.GetDbClient(_connectionInfo, true))
+            using (var dbClient = _providerFactory.GetTransactionalDbClient(_connectionInfo))
             {
                 var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClient);
                 var structureSchema = _structureSchemas.GetSchema(type);

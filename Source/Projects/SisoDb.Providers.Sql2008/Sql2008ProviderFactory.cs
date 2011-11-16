@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
@@ -22,14 +23,43 @@ namespace SisoDb.Sql2008
             _sqlStatements = new Lazy<ISqlStatements>(() => new Sql2008Statements());
         }
 
+        public StorageProviders ProviderType
+        {
+            get { return StorageProviders.Sql2008; }
+        }
+
+        public IDbConnection GetOpenConnection(ISisoConnectionInfo connectionInfo)
+        {
+            var cn = new SqlConnection(connectionInfo.ConnectionString.PlainString);
+            cn.Open();
+
+            return cn;
+        }
+
+        public void ReleaseConnection(IDbConnection dbConnection)
+        {
+            if(dbConnection == null)
+                return;
+
+            if (dbConnection.State != ConnectionState.Closed)
+                dbConnection.Close();
+            
+            dbConnection.Dispose();
+        }
+
         public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
             return new Sql2008ServerClient((Sql2008ConnectionInfo)connectionInfo);
         }
 
-        public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+        public IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008DbClient(this, transactional, () => new SqlConnection(connectionInfo.ConnectionString.PlainString));
+            return new Sql2008DbClient(connectionInfo, true);
+        }
+
+        public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        {
+            return new Sql2008DbClient(connectionInfo, false);
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()

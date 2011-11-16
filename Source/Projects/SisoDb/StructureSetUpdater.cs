@@ -62,7 +62,7 @@ namespace SisoDb
 
         public void Process(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            using (var dbClient = ProviderFactory.GetDbClient(ConnectionInfo, true))
+            using (var dbClient = ProviderFactory.GetTransactionalDbClient(ConnectionInfo))
             {
                 UpsertSchema(dbClient);
 
@@ -81,7 +81,7 @@ namespace SisoDb
 
         private bool ItterateStructures(IDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            using (var dbClientNonTrans = ProviderFactory.GetDbClient(ConnectionInfo, false))
+            using (var dbClientNonTrans = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo))
             {
                 foreach (var json in dbClientNonTrans.GetJson(StructureSchemaOld))
                 {
