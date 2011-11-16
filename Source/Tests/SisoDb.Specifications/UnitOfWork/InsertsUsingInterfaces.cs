@@ -77,8 +77,8 @@ namespace SisoDb.Specifications.UnitOfWork
             It should_have_been_stored =
                 () => TestContext.Database.should_have_X_num_of_items<IMyItemInterface>(1);
 
-            It should_not_have_stored_subclass_member_in_structure_table =
-                () => TestContext.Database.should_have_one_structure_with_json_not_containing<IMyItemInterface, MyItemWithInterface>(x => x.MyItemInt);
+            It should_have_stored_subclass_member_in_structure_table =
+                () => TestContext.Database.should_have_one_structure_with_json_containing<IMyItemInterface, MyItemWithInterface>(x => x.MyItemInt);
 
             It should_store_base_member_in_indexes_table =
                 () => TestContext.DbHelper.IndexesTableHasMember<IMyItemInterface>(_structureSchema, _structure.StructureId, x => x.MyItemInterfaceInt).ShouldBeTrue();
