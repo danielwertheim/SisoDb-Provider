@@ -26,7 +26,7 @@ namespace SisoDb.Profiling
 
             //db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 1000, 5);
+            //ProfilingInserts(db, 1, 5);
 
             //InsertCustomers(1, 10000, db);
             //ProfilingQueries(db, GetAllCustomers);
@@ -36,8 +36,8 @@ namespace SisoDb.Profiling
 
             //ProfilingUpdateStructureSet(db);
 
-            Console.WriteLine("---- Done ----");
-            Console.ReadKey();
+            //Console.WriteLine("---- Done ----");
+            //Console.ReadKey();
         }
 
         private static void ProfilingUpdateStructureSet(ISisoDatabase database)
