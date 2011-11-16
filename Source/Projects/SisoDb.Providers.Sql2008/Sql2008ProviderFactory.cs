@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
@@ -28,7 +29,7 @@ namespace SisoDb.Sql2008
 
         public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
-            return new Sql2008DbClient(connectionInfo, transactional);
+            return new Sql2008DbClient(this, transactional, () => new SqlConnection(connectionInfo.ConnectionString.PlainString));
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlServerCe;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
@@ -28,7 +29,7 @@ namespace SisoDb.SqlCe4
 
         public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
         {
-            return new SqlCe4DbClient(connectionInfo, transactional);
+            return new SqlCe4DbClient(this, transactional, () => new SqlCeConnection(connectionInfo.ConnectionString.PlainString));
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()

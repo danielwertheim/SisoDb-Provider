@@ -19,8 +19,6 @@ namespace SisoDb.Dac
         protected DbTransaction Transaction;
         protected TransactionScope Ts;
 
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
-
         public bool IsTransactional 
         {
             get { return Transaction != null || Ts != null; }
@@ -28,13 +26,12 @@ namespace SisoDb.Dac
 
         public ISqlStatements SqlStatements { get; private set; }
 
-        protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional, Func<DbConnection> connectionFunc)
+        protected DbClientBase(ISisoProviderFactory providerFactory, bool transactional, Func<DbConnection> connectionFunc)
         {
-            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+            Ensure.That(providerFactory, "providerFactory").IsNotNull();
             Ensure.That(connectionFunc, "connectionFunc").IsNotNull();
             
-            ConnectionInfo = connectionInfo;
-            ProviderFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
+            ProviderFactory = providerFactory;
             SqlStatements = ProviderFactory.GetSqlStatements();
 
             Connection = connectionFunc.Invoke();

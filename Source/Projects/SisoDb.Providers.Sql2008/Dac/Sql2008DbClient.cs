@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using EnsureThat;
@@ -8,6 +9,7 @@ using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
+using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 
@@ -15,8 +17,8 @@ namespace SisoDb.Sql2008.Dac
 {
     public class Sql2008DbClient : DbClientBase
     {
-        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional) 
-            : base(connectionInfo, transactional, () => new SqlConnection(connectionInfo.ConnectionString.PlainString))
+        public Sql2008DbClient(ISisoProviderFactory providerFactory, bool transactional, Func<DbConnection> connectionFunc)
+            : base(providerFactory, transactional, connectionFunc)
         {
         }
 
