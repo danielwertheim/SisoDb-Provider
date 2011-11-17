@@ -53,21 +53,25 @@ namespace SisoDb
 
         public virtual void EnsureNewDatabase()
         {
+            _structureSchemas.Clear();
             _serverClient.EnsureNewDb();
         }
 
         public virtual void CreateIfNotExists()
         {
+            _structureSchemas.Clear();
             _serverClient.CreateDbIfDoesNotExists();
         }
 
         public virtual void InitializeExisting()
         {
+            _structureSchemas.Clear();
             _serverClient.InitializeExistingDb();
         }
 
         public virtual void DeleteIfExists()
         {
+            _structureSchemas.Clear();
             _serverClient.DropDbIfItExists();
         }
 

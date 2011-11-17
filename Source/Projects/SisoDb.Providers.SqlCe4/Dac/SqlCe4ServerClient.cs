@@ -13,7 +13,7 @@ namespace SisoDb.SqlCe4.Dac
     public class SqlCe4ServerClient : IServerClient
     {
         private readonly SqlCe4ConnectionInfo _connectionInfo;
-        private readonly ISisoProviderFactory _providerFactory;
+        private readonly SqlCe4ProviderFactory _providerFactory;
         private readonly ISqlStatements _sqlStatements;
 
         public SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo)
@@ -21,7 +21,7 @@ namespace SisoDb.SqlCe4.Dac
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
             _connectionInfo = connectionInfo;
-            _providerFactory = SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
+            _providerFactory = (SqlCe4ProviderFactory)SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
             _sqlStatements = _providerFactory.GetSqlStatements();
         }
 
@@ -64,6 +64,7 @@ namespace SisoDb.SqlCe4.Dac
             if (!DbExists())
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.FilePath));
 
+            _providerFactory.ReleaseAllClientConnections();
             WithConnection(cn =>
             {
                 var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("Sys_Identities_Exists")) > 0;
@@ -82,6 +83,8 @@ namespace SisoDb.SqlCe4.Dac
 
         public void DropDbIfItExists()
         {
+            _providerFactory.ReleaseAllClientConnections();
+
             IoHelper.DeleteIfFileExists(_connectionInfo.FilePath);
         }
     }

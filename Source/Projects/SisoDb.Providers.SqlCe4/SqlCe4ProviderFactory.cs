@@ -20,44 +20,17 @@ namespace SisoDb.SqlCe4
     {
         private readonly Lazy<ISqlStatements> _sqlStatements;
 
-        private readonly ConcurrentDictionary<string, IDbConnection> _connections; 
+        private readonly ConcurrentDictionary<string, IDbConnection> _clientConnections; 
 
         public SqlCe4ProviderFactory()
         {
             _sqlStatements = new Lazy<ISqlStatements>(() => new SqlCe4Statements());
-            _connections = new ConcurrentDictionary<string, IDbConnection>();
+            _clientConnections = new ConcurrentDictionary<string, IDbConnection>();
         }
 
         ~SqlCe4ProviderFactory()
         {
-            var exceptions = new List<Exception>();
-
-            foreach (var key in _connections.Keys)
-            {
-                try
-                {
-                    IDbConnection cn;
-                    if (_connections.TryRemove(key, out cn))
-                    {
-                        if (cn != null)
-                        {
-                            if (cn.State != ConnectionState.Closed)
-                                cn.Close();
-
-                            cn.Dispose();
-                        }
-
-                        cn = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
-
-            if (exceptions.Count > 0)
-                throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
+            ReleaseAllClientConnections();
         }
 
         public StorageProviders ProviderType
@@ -93,11 +66,44 @@ namespace SisoDb.SqlCe4
                 return cn;
             };
 
-            return _connections.GetOrAdd(connectionString.PlainString, cnFactory);
+            return _clientConnections.GetOrAdd(connectionString.PlainString, cnFactory);
         }
 
         public void ReleaseConnection(IDbConnection dbConnection)
         {
+            //We are caching client connections in SQLCE
+        }
+
+        public void ReleaseAllClientConnections()
+        {
+            var exceptions = new List<Exception>();
+
+            foreach (var key in _clientConnections.Keys)
+            {
+                try
+                {
+                    IDbConnection cn;
+                    if (_clientConnections.TryRemove(key, out cn))
+                    {
+                        if (cn != null)
+                        {
+                            if (cn.State != ConnectionState.Closed)
+                                cn.Close();
+
+                            cn.Dispose();
+                        }
+
+                        cn = null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            }
+
+            if (exceptions.Count > 0)
+                throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
         }
 
         public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
