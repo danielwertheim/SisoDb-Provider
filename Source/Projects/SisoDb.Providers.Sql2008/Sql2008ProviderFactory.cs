@@ -28,9 +28,28 @@ namespace SisoDb.Sql2008
             get { return StorageProviders.Sql2008; }
         }
 
-        public IDbConnection GetOpenConnection(ISisoConnectionInfo connectionInfo)
+        public IDbConnection GetOpenServerConnection(IConnectionString connectionString)
         {
-            var cn = new SqlConnection(connectionInfo.ConnectionString.PlainString);
+            var cn = new SqlConnection(connectionString.PlainString);
+            cn.Open();
+
+            return cn;
+        }
+
+        public void ReleaseServerConnection(IDbConnection dbConnection)
+        {
+            if (dbConnection == null)
+                return;
+
+            if (dbConnection.State != ConnectionState.Closed)
+                dbConnection.Close();
+
+            dbConnection.Dispose();
+        }
+
+        public IDbConnection GetOpenConnection(IConnectionString connectionString)
+        {
+            var cn = new SqlConnection(connectionString.PlainString);
             cn.Open();
 
             return cn;

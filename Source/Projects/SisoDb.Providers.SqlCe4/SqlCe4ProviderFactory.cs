@@ -65,7 +65,26 @@ namespace SisoDb.SqlCe4
             get { return StorageProviders.SqlCe4; }
         }
 
-        public IDbConnection GetOpenConnection(ISisoConnectionInfo connectionInfo)
+        public IDbConnection GetOpenServerConnection(IConnectionString connectionString)
+        {
+            var cn = new SqlCeConnection(connectionString.PlainString);
+            cn.Open();
+            
+            return cn;
+        }
+
+        public void ReleaseServerConnection(IDbConnection dbConnection)
+        {
+            if (dbConnection == null)
+                return;
+
+            if (dbConnection.State != ConnectionState.Closed)
+                dbConnection.Close();
+
+            dbConnection.Dispose();
+        }
+
+        public IDbConnection GetOpenConnection(IConnectionString connectionString)
         {
             Func<string, IDbConnection> cnFactory = (cnString) =>
             {
@@ -74,18 +93,11 @@ namespace SisoDb.SqlCe4
                 return cn;
             };
 
-            return _connections.GetOrAdd(connectionInfo.ConnectionString.PlainString, cnFactory);
+            return _connections.GetOrAdd(connectionString.PlainString, cnFactory);
         }
 
         public void ReleaseConnection(IDbConnection dbConnection)
         {
-            //if(dbConnection == null)
-            //    return;
-
-            //if (dbConnection.State != ConnectionState.Closed)
-            //    dbConnection.Close();
-            
-            //dbConnection.Dispose();
         }
 
         public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)

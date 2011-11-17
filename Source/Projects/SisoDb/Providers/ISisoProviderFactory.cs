@@ -12,7 +12,11 @@ namespace SisoDb.Providers
     {
         StorageProviders ProviderType { get; }
 
-        IDbConnection GetOpenConnection(ISisoConnectionInfo connectionInfo);
+        IDbConnection GetOpenServerConnection(IConnectionString connectionString);
+
+        void ReleaseServerConnection(IDbConnection dbConnection);
+
+        IDbConnection GetOpenConnection(IConnectionString connectionString);
 
         void ReleaseConnection(IDbConnection dbConnection);
 

@@ -25,16 +25,18 @@ namespace SisoDb.SqlCe4.Dac
             _sqlStatements = _providerFactory.GetSqlStatements();
         }
 
-        private void WithConnection(Action<SqlCeConnection> cnConsumer)
+        private void WithConnection(Action<IDbConnection> cnConsumer)
         {
-            using (var cn = new SqlCeConnection(_connectionInfo.ConnectionString.PlainString))
+            IDbConnection cn = null;
+
+            try
             {
-                cn.Open();
-
+                cn = _providerFactory.GetOpenServerConnection(_connectionInfo.ConnectionString);
                 cnConsumer.Invoke(cn);
-
-                if (cn.State == ConnectionState.Open)
-                    cn.Close();
+            }
+            finally
+            {
+                _providerFactory.ReleaseServerConnection(cn);
             }
         }
 
