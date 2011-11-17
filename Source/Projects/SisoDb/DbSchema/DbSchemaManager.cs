@@ -13,6 +13,11 @@ namespace SisoDb.DbSchema
             _upsertedSchemas = new HashSet<string>();
         }
 
+        public void ClearCache()
+        {
+            _upsertedSchemas.Clear();
+        }
+
         public void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
         {
             lock (_upsertedSchemas)
