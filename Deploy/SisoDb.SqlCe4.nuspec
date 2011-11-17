@@ -26,9 +26,9 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="SisoDb.SqlCe4.dll" target="lib" />
-	  <file src="SisoDb.SqlCe4.xml" target="lib" />
-	  <file src="NCore*.dll" target="lib" />
-	  <file src="License*.txt" />
+	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.dll" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.xml" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\NCore*.dll" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\License*.txt" />
 	</files>
 </package>

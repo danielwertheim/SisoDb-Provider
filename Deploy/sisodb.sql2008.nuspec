@@ -24,9 +24,9 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="SisoDb.Sql2008.dll" target="lib" />
-	  <file src="SisoDb.Sql2008.xml" target="lib" />
-	  <file src="NCore*.dll" target="lib" />
-	  <file src="License*.txt" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.dll" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.xml" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\NCore*.dll" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\License*.txt" />
 	</files>
 </package>
