@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
 using SisoDb.Dac;
@@ -24,31 +23,34 @@ namespace SisoDb.Sql2008.Dac
             _sqlStatements = _providerFactory.GetSqlStatements();
         }
 
-        private void WithConnection(Action<SqlConnection> cnConsumer)
+        private void WithConnection(Action<IDbConnection> cnConsumer)
         {
-            using (var cn = new SqlConnection(_connectionInfo.ServerConnectionString.PlainString))
+            IDbConnection cn = null;
+
+            try
             {
-                cn.Open();
-
+                cn = _providerFactory.GetOpenServerConnection(_connectionInfo.ServerConnectionString);
                 cnConsumer.Invoke(cn);
-
-                if(cn.State == ConnectionState.Open)
-                    cn.Close();
+            }
+            finally
+            {
+                _providerFactory.ReleaseServerConnection(cn);
             }
         }
 
-        private T WithConnection<T>(Func<SqlConnection, T> cnConsumer)
+        private T WithConnection<T>(Func<IDbConnection, T> cnConsumer)
         {
             T result;
+            IDbConnection cn = null;
 
-            using (var cn = new SqlConnection(_connectionInfo.ServerConnectionString.PlainString))
+            try
             {
-                cn.Open();
-
+                cn = _providerFactory.GetOpenConnection(_connectionInfo.ServerConnectionString);
                 result = cnConsumer.Invoke(cn);
-
-                if (cn.State == ConnectionState.Open)
-                    cn.Close();
+            }
+            finally
+            {
+                _providerFactory.ReleaseConnection(cn);
             }
 
             return result;

@@ -32,7 +32,7 @@ namespace SisoDb.Dac
             ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
             SqlStatements = ProviderFactory.GetSqlStatements();
 
-            Connection = ProviderFactory.GetOpenConnection(connectionInfo);
+            Connection = ProviderFactory.GetOpenConnection(connectionInfo.ConnectionString);
 
             if (System.Transactions.Transaction.Current == null)
                 Transaction = transactional ? Connection.BeginTransaction() : null;
