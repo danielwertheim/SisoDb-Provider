@@ -15,8 +15,8 @@ namespace SisoDb.Sql2008.Dac
 {
     public class Sql2008DbClient : DbClientBase
     {
-        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional) 
-            : base(connectionInfo, transactional, () => new SqlConnection(connectionInfo.ConnectionString.PlainString))
+        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+            : base(connectionInfo, transactional)
         {
         }
 

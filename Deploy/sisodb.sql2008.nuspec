@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.Sql2008</id>    
 		<title>SisoDb.Sql2008 - Simple Structure Oriented Db</title>
-		<version>5.0.0</version>
+		<version>5.0.1</version>
 		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 		<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
@@ -18,15 +18,15 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,json,sql,sql-server,sql2008,mssql2008</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="5.0.0" />
+			<dependency id="SisoDb" version="5.0.1" />
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="0.27.0" />
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="SisoDb.Sql2008.dll" target="lib" />
-	  <file src="SisoDb.Sql2008.xml" target="lib" />
-	  <file src="NCore*.dll" target="lib" />
-	  <file src="License*.txt" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.dll" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.xml" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\NCore*.dll" target="lib" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\License*.txt" />
 	</files>
 </package>

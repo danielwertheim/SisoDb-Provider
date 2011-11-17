@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlServerCe;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
@@ -16,9 +20,72 @@ namespace SisoDb.SqlCe4
     {
         private readonly Lazy<ISqlStatements> _sqlStatements;
 
+        private readonly ConcurrentDictionary<string, IDbConnection> _connections; 
+
         public SqlCe4ProviderFactory()
         {
             _sqlStatements = new Lazy<ISqlStatements>(() => new SqlCe4Statements());
+            _connections = new ConcurrentDictionary<string, IDbConnection>();
+        }
+
+        ~SqlCe4ProviderFactory()
+        {
+            var exceptions = new List<Exception>();
+
+            foreach (var key in _connections.Keys)
+            {
+                try
+                {
+                    IDbConnection cn;
+                    if (_connections.TryRemove(key, out cn))
+                    {
+                        if (cn != null)
+                        {
+                            if (cn.State != ConnectionState.Closed)
+                                cn.Close();
+
+                            cn.Dispose();
+                        }
+
+                        cn = null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            }
+
+            if (exceptions.Count > 0)
+                throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
+        }
+
+        public StorageProviders ProviderType
+        {
+            get { return StorageProviders.SqlCe4; }
+        }
+
+        public IDbConnection GetOpenConnection(ISisoConnectionInfo connectionInfo)
+        {
+            Func<string, IDbConnection> cnFactory = (cnString) =>
+            {
+                var cn = new SqlCeConnection(cnString);
+                cn.Open();
+                return cn;
+            };
+
+            return _connections.GetOrAdd(connectionInfo.ConnectionString.PlainString, cnFactory);
+        }
+
+        public void ReleaseConnection(IDbConnection dbConnection)
+        {
+            //if(dbConnection == null)
+            //    return;
+
+            //if (dbConnection.State != ConnectionState.Closed)
+            //    dbConnection.Close();
+            
+            //dbConnection.Dispose();
         }
 
         public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
@@ -26,9 +93,14 @@ namespace SisoDb.SqlCe4
             return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo);
         }
 
-        public virtual IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional)
+        public IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return new SqlCe4DbClient(connectionInfo, transactional);
+            return new SqlCe4DbClient(connectionInfo, true);
+        }
+
+        public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        {
+            return new SqlCe4DbClient(connectionInfo, false);
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()
@@ -51,9 +123,9 @@ namespace SisoDb.SqlCe4
             return new IdentityStructureIdGenerator(dbClient);
         }
 
-        public virtual IDbBulkInserter GetDbBulkInserter(IDbClient dbClient)
+        public virtual IDbStructureInserter GetDbStructureInserter(IDbClient dbClient)
         {
-            return new DbBulkInserter(dbClient);
+            return new DbStructureInserter(dbClient);
         }
 
         public virtual IDbQueryGenerator GetDbQueryGenerator()

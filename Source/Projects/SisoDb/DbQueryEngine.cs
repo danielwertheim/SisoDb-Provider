@@ -20,10 +20,7 @@ namespace SisoDb
 {
     public abstract class DbQueryEngine : IQueryEngine, IAdvancedQueryEngine
     {
-        protected StorageProviders ProviderType { get; private set; }
         protected ISisoProviderFactory ProviderFactory { get; private set; }
-        
-        public IAdvancedQueryEngine Advanced { get; private set; }
         protected IDbClient DbClient { get; private set; }
         protected IDbClient DbClientNonTrans { get; private set; }
         protected IDbSchemaManager DbSchemaManager { get; private set; }
@@ -31,6 +28,8 @@ namespace SisoDb
         protected IStructureSchemas StructureSchemas { get; private set; }
         protected IDbQueryGenerator QueryGenerator { get; private set; }
         protected IJsonSerializer JsonSerializer { get; private set; }
+
+        public IAdvancedQueryEngine Advanced { get; private set; }
 
         protected DbQueryEngine(
             ISisoConnectionInfo connectionInfo,
@@ -44,10 +43,16 @@ namespace SisoDb
             Ensure.That(structureSchemas, "structureSchemas").IsNotNull();
             Ensure.That(jsonSerializer, "jsonSerializer").IsNotNull();
 
-            ProviderType = connectionInfo.ProviderType;
-            ProviderFactory = SisoEnvironment.ProviderFactories.Get(ProviderType);
-            DbClient = ProviderFactory.GetDbClient(connectionInfo, transactional);
-            DbClientNonTrans = !DbClient.IsTransactional ? DbClient : ProviderFactory.GetDbClient(connectionInfo, false);
+            ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
+            
+            DbClient = transactional 
+                ? ProviderFactory.GetTransactionalDbClient(connectionInfo) 
+                : ProviderFactory.GetNonTransactionalDbClient(connectionInfo);
+
+            DbClientNonTrans = !DbClient.IsTransactional 
+                ? DbClient 
+                : ProviderFactory.GetNonTransactionalDbClient(connectionInfo);
+            
             DbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(DbClientNonTrans);
             QueryGenerator = ProviderFactory.GetDbQueryGenerator();
             DbSchemaManager = dbSchemaManager;
@@ -142,7 +147,7 @@ namespace SisoDb
             var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             if (!structureSchema.IdAccessor.IdType.IsIdentity())
-                throw new SisoDbNotSupportedByProviderException(ProviderType, ExceptionMessages.QueryEngine_GetByIdInterval_WrongIdType);
+                throw new SisoDbNotSupportedByProviderException(ProviderFactory.ProviderType, ExceptionMessages.QueryEngine_GetByIdInterval_WrongIdType);
 
             UpsertStructureSet(structureSchema);
 

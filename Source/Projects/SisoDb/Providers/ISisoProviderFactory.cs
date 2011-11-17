@@ -1,3 +1,4 @@
+using System.Data;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
@@ -9,15 +10,32 @@ namespace SisoDb.Providers
 {
     public interface ISisoProviderFactory
     {
+        StorageProviders ProviderType { get; }
+
+        IDbConnection GetOpenConnection(ISisoConnectionInfo connectionInfo);
+
+        void ReleaseConnection(IDbConnection dbConnection);
+
         IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
-        IDbClient GetDbClient(ISisoConnectionInfo connectionInfo, bool transactional);
+
+        IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo);
+
+        IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
+
         IDbSchemaManager GetDbSchemaManager();
+        
         IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient);
+        
         ISqlStatements GetSqlStatements();
+        
         IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
-        IDbBulkInserter GetDbBulkInserter(IDbClient dbClient);
+        
+        IDbStructureInserter GetDbStructureInserter(IDbClient dbClient);
+        
         IDbQueryGenerator GetDbQueryGenerator();
+        
         IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class;
+        
         IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class;
     }
 }

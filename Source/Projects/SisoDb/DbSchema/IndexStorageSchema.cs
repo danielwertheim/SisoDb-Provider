@@ -2,7 +2,6 @@
 using NCore;
 using NCore.Reflections;
 using PineCone.Structures.Schemas;
-using SisoDb.Providers;
 using SisoDb.Resources;
 using SisoDb.Structures;
 
@@ -54,6 +53,9 @@ namespace SisoDb.DbSchema
 
             if (dataType.IsAnyGuidType())
                 return Fields.GuidValue;
+
+            if (dataType.IsEnumType())
+                return GetValueSchemaFieldForType(dataType.GetEnumUnderlyingType());
 
             throw new SisoDbException(ExceptionMessages.IndexStorageSchema_MissingValueSchemaField.Inject(dataType.Name));
         }

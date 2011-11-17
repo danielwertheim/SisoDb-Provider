@@ -123,6 +123,18 @@ namespace SisoDb.Testing.Steps
                 structureJson.Contains("\"{0}\"".Inject(part)).ShouldBeTrue();
         }
 
+        public static void should_have_one_structure_with_json_containing<T1, T2>(this ISisoDatabase db, params Expression<Func<T2, object>>[] parts)
+            where T1 : class
+            where T2 : class
+        {
+            var structureJson = db.ReadOnce().GetAllAsJson<T1>().SingleOrDefault();
+
+            structureJson.ShouldNotBeEmpty();
+
+            foreach (var part in parts.Select(GetMemberPath))
+                structureJson.Contains("\"{0}\"".Inject(part)).ShouldBeTrue();
+        }
+
         public static void should_have_one_structure_with_json_not_containing<T1, T2>(this ISisoDatabase db, params Expression<Func<T2, object>>[] parts) where T1 : class where T2 : class 
         {
             var structureJson = db.ReadOnce().GetAllAsJson<T1>().SingleOrDefault();

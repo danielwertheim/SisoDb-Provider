@@ -17,7 +17,7 @@ namespace SisoDb.SqlCe4.Dac
     public class SqlCe4DbClient : DbClientBase
     {
         public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
-            : base(connectionInfo, transactional, () => new SqlCeConnection(connectionInfo.ConnectionString.PlainString))
+            : base(connectionInfo, transactional)
         {
         }
 

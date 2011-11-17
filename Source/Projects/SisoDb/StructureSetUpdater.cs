@@ -62,7 +62,7 @@ namespace SisoDb
 
         public void Process(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            using (var dbClient = ProviderFactory.GetDbClient(ConnectionInfo, true))
+            using (var dbClient = ProviderFactory.GetTransactionalDbClient(ConnectionInfo))
             {
                 UpsertSchema(dbClient);
 
@@ -81,7 +81,7 @@ namespace SisoDb
 
         private bool ItterateStructures(IDbClient dbClient, Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
         {
-            using (var dbClientNonTrans = ProviderFactory.GetDbClient(ConnectionInfo, false))
+            using (var dbClientNonTrans = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo))
             {
                 foreach (var json in dbClientNonTrans.GetJson(StructureSchemaOld))
                 {
@@ -147,14 +147,15 @@ namespace SisoDb
             if (KeepQueue.Count < 1)
                 return;
 
-            var structures = new List<IStructure>(KeepQueue.Count);
+            var structures = new IStructure[KeepQueue.Count];
+            var i = 0;
             while (KeepQueue.Count > 0)
             {
                 var structureToKeep = KeepQueue.Dequeue();
                 var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew, _structureBuilderOptions);
-                structures.Add(structureItem);
+                structures[i++] = structureItem;
             }
-            var bulkInserter = ProviderFactory.GetDbBulkInserter(dbClient);
+            var bulkInserter = ProviderFactory.GetDbStructureInserter(dbClient);
             bulkInserter.Insert(StructureSchemaNew, structures);
         }
 

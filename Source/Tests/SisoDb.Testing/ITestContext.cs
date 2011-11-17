@@ -1,5 +1,3 @@
-using SisoDb.Dac;
-
 namespace SisoDb.Testing
 {
     public interface ITestContext
@@ -9,6 +7,5 @@ namespace SisoDb.Testing
         ITestDbUtils DbHelperForServer { get; }
 
         void Cleanup();
-        IDbClient CreateNonTransactionalDbClient();
     }
 }

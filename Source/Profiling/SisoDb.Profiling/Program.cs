@@ -26,7 +26,7 @@ namespace SisoDb.Profiling
 
             //db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 5000, 5);
+            //ProfilingInserts(db, 1, 5);
 
             //InsertCustomers(1, 10000, db);
             //ProfilingQueries(db, GetAllCustomers);
