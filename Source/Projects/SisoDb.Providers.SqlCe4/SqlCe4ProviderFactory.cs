@@ -20,12 +20,21 @@ namespace SisoDb.SqlCe4
     {
         private readonly Lazy<ISqlStatements> _sqlStatements;
 
-        private readonly ConcurrentDictionary<string, IDbConnection> _clientConnections; 
+        private readonly ConcurrentDictionary<string, IDbConnection> _clientConnections;
+
+        private readonly Func<string, IDbConnection> _clientConnectionFactoryFn;
 
         public SqlCe4ProviderFactory()
         {
             _sqlStatements = new Lazy<ISqlStatements>(() => new SqlCe4Statements());
             _clientConnections = new ConcurrentDictionary<string, IDbConnection>();
+
+            _clientConnectionFactoryFn = cnString =>
+            {
+                var cn = new SqlCeConnection(cnString);
+                cn.Open();
+                return cn;
+            };
         }
 
         ~SqlCe4ProviderFactory()
@@ -59,14 +68,7 @@ namespace SisoDb.SqlCe4
 
         public IDbConnection GetOpenConnection(IConnectionString connectionString)
         {
-            Func<string, IDbConnection> cnFactory = (cnString) =>
-            {
-                var cn = new SqlCeConnection(cnString);
-                cn.Open();
-                return cn;
-            };
-
-            return _clientConnections.GetOrAdd(connectionString.PlainString, cnFactory);
+            return _clientConnections.GetOrAdd(connectionString.PlainString, _clientConnectionFactoryFn);
         }
 
         public void ReleaseConnection(IDbConnection dbConnection)
