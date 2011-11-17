@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb</id>    
 		<title>SisoDb - Simple Structure Oriented Db (core)</title>
-		<version>5.0.4</version>
+		<version>5.0.5</version>
 		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 		<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
