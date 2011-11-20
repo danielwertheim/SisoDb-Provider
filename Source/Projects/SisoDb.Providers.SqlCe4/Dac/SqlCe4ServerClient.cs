@@ -43,13 +43,15 @@ namespace SisoDb.SqlCe4.Dac
         public void EnsureNewDb()
         {
             DropDbIfItExists();
-            CreateDbIfDoesNotExists();
+            CreateDbIfItDoesNotExist();
         }
 
-        public void CreateDbIfDoesNotExists()
+        public void CreateDbIfItDoesNotExist()
         {
             if(DbExists())
                 return;
+
+            _providerFactory.ReleaseAllClientConnections();
 
             using (var engine = new SqlCeEngine(_connectionInfo.ConnectionString.PlainString))
             {
@@ -64,7 +66,8 @@ namespace SisoDb.SqlCe4.Dac
             if (!DbExists())
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.FilePath));
 
-            _providerFactory.ReleaseAllClientConnections();
+            _providerFactory.ReleaseAllClientConnections();
+
             WithConnection(cn =>
             {
                 var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("Sys_Identities_Exists")) > 0;
