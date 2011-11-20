@@ -20,21 +20,12 @@ namespace SisoDb.SqlCe4
     {
         private readonly Lazy<ISqlStatements> _sqlStatements;
 
-        private readonly ConcurrentDictionary<string, IDbConnection> _clientConnections;
-
-        private readonly Func<string, IDbConnection> _clientConnectionFactoryFn;
+        private readonly ConcurrentDictionary<string, BlockingCollection<IDbConnection>> _clientConnections;
 
         public SqlCe4ProviderFactory()
         {
             _sqlStatements = new Lazy<ISqlStatements>(() => new SqlCe4Statements());
-            _clientConnections = new ConcurrentDictionary<string, IDbConnection>();
-
-            _clientConnectionFactoryFn = cnString =>
-            {
-                var cn = new SqlCeConnection(cnString);
-                cn.Open();
-                return cn;
-            };
+            _clientConnections = new ConcurrentDictionary<string, BlockingCollection<IDbConnection>>();
         }
 
         ~SqlCe4ProviderFactory()
@@ -68,12 +59,30 @@ namespace SisoDb.SqlCe4
 
         public IDbConnection GetOpenConnection(IConnectionString connectionString)
         {
-            return _clientConnections.GetOrAdd(connectionString.PlainString, _clientConnectionFactoryFn);
+            IDbConnection cn;
+
+            var connectionsPerCnString = GetConnectionsForConnectionString(connectionString.PlainString);
+            if (connectionsPerCnString.TryTake(out cn))
+                return cn;
+
+            cn = new SqlCeConnection(connectionString.PlainString);
+            cn.Open();
+            return cn;
         }
 
         public void ReleaseConnection(IDbConnection dbConnection)
         {
-            //We are caching client connections in SQLCE
+            var connectionsPerCnString = GetConnectionsForConnectionString(dbConnection.ConnectionString);
+            if(!connectionsPerCnString.TryAdd(dbConnection))
+            {
+                dbConnection.Close();
+                dbConnection.Dispose();
+            }
+        }
+
+        private BlockingCollection<IDbConnection> GetConnectionsForConnectionString(string connectionString)
+        {
+            return _clientConnections.GetOrAdd(connectionString, new BlockingCollection<IDbConnection>());
         }
 
         public void ReleaseAllClientConnections()
@@ -84,18 +93,27 @@ namespace SisoDb.SqlCe4
             {
                 try
                 {
-                    IDbConnection cn;
-                    if (_clientConnections.TryRemove(key, out cn))
+                    BlockingCollection<IDbConnection> connections;
+                    if (_clientConnections.TryRemove(key, out connections))
                     {
-                        if (cn != null)
+                        while(connections.Count > 0)
                         {
-                            if (cn.State != ConnectionState.Closed)
-                                cn.Close();
+                            try
+                            {
+                                IDbConnection cn;
+                                if (connections.TryTake(out cn) && cn != null)
+                                {
+                                    if (cn.State != ConnectionState.Closed)
+                                        cn.Close();
 
-                            cn.Dispose();
+                                    cn.Dispose();
+                                }   
+                            }
+                            catch (Exception ex)
+                            {
+                                exceptions.Add(ex);
+                            }
                         }
-
-                        cn = null;
                     }
                 }
                 catch (Exception ex)
@@ -103,6 +121,8 @@ namespace SisoDb.SqlCe4
                     exceptions.Add(ex);
                 }
             }
+
+            _clientConnections.Clear();
 
             if (exceptions.Count > 0)
                 throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);

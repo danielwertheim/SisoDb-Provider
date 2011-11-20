@@ -60,7 +60,7 @@ namespace SisoDb
         public virtual void CreateIfNotExists()
         {
             DbSchemaManager.ClearCache();
-            _serverClient.CreateDbIfDoesNotExists();
+            _serverClient.CreateDbIfItDoesNotExist();
         }
 
         public virtual void InitializeExisting()

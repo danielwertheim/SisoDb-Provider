@@ -67,7 +67,7 @@ namespace SisoDb.Sql2008.Dac
             });
         }
 
-        public void CreateDbIfDoesNotExists()
+        public void CreateDbIfItDoesNotExist()
         {
             WithConnection(cn =>
             {
