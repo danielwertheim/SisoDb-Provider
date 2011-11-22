@@ -2,9 +2,8 @@ using NCore;
 using NUnit.Framework;
 using SisoDb.Resources;
 using SisoDb.SqlCe4;
-using SisoDb.UnitTests;
 
-namespace SisoDb.Tests.UnitTests.SqlCe4
+namespace SisoDb.UnitTests.Connections
 {
     [TestFixture]
     public class SqlCe4ConnectionInfoTests : UnitTestBase

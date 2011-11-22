@@ -29,7 +29,7 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlQuery(string sql, ICollection<IDacParameter> parameters)
+        public SqlQuery(string sql, IDacParameter[] parameters)
         {
             Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
             Ensure.That(parameters, "parameters").IsNotNull();

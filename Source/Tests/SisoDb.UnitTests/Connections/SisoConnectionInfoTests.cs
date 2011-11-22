@@ -2,7 +2,7 @@
 using Moq;
 using NUnit.Framework;
 
-namespace SisoDb.UnitTests
+namespace SisoDb.UnitTests.Connections
 {
     [TestFixture]
     public class SisoConnectionInfoTests : UnitTestBase

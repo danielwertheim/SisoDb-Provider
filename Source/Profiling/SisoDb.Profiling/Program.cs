@@ -12,13 +12,16 @@ namespace SisoDb.Profiling
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
-            Console.ReadKey();
-            return;
+            //Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
+            //Console.ReadKey();
+            //return;
 
             //********* SQL2008 ***********
-            //var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;");
-            //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
+            var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;");
+            var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
+
+            db.ReadOnce().Query<Customer>(
+                cq => cq.SortBy(c => c.BillingAddress.AreaCode, c => c.DeliveryAddress.AreaCode));
 
             //********* SQLCE4 ***********
             //var cnInfo = new SqlCe4ConnectionInfo(@"sisodb:provider=SqlCe4||plain:Data source=D:\Temp\SisoDb.Profiling.sdf;");
@@ -36,8 +39,8 @@ namespace SisoDb.Profiling
 
             //ProfilingUpdateStructureSet(db);
 
-            //Console.WriteLine("---- Done ----");
-            //Console.ReadKey();
+            Console.WriteLine("---- Done ----");
+            Console.ReadKey();
         }
 
         private static void ProfilingUpdateStructureSet(ISisoDatabase database)

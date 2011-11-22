@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SisoDb.Resources;
 using SisoDb.Sql2008;
 
-namespace SisoDb.UnitTests.Sql2008
+namespace SisoDb.UnitTests.Connections
 {
     [TestFixture]
     public class Sql2008ConnectionInfoTests : UnitTestBase

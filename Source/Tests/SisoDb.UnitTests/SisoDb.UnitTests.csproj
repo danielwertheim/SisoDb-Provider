@@ -80,7 +80,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ConnectionStringTests.cs" />
+    <Compile Include="Connections\ConnectionStringTests.cs" />
     <Compile Include="CustomAssert.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
@@ -89,33 +89,24 @@
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTestBase.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter\LambdaToSqlSortingConverterTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterCombinedTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterCommonDataTypeTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterEnumerableQueryExtensionsTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterFunctionInvocationTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterHierarchyTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterMemberComparisionTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverterTests\LambdaToSqlWhereConverterTestBase.cs" />
+    <Compile Include="Querying\QueryGeneration\QueryGeneratorTests.cs" />
+    <Compile Include="Querying\QueryGeneration\Sql2008QueryGeneratorTests.cs" />
+    <Compile Include="Querying\QueryGeneration\SqlCe4QueryGeneratorTests.cs" />
     <Compile Include="Reflect.cs" />
-    <Compile Include="Sql2008\Sql2008ConnectionInfoTests.cs" />
+    <Compile Include="Connections\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNodeTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserQxAnyTests.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlIncludeConverterTests\LambdaToSqlIncludeConverterTestBase.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlIncludeConverterTests\LambdaToSqlIncludeConverterTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Querying\Sql\SqlQueryGeneratorTests.cs" />
     <Compile Include="Querying\PagingTests.cs" />
     <Compile Include="Querying\QueryCommandBuilderTests.cs" />
     <Compile Include="Querying\QueryCommandTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
-    <Compile Include="SisoConnectionInfoTests.cs" />
-    <Compile Include="SqlCe4\SqlCe4ConnectionInfoTests.cs" />
+    <Compile Include="Connections\SisoConnectionInfoTests.cs" />
+    <Compile Include="Connections\SqlCe4ConnectionInfoTests.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
     <Compile Include="Stub.cs" />
     <Compile Include="TestFactories\StructureSchemaTestFactory.cs" />
@@ -146,6 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sql2008\" />
+    <Folder Include="SqlCe4\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

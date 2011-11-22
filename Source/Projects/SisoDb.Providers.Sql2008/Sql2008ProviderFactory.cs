@@ -7,8 +7,8 @@ using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Converters.Sql;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Querying.Sql;
 using SisoDb.Sql2008.Dac;
 using SisoDb.Structures;
 
@@ -108,10 +108,7 @@ namespace SisoDb.Sql2008
 
         public virtual IDbQueryGenerator GetDbQueryGenerator()
         {
-            return new Sql2008QueryGenerator(
-                new LambdaToSqlWhereConverter(),
-                new LambdaToSqlSortingConverter(),
-                new LambdaToSqlIncludeConverter());
+            return new Sql2008QueryGenerator();
         }
 
         public virtual IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class

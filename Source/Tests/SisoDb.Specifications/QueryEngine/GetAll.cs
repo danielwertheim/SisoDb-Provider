@@ -170,5 +170,32 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _structures;
             private static IList<QueryGuidItem> _fetchedStructures;
         }
+
+        [Subject(typeof(IUnitOfWork), "Get all, with sorting")]
+        public class when_set_contains_four_items_inserted_unordered_and_sorting_on_different_members_but_same_datatype : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+            };
+
+            Because of =
+                () => _fetchedStructures = TestContext.Database.ReadOnce().GetAll<QueryGuidItem>(q => q.SortBy(i => i.SortOrder, i => i.IntegerValue)).ToList();
+
+            It should_fetch_all_4_structures =
+                () => _fetchedStructures.Count.ShouldEqual(4);
+
+            It should_fetch_all_structures_in_correct_order = () =>
+            {
+                var orderedStructures = _structures.OrderBy(s => s.SortOrder).OrderBy(s => s.IntegerValue).ToArray();
+
+                for (var c = 0; c < 4; c++)
+                    _fetchedStructures[c].ShouldBeValueEqualTo(orderedStructures[c]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
     }
 }

@@ -260,15 +260,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The node of type: &apos;{0}&apos; is not supported!.
-        /// </summary>
-        public static string ParsedSortingLambdaSqlProcessor_NotSupportedNodeType {
-            get {
-                return ResourceManager.GetString("ParsedSortingLambdaSqlProcessor_NotSupportedNodeType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc..
         /// </summary>
         public static string Property_Ctor_UniqueOnNonSimpleType {

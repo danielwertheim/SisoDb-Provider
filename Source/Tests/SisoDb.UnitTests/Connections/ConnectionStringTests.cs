@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace SisoDb.UnitTests
+namespace SisoDb.UnitTests.Connections
 {
     [TestFixture]
     public class ConnectionStringTests : UnitTestBase
