@@ -60,12 +60,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.19.0.64, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.28.0\lib\NCore.dll</HintPath>
+    <Reference Include="NCore">
+      <HintPath>..\..\packages\PineCone.0.29.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.28.0.62, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.28.0\lib\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.29.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

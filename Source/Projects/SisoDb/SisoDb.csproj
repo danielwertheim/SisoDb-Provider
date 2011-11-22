@@ -49,15 +49,15 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="NCore, Version=0.19.0.64, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.28.0\lib\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.29.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.28.0.62, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.29.0.63, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.28.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.29.0\lib\PineCone.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.0.5.37151, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Text, Version=3.0.6.5609, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.0.5\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.0.6\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -92,10 +92,10 @@
     <Compile Include="IAdvancedQueryEngine.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
+    <Compile Include="Querying\Sql\ISqlExpression.cs" />
+    <Compile Include="Querying\Sql\SqlExpression.cs" />
+    <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\SqlQuery.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\ILambdaToSqlIncludeConverter.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\ILambdaToSqlSortingConverter.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\ILambdaToSqlWhereConverter.cs" />
     <Compile Include="IConnectionString.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="ISisoDbFactory.cs" />
@@ -112,6 +112,7 @@
     <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="DbUnitOfWorkExtensions.cs" />
+    <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="SisoDatabase.cs" />
     <Compile Include="SisoDbNotSupportedByProviderException.cs" />
     <Compile Include="DbUnitOfWork.cs" />
@@ -132,13 +133,12 @@
     <Compile Include="Querying\GetCommandBuilder.cs" />
     <Compile Include="Querying\IGetCommandBuilder.cs" />
     <Compile Include="Querying\IQueryCommandBuilder.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlIncludeConverter.cs" />
     <Compile Include="Providers\ISisoProviderFactory.cs" />
     <Compile Include="Querying\QueryCommandBuilder.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Core\Expressions\LambdaExpressionEvaluator.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlSortingConverter.cs" />
+    <Compile Include="Querying\Sql\SqlExpressionBuilder.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParser.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndGroupNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INode.cs" />
@@ -162,12 +162,10 @@
     <Compile Include="Querying\Lambdas\Operators\Operator.cs" />
     <Compile Include="Querying\Lambdas\Operators\OrOperator.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambda.cs" />
-    <Compile Include="Querying\Lambdas\Converters\IParsedLambdaConverter.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortDirections.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
-    <Compile Include="Querying\Lambdas\Converters\Sql\LambdaToSqlWhereConverter.cs" />
     <Compile Include="Querying\IEnumerableQueryExtensions.cs" />
     <Compile Include="Querying\IStringQueryExtensions.cs" />
     <Compile Include="Querying\INamedQuery.cs" />
@@ -183,12 +181,12 @@
     <Compile Include="Providers\SqlStatementsBase.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
     <Compile Include="Querying\SortingExtensions.cs" />
-    <Compile Include="Querying\Sql\SqlSorting.cs" />
+    <Compile Include="Querying\Sql\SqlSortingMember.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="DbSchema\DbSchemaManager.cs" />
     <Compile Include="Dac\DacParameter.cs" />
-    <Compile Include="Querying\Sql\SqlWhere.cs" />
+    <Compile Include="Querying\Sql\SqlWhereMember.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
     <Compile Include="IUnitOfWork.cs" />

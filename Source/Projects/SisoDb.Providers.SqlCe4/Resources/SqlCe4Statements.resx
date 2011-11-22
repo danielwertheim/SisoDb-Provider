@@ -129,6 +129,7 @@
 [BoolValue] [bit] null,
 [GuidValue] [uniqueidentifier] null);
 
+create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
 create index [IX_{0}_StructureId_MemberPath] on [{0}] ([StructureId],[MemberPath]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
@@ -145,6 +146,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 [BoolValue] [bit] null,
 [GuidValue] [uniqueidentifier] null);
 
+create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
 create index [IX_{0}_StructureId_MemberPath] on [{0}] ([StructureId],[MemberPath]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
