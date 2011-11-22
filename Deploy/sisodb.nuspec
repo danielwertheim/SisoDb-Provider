@@ -11,12 +11,12 @@
 			SisoDb is a document-oriented provider over SQL-Server. This package is Core package. Use specific package instead. E.g SisoDb.Sql2008, SisoDb.SqlCe4. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates.
 		</description>
 		<projectUrl>http://www.sisodb.com</projectUrl>
-		<licenseUrl>http://github.com/danielwertheim/SisoDb-Provider/blob/master/Solution/License-SisoDb.txt</licenseUrl>
+		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,json,sql,sql-server,sqlce,sqlce4</tags>
 		<dependencies>
 			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="[0.28.0]" />
+			<dependency id="PineCone" version="[0.29.0]" />
 			<dependency id="ServiceStack.Text" version="[3.0.6]" />
 		</dependencies>
 	</metadata>
