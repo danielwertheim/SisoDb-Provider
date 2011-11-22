@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.SqlCe4</id>    
 		<title>SisoDb.SqlCe4 - Simple Structure Oriented Db</title>
-		<version>5.0.7</version>
+		<version>5.0.8</version>
 		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 		<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
@@ -15,7 +15,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,json,sql,sql-server,sqlce,sqlce4</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[5.0.7]" />
+			<dependency id="SisoDb" version="[5.0.8]" />
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="[0.28.0]" />
 			<dependency id="SqlServerCompact" version="4.0.8482.1" />
