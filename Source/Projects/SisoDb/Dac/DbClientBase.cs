@@ -99,7 +99,7 @@ namespace SisoDb.Dac
             return Connection.CreateCommand(Transaction, CommandType.StoredProcedure, sp, parameters);
         }
 
-        public abstract IDbBulkCopy GetBulkCopy(bool keepIdentities);
+        public abstract IDbBulkCopy GetBulkCopy();
 
         public abstract void Drop(IStructureSchema structureSchema);
 

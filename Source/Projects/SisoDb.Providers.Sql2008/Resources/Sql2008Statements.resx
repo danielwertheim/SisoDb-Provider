@@ -123,7 +123,7 @@ alter database [{0}] set recovery simple;</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([RowId]),
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [StringValue] [nvarchar](max) null,
@@ -140,7 +140,7 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([RowId]),
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [StringValue] [nvarchar](max) null,
@@ -157,35 +157,43 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key clustered ([StructureId]),
-[Json] [nvarchar](max) not null);</value>
+[RowId] [bigint] identity(1,1) not null,
+[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key ([StructureId]),
+[Json] [nvarchar](max) not null);
+
+create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
-[StructureId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key clustered ([StructureId]),
+[RowId] [bigint] identity(1,1) not null,
+[StructureId] [bigint] not null constraint [PK_{0}] primary key ([StructureId]),
 [Json] [nvarchar](max) not null);
+
+create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);
 
 insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [UqStructureId] [uniqueidentifier] null,
 [UqMemberPath] [varchar](250) not null,
 [UqValue] [nvarchar](10) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
+create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [UqStructureId] [bigint] null,
 [UqMemberPath] [varchar](250) not null,
 [UqValue] [nvarchar](10) not null);
 
-create unique clustered index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
+create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>

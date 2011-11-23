@@ -14,6 +14,8 @@ namespace SisoDb.SqlCe4
         {
             var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
 
+            var outerSql = "select s.[Json] from ({0}) rs inner join [{1}] s on rs.[StructureId] = s.[StructureId] order by ...;";
+
             var sql = string.Format(
                 "select {0}min(s.[Json]) [Json]{1}{2} from [{3}] s inner join [{4}] si on si.[StructureId] = s.[StructureId]{5}{6}{7}{8}{9};",
                 GenerateTakeString(queryCommand).AppendWith(" "),

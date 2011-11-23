@@ -119,7 +119,7 @@
   </resheader>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
+[RowId] [bigint] identity(1,1) not null primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [StringValue] [nvarchar](4000) null,
@@ -136,7 +136,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="CreateIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
+[RowId] [bigint] identity(1,1) not null primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [StringValue] [nvarchar](4000) null,
@@ -153,18 +153,25 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
-[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key,
-[Json] [nvarchar](4000) not null);</value>
+[RowId] [bigint] identity(1,1) not null,
+[StructureId] [uniqueidentifier] not null rowguidcol primary key,
+[Json] [ntext] not null);
+
+create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [{0}] (
-[StructureId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
-[Json] [nvarchar](4000) not null);
+[RowId] [bigint] identity(1,1) not null,
+[StructureId] [bigint] not null primary key,
+[Json] [ntext] not null);
+
+create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);
 
 insert into [SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity(1,1) not null primary key,
 [StructureId] [uniqueidentifier] not null,
 [UqStructureId] [uniqueidentifier] null,
 [UqMemberPath] [nvarchar](250) not null,
@@ -176,6 +183,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity(1,1) not null primary key,
 [StructureId] [bigint] not null,
 [UqStructureId] [bigint] null,
 [UqMemberPath] [nvarchar](250) not null,

@@ -20,11 +20,9 @@ namespace SisoDb.Sql2008.Dac
         {
         }
 
-        public override IDbBulkCopy GetBulkCopy(bool keepIdentities)
+        public override IDbBulkCopy GetBulkCopy()
         {
-            var options = keepIdentities ? SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
-
-            return new Sql2008DbBulkCopy((SqlConnection)Connection, options, (SqlTransaction)Transaction);
+            return new Sql2008DbBulkCopy((SqlConnection)Connection, SqlBulkCopyOptions.Default, (SqlTransaction)Transaction);
         }
 
         public override void Drop(IStructureSchema structureSchema)

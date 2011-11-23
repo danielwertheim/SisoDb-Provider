@@ -18,7 +18,7 @@ namespace SisoDb.Dac
         IDbCommand CreateCommand(string sql, params IDacParameter[] parameters);
         IDbCommand CreateSpCommand(string sql, params IDacParameter[] parameters);
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
-        IDbBulkCopy GetBulkCopy(bool keepIdentities);
+        IDbBulkCopy GetBulkCopy();
 
         void Drop(IStructureSchema structureSchema);
         void RefreshIndexes(IStructureSchema structureSchema);

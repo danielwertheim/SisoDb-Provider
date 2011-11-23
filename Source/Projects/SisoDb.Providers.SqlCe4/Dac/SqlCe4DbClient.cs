@@ -29,11 +29,9 @@ namespace SisoDb.SqlCe4.Dac
                 Connection.ExecuteNonQuery(Transaction, sql.Split(';'), parameters);
         }
 
-        public override IDbBulkCopy GetBulkCopy(bool keepIdentities)
+        public override IDbBulkCopy GetBulkCopy()
         {
-            var options = keepIdentities ? SqlCeBulkCopyOptions.KeepIdentity : SqlCeBulkCopyOptions.None;
-
-            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, options, (SqlCeTransaction)Transaction);
+            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, SqlCeBulkCopyOptions.None, (SqlCeTransaction)Transaction);
         }
 
         public override void Drop(IStructureSchema structureSchema)
