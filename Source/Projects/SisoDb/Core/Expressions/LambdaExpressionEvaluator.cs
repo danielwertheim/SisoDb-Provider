@@ -13,5 +13,10 @@ namespace SisoDb.Core.Expressions
         {
             return Expression.Lambda(memberExpression).Compile().DynamicInvoke();
         }
+
+        public object Evaluate(ConstantExpression constantExpression)
+        {
+            return constantExpression.Value;
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using NCore;
 using NCore.Expressions;
 using NCore.Reflections;
+using SisoDb.Core;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
@@ -30,7 +31,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
             SupportedEnumerableQxOperators = new HashSet<ExpressionType>
             {
                 ExpressionType.Equal, ExpressionType.NotEqual,
-                ExpressionType.OrElse, ExpressionType.AndAlso
+                ExpressionType.OrElse, ExpressionType.AndAlso,
+                ExpressionType.LessThan, ExpressionType.LessThanOrEqual,
+                ExpressionType.GreaterThan, ExpressionType.GreaterThanOrEqual,
             };
         }
 
@@ -172,6 +175,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             if (e.Method.DeclaringType == typeof(StringQueryExtensions))
                 return VisitStringQxMethodCall(e);
+
+            if (e.Method.DeclaringType == typeof(string))
+                return VisitStringMethodCall(e);
             
             if (e.Method.DeclaringType == typeof(EnumerableQueryExtensions))
                 return VisitEnumerableQxMethodCall(e);
@@ -191,25 +197,63 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
+        private Expression VisitStringMethodCall(MethodCallExpression e)
+        {
+            var member = (MemberExpression)e.Object;
+            var methodName = e.Method.Name;
+            
+            switch (methodName)
+            {
+                case "StartsWith":
+                case "EndsWith":
+                    var useSuffix = methodName == "StartsWith";
+                    var usePrefix = methodName == "EndsWith";
+                    var argValue = _expressionEvaluator.Evaluate((ConstantExpression)e.Arguments[0]).ToStringOrNull();
+                    var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
+
+                    Visit(member);
+                    _nodesContainer.AddNode(new OperatorNode(Operator.Like()));
+                    Visit(Expression.Constant(newValue));
+                    break;
+                case "ToLower":
+                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToLowerNode());
+                    break;
+                case "ToUpper":
+                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToUpperNode());
+                    break;
+            }
+
+            return e;
+        }
+
         private Expression VisitStringQxMethodCall(MethodCallExpression e)
         {
-            var member = e.Arguments[0];
+            var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
 
             switch (methodName)
             {
+                case "StartsWith":
+                case "EndsWith":
                 case "QxLike":
                 case "QxStartsWith":
                 case "QxEndsWith":
                 case "QxContains":
                     var useSuffix = methodName != "QxLike" && (methodName == "QxStartsWith" || methodName == "QxContains");
                     var usePrefix = methodName != "QxLike" && (methodName == "QxEndsWith" || methodName == "QxContains");
-                    var argValue = ((ConstantExpression)e.Arguments[1]).Value;
+                    var argValue = _expressionEvaluator.Evaluate((ConstantExpression)e.Arguments[1]).ToStringOrNull();
                     var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
                     var constant = Expression.Constant(newValue);
+
                     Visit(member);
                     _nodesContainer.AddNode(new OperatorNode(Operator.Like()));
                     Visit(constant);
+                    break;
+                case "QxToLower":
+                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToLowerNode());
+                    break;
+                case "QxToUpper":
+                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToUpperNode());
                     break;
             }
 

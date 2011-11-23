@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
+    <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="Dac\BulkInserts\IDbStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
@@ -92,6 +93,8 @@
     <Compile Include="IAdvancedQueryEngine.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\ToLowerMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\ToUpperMemberNode.cs" />
     <Compile Include="Querying\Sql\ISqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlExpression.cs" />
     <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
@@ -166,8 +169,8 @@
     <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
-    <Compile Include="Querying\IEnumerableQueryExtensions.cs" />
-    <Compile Include="Querying\IStringQueryExtensions.cs" />
+    <Compile Include="Querying\EnumerableQueryExtensions.cs" />
+    <Compile Include="Querying\StringQueryExtensions.cs" />
     <Compile Include="Querying\INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
