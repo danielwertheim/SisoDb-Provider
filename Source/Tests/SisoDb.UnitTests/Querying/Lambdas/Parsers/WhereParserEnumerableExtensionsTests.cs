@@ -8,50 +8,74 @@ using SisoDb.Querying.Lambdas.Parsers;
 namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 {
     [TestFixture]
-    public class WhereParserQxAnyTests : UnitTestBase
+    public class WhereParserEnumerableQueryTests : UnitTestBase
     {
         [Test]
-        public void Parse_WhenQxAnyIsUsedWithLtOperator_ThrowsSisoDbException()
+        public void Parse_WhenQxAnyIsUsedWithLtOperator_ReturnsCorrectNodes()
         {
             var expression = Reflect<Root>.LambdaFrom(m => m.ChildA.Items.QxAny(i => i.Value < 42));
 
             var parser = new WhereParser();
-            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(expression));
+            var parsedLambda = parser.Parse(expression);
 
-            Assert.AreEqual("The operator 'LessThan' is not supported for Qx-methods on enumerables.", ex.Message);
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("ChildA.Items.Value", memberNode.Path);
+            Assert.AreEqual("<", operatorNode.Operator.ToString());
+            Assert.AreEqual(42, operandNode.Value);
         }
 
         [Test]
-        public void Parse_WhenQxAnyIsUsedWithLteOperator_ThrowsSisoDbException()
+        public void Parse_WhenQxAnyIsUsedWithLteOperator_ReturnsCorrectNodes()
         {
             var expression = Reflect<Root>.LambdaFrom(m => m.ChildA.Items.QxAny(i => i.Value <= 42));
 
             var parser = new WhereParser();
-            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(expression));
+            var parsedLambda = parser.Parse(expression);
 
-            Assert.AreEqual("The operator 'LessThanOrEqual' is not supported for Qx-methods on enumerables.", ex.Message);
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("ChildA.Items.Value", memberNode.Path);
+            Assert.AreEqual("<=", operatorNode.Operator.ToString());
+            Assert.AreEqual(42, operandNode.Value);
         }
 
         [Test]
-        public void Parse_WhenQxAnyIsUsedWithGtOperator_ThrowsSisoDbException()
+        public void Parse_WhenQxAnyIsUsedWithGtOperator_ReturnsCorrectNodes()
         {
             var expression = Reflect<Root>.LambdaFrom(m => m.ChildA.Items.QxAny(i => i.Value > 42));
 
             var parser = new WhereParser();
-            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(expression));
-            
-            Assert.AreEqual("The operator 'GreaterThan' is not supported for Qx-methods on enumerables.", ex.Message);
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("ChildA.Items.Value", memberNode.Path);
+            Assert.AreEqual(">", operatorNode.Operator.ToString());
+            Assert.AreEqual(42, operandNode.Value);
         }
 
         [Test]
-        public void Parse_WhenQxAnyIsUsedWithGteOperator_ThrowsSisoDbException()
+        public void Parse_WhenQxAnyIsUsedWithGteOperator_ReturnsCorrectNodes()
         {
             var expression = Reflect<Root>.LambdaFrom(m => m.ChildA.Items.QxAny(i => i.Value >= 42));
 
             var parser = new WhereParser();
-            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(expression));
+            var parsedLambda = parser.Parse(expression);
 
-            Assert.AreEqual("The operator 'GreaterThanOrEqual' is not supported for Qx-methods on enumerables.", ex.Message);
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("ChildA.Items.Value", memberNode.Path);
+            Assert.AreEqual(">=", operatorNode.Operator.ToString());
+            Assert.AreEqual(42, operandNode.Value);
         }
 
         [Test]

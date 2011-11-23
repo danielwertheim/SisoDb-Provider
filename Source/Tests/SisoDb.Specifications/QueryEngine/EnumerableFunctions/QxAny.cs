@@ -5,7 +5,7 @@ using SisoDb.Querying;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.QueryEngine.QxEnumerableExtensions
+namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
 {
     namespace QxAny
     {

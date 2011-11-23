@@ -46,9 +46,8 @@ namespace SisoDb.Querying.Sql
 
             if (!HasWrittenMember)
             {
-                Sql.AppendFormat("(mem{0}.[{1}]{2}{3})",
-                    memberIndex,
-                    IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
+                Sql.AppendFormat("({0}{1}{2})",
+                    GetMemberNodeString(member, memberIndex),
                     OpMarker,
                     ValueMarker);
 
@@ -60,14 +59,26 @@ namespace SisoDb.Querying.Sql
             if (!HasWrittenValue)
             {
                 Sql = Sql.Replace(ValueMarker,
-                    string.Format("(mem{0}.[{1}]{2}{3})",
-                    memberIndex,
-                    IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name,
+                    string.Format("({0}{1}{2})",
+                    GetMemberNodeString(member, memberIndex),
                     OpMarker,
                     ValueMarker));
 
                 HasWrittenValue = true;
             }
+        }
+
+        private static string GetMemberNodeString(MemberNode member, int memberIndex)
+        {
+            var memFormat = "mem{0}.[{1}]";
+
+            if (member is ToLowerMemberNode)
+                memFormat = string.Format("lower({0})", memFormat);
+
+            if (member is ToUpperMemberNode)
+                memFormat = string.Format("upper({0})", memFormat);
+
+            return string.Format(memFormat, memberIndex, IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name);
         }
 
         internal void AddOp(OperatorNode op)

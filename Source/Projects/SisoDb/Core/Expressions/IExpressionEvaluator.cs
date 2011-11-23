@@ -6,5 +6,6 @@ namespace SisoDb.Core.Expressions
     {
         object Evaluate(MethodCallExpression methodExpression);
         object Evaluate(MemberExpression memberExpression);
+        object Evaluate(ConstantExpression constantExpression);
     }
 }

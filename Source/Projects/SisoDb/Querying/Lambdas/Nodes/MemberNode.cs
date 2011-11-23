@@ -23,5 +23,15 @@ namespace SisoDb.Querying.Lambdas.Nodes
         {
             return Path;
         }
+
+        public ToLowerMemberNode AsToLowerNode()
+        {
+            return new ToLowerMemberNode(Path, MemberType);
+        }
+
+        public ToUpperMemberNode AsToUpperNode()
+        {
+            return new ToUpperMemberNode(Path, MemberType);
+        }
     }
 }

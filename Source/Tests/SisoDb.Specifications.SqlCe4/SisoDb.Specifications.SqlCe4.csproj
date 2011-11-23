@@ -108,6 +108,9 @@
     <Compile Include="..\SisoDb.Specifications\QueryEngine\Count.cs">
       <Link>QueryEngine\Count.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\EnumerableFunctions\QxAny.cs">
+      <Link>QueryEngine\EnumerableFunctions\QxAny.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\GetAll.cs">
       <Link>QueryEngine\GetAll.cs</Link>
     </Compile>
@@ -126,20 +129,38 @@
     <Compile Include="..\SisoDb.Specifications\QueryEngine\Query.cs">
       <Link>QueryEngine\Query.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxEnumerableExtensions\QxAny.cs">
-      <Link>QueryEngine\QxEnumerableExtensions\QxAny.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\EndsWith.cs">
+      <Link>QueryEngine\StringFunctions\EndsWith.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxContains.cs">
-      <Link>QueryEngine\QxStringExtensions\QxContains.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxContains.cs">
+      <Link>QueryEngine\StringFunctions\QxContains.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxEndsWith.cs">
-      <Link>QueryEngine\QxStringExtensions\QxEndsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxEndsWith.cs">
+      <Link>QueryEngine\StringFunctions\QxEndsWith.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxLike.cs">
-      <Link>QueryEngine\QxStringExtensions\QxLike.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxLike.cs">
+      <Link>QueryEngine\StringFunctions\QxLike.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\QxStringExtensions\QxStartsWith.cs">
-      <Link>QueryEngine\QxStringExtensions\QxStartsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxStartsWith.cs">
+      <Link>QueryEngine\StringFunctions\QxStartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxToLower.cs">
+      <Link>QueryEngine\StringFunctions\QxToLower.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxToUpper.cs">
+      <Link>QueryEngine\StringFunctions\QxToUpper.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\StartsWith.cs">
+      <Link>QueryEngine\StringFunctions\StartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\StringFunctionsItem.cs">
+      <Link>QueryEngine\StringFunctions\StringFunctionsItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\ToLower.cs">
+      <Link>QueryEngine\StringFunctions\ToLower.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\ToUpper.cs">
+      <Link>QueryEngine\StringFunctions\ToUpper.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\Where.cs">
       <Link>QueryEngine\Where.cs</Link>

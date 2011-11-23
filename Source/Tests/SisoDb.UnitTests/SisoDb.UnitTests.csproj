@@ -89,8 +89,12 @@
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\WhereParserStringQueryTests.cs" />
+    <Compile Include="Querying\QueryGeneration\QueryGeneratorStringFunctionTests.cs" />
     <Compile Include="Querying\QueryGeneration\QueryGeneratorTests.cs" />
+    <Compile Include="Querying\QueryGeneration\Sql2008QueryGeneratorStringFunctionTests.cs" />
     <Compile Include="Querying\QueryGeneration\Sql2008QueryGeneratorTests.cs" />
+    <Compile Include="Querying\QueryGeneration\SqlCe4QueryGeneratorStringFunctionTests.cs" />
     <Compile Include="Querying\QueryGeneration\SqlCe4QueryGeneratorTests.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Connections\Sql2008ConnectionInfoTests.cs" />
@@ -98,7 +102,7 @@
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNodeTests.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\WhereParserQxAnyTests.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\WhereParserEnumerableExtensionsTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querying\PagingTests.cs" />

@@ -23,5 +23,15 @@ namespace SisoDb.Querying
         {
             throw new NotImplementedException();
         }
+
+        public static string QxToLower(this string m)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static string QxToUpper(this string m)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
