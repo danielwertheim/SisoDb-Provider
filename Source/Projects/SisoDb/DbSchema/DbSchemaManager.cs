@@ -15,7 +15,10 @@ namespace SisoDb.DbSchema
 
         public void ClearCache()
         {
-            _upsertedSchemas.Clear();
+            lock (_upsertedSchemas)
+            {
+                _upsertedSchemas.Clear();
+            }
         }
 
         public void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient)

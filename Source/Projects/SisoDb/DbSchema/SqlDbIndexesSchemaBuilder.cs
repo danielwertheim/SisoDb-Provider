@@ -2,6 +2,7 @@
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Providers;
+using SisoDb.Resources;
 using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
@@ -17,13 +18,19 @@ namespace SisoDb.DbSchema
 
         public string GenerateSql(IStructureSchema structureSchema)
         {
-            var sql = structureSchema.IdAccessor.IdType == StructureIdTypes.Guid
-                          ? _sqlStatements.GetSql("CreateIndexesGuid")
-                          : _sqlStatements.GetSql("CreateIndexesIdentity");
+            var indexesTableName = structureSchema.GetIndexesTableName();
+            var structureTableName = structureSchema.GetStructureTableName();
 
-            return sql.Inject(
-                structureSchema.GetIndexesTableName(),
-                structureSchema.GetStructureTableName());
+            if (structureSchema.IdAccessor.IdType == StructureIdTypes.String)
+                return _sqlStatements.GetSql("CreateIndexesString").Inject(indexesTableName, structureTableName);
+
+            if (structureSchema.IdAccessor.IdType == StructureIdTypes.Guid)
+                return _sqlStatements.GetSql("CreateIndexesGuid").Inject(indexesTableName, structureTableName);
+
+            if (structureSchema.IdAccessor.IdType.IsIdentity())
+                return _sqlStatements.GetSql("CreateIndexesIdentity").Inject(indexesTableName, structureTableName);
+
+            throw new SisoDbException(ExceptionMessages.SqlDbIndexesSchemaBuilder_GenerateSql.Inject(structureSchema.IdAccessor.IdType));
         }
     }
 }

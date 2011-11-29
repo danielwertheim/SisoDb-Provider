@@ -1,5 +1,3 @@
-﻿using System.Collections.Generic;
-using EnsureThat;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
@@ -8,45 +6,49 @@ namespace SisoDb.Structures
 {
     public class IdentityStructureIdGenerator : IStructureIdGenerator
     {
-        private readonly IDbClient _dbClient;
+        private readonly GetNextIdentity _getNextIdentity;
 
-        public IdentityStructureIdGenerator(IDbClient dbClient)
+        public IdentityStructureIdGenerator(GetNextIdentity getNextIdentity)
         {
-            Ensure.That(dbClient, "dbClient").IsNotNull();
-
-            _dbClient = dbClient;
+            _getNextIdentity = getNextIdentity;
         }
 
-        public IStructureId CreateId(IStructureSchema structureSchema)
+        public IStructureId Generate(IStructureSchema structureSchema)
         {
-            var nextId = _dbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, 1);
-
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.Identity)
-                return StructureId.Create((int)nextId);
+                return StructureId.Create((int)_getNextIdentity.Invoke(structureSchema, 1));
 
-            return StructureId.Create(nextId);
+            return StructureId.Create(_getNextIdentity.Invoke(structureSchema, 1));
         }
 
-        public IEnumerable<IStructureId> CreateIds(int numOfIds, IStructureSchema structureSchema)
+        public IStructureId[] Generate(IStructureSchema structureSchema, int numOfIds)
         {
-            var nextId = _dbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, numOfIds);
-
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.Identity)
-                return CreateIdentityIds(numOfIds, (int)nextId);
+                return GenerateIdentityStructureId(structureSchema, numOfIds);
 
-            return CreateBigIdentityIds(numOfIds, nextId);
+            return GenerateBigIdentityStructureId(structureSchema, numOfIds);
         }
 
-        private IEnumerable<IStructureId> CreateIdentityIds(int numOfIds, int startId)
+        private IStructureId[] GenerateIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
+            var structureIds = new IStructureId[numOfIds];
+            var startId = (int)_getNextIdentity.Invoke(structureSchema, numOfIds);
+
             for (var c = 0; c < numOfIds; c++)
-                yield return StructureId.Create((startId + c));
+                structureIds[c] = StructureId.Create(startId++);
+
+            return structureIds;
         }
 
-        private IEnumerable<IStructureId> CreateBigIdentityIds(int numOfIds, long startId)
+        private IStructureId[] GenerateBigIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
+            var structureIds = new IStructureId[numOfIds];
+            var startId = _getNextIdentity.Invoke(structureSchema, numOfIds);
+
             for (var c = 0; c < numOfIds; c++)
-                yield return StructureId.Create((startId + c));
+                structureIds[c] = StructureId.Create(startId++);
+
+            return structureIds;
         }
     }
 }

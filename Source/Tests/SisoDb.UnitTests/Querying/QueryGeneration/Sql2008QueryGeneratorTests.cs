@@ -9,7 +9,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new Sql2008QueryGenerator();
+            return new Sql2008QueryGenerator(new Sql2008Statements());
         }
 
         [Test]
@@ -18,11 +18,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithWhere_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "where (mem0.[IntegerValue] = @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[IntegerValue] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -35,11 +31,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithSorting_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "group by s.[StructureId] " +
-                "order by min(mem0.[IntegerValue]) Asc;",
+                "select s.[Json] from (select s.[StructureId], min(mem0.[IntegerValue]) mem0 from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc;",
                 sqlQuery.Sql);
         }
 
@@ -49,12 +41,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithWhereAndSorting_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "where (mem0.[IntegerValue] = @p0) " +
-                "group by s.[StructureId] " +
-                "order by min(mem0.[IntegerValue]) Asc;",
+                "select s.[Json] from (select s.[StructureId], min(mem0.[IntegerValue]) mem0 from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[IntegerValue] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc;",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -67,8 +54,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithTake_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select top(11) min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId];",
+                "select top (11) s.[Json] from (select s.[StructureId] from [MyClassStructure] s group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
         }
 
@@ -78,11 +64,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithTakeAndSorting_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select top(11) min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "group by s.[StructureId] " +
-                "order by min(mem0.[IntegerValue]) Asc;",
+                "select top (11) s.[Json] from (select s.[StructureId], min(mem0.[IntegerValue]) mem0 from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc;",
                 sqlQuery.Sql);
         }
 
@@ -92,12 +74,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithTakeAndWhereAndSorting_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select top(11) min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "where (mem0.[IntegerValue] = @p0) " +
-                "group by s.[StructureId] " +
-                "order by min(mem0.[IntegerValue]) Asc;",
+                "select top (11) s.[Json] from (select s.[StructureId], min(mem0.[IntegerValue]) mem0 from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[IntegerValue] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc;",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -109,13 +86,8 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery();
 
-            Assert.AreEqual("with pagedRs as (select min(s.[Json]) [Json], row_number() over (order by min(mem0.[IntegerValue]) Asc) as RowNum " +
-                "from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "where (mem0.[IntegerValue] = @p0) " +
-                "group by s.[StructureId]) " +
-                "select pagedRs.[Json] from pagedRs where pagedRs.[RowNum] between @pagingFrom and @pagingTo;",
+            Assert.AreEqual(
+                "select s.[Json] from (select s.[StructureId] , row_number() over (order by min(mem0.[IntegerValue]) Asc) RowNum from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[IntegerValue] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] where rs.RowNum between @pagingFrom and @pagingTo;",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -134,12 +106,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithExplicitSortingOnTwoDifferentMemberTypesAndSorting_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "inner join [MyClassIndexes] mem1 on mem1.[StructureId] = s.[StructureId] and mem1.[MemberPath] = 'String1' " +
-                "group by s.[StructureId] " +
-                "order by min(mem0.[IntegerValue]) Asc, min(mem1.[StringValue]) Desc;",
+                "select s.[Json] from (select s.[StructureId], min(mem0.[IntegerValue]) mem0, min(mem1.[StringValue]) mem1 from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' inner join [MyClassIndexes] mem1 on mem1.[StructureId] = s.[StructureId] and mem1.[MemberPath] = 'String1' group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc, mem1 Desc;",
                 sqlQuery.Sql);
         }
 
@@ -149,12 +116,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithSortingOnTwoDifferentMemberOfSameType_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' " +
-                "inner join [MyClassIndexes] mem1 on mem1.[StructureId] = s.[StructureId] and mem1.[MemberPath] = 'Int2' " +
-                "group by s.[StructureId] " +
-                "order by min(mem0.[IntegerValue]) Asc, min(mem1.[IntegerValue]) Asc;",
+                "select s.[Json] from (select s.[StructureId], min(mem0.[IntegerValue]) mem0, min(mem1.[IntegerValue]) mem1 from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' inner join [MyClassIndexes] mem1 on mem1.[StructureId] = s.[StructureId] and mem1.[MemberPath] = 'Int2' group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc, mem1 Asc;",
                 sqlQuery.Sql);
         }
     }

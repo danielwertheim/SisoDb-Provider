@@ -33,25 +33,21 @@ namespace SisoDb.Dac
             if (transaction != null)
                 cmd.Transaction = transaction;
 
-            foreach (var queryParameter in parameters)
-            {
-                var parameter = cmd.CreateParameter();
-                parameter.ParameterName = queryParameter.Name;
-                parameter.Value = queryParameter.Value;
-
-                cmd.Parameters.Add(parameter);
-            }
+            cmd.AddParameters(parameters);
             
             return cmd;
         }
 
-        internal static void AddParameter<T>(this IDbCommand cmd, string name, T value)
+        internal static void AddParameters(this IDbCommand cmd, params IDacParameter[] parameters)
         {
-            var p = cmd.CreateParameter();
-            p.ParameterName = name;
-            p.Value = value;
+            foreach (var dacParam in parameters)
+            {
+                var parameter = cmd.CreateParameter();
+                parameter.ParameterName = dacParam.Name;
+                parameter.Value = dacParam.Value;
 
-            cmd.Parameters.Add(p);
+                cmd.Parameters.Add(parameter);
+            }
         }
 
         internal static void ExecuteNonQuery(this IDbConnection connection, string sql, params IDacParameter[] parameters)

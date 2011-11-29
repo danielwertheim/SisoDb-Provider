@@ -14,32 +14,32 @@ namespace SisoDb.Testing.Steps
 {
     public static class Shoulds
     {
-        public static void should_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
+        public static void should_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
         {
             db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(0);
         }
 
-        public static void should_not_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
+        public static void should_not_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
         {
             db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(1);
         }
 
-        public static void should_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
+        public static void should_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
         {
             db.RowCount(structureSchema.GetIndexesTableName(), "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(0);
         }
 
-        public static void should_not_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
+        public static void should_not_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
         {
             db.RowCount(structureSchema.GetIndexesTableName(), "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldBeGreaterThan(0);
         }
 
-        public static void should_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
+        public static void should_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
         {
             db.RowCount(structureSchema.GetUniquesTableName(), "{0} = '{1}'".Inject(UniqueStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(0);
         }
 
-        public static void should_not_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, ValueType structureId)
+        public static void should_not_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
         {
             db.RowCount(structureSchema.GetUniquesTableName(), "{0} = '{1}'".Inject(UniqueStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(1);
         }
@@ -65,7 +65,7 @@ namespace SisoDb.Testing.Steps
             }
         }
 
-        public static void should_have_ids<T>(this ISisoDatabase db, params ValueType[] ids) where T : class
+        public static void should_have_ids<T>(this ISisoDatabase db, params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 
@@ -76,7 +76,7 @@ namespace SisoDb.Testing.Steps
             }
         }
 
-        public static void should_not_have_ids<T>(this ISisoDatabase db, params ValueType[] ids) where T : class
+        public static void should_not_have_ids<T>(this ISisoDatabase db, params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 

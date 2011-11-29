@@ -58,12 +58,32 @@ namespace SisoDb.Testing.Steps
             return db.WriteOnce().InsertMany(items);
         }
 
+        public static IList<StringItem> InsertStringItems(this ISisoDatabase db, int numOfItems)
+        {
+            var items = new List<StringItem>(numOfItems);
+
+            for (var c = 0; c < numOfItems; c++)
+                items.Add(new StringItem { StructureId = (c + 1).ToString(), Value = c + 1 });
+
+            return db.WriteOnce().InsertMany(items);
+        }
+
         public static IList<UniqueGuidItem> InsertUniqueGuidItems(this ISisoDatabase db, int numOfItems)
         {
             var items = new List<UniqueGuidItem>(numOfItems);
 
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueGuidItem { UniqueValue = c + 1 });
+
+            return db.WriteOnce().InsertMany(items);
+        }
+
+        public static IList<UniqueStringItem> InsertUniqueStringItems(this ISisoDatabase db, int numOfItems)
+        {
+            var items = new List<UniqueStringItem>(numOfItems);
+
+            for (var c = 0; c < numOfItems; c++)
+                items.Add(new UniqueStringItem { StructureId = (c + 1).ToString(), UniqueValue = c + 1 });
 
             return db.WriteOnce().InsertMany(items);
         }

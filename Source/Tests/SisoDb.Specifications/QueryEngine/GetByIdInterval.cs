@@ -69,6 +69,37 @@ namespace SisoDb.Specifications.QueryEngine
         }
 
         [Subject(typeof(IQueryEngine), "Get by Id interval")]
+        public class when_getting_for_strings : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _idFrom = "A";
+                _idTo = "P";
+            };
+
+            Because of = () =>
+            {
+                CaughtException = Catch.Exception(() =>
+                {
+                    _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryStringItem>(_idFrom, _idTo).ToList();
+                });
+            };
+
+            It should_have_failed = () =>
+            {
+                CaughtException.ShouldNotBeNull();
+                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
+
+                var ex = (SisoDbNotSupportedByProviderException)CaughtException;
+                ex.Message.ShouldContain(ExceptionMessages.QueryEngine_GetByIdInterval_WrongIdType);
+            };
+
+            private static string _idFrom, _idTo;
+            private static IList<QueryStringItem> _result;
+        }
+
+        [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_identities_and_range_matches_subset_of_items : SpecificationBase
         {
             Establish context = () =>

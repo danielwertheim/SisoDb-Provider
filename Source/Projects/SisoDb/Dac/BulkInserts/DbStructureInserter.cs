@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
@@ -44,7 +45,7 @@ namespace SisoDb.Dac.BulkInserts
                 new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data));
         }
 
-        protected virtual void BulkInsertStructures(IStructureSchema structureSchema, IStructure[] structures)
+        protected virtual void BulkInsertStructures(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
             var structureStorageSchema = new StructureStorageSchema(structureSchema);
 
@@ -63,7 +64,7 @@ namespace SisoDb.Dac.BulkInserts
             }
         }
 
-        protected virtual void BulkInsertIndexes(IStructureSchema structureSchema, IStructure[] structures)
+        protected virtual void BulkInsertIndexes(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
             var indexesStorageSchema = new IndexStorageSchema(structureSchema);
 
@@ -84,7 +85,7 @@ namespace SisoDb.Dac.BulkInserts
             }
         }
 
-        protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructure[] structures)
+        protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
             var uniques = structures.SelectMany(s => s.Uniques).ToArray();
             if (uniques.Length <= 0)

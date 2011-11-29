@@ -1,26 +1,26 @@
 ﻿using System;
-using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
+using SisoDb.Structures;
 
 namespace SisoDb
 {
-    public class ResourceContainer
+    public class GlobalResourceContainer
     {
         private readonly IJsonSerializer _defaultJsonSerializer;
         
         public Func<IJsonSerializer> ResolveJsonSerializer;
         public Func<IStructureSchemas> ResolveStructureSchemas;
-        public Func<IStructureBuilder> ResolveStructureBuilder;
+        public Func<IStructureBuilders> ResolveStructureBuilders;
 
-        public ResourceContainer()
+        public GlobalResourceContainer()
         {
             _defaultJsonSerializer = new ServiceStackJsonSerializer();
 
             ResolveJsonSerializer = () => _defaultJsonSerializer;
             ResolveStructureSchemas = () => new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
-            ResolveStructureBuilder = () => new StructureBuilder();
+            ResolveStructureBuilders = () => new StructureBuilders();
         }
     }
 }

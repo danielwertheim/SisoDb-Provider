@@ -151,6 +151,23 @@ create index [IX_{0}_StructureId_MemberPath] on [{0}] ([StructureId],[MemberPath
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
+  <data name="CreateIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity(1,1) not null primary key,
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [nvarchar](250) not null,
+[StringValue] [nvarchar](4000) null,
+[IntegerValue] [bigint] null,
+[FractalValue] [real] null,
+[DateTimeValue] [datetime] null,
+[BoolValue] [bit] null,
+[GuidValue] [uniqueidentifier] null);
+
+create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+create index [IX_{0}_StructureId_MemberPath] on [{0}] ([StructureId],[MemberPath]);
+
+alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
 [RowId] [bigint] identity(1,1) not null,
@@ -169,6 +186,14 @@ create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);
 
 insert into [SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
+  <data name="CreateStructuresString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity(1,1) not null,
+[StructureId] [nvarchar](16) not null primary key,
+[Json] [ntext] not null);
+
+create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);</value>
+  </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [RowId] [bigint] identity(1,1) not null primary key,
@@ -186,6 +211,18 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 [RowId] [bigint] identity(1,1) not null primary key,
 [StructureId] [bigint] not null,
 [UqStructureId] [bigint] null,
+[UqMemberPath] [nvarchar](250) not null,
+[UqValue] [nvarchar](10) not null);
+
+create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
+
+alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateUniquesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity(1,1) not null primary key,
+[StructureId] [nvarchar](16) not null,
+[UqStructureId] [nvarchar](16) null,
 [UqMemberPath] [nvarchar](250) not null,
 [UqValue] [nvarchar](10) not null);
 
@@ -231,6 +268,16 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="IndexesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
     <value>select distinct [{0}] from [{1}];</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>[%Start%]
+select [%Take%]s.[Json][%IncludedJsonMembers%] from (select s.[StructureId][%OrderByMembers%][%IncludedRowIds%] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%MatchingIncludesJoins%][%WhereCriteria%] group by s.[StructureId]) rs inner join [[%MainStructureTable%]] s on s.[StructureId] = rs.[StructureId][%IncludesJoins%][%OrderBy%][%Paging%]
+[%End%];</value>
+  </data>
+  <data name="QueryReturningStructureIds" xml:space="preserve">
+    <value>[%Start%]
+select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]
+[%End%]</value>
   </data>
   <data name="RefreshIndexes" xml:space="preserve">
     <value>UPDATE STATISTICS ON [{0}].[PK_{0}] WITH FULLSCAN;

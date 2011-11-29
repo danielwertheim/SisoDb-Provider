@@ -4,7 +4,6 @@ using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
-using SisoDb.Structures;
 
 namespace SisoDb.Providers
 {
@@ -29,10 +28,8 @@ namespace SisoDb.Providers
         IDbSchemaManager GetDbSchemaManager();
         
         IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient);
-        
+
         ISqlStatements GetSqlStatements();
-        
-        IdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
         
         IDbStructureInserter GetDbStructureInserter(IDbClient dbClient);
         

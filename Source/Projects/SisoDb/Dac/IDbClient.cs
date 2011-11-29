@@ -22,18 +22,18 @@ namespace SisoDb.Dac
 
         void Drop(IStructureSchema structureSchema);
         void RefreshIndexes(IStructureSchema structureSchema);
-        void DeleteById(ValueType structureId, IStructureSchema structureSchema);
-        void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
-        void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema);
-        void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
+        void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
+        void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
+        void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema);
+        void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
         bool TableExists(string name);
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
         IEnumerable<string> GetJson(IStructureSchema structureSchema);
-        string GetJsonById(ValueType structureId, IStructureSchema structureSchema);
-        IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
-        IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
+        string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
+        IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
+        IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
 
         void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
     }

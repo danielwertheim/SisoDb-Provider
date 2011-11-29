@@ -11,7 +11,7 @@ namespace SisoDb.Querying
     {
         public IStructureSchema StructureSchema { get; private set; }
 
-        public int TakeNumOfStructures { get; set; }
+        public int? TakeNumOfStructures { get; set; }
 
         public Paging Paging { get; set; }
 
@@ -23,7 +23,7 @@ namespace SisoDb.Querying
 
         public bool HasTakeNumOfStructures
         {
-            get { return TakeNumOfStructures > 0; }
+            get { return TakeNumOfStructures.HasValue && TakeNumOfStructures > 0; }
         }
 
         public bool HasPaging

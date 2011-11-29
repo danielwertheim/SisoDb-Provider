@@ -9,7 +9,7 @@ namespace SisoDb.SqlCe4
 
         public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
         {
-            return new SqlCe4Database((SqlCe4ConnectionInfo)connectionInfo);
+            return new SqlCe4Database(connectionInfo);
         }
     }
 }

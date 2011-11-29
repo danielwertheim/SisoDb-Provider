@@ -155,6 +155,23 @@ create index [IX_{0}_StructureId_MemberPath] on [{0}] ([StructureId],[MemberPath
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
+  <data name="CreateIndexesString" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[StringValue] [nvarchar](max) null,
+[IntegerValue] [bigint] null,
+[FractalValue] [real] null,
+[DateTimeValue] [datetime] null,
+[BoolValue] [bit] null,
+[GuidValue] [uniqueidentifier] null);
+
+create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+create index [IX_{0}_StructureId_MemberPath] on [{0}] ([StructureId],[MemberPath]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
 [RowId] [bigint] identity(1,1) not null,
@@ -173,6 +190,14 @@ create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);
 
 insert into dbo.[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
+  <data name="CreateStructuresString" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null,
+[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key ([StructureId]),
+[Json] [nvarchar](max) not null);
+
+create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);</value>
+  </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
 [RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
@@ -190,6 +215,18 @@ alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Struct
 [RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [UqStructureId] [bigint] null,
+[UqMemberPath] [varchar](250) not null,
+[UqValue] [nvarchar](10) not null);
+
+create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateUniquesString" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key,
+[StructureId] [nvarchar](16) not null,
+[UqStructureId] [nvarchar](16) null,
 [UqMemberPath] [varchar](250) not null,
 [UqValue] [nvarchar](10) not null);
 
@@ -258,6 +295,16 @@ delete from [dbo].[{0}] where [{1}] in({2});</value>
     <value>set nocount on;
 select distinct [{0}] from [dbo].[{1}];</value>
   </data>
+  <data name="Query" xml:space="preserve">
+    <value>[%Start%]
+select [%Take%]s.[Json][%IncludedJsonMembers%] from (select s.[StructureId][%OrderByMembers%][%IncludedRowIds%][%Paging%] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%MatchingIncludesJoins%][%WhereCriteria%] group by s.[StructureId]) rs inner join [[%MainStructureTable%]] s on s.[StructureId] = rs.[StructureId][%IncludesJoins%][%OrderBy%]
+[%End%];</value>
+  </data>
+  <data name="QueryReturningStructureIds" xml:space="preserve">
+    <value>[%Start%]
+select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]
+[%End%]</value>
+  </data>
   <data name="RefreshIndexes" xml:space="preserve">
     <value>set nocount on;
 ALTER INDEX [PK_{0}] ON dbo.[{0}] REBUILD;
@@ -301,6 +348,11 @@ end
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'StructureIdentityIds') is null
 begin
 create type dbo.StructureIdentityIds as table (Id bigint primary key not null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStringIds') is null
+begin
+create type dbo.SisoStringIds as table (Id nvarchar(16) primary key not null);	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">

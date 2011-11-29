@@ -27,7 +27,7 @@ namespace SisoDb
             }
         }
 
-        public static T GetById<T>(this DbQueryExtensionPoint db, ValueType id) where T : class
+        public static T GetById<T>(this DbQueryExtensionPoint db, object id) where T : class
         {
             using (var qe = db.Instance.CreateQueryEngine())
             {
@@ -35,7 +35,7 @@ namespace SisoDb
             }
         }
 
-        public static TOut GetByIdAs<TContract, TOut>(this DbQueryExtensionPoint db, ValueType id)
+        public static TOut GetByIdAs<TContract, TOut>(this DbQueryExtensionPoint db, object id)
             where TContract : class
             where TOut : class
         {
@@ -45,7 +45,7 @@ namespace SisoDb
             }
         }
 
-        public static IList<T> GetByIds<T>(this DbQueryExtensionPoint db, params ValueType[] ids) where T : class
+        public static IList<T> GetByIds<T>(this DbQueryExtensionPoint db, params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 
@@ -55,7 +55,7 @@ namespace SisoDb
             }
         }
 
-        public static IList<TOut> GetByIdsAs<TContract, TOut>(this DbQueryExtensionPoint db, params ValueType[] ids)
+        public static IList<TOut> GetByIdsAs<TContract, TOut>(this DbQueryExtensionPoint db, params object[] ids)
             where TContract : class
             where TOut : class
         {
@@ -67,7 +67,7 @@ namespace SisoDb
             }
         }
 
-        public static IList<T> GetByIdInterval<T>(this DbQueryExtensionPoint db, ValueType idFrom, ValueType idTo) where T : class
+        public static IList<T> GetByIdInterval<T>(this DbQueryExtensionPoint db, object idFrom, object idTo) where T : class
         {
             using (var qe = db.Instance.CreateQueryEngine())
             {
@@ -75,7 +75,7 @@ namespace SisoDb
             }
         }
 
-        public static string GetByIdAsJson<T>(this DbQueryExtensionPoint db, ValueType id) where T : class
+        public static string GetByIdAsJson<T>(this DbQueryExtensionPoint db, object id) where T : class
         {
             using (var qe = db.Instance.CreateQueryEngine())
             {
@@ -83,7 +83,7 @@ namespace SisoDb
             }
         }
 
-        public static IList<string> GetByIdsAsJson<T>(this DbQueryExtensionPoint db, params ValueType[] ids) where T : class
+        public static IList<string> GetByIdsAsJson<T>(this DbQueryExtensionPoint db, params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 

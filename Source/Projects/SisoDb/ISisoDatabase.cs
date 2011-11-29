@@ -1,6 +1,8 @@
 using System;
-using PineCone.Structures;
+using System.Diagnostics;
 using PineCone.Structures.Schemas;
+using SisoDb.Serialization;
+using SisoDb.Structures;
 
 namespace SisoDb
 {
@@ -24,12 +26,17 @@ namespace SisoDb
         /// <summary>
         /// Cached structure schemas.
         /// </summary>
-        IStructureSchemas StructureSchemas { get; }
+        IStructureSchemas StructureSchemas { get; set; }
 
         /// <summary>
-        /// Structure builder used to build structures for insert and updates.
+        /// Structure builders collection used to resolve a Structure builder to use when building structures for insert and updates.
         /// </summary>
-        IStructureBuilder StructureBuilder { get; }
+        IStructureBuilders StructureBuilders { get; set; }
+
+        /// <summary>
+        /// The serializer used to handle Json.
+        /// </summary>
+        IJsonSerializer Serializer { get; set; }
 
         /// <summary>
         /// Ensures that a new fresh database will exists. Drops any existing database.
@@ -74,8 +81,8 @@ namespace SisoDb
         /// <summary>
         /// Drops ALL structure sets.
         /// </summary>
-        /// <remarks>NOTE!!! ALL SETS ARE DROPPED</remarks>
-        void DropStructureSets();
+        /// <param name="types"></param>
+        void DropStructureSets(Type[] types);
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
@@ -118,5 +125,40 @@ namespace SisoDb
         /// </summary>
         /// <returns></returns>
         IUnitOfWork CreateUnitOfWork();
+
+        /// <summary>
+        /// Use when you want to execute a single Fetch against the <see cref="ISisoDatabase"/>
+        /// via an <see cref="IQueryEngine"/>.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>If you need to do multiple queries, use <see cref="ISisoDatabase.CreateQueryEngine"/> instead.</remarks>
+        [DebuggerStepThrough]
+        DbQueryExtensionPoint ReadOnce();
+
+        /// <summary>
+        /// Use when you want to execute a single Insert, Update or Delete against 
+        /// the <see cref="ISisoDatabase"/> via an <see cref="IUnitOfWork"/>.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>If you need to do multiple operations in the <see cref="IUnitOfWork"/>,
+        /// use <see cref="ISisoDatabase.CreateUnitOfWork"/> instead.</remarks>
+        [DebuggerStepThrough]
+        DbUnitOfWorkExtensionPoint WriteOnce();
+
+        /// <summary>
+        /// Simplifies usage of <see cref="IUnitOfWork"/>.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="consumer"></param>
+        [DebuggerStepThrough]
+        void WithUnitOfWork(Action<IUnitOfWork> consumer);
+
+        /// <summary>
+        /// Simplifies usage of <see cref="IQueryEngine"/>.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="consumer"></param>
+        [DebuggerStepThrough]
+        void WithQueryEngine(Action<IQueryEngine> consumer);
     }
 }

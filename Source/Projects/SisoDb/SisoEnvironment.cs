@@ -15,7 +15,7 @@ namespace SisoDb
 
         public static readonly IHashService HashService;
 
-        public static readonly ResourceContainer Resources;
+        public static readonly GlobalResourceContainer Resources;
 
         public static readonly ISisoProviderFactories ProviderFactories;
 
@@ -25,7 +25,7 @@ namespace SisoDb
             StringConverter = new StringConverter(Formatting);
             StringComparer = StringComparer.InvariantCultureIgnoreCase;
             HashService = new Crc32HashService();
-            Resources = new ResourceContainer();
+            Resources = new GlobalResourceContainer();
             ProviderFactories = new SisoProviderFactories();
         }
     }

@@ -7,12 +7,14 @@ namespace SisoDb.Dynamic
 {
     public class DynamicServiceStackJsonSerializer : IDynamicJsonSerializer
     {
+        private static readonly IJsonSerializer Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+
         public IDictionary<string, object> ToTypedKeyValueOrNull(TypeDescriptor typeDescriptor, string json)
         {
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            var kvRepresentation = ServiceStackJsonSerializer<IDictionary<string, dynamic>>.Deserialize(json);
+            var kvRepresentation = Serializer.Deserialize<IDictionary<string, dynamic>>(json);
             if (kvRepresentation == null || kvRepresentation.Count < 1)
                 return null;
 

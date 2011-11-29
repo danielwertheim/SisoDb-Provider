@@ -105,13 +105,13 @@ namespace SisoDb.Dac
 
         public abstract void RefreshIndexes(IStructureSchema structureSchema);
 
-        public abstract void DeleteById(ValueType structureId, IStructureSchema structureSchema);
+        public abstract void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
 
-        public abstract void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
+        public abstract void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public abstract void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema);
+        public abstract void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema);
 
-        public abstract void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
+        public abstract void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
 
         public abstract bool TableExists(string name);
 
@@ -123,11 +123,11 @@ namespace SisoDb.Dac
 
         public abstract IEnumerable<string> GetJson(IStructureSchema structureSchema);
 
-        public abstract string GetJsonById(ValueType structureId, IStructureSchema structureSchema);
+        public abstract string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
 
-        public abstract IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema);
+        public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public abstract IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema);
+        public abstract IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
 
         protected virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
         {

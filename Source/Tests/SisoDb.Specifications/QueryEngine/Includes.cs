@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using SisoDb.Querying;
@@ -56,7 +57,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes using Query as X")]
+        [Subject(typeof(IQueryEngine), "Includes with Where, Paging and Sorting using Query as X")]
         public class when_querying_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -67,6 +68,9 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
                 .QueryAs<IAlbumData, Album>(q => q
+                    .Where(a => a.Name == "Born to run")
+                    .SortBy(a => a.Name)
+                    .Page(0, 10)
                     .Include<Genre>(a => a.GenreId)
                     .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
 
@@ -75,6 +79,15 @@ namespace SisoDb.Specifications.QueryEngine
 
             It should_have_fetched_album =
                 () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+
+            It should_not_have_stored_genere_and_artists_in_the_json = () =>
+            {
+                var json = TestContext.Database.ReadOnce().GetByIdAsJson<IAlbumData>(_structure.StructureId);
+                json.Length.ShouldEqual(214);
+                json.ShouldNotContain("\"Genre\"");
+                json.ShouldNotContain("\"Artist\"");
+                json.ShouldNotContain("\"SecondArtist\"");
+            };
 
             private static Album _structure;
             private static IList<Album> _fetchedStructures;

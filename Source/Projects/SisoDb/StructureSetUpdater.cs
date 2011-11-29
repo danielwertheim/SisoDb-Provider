@@ -8,6 +8,7 @@ using SisoDb.Dac;
 using SisoDb.Providers;
 using SisoDb.Resources;
 using SisoDb.Serialization;
+using SisoDb.Structures;
 
 namespace SisoDb
 {
@@ -20,7 +21,6 @@ namespace SisoDb
         private IStructureId _deleteIdentityIdFrom;
         private IStructureId _deleteIdentityIdTo;
         private readonly IJsonSerializer _jsonSerializer;
-        private readonly StructureBuilderOptions _structureBuilderOptions;
 
         protected ISisoProviderFactory ProviderFactory { get; private set; }
 
@@ -34,29 +34,25 @@ namespace SisoDb
 
         protected IStructureBuilder StructureBuilder { get; private set; }
 
-        internal StructureSetUpdater(ISisoConnectionInfo connectionInfo, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilder structureBuilder)
+        internal StructureSetUpdater(ISisoConnectionInfo connectionInfo, IStructureSchema structureSchemaOld, IStructureSchema structureSchemaNew, IStructureBuilders structureBuilders)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(structureSchemaOld, "structureSchemaOld").IsNotNull();
             Ensure.That(structureSchemaNew, "structureSchemaNew").IsNotNull();
-            Ensure.That(structureBuilder, "structureBuilder").IsNotNull();
+            Ensure.That(structureBuilders, "structureBuilders").IsNotNull();
 
             ConnectionInfo = connectionInfo;
+            
             StructureSchemaOld = structureSchemaOld;
             StructureSchemaNew = structureSchemaNew;
-            StructureBuilder = structureBuilder;
+            if (StructureSchemaNew.IdAccessor.IdType != StructureSchemaOld.IdAccessor.IdType)
+                throw new SisoDbException(ExceptionMessages.StructureSetUpdater_MissmatchInIdTypes);
+            
+            StructureBuilder = structureBuilders.ForUpdates(StructureSchemaNew);
+            //StructureBuilder.Options.StructureIdStrategy = new KeepStructureIdStrategy();
 
             ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
             _jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
-            _structureBuilderOptions = new StructureBuilderOptions
-            {
-                Serializer = new SerializerForStructureBuilder(),
-                KeepStructureId = true
-            };
-
-            if (StructureSchemaNew.IdAccessor.IdType != StructureSchemaOld.IdAccessor.IdType)
-                throw new SisoDbException(ExceptionMessages.StructureSetUpdater_MissmatchInIdTypes);
-
             KeepQueue = new Queue<TNew>(MaxKeepQueueSize);
         }
 
@@ -152,7 +148,7 @@ namespace SisoDb
             while (KeepQueue.Count > 0)
             {
                 var structureToKeep = KeepQueue.Dequeue();
-                var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew, _structureBuilderOptions);
+                var structureItem = StructureBuilder.CreateStructure(structureToKeep, StructureSchemaNew);
                 structures[i++] = structureItem;
             }
             var bulkInserter = ProviderFactory.GetDbStructureInserter(dbClient);
@@ -170,7 +166,7 @@ namespace SisoDb
             if (_deleteIdentityIdFrom == null)
                 return;
 
-            dbClient.DeleteWhereIdIsBetween(_deleteIdentityIdFrom.Value, _deleteIdentityIdTo.Value, StructureSchemaOld);
+            dbClient.DeleteWhereIdIsBetween(_deleteIdentityIdFrom, _deleteIdentityIdTo, StructureSchemaOld);
 
             _deleteIdentityIdFrom = null;
             _deleteIdentityIdTo = null;
