@@ -20,6 +20,16 @@ namespace SisoDb
         {
         }
 
+        public IStructureSchema GetSchema(Type type)
+        {
+            return Db.StructureSchemas.GetSchema(type);
+        }
+
+        public IStructureSchema GetSchema<T>() where T : class
+        {
+            return Db.StructureSchemas.GetSchema<T>();
+        }
+
         public virtual void Commit()
         {
             DbClient.Flush();
