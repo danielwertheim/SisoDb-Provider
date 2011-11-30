@@ -104,7 +104,6 @@ namespace SisoDb
         /// <summary>
         /// Lets you handle complex model updates.
         /// </summary>
-        /// <seealso cref="http://sisodb.com/docs/doc13"/>
         /// <typeparam name="TOld"></typeparam>
         /// <typeparam name="TNew"></typeparam>
         /// <param name="onProcess"></param>
@@ -148,7 +147,6 @@ namespace SisoDb
         /// <summary>
         /// Simplifies usage of <see cref="IUnitOfWork"/>.
         /// </summary>
-        /// <param name="db"></param>
         /// <param name="consumer"></param>
         [DebuggerStepThrough]
         void WithUnitOfWork(Action<IUnitOfWork> consumer);
@@ -156,7 +154,6 @@ namespace SisoDb
         /// <summary>
         /// Simplifies usage of <see cref="IQueryEngine"/>.
         /// </summary>
-        /// <param name="db"></param>
         /// <param name="consumer"></param>
         [DebuggerStepThrough]
         void WithQueryEngine(Action<IQueryEngine> consumer);

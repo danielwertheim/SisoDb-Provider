@@ -41,6 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SisoDb.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
@@ -173,8 +174,7 @@
     <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
-    <Compile Include="Querying\EnumerableQueryExtensions.cs" />
-    <Compile Include="Querying\StringQueryExtensions.cs" />
+    <Compile Include="QueryExtensions.cs" />
     <Compile Include="Querying\INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
@@ -186,7 +186,6 @@
     <Compile Include="Providers\ISqlStatements.cs" />
     <Compile Include="Providers\SqlStatementsBase.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
-    <Compile Include="Querying\SortingExtensions.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
