@@ -44,7 +44,7 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
         /// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
-        T GetById<T>(ValueType id)
+        T GetById<T>(object id)
             where T : class;
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace SisoDb
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="id"></param>
         /// <returns>Structure (<typeparamref name="TOut"/>) or null.</returns>
-        TOut GetByIdAs<TContract, TOut>(ValueType id)
+        TOut GetByIdAs<TContract, TOut>(object id)
             where TContract : class
             where TOut : class;
 
@@ -68,7 +68,7 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-        IEnumerable<T> GetByIds<T>(params ValueType[] ids)
+        IEnumerable<T> GetByIds<T>(params object[] ids)
             where T : class;
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace SisoDb
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
-        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(params ValueType[] ids)
+        IEnumerable<TOut> GetByIdsAs<TContract, TOut>(params object[] ids)
             where TContract : class
             where TOut : class;
 
@@ -94,7 +94,7 @@ namespace SisoDb
         /// <param name="idTo"></param>
         /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
         /// /// <remarks>YOU COULD GET STRANGE RESULTS IF YOU HAVE SPECIFIED NON SEQUENTIAL GUIDS.</remarks>
-        IEnumerable<T> GetByIdInterval<T>(ValueType idFrom, ValueType idTo)
+        IEnumerable<T> GetByIdInterval<T>(object idFrom, object idTo)
             where T : class;
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
         /// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
-        string GetByIdAsJson<T>(ValueType id)
+        string GetByIdAsJson<T>(object id)
             where T : class;
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
-        IEnumerable<string> GetByIdsAsJson<T>(params ValueType[] ids)
+        IEnumerable<string> GetByIdsAsJson<T>(params object[] ids)
             where T : class;
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new Sql2008QueryGenerator();
+            return new Sql2008QueryGenerator(new Sql2008Statements());
         }
 
         [Test]
@@ -18,11 +18,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_StartsWith_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (mem0.[StringValue] like @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -35,11 +31,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_QxStartsWith_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (mem0.[StringValue] like @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -52,11 +44,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_EndsWith_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (mem0.[StringValue] like @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -69,11 +57,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_QxEndsWith_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (mem0.[StringValue] like @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -84,13 +68,9 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         public override void GenerateQuery_for_Where_with_String_QxContains_GeneratesCorrectQuery()
         {
             var sqlQuery = On_GenerateQuery_for_Where_with_String_QxContains_GeneratesCorrectQuery();
-
+            
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (mem0.[StringValue] like @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -103,11 +83,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_QxLike_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (mem0.[StringValue] like @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -120,11 +96,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_ToLower_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (lower(mem0.[StringValue]) = @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (lower(mem0.[StringValue]) = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -137,11 +109,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_QxToLower_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (lower(mem0.[StringValue]) = @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (lower(mem0.[StringValue]) = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -154,11 +122,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_ToUpper_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (upper(mem0.[StringValue]) = @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (upper(mem0.[StringValue]) = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
@@ -171,11 +135,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_for_Where_with_String_QxToUpper_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select min(s.[Json]) [Json] from [MyClassStructure] s " +
-                "inner join [MyClassIndexes] si on si.[StructureId] = s.[StructureId] " +
-                "inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' " +
-                "where (upper(mem0.[StringValue]) = @p0) " +
-                "group by s.[StructureId];",
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (upper(mem0.[StringValue]) = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);

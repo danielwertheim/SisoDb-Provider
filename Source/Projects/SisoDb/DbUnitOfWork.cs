@@ -8,30 +8,16 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Resources;
-using SisoDb.Serialization;
-using SisoDb.Structures;
 
 namespace SisoDb
 {
-    public abstract class DbUnitOfWork : DbQueryEngine, IUnitOfWork
+    public abstract class DbUnitOfWork : DbQueryEngine, IUnitOfWork //TODO: Use composition instead.
     {
-        private const int BatchSize = 1000;
-
-        protected IStructureBuilder StructureBuilder { get; private set; }
-        protected IdentityStructureIdGenerator IdentityStructureIdGenerator { get; private set; }
-
         protected DbUnitOfWork(
-            ISisoConnectionInfo connectionInfo,
-            IDbSchemaManager dbSchemaManager,
-            IStructureSchemas structureSchemas,
-            IJsonSerializer jsonSerializer,
-            IStructureBuilder structureBuilder)
-            : base(connectionInfo, true, dbSchemaManager, structureSchemas, jsonSerializer)
+            ISisoDatabase db,
+            IDbSchemaManager dbSchemaManager)
+            : base(db, dbSchemaManager, true)
         {
-            Ensure.That(structureBuilder, "structureBuilder").IsNotNull();
-
-            StructureBuilder = structureBuilder;
-            IdentityStructureIdGenerator = ProviderFactory.GetIdentityStructureIdGenerator(DbClientNonTrans);
         }
 
         public virtual void Commit()
@@ -39,18 +25,20 @@ namespace SisoDb
             DbClient.Flush();
         }
 
-        protected StructureBuilderOptions CreateStructureBuilderOptions(StructureIdTypes structureIdType)
+        protected virtual long CheckOutAndGetNextIdentity(IStructureSchema structureSchema, int numOfIds)
         {
-            return StructureBuilderOptionsFactory.Create(structureIdType, IdentityStructureIdGenerator);
+            return DbClientNonTrans.CheckOutAndGetNextIdentity(structureSchema.Hash, numOfIds);
         }
 
         public virtual void Insert<T>(T item) where T : class
         {
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            var structureSchema = Db.StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             UpsertStructureSet(structureSchema);
 
-            var structure = StructureBuilder.CreateStructure(item, structureSchema, CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType));
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, CheckOutAndGetNextIdentity);
+
+            var structure = structureBuilder.CreateStructure(item, structureSchema);
 
             var bulkInserter = ProviderFactory.GetDbStructureInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { structure });
@@ -58,98 +46,96 @@ namespace SisoDb
 
         public virtual void InsertJson<T>(string json) where T : class
         {
-            Insert(JsonSerializer.Deserialize<T>(json));
+            Insert(Db.Serializer.Deserialize<T>(json));
         }
 
         public virtual void InsertMany<T>(IList<T> items) where T : class
         {
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            var structureSchema = Db.StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             UpsertStructureSet(structureSchema);
 
-            var structureBuilderOptions = CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType);
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, CheckOutAndGetNextIdentity);
             
             var bulkInserter = ProviderFactory.GetDbStructureInserter(DbClient);
-            foreach (var batchOfStructures in StructureBuilder.CreateStructureBatches(items, structureSchema, BatchSize, structureBuilderOptions))
-                bulkInserter.Insert(structureSchema, batchOfStructures);
+            bulkInserter.Insert(structureSchema, structureBuilder.CreateStructures(items, structureSchema)); //TODO: Batch?
         }
 
         public virtual void InsertManyJson<T>(IList<string> json) where T : class
         {
-            InsertMany(JsonSerializer.DeserializeMany<T>(json).ToList());
+            InsertMany(Db.Serializer.DeserializeMany<T>(json).ToList());
         }
 
         public virtual void Update<T>(T item) where T : class
         {
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            var structureSchema = Db.StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             UpsertStructureSet(structureSchema);
 
-            var structureBuilderOptions = CreateStructureBuilderOptions(structureSchema.IdAccessor.IdType);
-            structureBuilderOptions.KeepStructureId = true;
+            var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
 
-            var updatedStructure = StructureBuilder.CreateStructure(item, structureSchema, structureBuilderOptions);
+            var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
-            var existingItem = GetByIdAsJson<T>(updatedStructure.Id.Value);
+            var existingItem = DbClient.GetJsonById(updatedStructure.Id, structureSchema);
 
             if (string.IsNullOrWhiteSpace(existingItem))
-                throw new SisoDbException(ExceptionMessages.UnitOfWork_NoItemExistsForUpdate.Inject(updatedStructure.Name, updatedStructure.Id));
+                throw new SisoDbException(ExceptionMessages.UnitOfWork_NoItemExistsForUpdate.Inject(updatedStructure.Name, updatedStructure.Id.Value));
 
-            DeleteById(structureSchema, updatedStructure.Id.Value);
+            DeleteById(structureSchema, updatedStructure.Id);
 
             var bulkInserter = ProviderFactory.GetDbStructureInserter(DbClient);
             bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 
-        public virtual void DeleteById<T>(ValueType id) where T : class
+        public virtual void DeleteById<T>(object id) where T : class
         {
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            var structureSchema = Db.StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             UpsertStructureSet(structureSchema);
 
-            DeleteById(structureSchema, id);
+            DeleteById(structureSchema, StructureId.ConvertFrom(id));
         }
 
-        private void DeleteById(IStructureSchema structureSchema, ValueType structureId)
+        private void DeleteById(IStructureSchema structureSchema, IStructureId structureId)
         {
             DbClient.DeleteById(structureId, structureSchema);
         }
 
-        public virtual void DeleteByIds<T>(params ValueType[] ids) where T : class
+        public virtual void DeleteByIds<T>(params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            var structureSchema = Db.StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             UpsertStructureSet(structureSchema);
 
-            DbClient.DeleteByIds(ids, structureSchema.IdAccessor.IdType, structureSchema);
+            DbClient.DeleteByIds(ids.Select(StructureId.ConvertFrom), structureSchema);
         }
 
-        public virtual void DeleteByIdInterval<T>(ValueType idFrom, ValueType idTo) where T : class
+        public virtual void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
         {
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            var structureSchema = Db.StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             if(!structureSchema.IdAccessor.IdType.IsIdentity())
                 throw new SisoDbNotSupportedByProviderException(ProviderFactory.ProviderType, ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
 
             UpsertStructureSet(structureSchema);
 
-            DbClient.DeleteWhereIdIsBetween(idFrom, idTo, structureSchema);
+            DbClient.DeleteWhereIdIsBetween(StructureId.ConvertFrom(idFrom), StructureId.ConvertFrom(idTo), structureSchema);
         }
 
         public virtual void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
             Ensure.That(expression, "expression").IsNotNull();
 
-            var structureSchema = StructureSchemas.GetSchema(TypeFor<T>.Type);
+            var structureSchema = Db.StructureSchemas.GetSchema(TypeFor<T>.Type);
 
             UpsertStructureSet(structureSchema);
 
             var commandBuilder = ProviderFactory.CreateQueryCommandBuilder<T>(structureSchema);
             var queryCommand = commandBuilder.Where(expression).Command;
             var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryCommand);
-            DbClient.DeleteByQuery(sql, structureSchema.IdAccessor.DataType, structureSchema);
+            DbClient.DeleteByQuery(sql, structureSchema);
         }
     }
 }

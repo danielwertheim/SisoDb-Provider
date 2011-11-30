@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using ServiceStack.Text;
 
@@ -9,14 +7,26 @@ namespace SisoDb.Serialization
 {
     public class ServiceStackJsonSerializer : IJsonSerializer
     {
+        static ServiceStackJsonSerializer()
+        {
+            JsConfig.ExcludeTypeInfo = true;
+        }
+
         public string Serialize<T>(T item) where T : class
         {
-            return ServiceStackJsonSerializer<T>.Serialize(item);
+            if (item == null)
+                return string.Empty;
+
+            ServiceStackTypeConfig<T>.Config(item.GetType());
+
+            return JsonSerializer.SerializeToString(item);
         }
 
         public T Deserialize<T>(string json) where T : class
         {
-            return ServiceStackJsonSerializer<T>.Deserialize(json);
+            return string.IsNullOrWhiteSpace(json)
+                ? null
+                : JsonSerializer.DeserializeFromString<T>(json);
         }
 
         public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
@@ -24,10 +34,10 @@ namespace SisoDb.Serialization
             return DeserializeManyInParallel<T>(sourceData);
         }
 
-        private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
-        {
-            return sourceData.Select(Deserialize<T>);
-        }
+        //private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
+        //{
+        //    return sourceData.Select(Deserialize<T>);
+        //}
 
         private IEnumerable<T> DeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
         {
@@ -55,35 +65,6 @@ namespace SisoDb.Serialization
                 while (q.Count > 0)
                     yield return Deserialize<T>(q.Take());
             }
-        }
-    }
-
-    public static class ServiceStackJsonSerializer<T> where T : class
-    {
-        static ServiceStackJsonSerializer()
-        {
-            JsConfig.ExcludeTypeInfo = true;
-            TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
-        }
-
-        private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
-        {
-            return properties.Where(p => 
-                !SisoEnvironment.Resources.ResolveStructureSchemas().StructureTypeFactory.Reflecter.HasIdProperty(p.PropertyType)).ToArray();
-        }
-
-        public static string Serialize(T item)
-        {
-            return item == null 
-                ? string.Empty 
-                : JsonSerializer.SerializeToString(item);
-        }
-
-        public static T Deserialize(string json)
-        {
-            return string.IsNullOrWhiteSpace(json) 
-                ? null 
-                : JsonSerializer.DeserializeFromString<T>(json);
         }
     }
 }

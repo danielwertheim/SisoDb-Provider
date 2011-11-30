@@ -3,11 +3,11 @@ using System.Diagnostics;
 namespace SisoDb
 {
     [DebuggerStepThrough]
-    public class DbUoWExtensionPoint
+    public class DbUnitOfWorkExtensionPoint
     {
         public readonly ISisoDatabase Instance;
 
-        public DbUoWExtensionPoint(ISisoDatabase instance)
+        public DbUnitOfWorkExtensionPoint(ISisoDatabase instance)
         {
             Instance = instance;
         }

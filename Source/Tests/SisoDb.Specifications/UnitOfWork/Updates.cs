@@ -54,6 +54,49 @@ namespace SisoDb.Specifications.UnitOfWork
         }
 
         [Subject(typeof(IUnitOfWork), "Update")]
+        public class when_stringitem_and_updating_two_of_four_items_without_committing : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = TestContext.Database.InsertStringItems(4);
+                _orgItem1 = CopyObject.Deep(_structures[1]);
+                _orgItem2 = CopyObject.Deep(_structures[2]);
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    _structures[1].Value += 10;
+                    uow.Update(_structures[1]);
+
+                    _structures[2].Value += 10;
+                    uow.Update(_structures[2]);
+                }
+            };
+
+            It should_have_the_same_number_of_structures_in_database =
+                () => TestContext.Database.should_have_X_num_of_items<StringItem>(_structures.Count);
+
+            It should_not_have_changed_ids_of_the_structures_in_memory = () =>
+            {
+                _structures[1].StructureId.ShouldEqual(_orgItem1.StructureId);
+                _structures[2].StructureId.ShouldEqual(_orgItem2.StructureId);
+            };
+
+            It should_not_have_changed_ids_of_the_structures_in_database =
+                () => TestContext.Database.should_have_ids<StringItem>(_orgItem1.StructureId, _orgItem2.StructureId);
+
+            It should_not_have_updated_values_in_database =
+                () => TestContext.Database.should_have_identical_structures(_structures[0], _orgItem1, _orgItem2, _structures[3]);
+
+            private static IList<StringItem> _structures;
+            private static StringItem _orgItem1, _orgItem2;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Update")]
         public class when_identityitem_and_updating_two_of_four_items_without_committing : SpecificationBase
         {
             Establish context = () =>
@@ -181,6 +224,50 @@ namespace SisoDb.Specifications.UnitOfWork
 
             private static IList<GuidItem> _structures;
             private static GuidItem _orgItem1, _orgItem2;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Update")]
+        public class when_stringitem_and_updating_two_of_four_items : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = TestContext.Database.InsertStringItems(4);
+                _orgItem1 = CopyObject.Deep(_structures[1]);
+                _orgItem2 = CopyObject.Deep(_structures[2]);
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    _structures[1].Value += 10;
+                    uow.Update(_structures[1]);
+
+                    _structures[2].Value += 10;
+                    uow.Update(_structures[2]);
+                    uow.Commit();
+                }
+            };
+
+            It should_have_the_same_number_of_structures_in_database =
+                () => TestContext.Database.should_have_X_num_of_items<StringItem>(_structures.Count);
+
+            It should_not_have_changed_ids_of_the_structures_in_memory = () =>
+            {
+                _structures[1].StructureId.ShouldEqual(_orgItem1.StructureId);
+                _structures[2].StructureId.ShouldEqual(_orgItem2.StructureId);
+            };
+
+            It should_not_have_changed_ids_of_the_structures_in_database =
+                () => TestContext.Database.should_have_ids<StringItem>(_orgItem1.StructureId, _orgItem2.StructureId);
+
+            It should_have_updated_values_in_database =
+                () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
+
+            private static IList<StringItem> _structures;
+            private static StringItem _orgItem1, _orgItem2;
         }
 
         [Subject(typeof(IUnitOfWork), "Update")]

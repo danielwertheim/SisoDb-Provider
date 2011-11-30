@@ -142,11 +142,11 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A where clause can not be generated if the query command doesn&apos;t contain any where criterias and it should only contain a where clause. No sortings, paging etc..
+        ///   Looks up a localized string similar to The query should only return StructureIds and then onle Where expressions are allowed. Take, Paging and Sorting etc is not allowed..
         /// </summary>
-        public static string DbQueryGenerator_GenerateWhere {
+        public static string DbQueryGenerator_GenerateQueryReturningStrutureIds {
             get {
-                return ResourceManager.GetString("DbQueryGenerator_GenerateWhere", resourceCulture);
+                return ResourceManager.GetString("DbQueryGenerator_GenerateQueryReturningStrutureIds", resourceCulture);
             }
         }
         
@@ -341,6 +341,33 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not locate SQL for generating Structure-table for StructureId type: &apos;{0}&apos;..
+        /// </summary>
+        public static string SqlDbIndexesSchemaBuilder_GenerateSql {
+            get {
+                return ResourceManager.GetString("SqlDbIndexesSchemaBuilder_GenerateSql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not locate SQL for generating Structure-table for StructureId type: &apos;{0}&apos;..
+        /// </summary>
+        public static string SqlDbStructureSchemaBuilder_GenerateSql {
+            get {
+                return ResourceManager.GetString("SqlDbStructureSchemaBuilder_GenerateSql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not locate SQL for generating Structure-table for StructureId type: &apos;{0}&apos;..
+        /// </summary>
+        public static string SqlDbUniquesSchemaBuilder_GenerateSql {
+            get {
+                return ResourceManager.GetString("SqlDbUniquesSchemaBuilder_GenerateSql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Id could be extracted from the old structure..
         /// </summary>
         public static string SqlStructureSetUpdater_OldIdDoesNotExist {
@@ -368,11 +395,11 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can not create StructureBuilderOptions for StructureIdType &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Could not create StructureBuilder for Inserts and Id-type &apos;{0}&apos; for Schema &apos;{1}&apos;..
         /// </summary>
-        public static string StructureBuilderOptionsFactory_Create {
+        public static string StructureBuilders_CreateForInsert {
             get {
-                return ResourceManager.GetString("StructureBuilderOptionsFactory_Create", resourceCulture);
+                return ResourceManager.GetString("StructureBuilders_CreateForInsert", resourceCulture);
             }
         }
         

@@ -9,7 +9,7 @@
 
         public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008Database((Sql2008ConnectionInfo)connectionInfo);
+            return new Sql2008Database(connectionInfo);
         }
     }
 }

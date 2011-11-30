@@ -12,34 +12,37 @@ namespace SisoDb.Sql2008.Dac
 {
     internal static class Sql2008IdsTableParam
     {
-        internal static SqlParameter CreateIdsTableParam(StructureIdTypes idType, IEnumerable<ValueType> ids)
+        internal static SqlParameter CreateIdsTableParam(StructureIdTypes idType, IEnumerable<IStructureId> ids)
         {
+            if (idType == StructureIdTypes.String)
+                return CreateStringIdsTableParam(ids.Select(id => (string)id.Value));
+
             if(idType == StructureIdTypes.Guid)
-                return CreateGuidIdsTableParam(ids);
+                return CreateGuidIdsTableParam(ids.Select(id => (Guid)id.Value));
 
             if(idType == StructureIdTypes.Identity)
-                return CreateIdentityIdsTableParam(ids);
+                return CreateIdentityIdsTableParam(ids.Select(id => (int)id.Value));
 
             if(idType == StructureIdTypes.BigIdentity)
-                return CreateBigIdentityIdsTableParam(ids);
+                return CreateBigIdentityIdsTableParam(ids.Select(id => (long)id.Value));
 
             throw new SisoDbException(Sql2008Exceptions.SqlIdsTableParam_CreateIdsTableParam.Inject(idType));
         }
 
-        private static SqlParameter CreateIdentityIdsTableParam(IEnumerable<ValueType> ids)
+        private static SqlParameter CreateIdentityIdsTableParam(IEnumerable<int> ids)
         {
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
-                Value = ids.Select(id => CreateBigIdentityIdRecord((int)id)),
+                Value = ids.Select(id => CreateBigIdentityIdRecord(id)),
                 TypeName = "dbo.StructureIdentityIds"
             };
         }
 
-        private static SqlParameter CreateBigIdentityIdsTableParam(IEnumerable<ValueType> ids)
+        private static SqlParameter CreateBigIdentityIdsTableParam(IEnumerable<long> ids)
         {
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
-                Value = ids.Select(id => CreateBigIdentityIdRecord((long)id)),
+                Value = ids.Select(CreateBigIdentityIdRecord),
                 TypeName = "dbo.StructureIdentityIds"
             };
         }
@@ -53,11 +56,29 @@ namespace SisoDb.Sql2008.Dac
             return record;
         }
 
-        private static SqlParameter CreateGuidIdsTableParam(IEnumerable<ValueType> ids)
+        private static SqlParameter CreateStringIdsTableParam(IEnumerable<string> ids)
         {
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
-                Value = ids.Select(id => CreateGuidIdRecord((Guid)id)),
+                Value = ids.Select(CreateStringIdRecord),
+                TypeName = "dbo.SisoStringIds"
+            };
+        }
+
+        private static SqlDataRecord CreateStringIdRecord(string id)
+        {
+            var record = new SqlDataRecord(new SqlMetaData("Id", SqlDbType.NVarChar, 16));
+
+            record.SetSqlString(0, id);
+
+            return record;
+        }
+
+        private static SqlParameter CreateGuidIdsTableParam(IEnumerable<Guid> ids)
+        {
+            return new SqlParameter("@ids", SqlDbType.Structured)
+            {
+                Value = ids.Select(CreateGuidIdRecord),
                 TypeName = "dbo.SisoGuidIds"
             };
         }

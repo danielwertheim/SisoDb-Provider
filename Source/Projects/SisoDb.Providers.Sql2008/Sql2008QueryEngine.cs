@@ -1,26 +1,20 @@
-﻿using PineCone.Structures.Schemas;
-using SisoDb.DbSchema;
-using SisoDb.Serialization;
+﻿using SisoDb.DbSchema;
 
 namespace SisoDb.Sql2008
 {
     public class Sql2008QueryEngine : DbQueryEngine
     {
         internal Sql2008QueryEngine(
-            ISisoConnectionInfo connectionInfo,
-            IDbSchemaManager dbSchemaManager,
-            IStructureSchemas structureSchemas,
-            IJsonSerializer jsonSerializer) 
-            : base(connectionInfo, false, dbSchemaManager, structureSchemas, jsonSerializer)
+            ISisoDatabase db,
+            IDbSchemaManager dbSchemaManager)
+            : base(db, dbSchemaManager, false)
         {}
 
         protected Sql2008QueryEngine(
-            ISisoConnectionInfo connectionInfo,
-            bool transactional,
+            ISisoDatabase db,
             IDbSchemaManager dbSchemaManager,
-            IStructureSchemas structureSchemas,
-            IJsonSerializer jsonSerializer)
-            : base(connectionInfo, transactional, dbSchemaManager, structureSchemas, jsonSerializer)
+            bool transactional)
+            : base(db, dbSchemaManager, transactional)
         {
         }
     }

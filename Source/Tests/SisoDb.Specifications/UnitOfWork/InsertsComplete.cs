@@ -52,6 +52,48 @@ namespace SisoDb.Specifications.UnitOfWork
         }
 
         [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        public class when_inserting_complete_string_entity_with_populated_hierarchy : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structure = ModelFactory.CreateItems<CompleteStringEntity, string>(1).Single();
+            };
+
+            Because of =
+                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
+
+            It should_have_been_inserted =
+                () => TestContext.Database.should_have_X_num_of_items<CompleteStringEntity>(1);
+
+            It should_have_been_inserted_completely =
+                () => TestContext.Database.should_have_identical_structures(_structure);
+
+            private static CompleteStringEntity _structure;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        public class when_inserting_two_complete_string_entities_with_populated_hierarchy : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = ModelFactory.CreateItems<CompleteStringEntity, string>(2);
+            };
+
+            Because of =
+                () => TestContext.Database.WriteOnce().InsertMany(_structures);
+
+            It should_have_inserted_both =
+                () => TestContext.Database.should_have_X_num_of_items<CompleteStringEntity>(2);
+
+            It should_have_inserted_both_completely =
+                () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
+
+            private static IList<CompleteStringEntity> _structures;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
         public class when_inserting_complete_identity_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -185,12 +227,19 @@ namespace SisoDb.Specifications.UnitOfWork
                         }
                     };
 
+                    if (item is Entity<string>)
+                        (item as Entity<string>).StructureId = (c + 1).ToString();
+
                     items.Add(item);
                 }
 
                 return items;
             }
         }
+
+        [Serializable]
+        public class CompleteStringEntity : Entity<string>
+        { }
 
         [Serializable]
         public class CompleteGuidEntity : Entity<Guid>

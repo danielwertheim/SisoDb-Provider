@@ -8,25 +8,12 @@ namespace SisoDb.Sql2008
 
         public override IQueryEngine CreateQueryEngine()
         {
-            var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
-
-            return new Sql2008QueryEngine(
-                ConnectionInfo,
-                DbSchemaManager,
-                StructureSchemas,
-                jsonSerializer);
+            return new Sql2008QueryEngine(this, DbSchemaManager);
         }
 
         public override IUnitOfWork CreateUnitOfWork()
         {
-            var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
-
-            return new Sql2008UnitOfWork(
-                ConnectionInfo,
-                DbSchemaManager,
-                StructureSchemas,
-                jsonSerializer,
-                StructureBuilder);
+            return new Sql2008UnitOfWork(this, DbSchemaManager);
         }
     }
 }

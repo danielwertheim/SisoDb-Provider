@@ -65,6 +65,59 @@ namespace SisoDb.Specifications.UnitOfWork
         }
 
         [Subject(typeof(IUnitOfWork), "Delete by query")]
+        public class when_stringitem_and_deleting_two_of_four_items_using_query : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertStringItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<StringItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    uow.Commit();
+                }
+            };
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<StringItem>(2);
+
+            It should_have_first_and_last_item_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_not_have_deleted_first_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<StringItem> _structures;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Delete by query")]
         public class when_identityitem_and_deleting_two_of_four_items_using_query : SpecificationBase
         {
             Establish context = () =>
@@ -235,6 +288,126 @@ namespace SisoDb.Specifications.UnitOfWork
 
             private static IStructureSchema _structureSchema;
             private static IList<UniqueGuidItem> _structures;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        public class when_stringitem_and_deleting_two_of_four_items_using_id : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertStringItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<StringItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.DeleteById<StringItem>(_structures[1].StructureId);
+                    uow.DeleteById<StringItem>(_structures[2].StructureId);
+                    uow.Commit();
+                }
+            };
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<StringItem>(2);
+
+            It should_have_first_and_last_item_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_not_have_deleted_first_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<StringItem> _structures;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Delete by id (uniques)")]
+        public class when_uniquestringitem_and_deleting_two_of_four_items_using_id : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertUniqueStringItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UniqueStringItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.DeleteById<UniqueStringItem>(_structures[1].StructureId);
+                    uow.DeleteById<UniqueStringItem>(_structures[2].StructureId);
+                    uow.Commit();
+                }
+            };
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<UniqueStringItem>(2);
+
+            It should_have_first_and_last_item_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_not_have_deleted_first_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+
+            It should_not_have_deleted_first_item_from_uniques_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_uniques_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_uniques_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_uniques_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<UniqueStringItem> _structures;
         }
 
         [Subject(typeof(IUnitOfWork), "Delete by id")]
@@ -500,6 +673,28 @@ namespace SisoDb.Specifications.UnitOfWork
         }
 
         [Subject(typeof(IUnitOfWork), "Delete by id")]
+        public class when_stringitem_and_deleting_item_by_id_in_empty_set : SpecificationBase
+        {
+            Establish context =
+                () => TestContext = TestContextFactory.Create();
+
+            Because of = () =>
+            {
+                CaughtException = Catch.Exception(() =>
+                {
+                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    {
+                        uow.DeleteById<StringItem>("foo");
+                        uow.Commit();
+                    }
+                });
+            };
+
+            It should_not_have_failed =
+                () => CaughtException.ShouldBeNull();
+        }
+
+        [Subject(typeof(IUnitOfWork), "Delete by id")]
         public class when_identityitem_and_deleting_item_by_id_in_empty_set : SpecificationBase
         {
             Establish context =
@@ -572,6 +767,59 @@ namespace SisoDb.Specifications.UnitOfWork
 
             private static IStructureSchema _structureSchema;
             private static IList<GuidItem> _structures;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Delete by ids")]
+        public class when_stringitem_and_deleting_two_of_four_items_using_ids : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertStringItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<StringItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var uow = TestContext.Database.CreateUnitOfWork())
+                {
+                    uow.DeleteByIds<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
+                    uow.Commit();
+                }
+            };
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<StringItem>(2);
+
+            It should_have_first_and_last_item_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_not_have_deleted_first_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_indexes_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<StringItem> _structures;
         }
 
         [Subject(typeof(IUnitOfWork), "Delete by ids")]
@@ -711,6 +959,39 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             private static IList<GuidItem> _structures;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Delete by id interval")]
+        public class when_stringitem_throws_not_supported_exception : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertStringItems(4);
+            };
+
+            Because of = () =>
+            {
+                CaughtException = Catch.Exception(() =>
+                {
+                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    {
+                        uow.DeleteByIdInterval<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
+                        uow.Commit();
+                    }
+                });
+            };
+
+            It should_have_failed = () =>
+            {
+                CaughtException.ShouldNotBeNull();
+                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
+
+                var ex = (SisoDbNotSupportedByProviderException)CaughtException;
+                ex.Message.ShouldContain(ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
+            };
+
+            private static IList<StringItem> _structures;
         }
 
         [Subject(typeof(IUnitOfWork), "Delete by id interval")]

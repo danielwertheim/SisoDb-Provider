@@ -41,6 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SisoDb.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
@@ -48,12 +49,12 @@
       <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NCore, Version=0.19.0.64, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.29.0\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.20.0.65, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PineCone.0.41.0\lib\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.29.0.63, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.41.0.80, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.29.0\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.41.0\lib\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.0.6.5609, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -72,15 +73,14 @@
     </Compile>
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
-    <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="Dac\BulkInserts\IDbStructureInserter.cs" />
+    <Compile Include="Dac\GetNextIdentity.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
     <Compile Include="Dac\DbClientBase.cs" />
     <Compile Include="DbQueryExtensionPoint.cs" />
-    <Compile Include="DbExtensionsPoints.cs" />
     <Compile Include="DbQueryExtensions.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
-    <Compile Include="DbUoWExtensionPoint.cs" />
+    <Compile Include="DbUnitOfWorkExtensionPoint.cs" />
     <Compile Include="DbQueryEngine.cs" />
     <Compile Include="IAdvancedQueryEngine.cs" />
     <Compile Include="Querying\IQueryCommand.cs" />
@@ -97,6 +97,7 @@
     <Compile Include="Querying\Lambdas\Nodes\ToUpperMemberNode.cs" />
     <Compile Include="Querying\Sql\ISqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlExpression.cs" />
+    <Compile Include="Querying\Sql\SqlQueryFormatter.cs" />
     <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\SqlQuery.cs" />
     <Compile Include="IConnectionString.cs" />
@@ -116,9 +117,13 @@
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="DbUnitOfWorkExtensions.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
+    <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
     <Compile Include="SisoDatabase.cs" />
     <Compile Include="SisoDbNotSupportedByProviderException.cs" />
     <Compile Include="DbUnitOfWork.cs" />
+    <Compile Include="Structures\IdentityStructureIdGenerator.cs" />
+    <Compile Include="Structures\IStructureBuilders.cs" />
+    <Compile Include="Structures\StructureBuilders.cs" />
     <Compile Include="Structures\StructureSchemaExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
@@ -128,7 +133,7 @@
     <Compile Include="Querying\Lambdas\Parsers\ISortingParser.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
-    <Compile Include="ResourceContainer.cs" />
+    <Compile Include="GlobalResourceContainer.cs" />
     <Compile Include="Providers\SisoProviderFactories.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
     <Compile Include="StructureSetUpdater.cs" />
@@ -169,8 +174,7 @@
     <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
     <Compile Include="Querying\GetCommand.cs" />
     <Compile Include="Querying\IGetCommand.cs" />
-    <Compile Include="Querying\EnumerableQueryExtensions.cs" />
-    <Compile Include="Querying\StringQueryExtensions.cs" />
+    <Compile Include="QueryExtensions.cs" />
     <Compile Include="Querying\INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
@@ -178,12 +182,10 @@
     <Compile Include="DbSchema\IDbSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\IDbSchemaManager.cs" />
     <Compile Include="Core\Expressions\ExpressionUtils.cs" />
-    <Compile Include="Structures\IdentityStructureIdGenerator.cs" />
     <Compile Include="Querying\IDbQueryGenerator.cs" />
     <Compile Include="Providers\ISqlStatements.cs" />
     <Compile Include="Providers\SqlStatementsBase.cs" />
     <Compile Include="Querying\QueryCommand.cs" />
-    <Compile Include="Querying\SortingExtensions.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
@@ -193,7 +195,6 @@
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
     <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="Structures\StructureBuilderOptionsFactory.cs" />
     <Compile Include="StructureTypeNameFor.cs" />
     <Compile Include="TypeFor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

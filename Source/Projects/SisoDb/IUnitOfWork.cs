@@ -8,7 +8,6 @@ namespace SisoDb
     /// All operations within the unit of work are transactional.
     /// Use <see cref="Commit"/> to make your changes persistant.
     /// </summary>
-    /// <seealso cref="http://www.sisodb.com/docs"/>
     public interface IUnitOfWork : IQueryEngine
     {
         /// <summary>
@@ -73,7 +72,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
-        void DeleteById<T>(ValueType id) where T : class;
+        void DeleteById<T>(object id) where T : class;
 
         /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>
@@ -81,7 +80,7 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
-        void DeleteByIds<T>(params ValueType[] ids) where T : class;
+        void DeleteByIds<T>(params object[] ids) where T : class;
 
         /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>
@@ -91,7 +90,7 @@ namespace SisoDb
         /// <param name="idFrom"></param>
         /// <param name="idTo"></param>
         /// <remarks>ONLY SUPPORTED BY IDENTITIES! If not sequenced ids are used, you could be doomed!</remarks>
-        void DeleteByIdInterval<T>(ValueType idFrom, ValueType idTo) where T : class;
+        void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class;
 
         /// <summary>
         /// Deletes one or more structures matchings the sent

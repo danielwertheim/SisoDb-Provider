@@ -2,6 +2,7 @@
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Providers;
+using SisoDb.Resources;
 using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
@@ -18,11 +19,17 @@ namespace SisoDb.DbSchema
         public string GenerateSql(IStructureSchema structureSchema)
         {
             var tableName = structureSchema.GetStructureTableName();
-            var sql = structureSchema.IdAccessor.IdType == StructureIdTypes.Guid
-                          ? _sqlStatements.GetSql("CreateStructuresGuid")
-                          : _sqlStatements.GetSql("CreateStructuresIdentity");
 
-            return sql.Inject(tableName);
+            if (structureSchema.IdAccessor.IdType == StructureIdTypes.String)
+                return _sqlStatements.GetSql("CreateStructuresString").Inject(tableName);
+
+            if (structureSchema.IdAccessor.IdType == StructureIdTypes.Guid)
+                return _sqlStatements.GetSql("CreateStructuresGuid").Inject(tableName);
+
+            if (structureSchema.IdAccessor.IdType.IsIdentity())
+                return _sqlStatements.GetSql("CreateStructuresIdentity").Inject(tableName);
+
+            throw new SisoDbException(ExceptionMessages.SqlDbStructureSchemaBuilder_GenerateSql.Inject(structureSchema.IdAccessor.IdType));
         }
     }
 }

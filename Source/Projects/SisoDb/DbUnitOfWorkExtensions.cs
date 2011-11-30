@@ -7,7 +7,7 @@ namespace SisoDb
 {
     public static class DbUnitOfWorkExtensions
     {
-        public static T Insert<T>(this DbUoWExtensionPoint db, T item) where T : class
+        public static T Insert<T>(this DbUnitOfWorkExtensionPoint db, T item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
 
@@ -20,7 +20,7 @@ namespace SisoDb
             return item;
         }
 
-        public static void InsertJson<T>(this DbUoWExtensionPoint db, string json) where T : class
+        public static void InsertJson<T>(this DbUnitOfWorkExtensionPoint db, string json) where T : class
         {
             Ensure.That(json, "json").IsNotNullOrWhiteSpace();
 
@@ -31,7 +31,7 @@ namespace SisoDb
             }
         }
 
-        public static IList<T> InsertMany<T>(this DbUoWExtensionPoint db, IList<T> items) where T : class
+        public static IList<T> InsertMany<T>(this DbUnitOfWorkExtensionPoint db, IList<T> items) where T : class
         {
             Ensure.That(items, "items").HasItems();
 
@@ -44,7 +44,7 @@ namespace SisoDb
             return items;
         }
 
-        public static void InsertManyJson<T>(this DbUoWExtensionPoint db, IList<string> json) where T : class
+        public static void InsertManyJson<T>(this DbUnitOfWorkExtensionPoint db, IList<string> json) where T : class
         {
             Ensure.That(json, "json").HasItems();
 
@@ -55,7 +55,7 @@ namespace SisoDb
             }
         }
 
-        public static T Update<T>(this DbUoWExtensionPoint db, T item) where T : class
+        public static T Update<T>(this DbUnitOfWorkExtensionPoint db, T item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
 
@@ -68,7 +68,7 @@ namespace SisoDb
             return item;
         }
 
-        public static void DeleteById<T>(this DbUoWExtensionPoint db, ValueType id) where T : class
+        public static void DeleteById<T>(this DbUnitOfWorkExtensionPoint db, object id) where T : class
         {
             using (var uow = db.Instance.CreateUnitOfWork())
             {
@@ -77,7 +77,7 @@ namespace SisoDb
             }
         }
 
-        public static void DeleteByIds<T>(this DbUoWExtensionPoint db, params ValueType[] ids) where T : class
+        public static void DeleteByIds<T>(this DbUnitOfWorkExtensionPoint db, params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
 
@@ -88,7 +88,7 @@ namespace SisoDb
             }
         }
 
-        public static void DeleteByIdInterval<T>(this DbUoWExtensionPoint db, ValueType idFrom, ValueType idTo) where T : class
+        public static void DeleteByIdInterval<T>(this DbUnitOfWorkExtensionPoint db, object idFrom, object idTo) where T : class
         {
             using (var uow = db.Instance.CreateUnitOfWork())
             {
@@ -97,7 +97,7 @@ namespace SisoDb
             }
         }
 
-        public static void DeleteByQuery<T>(this DbUoWExtensionPoint db, Expression<Func<T, bool>> expression) where T : class
+        public static void DeleteByQuery<T>(this DbUnitOfWorkExtensionPoint db, Expression<Func<T, bool>> expression) where T : class
         {
             using (var uow = db.Instance.CreateUnitOfWork())
             {

@@ -2,6 +2,7 @@
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Providers;
+using SisoDb.Resources;
 using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
@@ -17,13 +18,19 @@ namespace SisoDb.DbSchema
 
         public string GenerateSql(IStructureSchema structureSchema)
         {
-            var sql = structureSchema.IdAccessor.IdType == StructureIdTypes.Guid
-                          ? _sqlStatements.GetSql("CreateUniquesGuid")
-                          : _sqlStatements.GetSql("CreateUniquesIdentity");
+            var uniquesTableName = structureSchema.GetUniquesTableName();
+            var structureTableName = structureSchema.GetStructureTableName();
 
-            return sql.Inject(
-                structureSchema.GetUniquesTableName(),
-                structureSchema.GetStructureTableName());
+            if (structureSchema.IdAccessor.IdType == StructureIdTypes.String)
+                return _sqlStatements.GetSql("CreateUniquesString").Inject(uniquesTableName, structureTableName);
+
+            if (structureSchema.IdAccessor.IdType == StructureIdTypes.Guid)
+                return _sqlStatements.GetSql("CreateUniquesGuid").Inject(uniquesTableName, structureTableName);
+
+            if (structureSchema.IdAccessor.IdType.IsIdentity())
+                return _sqlStatements.GetSql("CreateUniquesIdentity").Inject(uniquesTableName, structureTableName);
+
+            throw new SisoDbException(ExceptionMessages.SqlDbUniquesSchemaBuilder_GenerateSql.Inject(structureSchema.IdAccessor.IdType));
         }
     }
 }

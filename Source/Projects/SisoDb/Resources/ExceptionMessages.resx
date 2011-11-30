@@ -199,8 +199,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="GetCommand_SortingsAllreadyInitialized" xml:space="preserve">
     <value>The Sortings has allready been initialized.</value>
   </data>
-  <data name="DbQueryGenerator_GenerateWhere" xml:space="preserve">
-    <value>A where clause can not be generated if the query command doesn't contain any where criterias and it should only contain a where clause. No sortings, paging etc.</value>
+  <data name="DbQueryGenerator_GenerateQueryReturningStrutureIds" xml:space="preserve">
+    <value>The query should only return StructureIds and then onle Where expressions are allowed. Take, Paging and Sorting etc is not allowed.</value>
   </data>
   <data name="LambdaParser_VisitUnary_InvalidConvert" xml:space="preserve">
     <value>Conversion of values in expression is only allowed for nullable valuetypes.</value>
@@ -241,9 +241,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConnectionString_MissingSisoDbPart" xml:space="preserve">
     <value>The connectionstring is missing the SisoDb-part, indicated by '{0}'. Example: '{1}'.</value>
   </data>
-  <data name="StructureBuilderOptionsFactory_Create" xml:space="preserve">
-    <value>Can not create StructureBuilderOptions for StructureIdType '{0}'.</value>
-  </data>
   <data name="IndexStorageSchema_MissingValueSchemaField" xml:space="preserve">
     <value>There's no index storage schema value column matching the type '{0}'.</value>
   </data>
@@ -264,5 +261,17 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="QueryEngine_GetByIdInterval_WrongIdType" xml:space="preserve">
     <value>GetByIdInterval is not supported when using other ID-types than identities.</value>
+  </data>
+  <data name="StructureBuilders_CreateForInsert" xml:space="preserve">
+    <value>Could not create StructureBuilder for Inserts and Id-type '{0}' for Schema '{1}'.</value>
+  </data>
+  <data name="SqlDbIndexesSchemaBuilder_GenerateSql" xml:space="preserve">
+    <value>Could not locate SQL for generating Structure-table for StructureId type: '{0}'.</value>
+  </data>
+  <data name="SqlDbStructureSchemaBuilder_GenerateSql" xml:space="preserve">
+    <value>Could not locate SQL for generating Structure-table for StructureId type: '{0}'.</value>
+  </data>
+  <data name="SqlDbUniquesSchemaBuilder_GenerateSql" xml:space="preserve">
+    <value>Could not locate SQL for generating Structure-table for StructureId type: '{0}'.</value>
   </data>
 </root>

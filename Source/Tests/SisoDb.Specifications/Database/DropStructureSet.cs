@@ -41,5 +41,41 @@ namespace SisoDb.Specifications.Database
                 public int IndexableMember2 { get; set; }
             }
         }
+
+        [Subject(typeof(ISisoDatabase), "Drop structure set")]
+        public class when_set_exists_in_a_recreated_database_instance : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.UpsertStructureSet<MyClass>();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<MyClass>();
+
+                TestContext = TestContextFactory.Create();
+            };
+
+            Because of =
+                () => TestContext.Database.DropStructureSet<MyClass>();
+
+            It should_have_dropped_structure_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetStructureTableName()).ShouldBeFalse();
+
+            It should_have_dropped_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableName()).ShouldBeFalse();
+
+            It should_have_dropped_uniques_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeFalse();
+
+            private static IStructureSchema _structureSchema;
+
+            private class MyClass
+            {
+                public Guid StructureId { get; set; }
+
+                public string IndexableMember1 { get; set; }
+
+                public int IndexableMember2 { get; set; }
+            }
+        }
     }
 }

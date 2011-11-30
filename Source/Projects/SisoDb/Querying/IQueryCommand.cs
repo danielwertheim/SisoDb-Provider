@@ -7,7 +7,7 @@ namespace SisoDb.Querying
     public interface IQueryCommand
     {
         IStructureSchema StructureSchema { get; }
-        int TakeNumOfStructures { get; set; }
+        int? TakeNumOfStructures { get; set; }
         Paging Paging { get; set; }
         IParsedLambda Where { get; set; }
         IParsedLambda Sortings { get; set; }

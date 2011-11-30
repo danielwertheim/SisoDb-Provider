@@ -1,3 +1,4 @@
+using System.Linq;
 using SisoDb.Providers;
 
 namespace SisoDb.Testing
@@ -17,7 +18,7 @@ namespace SisoDb.Testing
 
         public void Cleanup()
         {
-            Database.DropStructureSets();
+            Database.DropStructureSets(Database.StructureSchemas.GetRegistrations().Select(r => r.Key).ToArray());
         }
     }
 }

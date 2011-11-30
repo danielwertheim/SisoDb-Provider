@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using EnsureThat;
-using NCore;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
@@ -59,7 +58,7 @@ namespace SisoDb.Querying.Sql
                     var memberIndex = expression.GetExistingOrNewMemberIndexFor(memNode.Path);
 
                     if (!expression.ContainsWhereMemberFor(memNode.Path))
-                        expression.AddWhereMember(new SqlWhereMember(memNode.Path, "mem" + memberIndex));
+                        expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex));
                     
                     builder.AddMember(memNode, memberIndex);
                 }
@@ -97,8 +96,8 @@ namespace SisoDb.Querying.Sql
                 var memberIndex = expression.GetExistingOrNewMemberIndexFor(sortingNode.MemberPath);
 
                 expression.AddSortingMember(new SqlSortingMember(
+                    memberIndex,
                     sortingNode.MemberPath,
-                    "mem" + memberIndex,
                     valueField.Name,
                     sortingNode.Direction.ToString()));
             }
@@ -111,23 +110,12 @@ namespace SisoDb.Querying.Sql
 
             foreach (var includeNode in includesLambda.Nodes.OfType<IncludeNode>())
             {
-                var parentMemberPath = includeNode.IdReferencePath;
-
-                var includeIndex = expression.GetNextNewIncludeIndex();
-                
-                var columnDefinition = "cs{0}.Json".Inject(includeIndex);
-                
-                var jsonColumnDefinition = string.Format("min({0}) [{1}Json]", columnDefinition, includeNode.ObjectReferencePath);
-
-                var join = string.Format("left join [{0}] cs{1} on cs{1}.[{2}] = si.[{3}] and si.[{4}] = '{5}'",
+                expression.AddInclude(new SqlInclude(
+                    expression.GetNextNewIncludeIndex(),
                     includeNode.ChildStructureName + "Structure",
-                    includeIndex,
-                    StructureStorageSchema.Fields.Id.Name,
                     IndexStorageSchema.GetValueSchemaFieldForType(includeNode.MemberType).Name,
-                    IndexStorageSchema.Fields.MemberPath.Name,
-                    parentMemberPath);
-
-                expression.AddInclude(new SqlInclude(columnDefinition, jsonColumnDefinition, join));
+                    includeNode.IdReferencePath,
+                    includeNode.ObjectReferencePath));
             }
         }
     }

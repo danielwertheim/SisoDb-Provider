@@ -6,24 +6,36 @@ namespace SisoDb.Querying.Sql
     [Serializable]
     public class SqlInclude
     {
-        private readonly string _columnDefinition;
-        private readonly string _jsonOutputDefinition;
-        private readonly string _joinString;
+        private readonly int _index;
+        private readonly string _tableName;
+        private readonly string _indexValueColumnName;
+        private readonly string _memberPathReference;
+        private readonly string _objectReferencePath;
         private readonly bool _isEmpty;
 
-        public virtual string ColumnDefinition
+        public virtual int Index
         {
-            get { return _columnDefinition; }
+            get { return _index; }
         }
 
-        public virtual string JsonOutputDefinition
+        public virtual string TableName
         {
-            get { return _jsonOutputDefinition; }
+            get { return _tableName; }
         }
 
-        public virtual string JoinString
+        public virtual string IndexValueColumnName
         {
-            get { return _joinString; }
+            get { return _indexValueColumnName; }
+        }
+
+        public virtual string MemberPathReference
+        {
+            get { return _memberPathReference; }
+        }
+
+        public virtual string ObjectReferencePath
+        {
+            get { return _objectReferencePath; }
         }
 
         public virtual bool IsEmpty
@@ -31,24 +43,30 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlInclude(string columnDefinition, string jsonOutputDefinition, string joinString)
+        public SqlInclude(int index, string tableName, string indexValueColumnName, string memberPathReference, string objectReferencePath)
         {
-            Ensure.That(columnDefinition, "columnDefinition").IsNotNullOrWhiteSpace();
-            Ensure.That(jsonOutputDefinition, "jsonOutputDefinition").IsNotNullOrWhiteSpace();
-            Ensure.That(joinString, "JoinString").IsNotNullOrWhiteSpace();
+            Ensure.That(index, "index").IsGte(0);
+            Ensure.That(tableName, "tableName").IsNotNullOrWhiteSpace();
+            Ensure.That(indexValueColumnName, "indexValueColumnName").IsNotNullOrWhiteSpace();
+            Ensure.That(memberPathReference, "memberPathReference").IsNotNullOrWhiteSpace();
+            Ensure.That(objectReferencePath, "objectReferencePath").IsNotNullOrWhiteSpace();
 
             _isEmpty = false;
-            _columnDefinition = columnDefinition;
-            _jsonOutputDefinition = jsonOutputDefinition;
-            _joinString = joinString;
+            _index = index;
+            _tableName = tableName;
+            _indexValueColumnName = indexValueColumnName;
+            _memberPathReference = memberPathReference;
+            _objectReferencePath = objectReferencePath;
         }
 
         private SqlInclude()
         {
             _isEmpty = true;
-            _columnDefinition = string.Empty;
-            _jsonOutputDefinition = string.Empty;
-            _joinString = string.Empty;
+            _tableName = string.Empty;
+            _indexValueColumnName = string.Empty;
+            _index = -1;
+            _memberPathReference = string.Empty;
+            _objectReferencePath = string.Empty;
         }
 
         public static SqlInclude Empty()

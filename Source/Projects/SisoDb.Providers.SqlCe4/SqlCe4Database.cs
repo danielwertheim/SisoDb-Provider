@@ -9,25 +9,12 @@ namespace SisoDb.SqlCe4
 
         public override IQueryEngine CreateQueryEngine()
         {
-            var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
-
-            return new SqlCe4QueryEngine(
-                ConnectionInfo,
-                DbSchemaManager,
-                StructureSchemas,
-                jsonSerializer);
+            return new SqlCe4QueryEngine(this, DbSchemaManager);
         }
 
         public override IUnitOfWork CreateUnitOfWork()
         {
-            var jsonSerializer = SisoEnvironment.Resources.ResolveJsonSerializer();
-
-            return new SqlCe4UnitOfWork(
-                ConnectionInfo,
-                DbSchemaManager,
-                StructureSchemas,
-                jsonSerializer,
-                StructureBuilder);
+            return new SqlCe4UnitOfWork(this, DbSchemaManager);
         }
     }
 }

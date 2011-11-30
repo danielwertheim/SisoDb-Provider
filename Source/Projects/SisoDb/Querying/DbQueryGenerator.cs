@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
-using NCore;
-using SisoDb.Dac;
-using SisoDb.DbSchema;
+using NCore.Collections;
+using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Structures;
@@ -13,12 +12,14 @@ namespace SisoDb.Querying
 {
     public abstract class DbQueryGenerator : IDbQueryGenerator
     {
-        protected readonly static string StructureIdColumnName = string.Format("[{0}]", StructureStorageSchema.Fields.Id.Name);
-
+        protected readonly ISqlStatements SqlStatements;
         protected readonly SqlExpressionBuilder SqlExpressionBuilder;
 
-        protected DbQueryGenerator()
+        protected DbQueryGenerator(ISqlStatements sqlStatements)
         {
+            Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
+
+            SqlStatements = sqlStatements;
             SqlExpressionBuilder = new SqlExpressionBuilder();
         }
 
@@ -26,122 +27,62 @@ namespace SisoDb.Querying
         {
             Ensure.That(queryCommand, "queryCommand").IsNotNull();
 
-            return queryCommand.HasPaging
-                ? CreateSqlQueryForPaging(queryCommand)
-                : CreateSqlQuery(queryCommand);
+            return CreateSqlQuery(queryCommand);
         }
 
         public SqlQuery GenerateQueryReturningStrutureIds(IQueryCommand queryCommand)
         {
             Ensure.That(queryCommand, "queryCommand").IsNotNull();
 
-            if (!queryCommand.HasWhere || (queryCommand.HasIncludes || queryCommand.HasSortings || queryCommand.HasPaging))
-                throw new ArgumentException(ExceptionMessages.DbQueryGenerator_GenerateWhere);
+            if (!queryCommand.HasWhere || (queryCommand.HasTakeNumOfStructures || queryCommand.HasIncludes || queryCommand.HasSortings || queryCommand.HasPaging))
+                throw new ArgumentException(ExceptionMessages.DbQueryGenerator_GenerateQueryReturningStrutureIds);
 
             return CreateSqlQueryReturningStructureIds(queryCommand);
         }
 
-        protected virtual SqlQuery CreateSqlQueryReturningStructureIds(IQueryCommand queryCommand)
+        protected abstract SqlQuery CreateSqlQuery(IQueryCommand queryCommand);
+
+        protected abstract SqlQuery CreateSqlQueryReturningStructureIds(IQueryCommand queryCommand);
+
+        protected virtual string GenerateStartString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
         {
-            var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
-
-            var sql = string.Format(
-                "select {0}s.[StructureId] from [{1}] s{2}{3} group by s.[StructureId]",
-                GenerateTakeString(queryCommand).AppendWith(" "),
-                queryCommand.StructureSchema.GetStructureTableName(),
-                GenerateMembersJoinString(queryCommand, sqlExpression).PrependWith(" "),
-                sqlExpression.WhereCriteria.CriteriaString.PrependWith(" where "));
-
-            return new SqlQuery(sql, sqlExpression.WhereCriteria.Parameters);
+            return string.Empty;
         }
 
-        protected virtual SqlQuery CreateSqlQuery(IQueryCommand queryCommand)
+        protected virtual string GenerateEndString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
         {
-            var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
-
-            var sql = string.Format(
-                "select {0}min(s.[Json]) [Json]{1} from [{2}] s inner join [{3}] si on si.[StructureId] = s.[StructureId]{4}{5}{6}{7}{8};",
-                GenerateTakeString(queryCommand).AppendWith(" "),
-                GenerateIncludesJsonOutputDefinitionString(sqlExpression).PrependWith(", "),
-                queryCommand.StructureSchema.GetStructureTableName(),
-                queryCommand.StructureSchema.GetIndexesTableName(),
-                GenerateMembersJoinString(queryCommand, sqlExpression).PrependWith(" "),
-                GenerateIncluesJoinString(sqlExpression).PrependWith(" "),
-                sqlExpression.WhereCriteria.CriteriaString.PrependWith(" where "),
-                GenerateGroupingString(queryCommand).PrependWith(" group by "),
-                GenerateSortingString(sqlExpression, "min({0})").PrependWith(" order by "));
-
-            return new SqlQuery(sql, sqlExpression.WhereCriteria.Parameters);
-        }
-
-        protected virtual SqlQuery CreateSqlQueryForPaging(IQueryCommand queryCommand)
-        {
-            var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
-
-            var innerSelect = string.Format(
-                "select min(s.[Json]) [Json]{0}, row_number() over (order by {1}) as RowNum from [{2}] s inner join [{3}] si on si.[StructureId] = s.[StructureId]{4}{5}{6}{7}",
-                GenerateIncludesJsonOutputDefinitionString(sqlExpression).PrependWith(", "),
-                queryCommand.HasSortings ? GenerateSortingString(sqlExpression, "min({0})") : "s.[StructureId]",
-                queryCommand.StructureSchema.GetStructureTableName(),
-                queryCommand.StructureSchema.GetIndexesTableName(),
-                GenerateMembersJoinString(queryCommand, sqlExpression).PrependWith(" "),
-                GenerateIncluesJoinString(sqlExpression).PrependWith(" "),
-                sqlExpression.WhereCriteria.CriteriaString.PrependWith(" where "),
-                GenerateGroupingString(queryCommand).PrependWith(" group by "));
-
-            var sql = string.Format("with pagedRs as ({0}) select {1}pagedRs.[Json]{2} from pagedRs where pagedRs.[RowNum] between @pagingFrom and @pagingTo;",
-                innerSelect,
-                GenerateTakeString(queryCommand).AppendWith(" "),
-                GenerateIncludesJsonOutputDefinitionString(sqlExpression).PrependWith(", "));
-
-            var takeFromRowNum = (queryCommand.Paging.PageIndex * queryCommand.Paging.PageSize) + 1;
-            var takeToRowNum = (takeFromRowNum + queryCommand.Paging.PageSize) - 1;
-            var queryParams = new List<IDacParameter>(sqlExpression.WhereCriteria.Parameters)
-            {
-                new DacParameter("@pagingFrom", takeFromRowNum),
-                new DacParameter("@pagingTo", takeToRowNum)
-            };
-
-            return new SqlQuery(sql, queryParams.ToArray());
+            return string.Empty;
         }
 
         protected virtual string GenerateTakeString(IQueryCommand queryCommand)
         {
-            if (!queryCommand.HasTakeNumOfStructures)
+            if (!queryCommand.HasTakeNumOfStructures || queryCommand.HasPaging)
                 return string.Empty;
 
-            return string.Format("top({0})", queryCommand.TakeNumOfStructures);
+            return string.Format("top ({0})", queryCommand.TakeNumOfStructures);
         }
 
-        protected virtual string GenerateGroupingString(IQueryCommand queryCommand)
-        {
-            var shouldHaveGrouping = queryCommand.HasIncludes || queryCommand.HasPaging || queryCommand.HasSortings || queryCommand.HasWhere;
+        protected abstract string GeneratePagingString(IQueryCommand queryCommand, ISqlExpression sqlExpression);
 
-            if (!shouldHaveGrouping)
-                return string.Empty;
-
-            return "s.[StructureId]";
-        }
-
-        protected virtual string GenerateSortingString(ISqlExpression sqlExpression, string decorateSortingWith)
+        protected virtual string GenerateOrderByMembersString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
         {
             var sortings = sqlExpression.SortingMembers.ToList();
-            if (sortings.Count == 0)
-                return string.Empty;
 
-            var transformedSortings = new List<string>();
-
-            foreach (var sorting in sortings)
-            {
-                transformedSortings.Add(string.Format("{0} {1}",
-                    string.Format(decorateSortingWith, "{0}.[{1}]".Inject(sorting.Alias, sorting.IndexStorageColumnName)),
-                    sorting.Direction));
-            }
-
-            return string.Join(", ", transformedSortings);
+            return sortings.Count == 0
+                ? string.Empty
+                : string.Join(", ", sortings.Select(sorting => string.Format("min(mem{0}.[{1}]) mem{0}", sorting.Index, sorting.IndexStorageColumnName)));
         }
 
-        protected virtual string GenerateMembersJoinString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+        protected virtual string GenerateOrderByString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+        {
+            var sortings = sqlExpression.SortingMembers.ToList();
+
+            return sortings.Count == 0
+                ? string.Empty
+                : string.Join(", ", sortings.Select(sorting => string.Format("mem{0} {1}", sorting.Index, sorting.Direction)));
+        }
+
+        protected virtual string GenerateWhereAndSortingJoins(IQueryCommand queryCommand, ISqlExpression sqlExpression)
         {
             var wheres = sqlExpression.WhereMembers.ToList();
             var sortings = sqlExpression.SortingMembers.ToList();
@@ -150,14 +91,14 @@ namespace SisoDb.Querying
 
             var joins = new List<string>(wheres.Count + sortings.Count);
 
-            const string joinFormat = "inner join [{0}] {1} on {1}.[StructureId] = s.[StructureId] and {1}.[MemberPath] = '{2}'";
+            const string joinFormat = "inner join [{0}] mem{1} on mem{1}.[StructureId] = s.[StructureId] and mem{1}.[MemberPath] = '{2}'";
 
             if (wheres.Count > 0)
             {
                 joins.AddRange(wheres.Select(where =>
                     string.Format(joinFormat,
                     indexesTableName,
-                    where.Alias,
+                    where.Index,
                     where.MemberPath)));
             }
 
@@ -166,30 +107,60 @@ namespace SisoDb.Querying
                 joins.AddRange(sortings.Select(sorting =>
                     string.Format(joinFormat,
                     indexesTableName,
-                    sorting.Alias,
+                    sorting.Index,
                     sorting.MemberPath)));
             }
 
             return string.Join(" ", joins.Distinct());
         }
 
-        protected virtual string GenerateIncluesJoinString(ISqlExpression sqlExpression)
+        protected virtual string GenerateWhereCriteriaString(ISqlExpression sqlExpression)
+        {
+            return sqlExpression.WhereCriteria.CriteriaString;
+        }
+
+        protected virtual string GenerateMatchingIncludesJoins(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+        {
+            var includes = sqlExpression.Includes.ToList();
+            if (includes.Count == 0)
+                return string.Empty;
+
+            var indexesJoinString = string.Format("inner join [{0}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in ({1})", 
+                queryCommand.StructureSchema.GetIndexesTableName(),
+                string.Join(", ", includes.Select(inc => string.Format("'{0}'", inc.MemberPathReference))));
+
+            const string joinFormat = "left join [{0}] cs{1} on cs{1}.[StructureId] = si.[{2}] and si.[MemberPath] = '{3}'";
+
+            return string.Join(" ", new [] { indexesJoinString }.MergeWith(includes.Select(inc => string.Format(joinFormat, inc.TableName, inc.Index, inc.IndexValueColumnName, inc.MemberPathReference))));
+        }
+
+        protected virtual string GenerateIncludesJoins(ISqlExpression sqlExpression)
+        {
+            var includes = sqlExpression.Includes.ToList();
+
+            const string joinFormat = "left join [{0}] cs{1} on cs{1}.[RowId] = rs.[{2}RowId]";
+
+            return includes.Count == 0
+                ? string.Empty
+                : string.Join(" ", includes.Select(inc => string.Format(joinFormat, inc.TableName, inc.Index, inc.ObjectReferencePath)));
+        }
+
+        protected virtual string GenerateIncludedJsonMembersString(ISqlExpression sqlExpression)
         {
             var includes = sqlExpression.Includes.ToList();
 
             return includes.Count == 0
                 ? string.Empty
-                : string.Join(" ", includes.Select(inc => inc.JoinString));
+                : string.Join(", ", includes.Select(inc => string.Format("cs{0}.[Json] [{1}Json]", inc.Index, inc.ObjectReferencePath)));
         }
 
-        protected virtual string GenerateIncludesJsonOutputDefinitionString(ISqlExpression sqlExpression)
+        protected virtual string GenerateIncludedRowIdsString(ISqlExpression sqlExpression)
         {
             var includes = sqlExpression.Includes.ToList();
 
-            if (includes.Count == 0)
-                return string.Empty;
-
-            return string.Join(", ", includes.Select(inc => inc.JsonOutputDefinition));
+            return includes.Count == 0
+                ? string.Empty
+                : string.Join(", ", includes.Select(inc => string.Format("min(cs{0}.[RowId]) [{1}RowId]", inc.Index, inc.ObjectReferencePath)));
         }
     }
 }

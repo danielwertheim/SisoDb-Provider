@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Linq;
@@ -29,11 +28,9 @@ namespace SisoDb.SqlCe4.Dac
                 Connection.ExecuteNonQuery(Transaction, sql.Split(';'), parameters);
         }
 
-        public override IDbBulkCopy GetBulkCopy(bool keepIdentities)
+        public override IDbBulkCopy GetBulkCopy()
         {
-            var options = keepIdentities ? SqlCeBulkCopyOptions.KeepIdentity : SqlCeBulkCopyOptions.None;
-
-            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, options, (SqlCeTransaction)Transaction);
+            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, SqlCeBulkCopyOptions.None, (SqlCeTransaction)Transaction);
         }
 
         public override void Drop(IStructureSchema structureSchema)
@@ -81,56 +78,34 @@ namespace SisoDb.SqlCe4.Dac
             ExecuteNonQuery(sql);
         }
 
-        public override void DeleteById(ValueType structureId, IStructureSchema structureSchema)
+        public override void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("DeleteById").Inject(
-                structureSchema.GetStructureTableName());
+            var sql = SqlStatements.GetSql("DeleteById").Inject(structureSchema.GetStructureTableName());
 
-            ExecuteNonQuery(sql, new DacParameter("id", structureId));
+            ExecuteNonQuery(sql, new DacParameter("id", structureId.Value));
         }
 
-        public override void DeleteByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
+        public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
-            var sqlFormat = SqlStatements.GetSql("DeleteByIds").Inject(
-                structureSchema.GetStructureTableName(), "{0}");
+            var sqlFormat = SqlStatements.GetSql("DeleteByIds").Inject(structureSchema.GetStructureTableName(), "{0}");
 
             using (var cmd = CreateCommand(string.Empty))
             {
-                foreach (var idsString in ToIdsStrings(ids, idType))
+                foreach (var batchedIds in ToBatchedIds(ids))
                 {
-                    cmd.CommandText = sqlFormat.Inject(string.Join(",", idsString));
+                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
+
+                    cmd.AddParameters(batchedIds);
+                    cmd.CommandText = sqlFormat.Inject(paramsString);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        private static IEnumerable<string[]> ToIdsStrings(IEnumerable<ValueType> ids, StructureIdTypes idType)
-        {
-            var idFormat = idType.IsIdentity() ? "{0}" : "'{0}'";
-
-            var buff = new List<string>();
-            foreach (var id in ids)
-            {
-                buff.Add(string.Format(idFormat, id));
-
-                if (buff.Count == 10)
-                {
-                    yield return buff.ToArray();
-                    buff.Clear();
-                }
-            }
-
-            if(buff.Count == 0)
-                yield break;
-
-            yield return buff.ToArray();
-            buff.Clear();
-        }
-
-        public override void DeleteByQuery(SqlQuery query, Type idType, IStructureSchema structureSchema)
+        public override void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -141,14 +116,13 @@ namespace SisoDb.SqlCe4.Dac
             ExecuteNonQuery(sql, query.Parameters.ToArray());
         }
 
-        public override void DeleteWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)
+        public override void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(
-                structureSchema.GetStructureTableName());
+            var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
 
-            ExecuteNonQuery(sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo));
+            ExecuteNonQuery(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value));
         }
 
         public override bool TableExists(string name)
@@ -211,25 +185,29 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        public override string GetJsonById(ValueType structureId, IStructureSchema structureSchema)
+        public override string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("GetById").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(sql, new DacParameter("id", structureId));
+            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
 
-        public override IEnumerable<string> GetJsonByIds(IEnumerable<ValueType> ids, StructureIdTypes idType, IStructureSchema structureSchema)
+        public override IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
             var sqlFormat = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName(), "{0}");
 
             using (var cmd = CreateCommand(string.Empty))
             {
-                foreach (var idsString in ToIdsStrings(ids, idType))
+                foreach (var batchedIds in ToBatchedIds(ids))
                 {
-                    cmd.CommandText = sqlFormat.Inject(string.Join(",", idsString));
+                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
+
+                    cmd.AddParameters(batchedIds);
+                    cmd.CommandText = sqlFormat.Inject(paramsString);
+
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {
                         while (reader.Read())
@@ -242,13 +220,13 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        public override IEnumerable<string> GetJsonWhereIdIsBetween(ValueType structureIdFrom, ValueType structureIdTo, IStructureSchema structureSchema)
+        public override IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
             var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(sql, new DacParameter("idFrom", structureIdFrom), new DacParameter("idTo", structureIdTo)))
+            using (var cmd = CreateCommand(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value)))
             {
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                 {
@@ -258,6 +236,28 @@ namespace SisoDb.SqlCe4.Dac
                     }
                     reader.Close();
                 }
+            }
+        }
+
+        private static IEnumerable<IDacParameter[]> ToBatchedIds(IEnumerable<IStructureId> ids)
+        {
+            var batch = new List<IDacParameter>();
+
+            foreach (var id in ids)
+            {
+                batch.Add(new DacParameter(string.Concat("id", batch.Count), id.Value));
+
+                if (batch.Count == 10)
+                {
+                    yield return batch.ToArray();
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                yield return batch.ToArray();
+                batch.Clear();
             }
         }
     }

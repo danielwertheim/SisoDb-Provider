@@ -22,6 +22,20 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryGuidItem _fetchedStructure;
         }
 
+        [Subject(typeof(IUnitOfWork), "Get by Id (string)")]
+        public class when_set_with_string_id_is_empty : SpecificationBase
+        {
+            Establish context = () => TestContext = TestContextFactory.Create();
+
+            Because of = () =>
+                _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryStringItem>("Foo");
+
+            It should_not_fetch_any_structure =
+                () => _fetchedStructure.ShouldBeNull();
+
+            private static QueryStringItem _fetchedStructure;
+        }
+
         [Subject(typeof(IUnitOfWork), "Get by Id (identity)")]
         public class when_set_with_identity_id_is_empty : SpecificationBase
         {
@@ -57,6 +71,20 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
                 _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryGuidItem>(Guid.Parse("ABF5FC75-1E74-4564-B55A-DB3594394BE3"));
+
+            It should_not_fetch_any_structure =
+                () => _fetchedStructure.ShouldBeNull();
+
+            private static string _fetchedStructure;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Get by Id as Json (string)")]
+        public class when_json_set_with_string_id_is_empty : SpecificationBase
+        {
+            Establish context = () => TestContext = TestContextFactory.Create();
+
+            Because of = () =>
+                _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryStringItem>("Foo");
 
             It should_not_fetch_any_structure =
                 () => _fetchedStructure.ShouldBeNull();
@@ -109,6 +137,25 @@ namespace SisoDb.Specifications.QueryEngine
 
             private static IList<QueryGuidItem> _structures;
             private static QueryGuidItem _fetchedStructure;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Get by Id (string)")]
+        public class when_set_with_string_id_contains_four_items : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryStringItem.CreateFourItems<QueryStringItem>());
+            };
+
+            Because of =
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetById<QueryStringItem>(_structures[1].StructureId);
+
+            It should_fetch_the_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryStringItem> _structures;
+            private static QueryStringItem _fetchedStructure;
         }
 
         [Subject(typeof(IUnitOfWork), "Get by Id (identity)")]
@@ -165,6 +212,25 @@ namespace SisoDb.Specifications.QueryEngine
                 () => _fetchedStructure.ShouldEqual(_structures[1].AsJson());
 
             private static IList<QueryGuidItem> _structures;
+            private static string _fetchedStructure;
+        }
+
+        [Subject(typeof(IUnitOfWork), "Get by Id as Json (string)")]
+        public class when_json_set_with_string_id_contains_four_items : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.WriteOnce().InsertMany(QueryStringItem.CreateFourItems<QueryStringItem>());
+            };
+
+            Because of =
+                () => _fetchedStructure = TestContext.Database.ReadOnce().GetByIdAsJson<QueryStringItem>(_structures[1].StructureId);
+
+            It should_fetch_the_structure =
+                () => _fetchedStructure.ShouldEqual(_structures[1].AsJson());
+
+            private static IList<QueryStringItem> _structures;
             private static string _fetchedStructure;
         }
 

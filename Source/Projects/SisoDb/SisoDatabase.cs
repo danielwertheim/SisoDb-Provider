@@ -1,20 +1,26 @@
 using System;
+using System.Diagnostics;
 using EnsureThat;
-using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
+using SisoDb.Serialization;
+using SisoDb.Structures;
 
 namespace SisoDb
 {
     public abstract class SisoDatabase : ISisoDatabase
     {
-        private readonly ISisoProviderFactory _providerFactory;
-        private readonly ISisoConnectionInfo _connectionInfo;
+        protected readonly object DbOperationsLock;
+
+        protected readonly ISisoProviderFactory ProviderFactory;
         protected readonly IDbSchemaManager DbSchemaManager;
-        private readonly IStructureSchemas _structureSchemas;
-        private readonly IStructureBuilder _structureBuilder;
+
+        private readonly ISisoConnectionInfo _connectionInfo;
+        private IStructureSchemas _structureSchemas;
+        private IStructureBuilders _structureBuilders;
+        private IJsonSerializer _serializer;
         private readonly IServerClient _serverClient;
 
         public string Name
@@ -30,54 +36,93 @@ namespace SisoDb
         public IStructureSchemas StructureSchemas
         {
             get { return _structureSchemas; }
+            set
+            {
+                Ensure.That(value, "StructureSchemas").IsNotNull();
+
+                _structureSchemas = value;
+            }
         }
 
-        public IStructureBuilder StructureBuilder
+        public IStructureBuilders StructureBuilders
         {
-            get { return _structureBuilder; }
+            get { return _structureBuilders; }
+            set
+            {
+                Ensure.That(value, "StructureBuilderss").IsNotNull();
+                _structureBuilders = value;
+            }
+        }
+
+        public IJsonSerializer Serializer
+        {
+            get { return _serializer; }
+            set
+            {
+                Ensure.That(value, "Serializer").IsNotNull();
+
+                _serializer = value;
+            }
         }
 
         protected SisoDatabase(ISisoConnectionInfo connectionInfo)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
+            DbOperationsLock = new object();
+
             _connectionInfo = connectionInfo;
-            _providerFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
-            
-            DbSchemaManager = _providerFactory.GetDbSchemaManager();
-            _structureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
-            _structureBuilder = SisoEnvironment.Resources.ResolveStructureBuilder();
-            _providerFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
-            _serverClient = _providerFactory.GetServerClient(ConnectionInfo);
+            ProviderFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
+            StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
+            StructureBuilders = SisoEnvironment.Resources.ResolveStructureBuilders();
+            Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+
+            DbSchemaManager = ProviderFactory.GetDbSchemaManager();
+            _serverClient = ProviderFactory.GetServerClient(ConnectionInfo);
         }
 
         public virtual void EnsureNewDatabase()
         {
-            DbSchemaManager.ClearCache();
-            _serverClient.EnsureNewDb();
+            lock (DbOperationsLock)
+            {
+                DbSchemaManager.ClearCache();
+                _serverClient.EnsureNewDb();
+            }
         }
 
         public virtual void CreateIfNotExists()
         {
-            DbSchemaManager.ClearCache();
-            _serverClient.CreateDbIfItDoesNotExist();
+            lock (DbOperationsLock)
+            {
+                DbSchemaManager.ClearCache();
+                _serverClient.CreateDbIfItDoesNotExist();
+            }
         }
 
         public virtual void InitializeExisting()
         {
-            DbSchemaManager.ClearCache();
-            _serverClient.InitializeExistingDb();
+            lock (DbOperationsLock)
+            {
+                DbSchemaManager.ClearCache();
+                _serverClient.InitializeExistingDb();
+            }
         }
 
         public virtual void DeleteIfExists()
         {
-            DbSchemaManager.ClearCache();
-            _serverClient.DropDbIfItExists();
+            lock (DbOperationsLock)
+            {
+                DbSchemaManager.ClearCache();
+                _serverClient.DropDbIfItExists();
+            }
         }
 
         public virtual bool Exists()
         {
-            return _serverClient.DbExists();
+            lock (DbOperationsLock)
+            {
+                return _serverClient.DbExists();
+            }
         }
 
         public virtual void DropStructureSet<T>() where T : class
@@ -87,44 +132,48 @@ namespace SisoDb
 
         public virtual void DropStructureSet(Type type)
         {
-            using (var dbClient = _providerFactory.GetTransactionalDbClient(_connectionInfo))
-            {
-                var structureSchema = _structureSchemas.GetSchema(type);
+            Ensure.That(type, "type").IsNotNull();
 
-                DbSchemaManager.DropStructureSet(structureSchema, dbClient);
-
-                dbClient.Flush();
-            }
-
-            _structureSchemas.RemoveSchema(type);
+            DropStructureSets(new[] { type });
         }
 
-        public virtual void DropStructureSets()
+        public virtual void DropStructureSets(Type[] types)
         {
-            using (var dbClient = _providerFactory.GetTransactionalDbClient(_connectionInfo))
+            Ensure.That(types, "types").HasItems();
+
+            lock (DbOperationsLock)
             {
-                foreach (var structureSchema in StructureSchemas.GetSchemas())
+                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
-                    DbSchemaManager.DropStructureSet(structureSchema, dbClient);
+                    foreach (var type in types)
+                    {
+                        var structureSchema = _structureSchemas.GetSchema(type);
+
+                        DbSchemaManager.DropStructureSet(structureSchema, dbClient);
+
+                        dbClient.Flush();
+
+                        _structureSchemas.RemoveSchema(type);
+                    }
                 }
-
-                dbClient.Flush();
             }
-
-            StructureSchemas.Clear();
         }
 
         public virtual void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
             where TOld : class
             where TNew : class
         {
-            var structureSchemaOld = _structureSchemas.GetSchema(TypeFor<TOld>.Type);
-            _structureSchemas.RemoveSchema(TypeFor<TOld>.Type);
+            lock (DbOperationsLock)
+            {
+                var structureSchemaOld = _structureSchemas.GetSchema(TypeFor<TOld>.Type);
+                _structureSchemas.RemoveSchema(TypeFor<TOld>.Type);
 
-            var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
+                var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
 
-            var updater = new StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld, structureSchemaNew, _structureBuilder);
-            updater.Process(onProcess);
+                var updater = new StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld,
+                                                                  structureSchemaNew, StructureBuilders);
+                updater.Process(onProcess);
+            }
         }
 
         public virtual void UpsertStructureSet<T>() where T : class
@@ -134,18 +183,53 @@ namespace SisoDb
 
         public virtual void UpsertStructureSet(Type type)
         {
-            using (var dbClient = _providerFactory.GetTransactionalDbClient(_connectionInfo))
-            {
-                var dbSchemaUpserter = _providerFactory.GetDbSchemaUpserter(dbClient);
-                var structureSchema = _structureSchemas.GetSchema(type);
-                DbSchemaManager.UpsertStructureSet(structureSchema, dbSchemaUpserter);
+            Ensure.That(type, "type").IsNotNull();
 
-                dbClient.Flush();
+            lock (DbOperationsLock)
+            {
+                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+                {
+                    var dbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(dbClient);
+                    var structureSchema = _structureSchemas.GetSchema(type);
+                    DbSchemaManager.UpsertStructureSet(structureSchema, dbSchemaUpserter);
+
+                    dbClient.Flush();
+                }
             }
         }
 
         public abstract IQueryEngine CreateQueryEngine();
 
         public abstract IUnitOfWork CreateUnitOfWork();
+
+        [DebuggerStepThrough]
+        public DbQueryExtensionPoint ReadOnce()
+        {
+            return new DbQueryExtensionPoint(this);
+        }
+
+        [DebuggerStepThrough]
+        public DbUnitOfWorkExtensionPoint WriteOnce()
+        {
+            return new DbUnitOfWorkExtensionPoint(this);
+        }
+
+        [DebuggerStepThrough]
+        public void WithUnitOfWork(Action<IUnitOfWork> consumer)
+        {
+            using (var uow = CreateUnitOfWork())
+            {
+                consumer.Invoke(uow);
+            }
+        }
+
+        [DebuggerStepThrough]
+        public void WithQueryEngine(Action<IQueryEngine> consumer)
+        {
+            using (var qe = CreateQueryEngine())
+            {
+                consumer.Invoke(qe);
+            }
+        }
     }
 }

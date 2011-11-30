@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using SisoDb.Querying;
@@ -56,7 +57,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes using Query as X")]
+        [Subject(typeof(IQueryEngine), "Includes with Where, Paging and Sorting using Query as X")]
         public class when_querying_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -67,6 +68,9 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
                 .QueryAs<IAlbumData, Album>(q => q
+                    .Where(a => a.Name == "Born to run")
+                    .SortBy(a => a.Name)
+                    .Page(0, 10)
                     .Include<Genre>(a => a.GenreId)
                     .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
 
@@ -75,6 +79,15 @@ namespace SisoDb.Specifications.QueryEngine
 
             It should_have_fetched_album =
                 () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+
+            It should_not_have_stored_genere_and_artists_in_the_json = () =>
+            {
+                var json = TestContext.Database.ReadOnce().GetByIdAsJson<IAlbumData>(_structure.StructureId);
+                json.Length.ShouldEqual(214);
+                json.ShouldNotContain("\"Genre\"");
+                json.ShouldNotContain("\"Artist\"");
+                json.ShouldNotContain("\"SecondArtist\"");
+            };
 
             private static Album _structure;
             private static IList<Album> _fetchedStructures;
@@ -112,7 +125,7 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 TestContext = TestContextFactory.Create();
                 _structure = Establishments.SetupStructuresForIncludes(TestContext);
-                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [GenreStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [ArtistStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [ArtistStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [GenreStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='GenreId' left join [ArtistStructure] as cs1 on cs1.[StructureId] = si.[GuidValue] and si.[MemberPath]='ArtistId' left join [ArtistStructure] as cs2 on cs2.[StructureId] = si.[GuidValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
             public void AfterContextCleanup()
@@ -141,7 +154,7 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 TestContext = TestContextFactory.Create();
                 _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
-                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [IGenreDataStructure] as cs0 on cs0.[StructureId] = si.[IntegerValue] and si.[MemberPath]='GenreId' left join [IArtistDataStructure] as cs1 on cs1.[StructureId] = si.[IntegerValue] and si.[MemberPath]='ArtistId' left join [IArtistDataStructure] as cs2 on cs2.[StructureId] = si.[IntegerValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [IGenreDataStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='GenreId' left join [IArtistDataStructure] as cs1 on cs1.[StructureId] = si.[GuidValue] and si.[MemberPath]='ArtistId' left join [IArtistDataStructure] as cs2 on cs2.[StructureId] = si.[GuidValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
             public void AfterContextCleanup()
@@ -217,46 +230,46 @@ namespace SisoDb.Specifications.QueryEngine
 
         public interface IAlbumData
         {
-            int StructureId { get; set; }
-            int? GenreId { get; }
-            int? ArtistId { get; }
-            int? SecondArtistId { get; }
+            Guid StructureId { get; set; }
+            Guid? GenreId { get; }
+            Guid? ArtistId { get; }
+            Guid? SecondArtistId { get; }
             string Name { get; }
         }
 
         public interface IGenreData
         {
-            int StructureId { get; set; }
+            Guid StructureId { get; set; }
 
             string Name { get; }
         }
 
         public interface IArtistData
         {
-            int StructureId { get; set; }
+            Guid StructureId { get; set; }
 
             string Name { get; }
         }
 
         public class Album : IAlbumData
         {
-            public int StructureId { get; set; }
+            public Guid StructureId { get; set; }
 
-            public int? GenreId
+            public Guid? GenreId
             {
-                get { return Genre != null ? (int?)Genre.StructureId : null; }
+                get { return Genre != null ? (Guid?)Genre.StructureId : null; }
                 set { Genre.StructureId = value.Value; }
             }
 
-            public int? ArtistId
+            public Guid? ArtistId
             {
-                get { return Artist != null ? (int?)Artist.StructureId : null; }
+                get { return Artist != null ? (Guid?)Artist.StructureId : null; }
                 set { Artist.StructureId = value.Value; }
             }
 
-            public int? SecondArtistId
+            public Guid? SecondArtistId
             {
-                get { return SecondArtist != null ? (int?)SecondArtist.StructureId : null; }
+                get { return SecondArtist != null ? (Guid?)SecondArtist.StructureId : null; }
                 set { SecondArtist.StructureId = value.Value; }
             }
 
@@ -278,14 +291,14 @@ namespace SisoDb.Specifications.QueryEngine
 
         public class Genre : IGenreData
         {
-            public int StructureId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string Name { get; set; }
         }
 
         public class Artist : IArtistData
         {
-            public int StructureId { get; set; }
+            public Guid StructureId { get; set; }
 
             public string Name { get; set; }
         }
