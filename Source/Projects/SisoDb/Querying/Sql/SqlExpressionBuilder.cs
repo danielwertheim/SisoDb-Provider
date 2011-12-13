@@ -8,34 +8,34 @@ namespace SisoDb.Querying.Sql
 {
     public class SqlExpressionBuilder
     {
-        public ISqlExpression Process(IQueryCommand queryCommand)
+        public ISqlExpression Process(IQuery query)
         {
-            Ensure.That(queryCommand, "queryCommand").IsNotNull();
+            Ensure.That(query, "query").IsNotNull();
 
             var expression = new SqlExpression();
 
-            if(queryCommand.HasWhere)
-                ProcessWheres(queryCommand.Where, expression);
+            if(query.HasWhere)
+                ProcessWheres(query.Where, expression);
 
-            if (queryCommand.HasSortings)
-                ProcessSortings(queryCommand.Sortings, expression);
+            if (query.HasSortings)
+                ProcessSortings(query.Sortings, expression);
 
-            if (queryCommand.HasIncludes)
+            if (query.HasIncludes)
             {
-                var mergedIncludeLambda = GetMergedIncludeLambda(queryCommand);
+                var mergedIncludeLambda = GetMergedIncludeLambda(query);
                 ProcessIncludes(mergedIncludeLambda, expression);
             }
 
             return expression;
         }
 
-        protected virtual IParsedLambda GetMergedIncludeLambda(IQueryCommand queryCommand)
+        protected virtual IParsedLambda GetMergedIncludeLambda(IQuery query)
         {
-            if (!queryCommand.HasIncludes)
+            if (!query.HasIncludes)
                 return null;
 
             IParsedLambda mergedIncludes = null;
-            foreach (var include in queryCommand.Includes)
+            foreach (var include in query.Includes)
             {
                 mergedIncludes = mergedIncludes == null 
                     ? include 
@@ -83,7 +83,7 @@ namespace SisoDb.Querying.Sql
 
         protected virtual void ProcessSortings(IParsedLambda sortingsLambda, SqlExpression expression)
         {
-            if (sortingsLambda == null || sortingsLambda.Nodes.Count == 0)
+            if (sortingsLambda == null || sortingsLambda.Nodes.Length == 0)
                 return;
 
             foreach (var sortingNode in sortingsLambda.Nodes.OfType<SortingNode>())
@@ -105,14 +105,14 @@ namespace SisoDb.Querying.Sql
 
         protected virtual void ProcessIncludes(IParsedLambda includesLambda, SqlExpression expression)
         {
-            if (includesLambda == null || includesLambda.Nodes.Count == 0)
+            if (includesLambda == null || includesLambda.Nodes.Length == 0)
                 return;
 
             foreach (var includeNode in includesLambda.Nodes.OfType<IncludeNode>())
             {
                 expression.AddInclude(new SqlInclude(
                     expression.GetNextNewIncludeIndex(),
-                    includeNode.ChildStructureName + "Structure",
+                    includeNode.ReferencedStructureName,
                     IndexStorageSchema.GetValueSchemaFieldForType(includeNode.MemberType).Name,
                     includeNode.IdReferencePath,
                     includeNode.ObjectReferencePath));

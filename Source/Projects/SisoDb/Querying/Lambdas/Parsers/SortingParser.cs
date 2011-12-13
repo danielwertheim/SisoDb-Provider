@@ -39,7 +39,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                             sortDirection = SortDirections.Desc;
                             break;
                         default:
-                            throw new NotSupportedException(ExceptionMessages.SortingParser_UnsupportedMethodForSortingDirection);
+                            throw new NotSupportedException(ExceptionMessages.OrderByParser_UnsupportedMethodForSortingDirection);
                     }
                 }
 

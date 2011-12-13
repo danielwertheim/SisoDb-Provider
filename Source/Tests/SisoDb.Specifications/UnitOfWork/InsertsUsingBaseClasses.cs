@@ -6,7 +6,7 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace InsertsUsingBaseClasses
+	class InsertsUsingBaseClasses
     {
         [Subject(typeof(IUnitOfWork), "Insert (base classes)")]
         public class when_inserting_subclass_as_subclass : SpecificationBase

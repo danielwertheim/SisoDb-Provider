@@ -2,17 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using PineCone.Structures.Schemas;
 using ServiceStack.Text;
 
 namespace SisoDb.Serialization
 {
-    internal static class ServiceStackTypeConfig<T> where T : class 
+    internal static class ServiceStackTypeConfig<T> where T : class
     {
+    	private static readonly IStructureTypeReflecter StructureTypeReflecter;
         private static readonly Type TypeConfig = typeof(TypeConfig<>);
         private static Action<Type> _config;
          
         static ServiceStackTypeConfig()
         {
+			StructureTypeReflecter = new StructureTypeReflecter();
             JsConfig<T>.ExcludeTypeInfo = true;
             _config = RealConfig;
         }
@@ -38,7 +41,7 @@ namespace SisoDb.Serialization
 
         private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
         {
-            return properties.Where(p => !SisoEnvironment.Resources.ResolveStructureSchemas().StructureTypeFactory.Reflecter.HasIdProperty(p.PropertyType)).ToArray();
+            return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
         }
     }
 }

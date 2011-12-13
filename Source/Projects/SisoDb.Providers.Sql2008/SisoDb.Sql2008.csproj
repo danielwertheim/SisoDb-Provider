@@ -37,14 +37,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ensure.That.0.5.0.32\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.21.0.66, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.42.0.82, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.22.0.68, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.45.0.85, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,7 +72,7 @@
     <Compile Include="Sql2008ProviderFactory.cs" />
     <Compile Include="Sql2008ConnectionInfo.cs" />
     <Compile Include="Dac\Sql2008DbClient.cs" />
-    <Compile Include="Sql2008QueryEngine.cs" />
+    <Compile Include="Sql2008ReadSession.cs" />
     <Compile Include="Dac\Sql2008ServerClient.cs" />
     <Compile Include="Sql2008UnitOfWork.cs" />
     <Compile Include="Sql2008QueryGenerator.cs" />

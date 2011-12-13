@@ -223,15 +223,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true).
-        /// </summary>
-        public static string LambdaParser_NoMemberExpressions {
-            get {
-                return ResourceManager.GetString("LambdaParser_NoMemberExpressions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not evaluate the method call: &apos;{0}&apos;.
         ///Specific supported method exists as extensionmethods and are prefixed with &apos;Qx&apos;. Import namespace &apos;SisoDb.Querying&apos; to enable them..
         /// </summary>
@@ -260,6 +251,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The only supported methods for marking sortings are Asc() and Desc()..
+        /// </summary>
+        public static string OrderByParser_UnsupportedMethodForSortingDirection {
+            get {
+                return ResourceManager.GetString("OrderByParser_UnsupportedMethodForSortingDirection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc..
         /// </summary>
         public static string Property_Ctor_UniqueOnNonSimpleType {
@@ -269,29 +269,20 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Sortings has allready been initialized..
-        /// </summary>
-        public static string QueryCommandBuilder_SortingsAllreadyInitialized {
-            get {
-                return ResourceManager.GetString("QueryCommandBuilder_SortingsAllreadyInitialized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Where expression has allready been initialized..
-        /// </summary>
-        public static string QueryCommandBuilder_WhereAllreadyInitialized {
-            get {
-                return ResourceManager.GetString("QueryCommandBuilder_WhereAllreadyInitialized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to GetByIdInterval is not supported when using other ID-types than identities..
         /// </summary>
-        public static string QueryEngine_GetByIdInterval_WrongIdType {
+        public static string QuerySession_GetByIdInterval_WrongIdType {
             get {
-                return ResourceManager.GetString("QueryEngine_GetByIdInterval_WrongIdType", resourceCulture);
+                return ResourceManager.GetString("QuerySession_GetByIdInterval_WrongIdType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ReadOnceQueryable doesn&apos;t support yielding result. Use matching ToList method instead..
+        /// </summary>
+        public static string ReadOnceQueryable_YieldingNotSupported {
+            get {
+                return ResourceManager.GetString("ReadOnceQueryable_YieldingNotSupported", resourceCulture);
             }
         }
         
@@ -310,15 +301,6 @@ namespace SisoDb.Resources {
         public static string SisoDbNotSupportedByProviderException {
             get {
                 return ResourceManager.GetString("SisoDbNotSupportedByProviderException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The only supported methods for marking sortings are Asc() and Desc()..
-        /// </summary>
-        public static string SortingParser_UnsupportedMethodForSortingDirection {
-            get {
-                return ResourceManager.GetString("SortingParser_UnsupportedMethodForSortingDirection", resourceCulture);
             }
         }
         
@@ -517,6 +499,15 @@ namespace SisoDb.Resources {
         public static string UnitOfWork_NoItemExistsForUpdate {
             get {
                 return ResourceManager.GetString("UnitOfWork_NoItemExistsForUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true).
+        /// </summary>
+        public static string WhereExpressionParser_NoMemberExpressions {
+            get {
+                return ResourceManager.GetString("WhereExpressionParser_NoMemberExpressions", resourceCulture);
             }
         }
         

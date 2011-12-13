@@ -9,7 +9,7 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace Deletes
+    class Deletes
     {
         [Subject(typeof(IUnitOfWork), "Delete by query")]
         public class when_guiditem_and_deleting_two_of_four_items_using_query : SpecificationBase
@@ -952,9 +952,9 @@ namespace SisoDb.Specifications.UnitOfWork
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
+				CaughtException.ShouldBeOfType<SisoDbException>();
 
-                var ex = (SisoDbNotSupportedByProviderException) CaughtException;
+				var ex = (SisoDbException)CaughtException;
                 ex.Message.ShouldContain(ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
             };
 
@@ -985,9 +985,9 @@ namespace SisoDb.Specifications.UnitOfWork
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
+				CaughtException.ShouldBeOfType<SisoDbException>();
 
-                var ex = (SisoDbNotSupportedByProviderException)CaughtException;
+				var ex = (SisoDbException)CaughtException;
                 ex.Message.ShouldContain(ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
             };
 

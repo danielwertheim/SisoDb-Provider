@@ -34,9 +34,7 @@ namespace SisoDb.Providers
         IDbStructureInserter GetDbStructureInserter(IDbClient dbClient);
         
         IDbQueryGenerator GetDbQueryGenerator();
-        
-        IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class;
-        
-        IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class;
+
+		IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
     }
 }

@@ -121,8 +121,6 @@ namespace SisoDb.Dac
 
         public abstract long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
 
-        public abstract IEnumerable<string> GetJson(IStructureSchema structureSchema);
-
         public abstract string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
 
         public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);

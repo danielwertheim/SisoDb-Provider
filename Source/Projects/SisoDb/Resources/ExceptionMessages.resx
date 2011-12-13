@@ -174,7 +174,7 @@
   <data name="SqlDatabase_InitializeExisting_DbDoesNotExist" xml:space="preserve">
     <value>The database '{0}' doesn't exist.</value>
   </data>
-  <data name="LambdaParser_NoMemberExpressions" xml:space="preserve">
+  <data name="WhereExpressionParser_NoMemberExpressions" xml:space="preserve">
     <value>You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true)</value>
   </data>
   <data name="LambdaOperator_OperatorTypeIsNotSupported" xml:space="preserve">
@@ -187,14 +187,8 @@
     <value>Could not evaluate the method call: '{0}'.
 Specific supported method exists as extensionmethods and are prefixed with 'Qx'. Import namespace 'SisoDb.Querying' to enable them.</value>
   </data>
-  <data name="SortingParser_UnsupportedMethodForSortingDirection" xml:space="preserve">
+  <data name="OrderByParser_UnsupportedMethodForSortingDirection" xml:space="preserve">
     <value>The only supported methods for marking sortings are Asc() and Desc().</value>
-  </data>
-  <data name="QueryCommandBuilder_SortingsAllreadyInitialized" xml:space="preserve">
-    <value>The Sortings has allready been initialized.</value>
-  </data>
-  <data name="QueryCommandBuilder_WhereAllreadyInitialized" xml:space="preserve">
-    <value>The Where expression has allready been initialized.</value>
   </data>
   <data name="GetCommand_SortingsAllreadyInitialized" xml:space="preserve">
     <value>The Sortings has allready been initialized.</value>
@@ -259,7 +253,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="UnitOfWork_DeleteByIdInterval_WrongIdType" xml:space="preserve">
     <value>DeleteByIdInterval is not supported when using other ID-types than identities.</value>
   </data>
-  <data name="QueryEngine_GetByIdInterval_WrongIdType" xml:space="preserve">
+  <data name="QuerySession_GetByIdInterval_WrongIdType" xml:space="preserve">
     <value>GetByIdInterval is not supported when using other ID-types than identities.</value>
   </data>
   <data name="StructureBuilders_CreateForInsert" xml:space="preserve">
@@ -273,5 +267,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="SqlDbUniquesSchemaBuilder_GenerateSql" xml:space="preserve">
     <value>Could not locate SQL for generating Structure-table for StructureId type: '{0}'.</value>
+  </data>
+  <data name="ReadOnceQueryable_YieldingNotSupported" xml:space="preserve">
+    <value>ReadOnceQueryable doesn't support yielding result. Use matching ToList method instead.</value>
   </data>
 </root>

@@ -8,7 +8,7 @@ using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace InsertsOfUniquesPerType
+	class InsertsOfUniquesPerType
     {
         [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_guid_entity : SpecificationBase

@@ -45,19 +45,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ensure.That.0.5.0.32\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NCore, Version=0.21.0.66, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.42.0.82, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.22.0.68, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.0.6.5609, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.45.0.85, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.0.6\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\PineCone.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.0.9.8943, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\ServiceStack.Text.3.0.9\lib\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -74,33 +75,46 @@
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="Dac\BulkInserts\IDbStructureInserter.cs" />
-    <Compile Include="Dac\GetNextIdentity.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
     <Compile Include="Dac\DbClientBase.cs" />
-    <Compile Include="DbQueryExtensionPoint.cs" />
-    <Compile Include="DbQueryExtensions.cs" />
+    <Compile Include="DbReadOnceOp.cs" />
+    <Compile Include="DbReadOnceOpExtensions.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
     <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
-    <Compile Include="DbUnitOfWorkExtensionPoint.cs" />
-    <Compile Include="DbQueryEngine.cs" />
-    <Compile Include="IAdvancedQueryEngine.cs" />
-    <Compile Include="Querying\IQueryCommand.cs" />
+    <Compile Include="DbWriteOnceOp.cs" />
+    <Compile Include="IAdvancedQuerySession.cs" />
+    <Compile Include="IQuery.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
+    <Compile Include="IReadSession.cs" />
+    <Compile Include="ISisoQueryable.cs" />
+    <Compile Include="Querying\IQueryBuilder.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ToLowerMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ToUpperMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\ExpressionParsers.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\IExpressionParsers.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\IOrderByParser.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\OrderByAscExpression.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\OrderByDescExpression.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\OrderByExpression.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\OrderByParser.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\WhereExpressionChainer.cs" />
+    <Compile Include="Querying\Query.cs" />
+    <Compile Include="DbReadSession.cs" />
+    <Compile Include="Querying\QueryBuilder.cs" />
+    <Compile Include="Querying\SisoReadOnceQueryable.cs" />
+    <Compile Include="Querying\SisoQueryable.cs" />
     <Compile Include="Querying\Sql\ISqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlQueryFormatter.cs" />
     <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\SqlQuery.cs" />
     <Compile Include="IConnectionString.cs" />
-    <Compile Include="IQueryEngine.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="Dac\BulkInserts\IndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\SingleResultReaderBase.cs" />
@@ -112,15 +126,13 @@
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
     <Compile Include="Providers\ISisoProviderFactories.cs" />
-    <Compile Include="Core\Expressions\IExpressionEvaluator.cs" />
     <Compile Include="Dac\AdoNetExtensions.cs" />
-    <Compile Include="DbUnitOfWorkExtensions.cs" />
+    <Compile Include="DbWriteOnceOpExtensions.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
     <Compile Include="SisoDatabase.cs" />
-    <Compile Include="SisoDbNotSupportedByProviderException.cs" />
     <Compile Include="DbUnitOfWork.cs" />
-    <Compile Include="Structures\IdentityStructureIdGenerator.cs" />
+    <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
     <Compile Include="Structures\StructureBuilders.cs" />
     <Compile Include="Structures\StructureSchemaExtensions.cs" />
@@ -135,15 +147,9 @@
     <Compile Include="GlobalResourceContainer.cs" />
     <Compile Include="Providers\SisoProviderFactories.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
-    <Compile Include="StructureSetUpdater.cs" />
-    <Compile Include="StructureSetUpdaterStatuses.cs" />
-    <Compile Include="Querying\GetCommandBuilder.cs" />
-    <Compile Include="Querying\IGetCommandBuilder.cs" />
-    <Compile Include="Querying\IQueryCommandBuilder.cs" />
+    <Compile Include="UpdateManyModifierStatus.cs" />
     <Compile Include="Providers\ISisoProviderFactory.cs" />
-    <Compile Include="Querying\QueryCommandBuilder.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
-    <Compile Include="Core\Expressions\LambdaExpressionEvaluator.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Sql\SqlExpressionBuilder.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParser.cs" />
@@ -171,10 +177,8 @@
     <Compile Include="Querying\Lambdas\ParsedLambda.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortDirections.cs" />
     <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
-    <Compile Include="Querying\GetCommand.cs" />
-    <Compile Include="Querying\IGetCommand.cs" />
     <Compile Include="QueryExtensions.cs" />
-    <Compile Include="Querying\INamedQuery.cs" />
+    <Compile Include="INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
     <Compile Include="DbSchema\IDbSchemaBuilder.cs" />
@@ -184,7 +188,6 @@
     <Compile Include="Querying\IDbQueryGenerator.cs" />
     <Compile Include="Providers\ISqlStatements.cs" />
     <Compile Include="Providers\SqlStatementsBase.cs" />
-    <Compile Include="Querying\QueryCommand.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
@@ -194,7 +197,6 @@
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
     <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="StructureTypeNameFor.cs" />
     <Compile Include="TypeFor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
@@ -228,7 +230,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

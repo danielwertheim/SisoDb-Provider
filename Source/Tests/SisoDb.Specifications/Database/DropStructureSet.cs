@@ -6,7 +6,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database
 {
-    namespace DropStructureSet
+    class DropStructureSet
     {
         [Subject(typeof(ISisoDatabase), "Drop structure set")]
         public class when_set_exists : SpecificationBase

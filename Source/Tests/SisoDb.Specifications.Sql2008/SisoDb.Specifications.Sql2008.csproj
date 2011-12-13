@@ -32,17 +32,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ensure.That.0.5.0.32\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Specifications, Version=0.4.24.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Machine.Specifications.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.21.0.66, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.42.0.82, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.22.0.68, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.45.0.85, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -115,68 +116,65 @@
     <Compile Include="..\SisoDb.Specifications\Model\QueryXItem.cs">
       <Link>Model\QueryXItem.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Count.cs">
-      <Link>QueryEngine\Count.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\Count.cs">
+      <Link>ReadSession\Count.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\EnumerableFunctions\QxAny.cs">
-      <Link>QueryEngine\EnumerableFunctions\QxAny.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\EnumerableFunctions\QxAny.cs">
+      <Link>ReadSession\EnumerableFunctions\QxAny.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetAll.cs">
-      <Link>QueryEngine\GetAll.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\GetById.cs">
+      <Link>ReadSession\GetById.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
-      <Link>QueryEngine\GetById.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\GetByIdInterval.cs">
+      <Link>ReadSession\GetByIdInterval.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIdInterval.cs">
-      <Link>QueryEngine\GetByIdInterval.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\GetByIds.cs">
+      <Link>ReadSession\GetByIds.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIds.cs">
-      <Link>QueryEngine\GetByIds.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\Includes.cs">
+      <Link>ReadSession\Includes.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Includes.cs">
-      <Link>QueryEngine\Includes.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\NamedQueries.cs">
+      <Link>ReadSession\NamedQueries.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\NamedQueries.cs">
-      <Link>QueryEngine\NamedQueries.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\Query.cs">
+      <Link>ReadSession\Query.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Query.cs">
-      <Link>QueryEngine\Query.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\QueryAll.cs">
+      <Link>ReadSession\QueryAll.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\EndsWith.cs">
-      <Link>QueryEngine\StringFunctions\EndsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\EndsWith.cs">
+      <Link>ReadSession\StringFunctions\EndsWith.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxContains.cs">
-      <Link>QueryEngine\StringFunctions\QxContains.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\QxContains.cs">
+      <Link>ReadSession\StringFunctions\QxContains.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxEndsWith.cs">
-      <Link>QueryEngine\StringFunctions\QxEndsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\QxEndsWith.cs">
+      <Link>ReadSession\StringFunctions\QxEndsWith.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxLike.cs">
-      <Link>QueryEngine\StringFunctions\QxLike.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\QxLike.cs">
+      <Link>ReadSession\StringFunctions\QxLike.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxStartsWith.cs">
-      <Link>QueryEngine\StringFunctions\QxStartsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\QxStartsWith.cs">
+      <Link>ReadSession\StringFunctions\QxStartsWith.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxToLower.cs">
-      <Link>QueryEngine\StringFunctions\QxToLower.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\QxToLower.cs">
+      <Link>ReadSession\StringFunctions\QxToLower.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxToUpper.cs">
-      <Link>QueryEngine\StringFunctions\QxToUpper.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\QxToUpper.cs">
+      <Link>ReadSession\StringFunctions\QxToUpper.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\StartsWith.cs">
-      <Link>QueryEngine\StringFunctions\StartsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\StartsWith.cs">
+      <Link>ReadSession\StringFunctions\StartsWith.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\StringFunctionsItem.cs">
-      <Link>QueryEngine\StringFunctions\StringFunctionsItem.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\StringFunctionsItem.cs">
+      <Link>ReadSession\StringFunctions\StringFunctionsItem.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\ToLower.cs">
-      <Link>QueryEngine\StringFunctions\ToLower.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\ToLower.cs">
+      <Link>ReadSession\StringFunctions\ToLower.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\ToUpper.cs">
-      <Link>QueryEngine\StringFunctions\ToUpper.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Where.cs">
-      <Link>QueryEngine\Where.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\ReadSession\StringFunctions\ToUpper.cs">
+      <Link>ReadSession\StringFunctions\ToUpper.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
@@ -202,8 +200,26 @@
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingInterfaces.cs">
       <Link>UnitOfWork\InsertsUsingInterfaces.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries.cs">
-      <Link>UnitOfWork\Queries.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Count.cs">
+      <Link>UnitOfWork\Queries\Count.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetById.cs">
+      <Link>UnitOfWork\Queries\GetById.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetByIdInterval.cs">
+      <Link>UnitOfWork\Queries\GetByIdInterval.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetByIds.cs">
+      <Link>UnitOfWork\Queries\GetByIds.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Query.cs">
+      <Link>UnitOfWork\Queries\Query.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\QueryAll.cs">
+      <Link>UnitOfWork\Queries\QueryAll.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Where.cs">
+      <Link>UnitOfWork\Queries\Where.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
       <Link>UnitOfWork\TransactionScopes.cs</Link>
@@ -233,7 +249,6 @@
       <Name>SisoDb.Testing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

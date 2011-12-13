@@ -104,20 +104,9 @@ namespace SisoDb.Sql2008
             return new Sql2008QueryGenerator(GetSqlStatements());
         }
 
-        public virtual IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class
-        {
-            return new GetCommandBuilder<T>(
-                new SortingParser(),
-                new IncludeParser());
-        }
-
-        public virtual IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class
-        {
-            return new QueryCommandBuilder<T>(
-                structureSchema,
-                new WhereParser(),
-                new SortingParser(),
-                new IncludeParser());
-        }
+    	public IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
+    	{
+    		return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
+    	}
     }
 }

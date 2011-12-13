@@ -11,33 +11,33 @@ namespace SisoDb.SqlCe4
     {
         public SqlCe4QueryGenerator(ISqlStatements sqlStatements) : base(sqlStatements) {}
 
-        protected override SqlQuery CreateSqlQuery(IQueryCommand queryCommand)
+		protected override SqlQuery CreateSqlQuery(IQuery query)
         {
-            var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
+			var sqlExpression = SqlExpressionBuilder.Process(query);
 
             var formatter = new SqlQueryFormatter
             {
-                Start = GenerateStartString(queryCommand, sqlExpression),
-                End = GenerateEndString(queryCommand, sqlExpression),
-                Take = GenerateTakeString(queryCommand),
+				Start = GenerateStartString(query, sqlExpression),
+				End = GenerateEndString(query, sqlExpression),
+				Take = GenerateTakeString(query),
                 IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
-                OrderByMembers = GenerateOrderByMembersString(queryCommand, sqlExpression),
-                IncludedRowIds = GenerateIncludedRowIdsString(sqlExpression), 
-                MainStructureTable = queryCommand.StructureSchema.GetStructureTableName(),
-                WhereAndSortingJoins = GenerateWhereAndSortingJoins(queryCommand, sqlExpression),
-                MatchingIncludesJoins = GenerateMatchingIncludesJoins(queryCommand, sqlExpression),
+				OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
+                IncludedRowIds = GenerateIncludedRowIdsString(sqlExpression),
+				MainStructureTable = query.StructureSchema.GetStructureTableName(),
+				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
+				MatchingIncludesJoins = GenerateMatchingIncludesJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
                 IncludesJoins = GenerateIncludesJoins(sqlExpression),
-                OrderBy = GenerateOrderByString(queryCommand, sqlExpression),
-                Paging = GeneratePagingString(queryCommand, sqlExpression)
+				OrderBy = GenerateOrderByString(query, sqlExpression),
+				Paging = GeneratePagingString(query, sqlExpression)
             };
 
             IDacParameter[] parameters;
 
-            if (queryCommand.HasPaging)
+			if (query.HasPaging)
             {
-                var offsetRows = (queryCommand.Paging.PageIndex * queryCommand.Paging.PageSize);
-                var takeRows = queryCommand.Paging.PageSize;
+				var offsetRows = (query.Paging.PageIndex * query.Paging.PageSize);
+				var takeRows = query.Paging.PageSize;
 
                 parameters = new List<IDacParameter>(sqlExpression.WhereCriteria.Parameters)
                 {
@@ -50,22 +50,22 @@ namespace SisoDb.SqlCe4
             
             return new SqlQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
         }
-        
-        protected override SqlQuery CreateSqlQueryReturningStructureIds(IQueryCommand queryCommand)
+
+		protected override SqlQuery CreateSqlQueryReturningStructureIds(IQuery query)
         {
-            var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
+			var sqlExpression = SqlExpressionBuilder.Process(query);
 
             var formatter = new SqlQueryFormatter
             {
-                MainStructureTable = queryCommand.StructureSchema.GetStructureTableName(),
-                WhereAndSortingJoins = GenerateWhereAndSortingJoins(queryCommand, sqlExpression),
+				MainStructureTable = query.StructureSchema.GetStructureTableName(),
+				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression)
             };
 
             return new SqlQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), sqlExpression.WhereCriteria.Parameters);
         }
 
-        protected override string GeneratePagingString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected override string GeneratePagingString(IQuery queryCommand, ISqlExpression sqlExpression)
         {
             return queryCommand.HasPaging
                 ? "offset @offsetRows rows fetch next @takeRows rows only"

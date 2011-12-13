@@ -15,7 +15,7 @@ namespace SisoDb.UnitTests.DbSchema
 
         protected override void OnFixtureInitialize()
         {
-            _structureSchema = StructureSchemaTestFactory.Stub<Class_53966417_B25D_49E1_966B_58754110781C>(
+            _structureSchema = StructureSchemaStubFactory.Stub<Class_53966417_B25D_49E1_966B_58754110781C>(
                 indexAccessorsPaths: new[] { "IndexableMember1", "IndexableMember2" });
         }
 

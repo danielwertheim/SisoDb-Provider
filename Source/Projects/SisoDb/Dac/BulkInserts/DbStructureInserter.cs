@@ -73,8 +73,8 @@ namespace SisoDb.Dac.BulkInserts
                 using (var bulkInserter = _dbClient.GetBulkCopy())
                 {
                     bulkInserter.BatchSize = indexesReader.RecordsAffected > MaxIndexesBatchSize
-                                                 ? MaxIndexesBatchSize
-                                                 : indexesReader.RecordsAffected;
+						? MaxIndexesBatchSize
+						: indexesReader.RecordsAffected;
                     bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
 
                     foreach (var field in indexesReader.StorageSchema.GetFieldsOrderedByIndex())

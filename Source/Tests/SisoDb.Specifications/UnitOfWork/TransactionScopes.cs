@@ -5,7 +5,8 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace TransactionScopes
+#if Sql2008Provider
+	class TransactionScopes
     {
         [Subject(typeof(IUnitOfWork), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_commiting_ts : SpecificationBase
@@ -42,9 +43,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.CreateQueryEngine())
+                using (var qe = TestContext.Database.CreateReadSession())
                 {
-                    qe.Count<IdentityItem>().ShouldEqual(0);
+					qe.Query<IdentityItem>().Count().ShouldEqual(0);
                 }
             };
         }
@@ -84,11 +85,12 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.CreateQueryEngine())
+                using (var qe = TestContext.Database.CreateReadSession())
                 {
-                    qe.Count<IdentityItem>().ShouldEqual(6);
+					qe.Query<IdentityItem>().Count().ShouldEqual(6);
                 }
             };
         }
     }
+#endif
 }

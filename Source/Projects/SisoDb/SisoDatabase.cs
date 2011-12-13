@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using EnsureThat;
 using PineCone.Structures.Schemas;
+using PineCone.Structures.Schemas.Builders;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Providers;
@@ -13,16 +14,16 @@ namespace SisoDb
     public abstract class SisoDatabase : ISisoDatabase
     {
         protected readonly object DbOperationsLock;
-
-        protected readonly ISisoProviderFactory ProviderFactory;
         protected readonly IDbSchemaManager DbSchemaManager;
-
-        private readonly ISisoConnectionInfo _connectionInfo;
-        private IStructureSchemas _structureSchemas;
+    	protected readonly IServerClient ServerClient;
+    	protected readonly IDbClient DbClientNonTrans; //TODO: DISPOSE
+		
+		private readonly ISisoConnectionInfo _connectionInfo;
+		private readonly ISisoProviderFactory _providerFactory;
+		private IStructureSchemas _structureSchemas;
         private IStructureBuilders _structureBuilders;
         private IJsonSerializer _serializer;
-        private readonly IServerClient _serverClient;
-
+        
         public string Name
         {
             get { return _connectionInfo.DbName; }
@@ -33,7 +34,12 @@ namespace SisoDb
             get { return _connectionInfo; }
         }
 
-        public IStructureSchemas StructureSchemas
+    	public ISisoProviderFactory ProviderFactory
+    	{
+    		get { return _providerFactory; }
+    	}
+
+    	public IStructureSchemas StructureSchemas
         {
             get { return _structureSchemas; }
             set
@@ -72,13 +78,21 @@ namespace SisoDb
             DbOperationsLock = new object();
 
             _connectionInfo = connectionInfo;
-            ProviderFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
-            StructureSchemas = SisoEnvironment.Resources.ResolveStructureSchemas();
-            StructureBuilders = SisoEnvironment.Resources.ResolveStructureBuilders();
-            Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+			_providerFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
+			
+			DbClientNonTrans = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo);
+			DbSchemaManager = ProviderFactory.GetDbSchemaManager();
+			ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
 
-            DbSchemaManager = ProviderFactory.GetDbSchemaManager();
-            _serverClient = ProviderFactory.GetServerClient(ConnectionInfo);
+			StructureBuilders = new StructureBuilders(new DbIdentityStructureIdGenerator(DbClientNonTrans));
+            StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
+            Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+        }
+
+		~SisoDatabase()
+        {
+			if(DbClientNonTrans != null)
+				DbClientNonTrans.Dispose();
         }
 
         public virtual void EnsureNewDatabase()
@@ -86,7 +100,7 @@ namespace SisoDb
             lock (DbOperationsLock)
             {
                 DbSchemaManager.ClearCache();
-                _serverClient.EnsureNewDb();
+                ServerClient.EnsureNewDb();
             }
         }
 
@@ -95,7 +109,7 @@ namespace SisoDb
             lock (DbOperationsLock)
             {
                 DbSchemaManager.ClearCache();
-                _serverClient.CreateDbIfItDoesNotExist();
+                ServerClient.CreateDbIfItDoesNotExist();
             }
         }
 
@@ -104,7 +118,7 @@ namespace SisoDb
             lock (DbOperationsLock)
             {
                 DbSchemaManager.ClearCache();
-                _serverClient.InitializeExistingDb();
+                ServerClient.InitializeExistingDb();
             }
         }
 
@@ -113,7 +127,7 @@ namespace SisoDb
             lock (DbOperationsLock)
             {
                 DbSchemaManager.ClearCache();
-                _serverClient.DropDbIfItExists();
+                ServerClient.DropDbIfItExists();
             }
         }
 
@@ -121,7 +135,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                return _serverClient.DbExists();
+                return ServerClient.DbExists();
             }
         }
 
@@ -159,23 +173,6 @@ namespace SisoDb
             }
         }
 
-        public virtual void UpdateStructureSet<TOld, TNew>(Func<TOld, TNew, StructureSetUpdaterStatuses> onProcess)
-            where TOld : class
-            where TNew : class
-        {
-            lock (DbOperationsLock)
-            {
-                var structureSchemaOld = _structureSchemas.GetSchema(TypeFor<TOld>.Type);
-                _structureSchemas.RemoveSchema(TypeFor<TOld>.Type);
-
-                var structureSchemaNew = _structureSchemas.GetSchema(TypeFor<TNew>.Type);
-
-                var updater = new StructureSetUpdater<TOld, TNew>(_connectionInfo, structureSchemaOld,
-                                                                  structureSchemaNew, StructureBuilders);
-                updater.Process(onProcess);
-            }
-        }
-
         public virtual void UpsertStructureSet<T>() where T : class
         {
             UpsertStructureSet(TypeFor<T>.Type);
@@ -198,20 +195,20 @@ namespace SisoDb
             }
         }
 
-        public abstract IQueryEngine CreateQueryEngine();
+        public abstract IReadSession CreateReadSession();
 
         public abstract IUnitOfWork CreateUnitOfWork();
 
         [DebuggerStepThrough]
-        public DbQueryExtensionPoint ReadOnce()
+        public DbReadOnceOp ReadOnce()
         {
-            return new DbQueryExtensionPoint(this);
+            return new DbReadOnceOp(this);
         }
 
         [DebuggerStepThrough]
-        public DbUnitOfWorkExtensionPoint WriteOnce()
+        public DbWriteOnceOp WriteOnce()
         {
-            return new DbUnitOfWorkExtensionPoint(this);
+            return new DbWriteOnceOp(this);
         }
 
         [DebuggerStepThrough]
@@ -224,9 +221,9 @@ namespace SisoDb
         }
 
         [DebuggerStepThrough]
-        public void WithQueryEngine(Action<IQueryEngine> consumer)
+        public void WithQueryEngine(Action<IReadSession> consumer)
         {
-            using (var qe = CreateQueryEngine())
+            using (var qe = CreateReadSession())
             {
                 consumer.Invoke(qe);
             }

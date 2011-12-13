@@ -9,7 +9,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database
 {
-    namespace UpsertStructureSet
+    class UpsertStructureSet
     {
         [Subject(typeof(ISisoDatabase), "Upsert structure set")]
         public class when_using_generics_and_no_set_exists : SpecificationBase
@@ -155,7 +155,7 @@ namespace SisoDb.Specifications.Database
             private static IStructureSchema _structureSchema;
         }
 
-        namespace OrgModel
+        class OrgModel
         {
             public class MyClass
             {
@@ -167,7 +167,7 @@ namespace SisoDb.Specifications.Database
             }
         }
 
-        namespace NewIdTypeModel
+        class NewIdTypeModel
         {
             public class MyClass
             {
@@ -179,7 +179,7 @@ namespace SisoDb.Specifications.Database
             }
         }
 
-        namespace DroppedColumnModel
+		class DroppedColumnModel
         {
             public class MyClass
             {

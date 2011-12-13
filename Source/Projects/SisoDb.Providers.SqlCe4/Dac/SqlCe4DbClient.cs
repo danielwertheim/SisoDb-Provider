@@ -166,30 +166,11 @@ namespace SisoDb.SqlCe4.Dac
             return nextId;
         }
 
-        public override IEnumerable<string> GetJson(IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("GetAllById").Inject(structureSchema.GetStructureTableName());
-
-            using (var cmd = CreateCommand(sql))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetString(0);
-                    }
-                    reader.Close();
-                }
-            }
-        }
-
         public override string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("GetById").Inject(structureSchema.GetStructureTableName());
+            var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
 
             return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
@@ -197,7 +178,7 @@ namespace SisoDb.SqlCe4.Dac
         public override IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
-            var sqlFormat = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName(), "{0}");
+            var sqlFormat = SqlStatements.GetSql("GetJsonByIds").Inject(structureSchema.GetStructureTableName(), "{0}");
 
             using (var cmd = CreateCommand(string.Empty))
             {

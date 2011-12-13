@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using EnsureThat;
+using NCore.Collections;
 using SisoDb.Querying.Lambdas.Nodes;
 
 namespace SisoDb.Querying.Lambdas
@@ -9,21 +9,28 @@ namespace SisoDb.Querying.Lambdas
     [Serializable]
     public class ParsedLambda : IParsedLambda
     {
-        public ReadOnlyCollection<INode> Nodes { get; private set; }
+        public INode[] Nodes { get; private set; }
+
+		public static IParsedLambda Empty()
+		{
+			return new ParsedLambda();
+		}
+
+    	private ParsedLambda()
+    	{
+    		Nodes = new INode[]{};
+    	}
 
         public ParsedLambda(INode[] nodes)
         {
             Ensure.That(nodes, "nodes").HasItems();
 
-            Nodes = new ReadOnlyCollection<INode>(nodes.ToList());
+        	Nodes = nodes;
         }
 
         public IParsedLambda MergeAsNew(IParsedLambda other)
         {
-            var thisNodes = Nodes.ToList();
-            var otherNodes = other.Nodes;
-
-            return new ParsedLambda(thisNodes.Union(otherNodes).ToArray()); //TODO: Union or Merge?
+            return new ParsedLambda(Nodes.Union(other.Nodes).ToArray());
         }
     }
 }

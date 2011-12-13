@@ -3,7 +3,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database
 {
-    namespace InitializeExisting
+    class InitializeExisting
     {
         [Subject(typeof (ISisoDatabase), "Initialize existing")]
         public class when_blank_database_exists : SpecificationBase

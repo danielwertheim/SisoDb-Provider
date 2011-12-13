@@ -18,7 +18,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             var ex = Assert.Throws<SisoDbException>(
                 () => parser.Parse(expression));
 
-            Assert.AreEqual(ExceptionMessages.LambdaParser_NoMemberExpressions, ex.Message);
+            Assert.AreEqual(ExceptionMessages.WhereExpressionParser_NoMemberExpressions, ex.Message);
         }
 
         [Test]

@@ -30,7 +30,6 @@ namespace SisoDb.Dac
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
-        IEnumerable<string> GetJson(IStructureSchema structureSchema);
         string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);

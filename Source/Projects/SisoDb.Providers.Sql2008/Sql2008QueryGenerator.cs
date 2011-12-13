@@ -13,33 +13,33 @@ namespace SisoDb.Sql2008
     {
         public Sql2008QueryGenerator(ISqlStatements sqlStatements) : base(sqlStatements) {}
 
-        protected override SqlQuery CreateSqlQuery(IQueryCommand queryCommand)
+		protected override SqlQuery CreateSqlQuery(IQuery query)
         {
-            var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
+			var sqlExpression = SqlExpressionBuilder.Process(query);
 
             var formatter = new SqlQueryFormatter
             {
-                Start = GenerateStartString(queryCommand, sqlExpression),
-                End = GenerateEndString(queryCommand, sqlExpression),
-                Take = GenerateTakeString(queryCommand),
+				Start = GenerateStartString(query, sqlExpression),
+				End = GenerateEndString(query, sqlExpression),
+				Take = GenerateTakeString(query),
                 IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
-                OrderByMembers = GenerateOrderByMembersString(queryCommand, sqlExpression),
+				OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
                 IncludedRowIds = GenerateIncludedRowIdsString(sqlExpression),
-                MainStructureTable = queryCommand.StructureSchema.GetStructureTableName(),
-                WhereAndSortingJoins = GenerateWhereAndSortingJoins(queryCommand, sqlExpression),
-                MatchingIncludesJoins = GenerateMatchingIncludesJoins(queryCommand, sqlExpression),
+				MainStructureTable = query.StructureSchema.GetStructureTableName(),
+				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
+				MatchingIncludesJoins = GenerateMatchingIncludesJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
                 IncludesJoins = GenerateIncludesJoins(sqlExpression),
-                OrderBy = GenerateOrderByString(queryCommand, sqlExpression),
-                Paging = GeneratePagingString(queryCommand, sqlExpression).PrependWith(", "),
+				OrderBy = GenerateOrderByString(query, sqlExpression),
+				Paging = GeneratePagingString(query, sqlExpression).PrependWith(", "),
             };
 
             IDacParameter[] parameters;
 
-            if (queryCommand.HasPaging)
+			if (query.HasPaging)
             {
-                var takeFromRowNum = (queryCommand.Paging.PageIndex * queryCommand.Paging.PageSize) + 1;
-                var takeToRowNum = (takeFromRowNum + queryCommand.Paging.PageSize) - 1;
+				var takeFromRowNum = (query.Paging.PageIndex * query.Paging.PageSize) + 1;
+				var takeToRowNum = (takeFromRowNum + query.Paging.PageSize) - 1;
 
                 parameters = new List<IDacParameter>(sqlExpression.WhereCriteria.Parameters)
                 {
@@ -53,37 +53,37 @@ namespace SisoDb.Sql2008
             return new SqlQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
         }
 
-        protected override SqlQuery CreateSqlQueryReturningStructureIds(IQueryCommand queryCommand)
+		protected override SqlQuery CreateSqlQueryReturningStructureIds(IQuery query)
         {
-            var sqlExpression = SqlExpressionBuilder.Process(queryCommand);
+			var sqlExpression = SqlExpressionBuilder.Process(query);
 
             var formatter = new SqlQueryFormatter
             {
-                MainStructureTable = queryCommand.StructureSchema.GetStructureTableName(),
-                WhereAndSortingJoins = GenerateWhereAndSortingJoins(queryCommand, sqlExpression),
+				MainStructureTable = query.StructureSchema.GetStructureTableName(),
+				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression)
             };
 
             return new SqlQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), sqlExpression.WhereCriteria.Parameters);
         }
 
-        protected override string GenerateOrderByMembersString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected override string GenerateOrderByMembersString(IQuery query, ISqlExpression sqlExpression)
         {
-            return queryCommand.HasPaging
+			return query.HasPaging
                 ? string.Empty
-                : base.GenerateOrderByMembersString(queryCommand, sqlExpression);
+				: base.GenerateOrderByMembersString(query, sqlExpression);
         }
 
-        protected override string GenerateOrderByString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected override string GenerateOrderByString(IQuery query, ISqlExpression sqlExpression)
         {
-            return queryCommand.HasPaging
+			return query.HasPaging
                 ? string.Empty
-                : base.GenerateOrderByString(queryCommand, sqlExpression);
+				: base.GenerateOrderByString(query, sqlExpression);
         }
 
-        protected override string GeneratePagingString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected override string GeneratePagingString(IQuery query, ISqlExpression sqlExpression)
         {
-            if(!queryCommand.HasPaging)
+			if (!query.HasPaging)
                 return string.Empty;
 
             var s = string.Join(", ", sqlExpression.SortingMembers.Select(sorting => string.Format("min(mem{0}.[{1}]) {2}", sorting.Index, sorting.IndexStorageColumnName, sorting.Direction)));
@@ -91,9 +91,9 @@ namespace SisoDb.Sql2008
             return string.Format("row_number() over (order by {0}) RowNum", s);
         }
 
-        protected override string GenerateEndString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected override string GenerateEndString(IQuery query, ISqlExpression sqlExpression)
         {
-            return queryCommand.HasPaging
+			return query.HasPaging
                 ? "where rs.RowNum between @pagingFrom and @pagingTo"
                 : string.Empty;
         }

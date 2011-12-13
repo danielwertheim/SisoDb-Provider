@@ -6,14 +6,20 @@ namespace SisoDb.Sql2008
         {
         }
 
-        public override IQueryEngine CreateQueryEngine()
+		public override IReadSession CreateReadSession()
         {
-            return new Sql2008QueryEngine(this, DbSchemaManager);
+            return new Sql2008ReadSession(
+				this,
+				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo),
+				DbSchemaManager);
         }
 
         public override IUnitOfWork CreateUnitOfWork()
         {
-            return new Sql2008UnitOfWork(this, DbSchemaManager);
+            return new Sql2008UnitOfWork(
+				this,
+				ProviderFactory.GetTransactionalDbClient(ConnectionInfo),
+				DbSchemaManager);
         }
     }
 }

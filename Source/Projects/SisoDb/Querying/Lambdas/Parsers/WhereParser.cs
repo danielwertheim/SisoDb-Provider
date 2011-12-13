@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using NCore;
 using NCore.Expressions;
 using NCore.Reflections;
-using SisoDb.Core;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
@@ -17,7 +16,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
     {
         private static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
         private readonly object _lock;
-        private readonly IExpressionEvaluator _expressionEvaluator;
         private readonly Stack<MemberExpression> _virtualPrefixMembers;
         private NodesContainer _nodesContainer;
 
@@ -40,14 +38,13 @@ namespace SisoDb.Querying.Lambdas.Parsers
         public WhereParser()
         {
             _lock = new object();
-            _expressionEvaluator = new LambdaExpressionEvaluator();
             _virtualPrefixMembers = new Stack<MemberExpression>();
         }
 
         public IParsedLambda Parse(LambdaExpression e)
         {
             if (e.Body.NodeType == ExpressionType.MemberAccess)
-                throw new SisoDbException(ExceptionMessages.LambdaParser_NoMemberExpressions);
+                throw new SisoDbException(ExceptionMessages.WhereExpressionParser_NoMemberExpressions);
 
             lock (_lock)
             {
@@ -130,7 +127,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             try
             {
-                var value = _expressionEvaluator.Evaluate(e);
+                var value = e.Evaluate();
 
                 var constantExpression = Expression.Constant(value);
 
@@ -184,7 +181,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             try
             {
-                var value = _expressionEvaluator.Evaluate(e);
+                var value = e.Evaluate();
                 var constant = Expression.Constant(value);
                 Visit(constant);
             }
@@ -208,7 +205,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 case "EndsWith":
                     var useSuffix = methodName == "StartsWith";
                     var usePrefix = methodName == "EndsWith";
-                    var argValue = _expressionEvaluator.Evaluate((ConstantExpression)e.Arguments[0]).ToStringOrNull();
+                    var argValue = ((ConstantExpression)e.Arguments[0]).Evaluate().ToStringOrNull();
                     var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
 
                     Visit(member);
@@ -241,7 +238,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 case "QxContains":
                     var useSuffix = methodName != "QxLike" && (methodName == "QxStartsWith" || methodName == "QxContains");
                     var usePrefix = methodName != "QxLike" && (methodName == "QxEndsWith" || methodName == "QxContains");
-                    var argValue = _expressionEvaluator.Evaluate((ConstantExpression)e.Arguments[1]).ToStringOrNull();
+                    var argValue = ((ConstantExpression)e.Arguments[1]).Evaluate().ToStringOrNull();
                     var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
                     var constant = Expression.Constant(newValue);
 

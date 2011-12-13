@@ -25,6 +25,22 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
         }
 
+		[Test]
+		public override void GenerateQuery_WithChainedWheres_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithChainedWheres_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where ((mem0.[IntegerValue] >= @p0) and (mem0.[IntegerValue] <= @p1)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual(40, sqlQuery.Parameters[0].Value);
+
+			Assert.AreEqual("@p1", sqlQuery.Parameters[1].Name);
+			Assert.AreEqual(42, sqlQuery.Parameters[1].Value);
+		}
+
         [Test]
         public override void GenerateQuery_WithSorting_GeneratesCorrectQuery()
         {

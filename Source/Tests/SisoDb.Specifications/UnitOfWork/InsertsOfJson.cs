@@ -8,7 +8,7 @@ using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace InsertsOfJson
+	class InsertsOfJson
     {
         [Subject(typeof(IUnitOfWork), "Insert (json)")]
         public class when_json_is_inserted : SpecificationBase
@@ -35,8 +35,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 string json;
 
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    json = qe.GetAllAsJson<JsonItem>().Single();
+                using (var qe = TestContext.Database.CreateReadSession())
+                    json = qe.Query<JsonItem>().SingleAsJson();
 
                 var jsonWithoutStructureId = "{" + json.Remove(0, 50);
                 jsonWithoutStructureId.ShouldEqual(_json);
@@ -46,9 +46,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var qe = TestContext.Database.CreateQueryEngine())
+                using (var qe = TestContext.Database.CreateReadSession())
                 {
-                    structure = qe.GetAll<JsonItem>().Single();
+                    structure = qe.Query<JsonItem>().Single();
                 }
 
                 structure.String1.ShouldEqual("1");
@@ -90,8 +90,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
                 
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    structure = qe.GetAll<JsonItem>().Single();
+                using (var qe = TestContext.Database.CreateReadSession())
+                    structure = qe.Query<JsonItem>().Single();
 
                 structure.StructureId.ShouldNotEqual(Guid.Parse(_idString));
             };
@@ -125,8 +125,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    structure = qe.GetAll<JsonItem>().Single();
+                using (var qe = TestContext.Database.CreateReadSession())
+                    structure = qe.Query<JsonItem>().Single();
 
                 structure.String1.ShouldNotEqual("1");
             };
