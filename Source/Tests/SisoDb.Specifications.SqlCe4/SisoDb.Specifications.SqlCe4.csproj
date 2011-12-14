@@ -76,9 +76,6 @@
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\Database\UpdateStructureSet.cs">
-      <Link>Database\UpdateStructureSet.cs</Link>
-    </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
       <Link>Database\UpsertStructureSet.cs</Link>
     </Compile>
@@ -225,6 +222,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
       <Link>UnitOfWork\TransactionScopes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\UpdateMany.cs">
+      <Link>UnitOfWork\UpdateMany.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Updates.cs">
       <Link>UnitOfWork\Updates.cs</Link>

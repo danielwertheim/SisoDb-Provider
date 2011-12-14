@@ -503,6 +503,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UpdateMany&lt;TOld, TNew&gt; should not be used for same types. Use UpdateMany&lt;T&gt; instead..
+        /// </summary>
+        public static string UnitOfWork_UpdateMany_TOld_TNew_SameType {
+            get {
+                return ResourceManager.GetString("UnitOfWork_UpdateMany_TOld_TNew_SameType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true).
         /// </summary>
         public static string WhereExpressionParser_NoMemberExpressions {

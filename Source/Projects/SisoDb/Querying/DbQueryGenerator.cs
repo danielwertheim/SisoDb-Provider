@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
 using NCore.Collections;
+using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
@@ -65,21 +66,27 @@ namespace SisoDb.Querying
 		protected abstract string GeneratePagingString(IQuery query, ISqlExpression sqlExpression);
 
 		protected virtual string GenerateOrderByMembersString(IQuery queryCommand, ISqlExpression sqlExpression)
-        {
-            var sortings = sqlExpression.SortingMembers.ToList();
+		{
+			var sortings = sqlExpression.SortingMembers.Select(
+				sorting => (sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name)
+					? string.Format("min(mem{0}.[{1}]) mem{0}", sorting.Index, sorting.IndexStorageColumnName)
+					: string.Empty).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
-            return sortings.Count == 0
+            return sortings.Length == 0
                 ? string.Empty
-                : string.Join(", ", sortings.Select(sorting => string.Format("min(mem{0}.[{1}]) mem{0}", sorting.Index, sorting.IndexStorageColumnName)));
+				: string.Join(", ", sortings);
         }
 
 		protected virtual string GenerateOrderByString(IQuery query, ISqlExpression sqlExpression)
-        {
-            var sortings = sqlExpression.SortingMembers.ToList();
+		{
+			var sortings = sqlExpression.SortingMembers.Select(
+				sorting => (sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name)
+				           	? string.Format("mem{0} {1}", sorting.Index, sorting.Direction)
+							: string.Format("s.[{0}] {1}", IndexStorageSchema.Fields.StructureId.Name, sorting.Direction)).ToArray();
 
-            return sortings.Count == 0
+            return sortings.Length == 0
                 ? string.Empty
-                : string.Join(", ", sortings.Select(sorting => string.Format("mem{0} {1}", sorting.Index, sorting.Direction)));
+                : string.Join(", ", sortings);
         }
 
 		protected virtual string GenerateWhereAndSortingJoins(IQuery query, ISqlExpression sqlExpression)

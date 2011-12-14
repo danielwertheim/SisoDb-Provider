@@ -11,12 +11,12 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-    public abstract class SisoDatabase : ISisoDatabase
+    public abstract class SisoDatabase : ISisoDatabase //TODO: IDisposable
     {
         protected readonly object DbOperationsLock;
         protected readonly IDbSchemaManager DbSchemaManager;
     	protected readonly IServerClient ServerClient;
-    	protected readonly IDbClient DbClientNonTrans; //TODO: DISPOSE
+    	protected readonly IDbClient DbClientNonTrans;
 		
 		private readonly ISisoConnectionInfo _connectionInfo;
 		private readonly ISisoProviderFactory _providerFactory;
@@ -89,11 +89,11 @@ namespace SisoDb
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
         }
 
-		~SisoDatabase()
-        {
-			if(DbClientNonTrans != null)
-				DbClientNonTrans.Dispose();
-        }
+		//~SisoDatabase()
+		//{
+		//    if(DbClientNonTrans != null)
+		//        DbClientNonTrans.Dispose();
+		//}
 
         public virtual void EnsureNewDatabase()
         {

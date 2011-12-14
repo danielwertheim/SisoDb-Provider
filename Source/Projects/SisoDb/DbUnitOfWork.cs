@@ -127,6 +127,8 @@ namespace SisoDb
 						continue;
 
 					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo, structureSchema);
+					deleteIdFrom = deleteIdTo;
+
 					bulkInserter.Insert(structureSchema, structureBuilder.CreateStructures(keepQueue, structureSchema));
 					keepQueue.Clear();
 				}
@@ -149,7 +151,7 @@ namespace SisoDb
 			var oldType = typeof(TOld);
 			var newType = typeof(TNew);
 			if(oldType.Equals(newType))
-				throw new SisoDbException("UpdateMany<TOld, TNew> should not be used for same types. Use UpdateMany<T> instead.");
+				throw new SisoDbException(ExceptionMessages.UnitOfWork_UpdateMany_TOld_TNew_SameType);
 			
 			var newStructureSchema = Db.StructureSchemas.GetSchema<TNew>();
 			UpsertStructureSet(newStructureSchema);

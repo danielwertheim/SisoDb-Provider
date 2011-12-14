@@ -7,6 +7,7 @@ using ErikEJ.SqlCe;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
@@ -15,6 +16,8 @@ namespace SisoDb.SqlCe4.Dac
 {
     public class SqlCe4DbClient : DbClientBase
     {
+    	private const int MaxBatchedIdsSize = 20;
+
         public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
             : base(connectionInfo, transactional)
         {
@@ -94,11 +97,12 @@ namespace SisoDb.SqlCe4.Dac
 
             using (var cmd = CreateCommand(string.Empty))
             {
-                foreach (var batchedIds in ToBatchedIds(ids))
+                foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
-                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
+					cmd.Parameters.Clear();
+					cmd.AddParameters(batchedIds);
 
-                    cmd.AddParameters(batchedIds);
+                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
                     cmd.ExecuteNonQuery();
                 }
@@ -182,11 +186,12 @@ namespace SisoDb.SqlCe4.Dac
 
             using (var cmd = CreateCommand(string.Empty))
             {
-                foreach (var batchedIds in ToBatchedIds(ids))
+				foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
-                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
-
+                    cmd.Parameters.Clear();
                     cmd.AddParameters(batchedIds);
+
+					var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
 
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
@@ -217,28 +222,6 @@ namespace SisoDb.SqlCe4.Dac
                     }
                     reader.Close();
                 }
-            }
-        }
-
-        private static IEnumerable<IDacParameter[]> ToBatchedIds(IEnumerable<IStructureId> ids)
-        {
-            var batch = new List<IDacParameter>();
-
-            foreach (var id in ids)
-            {
-                batch.Add(new DacParameter(string.Concat("id", batch.Count), id.Value));
-
-                if (batch.Count == 10)
-                {
-                    yield return batch.ToArray();
-                    batch.Clear();
-                }
-            }
-
-            if (batch.Count > 0)
-            {
-                yield return batch.ToArray();
-                batch.Clear();
             }
         }
     }

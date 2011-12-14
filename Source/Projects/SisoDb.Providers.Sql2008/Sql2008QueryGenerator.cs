@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NCore;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
@@ -86,7 +87,10 @@ namespace SisoDb.Sql2008
 			if (!query.HasPaging)
                 return string.Empty;
 
-            var s = string.Join(", ", sqlExpression.SortingMembers.Select(sorting => string.Format("min(mem{0}.[{1}]) {2}", sorting.Index, sorting.IndexStorageColumnName, sorting.Direction)));
+            var s = string.Join(", ", sqlExpression.SortingMembers.Select(
+				sorting => sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name 
+					? string.Format("min(mem{0}.[{1}]) {2}", sorting.Index, sorting.IndexStorageColumnName, sorting.Direction)
+					: string.Format("s.[{0}] {1}", IndexStorageSchema.Fields.StructureId.Name, sorting.Direction)));
             
             return string.Format("row_number() over (order by {0}) RowNum", s);
         }

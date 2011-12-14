@@ -6,6 +6,7 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
@@ -14,6 +15,8 @@ namespace SisoDb.Sql2008.Dac
 {
     public class Sql2008DbClient : DbClientBase
     {
+		private const int MaxBatchedIdsSize = 100;
+
         public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
             : base(connectionInfo, transactional)
         {
@@ -72,8 +75,12 @@ namespace SisoDb.Sql2008.Dac
 
             using (var cmd = CreateCommand(sql))
             {
-                cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, ids));
-                cmd.ExecuteNonQuery();
+            	foreach (var idBatch in ids.Batch(MaxBatchedIdsSize))
+            	{
+					cmd.Parameters.Clear();
+					cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
+					cmd.ExecuteNonQuery();	
+            	}
             }
         }
 
@@ -159,16 +166,20 @@ namespace SisoDb.Sql2008.Dac
 
             using (var cmd = CreateCommand(sql))
             {
-                cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, ids));
+				foreach (var idBatch in ids.Batch(MaxBatchedIdsSize))
+				{
+					cmd.Parameters.Clear();
+					cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
 
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetString(0);
-                    }
-                    reader.Close();
-                }
+					using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+					{
+						while (reader.Read())
+						{
+							yield return reader.GetString(0);
+						}
+						reader.Close();
+					}
+				}
             }
         }
 

@@ -5,11 +5,11 @@ using NCore;
 using SisoDb.Resources;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.Database
+namespace SisoDb.Specifications.UnitOfWork
 {
-	class UpdateStructureSet
+	class UpdateMany
 	{
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
+		[Subject(typeof(IUnitOfWork), "Update many")]
 		public class when_stored_as_person_and_transformed_to_sales_person_with_more_fine_grained_properties : SpecificationBase
 		{
 			Establish context = () =>
@@ -73,7 +73,7 @@ namespace SisoDb.Specifications.Database
 			private static Guid _personId;
 		}
 
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
+		[Subject(typeof(IUnitOfWork), "Update many")]
 		public class when_three_structures_with_identities_exists_and_trash_is_made_on_second : SpecificationBase
 		{
 			Establish context = () =>
@@ -147,7 +147,7 @@ namespace SisoDb.Specifications.Database
 			private static int _orgItem1Id, _orgItem2Id, _orgItem3Id;
 		}
 
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
+		[Subject(typeof(IUnitOfWork), "Update many")]
 		public class when_three_structures_with_guids_exists_and_trash_is_made_on_second : SpecificationBase
 		{
 			Establish context = () =>
@@ -220,7 +220,7 @@ namespace SisoDb.Specifications.Database
 			private static Guid _orgItem1Id, _orgItem2Id, _orgItem3Id;
 		}
 
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
+		[Subject(typeof(IUnitOfWork), "Update many")]
 		public class when_two_structures_exists_and_abort_is_made_on_last : SpecificationBase
 		{
 			Establish context = () =>
@@ -283,8 +283,8 @@ namespace SisoDb.Specifications.Database
 			private static Guid _orgItem1Id, _orgItem2Id;
 		}
 
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
-		public class when_the_second_of_two_new_structures_does_not_get_an_identity_id : SpecificationBase
+		[Subject(typeof(IUnitOfWork), "Update many")]
+		public class when_the_second_of_two_new_structures_does_not_get_a_identity_id : SpecificationBase
 		{
 			Establish context = () =>
 			{
@@ -351,8 +351,8 @@ namespace SisoDb.Specifications.Database
 			private static int _orgItem1Id, _orgItem2Id;
 		}
 
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
-		public class when_the_second_of_two_new_structures_does_not_get_an_guid_id : SpecificationBase
+		[Subject(typeof(IUnitOfWork), "Update many")]
+		public class when_the_second_of_two_new_structures_does_not_get_a_guid_id : SpecificationBase
 		{
 			Establish context = () =>
 			{
@@ -420,8 +420,8 @@ namespace SisoDb.Specifications.Database
 			private static Guid _orgItem1Id, _orgItem2Id;
 		}
 
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
-		public class when_the_second_of_two_new_structures_does_get_an_new_identity_id : SpecificationBase
+		[Subject(typeof(IUnitOfWork), "Update many")]
+		public class when_the_second_of_two_new_structures_does_get_a_new_identity_id : SpecificationBase
 		{
 			Establish context = () =>
 			{
@@ -491,8 +491,8 @@ namespace SisoDb.Specifications.Database
 			private static int _newItem2Id;
 		}
 
-		[Subject(typeof(ISisoDatabase), "Update structure set")]
-		public class when_the_second_of_two_new_structures_does_get_an_new_guid_id : SpecificationBase
+		[Subject(typeof(IUnitOfWork), "Update many")]
+		public class when_the_second_of_two_new_structures_does_get_a_new_guid_id : SpecificationBase
 		{
 			Establish context = () =>
 			{
