@@ -1,6 +1,4 @@
 using System;
-using Moq;
-using PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;

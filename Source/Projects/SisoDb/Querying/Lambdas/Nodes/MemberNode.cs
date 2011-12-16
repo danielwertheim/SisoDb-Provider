@@ -3,6 +3,12 @@ using EnsureThat;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
+	[Serializable]
+	public class NullableMemberNode : MemberNode
+	{
+		public NullableMemberNode(string memberPath, Type memberType) : base(memberPath, memberType) {}
+	}
+
     [Serializable]
     public class MemberNode : INode
     {
@@ -22,16 +28,6 @@ namespace SisoDb.Querying.Lambdas.Nodes
         public override string ToString()
         {
             return Path;
-        }
-
-        public ToLowerMemberNode AsToLowerNode()
-        {
-            return new ToLowerMemberNode(Path, MemberType);
-        }
-
-        public ToUpperMemberNode AsToUpperNode()
-        {
-            return new ToUpperMemberNode(Path, MemberType);
         }
     }
 }

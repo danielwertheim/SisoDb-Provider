@@ -20,6 +20,76 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 			return generator.GenerateQuery(queryCommand);
 		}
 
+		public abstract void GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.Bool1));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1 == null));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1 != null));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.HasValue));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => !i.NullableInt1.HasValue));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1 == 42));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.Value == 42));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
 		public abstract void GenerateQuery_WithChainedWheres_GeneratesCorrectQuery();
 
 		protected SqlQuery On_GenerateQuery_WithChainedWheres_GeneratesCorrectQuery()
@@ -143,7 +213,11 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 			public int Int2 { get; set; }
 
+			public bool Bool1 { get; set; }
+
 			public string String1 { get; set; }
+
+			public int? NullableInt1 { get; set; }
 		}
 	}
 }

@@ -1,8 +1,12 @@
 ﻿using System.Linq;
+using System.Linq.Expressions;
 using EnsureThat;
+using SisoDb.Core;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
+using NCore.Reflections;
+using SisoDb.Querying.Lambdas.Operators;
 
 namespace SisoDb.Querying.Sql
 {
@@ -49,32 +53,45 @@ namespace SisoDb.Querying.Sql
         {
             var builder = new WhereCriteriaBuilder();
 
-            foreach (var node in wheresLambda.Nodes)
-            {
-                if (node is MemberNode)
-                {
-                    var memNode = (MemberNode) node;
+        	for (int i = 0; i < wheresLambda.Nodes.Length; i++)
+        	{
+        		var node = wheresLambda.Nodes[i];
+        		if (node is MemberNode)
+        		{
+        			var memNode = (MemberNode) node;
+					var memberIndex = expression.GetExistingOrNewMemberIndexFor(memNode.Path);
+					if (!expression.ContainsWhereMemberFor(memNode.Path))
+						expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex));
 
-                    var memberIndex = expression.GetExistingOrNewMemberIndexFor(memNode.Path);
+        			if (memNode.MemberType.IsAnyBoolType())
+        			{
+        				var leftNode = wheresLambda.Nodes.PeekLeft(i);
+						var rightNode = wheresLambda.Nodes.PeekRight(i);
 
-                    if (!expression.ContainsWhereMemberFor(memNode.Path))
-                        expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex));
-                    
-                    builder.AddMember(memNode, memberIndex);
-                }
-                else if (node is OperatorNode)
-                    builder.AddOp((OperatorNode)node);
-                else if (node is ValueNode)
-                    builder.AddValue((ValueNode)node);
-                else if (node is NullNode)
-                    builder.AddNullValue((NullNode)node);
-                else
-                    builder.Sql.Append(node);
+						if(!(leftNode is OperatorNode) && !(rightNode is OperatorNode))
+						{
+							builder.AddMember(memNode, memberIndex);
+							builder.AddOp(new OperatorNode(Operator.Create(ExpressionType.Equal)));
+							builder.AddValue(new ValueNode(true));
+							continue;
+						}
+        			}
 
-                builder.Flush();
-            }
+        			builder.AddMember(memNode, memberIndex);
+        		}
+        		else if (node is OperatorNode)
+        			builder.AddOp((OperatorNode) node);
+        		else if (node is ValueNode)
+        			builder.AddValue((ValueNode) node);
+        		else if (node is NullNode)
+        			builder.AddNullValue((NullNode) node);
+        		else
+        			builder.Sql.Append(node);
 
-            var whereCriteria = builder.Sql.Length > 0 
+        		builder.Flush();
+        	}
+
+        	var whereCriteria = builder.Sql.Length > 0 
                 ? new SqlWhereCriteria(builder.Sql.ToString(), builder.Params.ToArray())
                 : SqlWhereCriteria.Empty();
 

@@ -43,7 +43,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         public IParsedLambda Parse(LambdaExpression e)
         {
-            if (e.Body.NodeType == ExpressionType.MemberAccess)
+            if (e.Body.NodeType == ExpressionType.MemberAccess && e.Body.Type != typeof(bool))
                 throw new SisoDbException(ExceptionMessages.WhereExpressionParser_NoMemberExpressions);
 
             lock (_lock)
@@ -125,6 +125,14 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected override Expression VisitMember(MemberExpression e)
         {
+			if (e.Expression.NodeType == ExpressionType.Parameter)
+			{
+				var memberNode = CreateNewMemberNode(e);
+				_nodesContainer.AddNode(memberNode);
+
+				return e;
+			}
+
             try
             {
                 var value = e.Evaluate();
@@ -165,7 +173,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     previousNode = new MemberNode(path, memberExpression.Type);
             }
 
-            return previousNode;
+        	return e.Type.IsNullablePrimitiveType() || e.Expression.Type.IsNullablePrimitiveType()
+        	       	? ToNullableNode(previousNode)
+        	       	: previousNode;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression e)
@@ -213,17 +223,17 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     Visit(Expression.Constant(newValue));
                     break;
                 case "ToLower":
-                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToLowerNode());
+                    _nodesContainer.AddNode(ToLowerNode(CreateNewMemberNode(member)));
                     break;
                 case "ToUpper":
-                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToUpperNode());
+                    _nodesContainer.AddNode(ToUpperNode(CreateNewMemberNode(member)));
                     break;
             }
 
             return e;
         }
 
-        private Expression VisitStringQxMethodCall(MethodCallExpression e)
+    	private Expression VisitStringQxMethodCall(MethodCallExpression e)
         {
             var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
@@ -247,17 +257,17 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     Visit(constant);
                     break;
                 case "QxToLower":
-                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToLowerNode());
+                    _nodesContainer.AddNode(ToLowerNode(CreateNewMemberNode(member)));
                     break;
                 case "QxToUpper":
-                    _nodesContainer.AddNode(CreateNewMemberNode(member).AsToUpperNode());
+                    _nodesContainer.AddNode(ToUpperNode(CreateNewMemberNode(member)));
                     break;
             }
 
             return e;
         }
 
-        private Expression VisitEnumerableQxMethodCall(MethodCallExpression e)
+    	private Expression VisitEnumerableQxMethodCall(MethodCallExpression e)
         {
             var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
@@ -276,7 +286,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
-        private static void EnsureSupportedEnumerableQxOperator(LambdaExpression e)
+    	private static void EnsureSupportedEnumerableQxOperator(LambdaExpression e)
         {
             var isSupportedMethodCall = e.Body.NodeType == ExpressionType.Call && ((MethodCallExpression)e.Body).Method.Name == "QxAny";
             
@@ -285,5 +295,28 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if(!operatorIsSupported)
                 throw new SisoDbException(ExceptionMessages.WhereParser_QxEnumerables_OperatorNotSupported.Inject(e.Body.NodeType));
         }
+
+    	protected NullableMemberNode ToNullableNode(MemberNode memberNode)
+    	{
+    		var path = memberNode.Path.EndsWith(".Value") 
+				? memberNode.Path.Substring(0, memberNode.Path.LastIndexOf('.'))
+				: memberNode.Path;
+
+    		return new NullableMemberNode(
+				path, 
+				memberNode.MemberType.IsNullablePrimitiveType() 
+					? memberNode.MemberType.GetGenericArguments()[0] 
+					: memberNode.MemberType);
+    	}
+
+    	protected ToLowerMemberNode ToLowerNode(MemberNode memberNode)
+    	{
+    		return new ToLowerMemberNode(memberNode.Path, memberNode.MemberType);
+    	}
+
+    	protected ToUpperMemberNode ToUpperNode(MemberNode memberNode)
+    	{
+    		return new ToUpperMemberNode(memberNode.Path, memberNode.MemberType);
+    	}
     }
 }

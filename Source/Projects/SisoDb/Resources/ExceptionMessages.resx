@@ -175,7 +175,7 @@
     <value>The database '{0}' doesn't exist.</value>
   </data>
   <data name="WhereExpressionParser_NoMemberExpressions" xml:space="preserve">
-    <value>You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true)</value>
+    <value>You can't only access a member in a query expression unless it's a bool. You need to compare it against something.</value>
   </data>
   <data name="LambdaOperator_OperatorTypeIsNotSupported" xml:space="preserve">
     <value>Operator '{0}' is not supported!</value>

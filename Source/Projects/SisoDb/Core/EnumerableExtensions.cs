@@ -3,8 +3,22 @@ using System.Collections.Generic;
 
 namespace SisoDb.Core
 {
-	public static class EnumerableBatcher //TODO: Move to NCore
+	public static class EnumerableExtensions //TODO: Move to NCore
 	{
+		public static T PeekLeft<T>(this T[] source, int currentIndex) where T : class
+		{
+			return currentIndex > 0 
+				? source[currentIndex - 1] 
+				: null;
+		}
+
+		public static T PeekRight<T>(this T[] source, int currentIndex) where T : class
+		{
+			return currentIndex < source.Length - 1
+				? source[currentIndex + 1]
+				: null;
+		}
+
 		public static IEnumerable<T[]> Batch<T>(this IEnumerable<T> source, int maxBatchSize)
 		{
 			var batch = new List<T>(maxBatchSize);
