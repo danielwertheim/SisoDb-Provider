@@ -9,6 +9,7 @@ using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Sql2008.Dac;
+using SisoDb.Structures;
 
 namespace SisoDb.Sql2008
 {
@@ -81,12 +82,7 @@ namespace SisoDb.Sql2008
 
         public virtual IDbSchemaManager GetDbSchemaManager()
         {
-            return new DbSchemaManager();
-        }
-
-        public virtual IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
-        {
-            return new SqlDbSchemaUpserter(dbClient);
+            return new DbSchemaManager(new SqlDbSchemaUpserter(GetSqlStatements()));
         }
 
         public virtual ISqlStatements GetSqlStatements()
@@ -94,12 +90,17 @@ namespace SisoDb.Sql2008
             return _sqlStatements.Value;
         }
 
-        public virtual IDbStructureInserter GetDbStructureInserter(IDbClient dbClient)
+        public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
             return new DbStructureInserter(dbClient);
         }
 
-        public virtual IDbQueryGenerator GetDbQueryGenerator()
+    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
+    	{
+    		return new DbIdentityStructureIdGenerator(dbClient);
+    	}
+
+    	public virtual IDbQueryGenerator GetDbQueryGenerator()
         {
             return new Sql2008QueryGenerator(GetSqlStatements());
         }

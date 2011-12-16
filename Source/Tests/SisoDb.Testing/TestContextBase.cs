@@ -18,7 +18,11 @@ namespace SisoDb.Testing
 
         public void Cleanup()
         {
-            Database.DropStructureSets(Database.StructureSchemas.GetRegistrations().Select(r => r.Key).ToArray());
+			if (Database != null)
+			{
+				Database.DropStructureSets(Database.StructureSchemas.GetRegistrations().Select(r => r.Key).ToArray());
+				Database = null;
+			}
         }
     }
 }

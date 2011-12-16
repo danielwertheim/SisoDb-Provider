@@ -5,8 +5,10 @@ namespace SisoDb.DbSchema
 {
     public interface IDbSchemaManager
     {
-        void ClearCache();
+    	void ClearCache();
+    	void RemoveFromCache(IStructureSchema structureSchema);
+
         void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient);
-        void UpsertStructureSet(IStructureSchema structureSchema, IDbSchemaUpserter upserter);
+        void UpsertStructureSet(IStructureSchema structureSchema, IDbClient dbClient);
     }
 }

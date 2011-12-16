@@ -300,7 +300,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				_orgItem1Id = orgItem1.StructureId;
 				_orgItem2Id = orgItem2.StructureId;
-
+				
 				TestContext = TestContextFactory.Create();
 			};
 
@@ -323,29 +323,24 @@ namespace SisoDb.Specifications.UnitOfWork
 				}
 			};
 
-			It should_have_failed = () => CaughtException.ShouldNotBeNull();
-
-			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(0, _orgItem2Id));
-
-			It should_have_kept_old_items_untouched = () =>
+			It should_have_updated_all_items_and_allowed_new_id = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.ItemForPropChange> items;
+				IList<ModelNew.ItemForPropChange> items;
 
 				using (var q = TestContext.Database.CreateReadSession())
 				{
-					items = q.Query<ModelOld.ItemForPropChange>().ToList();
+					items = q.Query<ModelNew.ItemForPropChange>().ToList();
 				}
 
-				items[0].StructureId.ShouldEqual(_orgItem1Id);
-				items[0].Int1.ShouldEqual(142);
-				items[0].String1.ShouldEqual("A");
+				items.Count.ShouldEqual(2);
 
-				items[1].StructureId.ShouldEqual(_orgItem2Id);
-				items[1].Int1.ShouldEqual(242);
-				items[1].String1.ShouldEqual("B");
+				items[0].StructureId.ShouldEqual(0);
+				items[0].NewString1.ShouldEqual("NewB");
+
+				items[1].StructureId.ShouldEqual(_orgItem1Id);
+				items[1].NewString1.ShouldEqual("NewA");
 			};
 
 			private static int _orgItem1Id, _orgItem2Id;
@@ -391,30 +386,24 @@ namespace SisoDb.Specifications.UnitOfWork
 				}
 			};
 
-			It should_have_failed =
-				() => CaughtException.ShouldNotBeNull();
-
-			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(Guid.Empty, _orgItem2Id));
-
-			It should_have_kept_old_items_untouched = () =>
+			It should_have_updated_all_items_and_allowed_new_id = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.GuidItemForPropChange> items;
+				IList<ModelNew.GuidItemForPropChange> items;
 
 				using (var q = TestContext.Database.CreateReadSession())
 				{
-					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
+					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
 				}
 
-				items[0].StructureId.ShouldEqual(_orgItem1Id);
-				items[0].Int1.ShouldEqual(142);
-				items[0].String1.ShouldEqual("A");
+				items.Count.ShouldEqual(2);
 
-				items[1].StructureId.ShouldEqual(_orgItem2Id);
-				items[1].Int1.ShouldEqual(242);
-				items[1].String1.ShouldEqual("B");
+				items[0].StructureId.ShouldEqual(Guid.Empty);
+				items[0].NewString1.ShouldEqual("NewB");
+
+				items[1].StructureId.ShouldEqual(_orgItem1Id);
+				items[1].NewString1.ShouldEqual("NewA");
 			};
 
 			private static Guid _orgItem1Id, _orgItem2Id;
@@ -461,30 +450,24 @@ namespace SisoDb.Specifications.UnitOfWork
 				}
 			};
 
-			It should_have_failed =
-				() => CaughtException.ShouldNotBeNull();
-
-			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
-
-			It should_have_kept_old_items_untouched = () =>
+			It should_have_updated_all_items_and_allowed_new_id = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.ItemForPropChange> items;
+				IList<ModelNew.ItemForPropChange> items;
 
 				using (var q = TestContext.Database.CreateReadSession())
 				{
-					items = q.Query<ModelOld.ItemForPropChange>().ToList();
+					items = q.Query<ModelNew.ItemForPropChange>().ToList();
 				}
 
-				items[0].StructureId.ShouldEqual(_orgItem1Id);
-				items[0].Int1.ShouldEqual(142);
-				items[0].String1.ShouldEqual("A");
+				items.Count.ShouldEqual(2);
 
-				items[1].StructureId.ShouldEqual(_orgItem2Id);
-				items[1].Int1.ShouldEqual(242);
-				items[1].String1.ShouldEqual("B");
+				items[0].StructureId.ShouldEqual(_orgItem1Id);
+				items[0].NewString1.ShouldEqual("NewA");
+
+				items[1].StructureId.ShouldEqual(_newItem2Id);
+				items[1].NewString1.ShouldEqual("NewB");
 			};
 
 			private static int _orgItem1Id, _orgItem2Id;
@@ -532,30 +515,24 @@ namespace SisoDb.Specifications.UnitOfWork
 				}
 			};
 
-			It should_have_failed =
-				() => CaughtException.ShouldNotBeNull();
-
-			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
-
-			It should_have_kept_old_items_untouched = () =>
+			It should_have_updated_all_items_and_allowed_new_id = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.GuidItemForPropChange> items;
+				IList<ModelNew.GuidItemForPropChange> items;
 
 				using (var q = TestContext.Database.CreateReadSession())
 				{
-					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
+					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
 				}
 
-				items[0].StructureId.ShouldEqual(_orgItem1Id);
-				items[0].Int1.ShouldEqual(142);
-				items[0].String1.ShouldEqual("A");
+				items.Count.ShouldEqual(2);
 
-				items[1].StructureId.ShouldEqual(_orgItem2Id);
-				items[1].Int1.ShouldEqual(242);
-				items[1].String1.ShouldEqual("B");
+				items[0].StructureId.ShouldEqual(_orgItem1Id);
+				items[0].NewString1.ShouldEqual("NewA");
+
+				items[1].StructureId.ShouldEqual(_newItem2Id);
+				items[1].NewString1.ShouldEqual("NewB");
 			};
 
 			private static Guid _orgItem1Id, _orgItem2Id;

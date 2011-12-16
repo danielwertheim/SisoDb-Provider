@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using SisoDb.Dac;
@@ -18,11 +19,12 @@ namespace SisoDb.Sql2008.Dac
 
         public void Dispose()
         {
-            if(_innerBulkCopy != null)
+			if(_innerBulkCopy != null)
             {
                 _innerBulkCopy.Close();
                 _innerBulkCopy = null;
             }
+			GC.SuppressFinalize(this);
         }
 
         public string DestinationTableName

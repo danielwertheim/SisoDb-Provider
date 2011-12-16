@@ -10,6 +10,7 @@ using SisoDb.Core.Expressions;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Resources;
+using SisoDb.Structures;
 
 namespace SisoDb
 {
@@ -17,19 +18,36 @@ namespace SisoDb
 	{
 		protected const int MaxUpdateManyBatchSize = 1000;
 
-		protected DbUnitOfWork(ISisoDatabase db, IDbClient dbClient, IDbSchemaManager dbSchemaManager)
-			: base(db, dbClient, dbSchemaManager)
+		protected IDbClient DbClientNonTransactional;
+
+		protected readonly IIdentityStructureIdGenerator IdentityStructureIdGenerator;
+
+		protected DbUnitOfWork(ISisoDatabase db, IDbClient dbClientTransactional, IDbClient dbClientNonTransactional, IDbSchemaManager dbSchemaManager, IIdentityStructureIdGenerator identityStructureIdGenerator)
+			: base(db, dbClientTransactional, dbSchemaManager)
 		{
+			Ensure.That(dbClientNonTransactional, "dbClientNonTransactional").IsNotNull();
+			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
+
+			DbClientNonTransactional = dbClientNonTransactional;
+			IdentityStructureIdGenerator = identityStructureIdGenerator;
 		}
 
-		public IStructureSchema GetSchema(Type type)
+		public override void Dispose()
 		{
-			return Db.StructureSchemas.GetSchema(type);
+			base.Dispose();
+
+			if (DbClientNonTransactional != null)
+			{
+				DbClientNonTransactional.Dispose();
+				DbClientNonTransactional = null;
+			}
+
+			GC.SuppressFinalize(this);
 		}
 
-		public IStructureSchema GetSchema<T>() where T : class
+		protected override void UpsertStructureSet(IStructureSchema structureSchema)
 		{
-			return Db.StructureSchemas.GetSchema<T>();
+			DbSchemaManager.UpsertStructureSet(structureSchema, DbClientNonTransactional);
 		}
 
 		public virtual void Commit()
@@ -42,11 +60,11 @@ namespace SisoDb
 			var structureSchema = Db.StructureSchemas.GetSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema);
+			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, IdentityStructureIdGenerator);
 
 			var structure = structureBuilder.CreateStructure(item, structureSchema);
 
-			var bulkInserter = Db.ProviderFactory.GetDbStructureInserter(DbClient);
+			var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 			bulkInserter.Insert(structureSchema, new[] { structure });
 		}
 
@@ -60,9 +78,9 @@ namespace SisoDb
 			var structureSchema = Db.StructureSchemas.GetSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema);
+			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, IdentityStructureIdGenerator);
 
-			var bulkInserter = Db.ProviderFactory.GetDbStructureInserter(DbClient);
+			var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 			bulkInserter.Insert(structureSchema, structureBuilder.CreateStructures(items, structureSchema));
 		}
 
@@ -87,36 +105,30 @@ namespace SisoDb
 
 			DeleteById(structureSchema, updatedStructure.Id);
 
-			var bulkInserter = Db.ProviderFactory.GetDbStructureInserter(DbClient);
+			var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 			bulkInserter.Insert(structureSchema, new[] { updatedStructure });
 		}
 
 		public virtual bool UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
-			UpsertStructureSet(structureSchema);
+			var spec = UpdateManySpec.Create<T>(Db.StructureSchemas);
+			UpsertStructureSet(spec.NewSchema);
 
 			IStructureId deleteIdFrom = null, deleteIdTo = null;
 			var keepQueue = new List<T>(MaxUpdateManyBatchSize);
 
-			var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
-			var bulkInserter = Db.ProviderFactory.GetDbStructureInserter(DbClient);
+			var structureBuilder = Db.StructureBuilders.ForUpdates(spec.NewSchema);
+			var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
-			var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
-			if (expression != null)
-			{
-				queryBuilder.Where(expression);
-				queryBuilder.OrderBy(ExpressionUtils.GetMemberExpression<T>(StructureSchema.IdMemberName));
-			}
-			var query = queryBuilder.Build();
-			
+			var query = spec.BuildQuery(Db, expression);
 			foreach (var structure in Query<T>(query))
 			{
+				var structureId = spec.NewSchema.IdAccessor.GetValue(structure);
+				
 				var status = modifier.Invoke(structure);
 				if (status == UpdateManyModifierStatus.Abort)
 					return false;
 				
-				var structureId = structureSchema.IdAccessor.GetValue(structure);
 				deleteIdFrom = deleteIdFrom ?? structureId;
 				deleteIdTo = structureId;
 
@@ -126,18 +138,20 @@ namespace SisoDb
 					if (keepQueue.Count < MaxUpdateManyBatchSize)
 						continue;
 
-					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo, structureSchema);
+					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
 					deleteIdFrom = deleteIdTo;
 
-					bulkInserter.Insert(structureSchema, structureBuilder.CreateStructures(keepQueue, structureSchema));
+					structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 					keepQueue.Clear();
 				}
 			}
 
+			if(deleteIdFrom != null)
+				DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
+
 			if (keepQueue.Count > 0)
 			{
-				DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo, structureSchema);
-				bulkInserter.Insert(structureSchema, structureBuilder.CreateStructures(keepQueue, structureSchema));
+				structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 				keepQueue.Clear();
 			}
 
@@ -148,55 +162,76 @@ namespace SisoDb
 			where TOld : class
 			where TNew : class
 		{
-			var oldType = typeof(TOld);
-			var newType = typeof(TNew);
-			if(oldType.Equals(newType))
+			var spec = UpdateManySpec.Create<TOld, TNew>(Db.StructureSchemas);
+			if (spec.TypesAreIdentical)
 				throw new SisoDbException(ExceptionMessages.UnitOfWork_UpdateMany_TOld_TNew_SameType);
-			
-			var newStructureSchema = Db.StructureSchemas.GetSchema<TNew>();
-			UpsertStructureSet(newStructureSchema);
 
+			Func<IQuery, IEnumerable<string>> queryInvoker;
+			
+			if (spec.IsUpdatingSameSchema)
+			{
+				Db.StructureSchemas.RemoveSchema(spec.OldType);
+				DbSchemaManager.RemoveFromCache(spec.OldSchema);
+				UpsertStructureSet(spec.NewSchema);
+
+				queryInvoker = QueryAsJson<TNew>;
+			}
+			else
+			{
+				UpsertStructureSet(spec.OldSchema);
+				UpsertStructureSet(spec.NewSchema);
+
+				queryInvoker = QueryAsJson<TOld>;
+			}
+
+			IStructureId deleteIdFrom = null, deleteIdTo = null;
 			var keepQueue = new List<TNew>(MaxUpdateManyBatchSize);
 
-			var structureBuilder = Db.StructureBuilders.ForUpdates(newStructureSchema);
-			var bulkInserter = Db.ProviderFactory.GetDbStructureInserter(DbClient);
+			var structureBuilder = Db.StructureBuilders.ForUpdates(spec.NewSchema);
+			var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
-			var queryBuilder = Db.ProviderFactory.GetQueryBuilder<TOld>(Db.StructureSchemas);
-			if (expression != null)
-			{
-				queryBuilder.Where(expression);
-				queryBuilder.OrderBy(ExpressionUtils.GetMemberExpression<TOld>(StructureSchema.IdMemberName));
-			}
-			var query = queryBuilder.Build();
-
-			foreach (var oldStructureJson in QueryAsJson<TOld>(query))
+			var query = spec.BuildQuery(Db, expression);
+			foreach (var oldStructureJson in queryInvoker(query))
 			{
 				var oldStructure = Db.Serializer.Deserialize<TOld>(oldStructureJson);
 				var newStructure = Db.Serializer.Deserialize<TNew>(oldStructureJson);
+				var structureId = spec.OldSchema.IdAccessor.GetValue(oldStructure);
+				
 				var status = modifier.Invoke(oldStructure, newStructure);
 				if (status == UpdateManyModifierStatus.Abort)
 					return false;
 
-				keepQueue.Add(newStructure);
-				if (keepQueue.Count < MaxUpdateManyBatchSize)
-					continue;
+				deleteIdFrom = deleteIdFrom ?? structureId;
+				deleteIdTo = structureId;
 
-				bulkInserter.Insert(newStructureSchema, structureBuilder.CreateStructures(keepQueue, newStructureSchema));
-				keepQueue.Clear();
+				if (status == UpdateManyModifierStatus.Keep)
+				{
+					keepQueue.Add(newStructure);
+					if (keepQueue.Count < MaxUpdateManyBatchSize)
+						continue;
+
+					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
+					deleteIdFrom = deleteIdTo;
+
+					structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
+					keepQueue.Clear();
+				}
 			}
+
+			if (deleteIdFrom != null)
+				DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
 
 			if (keepQueue.Count > 0)
 			{
-				bulkInserter.Insert(newStructureSchema, structureBuilder.CreateStructures(keepQueue, newStructureSchema));
+				structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 				keepQueue.Clear();
 			}
 
-			if (oldType.Name.Equals(newType.Name, StringComparison.InvariantCultureIgnoreCase))
-				return true;
-
-			var oldSchema = Db.StructureSchemas.GetSchema(oldType);
-			Db.StructureSchemas.RemoveSchema(oldType);
-			DbSchemaManager.DropStructureSet(oldSchema, DbClient);
+			if (!spec.IsUpdatingSameSchema)
+			{
+				Db.StructureSchemas.RemoveSchema(spec.OldType);
+				DbSchemaManager.DropStructureSet(spec.OldSchema, DbClient);
+			}
 
 			return true;
 		}
@@ -248,6 +283,57 @@ namespace SisoDb
 
 			var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
 			DbClient.DeleteByQuery(sql, structureSchema);
+		}
+
+		protected class UpdateManySpec
+		{
+			public readonly IStructureSchema OldSchema;
+			public readonly IStructureSchema NewSchema;
+			public readonly bool IsUpdatingSameSchema;
+			public readonly Type OldType;
+			public readonly bool TypesAreIdentical;
+
+			private UpdateManySpec(IStructureSchema oldSchema, Type oldType, IStructureSchema newSchema, Type newType)
+			{
+				OldSchema = oldSchema;
+				OldType = oldType;
+				NewSchema = newSchema;
+
+				IsUpdatingSameSchema = OldSchema.Name.Equals(NewSchema.Name, StringComparison.InvariantCultureIgnoreCase);
+				TypesAreIdentical = oldType.Equals(newType);
+			}
+
+			public static UpdateManySpec Create<T>(IStructureSchemas structureSchemas) where T : class
+			{
+				return Create<T, T>(structureSchemas);
+			}
+
+			public static UpdateManySpec Create<TOld, TNew>(IStructureSchemas structureSchemas)
+				where TOld : class
+				where TNew : class
+			{
+				var oldType = typeof(TOld);
+				var oldSchema = structureSchemas.GetSchema<TOld>();
+				structureSchemas.RemoveSchema(oldType);
+
+				var newType = typeof(TNew);
+				var newSchema = structureSchemas.GetSchema<TNew>();
+				structureSchemas.RemoveSchema(newType);
+
+				return new UpdateManySpec(oldSchema, oldType, newSchema, newType);
+			}
+
+			public IQuery BuildQuery<T>(ISisoDatabase db, Expression<Func<T, bool>> expression = null) where T : class
+			{
+				var queryBuilder = db.ProviderFactory.GetQueryBuilder<T>(db.StructureSchemas);
+				if (expression != null)
+				{
+					queryBuilder.Where(expression);
+					queryBuilder.OrderBy(ExpressionUtils.GetMemberExpression<T>(StructureSchema.IdMemberName));
+				}
+
+				return queryBuilder.Build();
+			}
 		}
 	}
 }

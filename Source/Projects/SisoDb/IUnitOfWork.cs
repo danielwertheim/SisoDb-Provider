@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using PineCone.Structures.Schemas;
 
 namespace SisoDb
 {
@@ -11,20 +10,6 @@ namespace SisoDb
     /// </summary>
     public interface IUnitOfWork : IReadSession
     {
-        /// <summary>
-        /// Returns the schema associated with the Type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        IStructureSchema GetSchema(Type type);
-
-        /// <summary>
-        /// Returns the schema associated with the <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        IStructureSchema GetSchema<T>() where T : class;
-
         /// <summary>
         /// Commits your changes to the database. After a commit you
         /// can continue to work with your UnitOfWork. You do not have

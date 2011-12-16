@@ -42,7 +42,9 @@ namespace SisoDb.Dac
 
         public void Dispose()
         {
-            if (Transaction != null)
+			GC.SuppressFinalize(this);
+
+			if (Transaction != null)
             {
                 Transaction.Rollback();
                 Transaction.Dispose();

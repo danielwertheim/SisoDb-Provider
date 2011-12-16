@@ -5,7 +5,7 @@ using SisoDb.Dac;
 
 namespace SisoDb.Structures
 {
-    public class DbIdentityStructureIdGenerator : IStructureIdGenerator
+	public class DbIdentityStructureIdGenerator : IIdentityStructureIdGenerator
     {
     	protected readonly IDbClient DbClient;
 

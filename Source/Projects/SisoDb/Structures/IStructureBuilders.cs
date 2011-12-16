@@ -6,7 +6,7 @@ namespace SisoDb.Structures
 {
     public interface IStructureBuilders 
     {
-        Func<IStructureSchema, IStructureBuilder> ForInserts { get; set; }
+        Func<IStructureSchema, IIdentityStructureIdGenerator, IStructureBuilder> ForInserts { get; set; }
         Func<IStructureSchema, IStructureBuilder> ForUpdates { get; set; }
     }
 }

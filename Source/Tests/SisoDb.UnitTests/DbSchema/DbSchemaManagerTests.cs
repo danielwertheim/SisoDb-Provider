@@ -23,31 +23,34 @@ namespace SisoDb.UnitTests.DbSchema
         public void UpsertStructureSet_WhenNeverCalled_UpserterIsCalledOnce()
         {
             var upserterFake = new Mock<IDbSchemaUpserter>();
+			var dbClientFake = new Mock<IDbClient>();
 
-            var manager = new DbSchemaManager();
-            manager.UpsertStructureSet(_structureSchema, upserterFake.Object);
+            var manager = new DbSchemaManager(upserterFake.Object);
+            manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 
-            upserterFake.Verify(f => f.Upsert(_structureSchema), Times.Once());
+            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object), Times.Once());
         }
 
         [Test]
         public void UpsertStructureSet_WhenCalledTwice_UpserterIsCalledOnceNotTwice()
         {
             var upserterFake = new Mock<IDbSchemaUpserter>();
+			var dbClientFake = new Mock<IDbClient>();
 
-            var manager = new DbSchemaManager();
-            manager.UpsertStructureSet(_structureSchema, upserterFake.Object);
-            manager.UpsertStructureSet(_structureSchema, upserterFake.Object);
+            var manager = new DbSchemaManager(upserterFake.Object);
+            manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
+			manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 
-            upserterFake.Verify(f => f.Upsert(_structureSchema), Times.Once());
+            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object), Times.Once());
         }
 
         [Test]
         public void DropStructureSet_WhenCalledTwice_DropperIsCalledTwice()
         {
+			var upserterFake = new Mock<IDbSchemaUpserter>();
             var dbClientFake = new Mock<IDbClient>();
 
-            var manager = new DbSchemaManager();
+            var manager = new DbSchemaManager(upserterFake.Object);
             manager.DropStructureSet(_structureSchema, dbClientFake.Object);
             manager.DropStructureSet(_structureSchema, dbClientFake.Object);
 

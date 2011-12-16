@@ -129,7 +129,7 @@ namespace SisoDb
         /// <returns></returns>
         /// <remarks>If you need to do multiple queries, use <see cref="CreateReadSession"/> instead.</remarks>
         [DebuggerStepThrough]
-        DbReadOnceOp ReadOnce();
+        IReadOnce ReadOnce();
 
         /// <summary>
         /// Use when you want to execute a single Insert, Update or Delete against 
@@ -139,7 +139,7 @@ namespace SisoDb
         /// <remarks>If you need to do multiple operations in the <see cref="IUnitOfWork"/>,
         /// use <see cref="ISisoDatabase.CreateUnitOfWork"/> instead.</remarks>
         [DebuggerStepThrough]
-        DbWriteOnceOp WriteOnce();
+        IWriteOnce WriteOnce();
 
         /// <summary>
         /// Simplifies usage of <see cref="IUnitOfWork"/>.

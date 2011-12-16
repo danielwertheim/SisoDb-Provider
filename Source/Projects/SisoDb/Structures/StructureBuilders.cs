@@ -11,23 +11,21 @@ namespace SisoDb.Structures
 {
     public class StructureBuilders : IStructureBuilders
     {
-    	private readonly IStructureIdGenerator _identityStructureIdGenerator;
-
-    	public Func<IStructureSchema, IStructureBuilder> ForInserts { get; set; }
+    	public Func<IStructureSchema, IIdentityStructureIdGenerator, IStructureBuilder> ForInserts { get; set; }
 
         public Func<IStructureSchema, IStructureBuilder> ForUpdates { get; set; }
 
-		public StructureBuilders(IStructureIdGenerator identityStructureIdGenerator)
+		public StructureBuilders()
 		{
-			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
-			_identityStructureIdGenerator = identityStructureIdGenerator;
-
 			ForInserts = CreateForInserts;
             ForUpdates = CreateForUpdates;
         }
 
-        private IStructureBuilder CreateForInserts(IStructureSchema structureSchema)
-        {
+		private IStructureBuilder CreateForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator)
+		{
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
+
             var idType = structureSchema.IdAccessor.IdType;
 
             if (idType == StructureIdTypes.Guid)
@@ -40,7 +38,7 @@ namespace SisoDb.Structures
             if (idType.IsIdentity())
                 return new StructureBuilder
                 {
-                    StructureIdGenerator = _identityStructureIdGenerator,
+					StructureIdGenerator = identityStructureIdGenerator,
                     StructureSerializer = new SerializerForStructureBuilder()
                 };
 

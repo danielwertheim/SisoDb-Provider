@@ -1,10 +1,10 @@
 ﻿using Machine.Specifications;
-using SisoDb.Sql2008;
+using SisoDb.SqlCe4;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.Sql2008
+namespace SisoDb.Specifications.SqlCe4
 {
-    public class AssemblyInitializer : IAssemblyContext
+    public class AssemblyContext : IAssemblyContext
     {
         private static bool _isInitialized;
 
@@ -24,9 +24,9 @@ namespace SisoDb.Specifications.Sql2008
 
         private static void EnsureDbExists()
         {
-            var connectionInfo = new Sql2008ConnectionInfo(TestConstants.ConnectionStringNameForSql2008);
-            var database = new Sql2008DbFactory().CreateDatabase(connectionInfo);
-            database.EnsureNewDatabase();
+            var connectionInfo = new SqlCe4ConnectionInfo(TestConstants.ConnectionStringNameForSqlCe4);
+        	var database = new SqlCe4DbFactory().CreateDatabase(connectionInfo);
+			database.EnsureNewDatabase();
         }
     }
 }

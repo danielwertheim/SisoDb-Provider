@@ -18,9 +18,8 @@ namespace SisoDb
 	public abstract class DbReadSession : IReadSession, IAdvancedQuerySession
 	{
 		protected readonly ISisoDatabase Db;
-		protected IDbClient DbClient { get; private set; }
+		protected IDbClient DbClient;
 		protected readonly IDbSchemaManager DbSchemaManager;
-		protected readonly IDbSchemaUpserter DbSchemaUpserter;
 		protected readonly IDbQueryGenerator QueryGenerator;
 
 		protected DbReadSession(ISisoDatabase db, IDbClient dbClient, IDbSchemaManager dbSchemaManager)
@@ -33,23 +32,22 @@ namespace SisoDb
 			DbClient = dbClient;
 			DbSchemaManager = dbSchemaManager;
 			QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
-			DbSchemaUpserter = Db.ProviderFactory.GetDbSchemaUpserter(DbClient);
 		}
 
-		public void Dispose()
+		public virtual void Dispose()
 		{
-			GC.SuppressFinalize(this);
-
 			if (DbClient != null)
 			{
 				DbClient.Dispose();
 				DbClient = null;
 			}
+
+			GC.SuppressFinalize(this);
 		}
 
-		protected void UpsertStructureSet(IStructureSchema structureSchema)
+		protected virtual void UpsertStructureSet(IStructureSchema structureSchema)
 		{
-			DbSchemaManager.UpsertStructureSet(structureSchema, DbSchemaUpserter);
+			DbSchemaManager.UpsertStructureSet(structureSchema, DbClient);
 		}
 
 		public IStructureSchemas StructureSchemas

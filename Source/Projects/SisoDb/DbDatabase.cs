@@ -11,19 +11,18 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-    public abstract class SisoDatabase : ISisoDatabase //TODO: IDisposable
+    public abstract class DbDatabase : ISisoDatabase
     {
-        protected readonly object DbOperationsLock;
-        protected readonly IDbSchemaManager DbSchemaManager;
-    	protected readonly IServerClient ServerClient;
-    	protected readonly IDbClient DbClientNonTrans;
-		
 		private readonly ISisoConnectionInfo _connectionInfo;
 		private readonly ISisoProviderFactory _providerFactory;
 		private IStructureSchemas _structureSchemas;
-        private IStructureBuilders _structureBuilders;
-        private IJsonSerializer _serializer;
-        
+		private IStructureBuilders _structureBuilders;
+		private IJsonSerializer _serializer;
+
+        protected readonly object DbOperationsLock;
+        protected readonly IDbSchemaManager DbSchemaManager;
+    	protected readonly IServerClient ServerClient;
+		
         public string Name
         {
             get { return _connectionInfo.DbName; }
@@ -71,7 +70,7 @@ namespace SisoDb
             }
         }
 
-        protected SisoDatabase(ISisoConnectionInfo connectionInfo)
+    	protected DbDatabase(ISisoConnectionInfo connectionInfo)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 
@@ -80,22 +79,15 @@ namespace SisoDb
             _connectionInfo = connectionInfo;
 			_providerFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
 			
-			DbClientNonTrans = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo);
 			DbSchemaManager = ProviderFactory.GetDbSchemaManager();
 			ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
 
-			StructureBuilders = new StructureBuilders(new DbIdentityStructureIdGenerator(DbClientNonTrans));
+			StructureBuilders = new StructureBuilders();
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
         }
 
-		//~SisoDatabase()
-		//{
-		//    if(DbClientNonTrans != null)
-		//        DbClientNonTrans.Dispose();
-		//}
-
-        public virtual void EnsureNewDatabase()
+    	public virtual void EnsureNewDatabase()
         {
             lock (DbOperationsLock)
             {
@@ -104,7 +96,7 @@ namespace SisoDb
             }
         }
 
-        public virtual void CreateIfNotExists()
+    	public virtual void CreateIfNotExists()
         {
             lock (DbOperationsLock)
             {
@@ -113,7 +105,7 @@ namespace SisoDb
             }
         }
 
-        public virtual void InitializeExisting()
+    	public virtual void InitializeExisting()
         {
             lock (DbOperationsLock)
             {
@@ -122,7 +114,7 @@ namespace SisoDb
             }
         }
 
-        public virtual void DeleteIfExists()
+    	public virtual void DeleteIfExists()
         {
             lock (DbOperationsLock)
             {
@@ -131,7 +123,7 @@ namespace SisoDb
             }
         }
 
-        public virtual bool Exists()
+    	public virtual bool Exists()
         {
             lock (DbOperationsLock)
             {
@@ -139,19 +131,19 @@ namespace SisoDb
             }
         }
 
-        public virtual void DropStructureSet<T>() where T : class
+    	public virtual void DropStructureSet<T>() where T : class
         {
             DropStructureSet(TypeFor<T>.Type);
         }
 
-        public virtual void DropStructureSet(Type type)
+    	public virtual void DropStructureSet(Type type)
         {
             Ensure.That(type, "type").IsNotNull();
 
             DropStructureSets(new[] { type });
         }
 
-        public virtual void DropStructureSets(Type[] types)
+    	public virtual void DropStructureSets(Type[] types)
         {
             Ensure.That(types, "types").HasItems();
 
@@ -173,12 +165,12 @@ namespace SisoDb
             }
         }
 
-        public virtual void UpsertStructureSet<T>() where T : class
+    	public virtual void UpsertStructureSet<T>() where T : class
         {
             UpsertStructureSet(TypeFor<T>.Type);
         }
 
-        public virtual void UpsertStructureSet(Type type)
+    	public virtual void UpsertStructureSet(Type type)
         {
             Ensure.That(type, "type").IsNotNull();
 
@@ -186,32 +178,31 @@ namespace SisoDb
             {
                 using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
-                    var dbSchemaUpserter = ProviderFactory.GetDbSchemaUpserter(dbClient);
                     var structureSchema = _structureSchemas.GetSchema(type);
-                    DbSchemaManager.UpsertStructureSet(structureSchema, dbSchemaUpserter);
+                    DbSchemaManager.UpsertStructureSet(structureSchema, dbClient);
 
                     dbClient.Flush();
                 }
             }
         }
 
-        public abstract IReadSession CreateReadSession();
+    	public abstract IReadSession CreateReadSession();
 
-        public abstract IUnitOfWork CreateUnitOfWork();
+    	public abstract IUnitOfWork CreateUnitOfWork();
 
-        [DebuggerStepThrough]
-        public DbReadOnceOp ReadOnce()
+    	[DebuggerStepThrough]
+        public IReadOnce ReadOnce()
         {
-            return new DbReadOnceOp(this);
+            return new ReadOnce(this);
         }
 
-        [DebuggerStepThrough]
-        public DbWriteOnceOp WriteOnce()
+    	[DebuggerStepThrough]
+        public IWriteOnce WriteOnce()
         {
-            return new DbWriteOnceOp(this);
+            return new WriteOnce(this);
         }
 
-        [DebuggerStepThrough]
+    	[DebuggerStepThrough]
         public void WithUnitOfWork(Action<IUnitOfWork> consumer)
         {
             using (var uow = CreateUnitOfWork())
@@ -220,7 +211,7 @@ namespace SisoDb
             }
         }
 
-        [DebuggerStepThrough]
+    	[DebuggerStepThrough]
         public void WithQueryEngine(Action<IReadSession> consumer)
         {
             using (var qe = CreateReadSession())

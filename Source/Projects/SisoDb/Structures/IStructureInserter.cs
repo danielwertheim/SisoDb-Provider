@@ -1,9 +1,9 @@
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 
-namespace SisoDb.Dac.BulkInserts
+namespace SisoDb.Structures
 {
-    public interface IDbStructureInserter
+    public interface IStructureInserter
     {
         void Insert(IStructureSchema structureSchema, IStructure[] structures);
     }

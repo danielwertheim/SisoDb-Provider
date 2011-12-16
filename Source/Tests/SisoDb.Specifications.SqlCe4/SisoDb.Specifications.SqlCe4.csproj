@@ -229,7 +229,7 @@
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Updates.cs">
       <Link>UnitOfWork\Updates.cs</Link>
     </Compile>
-    <Compile Include="AssemblyInitializer.cs" />
+    <Compile Include="AssemblyContext.cs" />
     <Compile Include="ContextCleanup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

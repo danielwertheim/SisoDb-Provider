@@ -1,6 +1,8 @@
+using SisoDb.Structures;
+
 namespace SisoDb.Sql2008
 {
-    public class Sql2008Database : SisoDatabase
+    public class Sql2008Database : DbDatabase
     {
         protected internal Sql2008Database(ISisoConnectionInfo connectionInfo) : base(connectionInfo)
         {
@@ -16,10 +18,15 @@ namespace SisoDb.Sql2008
 
         public override IUnitOfWork CreateUnitOfWork()
         {
-            return new Sql2008UnitOfWork(
+        	var dbClient = ProviderFactory.GetTransactionalDbClient(ConnectionInfo);
+			var dbClientNonTransactional = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo);
+
+			return new Sql2008UnitOfWork(
 				this,
-				ProviderFactory.GetTransactionalDbClient(ConnectionInfo),
-				DbSchemaManager);
+				dbClient,
+				dbClientNonTransactional,
+				DbSchemaManager,
+				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional));
         }
     }
 }

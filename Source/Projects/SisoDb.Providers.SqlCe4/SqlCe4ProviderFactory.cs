@@ -11,6 +11,7 @@ using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.SqlCe4.Dac;
+using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4
 {
@@ -143,12 +144,7 @@ namespace SisoDb.SqlCe4
 
         public virtual IDbSchemaManager GetDbSchemaManager()
         {
-            return new DbSchemaManager();
-        }
-
-        public virtual IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
-        {
-            return new SqlDbSchemaUpserter(dbClient);
+            return new DbSchemaManager(new SqlDbSchemaUpserter(GetSqlStatements()));
         }
 
         public virtual ISqlStatements GetSqlStatements()
@@ -156,12 +152,17 @@ namespace SisoDb.SqlCe4
             return _sqlStatements.Value;
         }
 
-        public virtual IDbStructureInserter GetDbStructureInserter(IDbClient dbClient)
+        public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
             return new DbStructureInserter(dbClient);
         }
 
-        public virtual IDbQueryGenerator GetDbQueryGenerator()
+    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
+    	{
+    		return new DbIdentityStructureIdGenerator(dbClient);
+    	}
+
+    	public virtual IDbQueryGenerator GetDbQueryGenerator()
         {
             return new SqlCe4QueryGenerator(GetSqlStatements());
         }

@@ -8,7 +8,7 @@ using SisoDb.Structures;
 
 namespace SisoDb.Dac.BulkInserts
 {
-    public class DbStructureInserter : IDbStructureInserter
+    public class DbStructureInserter : IStructureInserter
     {
         private const int MaxStructureBatchSize = 1000;
         private const int MaxIndexesBatchSize = 6000;

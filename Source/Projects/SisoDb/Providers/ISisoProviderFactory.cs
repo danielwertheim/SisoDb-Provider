@@ -1,9 +1,9 @@
 using System.Data;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
+using SisoDb.Structures;
 
 namespace SisoDb.Providers
 {
@@ -26,12 +26,12 @@ namespace SisoDb.Providers
         IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
 
         IDbSchemaManager GetDbSchemaManager();
-        
-        IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient);
 
         ISqlStatements GetSqlStatements();
         
-        IDbStructureInserter GetDbStructureInserter(IDbClient dbClient);
+        IStructureInserter GetStructureInserter(IDbClient dbClient);
+
+    	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
         
         IDbQueryGenerator GetDbQueryGenerator();
 

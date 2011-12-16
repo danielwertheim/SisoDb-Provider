@@ -1,6 +1,6 @@
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4Database : SisoDatabase
+    public class SqlCe4Database : DbDatabase
     {
         protected internal SqlCe4Database(ISisoConnectionInfo connectionInfo)
             : base(connectionInfo)
@@ -11,16 +11,21 @@ namespace SisoDb.SqlCe4
         {
             return new SqlCe4ReadSession(
 				this,
-				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo), //TODO: Why IReadSession as IDisposable? If not we could use DB.DbNonTransClient
+				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo),
 				DbSchemaManager);
         }
 
         public override IUnitOfWork CreateUnitOfWork()
         {
-            return new SqlCe4UnitOfWork(
+			var dbClient = ProviderFactory.GetTransactionalDbClient(ConnectionInfo);
+			var dbClientNonTransactional = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo);
+
+			return new SqlCe4UnitOfWork(
 				this,
-				ProviderFactory.GetTransactionalDbClient(ConnectionInfo),
-				DbSchemaManager);
+				dbClient,
+				dbClientNonTransactional,
+				DbSchemaManager,
+				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional));
         }
     }
 }
