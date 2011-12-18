@@ -4,12 +4,6 @@ using EnsureThat;
 namespace SisoDb.Querying.Lambdas.Nodes
 {
 	[Serializable]
-	public class NullableMemberNode : MemberNode
-	{
-		public NullableMemberNode(string memberPath, Type memberType) : base(memberPath, memberType) {}
-	}
-
-    [Serializable]
     public class MemberNode : INode
     {
         public string Path { get; private set;  }

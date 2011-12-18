@@ -14,7 +14,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 		{
 			Ensure.That(orderByExpressions, "orderByExpressions").HasItems();
 
-			var nodesContainer = new NodesContainer();
+			var nodesContainer = new Nodes.Nodes();
 			foreach (var orderByExpression in orderByExpressions.Where(e => e != null))
 			{
 				var memberExpression = orderByExpression.InnerLambdaExpression.Body.GetRightMostMember();

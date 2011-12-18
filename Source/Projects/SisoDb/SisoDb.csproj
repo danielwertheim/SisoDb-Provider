@@ -48,9 +48,9 @@
       <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NCore, Version=0.22.0.68, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.23.0.69, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\NCore.0.23.0.69\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone, Version=0.45.0.85, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -77,6 +77,11 @@
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="IReadOnce.cs" />
     <Compile Include="IWriteOnce.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\INodes.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
@@ -158,7 +163,7 @@
     <Compile Include="Querying\Lambdas\Nodes\EndGroupNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNode.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\NodesContainer.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\Nodes.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\OperatorNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StartGroupNode.cs" />

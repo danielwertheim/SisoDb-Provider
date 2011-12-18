@@ -7,11 +7,30 @@ using SisoDb.Resources;
 namespace SisoDb.Querying.Lambdas.Operators
 {
     [Serializable]
-    public class Operator
+    public abstract class Operator
     {
+		[Serializable]
+		public enum Types
+		{
+			And,
+			Or,
+			Equal,
+			Not,
+			NotEqual,
+			Is,
+			IsNot,
+			LessThan,
+			LessThanOrEqual,
+			GreaterThan,
+			GreaterThanOrEqual,
+			Like
+		}
+
         private static readonly Dictionary<ExpressionType, Func<Operator>> OperatorMap;
 
         private readonly string _value;
+
+    	public abstract Types OperatorType { get; }
 
         static Operator()
         {

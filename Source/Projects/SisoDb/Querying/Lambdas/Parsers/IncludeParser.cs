@@ -13,7 +13,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			Ensure.That(includedStructureSetName, "includedStructureSetName").IsNotNullOrWhiteSpace();
             Ensure.That(includeExpressions, "includeExpressions").HasItems();
 
-            var nodes = new NodesContainer();
+            var nodes = new Nodes.Nodes();
 
             foreach (var includeExpression in includeExpressions)
             {

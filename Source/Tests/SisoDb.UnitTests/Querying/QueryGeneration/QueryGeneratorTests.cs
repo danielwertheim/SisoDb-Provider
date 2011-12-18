@@ -60,6 +60,16 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 			return generator.GenerateQuery(queryCommand);
 		}
 
+		public abstract void GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery();
+
+		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.HasValue == false));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
 		public abstract void GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery();
 
 		protected SqlQuery On_GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery()

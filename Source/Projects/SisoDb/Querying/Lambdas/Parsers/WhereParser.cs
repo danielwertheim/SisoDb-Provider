@@ -12,14 +12,14 @@ using SisoDb.Resources;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {
-    public class WhereParser : ExpressionVisitor, IWhereParser
+	public class WhereParser : ExpressionVisitor, IWhereParser
     {
-        private static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
+    	protected static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
         private readonly object _lock;
         private readonly Stack<MemberExpression> _virtualPrefixMembers;
-        private NodesContainer _nodesContainer;
+        private INodes _nodes;
 
-        private bool IsFlatteningMembers
+        protected bool IsFlatteningMembers
         {
             get { return _virtualPrefixMembers.Count > 0; }
         }
@@ -48,13 +48,18 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             lock (_lock)
             {
-                _nodesContainer = new NodesContainer();
+                _nodes = new Nodes.Nodes();
 
                 Visit(e);
 
-                return new ParsedLambda(_nodesContainer.ToArray());
+            	return CreateParsedLambda();
             }
         }
+
+		protected IParsedLambda CreateParsedLambda()
+		{
+			return new ParsedLambda(new NullableNodesTransformer().Transform(_nodes).ToArray());
+		}
 
         protected override Expression VisitNew(NewExpression node)
         {
@@ -70,7 +75,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             switch (e.NodeType)
             {
                 case ExpressionType.Not:
-                    _nodesContainer.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
+                    _nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
                     Visit(e.Operand);
                     break;
                 case ExpressionType.Convert:
@@ -85,12 +90,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
-        protected override Expression VisitBinary(BinaryExpression e)
+		protected override Expression VisitBinary(BinaryExpression e)
         {
-            var isGroupExpression = e.Left is BinaryExpression || e.Right is BinaryExpression;
+			var isGroupExpression = e.Left is BinaryExpression || e.Right is BinaryExpression;
 
             if (isGroupExpression)
-                _nodesContainer.AddNode(new StartGroupNode());
+                _nodes.AddNode(new StartGroupNode());
 
             if (e.Left.NodeType == ExpressionType.Parameter)
                 Visit(_virtualPrefixMembers.Peek());
@@ -98,14 +103,14 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 Visit(e.Left);
 
             if (ExpressionUtils.IsNullConstant(e.Right))
-                _nodesContainer.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
+                _nodes.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
-                _nodesContainer.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
+                _nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
 
             Visit(e.Right);
 
             if (isGroupExpression)
-                _nodesContainer.AddNode(new EndGroupNode());
+                _nodes.AddNode(new EndGroupNode());
 
             return e;
         }
@@ -114,24 +119,24 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             if (ExpressionUtils.IsNullConstant(e))
             {
-                _nodesContainer.AddNode(new NullNode());
+                _nodes.AddNode(new NullNode());
                 return e;
             }
 
-            _nodesContainer.AddNode(new ValueNode(e.Value));
+            _nodes.AddNode(new ValueNode(e.Value));
 
             return e;
         }
 
         protected override Expression VisitMember(MemberExpression e)
         {
-			if (e.Expression.NodeType == ExpressionType.Parameter)
-			{
-				var memberNode = CreateNewMemberNode(e);
-				_nodesContainer.AddNode(memberNode);
+			//if (e.Expression.NodeType == ExpressionType.Parameter)
+			//{
+			//    var memberNode = CreateNewMemberNode(e);
+			//    _nodes.AddNode(memberNode);
 
-				return e;
-			}
+			//    return e;
+			//}
 
             try
             {
@@ -144,7 +149,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             catch
             {
                 var memberNode = CreateNewMemberNode(e);
-                _nodesContainer.AddNode(memberNode);
+                _nodes.AddNode(memberNode);
 
                 return e;
             }
@@ -173,9 +178,16 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     previousNode = new MemberNode(path, memberExpression.Type);
             }
 
-        	return e.Type.IsNullablePrimitiveType() || e.Expression.Type.IsNullablePrimitiveType()
-        	       	? ToNullableNode(previousNode)
-        	       	: previousNode;
+			if (previousNode != null)
+			{
+				if (e.Type.IsNullablePrimitiveType())
+					return new NullableMemberNode(previousNode.Path, e.Type);
+
+				if (e.Expression.Type.IsNullablePrimitiveType())
+					return new NullableMemberNode(previousNode.Path, e.Expression.Type);
+			}
+
+        	return previousNode;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression e)
@@ -204,7 +216,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
-        private Expression VisitStringMethodCall(MethodCallExpression e)
+		protected virtual Expression VisitStringMethodCall(MethodCallExpression e)
         {
             var member = (MemberExpression)e.Object;
             var methodName = e.Method.Name;
@@ -219,21 +231,21 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
 
                     Visit(member);
-                    _nodesContainer.AddNode(new OperatorNode(Operator.Like()));
+                    _nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(Expression.Constant(newValue));
                     break;
                 case "ToLower":
-                    _nodesContainer.AddNode(ToLowerNode(CreateNewMemberNode(member)));
+                    _nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
                     break;
                 case "ToUpper":
-                    _nodesContainer.AddNode(ToUpperNode(CreateNewMemberNode(member)));
+                    _nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
                     break;
             }
 
             return e;
         }
 
-    	private Expression VisitStringQxMethodCall(MethodCallExpression e)
+		protected virtual Expression VisitStringQxMethodCall(MethodCallExpression e)
         {
             var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
@@ -253,21 +265,21 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     var constant = Expression.Constant(newValue);
 
                     Visit(member);
-                    _nodesContainer.AddNode(new OperatorNode(Operator.Like()));
+                    _nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(constant);
                     break;
                 case "QxToLower":
-                    _nodesContainer.AddNode(ToLowerNode(CreateNewMemberNode(member)));
+					_nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
                     break;
                 case "QxToUpper":
-                    _nodesContainer.AddNode(ToUpperNode(CreateNewMemberNode(member)));
+					_nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
                     break;
             }
 
             return e;
         }
 
-    	private Expression VisitEnumerableQxMethodCall(MethodCallExpression e)
+		protected virtual Expression VisitEnumerableQxMethodCall(MethodCallExpression e)
         {
             var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
@@ -286,7 +298,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             return e;
         }
 
-    	private static void EnsureSupportedEnumerableQxOperator(LambdaExpression e)
+		protected virtual void EnsureSupportedEnumerableQxOperator(LambdaExpression e)
         {
             var isSupportedMethodCall = e.Body.NodeType == ExpressionType.Call && ((MethodCallExpression)e.Body).Method.Name == "QxAny";
             
@@ -295,28 +307,5 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if(!operatorIsSupported)
                 throw new SisoDbException(ExceptionMessages.WhereParser_QxEnumerables_OperatorNotSupported.Inject(e.Body.NodeType));
         }
-
-    	protected NullableMemberNode ToNullableNode(MemberNode memberNode)
-    	{
-    		var path = memberNode.Path.EndsWith(".Value") 
-				? memberNode.Path.Substring(0, memberNode.Path.LastIndexOf('.'))
-				: memberNode.Path;
-
-    		return new NullableMemberNode(
-				path, 
-				memberNode.MemberType.IsNullablePrimitiveType() 
-					? memberNode.MemberType.GetGenericArguments()[0] 
-					: memberNode.MemberType);
-    	}
-
-    	protected ToLowerMemberNode ToLowerNode(MemberNode memberNode)
-    	{
-    		return new ToLowerMemberNode(memberNode.Path, memberNode.MemberType);
-    	}
-
-    	protected ToUpperMemberNode ToUpperNode(MemberNode memberNode)
-    	{
-    		return new ToUpperMemberNode(memberNode.Path, memberNode.MemberType);
-    	}
     }
 }

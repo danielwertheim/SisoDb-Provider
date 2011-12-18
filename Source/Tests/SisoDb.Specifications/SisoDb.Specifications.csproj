@@ -37,8 +37,9 @@
     <Reference Include="Machine.Specifications">
       <HintPath>..\..\packages\Machine.Specifications.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.23.0.69, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.23.0.69\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone">
       <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\PineCone.dll</HintPath>

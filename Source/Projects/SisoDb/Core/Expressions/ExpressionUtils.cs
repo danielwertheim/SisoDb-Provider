@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using NCore.Reflections;
 
 namespace SisoDb.Core.Expressions
 {
     public static class ExpressionUtils
     {
+		public static bool IsNullableValueTypeMemberExpression(this Expression e)
+		{
+			var memberExpression = e as MemberExpression;
+
+			if (memberExpression == null)
+				return false;
+
+			return memberExpression.Type.IsNullablePrimitiveType() || memberExpression.Expression.Type.IsNullablePrimitiveType();
+		}
+
     	public static Expression<Func<T, object>> GetMemberExpression<T>(string memberName) where T : class
 		{
 			var p = Expression.Parameter(typeof(T));
