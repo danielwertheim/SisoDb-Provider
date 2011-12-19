@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SisoDb
 {
-	public interface IReadSession : IDisposable
+	public interface IQueryEngine : IDisposable
 	{
 		/// <summary>
 		/// Advances querying options.

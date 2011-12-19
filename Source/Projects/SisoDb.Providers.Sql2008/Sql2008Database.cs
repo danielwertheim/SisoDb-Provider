@@ -8,9 +8,9 @@ namespace SisoDb.Sql2008
         {
         }
 
-		public override IReadSession CreateReadSession()
+		public override IQueryEngine CreateQueryEngine()
         {
-            return new Sql2008ReadSession(
+            return new Sql2008QueryEngine(
 				this,
 				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo),
 				DbSchemaManager);

@@ -5,7 +5,7 @@ using Machine.Specifications;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.ReadSession
+namespace SisoDb.Specifications.QueryEngine
 {
 	class GetByIds
     {

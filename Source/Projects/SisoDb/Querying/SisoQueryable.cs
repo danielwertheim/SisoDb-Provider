@@ -8,14 +8,14 @@ namespace SisoDb.Querying
 {
 	public class SisoQueryable<T> : ISisoQueryable<T> where T : class
 	{
-		protected virtual IReadSession ReadSession { get; private set; }
+		protected virtual IQueryEngine QueryEngine { get; private set; }
 		protected readonly IQueryBuilder<T> QueryBuilder;
 
-		public SisoQueryable(IQueryBuilder<T> queryBuilder, IReadSession readSession)
+		public SisoQueryable(IQueryBuilder<T> queryBuilder, IQueryEngine queryEngine)
 			: this(queryBuilder)
 		{
-			Ensure.That(readSession, "readSession").IsNotNull();
-			ReadSession = readSession;
+			Ensure.That(queryEngine, "QueryEngine").IsNotNull();
+			QueryEngine = queryEngine;
 		}
 
 		protected SisoQueryable(IQueryBuilder<T> queryBuilder)
@@ -24,78 +24,78 @@ namespace SisoDb.Querying
 			QueryBuilder = queryBuilder;
 		}
 
-		public virtual IEnumerable<T> Yield()
+		public virtual IEnumerable<T> ToEnumerable()
 		{
-			return ReadSession.Query<T>(QueryBuilder.Build());
+			return QueryEngine.Query<T>(QueryBuilder.Build());
 		}
 
-		public virtual IEnumerable<TResult> YieldAs<TResult>() where TResult : class
+		public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
 		{
-			return ReadSession.QueryAs<T, TResult>(QueryBuilder.Build());
+			return QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
 		}
 
-		public virtual IEnumerable<string> YieldAsJson()
+		public virtual IEnumerable<string> ToEnumerableOfJson()
 		{
-			return ReadSession.QueryAsJson<T>(QueryBuilder.Build());
+			return QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
 		}
 
 		public virtual IList<T> ToList()
 		{
-			return Yield().ToList();
+			return ToEnumerable().ToList();
 		}
 
 		public virtual IList<TResult> ToListOf<TResult>() where TResult : class
 		{
-			return YieldAs<TResult>().ToList();
+			return ToEnumerableOf<TResult>().ToList();
 		}
 
 		public virtual IList<string> ToListOfJson()
 		{
-			return YieldAsJson().ToList();
+			return ToEnumerableOfJson().ToList();
 		}
 
 		public virtual T Single()
 		{
-			return Yield().Single();
+			return ToEnumerable().Single();
 		}
 
 		public virtual TResult SingleAs<TResult>() where TResult : class
 		{
-			return YieldAs<TResult>().Single();
+			return ToEnumerableOf<TResult>().Single();
 		}
 
 		public virtual string SingleAsJson()
 		{
-			return YieldAsJson().Single();
+			return ToEnumerableOfJson().Single();
 		}
 
 		public virtual T SingleOrDefault()
 		{
-			return Yield().SingleOrDefault();
+			return ToEnumerable().SingleOrDefault();
 		}
 
 		public virtual TResult SingleOrDefaultAs<TResult>() where TResult : class 
 		{
-			return YieldAs<TResult>().SingleOrDefault();
+			return ToEnumerableOf<TResult>().SingleOrDefault();
 		}
 
 		public virtual string SingleOrDefaultAsJson()
 		{
-			return YieldAsJson().SingleOrDefault();
+			return ToEnumerableOfJson().SingleOrDefault();
 		}
 
 		public virtual int Count()
 		{
 			QueryBuilder.Clear();
 
-			return ReadSession.Count<T>(QueryBuilder.Build());
+			return QueryEngine.Count<T>(QueryBuilder.Build());
 		}
 
 		public virtual int Count(Expression<Func<T, bool>> expression)
 		{
 			QueryBuilder.Clear();
 
-			return ReadSession.Count<T>(QueryBuilder.Where(expression).Build());
+			return QueryEngine.Count<T>(QueryBuilder.Where(expression).Build());
 		}
 
 		public virtual ISisoQueryable<T> Take(int numOfStructures)

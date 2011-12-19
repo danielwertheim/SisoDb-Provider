@@ -5,9 +5,9 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
-	class QxEndsWith
+	class StartsWith
     {
-        [Subject(typeof(IReadSession), "QxEndsWith")]
+        [Subject(typeof(IQueryEngine), "StartsWith")]
         public class when_two_items_has_string_that_does_not_match_query : SpecificationBase
         {
             Establish context = () =>
@@ -20,8 +20,10 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                 }));
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-					.Query<QueryGuidItem>().Where(i => i.StringValue.QxEndsWith("Foo")).ToList();
+            Because of = 
+				() => _fetchedStructures = TestContext.Database.ReadOnce()
+					.Query<QueryGuidItem>()
+                    .Where(i => i.StringValue.StartsWith("Foo")).ToList();
 
             It should_not_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -29,8 +31,8 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxEndsWith")]
-        public class when_two_items_has_string_that_ends_with_queried_argument : SpecificationBase
+        [Subject(typeof(IQueryEngine), "StartsWith")]
+        public class when_two_items_has_string_that_starts_with_queried_argument : SpecificationBase
         {
             Establish context = () =>
             {
@@ -42,8 +44,9 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                 }));
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-					.Query<QueryGuidItem>().Where(i => i.StringValue.QxEndsWith("ha")).ToList();
+            Because of = 
+				() => _fetchedStructures = TestContext.Database.ReadOnce()
+					.Query<QueryGuidItem>().Where(i => i.StringValue.StartsWith("Al")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -58,7 +61,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxEndsWith")]
+        [Subject(typeof(IQueryEngine), "StartsWith")]
         public class when_two_items_has_string_that_completely_matches_argument : SpecificationBase
         {
             Establish context = () =>
@@ -71,8 +74,9 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                 }));
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-					.Query<QueryGuidItem>().Where(i => i.StringValue.QxEndsWith("Alpha")).ToList();
+            Because of = 
+				() => _fetchedStructures = TestContext.Database.ReadOnce()
+					.Query<QueryGuidItem>().Where(i => i.StringValue.StartsWith("Alpha")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
     class ToLower
     {
         //COLLATION FUCKS IT UP
-        //[Subject(typeof(IReadSession), "ToLower")]
+		//[Subject(typeof(IQueryEngine), "ToLower")]
         //public class when_query_does_not_match_any_items : SpecificationBase
         //{
         //    Establish context = () =>
@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
         //    private static IList<StringFunctionsItem> _fetchedStructures;
         //}
 
-        [Subject(typeof(IReadSession), "ToLower")]
+        [Subject(typeof(IQueryEngine), "ToLower")]
         public class when_query_matches_subset_of_2_items : SpecificationBase
         {
             Establish context = () =>

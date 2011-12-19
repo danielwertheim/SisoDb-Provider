@@ -80,7 +80,7 @@
     </Compile>
     <Compile Include="SqlCe4QueryGenerator.cs" />
     <Compile Include="SqlCe4UnitOfWork.cs" />
-    <Compile Include="SqlCe4ReadSession.cs" />
+    <Compile Include="SqlCe4QueryEngine.cs" />
     <Compile Include="SqlCe4ConnectionInfo.cs" />
     <Compile Include="SqlCe4Database.cs" />
     <Compile Include="SqlCe4DbFactory.cs" />

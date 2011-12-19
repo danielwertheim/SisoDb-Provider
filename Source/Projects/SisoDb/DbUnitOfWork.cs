@@ -14,7 +14,7 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class DbUnitOfWork : DbReadSession, IUnitOfWork
+	public abstract class DbUnitOfWork : DbQueryEngine, IUnitOfWork
 	{
 		protected const int MaxUpdateManyBatchSize = 1000;
 

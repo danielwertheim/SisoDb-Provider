@@ -4,11 +4,11 @@ using Machine.Specifications;
 using SisoDb.Querying;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.ReadSession
+namespace SisoDb.Specifications.QueryEngine
 {
 	class Includes
     {
-        [Subject(typeof(IReadSession), "Includes using Get all as X")]
+        [Subject(typeof(IQueryEngine), "Includes using Get all as X")]
         public class when_getting_all_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -32,7 +32,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Includes using Get all as X")]
+        [Subject(typeof(IQueryEngine), "Includes using Get all as X")]
         public class when_getting_all_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -56,7 +56,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Includes with Where, Paging and Sorting using Query as X")]
+        [Subject(typeof(IQueryEngine), "Includes with Where, Paging and Sorting using Query as X")]
         public class when_querying_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -92,7 +92,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Includes using Query as X")]
+        [Subject(typeof(IQueryEngine), "Includes using Query as X")]
         public class when_querying_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -117,7 +117,7 @@ namespace SisoDb.Specifications.ReadSession
         }
 
 #if Sql2008Provider
-        [Subject(typeof(IReadSession), "Includes using Named Query")]
+        [Subject(typeof(IQueryEngine), "Includes using Named Query")]
         public class when_named_query_including_different_firstlevel_members : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
             Establish context = () =>
@@ -146,7 +146,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Includes using Named Query")]
+        [Subject(typeof(IQueryEngine), "Includes using Named Query")]
         public class when_named_query_using_interfaces_including_different_firstlevel_members : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
             Establish context = () =>
@@ -176,7 +176,7 @@ namespace SisoDb.Specifications.ReadSession
         }
 #endif
 
-        internal static class Establishments
+		internal static class Establishments
         {
             internal static Album SetupStructuresForIncludes(ITestContext testContext)
             {

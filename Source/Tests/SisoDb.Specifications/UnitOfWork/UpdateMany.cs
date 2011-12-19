@@ -51,7 +51,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_removed_the_person = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					q.Query<ModelComplexUpdates.Person>().Count().ShouldEqual(0);
 				}
@@ -59,7 +59,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_created_a_salesperson_from_the_person = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					var refetchedSalesPerson = q.GetById<ModelComplexUpdates.SalesPerson>(_personId);
 					refetchedSalesPerson.Firstname.ShouldEqual("Daniel");
@@ -117,7 +117,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					var newItem1 = q.GetById<ModelNew.ItemForPropChange>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
@@ -127,7 +127,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_removed_the_second_item = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					var newItem2 = q.GetById<ModelNew.ItemForPropChange>(_orgItem2Id);
 					newItem2.ShouldBeNull();
@@ -136,7 +136,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_last_item = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					var newItem3 = q.GetById<ModelNew.ItemForPropChange>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
@@ -190,7 +190,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					var newItem1 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
@@ -200,7 +200,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_removed_the_second_item = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					var newItem2 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem2Id);
 					newItem2.ShouldBeNull();
@@ -209,7 +209,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_last_item = () =>
 			{
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					var newItem3 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
@@ -266,7 +266,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelOld.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
 				}
@@ -329,7 +329,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.ItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					items = q.Query<ModelNew.ItemForPropChange>().ToList();
 				}
@@ -392,7 +392,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
 				}
@@ -456,7 +456,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.ItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					items = q.Query<ModelNew.ItemForPropChange>().ToList();
 				}
@@ -521,7 +521,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateReadSession())
+				using (var q = TestContext.Database.CreateQueryEngine())
 				{
 					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
 				}

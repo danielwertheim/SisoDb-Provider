@@ -3,11 +3,11 @@ using Machine.Specifications;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.ReadSession
+namespace SisoDb.Specifications.QueryEngine
 {
     class Query
     {
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(IQueryEngine), "Query")]
         public class when_expression_does_not_match_any_structures : SpecificationBase
         {
             Establish context = () =>
@@ -25,7 +25,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(IQueryEngine), "Query as Json")]
         public class when_expression_does_not_match_any_json_structures : SpecificationBase
         {
             Establish context = () =>
@@ -43,7 +43,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(IQueryEngine), "Query as X")]
         public class when_expression_does_not_match_any_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
@@ -61,7 +61,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(IQueryEngine), "Query")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
@@ -86,7 +86,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(IQueryEngine), "Query as Json")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
@@ -111,7 +111,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(IQueryEngine), "Query as X")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
@@ -136,7 +136,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(IQueryEngine), "Query")]
         public class when_expression_contains_item_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
@@ -161,7 +161,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(IQueryEngine), "Query as Json")]
         public class when_expression_contains_item_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
@@ -186,7 +186,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(IQueryEngine), "Query as X")]
         public class when_expression_contains_item_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
@@ -211,7 +211,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(IQueryEngine), "Query")]
         public class when_expression_contains_local_constants_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
@@ -240,7 +240,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(IQueryEngine), "Query as Json")]
         public class when_expression_contains_local_constants_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
@@ -269,7 +269,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(IQueryEngine), "Query as X")]
         public class when_expression_contains_local_constants_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
@@ -298,7 +298,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(IQueryEngine), "Query")]
         public class when_expression_contains_variables_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
@@ -327,7 +327,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(IQueryEngine), "Query as Json")]
         public class when_expression_contains_variables_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
@@ -356,7 +356,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(IQueryEngine), "Query as X")]
         public class when_expression_contains_variables_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
@@ -385,7 +385,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query (nested items)")]
+        [Subject(typeof(IQueryEngine), "Query (nested items)")]
         public class when_expression_contains_variables_matching_two_middle_nested_structures : SpecificationBase
         {
             Establish context = () =>
@@ -414,7 +414,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryNestedGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json (nested items)")]
+        [Subject(typeof(IQueryEngine), "Query as Json (nested items)")]
         public class when_expression_contains_variables_matching_two_middle_nested_json_structures : SpecificationBase
         {
             Establish context = () =>
@@ -443,7 +443,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X (nested items)")]
+        [Subject(typeof(IQueryEngine), "Query as X (nested items)")]
         public class when_expression_contains_variables_matching_two_middle_nested_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
@@ -472,7 +472,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryNestedItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query with Take")]
+        [Subject(typeof(IQueryEngine), "Query with Take")]
         public class when_query_matches_the_three_last_structures_of_four_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
@@ -497,7 +497,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json with Take")]
+        [Subject(typeof(IQueryEngine), "Query as Json with Take")]
         public class when_query_matches_the_three_last_json_structures_of_four_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
@@ -522,7 +522,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X with Take")]
+        [Subject(typeof(IQueryEngine), "Query as X with Take")]
         public class when_query_matches_the_three_last_structures_of_four_and_take_is_two_as_X : SpecificationBase
         {
             Establish context = () =>
@@ -547,7 +547,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query with Take and Sort")]
+        [Subject(typeof(IQueryEngine), "Query with Take and Sort")]
         public class when_set_is_unsorted_and_query_matches_three_of_four_structures_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
@@ -572,7 +572,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json with Take and Sort")]
+        [Subject(typeof(IQueryEngine), "Query as Json with Take and Sort")]
         public class when_set_is_unsorted_and_query_matches_three_of_four_json_structures_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
@@ -597,7 +597,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X with Take and Sort")]
+        [Subject(typeof(IQueryEngine), "Query as X with Take and Sort")]
         public class when_set_is_unsorted_and_query_matches_three_of_four_structures_and_take_is_two_as_X : SpecificationBase
         {
             Establish context = () =>
@@ -622,7 +622,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query with Sort and Page")]
+        [Subject(typeof(IQueryEngine), "Query with Sort and Page")]
         public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page : SpecificationBase
         {
             Establish context = () =>
@@ -646,7 +646,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json Sort and Page")]
+        [Subject(typeof(IQueryEngine), "Query as Json Sort and Page")]
         public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page_as_Json : SpecificationBase
         {
             Establish context = () =>
@@ -670,7 +670,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X with Sort and Page")]
+        [Subject(typeof(IQueryEngine), "Query as X with Sort and Page")]
         public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page_as_X : SpecificationBase
         {
             Establish context = () =>

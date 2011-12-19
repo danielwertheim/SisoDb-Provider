@@ -53,7 +53,7 @@ namespace SisoDb.Testing.Steps
         {
             var structureScema = db.StructureSchemas.GetSchema<T>();
 
-            using (var rs = db.CreateReadSession())
+            using (var rs = db.CreateQueryEngine())
             {
                 var items = rs.Query<T>().ToList();
                 
@@ -69,7 +69,7 @@ namespace SisoDb.Testing.Steps
         {
             Ensure.That(ids, "ids").HasItems();
 
-            using (var qe = db.CreateReadSession())
+            using (var qe = db.CreateQueryEngine())
             {
                 foreach (var id in ids)
                     qe.GetById<T>(id).ShouldNotBeNull();
@@ -80,7 +80,7 @@ namespace SisoDb.Testing.Steps
         {
             Ensure.That(ids, "ids").HasItems();
 
-            using (var qe = db.CreateReadSession())
+            using (var qe = db.CreateQueryEngine())
             {
                 foreach (var id in ids)
                     qe.GetById<T>(id).ShouldBeNull();
@@ -93,7 +93,7 @@ namespace SisoDb.Testing.Steps
 
             var structureSchema = db.StructureSchemas.GetSchema(typeof(T));
 
-            using (var qe = db.CreateReadSession())
+            using (var qe = db.CreateQueryEngine())
             {
                 foreach (var structure in structures)
                 {
@@ -106,9 +106,9 @@ namespace SisoDb.Testing.Steps
 
         public static void should_have_valid_structures<T>(this ISisoDatabase db, Action<T> validationRule) where T : class
         {
-            using (var rs = db.CreateReadSession())
+            using (var rs = db.CreateQueryEngine())
             {
-                foreach (var structure in rs.Query<T>().Yield())
+                foreach (var structure in rs.Query<T>().ToEnumerable())
                     validationRule(structure);
             }
         }

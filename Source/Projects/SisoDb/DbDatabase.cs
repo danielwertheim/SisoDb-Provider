@@ -186,7 +186,7 @@ namespace SisoDb
             }
         }
 
-    	public abstract IReadSession CreateReadSession();
+    	public abstract IQueryEngine CreateQueryEngine();
 
     	public abstract IUnitOfWork CreateUnitOfWork();
 
@@ -212,9 +212,9 @@ namespace SisoDb
         }
 
     	[DebuggerStepThrough]
-        public void WithQueryEngine(Action<IReadSession> consumer)
+        public void WithQueryEngine(Action<IQueryEngine> consumer)
         {
-            using (var qe = CreateReadSession())
+            using (var qe = CreateQueryEngine())
             {
                 consumer.Invoke(qe);
             }

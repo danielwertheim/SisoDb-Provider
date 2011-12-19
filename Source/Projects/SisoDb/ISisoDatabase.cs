@@ -109,11 +109,11 @@ namespace SisoDb
         void UpsertStructureSet(Type type);
 
         /// <summary>
-		/// Creates a NON Transactional <see cref="IReadSession"/> used for searching.
+		/// Creates a NON Transactional <see cref="IQueryEngine"/> used for searching.
         /// Is designed for being short lived. Create, consume and dispose.
         /// </summary>
         /// <returns></returns>
-        IReadSession CreateReadSession();
+        IQueryEngine CreateQueryEngine();
 
         /// <summary>
         /// Creates a Transactional UnitOfWork <see cref="IUnitOfWork"/>, which is designed
@@ -124,10 +124,10 @@ namespace SisoDb
 
         /// <summary>
         /// Use when you want to execute a single Fetch against the <see cref="ISisoDatabase"/>
-		/// via an <see cref="IReadSession"/>.
+		/// via an <see cref="IQueryEngine"/>.
         /// </summary>
         /// <returns></returns>
-        /// <remarks>If you need to do multiple queries, use <see cref="CreateReadSession"/> instead.</remarks>
+        /// <remarks>If you need to do multiple queries, use <see cref="CreateQueryEngine"/> instead.</remarks>
         [DebuggerStepThrough]
         IReadOnce ReadOnce();
 
@@ -149,10 +149,10 @@ namespace SisoDb
         void WithUnitOfWork(Action<IUnitOfWork> consumer);
 
         /// <summary>
-		/// Simplifies usage of <see cref="IReadSession"/>.
+		/// Simplifies usage of <see cref="IQueryEngine"/>.
         /// </summary>
         /// <param name="consumer"></param>
         [DebuggerStepThrough]
-		void WithQueryEngine(Action<IReadSession> consumer);
+		void WithQueryEngine(Action<IQueryEngine> consumer);
     }
 }

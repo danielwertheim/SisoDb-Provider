@@ -6,11 +6,11 @@ namespace SisoDb
 {
 	public interface ISisoQueryable<T> where T : class
 	{
-		IEnumerable<T> Yield();
+		IEnumerable<T> ToEnumerable();
 
-		IEnumerable<TResult> YieldAs<TResult>() where TResult : class;
+		IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class;
 
-		IEnumerable<string> YieldAsJson();
+		IEnumerable<string> ToEnumerableOfJson();
 
 		IList<T> ToList();
 

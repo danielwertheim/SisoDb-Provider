@@ -35,7 +35,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 string json;
 
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                     json = qe.Query<JsonItem>().SingleAsJson();
 
                 var jsonWithoutStructureId = "{" + json.Remove(0, 50);
@@ -46,7 +46,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                 {
                     structure = qe.Query<JsonItem>().Single();
                 }
@@ -90,7 +90,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
                 
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                     structure = qe.Query<JsonItem>().Single();
 
                 structure.StructureId.ShouldNotEqual(Guid.Parse(_idString));
@@ -125,7 +125,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                     structure = qe.Query<JsonItem>().Single();
 
                 structure.String1.ShouldNotEqual("1");

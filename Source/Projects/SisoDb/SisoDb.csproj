@@ -98,7 +98,7 @@
     <Compile Include="IAdvancedQuerySession.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
-    <Compile Include="IReadSession.cs" />
+    <Compile Include="IQueryEngine.cs" />
     <Compile Include="ISisoQueryable.cs" />
     <Compile Include="Querying\IQueryBuilder.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ToLowerMemberNode.cs" />
@@ -112,7 +112,7 @@
     <Compile Include="Querying\Lambdas\Parsers\OrderByParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereExpressionChainer.cs" />
     <Compile Include="Querying\Query.cs" />
-    <Compile Include="DbReadSession.cs" />
+    <Compile Include="DbQueryEngine.cs" />
     <Compile Include="Querying\QueryBuilder.cs" />
     <Compile Include="Querying\SisoReadOnceQueryable.cs" />
     <Compile Include="Querying\SisoQueryable.cs" />

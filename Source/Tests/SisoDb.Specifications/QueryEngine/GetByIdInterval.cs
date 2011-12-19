@@ -7,11 +7,11 @@ using SisoDb.Resources;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.ReadSession
+namespace SisoDb.Specifications.QueryEngine
 {
 	class GetByIdInterval
     {
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_identities_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryIdentityItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_big_identities_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -37,7 +37,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryBigIdentityItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_guids : SpecificationBase
         {
             Establish context = () =>
@@ -68,7 +68,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryGuidItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_strings : SpecificationBase
         {
             Establish context = () =>
@@ -99,7 +99,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryStringItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_identities_and_range_matches_subset_of_items : SpecificationBase
         {
             Establish context = () =>
@@ -133,7 +133,7 @@ namespace SisoDb.Specifications.ReadSession
             private static IList<QueryIdentityItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_big_identities_and_range_matches_subset_of_items : SpecificationBase
         {
             Establish context = () =>

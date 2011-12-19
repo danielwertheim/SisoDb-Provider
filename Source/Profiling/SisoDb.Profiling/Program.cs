@@ -53,7 +53,7 @@ namespace SisoDb.Profiling
             stopWatch.Stop();
             Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
 
-            using (var rs = database.CreateReadSession())
+            using (var rs = database.CreateQueryEngine())
             {
 				var rowCount = rs.Query<Customer>().Count();
 
@@ -77,7 +77,7 @@ namespace SisoDb.Profiling
                 stopWatch.Reset();
             }
 
-            using (var rs = database.CreateReadSession())
+            using (var rs = database.CreateQueryEngine())
             {
                 var rowCount = rs.Query<Customer>().Count();
 

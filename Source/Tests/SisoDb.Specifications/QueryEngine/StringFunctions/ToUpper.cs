@@ -6,10 +6,10 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
-    class QxToLower
+    namespace ToUpper
     {
         //COLLATION FUCKS IT UP
-        //[Subject(typeof(IReadSession), "ToLower")]
+		//[Subject(typeof(IQueryEngine), "ToUpper")]
         //public class when_query_does_not_match_any_items : SpecificationBase
         //{
         //    Establish context = () =>
@@ -19,7 +19,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
         //    };
 
         //    Because of = 
-        //        () => _fetchedStructures = TestContext.Database.ReadOnce().Where<StringFunctionsItem>(i => i.String1.QxToLower() == "FOO1").ToList();
+        //        () => _fetchedStructures = TestContext.Database.ReadOnce().Where<StringFunctionsItem>(i => i.String1.ToUpper() == "foo1").ToList();
 
         //    It should_not_have_fetched_any_structures =
         //        () => _fetchedStructures.Count.ShouldEqual(0);
@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
         //    private static IList<StringFunctionsItem> _fetchedStructures;
         //}
 
-        [Subject(typeof(IReadSession), "QxToLower")]
+        [Subject(typeof(IQueryEngine), "ToUpper")]
         public class when_query_matches_subset_of_2_items : SpecificationBase
         {
             Establish context = () =>
@@ -36,10 +36,9 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                 _structures = TestContext.Database.WriteOnce().InsertMany(StringFunctionsItem.CreateItems(5, "ABC").MergeWith(StringFunctionsItem.CreateItems(5, "EFG")).ToList());
             };
 
-            Because of = 
+            Because of =
 				() => _fetchedStructures = TestContext.Database.ReadOnce()
-					.Query<StringFunctionsItem>()
-					.Where(i => i.String1.QxToLower() == "efg2" || i.String1.QxToLower() == "efg3").ToList();
+					.Query<StringFunctionsItem>().Where(i => i.String1.ToUpper() == "EFG2" || i.String1.ToUpper() == "EFG3").ToList();
 
             It should_have_fetched_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

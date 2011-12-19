@@ -20,9 +20,9 @@ namespace SisoDb
 
 		public int Count<T>() where T : class
 		{
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.Query<T>().Count();
+				return qe.Query<T>().Count();
 			}
 		}
 
@@ -35,9 +35,9 @@ namespace SisoDb
 
 		public T GetById<T>(object id) where T : class
 		{
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.GetById<T>(id);
+				return qe.GetById<T>(id);
 			}
 		}
 
@@ -45,9 +45,9 @@ namespace SisoDb
 			where TContract : class
 			where TOut : class
 		{
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.GetByIdAs<TContract, TOut>(id);
+				return qe.GetByIdAs<TContract, TOut>(id);
 			}
 		}
 
@@ -55,9 +55,9 @@ namespace SisoDb
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.GetByIds<T>(ids).ToList();
+				return qe.GetByIds<T>(ids).ToList();
 			}
 		}
 
@@ -67,25 +67,25 @@ namespace SisoDb
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.GetByIdsAs<TContract, TOut>(ids).ToList();
+				return qe.GetByIdsAs<TContract, TOut>(ids).ToList();
 			}
 		}
 
 		public IList<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.GetByIdInterval<T>(idFrom, idTo).ToList();
+				return qe.GetByIdInterval<T>(idFrom, idTo).ToList();
 			}
 		}
 
 		public string GetByIdAsJson<T>(object id) where T : class
 		{
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.GetByIdAsJson<T>(id);
+				return qe.GetByIdAsJson<T>(id);
 			}
 		}
 
@@ -93,9 +93,9 @@ namespace SisoDb
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.GetByIdsAsJson<T>(ids).ToList();
+				return qe.GetByIdsAsJson<T>(ids).ToList();
 			}
 		}
 
@@ -103,9 +103,9 @@ namespace SisoDb
 		{
 			Ensure.That(query, "query").IsNotNull();
 
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.Advanced.NamedQuery<T>(query).ToList();
+				return qe.Advanced.NamedQuery<T>(query).ToList();
 			}
 		}
 
@@ -115,9 +115,9 @@ namespace SisoDb
 		{
 			Ensure.That(query, "query").IsNotNull();
 
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.Advanced.NamedQueryAs<TContract, TOut>(query).ToList();
+				return qe.Advanced.NamedQueryAs<TContract, TOut>(query).ToList();
 			}
 		}
 
@@ -125,15 +125,15 @@ namespace SisoDb
 		{
 			Ensure.That(query, "query").IsNotNull();
 
-			using (var rs = _db.CreateReadSession())
+			using (var qe = _db.CreateQueryEngine())
 			{
-				return rs.Advanced.NamedQueryAsJson<T>(query).ToList();
+				return qe.Advanced.NamedQueryAsJson<T>(query).ToList();
 			}
 		}
 
 		public ISisoQueryable<T> Query<T>() where T : class
 		{
-			return new SisoReadOnceQueryable<T>(_db.ProviderFactory.GetQueryBuilder<T>(_db.StructureSchemas), () => _db.CreateReadSession());
+			return new SisoReadOnceQueryable<T>(_db.ProviderFactory.GetQueryBuilder<T>(_db.StructureSchemas), () => _db.CreateQueryEngine());
 		}
     }
 }

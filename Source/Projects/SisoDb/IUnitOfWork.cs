@@ -8,7 +8,7 @@ namespace SisoDb
     /// All operations within the unit of work are transactional.
     /// Use <see cref="Commit"/> to make your changes persistant.
     /// </summary>
-    public interface IUnitOfWork : IReadSession
+    public interface IUnitOfWork : IQueryEngine
     {
         /// <summary>
         /// Commits your changes to the database. After a commit you

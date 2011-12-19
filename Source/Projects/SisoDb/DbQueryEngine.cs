@@ -15,14 +15,14 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class DbReadSession : IReadSession, IAdvancedQuerySession
+	public abstract class DbQueryEngine : IQueryEngine, IAdvancedQuerySession
 	{
 		protected readonly ISisoDatabase Db;
 		protected IDbClient DbClient;
 		protected readonly IDbSchemaManager DbSchemaManager;
 		protected readonly IDbQueryGenerator QueryGenerator;
 
-		protected DbReadSession(ISisoDatabase db, IDbClient dbClient, IDbSchemaManager dbSchemaManager)
+		protected DbQueryEngine(ISisoDatabase db, IDbClient dbClient, IDbSchemaManager dbSchemaManager)
 		{
 			Ensure.That(db, "db").IsNotNull();
 			Ensure.That(dbClient, "dbClient").IsNotNull();

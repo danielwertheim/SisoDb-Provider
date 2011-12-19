@@ -7,9 +7,9 @@ namespace SisoDb.SqlCe4
         {
         }
 
-		public override IReadSession CreateReadSession()
+		public override IQueryEngine CreateQueryEngine()
         {
-            return new SqlCe4ReadSession(
+            return new SqlCe4QueryEngine(
 				this,
 				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo),
 				DbSchemaManager);

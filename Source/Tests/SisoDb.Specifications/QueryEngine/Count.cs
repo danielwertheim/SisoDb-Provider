@@ -2,18 +2,18 @@
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.ReadSession
+namespace SisoDb.Specifications.QueryEngine
 {
 	class Count
     {
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(IQueryEngine), "Count")]
         public class when_counting_all_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
             Because of = () =>
             {
-                using (var rs = TestContext.Database.CreateReadSession())
+                using (var rs = TestContext.Database.CreateQueryEngine())
                     _itemsCount = rs.Query<QueryGuidItem>().Count();
             };
 
@@ -22,14 +22,14 @@ namespace SisoDb.Specifications.ReadSession
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(IQueryEngine), "Count")]
         public class when_counting_using_query_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
             Because of = () =>
             {
-                using (var rs = TestContext.Database.CreateReadSession())
+                using (var rs = TestContext.Database.CreateQueryEngine())
 					_itemsCount = rs.Query<QueryGuidItem>().Count(x => x.StringValue == "Goofy");
             };
 
@@ -38,7 +38,7 @@ namespace SisoDb.Specifications.ReadSession
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(IQueryEngine), "Count")]
         public class when_two_items_exists_in_uncommitted_unit_of_work : SpecificationBase
         {
             Establish context = () =>
@@ -56,7 +56,7 @@ namespace SisoDb.Specifications.ReadSession
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                     _itemsCount = qe.Query<QueryGuidItem>().Count();
             };
 
@@ -65,7 +65,7 @@ namespace SisoDb.Specifications.ReadSession
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(IQueryEngine), "Count")]
         public class when_two_items_exists_in_committed_unit_of_work : SpecificationBase
         {
             Establish context = () =>
@@ -85,7 +85,7 @@ namespace SisoDb.Specifications.ReadSession
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                     _itemsCount = qe.Query<QueryGuidItem>().Count();
             };
 
@@ -94,7 +94,7 @@ namespace SisoDb.Specifications.ReadSession
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(IQueryEngine), "Count")]
         public class when_query_matches_two_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>
@@ -115,7 +115,7 @@ namespace SisoDb.Specifications.ReadSession
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                     _itemsCount = qe.Query<QueryGuidItem>().Count(x => x.SortOrder > 1);
             };
 
@@ -124,7 +124,7 @@ namespace SisoDb.Specifications.ReadSession
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(IQueryEngine), "Count")]
         public class when_query_matches_none_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>
@@ -145,7 +145,7 @@ namespace SisoDb.Specifications.ReadSession
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                     _itemsCount = qe.Query<QueryGuidItem>().Count(x => x.SortOrder < 1);
             };
 

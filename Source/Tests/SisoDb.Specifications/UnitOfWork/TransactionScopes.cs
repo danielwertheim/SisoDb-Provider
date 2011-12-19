@@ -43,7 +43,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                 {
 					qe.Query<IdentityItem>().Count().ShouldEqual(0);
                 }
@@ -85,7 +85,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.CreateReadSession())
+                using (var qe = TestContext.Database.CreateQueryEngine())
                 {
 					qe.Query<IdentityItem>().Count().ShouldEqual(6);
                 }
