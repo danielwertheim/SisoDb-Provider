@@ -17,7 +17,8 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			for (var i = 0; i < nodes.Count; i++)
 			{
 				var nullableNode = nodes[i] as NullableMemberNode;
-				if (nullableNode == null || nullableNode.IsForHasValueCheck == false)
+
+				if (nullableNode == null || !nullableNode.IsForHasValueCheck)
 				{
 					newNodes.AddNode(nodes[i]);
 					continue;
@@ -35,7 +36,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
 				if (rightOperator == null || rightValue == null)
 				{
 					newNodes.AddNodes(nullableNode, new OperatorNode(Operator.IsNot()), new NullNode());
-					i += 2;
 					continue;
 				}
 

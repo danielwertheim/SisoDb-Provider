@@ -54,6 +54,82 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		}
 
 		[Test]
+		public void Parse_WhenCombiningNullableHasValueAndValueInExpression_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1.HasValue && m.NullableInt1 != null);
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(9, listOfNodes.Count);
+
+			var startGroupNode = (StartGroupNode) listOfNodes[0];
+			var memberNode1 = (NullableMemberNode)listOfNodes[1];
+			var isNotNode1 = (OperatorNode)listOfNodes[2];
+			var nullNode1 = (NullNode)listOfNodes[3];
+			var andNode = (OperatorNode) listOfNodes[4];
+			var memberNode2 = (NullableMemberNode)listOfNodes[5];
+			var isNotNode2 = (OperatorNode)listOfNodes[6];
+			var nullNode2 = (NullNode)listOfNodes[7];
+			var endGroupNode = (EndGroupNode) listOfNodes[8];
+
+			Assert.AreEqual("NullableInt1", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+
+			Assert.AreEqual("NullableInt1", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("is not", isNotNode2.Operator.ToString());
+			Assert.AreEqual("null", nullNode2.ToString());
+		}
+
+    	[Test]
+    	public void Parse_WhenNullableIsComparedAgainstNullableVariableWithValue_ReturnsCorrectNodes()
+    	{
+    		var foo = (int?) 1;
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 == foo);
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(3, listOfNodes.Count);
+
+			var memberNode = (NullableMemberNode)listOfNodes[0];
+			var operatorNode = (OperatorNode)listOfNodes[1];
+			var operandNode = (ValueNode)listOfNodes[2];
+
+			Assert.AreEqual("NullableInt1", memberNode.Path);
+			Assert.AreEqual(typeof(int), memberNode.MemberType);
+			Assert.AreEqual("=", operatorNode.Operator.ToString());
+			Assert.AreEqual(1, operandNode.Value);
+    	}
+
+		[Test]
+		public void Parse_WhenNullableIsComparedAgainstNullableVariableIsNull_ReturnsCorrectNodes()
+		{
+			var foo = (int?)null;
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 == foo);
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(3, listOfNodes.Count);
+
+			var memberNode = (NullableMemberNode)listOfNodes[0];
+			var operatorNode = (OperatorNode)listOfNodes[1];
+			var operandNode = (NullNode)listOfNodes[2];
+
+			Assert.AreEqual("NullableInt1", memberNode.Path);
+			Assert.AreEqual(typeof(int), memberNode.MemberType);
+			Assert.AreEqual("=", operatorNode.Operator.ToString());
+			Assert.AreEqual("null", operandNode.ToString());
+		}
+
+		[Test]
 		public void Parse_WhenNullableIsComparedAgainstValue_ReturnsCorrectNodes()
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 == 1);

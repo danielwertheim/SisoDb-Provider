@@ -63,6 +63,7 @@
     <Compile Include="Database\DropStructureSets.cs" />
     <Compile Include="Database\EnsureNewDatabase.cs" />
     <Compile Include="Database\InitializeExisting.cs" />
+    <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="UnitOfWork\UpdateMany.cs" />
     <Compile Include="Database\UpsertStructureSet.cs" />
     <Compile Include="Model\ChildItem.cs" />

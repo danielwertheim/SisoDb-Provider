@@ -95,7 +95,7 @@
     <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
     <Compile Include="WriteOnce.cs" />
-    <Compile Include="IAdvancedQuerySession.cs" />
+    <Compile Include="IAdvancedQueries.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
     <Compile Include="IQueryEngine.cs" />

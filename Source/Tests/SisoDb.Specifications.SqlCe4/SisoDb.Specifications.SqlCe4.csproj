@@ -109,6 +109,9 @@
     <Compile Include="..\SisoDb.Specifications\Model\QueryNestedItemInfo.cs">
       <Link>Model\QueryNestedItemInfo.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryNullableItem.cs">
+      <Link>Model\QueryNullableItem.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Model\QueryStringItem.cs">
       <Link>Model\QueryStringItem.cs</Link>
     </Compile>

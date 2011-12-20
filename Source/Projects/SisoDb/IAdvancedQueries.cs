@@ -6,7 +6,7 @@ namespace SisoDb
     /// <summary>
     /// Used to execute some more advances query operations against the database.
     /// </summary>
-    public interface IAdvancedQuerySession
+    public interface IAdvancedQueries
     {
         /// <summary>
         /// Lets you invoke stored procedures that returns Json,

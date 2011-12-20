@@ -8,7 +8,7 @@ namespace SisoDb
 		/// <summary>
 		/// Advances querying options.
 		/// </summary>
-		IAdvancedQuerySession Advanced { get; }
+		IAdvancedQueries Advanced { get; }
 
 		/// <summary>
 		/// Issues a simple count for how many structures there are

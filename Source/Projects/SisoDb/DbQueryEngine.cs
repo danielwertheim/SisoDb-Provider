@@ -15,7 +15,7 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class DbQueryEngine : IQueryEngine, IAdvancedQuerySession
+	public abstract class DbQueryEngine : IQueryEngine, IAdvancedQueries
 	{
 		protected readonly ISisoDatabase Db;
 		protected IDbClient DbClient;
@@ -55,22 +55,22 @@ namespace SisoDb
 			get { return Db.StructureSchemas; }
 		}
 
-		public virtual IAdvancedQuerySession Advanced
+		public virtual IAdvancedQueries Advanced
 		{
 			get { return this; }
 		}
 
-		IEnumerable<T> IAdvancedQuerySession.NamedQuery<T>(INamedQuery query)
+		IEnumerable<T> IAdvancedQueries.NamedQuery<T>(INamedQuery query)
 		{
-			return Db.Serializer.DeserializeMany<T>(((IAdvancedQuerySession)this).NamedQueryAsJson<T>(query));
+			return Db.Serializer.DeserializeMany<T>(((IAdvancedQueries)this).NamedQueryAsJson<T>(query));
 		}
 
-		IEnumerable<TOut> IAdvancedQuerySession.NamedQueryAs<TContract, TOut>(INamedQuery query)
+		IEnumerable<TOut> IAdvancedQueries.NamedQueryAs<TContract, TOut>(INamedQuery query)
 		{
-			return Db.Serializer.DeserializeMany<TOut>(((IAdvancedQuerySession)this).NamedQueryAsJson<TContract>(query));
+			return Db.Serializer.DeserializeMany<TOut>(((IAdvancedQueries)this).NamedQueryAsJson<TContract>(query));
 		}
 
-		IEnumerable<string> IAdvancedQuerySession.NamedQueryAsJson<T>(INamedQuery query)
+		IEnumerable<string> IAdvancedQueries.NamedQueryAsJson<T>(INamedQuery query)
 		{
 			var structureSchema = Db.StructureSchemas.GetSchema<T>();
 			UpsertStructureSet(structureSchema);
