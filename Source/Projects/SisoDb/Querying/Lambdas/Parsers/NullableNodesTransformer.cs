@@ -4,15 +4,15 @@ using SisoDb.Querying.Lambdas.Operators;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {
-	internal class NullableNodesTransformer : INodesTransformer 
+	public class NullableNodesTransformer : INodesTransformer
 	{
-		public INodes Transform(INodes nodes)
+		public INodesCollection Transform(INodesCollection nodes)
 		{
 			if (!nodes.OfType<NullableMemberNode>().Any(n => n.IsForHasValueCheck))
 				return nodes;
 
 			var maxIndex = nodes.Count - 1;
-			var newNodes = new Nodes.Nodes();
+			var newNodes = new NodesCollection();
 
 			for (var i = 0; i < nodes.Count; i++)
 			{

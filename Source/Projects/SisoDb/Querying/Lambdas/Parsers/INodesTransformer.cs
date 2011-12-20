@@ -4,6 +4,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
 	public interface INodesTransformer
 	{
-		INodes Transform(INodes nodes);
+		INodesCollection Transform(INodesCollection nodes);
 	}
 }

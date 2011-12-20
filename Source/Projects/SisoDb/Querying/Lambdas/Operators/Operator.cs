@@ -63,6 +63,11 @@ namespace SisoDb.Querying.Lambdas.Operators
             return OperatorMap[expressionType].Invoke();
         }
 
+		public static EqualOperator Equal()
+		{
+			return new EqualOperator();
+		}
+
         public static LikeOperator Like()
         {
             return new LikeOperator();

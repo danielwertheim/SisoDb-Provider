@@ -5,11 +5,11 @@ using System.Collections.Generic;
 namespace SisoDb.Querying.Lambdas.Nodes
 {
     [Serializable]
-    public class Nodes : INodes
+    public class NodesCollection : INodesCollection
     {
         private readonly List<INode> _nodes;
 
-        public Nodes()
+        public NodesCollection()
         {
             _nodes = new List<INode>();
         }

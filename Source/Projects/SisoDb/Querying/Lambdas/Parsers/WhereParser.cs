@@ -17,7 +17,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
     	protected static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
         private readonly object _lock;
         private readonly Stack<MemberExpression> _virtualPrefixMembers;
-        private INodes _nodes;
+        private INodesCollection _nodes;
 
         protected bool IsFlatteningMembers
         {
@@ -48,7 +48,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             lock (_lock)
             {
-                _nodes = new Nodes.Nodes();
+                _nodes = new NodesCollection();
 
                 Visit(e);
 
@@ -58,7 +58,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
 		protected IParsedLambda CreateParsedLambda()
 		{
-			return new ParsedLambda(new NullableNodesTransformer().Transform(_nodes).ToArray());
+			var nodes =
+				new BoolNodesTransformer().Transform(
+				new NullableNodesTransformer().Transform(_nodes));
+
+			return new ParsedLambda(nodes.ToArray());
 		}
 
         protected override Expression VisitNew(NewExpression node)

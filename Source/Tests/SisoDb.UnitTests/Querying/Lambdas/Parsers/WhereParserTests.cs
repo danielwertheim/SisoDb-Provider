@@ -46,11 +46,46 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
-			Assert.AreEqual(1, listOfNodes.Count);
+			Assert.AreEqual(3, listOfNodes.Count);
 
 			var memberNode = (MemberNode)listOfNodes[0];
+			var equalNode = (OperatorNode) listOfNodes[1];
+			var valueNode = (ValueNode) listOfNodes[2];
+
 			Assert.AreEqual("Bool1", memberNode.Path);
 			Assert.AreEqual(typeof(bool), memberNode.MemberType);
+			Assert.AreEqual("=", equalNode.ToString());
+			Assert.AreEqual(true, valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenBoolWithoutComparisionOperatorAndWithNullable_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1 || m.NullableInt1.HasValue);
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (MemberNode)listOfNodes[0];
+			var equalNode = (OperatorNode)listOfNodes[1];
+			var valueNode = (ValueNode)listOfNodes[2];
+			var orNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (NullableMemberNode)listOfNodes[4];
+			var isNotNode2 = (OperatorNode)listOfNodes[5];
+			var nullNode2 = (NullNode)listOfNodes[6];
+			
+			Assert.AreEqual("Bool1", memberNode1.Path);
+			Assert.AreEqual(typeof(bool), memberNode1.MemberType);
+			Assert.AreEqual("=", equalNode.Operator.ToString());
+			Assert.AreEqual(true, valueNode.Value);
+			Assert.AreEqual("or", orNode.ToString());
+			Assert.AreEqual("NullableInt1", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("is not", isNotNode2.Operator.ToString());
+			Assert.AreEqual("null", nullNode2.ToString());
 		}
 
 		[Test]
@@ -78,7 +113,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			Assert.AreEqual(typeof(int), memberNode1.MemberType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
-
+			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt1", memberNode2.Path);
 			Assert.AreEqual(typeof(int), memberNode2.MemberType);
 			Assert.AreEqual("is not", isNotNode2.Operator.ToString());

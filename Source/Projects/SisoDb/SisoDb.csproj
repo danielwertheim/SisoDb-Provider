@@ -77,9 +77,10 @@
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="IReadOnce.cs" />
     <Compile Include="IWriteOnce.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\INodes.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\BoolNodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
@@ -163,7 +164,7 @@
     <Compile Include="Querying\Lambdas\Nodes\EndGroupNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNode.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\Nodes.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\NodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\OperatorNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StartGroupNode.cs" />

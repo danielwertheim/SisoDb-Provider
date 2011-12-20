@@ -9,6 +9,37 @@ namespace SisoDb.Specifications.QueryEngine
 	class Query
 	{
 		[Subject(typeof(IQueryEngine), "Query")]
+		public class when_using_plain_bool_and_nullable_value_type_hasvalue_in_expression : SpecificationBase
+		{
+			Establish context = () =>
+			{
+				TestContext = TestContextFactory.Create();
+
+				_structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableInt = null, BoolValue = true, StringValue = "Null" },
+					new QueryNullableItem { NullableInt = 1, BoolValue = false, StringValue = "One" },
+					new QueryNullableItem { NullableInt = 42, BoolValue = true, StringValue = "Fourthy two"}
+				};
+
+				TestContext.Database.WriteOnce().InsertMany(_structures);
+			};
+
+			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNullableItem>()
+				.Where(i => i.BoolValue && i.NullableInt.HasValue && i.NullableInt != null).ToList();
+
+			It should_have_fetched_one_structure =
+				() => _fetchedStructures.Count.ShouldEqual(1);
+
+			It should_have_fetched_the_last_structure = 
+				() => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[2]);
+			
+
+			private static IList<QueryNullableItem> _structures;
+			private static IList<QueryNullableItem> _fetchedStructures;
+		}
+
+		[Subject(typeof(IQueryEngine), "Query")]
 		public class when_using_nullable_value_types_in_expression : SpecificationBase
 		{
 			Establish context = () =>
@@ -25,13 +56,13 @@ namespace SisoDb.Specifications.QueryEngine
 				TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
-			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-			        .Query<QueryNullableItem>().Where(i => i.NullableInt.HasValue && i.NullableInt != null).ToList();
+			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNullableItem>()
+				.Where(i => i.NullableInt.HasValue && i.NullableInt != null).ToList();
 
 			It should_have_fetched_two_structures =
 				() => _fetchedStructures.Count.ShouldEqual(2);
 
-			It should_have_fetched_the_two_middle_structures = () =>
+			It should_have_fetched_the_two_last_structures = () =>
 			{
 				_fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
 				_fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);

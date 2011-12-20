@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
-	public interface INodes : IEnumerable<INode>
+	public interface INodesCollection : IEnumerable<INode>
 	{
 		INode this[int index] { get; }
 

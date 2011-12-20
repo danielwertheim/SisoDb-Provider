@@ -15,7 +15,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             Ensure.That(sortingExpressions, "sortingExpressions").HasItems();
 
-            var nodesContainer = new Nodes.Nodes();
+            var nodesContainer = new Nodes.NodesCollection();
             foreach (var lambda in sortingExpressions)
             {
                 if (lambda == null)
