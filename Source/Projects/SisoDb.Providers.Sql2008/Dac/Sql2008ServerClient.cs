@@ -45,12 +45,12 @@ namespace SisoDb.Sql2008.Dac
 
             try
             {
-                cn = _providerFactory.GetOpenConnection(_connectionInfo.ServerConnectionString);
+				cn = _providerFactory.GetOpenServerConnection(_connectionInfo.ServerConnectionString);
                 result = cnConsumer.Invoke(cn);
             }
             finally
             {
-                _providerFactory.ReleaseConnection(cn);
+				_providerFactory.ReleaseServerConnection(cn);
             }
 
             return result;
