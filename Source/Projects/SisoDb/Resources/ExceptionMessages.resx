@@ -126,9 +126,6 @@
   <data name="AutoSchemaBuilder_MissingIndexableMembers" xml:space="preserve">
     <value>The Item of type '{0}' has no members that are indexable. There's no point in storing items that has nothing to index.</value>
   </data>
-  <data name="StringConverter_AsString_TypeOfValueIsNotSupported" xml:space="preserve">
-    <value>The value being retrieved is not of supported type. It must either be a string or the type needs to implement IConvertible or if Nullable&lt;T&gt;, then T needs to implement it.</value>
-  </data>
   <data name="Index_IsMissingName" xml:space="preserve">
     <value>An Index-instance must be provided with a name.</value>
   </data>

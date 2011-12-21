@@ -359,15 +359,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The value being retrieved is not of supported type. It must either be a string or the type needs to implement IConvertible or if Nullable&lt;T&gt;, then T needs to implement it..
-        /// </summary>
-        public static string StringConverter_AsString_TypeOfValueIsNotSupported {
-            get {
-                return ResourceManager.GetString("StringConverter_AsString_TypeOfValueIsNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Duplicate Unique-index found for &apos;{0}&apos;.\r\nStructureId: &apos;{1}&apos;;Name: &apos;{2}&apos;;Value: &apos;{3}&apos;;.
         /// </summary>
         public static string Structure_DuplicateUniques {
