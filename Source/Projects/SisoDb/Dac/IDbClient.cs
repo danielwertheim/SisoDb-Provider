@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 
 namespace SisoDb.Dac
@@ -11,8 +10,6 @@ namespace SisoDb.Dac
     public interface IDbClient : IDisposable
     {
         bool IsTransactional { get; }
-        ISqlStatements SqlStatements { get; }
-
         void Flush();
         
         IDbCommand CreateCommand(string sql, params IDacParameter[] parameters);

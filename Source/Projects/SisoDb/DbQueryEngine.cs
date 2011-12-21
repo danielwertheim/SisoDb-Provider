@@ -9,6 +9,7 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Resources;
 using SisoDb.Structures;
@@ -21,16 +22,19 @@ namespace SisoDb
 		protected IDbClient DbClient;
 		protected readonly IDbSchemaManager DbSchemaManager;
 		protected readonly IDbQueryGenerator QueryGenerator;
+		protected readonly ISqlStatements SqlStatements;
 
-		protected DbQueryEngine(ISisoDatabase db, IDbClient dbClient, IDbSchemaManager dbSchemaManager)
+		protected DbQueryEngine(ISisoDatabase db, IDbClient dbClient, IDbSchemaManager dbSchemaManager, ISqlStatements sqlStatements)
 		{
 			Ensure.That(db, "db").IsNotNull();
 			Ensure.That(dbClient, "dbClient").IsNotNull();
 			Ensure.That(dbSchemaManager, "dbSchemaManager").IsNotNull();
+			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
 			Db = db;
 			DbClient = dbClient;
 			DbSchemaManager = dbSchemaManager;
+			SqlStatements = sqlStatements;
 			QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
 		}
 
@@ -177,7 +181,7 @@ namespace SisoDb
 
 			if(query.IsEmpty)
 			{
-				var sql = DbClient.SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
+				var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
 				return ConsumeReader(sql, false);
 			}
 

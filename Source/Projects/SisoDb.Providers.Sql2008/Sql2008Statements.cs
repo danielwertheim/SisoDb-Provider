@@ -1,19 +1,24 @@
-using System;
+using System.Reflection;
 using SisoDb.Providers;
 
 namespace SisoDb.Sql2008
 {
     internal class Sql2008Statements : SqlStatementsBase
     {
-        private static readonly Type ThisType;
+		private static readonly ISqlStatements SingletonInstance;
 
-        static Sql2008Statements()
+    	public static ISqlStatements Instance
+    	{
+			get { return SingletonInstance; }
+    	}
+
+    	static Sql2008Statements()
         {
-            ThisType = typeof (Sql2008Statements);
+			SingletonInstance = new Sql2008Statements(typeof(Sql2008Statements).Assembly);
         }
 
-        internal Sql2008Statements() 
-            : base(ThisType.Assembly, "Resources.Sql2008Statements")
+		private Sql2008Statements(Assembly resourceAssembly)
+            : base(resourceAssembly, "Resources.Sql2008Statements")
         {
         }
     }

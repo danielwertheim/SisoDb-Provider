@@ -12,7 +12,8 @@ namespace SisoDb.SqlCe4
             return new SqlCe4QueryEngine(
 				this,
 				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo),
-				DbSchemaManager);
+				DbSchemaManager,
+				SqlCe4Statements.Instance);
         }
 
         public override IUnitOfWork CreateUnitOfWork()
@@ -25,7 +26,8 @@ namespace SisoDb.SqlCe4
 				dbClient,
 				dbClientNonTransactional,
 				DbSchemaManager,
-				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional));
+				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional),
+				SqlCe4Statements.Instance);
         }
     }
 }

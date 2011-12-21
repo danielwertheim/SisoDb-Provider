@@ -8,6 +8,7 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Core;
 using SisoDb.Dac;
+using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 
@@ -17,8 +18,8 @@ namespace SisoDb.Sql2008.Dac
     {
 		private const int MaxBatchedIdsSize = 100;
 
-        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
-            : base(connectionInfo, transactional)
+		public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(connectionInfo, transactional, connectionManager, sqlStatements)
         {
         }
 

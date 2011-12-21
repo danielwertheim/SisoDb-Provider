@@ -66,6 +66,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Sql2008Exceptions.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sql2008ConnectionManager.cs" />
     <Compile Include="Sql2008Statements.cs" />
     <Compile Include="Sql2008Database.cs" />
     <Compile Include="Sql2008DbFactory.cs" />

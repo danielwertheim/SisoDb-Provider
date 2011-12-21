@@ -9,6 +9,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.Core.Expressions;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.Providers;
 using SisoDb.Resources;
 using SisoDb.Structures;
 
@@ -22,8 +23,14 @@ namespace SisoDb
 
 		protected readonly IIdentityStructureIdGenerator IdentityStructureIdGenerator;
 
-		protected DbUnitOfWork(ISisoDatabase db, IDbClient dbClientTransactional, IDbClient dbClientNonTransactional, IDbSchemaManager dbSchemaManager, IIdentityStructureIdGenerator identityStructureIdGenerator)
-			: base(db, dbClientTransactional, dbSchemaManager)
+		protected DbUnitOfWork(
+			ISisoDatabase db, 
+			IDbClient dbClientTransactional,
+			IDbClient dbClientNonTransactional,
+			IDbSchemaManager dbSchemaManager,
+			IIdentityStructureIdGenerator identityStructureIdGenerator,
+			ISqlStatements sqlStatements)
+			: base(db, dbClientTransactional, dbSchemaManager, sqlStatements)
 		{
 			Ensure.That(dbClientNonTransactional, "dbClientNonTransactional").IsNotNull();
 			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();

@@ -13,26 +13,29 @@ namespace SisoDb.Dac
 {
     public abstract class DbClientBase : IDbClient
     {
-        protected readonly ISisoProviderFactory ProviderFactory;
+    	protected readonly ISisoConnectionInfo ConnectionInfo;
+    	protected readonly IConnectionManager ConnectionManager;
         protected IDbConnection Connection;
         protected IDbTransaction Transaction;
         protected TransactionScope Ts;
+		protected readonly ISqlStatements SqlStatements;
 
         public bool IsTransactional 
         {
             get { return Transaction != null || Ts != null; }
         }
-
-        public ISqlStatements SqlStatements { get; private set; }
-
-        protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional)
+		
+        protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
-            
-            ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
-            SqlStatements = ProviderFactory.GetSqlStatements();
+			Ensure.That(connectionManager, "connectionManager").IsNotNull();
+			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
-            Connection = ProviderFactory.GetOpenConnection(connectionInfo.ConnectionString);
+        	ConnectionInfo = connectionInfo;
+        	ConnectionManager = connectionManager;
+        	SqlStatements = sqlStatements;
+
+            Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
 
             if (System.Transactions.Transaction.Current == null)
                 Transaction = transactional ? Connection.BeginTransaction() : null;
@@ -60,7 +63,7 @@ namespace SisoDb.Dac
             if (Connection == null)
                 return;
 
-            ProviderFactory.ReleaseConnection(Connection);
+            ConnectionManager.ReleaseDbConnection(Connection);
 
             Connection = null;
         }

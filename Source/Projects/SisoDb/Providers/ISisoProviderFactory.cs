@@ -1,4 +1,3 @@
-using System.Data;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
@@ -7,17 +6,9 @@ using SisoDb.Structures;
 
 namespace SisoDb.Providers
 {
-    public interface ISisoProviderFactory
+	public interface ISisoProviderFactory
     {
         StorageProviders ProviderType { get; }
-
-        IDbConnection GetOpenServerConnection(IConnectionString connectionString);
-
-        void ReleaseServerConnection(IDbConnection dbConnection);
-
-        IDbConnection GetOpenConnection(IConnectionString connectionString);
-
-        void ReleaseConnection(IDbConnection dbConnection);
 
         IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
 
@@ -27,9 +18,7 @@ namespace SisoDb.Providers
 
         IDbSchemaManager GetDbSchemaManager();
 
-        ISqlStatements GetSqlStatements();
-        
-        IStructureInserter GetStructureInserter(IDbClient dbClient);
+		IStructureInserter GetStructureInserter(IDbClient dbClient);
 
     	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
         
