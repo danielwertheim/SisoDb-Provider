@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Resources;
 using EnsureThat;
 
-namespace SisoDb.Providers
+namespace SisoDb.Dac
 {
     public abstract class SqlStatementsBase : ISqlStatements
     {

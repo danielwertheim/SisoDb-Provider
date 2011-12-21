@@ -1,5 +1,5 @@
 using System.Reflection;
-using SisoDb.Providers;
+using SisoDb.Dac;
 
 namespace SisoDb.Sql2008
 {

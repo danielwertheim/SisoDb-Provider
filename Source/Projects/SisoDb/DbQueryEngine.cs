@@ -9,7 +9,6 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Resources;
 using SisoDb.Structures;

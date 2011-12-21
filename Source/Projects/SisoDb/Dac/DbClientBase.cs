@@ -5,7 +5,6 @@ using System.Transactions;
 using EnsureThat;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 

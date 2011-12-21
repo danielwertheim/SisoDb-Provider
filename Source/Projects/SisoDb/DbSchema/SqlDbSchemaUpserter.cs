@@ -2,7 +2,6 @@
 using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Providers;
 using SisoDb.Structures;
 
 namespace SisoDb.DbSchema

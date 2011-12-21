@@ -4,9 +4,9 @@ using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Structures;
 
-namespace SisoDb.Providers
+namespace SisoDb
 {
-	public interface ISisoProviderFactory
+	public interface ISisoProviderFactory //TODO: DbProviderFactory
     {
         StorageProviders ProviderType { get; }
 

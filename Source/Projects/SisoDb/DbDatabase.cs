@@ -5,7 +5,6 @@ using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.Builders;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Providers;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 
@@ -70,14 +69,15 @@ namespace SisoDb
             }
         }
 
-    	protected DbDatabase(ISisoConnectionInfo connectionInfo)
+    	protected DbDatabase(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+			Ensure.That(providerFactory, "providerFactory").IsNotNull();
 
             DbOperationsLock = new object();
 
             _connectionInfo = connectionInfo;
-			_providerFactory = SisoEnvironment.ProviderFactories.Get(ConnectionInfo.ProviderType);
+			_providerFactory = providerFactory;
 			
 			DbSchemaManager = ProviderFactory.GetDbSchemaManager();
 			ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);

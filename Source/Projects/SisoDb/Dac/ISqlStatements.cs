@@ -1,4 +1,4 @@
-namespace SisoDb.Providers
+namespace SisoDb.Dac
 {
     public interface ISqlStatements
     {

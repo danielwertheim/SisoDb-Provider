@@ -134,7 +134,6 @@
     <Compile Include="DbSchema\StorageSchemaBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
-    <Compile Include="Providers\ISisoProviderFactories.cs" />
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
@@ -154,10 +153,9 @@
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="GlobalResourceContainer.cs" />
-    <Compile Include="Providers\SisoProviderFactories.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
     <Compile Include="UpdateManyModifierStatus.cs" />
-    <Compile Include="Providers\ISisoProviderFactory.cs" />
+    <Compile Include="ISisoProviderFactory.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Sql\SqlExpressionBuilder.cs" />
@@ -195,8 +193,8 @@
     <Compile Include="DbSchema\IDbSchemaManager.cs" />
     <Compile Include="Core\Expressions\ExpressionUtils.cs" />
     <Compile Include="Querying\IDbQueryGenerator.cs" />
-    <Compile Include="Providers\ISqlStatements.cs" />
-    <Compile Include="Providers\SqlStatementsBase.cs" />
+    <Compile Include="Dac\ISqlStatements.cs" />
+    <Compile Include="Dac\SqlStatementsBase.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />

@@ -2,8 +2,8 @@ namespace SisoDb.SqlCe4
 {
     public class SqlCe4Database : DbDatabase
     {
-        protected internal SqlCe4Database(ISisoConnectionInfo connectionInfo)
-            : base(connectionInfo)
+        protected internal SqlCe4Database(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory)
+            : base(connectionInfo, providerFactory)
         {
         }
 

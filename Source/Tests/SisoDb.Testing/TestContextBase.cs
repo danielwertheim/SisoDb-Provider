@@ -1,5 +1,4 @@
 using System.Linq;
-using SisoDb.Providers;
 
 namespace SisoDb.Testing
 {

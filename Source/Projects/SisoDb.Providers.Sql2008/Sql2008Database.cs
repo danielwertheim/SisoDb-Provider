@@ -2,7 +2,8 @@ namespace SisoDb.Sql2008
 {
     public class Sql2008Database : DbDatabase
     {
-        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo) : base(connectionInfo)
+        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory) 
+			: base(connectionInfo, providerFactory)
         {
         }
 

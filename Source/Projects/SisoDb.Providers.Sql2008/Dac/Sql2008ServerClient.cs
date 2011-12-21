@@ -3,7 +3,6 @@ using System.Data;
 using EnsureThat;
 using NCore;
 using SisoDb.Dac;
-using SisoDb.Providers;
 using SisoDb.Resources;
 
 namespace SisoDb.Sql2008.Dac

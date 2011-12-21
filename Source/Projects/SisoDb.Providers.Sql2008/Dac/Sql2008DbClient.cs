@@ -8,7 +8,6 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Core;
 using SisoDb.Dac;
-using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 

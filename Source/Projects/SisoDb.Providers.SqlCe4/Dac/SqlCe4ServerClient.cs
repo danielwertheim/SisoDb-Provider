@@ -5,7 +5,6 @@ using EnsureThat;
 using NCore;
 using SisoDb.Core.Io;
 using SisoDb.Dac;
-using SisoDb.Providers;
 using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4.Dac

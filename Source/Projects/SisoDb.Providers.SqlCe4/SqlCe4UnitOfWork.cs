@@ -1,6 +1,5 @@
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Providers;
 using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4
