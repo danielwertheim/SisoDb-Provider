@@ -9,7 +9,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new SqlCe4QueryGenerator(SqlCe4Statements.Instance);
+            return new SqlCe4QueryGenerator(new SqlCe4Statements());
         }
 
         [Test]

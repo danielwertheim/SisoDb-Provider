@@ -75,6 +75,7 @@
     <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
+    <Compile Include="IDbDatabase.cs" />
     <Compile Include="IReadOnce.cs" />
     <Compile Include="IWriteOnce.cs" />
     <Compile Include="IConnectionManager.cs" />
@@ -89,14 +90,14 @@
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
     <Compile Include="Dac\DbClientBase.cs" />
-    <Compile Include="ReadOnce.cs" />
+    <Compile Include="DbReadOnce.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
     <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
-    <Compile Include="WriteOnce.cs" />
+    <Compile Include="DbWriteOnce.cs" />
     <Compile Include="IAdvancedQueries.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
@@ -122,7 +123,7 @@
     <Compile Include="Querying\Sql\SqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlQueryFormatter.cs" />
     <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
-    <Compile Include="Querying\Sql\SqlQuery.cs" />
+    <Compile Include="Querying\Sql\DbQuery.cs" />
     <Compile Include="IConnectionString.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="Dac\BulkInserts\IndexesReader.cs" />
@@ -155,7 +156,7 @@
     <Compile Include="GlobalResourceContainer.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
     <Compile Include="UpdateManyModifierStatus.cs" />
-    <Compile Include="ISisoProviderFactory.cs" />
+    <Compile Include="IDbProviderFactory.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Sql\SqlExpressionBuilder.cs" />

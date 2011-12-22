@@ -8,7 +8,7 @@ using SisoDb.Dac;
 namespace SisoDb.Querying.Sql
 {
     [Serializable]
-    public class SqlQuery
+    public class DbQuery
     {
         private readonly string _sql;
         private readonly ReadOnlyCollection<IDacParameter> _parameters;
@@ -29,7 +29,7 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlQuery(string sql, IDacParameter[] parameters)
+        public DbQuery(string sql, IDacParameter[] parameters)
         {
             Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
             Ensure.That(parameters, "parameters").IsNotNull();
@@ -39,16 +39,16 @@ namespace SisoDb.Querying.Sql
             _parameters = new ReadOnlyCollection<IDacParameter>(parameters.Distinct().ToList());
         }
 
-        protected SqlQuery()
+        protected DbQuery()
         {
             _isEmpty = true;
             _sql = string.Empty;
             _parameters = new ReadOnlyCollection<IDacParameter>(new List<IDacParameter>());
         }
 
-        public static SqlQuery Empty()
+        public static DbQuery Empty()
         {
-            return new SqlQuery();
+            return new DbQuery();
         }
     }
 }

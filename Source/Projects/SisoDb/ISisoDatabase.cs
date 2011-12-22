@@ -23,11 +23,6 @@ namespace SisoDb
         /// </summary>
         ISisoConnectionInfo ConnectionInfo { get; }
 
-		/// <summary>
-		/// Provider factory.
-		/// </summary>
-    	ISisoProviderFactory ProviderFactory { get; }
-
     	/// <summary>
 		/// Cached Structure schemas, which holds information
 		/// about members to index etc.

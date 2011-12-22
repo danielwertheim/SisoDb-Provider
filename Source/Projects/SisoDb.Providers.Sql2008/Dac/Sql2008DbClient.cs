@@ -84,7 +84,7 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public override void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema)
+        public override void DeleteByQuery(DbQuery query, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -129,7 +129,7 @@ namespace SisoDb.Sql2008.Dac
             return ExecuteScalar<int>(sql);
         }
 
-        public override int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query)
+        public override int RowCountByQuery(IStructureSchema structureSchema, DbQuery query)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 

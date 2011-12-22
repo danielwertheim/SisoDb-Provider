@@ -7,11 +7,11 @@ using EnsureThat;
 namespace SisoDb
 {
     [DebuggerStepThrough]
-    public class WriteOnce : IWriteOnce
+    public class DbWriteOnce : IWriteOnce
     {
-    	private readonly ISisoDatabase _db;
+    	private readonly IDbDatabase _db;
 
-        public WriteOnce(ISisoDatabase db)
+        public DbWriteOnce(IDbDatabase db)
         {
             _db = db;
         }

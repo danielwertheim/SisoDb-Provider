@@ -15,11 +15,11 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
         //    Establish context = () =>
         //    {
         //        TestContext = TestContextFactory.Create();
-        //        TestContext.Database.WriteOnce().InsertMany(StringFunctionsItem.CreateItems(5, "FOO").ToList());
+        //        TestContext.Database.DbWriteOnce().InsertMany(StringFunctionsItem.CreateItems(5, "FOO").ToList());
         //    };
 
         //    Because of = 
-        //        () => _fetchedStructures = TestContext.Database.ReadOnce().Where<StringFunctionsItem>(i => i.String1.ToLower() == "FOO1").ToList();
+        //        () => _fetchedStructures = TestContext.Database.DbReadOnce().Where<StringFunctionsItem>(i => i.String1.ToLower() == "FOO1").ToList();
 
         //    It should_not_have_fetched_any_structures =
         //        () => _fetchedStructures.Count.ShouldEqual(0);

@@ -9,7 +9,7 @@ using SisoDb.Structures;
 
 namespace SisoDb.Sql2008
 {
-	public class Sql2008ProviderFactory : ISisoProviderFactory
+	public class Sql2008ProviderFactory : IDbProviderFactory
     {
 		private readonly IConnectionManager _connectionManager;
         private readonly ISqlStatements _sqlStatements;
@@ -17,7 +17,7 @@ namespace SisoDb.Sql2008
         public Sql2008ProviderFactory()
         {
 			_connectionManager = new Sql2008ConnectionManager();
-            _sqlStatements = Sql2008Statements.Instance;
+            _sqlStatements = new Sql2008Statements();
         }
 
         public StorageProviders ProviderType
@@ -25,7 +25,12 @@ namespace SisoDb.Sql2008
             get { return StorageProviders.Sql2008; }
         }
 
-        public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+		public ISqlStatements GetSqlStatements()
+		{
+			return _sqlStatements;
+		}
+
+		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
             return new Sql2008ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }

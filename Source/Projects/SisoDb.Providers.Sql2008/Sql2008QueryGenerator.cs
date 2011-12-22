@@ -13,7 +13,7 @@ namespace SisoDb.Sql2008
     {
         public Sql2008QueryGenerator(ISqlStatements sqlStatements) : base(sqlStatements) {}
 
-		protected override SqlQuery CreateSqlQuery(IQuery query)
+		protected override DbQuery CreateSqlQuery(IQuery query)
         {
 			var sqlExpression = SqlExpressionBuilder.Process(query);
 
@@ -50,10 +50,10 @@ namespace SisoDb.Sql2008
             else
                 parameters = sqlExpression.WhereCriteria.Parameters;
 
-            return new SqlQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
         }
 
-		protected override SqlQuery CreateSqlQueryReturningStructureIds(IQuery query)
+		protected override DbQuery CreateSqlQueryReturningStructureIds(IQuery query)
         {
 			var sqlExpression = SqlExpressionBuilder.Process(query);
 
@@ -64,7 +64,7 @@ namespace SisoDb.Sql2008
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression)
             };
 
-            return new SqlQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), sqlExpression.WhereCriteria.Parameters);
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), sqlExpression.WhereCriteria.Parameters);
         }
 
 		protected override string GenerateOrderByMembersString(IQuery query, ISqlExpression sqlExpression)

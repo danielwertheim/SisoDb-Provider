@@ -9,7 +9,7 @@ using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4
 {
-	public class SqlCe4ProviderFactory : ISisoProviderFactory
+	public class SqlCe4ProviderFactory : IDbProviderFactory
     {
 		private readonly IConnectionManager _connectionManager;
         private readonly ISqlStatements _sqlStatements;
@@ -17,7 +17,7 @@ namespace SisoDb.SqlCe4
         public SqlCe4ProviderFactory()
         {
 			_connectionManager = new SqlCe4ConnectionManager();
-            _sqlStatements = SqlCe4Statements.Instance;
+            _sqlStatements = new SqlCe4Statements();
         }
 
         public StorageProviders ProviderType
@@ -25,7 +25,12 @@ namespace SisoDb.SqlCe4
             get { return StorageProviders.SqlCe4; }
         }
 
-        public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+		public ISqlStatements GetSqlStatements()
+		{
+			return _sqlStatements;
+		}
+
+		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
             return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
         }

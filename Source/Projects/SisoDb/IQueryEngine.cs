@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace SisoDb
 {
+	/// <summary>
+	/// Used to query the database.
+	/// </summary>
 	public interface IQueryEngine : IDisposable
 	{
 		/// <summary>

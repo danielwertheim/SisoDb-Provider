@@ -113,7 +113,7 @@ namespace SisoDb.Dac
 
         public abstract void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public abstract void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema);
+        public abstract void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
 
         public abstract void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
 
@@ -121,7 +121,7 @@ namespace SisoDb.Dac
 
         public abstract int RowCount(IStructureSchema structureSchema);
 
-        public abstract int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query);
+        public abstract int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
 
         public abstract long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
 

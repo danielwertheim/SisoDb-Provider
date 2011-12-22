@@ -21,11 +21,11 @@ namespace SisoDb.Dac
         void RefreshIndexes(IStructureSchema structureSchema);
         void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
-        void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema);
+        void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
         void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
         bool TableExists(string name);
         int RowCount(IStructureSchema structureSchema);
-        int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query);
+        int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
         string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);

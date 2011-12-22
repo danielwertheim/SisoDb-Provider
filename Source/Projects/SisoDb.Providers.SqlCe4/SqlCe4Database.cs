@@ -2,8 +2,8 @@ namespace SisoDb.SqlCe4
 {
     public class SqlCe4Database : DbDatabase
     {
-        protected internal SqlCe4Database(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory)
-            : base(connectionInfo, providerFactory)
+        protected internal SqlCe4Database(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
+            : base(connectionInfo, dbProviderFactory)
         {
         }
 
@@ -11,9 +11,7 @@ namespace SisoDb.SqlCe4
         {
             return new SqlCe4QueryEngine(
 				this,
-				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo),
-				DbSchemaManager,
-				SqlCe4Statements.Instance);
+				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo));
         }
 
         public override IUnitOfWork CreateUnitOfWork()
@@ -25,9 +23,7 @@ namespace SisoDb.SqlCe4
 				this,
 				dbClient,
 				dbClientNonTransactional,
-				DbSchemaManager,
-				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional),
-				SqlCe4Statements.Instance);
+				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional));
         }
     }
 }

@@ -1,5 +1,4 @@
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4
@@ -7,13 +6,11 @@ namespace SisoDb.SqlCe4
     public class SqlCe4UnitOfWork : DbUnitOfWork
     {
 		protected internal SqlCe4UnitOfWork(
-			ISisoDatabase db, 
+			IDbDatabase db, 
 			IDbClient dbClientTransactional, 
 			IDbClient dbClientNonTransactional, 
-			IDbSchemaManager dbSchemaManager, 
-			IIdentityStructureIdGenerator identityStructureIdGenerator,
-			ISqlStatements sqlStatements)
-            : base(db, dbClientTransactional, dbClientNonTransactional, dbSchemaManager, identityStructureIdGenerator, sqlStatements)
+			IIdentityStructureIdGenerator identityStructureIdGenerator)
+            : base(db, dbClientTransactional, dbClientNonTransactional, identityStructureIdGenerator)
         {
         }
     }

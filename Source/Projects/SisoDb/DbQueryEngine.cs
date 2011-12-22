@@ -17,23 +17,19 @@ namespace SisoDb
 {
 	public abstract class DbQueryEngine : IQueryEngine, IAdvancedQueries
 	{
-		protected readonly ISisoDatabase Db;
-		protected IDbClient DbClient;
-		protected readonly IDbSchemaManager DbSchemaManager;
+		protected readonly IDbDatabase Db;
 		protected readonly IDbQueryGenerator QueryGenerator;
 		protected readonly ISqlStatements SqlStatements;
+		protected IDbClient DbClient;
 
-		protected DbQueryEngine(ISisoDatabase db, IDbClient dbClient, IDbSchemaManager dbSchemaManager, ISqlStatements sqlStatements)
+		protected DbQueryEngine(IDbDatabase db, IDbClient dbClient)
 		{
 			Ensure.That(db, "db").IsNotNull();
 			Ensure.That(dbClient, "dbClient").IsNotNull();
-			Ensure.That(dbSchemaManager, "dbSchemaManager").IsNotNull();
-			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
-
+			
 			Db = db;
 			DbClient = dbClient;
-			DbSchemaManager = dbSchemaManager;
-			SqlStatements = sqlStatements;
+			SqlStatements = Db.ProviderFactory.GetSqlStatements();
 			QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
 		}
 
@@ -50,7 +46,7 @@ namespace SisoDb
 
 		protected virtual void UpsertStructureSet(IStructureSchema structureSchema)
 		{
-			DbSchemaManager.UpsertStructureSet(structureSchema, DbClient);
+			Db.SchemaManager.UpsertStructureSet(structureSchema, DbClient);
 		}
 
 		public IStructureSchemas StructureSchemas

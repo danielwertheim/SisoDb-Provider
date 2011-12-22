@@ -8,7 +8,6 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Core.Expressions;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Resources;
 using SisoDb.Structures;
 
@@ -23,13 +22,11 @@ namespace SisoDb
 		protected readonly IIdentityStructureIdGenerator IdentityStructureIdGenerator;
 
 		protected DbUnitOfWork(
-			ISisoDatabase db, 
+			IDbDatabase db, 
 			IDbClient dbClientTransactional,
 			IDbClient dbClientNonTransactional,
-			IDbSchemaManager dbSchemaManager,
-			IIdentityStructureIdGenerator identityStructureIdGenerator,
-			ISqlStatements sqlStatements)
-			: base(db, dbClientTransactional, dbSchemaManager, sqlStatements)
+			IIdentityStructureIdGenerator identityStructureIdGenerator)
+			: base(db, dbClientTransactional)
 		{
 			Ensure.That(dbClientNonTransactional, "dbClientNonTransactional").IsNotNull();
 			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
@@ -53,7 +50,7 @@ namespace SisoDb
 
 		protected override void UpsertStructureSet(IStructureSchema structureSchema)
 		{
-			DbSchemaManager.UpsertStructureSet(structureSchema, DbClientNonTransactional);
+			Db.SchemaManager.UpsertStructureSet(structureSchema, DbClientNonTransactional);
 		}
 
 		public virtual void Commit()
@@ -177,7 +174,7 @@ namespace SisoDb
 			if (spec.IsUpdatingSameSchema)
 			{
 				Db.StructureSchemas.RemoveSchema(spec.OldType);
-				DbSchemaManager.RemoveFromCache(spec.OldSchema);
+				Db.SchemaManager.RemoveFromCache(spec.OldSchema);
 				UpsertStructureSet(spec.NewSchema);
 
 				queryInvoker = QueryAsJson<TNew>;
@@ -236,7 +233,7 @@ namespace SisoDb
 			if (!spec.IsUpdatingSameSchema)
 			{
 				Db.StructureSchemas.RemoveSchema(spec.OldType);
-				DbSchemaManager.DropStructureSet(spec.OldSchema, DbClient);
+				Db.SchemaManager.DropStructureSet(spec.OldSchema, DbClient);
 			}
 
 			return true;
@@ -329,7 +326,7 @@ namespace SisoDb
 				return new UpdateManySpec(oldSchema, oldType, newSchema, newType);
 			}
 
-			public IQuery BuildQuery<T>(ISisoDatabase db, Expression<Func<T, bool>> expression = null) where T : class
+			public IQuery BuildQuery<T>(IDbDatabase db, Expression<Func<T, bool>> expression = null) where T : class
 			{
 				var queryBuilder = db.ProviderFactory.GetQueryBuilder<T>(db.StructureSchemas);
 				if (expression != null)

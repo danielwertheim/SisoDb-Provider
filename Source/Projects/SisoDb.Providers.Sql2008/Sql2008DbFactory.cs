@@ -2,7 +2,7 @@
 {
     public class Sql2008DbFactory : ISisoDbFactory
     {
-		public static ISisoProviderFactory ProviderFactory { get; set; }
+		public static IDbProviderFactory ProviderFactory { get; set; }
 
     	static Sql2008DbFactory()
         {

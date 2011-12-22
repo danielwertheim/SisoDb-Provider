@@ -2,7 +2,7 @@ namespace SisoDb.SqlCe4
 {
     public class SqlCe4DbFactory : ISisoDbFactory
     {
-		public static ISisoProviderFactory ProviderFactory { get; set; }
+		public static IDbProviderFactory ProviderFactory { get; set; }
 
 		static SqlCe4DbFactory()
         {

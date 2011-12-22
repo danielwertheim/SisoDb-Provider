@@ -6,9 +6,15 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public interface ISisoProviderFactory //TODO: DbProviderFactory
+	/// <summary>
+	/// When targeting a Database oriented provider, e.g all providers extending <see cref="DbDatabase"/>, the infrastructure
+	/// could make use of this factory to ease the interaction with <see cref="DbDatabase"/>.
+	/// </summary>
+	public interface IDbProviderFactory
     {
         StorageProviders ProviderType { get; }
+
+		ISqlStatements GetSqlStatements();
 
         IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
 
@@ -21,9 +27,9 @@ namespace SisoDb
 		IStructureInserter GetStructureInserter(IDbClient dbClient);
 
     	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
-        
-        IDbQueryGenerator GetDbQueryGenerator();
 
 		IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
+		
+		IDbQueryGenerator GetDbQueryGenerator();
     }
 }

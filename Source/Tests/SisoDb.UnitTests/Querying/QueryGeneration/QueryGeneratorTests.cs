@@ -12,7 +12,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhere_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhere_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhere_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.Int1 == 42));
 			var generator = GetQueryGenerator();
@@ -22,7 +22,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.Bool1));
 			var generator = GetQueryGenerator();
@@ -32,7 +32,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1 == null));
 			var generator = GetQueryGenerator();
@@ -42,7 +42,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1 != null));
 			var generator = GetQueryGenerator();
@@ -52,7 +52,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.HasValue));
 			var generator = GetQueryGenerator();
@@ -62,7 +62,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.HasValue == false));
 			var generator = GetQueryGenerator();
@@ -72,7 +72,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => !i.NullableInt1.HasValue));
 			var generator = GetQueryGenerator();
@@ -82,7 +82,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1 == 42));
 			var generator = GetQueryGenerator();
@@ -92,7 +92,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.Value == 42));
 			var generator = GetQueryGenerator();
@@ -102,7 +102,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithChainedWheres_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithChainedWheres_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithChainedWheres_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.Int1 >= 40).Where(i => i.Int1 <= 42));
 			var generator = GetQueryGenerator();
@@ -112,7 +112,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithSorting_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithSorting_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithSorting_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.OrderBy(i => i.Int1));
 			var generator = GetQueryGenerator();
@@ -122,7 +122,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithWhereAndSorting_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithWhereAndSorting_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithWhereAndSorting_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q =>
 			{
@@ -136,7 +136,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithTake_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithTake_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithTake_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.Take(11));
 			var generator = GetQueryGenerator();
@@ -146,7 +146,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithTakeAndSorting_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithTakeAndSorting_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithTakeAndSorting_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q =>
 			{
@@ -160,7 +160,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithTakeAndWhereAndSorting_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithTakeAndWhereAndSorting_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithTakeAndWhereAndSorting_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q =>
 			{
@@ -175,7 +175,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q =>
 			{
@@ -190,7 +190,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithExplicitSortingOnTwoDifferentMemberTypesAndSorting_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithExplicitSortingOnTwoDifferentMemberTypesAndSorting_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithExplicitSortingOnTwoDifferentMemberTypesAndSorting_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.OrderBy(i => i.Int1).OrderByDescending(i => i.String1));
 			var generator = GetQueryGenerator();
@@ -200,7 +200,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		public abstract void GenerateQuery_WithSortingOnTwoDifferentMemberOfSameType_GeneratesCorrectQuery();
 
-		protected SqlQuery On_GenerateQuery_WithSortingOnTwoDifferentMemberOfSameType_GeneratesCorrectQuery()
+		protected DbQuery On_GenerateQuery_WithSortingOnTwoDifferentMemberOfSameType_GeneratesCorrectQuery()
 		{
 			var queryCommand = BuildQuery<MyClass>(q => q.OrderBy(i => i.Int1, i => i.Int2));
 			var generator = GetQueryGenerator();

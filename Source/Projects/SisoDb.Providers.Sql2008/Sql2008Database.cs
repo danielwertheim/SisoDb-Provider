@@ -2,8 +2,8 @@ namespace SisoDb.Sql2008
 {
     public class Sql2008Database : DbDatabase
     {
-        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory) 
-			: base(connectionInfo, providerFactory)
+        protected internal Sql2008Database(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory) 
+			: base(connectionInfo, dbProviderFactory)
         {
         }
 
@@ -11,9 +11,7 @@ namespace SisoDb.Sql2008
         {
             return new Sql2008QueryEngine(
 				this,
-				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo),
-				DbSchemaManager,
-				Sql2008Statements.Instance);
+				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo));
         }
 
         public override IUnitOfWork CreateUnitOfWork()
@@ -25,9 +23,7 @@ namespace SisoDb.Sql2008
 				this,
 				dbClient,
 				dbClientNonTransactional,
-				DbSchemaManager,
-				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional),
-				Sql2008Statements.Instance);
+				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional));
         }
     }
 }

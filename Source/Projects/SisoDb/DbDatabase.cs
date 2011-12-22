@@ -10,16 +10,16 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-    public abstract class DbDatabase : ISisoDatabase
+	public abstract class DbDatabase : IDbDatabase
     {
 		private readonly ISisoConnectionInfo _connectionInfo;
-		private readonly ISisoProviderFactory _providerFactory;
+		private readonly IDbProviderFactory _providerFactory;
+		private readonly IDbSchemaManager _dbSchemaManager;
 		private IStructureSchemas _structureSchemas;
 		private IStructureBuilders _structureBuilders;
 		private IJsonSerializer _serializer;
 
         protected readonly object DbOperationsLock;
-        protected readonly IDbSchemaManager DbSchemaManager;
     	protected readonly IServerClient ServerClient;
 		
         public string Name
@@ -32,10 +32,15 @@ namespace SisoDb
             get { return _connectionInfo; }
         }
 
-    	public ISisoProviderFactory ProviderFactory
-    	{
-    		get { return _providerFactory; }
-    	}
+		public IDbProviderFactory ProviderFactory
+		{
+			get { return _providerFactory; }
+		}
+
+		public IDbSchemaManager SchemaManager
+		{
+			get { return _dbSchemaManager; }
+		}
 
     	public IStructureSchemas StructureSchemas
         {
@@ -69,19 +74,17 @@ namespace SisoDb
             }
         }
 
-    	protected DbDatabase(ISisoConnectionInfo connectionInfo, ISisoProviderFactory providerFactory)
+    	protected DbDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
-			Ensure.That(providerFactory, "providerFactory").IsNotNull();
+			Ensure.That(dbProviderFactory, "dbProviderFactory").IsNotNull();
 
             DbOperationsLock = new object();
 
             _connectionInfo = connectionInfo;
-			_providerFactory = providerFactory;
-			
-			DbSchemaManager = ProviderFactory.GetDbSchemaManager();
+			_providerFactory = dbProviderFactory;
+			_dbSchemaManager = ProviderFactory.GetDbSchemaManager();
 			ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
-
 			StructureBuilders = new StructureBuilders();
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
@@ -91,7 +94,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                DbSchemaManager.ClearCache();
+                SchemaManager.ClearCache();
                 ServerClient.EnsureNewDb();
             }
         }
@@ -100,7 +103,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                DbSchemaManager.ClearCache();
+                SchemaManager.ClearCache();
                 ServerClient.CreateDbIfItDoesNotExist();
             }
         }
@@ -109,7 +112,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                DbSchemaManager.ClearCache();
+                SchemaManager.ClearCache();
                 ServerClient.InitializeExistingDb();
             }
         }
@@ -118,7 +121,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                DbSchemaManager.ClearCache();
+                SchemaManager.ClearCache();
                 ServerClient.DropDbIfItExists();
             }
         }
@@ -155,7 +158,7 @@ namespace SisoDb
                     {
                         var structureSchema = _structureSchemas.GetSchema(type);
 
-                        DbSchemaManager.DropStructureSet(structureSchema, dbClient);
+                        SchemaManager.DropStructureSet(structureSchema, dbClient);
 
                         dbClient.Flush();
 
@@ -179,7 +182,7 @@ namespace SisoDb
                 using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
                     var structureSchema = _structureSchemas.GetSchema(type);
-                    DbSchemaManager.UpsertStructureSet(structureSchema, dbClient);
+                    SchemaManager.UpsertStructureSet(structureSchema, dbClient);
 
                     dbClient.Flush();
                 }
@@ -193,13 +196,13 @@ namespace SisoDb
     	[DebuggerStepThrough]
         public IReadOnce ReadOnce()
         {
-            return new ReadOnce(this);
+            return new DbReadOnce(this);
         }
 
     	[DebuggerStepThrough]
         public IWriteOnce WriteOnce()
         {
-            return new WriteOnce(this);
+            return new DbWriteOnce(this);
         }
 
     	[DebuggerStepThrough]
