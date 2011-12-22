@@ -43,6 +43,11 @@ namespace SisoDb.Dac.BulkInserts
                 return Enumerator.Current.Value;
             }
 
+			if (schemaField.Name == IndexStorageSchema.Fields.StringValue.Name && !(dataType.IsStringType() || dataType.IsAnyEnumType()))
+			{
+				return SisoEnvironment.StringConverter.AsString(Enumerator.Current.Value);
+			}
+
             if (schemaField.Name == IndexStorageSchema.Fields.IntegerValue.Name && dataType.IsAnyIntegerNumberType())
             {
                 ValueIsConsumedForCurrent = true;
