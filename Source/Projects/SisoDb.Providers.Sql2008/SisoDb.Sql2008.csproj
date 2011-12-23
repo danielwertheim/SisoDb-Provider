@@ -37,15 +37,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.23.0.69, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.24.0.70, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NCore.0.23.0.69\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.45.0.85, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.46.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.45.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
