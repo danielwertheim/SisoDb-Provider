@@ -41,9 +41,7 @@ namespace SisoDb
 			}
 		}
 
-		public TOut GetByIdAs<TContract, TOut>(object id)
-			where TContract : class
-			where TOut : class
+		public TOut GetByIdAs<TContract, TOut>(object id) where TContract : class where TOut : class
 		{
 			using (var qe = _db.CreateQueryEngine())
 			{
@@ -51,7 +49,15 @@ namespace SisoDb
 			}
 		}
 
-		public IList<T> GetByIds<T>(params object[] ids) where T : class
+    	public string GetByIdAsJson<T>(object id) where T : class
+    	{
+    		using (var qe = _db.CreateQueryEngine())
+    		{
+    			return qe.GetByIdAsJson<T>(id);
+    		}
+    	}
+
+    	public IList<T> GetByIds<T>(params object[] ids) where T : class
 		{
 			Ensure.That(ids, "ids").HasItems();
 
@@ -61,9 +67,7 @@ namespace SisoDb
 			}
 		}
 
-		public IList<TOut> GetByIdsAs<TContract, TOut>(params object[] ids)
-			where TContract : class
-			where TOut : class
+    	public IList<TOut> GetByIdsAs<TContract, TOut>(params object[] ids) where TContract : class where TOut : class
 		{
 			Ensure.That(ids, "ids").HasItems();
 
@@ -73,7 +77,17 @@ namespace SisoDb
 			}
 		}
 
-		public IList<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
+    	public IList<string> GetByIdsAsJson<T>(params object[] ids) where T : class
+    	{
+    		Ensure.That(ids, "ids").HasItems();
+
+    		using (var qe = _db.CreateQueryEngine())
+    		{
+    			return qe.GetByIdsAsJson<T>(ids).ToList();
+    		}
+    	}
+
+    	public IList<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
 			using (var qe = _db.CreateQueryEngine())
 			{
@@ -81,25 +95,7 @@ namespace SisoDb
 			}
 		}
 
-		public string GetByIdAsJson<T>(object id) where T : class
-		{
-			using (var qe = _db.CreateQueryEngine())
-			{
-				return qe.GetByIdAsJson<T>(id);
-			}
-		}
-
-		public IList<string> GetByIdsAsJson<T>(params object[] ids) where T : class
-		{
-			Ensure.That(ids, "ids").HasItems();
-
-			using (var qe = _db.CreateQueryEngine())
-			{
-				return qe.GetByIdsAsJson<T>(ids).ToList();
-			}
-		}
-
-		public IList<T> NamedQuery<T>(INamedQuery query) where T : class
+    	public IList<T> NamedQuery<T>(INamedQuery query) where T : class
 		{
 			Ensure.That(query, "query").IsNotNull();
 
@@ -109,9 +105,7 @@ namespace SisoDb
 			}
 		}
 
-		public IList<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query)
-			where TContract : class
-			where TOut : class
+		public IList<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class
 		{
 			Ensure.That(query, "query").IsNotNull();
 
@@ -131,7 +125,37 @@ namespace SisoDb
 			}
 		}
 
-		public ISisoQueryable<T> Query<T>() where T : class
+		public IList<T> RawQuery<T>(IRawQuery query) where T : class
+    	{
+			Ensure.That(query, "query").IsNotNull();
+
+			using (var qe = _db.CreateQueryEngine())
+			{
+				return qe.Advanced.RawQuery<T>(query).ToList();
+			}
+    	}
+
+		public IList<TOut> RawQueryAs<TContract, TOut>(IRawQuery query) where TContract : class where TOut : class
+    	{
+			Ensure.That(query, "query").IsNotNull();
+
+			using (var qe = _db.CreateQueryEngine())
+			{
+				return qe.Advanced.RawQueryAs<TContract, TOut>(query).ToList();
+			}
+    	}
+
+		public IList<string> RawQueryAsJson<T>(IRawQuery query) where T : class
+    	{
+			Ensure.That(query, "query").IsNotNull();
+
+			using (var qe = _db.CreateQueryEngine())
+			{
+				return qe.Advanced.RawQueryAsJson<T>(query).ToList();
+			}
+    	}
+
+    	public ISisoQueryable<T> Query<T>() where T : class
 		{
 			return new SisoReadOnceQueryable<T>(_db.ProviderFactory.GetQueryBuilder<T>(_db.StructureSchemas), () => _db.CreateQueryEngine());
 		}

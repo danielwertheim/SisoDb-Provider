@@ -76,6 +76,7 @@
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="IDbDatabase.cs" />
+    <Compile Include="IRawQuery.cs" />
     <Compile Include="IReadOnce.cs" />
     <Compile Include="IWriteOnce.cs" />
     <Compile Include="IConnectionManager.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Querying\Lambdas\Parsers\BoolNodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
+    <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />

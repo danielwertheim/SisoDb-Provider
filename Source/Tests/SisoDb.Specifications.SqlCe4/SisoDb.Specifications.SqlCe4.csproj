@@ -146,6 +146,9 @@
     <Compile Include="..\SisoDb.Specifications\QueryEngine\QueryAll.cs">
       <Link>QueryEngine\QueryAll.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\RawQueries.cs">
+      <Link>QueryEngine\RawQueries.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\EndsWith.cs">
       <Link>QueryEngine\StringFunctions\EndsWith.cs</Link>
     </Compile>

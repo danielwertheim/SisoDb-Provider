@@ -77,6 +77,24 @@ namespace SisoDb
 			return ConsumeReader(query.Name, true, query.Parameters.ToArray());
 		}
 
+		IEnumerable<T> IAdvancedQueries.RawQuery<T>(IRawQuery query)
+		{
+			return Db.Serializer.DeserializeMany<T>(((IAdvancedQueries)this).RawQueryAsJson<T>(query));
+		}
+
+		IEnumerable<TOut> IAdvancedQueries.RawQueryAs<TContract, TOut>(IRawQuery query)
+		{
+			return Db.Serializer.DeserializeMany<TOut>(((IAdvancedQueries)this).RawQueryAsJson<TContract>(query));
+		}
+
+		IEnumerable<string> IAdvancedQueries.RawQueryAsJson<T>(IRawQuery query)
+		{
+			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			UpsertStructureSet(structureSchema);
+
+			return ConsumeReader(query.QueryString, false, query.Parameters.ToArray());
+		}
+
 		public virtual int Count<T>(IQuery query) where T : class
 		{
 			Ensure.That(query, "query").IsNotNull();
