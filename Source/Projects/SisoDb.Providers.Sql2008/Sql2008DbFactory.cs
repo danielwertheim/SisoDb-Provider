@@ -2,14 +2,16 @@
 {
     public class Sql2008DbFactory : ISisoDbFactory
     {
-        static Sql2008DbFactory()
+		public static IDbProviderFactory ProviderFactory { get; set; }
+
+    	static Sql2008DbFactory()
         {
-            SisoEnvironment.ProviderFactories.Register(StorageProviders.Sql2008, new Sql2008ProviderFactory());
+			ProviderFactory = new Sql2008ProviderFactory();
         }
 
         public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008Database(connectionInfo);
+            return new Sql2008Database(connectionInfo, ProviderFactory);
         }
     }
 }

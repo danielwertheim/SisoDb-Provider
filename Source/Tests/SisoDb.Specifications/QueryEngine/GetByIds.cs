@@ -7,7 +7,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-    namespace GetByIds
+	class GetByIds
     {
         [Subject(typeof(IUnitOfWork), "Get by Ids")]
         public class when_guid_id_set_matches_two_of_four_items : SpecificationBase

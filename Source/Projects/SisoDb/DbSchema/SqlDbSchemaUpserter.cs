@@ -14,42 +14,39 @@ namespace SisoDb.DbSchema
 
         private readonly SqlDbIndexesSchemaSynchronizer _indexesDbSchemaSynchronizer;
         private readonly SqlDbUniquesSchemaSynchronizer _uniquesDbSchemaSynchronizer;
-        private readonly IDbClient _dbClient;
 
-        public SqlDbSchemaUpserter(IDbClient dbClient)
-        {
-            Ensure.That(dbClient, "dbClient").IsNotNull();
+		public SqlDbSchemaUpserter(ISqlStatements sqlStatements)
+		{
+			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
-            _dbClient = dbClient;
+            _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(sqlStatements);
+            _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(sqlStatements);
+            _uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(sqlStatements);
 
-            _structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(_dbClient.SqlStatements);
-            _indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(_dbClient.SqlStatements);
-            _uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(_dbClient.SqlStatements);
-
-            _indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(_dbClient);
-            _uniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(_dbClient);
+            _indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(sqlStatements);
+            _uniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(sqlStatements);
         }
 
-        public void Upsert(IStructureSchema structureSchema)
+		public void Upsert(IStructureSchema structureSchema, IDbClient dbClient)
         {
             var structuresTableName = structureSchema.GetStructureTableName();
             var indexesTableName = structureSchema.GetIndexesTableName();
             var uniquesTableName = structureSchema.GetUniquesTableName();
 
-            var structuresTableExists = _dbClient.TableExists(structuresTableName);
-            var indexesTableExists = _dbClient.TableExists(indexesTableName);
-            var uniquesTableExists = _dbClient.TableExists(uniquesTableName);
+            var structuresTableExists = dbClient.TableExists(structuresTableName);
+            var indexesTableExists = dbClient.TableExists(indexesTableName);
+            var uniquesTableExists = dbClient.TableExists(uniquesTableName);
 
             if(indexesTableExists)
-                _indexesDbSchemaSynchronizer.Synchronize(structureSchema);
+                _indexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
 
             if(uniquesTableExists)
-                _uniquesDbSchemaSynchronizer.Synchronize(structureSchema);
+                _uniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
 
             if (structuresTableExists && indexesTableExists && uniquesTableExists)
                 return;
 
-            _dbClient.ExecuteNonQuery(GenerateSql(structureSchema, structuresTableExists, indexesTableExists, uniquesTableExists),
+            dbClient.ExecuteNonQuery(GenerateSql(structureSchema, structuresTableExists, indexesTableExists, uniquesTableExists),
                 new DacParameter("entityHash", structureSchema.Hash),
                 new DacParameter("entityName", structureSchema.Name));
         }

@@ -4,7 +4,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-    namespace Count
+	class Count
     {
         [Subject(typeof(IQueryEngine), "Count")]
         public class when_counting_all_and_no_items_exists : SpecificationBase
@@ -13,8 +13,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>();
+                using (var rs = TestContext.Database.CreateQueryEngine())
+                    _itemsCount = rs.Query<QueryGuidItem>().Count();
             };
 
             It should_be_0 = () => _itemsCount.ShouldEqual(0);
@@ -29,8 +29,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>(x => x.StringValue == "Goofy");
+                using (var rs = TestContext.Database.CreateQueryEngine())
+					_itemsCount = rs.Query<QueryGuidItem>().Count(x => x.StringValue == "Goofy");
             };
 
             It should_be_0 = () => _itemsCount.ShouldEqual(0);
@@ -57,7 +57,7 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>();
+                    _itemsCount = qe.Query<QueryGuidItem>().Count();
             };
 
             It should_be_0 = () => _itemsCount.ShouldEqual(0);
@@ -86,7 +86,7 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>();
+                    _itemsCount = qe.Query<QueryGuidItem>().Count();
             };
 
             It should_be_2 = () => _itemsCount.ShouldEqual(2);
@@ -116,7 +116,7 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>(x => x.SortOrder > 1);
+                    _itemsCount = qe.Query<QueryGuidItem>().Count(x => x.SortOrder > 1);
             };
 
             It should_be_2 = () => _itemsCount.ShouldEqual(2);
@@ -146,7 +146,7 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 using (var qe = TestContext.Database.CreateQueryEngine())
-                    _itemsCount = qe.Count<QueryGuidItem>(x => x.SortOrder < 1);
+                    _itemsCount = qe.Query<QueryGuidItem>().Count(x => x.SortOrder < 1);
             };
 
             It should_be_0 = () => _itemsCount.ShouldEqual(0);

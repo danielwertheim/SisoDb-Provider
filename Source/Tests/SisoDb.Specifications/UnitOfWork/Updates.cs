@@ -8,7 +8,7 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace Updates
+	class Updates
     {
         [Subject(typeof(IUnitOfWork), "Update")]
         public class when_guiditem_and_updating_two_of_four_items_without_committing : SpecificationBase

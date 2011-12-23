@@ -1,19 +1,11 @@
-using System;
-using SisoDb.Providers;
+using SisoDb.Dac;
 
 namespace SisoDb.Sql2008
 {
-    internal class Sql2008Statements : SqlStatementsBase
+	public class Sql2008Statements : SqlStatementsBase
     {
-        private static readonly Type ThisType;
-
-        static Sql2008Statements()
-        {
-            ThisType = typeof (Sql2008Statements);
-        }
-
-        internal Sql2008Statements() 
-            : base(ThisType.Assembly, "Resources.Sql2008Statements")
+    	public Sql2008Statements()
+			: base(typeof(Sql2008Statements).Assembly, "Resources.Sql2008Statements")
         {
         }
     }

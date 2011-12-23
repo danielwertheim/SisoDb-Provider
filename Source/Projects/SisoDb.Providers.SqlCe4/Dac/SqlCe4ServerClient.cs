@@ -5,7 +5,6 @@ using EnsureThat;
 using NCore;
 using SisoDb.Core.Io;
 using SisoDb.Dac;
-using SisoDb.Providers;
 using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4.Dac
@@ -13,16 +12,18 @@ namespace SisoDb.SqlCe4.Dac
     public class SqlCe4ServerClient : IServerClient
     {
         private readonly SqlCe4ConnectionInfo _connectionInfo;
-        private readonly SqlCe4ProviderFactory _providerFactory;
+    	private readonly IConnectionManager _connectionManager;
         private readonly ISqlStatements _sqlStatements;
 
-        public SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo)
+		public SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+			Ensure.That(connectionManager, "connectionManager").IsNotNull();
+			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
             _connectionInfo = connectionInfo;
-            _providerFactory = (SqlCe4ProviderFactory)SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
-            _sqlStatements = _providerFactory.GetSqlStatements();
+        	_connectionManager = connectionManager;
+            _sqlStatements = sqlStatements;
         }
 
         private void WithConnection(Action<IDbConnection> cnConsumer)
@@ -31,12 +32,12 @@ namespace SisoDb.SqlCe4.Dac
 
             try
             {
-                cn = _providerFactory.GetOpenServerConnection(_connectionInfo.ConnectionString);
+                cn = _connectionManager.OpenServerConnection(_connectionInfo.ConnectionString);
                 cnConsumer.Invoke(cn);
             }
             finally
             {
-                _providerFactory.ReleaseServerConnection(cn);
+                _connectionManager.ReleaseServerConnection(cn);
             }
         }
 
@@ -51,7 +52,7 @@ namespace SisoDb.SqlCe4.Dac
             if(DbExists())
                 return;
 
-            _providerFactory.ReleaseAllClientConnections();
+            _connectionManager.ReleaseAllDbConnections();
 
             using (var engine = new SqlCeEngine(_connectionInfo.ConnectionString.PlainString))
             {
@@ -66,7 +67,7 @@ namespace SisoDb.SqlCe4.Dac
             if (!DbExists())
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.FilePath));
 
-            _providerFactory.ReleaseAllClientConnections();
+			_connectionManager.ReleaseAllDbConnections();
 
             WithConnection(cn =>
             {
@@ -86,7 +87,7 @@ namespace SisoDb.SqlCe4.Dac
 
         public void DropDbIfItExists()
         {
-            _providerFactory.ReleaseAllClientConnections();
+			_connectionManager.ReleaseAllDbConnections();
 
             IoHelper.DeleteIfFileExists(_connectionInfo.FilePath);
         }

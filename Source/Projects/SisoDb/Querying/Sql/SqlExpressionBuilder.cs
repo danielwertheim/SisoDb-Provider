@@ -1,41 +1,45 @@
 ﻿using System.Linq;
+using System.Linq.Expressions;
 using EnsureThat;
+using SisoDb.Core;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
+using NCore.Reflections;
+using SisoDb.Querying.Lambdas.Operators;
 
 namespace SisoDb.Querying.Sql
 {
     public class SqlExpressionBuilder
     {
-        public ISqlExpression Process(IQueryCommand queryCommand)
+        public ISqlExpression Process(IQuery query)
         {
-            Ensure.That(queryCommand, "queryCommand").IsNotNull();
+            Ensure.That(query, "query").IsNotNull();
 
             var expression = new SqlExpression();
 
-            if(queryCommand.HasWhere)
-                ProcessWheres(queryCommand.Where, expression);
+            if(query.HasWhere)
+                ProcessWheres(query.Where, expression);
 
-            if (queryCommand.HasSortings)
-                ProcessSortings(queryCommand.Sortings, expression);
+            if (query.HasSortings)
+                ProcessSortings(query.Sortings, expression);
 
-            if (queryCommand.HasIncludes)
+            if (query.HasIncludes)
             {
-                var mergedIncludeLambda = GetMergedIncludeLambda(queryCommand);
+                var mergedIncludeLambda = GetMergedIncludeLambda(query);
                 ProcessIncludes(mergedIncludeLambda, expression);
             }
 
             return expression;
         }
 
-        protected virtual IParsedLambda GetMergedIncludeLambda(IQueryCommand queryCommand)
+        protected virtual IParsedLambda GetMergedIncludeLambda(IQuery query)
         {
-            if (!queryCommand.HasIncludes)
+            if (!query.HasIncludes)
                 return null;
 
             IParsedLambda mergedIncludes = null;
-            foreach (var include in queryCommand.Includes)
+            foreach (var include in query.Includes)
             {
                 mergedIncludes = mergedIncludes == null 
                     ? include 
@@ -49,32 +53,45 @@ namespace SisoDb.Querying.Sql
         {
             var builder = new WhereCriteriaBuilder();
 
-            foreach (var node in wheresLambda.Nodes)
-            {
-                if (node is MemberNode)
-                {
-                    var memNode = (MemberNode) node;
+        	for (int i = 0; i < wheresLambda.Nodes.Length; i++)
+        	{
+        		var node = wheresLambda.Nodes[i];
+        		if (node is MemberNode)
+        		{
+        			var memNode = (MemberNode) node;
+					var memberIndex = expression.GetExistingOrNewMemberIndexFor(memNode.Path);
+					if (!expression.ContainsWhereMemberFor(memNode.Path))
+						expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex));
 
-                    var memberIndex = expression.GetExistingOrNewMemberIndexFor(memNode.Path);
+        			if (memNode.MemberType.IsAnyBoolType())
+        			{
+        				var leftNode = wheresLambda.Nodes.PeekLeft(i);
+						var rightNode = wheresLambda.Nodes.PeekRight(i);
 
-                    if (!expression.ContainsWhereMemberFor(memNode.Path))
-                        expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex));
-                    
-                    builder.AddMember(memNode, memberIndex);
-                }
-                else if (node is OperatorNode)
-                    builder.AddOp((OperatorNode)node);
-                else if (node is ValueNode)
-                    builder.AddValue((ValueNode)node);
-                else if (node is NullNode)
-                    builder.AddNullValue((NullNode)node);
-                else
-                    builder.Sql.Append(node);
+						if(!(leftNode is OperatorNode) && !(rightNode is OperatorNode))
+						{
+							builder.AddMember(memNode, memberIndex);
+							builder.AddOp(new OperatorNode(Operator.Create(ExpressionType.Equal)));
+							builder.AddValue(new ValueNode(true));
+							continue;
+						}
+        			}
 
-                builder.Flush();
-            }
+        			builder.AddMember(memNode, memberIndex);
+        		}
+        		else if (node is OperatorNode)
+        			builder.AddOp((OperatorNode) node);
+        		else if (node is ValueNode)
+        			builder.AddValue((ValueNode) node);
+        		else if (node is NullNode)
+        			builder.AddNullValue((NullNode) node);
+        		else
+        			builder.Sql.Append(node);
 
-            var whereCriteria = builder.Sql.Length > 0 
+        		builder.Flush();
+        	}
+
+        	var whereCriteria = builder.Sql.Length > 0 
                 ? new SqlWhereCriteria(builder.Sql.ToString(), builder.Params.ToArray())
                 : SqlWhereCriteria.Empty();
 
@@ -83,7 +100,7 @@ namespace SisoDb.Querying.Sql
 
         protected virtual void ProcessSortings(IParsedLambda sortingsLambda, SqlExpression expression)
         {
-            if (sortingsLambda == null || sortingsLambda.Nodes.Count == 0)
+            if (sortingsLambda == null || sortingsLambda.Nodes.Length == 0)
                 return;
 
             foreach (var sortingNode in sortingsLambda.Nodes.OfType<SortingNode>())
@@ -105,14 +122,14 @@ namespace SisoDb.Querying.Sql
 
         protected virtual void ProcessIncludes(IParsedLambda includesLambda, SqlExpression expression)
         {
-            if (includesLambda == null || includesLambda.Nodes.Count == 0)
+            if (includesLambda == null || includesLambda.Nodes.Length == 0)
                 return;
 
             foreach (var includeNode in includesLambda.Nodes.OfType<IncludeNode>())
             {
                 expression.AddInclude(new SqlInclude(
                     expression.GetNextNewIncludeIndex(),
-                    includeNode.ChildStructureName + "Structure",
+                    includeNode.ReferencedStructureName,
                     IndexStorageSchema.GetValueSchemaFieldForType(includeNode.MemberType).Name,
                     includeNode.IdReferencePath,
                     includeNode.ObjectReferencePath));

@@ -3,19 +3,6 @@ using System.Collections.Generic;
 
 namespace SisoDb
 {
-    public static class SortingExtensions
-    {
-        public static T Asc<T>(this T t)
-        {
-            return t;
-        }
-
-        public static T Desc<T>(this T t)
-        {
-            return t;
-        }
-    }
-
     public static class EnumerableQueryExtensions
     {
         public static bool QxAny<T>(this IEnumerable<T> m, Func<T, bool> e)

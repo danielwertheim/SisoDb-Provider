@@ -7,7 +7,7 @@ using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace InsertsComplete
+	class InsertsComplete
     {
         [Subject(typeof(IUnitOfWork), "Insert (complete)")]
         public class when_inserting_complete_guid_entity_with_populated_hierarchy : SpecificationBase

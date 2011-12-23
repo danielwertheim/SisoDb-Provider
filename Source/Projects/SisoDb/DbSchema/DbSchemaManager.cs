@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 
@@ -6,10 +7,14 @@ namespace SisoDb.DbSchema
 {
     public class DbSchemaManager : IDbSchemaManager
     {
-        private readonly ISet<string> _upsertedSchemas;
+    	private readonly IDbSchemaUpserter _dbSchemaUpserter;
+    	private readonly ISet<string> _upsertedSchemas;
 
-        public DbSchemaManager()
+        public DbSchemaManager(IDbSchemaUpserter dbSchemaUpserter)
         {
+        	Ensure.That(dbSchemaUpserter, "dbSchemaUpserter").IsNotNull();
+
+			_dbSchemaUpserter = dbSchemaUpserter;
             _upsertedSchemas = new HashSet<string>();
         }
 
@@ -21,6 +26,14 @@ namespace SisoDb.DbSchema
             }
         }
 
+		public void RemoveFromCache(IStructureSchema structureSchema)
+		{
+			lock (_upsertedSchemas)
+			{
+				_upsertedSchemas.Remove(structureSchema.Name);
+			}
+		}
+
         public void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
         {
             lock (_upsertedSchemas)
@@ -31,14 +44,14 @@ namespace SisoDb.DbSchema
             }
         }
 
-        public void UpsertStructureSet(IStructureSchema structureSchema, IDbSchemaUpserter upserter)
+        public void UpsertStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
         {
             lock (_upsertedSchemas)
             {
                 if (_upsertedSchemas.Contains(structureSchema.Name))
                     return;
 
-                upserter.Upsert(structureSchema);
+                _dbSchemaUpserter.Upsert(structureSchema, dbClient);
 
                 _upsertedSchemas.Add(structureSchema.Name);
             }

@@ -6,7 +6,7 @@ namespace SisoDb.Querying.Lambdas.Nodes
     [Serializable]
     public class IncludeNode : INode
     {
-        public string ChildStructureName { get; private set; }
+        public string ReferencedStructureName { get; private set; }
 
         public string IdReferencePath { get; private set; }
 
@@ -14,14 +14,14 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public Type MemberType { get; private set; }
 
-        public IncludeNode(string childStructureName, string idReferencePath, string objectReferencePath, Type memberType)
+        public IncludeNode(string referencedStructureName, string idReferencePath, string objectReferencePath, Type memberType)
         {
-            Ensure.That(childStructureName, "childStructureName").IsNotNullOrWhiteSpace();
+			Ensure.That(referencedStructureName, "referencedStructureName").IsNotNullOrWhiteSpace();
             Ensure.That(idReferencePath, "idReferencePath").IsNotNullOrWhiteSpace();
             Ensure.That(objectReferencePath, "objectReferencePath").IsNotNullOrWhiteSpace();
             Ensure.That(memberType, "memberType").IsNotNull();
 
-            ChildStructureName = childStructureName;
+            ReferencedStructureName = referencedStructureName;
             IdReferencePath = idReferencePath;
             ObjectReferencePath = objectReferencePath;
             MemberType = memberType;

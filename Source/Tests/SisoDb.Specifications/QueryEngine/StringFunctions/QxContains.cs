@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Machine.Specifications;
-using SisoDb.Querying;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
-    namespace QxContains
+	class QxContains
     {
         [Subject(typeof(IQueryEngine), "QxContains")]
         public class when_two_items_has_string_that_does_not_match_query : SpecificationBase
@@ -23,7 +21,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.QxContains("Foo")).ToList();
+					.Query<QueryGuidItem>().Where(i => i.StringValue.QxContains("Foo")).ToList();
 
             It should_not_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -45,7 +43,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.QxContains("Al")).ToList();
+					.Query<QueryGuidItem>().Where(i => i.StringValue.QxContains("Al")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -74,7 +72,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.QxContains("lp")).ToList();
+					.Query<QueryGuidItem>().Where(i => i.StringValue.QxContains("lp")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -103,7 +101,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.QxContains("ha")).ToList();
+					.Query<QueryGuidItem>().Where(i => i.StringValue.QxContains("ha")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -132,7 +130,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.QxContains("Alpha")).ToList();
+					.Query<QueryGuidItem>().Where(i => i.StringValue.QxContains("Alpha")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

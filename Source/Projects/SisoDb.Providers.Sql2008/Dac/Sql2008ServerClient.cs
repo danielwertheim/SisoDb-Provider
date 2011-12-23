@@ -3,24 +3,25 @@ using System.Data;
 using EnsureThat;
 using NCore;
 using SisoDb.Dac;
-using SisoDb.Providers;
 using SisoDb.Resources;
 
 namespace SisoDb.Sql2008.Dac
 {
     public class Sql2008ServerClient : IServerClient
     {
-        private readonly Sql2008ConnectionInfo _connectionInfo;
-        private readonly ISisoProviderFactory _providerFactory;
+        private readonly ISisoConnectionInfo _connectionInfo;
+    	private readonly IConnectionManager _connectionManager;
         private readonly ISqlStatements _sqlStatements;
 
-        public Sql2008ServerClient(Sql2008ConnectionInfo connectionInfo)
+		public Sql2008ServerClient(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+			Ensure.That(connectionManager, "connectionManager").IsNotNull();
+			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
             _connectionInfo = connectionInfo;
-            _providerFactory = SisoEnvironment.ProviderFactories.Get(_connectionInfo.ProviderType);
-            _sqlStatements = _providerFactory.GetSqlStatements();
+        	_connectionManager = connectionManager;
+            _sqlStatements = sqlStatements;
         }
 
         private void WithConnection(Action<IDbConnection> cnConsumer)
@@ -29,12 +30,12 @@ namespace SisoDb.Sql2008.Dac
 
             try
             {
-                cn = _providerFactory.GetOpenServerConnection(_connectionInfo.ServerConnectionString);
+				cn = _connectionManager.OpenServerConnection(_connectionInfo.ServerConnectionString);
                 cnConsumer.Invoke(cn);
             }
             finally
             {
-                _providerFactory.ReleaseServerConnection(cn);
+				_connectionManager.ReleaseServerConnection(cn);
             }
         }
 
@@ -45,12 +46,12 @@ namespace SisoDb.Sql2008.Dac
 
             try
             {
-                cn = _providerFactory.GetOpenConnection(_connectionInfo.ServerConnectionString);
+				cn = _connectionManager.OpenServerConnection(_connectionInfo.ServerConnectionString);
                 result = cnConsumer.Invoke(cn);
             }
             finally
             {
-                _providerFactory.ReleaseConnection(cn);
+				_connectionManager.ReleaseServerConnection(cn);
             }
 
             return result;
@@ -58,6 +59,8 @@ namespace SisoDb.Sql2008.Dac
 
         public void EnsureNewDb()
         {
+			_connectionManager.ReleaseAllDbConnections();
+
             WithConnection(cn =>
             {
                 cn.ExecuteNonQuery(_sqlStatements.GetSql("DropDatabase").Inject(_connectionInfo.DbName));
@@ -69,6 +72,8 @@ namespace SisoDb.Sql2008.Dac
 
         public void CreateDbIfItDoesNotExist()
         {
+			_connectionManager.ReleaseAllDbConnections();
+
             WithConnection(cn =>
             {
                 var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
@@ -84,6 +89,8 @@ namespace SisoDb.Sql2008.Dac
 
         public void InitializeExistingDb()
         {
+			_connectionManager.ReleaseAllDbConnections();
+
             WithConnection(cn =>
             {
                 var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
@@ -103,6 +110,8 @@ namespace SisoDb.Sql2008.Dac
 
         public void DropDbIfItExists()
         {
+			_connectionManager.ReleaseAllDbConnections();
+
             WithConnection(cn => cn.ExecuteNonQuery(_sqlStatements.GetSql("DropDatabase").Inject(_connectionInfo.DbName)));
         }
     }

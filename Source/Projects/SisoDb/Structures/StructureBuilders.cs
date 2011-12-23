@@ -1,9 +1,9 @@
 using System;
+using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.IdGenerators;
 using PineCone.Structures.Schemas;
-using SisoDb.Dac;
 using SisoDb.Resources;
 using SisoDb.Serialization;
 
@@ -11,18 +11,21 @@ namespace SisoDb.Structures
 {
     public class StructureBuilders : IStructureBuilders
     {
-        public Func<IStructureSchema, GetNextIdentity, IStructureBuilder> ForInserts { get; set; }
+    	public Func<IStructureSchema, IIdentityStructureIdGenerator, IStructureBuilder> ForInserts { get; set; }
 
         public Func<IStructureSchema, IStructureBuilder> ForUpdates { get; set; }
 
-        public StructureBuilders()
-        {
-            ForInserts = CreateForInserts;
+		public StructureBuilders()
+		{
+			ForInserts = CreateForInserts;
             ForUpdates = CreateForUpdates;
         }
 
-        private IStructureBuilder CreateForInserts(IStructureSchema structureSchema, GetNextIdentity getNextIdentityDelegate)
-        {
+		private IStructureBuilder CreateForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator)
+		{
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
+
             var idType = structureSchema.IdAccessor.IdType;
 
             if (idType == StructureIdTypes.Guid)
@@ -35,7 +38,7 @@ namespace SisoDb.Structures
             if (idType.IsIdentity())
                 return new StructureBuilder
                 {
-                    StructureIdGenerator = new IdentityStructureIdGenerator(getNextIdentityDelegate),
+					StructureIdGenerator = identityStructureIdGenerator,
                     StructureSerializer = new SerializerForStructureBuilder()
                 };
 

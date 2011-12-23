@@ -12,45 +12,50 @@ namespace SisoDb.Profiling
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
-            Console.ReadKey();
-            return;
+			Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
+			Console.ReadKey();
+			return;
 
             //********* SQL2008 ***********
-            //var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;");
-            //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
+			//var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;");
+			//var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
 
             //********* SQLCE4 ***********
-            //var cnInfo = new SqlCe4ConnectionInfo(@"sisodb:provider=SqlCe4||plain:Data source=D:\Temp\SisoDb.Profiling.sdf;");
-            //var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
+			//var cnInfo = new SqlCe4ConnectionInfo(@"sisodb:provider=SqlCe4||plain:Data source=D:\Temp\SisoDb.Profiling.sdf;");
+			//var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
 
-            //db.EnsureNewDatabase();
+			//db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 1, 5);
+			//ProfilingInserts(db, 1, 5);
 
             //InsertCustomers(1, 10000, db);
-            //ProfilingQueries(db, GetAllCustomers);
-            //ProfilingQueries(db, GetAllCustomersAsJson);
-            //ProfilingQueries(db, GetAllCustomersViaIndexesTable);
-            //ProfilingQueries(db, GetAllCustomersAsJsonViaIndexesTable);
+			//ProfilingQueries(db, GetAllCustomers);
+			//ProfilingQueries(db, GetAllCustomersAsJson);
+			//ProfilingQueries(db, GetAllCustomersViaIndexesTable);
+			//ProfilingQueries(db, GetAllCustomersAsJsonViaIndexesTable);
 
             //ProfilingUpdateStructureSet(db);
 
-            //Console.WriteLine("---- Done ----");
-            //Console.ReadKey();
+			//Console.WriteLine("---- Done ----");
+			//Console.ReadKey();
         }
 
         private static void ProfilingUpdateStructureSet(ISisoDatabase database)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            database.UpdateStructureSet<Customer, Customer>((oldCustomer, newCustomer) => StructureSetUpdaterStatuses.Keep);
+        	using (var uow = database.CreateUnitOfWork())
+        	{
+        		if(uow.UpdateMany<Customer>(customer => UpdateManyModifierStatus.Keep))
+					uow.Commit();
+        	}
+
             stopWatch.Stop();
             Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
 
-            using (var unitOfWork = database.CreateUnitOfWork())
+            using (var rs = database.CreateQueryEngine())
             {
-                var rowCount = unitOfWork.Count<Customer>();
+				var rowCount = rs.Query<Customer>().Count();
 
                 Console.WriteLine("Total rows = {0}", rowCount);
             }
@@ -72,9 +77,9 @@ namespace SisoDb.Profiling
                 stopWatch.Reset();
             }
 
-            using (var unitOfWork = database.CreateQueryEngine())
+            using (var rs = database.CreateQueryEngine())
             {
-                var rowCount = unitOfWork.Count<Customer>();
+                var rowCount = rs.Query<Customer>().Count();
 
                 Console.WriteLine("Total rows = {0}", rowCount);
             }
@@ -112,34 +117,22 @@ namespace SisoDb.Profiling
 
         private static IList<Customer> GetAllCustomers(ISisoDatabase database)
         {
-            using (var unitOfWork = database.CreateUnitOfWork())
-            {
-                return unitOfWork.GetAll<Customer>().ToList();
-            }
+        	return database.ReadOnce().Query<Customer>().ToList();
         }
 
         private static IList<Customer> GetAllCustomersViaIndexesTable(ISisoDatabase database)
         {
-            using (var unitOfWork = database.CreateUnitOfWork())
-            {
-                return unitOfWork.Where<Customer>(c => c.StructureId == c.StructureId).ToList();
-            }
+			return database.ReadOnce().Query<Customer>().Where(c => c.StructureId == c.StructureId).ToList();
         }
 
         private static IList<string> GetAllCustomersAsJsonViaIndexesTable(ISisoDatabase database)
         {
-            using (var unitOfWork = database.CreateUnitOfWork())
-            {
-                return unitOfWork.WhereAsJson<Customer>(c => c.StructureId == c.StructureId).ToList();
-            }
+			return database.ReadOnce().Query<Customer>().Where(c => c.StructureId == c.StructureId).ToListOfJson();
         }
 
         private static IList<string> GetAllCustomersAsJson(ISisoDatabase database)
         {
-            using (var unitOfWork = database.CreateUnitOfWork())
-            {
-                return unitOfWork.GetAllAsJson<Customer>().ToList();
-            }
+			return database.ReadOnce().Query<Customer>().ToListOfJson();
         }
     }
 }

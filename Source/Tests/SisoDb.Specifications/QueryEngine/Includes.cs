@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Machine.Specifications;
 using SisoDb.Querying;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-    namespace Includes
+	class Includes
     {
         [Subject(typeof(IQueryEngine), "Includes using Get all as X")]
         public class when_getting_all_and_including_different_firstlevel_members : SpecificationBase
@@ -19,9 +18,9 @@ namespace SisoDb.Specifications.QueryEngine
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .GetAllAs<IAlbumData, Album>(q => q
-                    .Include<Genre>(a => a.GenreId)
-                    .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
+				.Query<IAlbumData>()
+                .Include<Genre>(a => a.GenreId)
+                .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
 
             It should_have_fetched_1_album = 
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -43,9 +42,9 @@ namespace SisoDb.Specifications.QueryEngine
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .GetAllAs<IAlbumData, Album>(q => q
-                    .Include<IGenreData>(a => a.GenreId)
-                    .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
+				.Query<IAlbumData>()
+				.Include<IGenreData>(a => a.GenreId)
+                .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -67,12 +66,12 @@ namespace SisoDb.Specifications.QueryEngine
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .QueryAs<IAlbumData, Album>(q => q
-                    .Where(a => a.Name == "Born to run")
-                    .SortBy(a => a.Name)
-                    .Page(0, 10)
-                    .Include<Genre>(a => a.GenreId)
-                    .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
+				.Query<IAlbumData>()
+                .Where(a => a.Name == "Born to run")
+                .OrderBy(a => a.Name)
+                .Page(0, 10)
+                .Include<Genre>(a => a.GenreId)
+                .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -103,9 +102,9 @@ namespace SisoDb.Specifications.QueryEngine
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .QueryAs<IAlbumData, Album>(q => q
-                    .Include<IGenreData>(a => a.GenreId)
-                    .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId)).ToList();
+				.Query<IAlbumData>()
+                .Include<IGenreData>(a => a.GenreId)
+                .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -134,7 +133,7 @@ namespace SisoDb.Specifications.QueryEngine
             }
 
             Because of =
-                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName)).ToList();
+                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName));
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -163,7 +162,7 @@ namespace SisoDb.Specifications.QueryEngine
             }
 
             Because of =
-                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName)).ToList();
+                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName));
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -177,7 +176,7 @@ namespace SisoDb.Specifications.QueryEngine
         }
 #endif
 
-        internal static class Establishments
+		internal static class Establishments
         {
             internal static Album SetupStructuresForIncludes(ITestContext testContext)
             {

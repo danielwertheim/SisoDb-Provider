@@ -15,7 +15,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             Ensure.That(sortingExpressions, "sortingExpressions").HasItems();
 
-            var nodesContainer = new NodesContainer();
+            var nodesContainer = new Nodes.NodesCollection();
             foreach (var lambda in sortingExpressions)
             {
                 if (lambda == null)
@@ -39,7 +39,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                             sortDirection = SortDirections.Desc;
                             break;
                         default:
-                            throw new NotSupportedException(ExceptionMessages.SortingParser_UnsupportedMethodForSortingDirection);
+                            throw new NotSupportedException(ExceptionMessages.OrderByParser_UnsupportedMethodForSortingDirection);
                     }
                 }
 

@@ -4,6 +4,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public interface IIncludeParser
     {
-        IParsedLambda Parse(string includedStructureTypeName, LambdaExpression[] includeExpressions);
+        IParsedLambda Parse(string includedStructureSetName, LambdaExpression[] includeExpressions);
     }
 }

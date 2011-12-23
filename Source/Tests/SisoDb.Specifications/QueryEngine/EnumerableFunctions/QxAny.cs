@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Machine.Specifications;
-using SisoDb.Querying;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
@@ -24,7 +22,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.Strings.QxAny(e => e == "Alpha")).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.Strings.QxAny(e => e == "Alpha")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -55,7 +53,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.Strings.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.Strings.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -85,7 +83,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.Integers.QxAny(e => e == 1)).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 1)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -116,7 +114,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.Integers.QxAny(e => e == 0 || e == 2)).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 0 || e == 2)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -146,7 +144,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.StringList.QxAny(e => e == "Alpha")).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Alpha")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -177,7 +175,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.StringList.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -207,7 +205,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.DecimalList.QxAny(e => e == 1.11m)).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 1.11m)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -238,7 +236,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.DecimalList.QxAny(e => e == 0m || e == 2.12m)).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 0m || e == 2.12m)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -286,7 +284,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.ChildItemList.QxAny(e => e.Int == -10)).ToList();
+			   .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == -10)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -334,7 +332,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.ChildItemList.QxAny(e => e.Int == 0 || e.Int == 5)).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == 0 || e.Int == 5)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -382,7 +380,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == -10))).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == -10))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -430,7 +428,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == 0 || il == 5))).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == 0 || il == 5))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -478,7 +476,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == -10))).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == -10))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -526,7 +524,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                .Where<QueryItemForQxAnyQueries>(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == 0 || gcl.Int == 5))).ToList();
+				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == 0 || gcl.Int == 5))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

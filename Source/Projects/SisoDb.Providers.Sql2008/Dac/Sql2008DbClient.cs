@@ -6,6 +6,7 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
@@ -14,8 +15,10 @@ namespace SisoDb.Sql2008.Dac
 {
     public class Sql2008DbClient : DbClientBase
     {
-        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
-            : base(connectionInfo, transactional)
+		private const int MaxBatchedIdsSize = 100;
+
+		public Sql2008DbClient(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(connectionInfo, transactional, connectionManager, sqlStatements)
         {
         }
 
@@ -72,12 +75,16 @@ namespace SisoDb.Sql2008.Dac
 
             using (var cmd = CreateCommand(sql))
             {
-                cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, ids));
-                cmd.ExecuteNonQuery();
+            	foreach (var idBatch in ids.Batch(MaxBatchedIdsSize))
+            	{
+					cmd.Parameters.Clear();
+					cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
+					cmd.ExecuteNonQuery();	
+            	}
             }
         }
 
-        public override void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema)
+        public override void DeleteByQuery(DbQuery query, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -122,7 +129,7 @@ namespace SisoDb.Sql2008.Dac
             return ExecuteScalar<int>(sql);
         }
 
-        public override int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query)
+        public override int RowCountByQuery(IStructureSchema structureSchema, DbQuery query)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -142,30 +149,11 @@ namespace SisoDb.Sql2008.Dac
                 new DacParameter("numOfIds", numOfIds));
         }
 
-        public override IEnumerable<string> GetJson(IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("GetAllById").Inject(structureSchema.GetStructureTableName());
-
-            using (var cmd = CreateCommand(sql))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetString(0);
-                    }
-                    reader.Close();
-                }
-            }
-        }
-
         public override string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("GetById").Inject(structureSchema.GetStructureTableName());
+            var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
 
             return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
@@ -174,20 +162,24 @@ namespace SisoDb.Sql2008.Dac
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName());
+            var sql = SqlStatements.GetSql("GetJsonByIds").Inject(structureSchema.GetStructureTableName());
 
             using (var cmd = CreateCommand(sql))
             {
-                cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, ids));
+				foreach (var idBatch in ids.Batch(MaxBatchedIdsSize))
+				{
+					cmd.Parameters.Clear();
+					cmd.Parameters.Add(Sql2008IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
 
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetString(0);
-                    }
-                    reader.Close();
-                }
+					using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+					{
+						while (reader.Read())
+						{
+							yield return reader.GetString(0);
+						}
+						reader.Close();
+					}
+				}
             }
         }
 

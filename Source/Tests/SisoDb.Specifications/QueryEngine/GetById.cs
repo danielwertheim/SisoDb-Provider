@@ -6,7 +6,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-    namespace GetById
+	class GetById
     {
         [Subject(typeof(IUnitOfWork), "Get by Id (guid)")]
         public class when_set_with_guid_id_is_empty : SpecificationBase

@@ -8,11 +8,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public class IncludeParser : IIncludeParser
     {
-        public IParsedLambda Parse(string includedStructureTypeName, LambdaExpression[] includeExpressions)
+        public IParsedLambda Parse(string includedStructureSetName, LambdaExpression[] includeExpressions)
         {
+			Ensure.That(includedStructureSetName, "includedStructureSetName").IsNotNullOrWhiteSpace();
             Ensure.That(includeExpressions, "includeExpressions").HasItems();
 
-            var nodes = new NodesContainer();
+            var nodes = new Nodes.NodesCollection();
 
             foreach (var includeExpression in includeExpressions)
             {
@@ -21,7 +22,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
 
                 nodes.AddNode(
-                    new IncludeNode(includedStructureTypeName, idReferencePath, objectReferencePath, memberExpression.Type));    
+                    new IncludeNode(includedStructureSetName, idReferencePath, objectReferencePath, memberExpression.Type));    
             }
 
             return new ParsedLambda(nodes.ToArray());

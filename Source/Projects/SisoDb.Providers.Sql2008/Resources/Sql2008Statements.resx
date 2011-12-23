@@ -267,19 +267,15 @@ if object_id(N'{1}', N'U') is not null drop table [dbo].[{1}];
 if object_id(N'{2}', N'U') is not null drop table [dbo].[{2}];
 if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[SisoDbIdentities] where [EntityHash] = @entityHash;</value>
   </data>
-  <data name="GetAll" xml:space="preserve">
+  <data name="GetAllJson" xml:space="preserve">
     <value>set nocount on;
 select json from [dbo].[{0}] order by [StructureId];</value>
   </data>
-  <data name="GetAllById" xml:space="preserve">
-    <value>set nocount on;
-select json from [dbo].[{0}] order by [StructureId];</value>
-  </data>
-  <data name="GetById" xml:space="preserve">
+  <data name="GetJsonById" xml:space="preserve">
     <value>set nocount on;
 select json from [dbo].[{0}] where StructureId =@id;</value>
   </data>
-  <data name="GetByIds" xml:space="preserve">
+  <data name="GetJsonByIds" xml:space="preserve">
     <value>set nocount on;
 select Json from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
   </data>
@@ -309,6 +305,8 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
     <value>set nocount on;
 ALTER INDEX [PK_{0}] ON dbo.[{0}] REBUILD;
 ALTER INDEX [PK_{1}] ON dbo.[{1}] REBUILD;
+ALTER INDEX [IX_{1}_StructureId] ON dbo.[{1}] REBUILD;
+ALTER INDEX [IX_{1}_StructureId_MemberPath] ON dbo.[{1}] REBUILD;
 ALTER INDEX [UQ_{2}] ON dbo.[{2}] REBUILD;</value>
   </data>
   <data name="RowCount" xml:space="preserve">

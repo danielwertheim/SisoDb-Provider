@@ -1,7 +1,6 @@
 ﻿using System;
 using NCore;
 using NCore.Cryptography;
-using SisoDb.Providers;
 
 namespace SisoDb
 {
@@ -17,8 +16,6 @@ namespace SisoDb
 
         public static readonly GlobalResourceContainer Resources;
 
-        public static readonly ISisoProviderFactories ProviderFactories;
-
         static SisoEnvironment()
         {
             Formatting = new SisoDbFormatting();
@@ -26,7 +23,6 @@ namespace SisoDb
             StringComparer = StringComparer.InvariantCultureIgnoreCase;
             HashService = new Crc32HashService();
             Resources = new GlobalResourceContainer();
-            ProviderFactories = new SisoProviderFactories();
         }
     }
 }

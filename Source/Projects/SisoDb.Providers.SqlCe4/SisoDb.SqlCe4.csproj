@@ -37,17 +37,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ensure.That.0.5.0.32\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="ErikEJ.SqlCe40">
       <HintPath>..\..\packages\ErikEJ.SqlCeBulkCopy.2.1.0.2\lib\Net40\ErikEJ.SqlCe40.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.21.0.66, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.42.0.82, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.24.0.70, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.46.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="Salient.Data">
       <HintPath>..\..\packages\ErikEJ.SqlCeBulkCopy.2.1.0.2\lib\Net40\Salient.Data.dll</HintPath>
@@ -77,6 +78,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SqlCe4Exceptions.resx</DependentUpon>
     </Compile>
+    <Compile Include="SqlCe4ConnectionManager.cs" />
     <Compile Include="SqlCe4QueryGenerator.cs" />
     <Compile Include="SqlCe4UnitOfWork.cs" />
     <Compile Include="SqlCe4QueryEngine.cs" />
@@ -100,7 +102,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SqlCe4Exceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SqlCe4Statements.resx" />
+    <EmbeddedResource Include="Resources\SqlCe4Statements.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\License-SqlCe4BulkCopy.txt">

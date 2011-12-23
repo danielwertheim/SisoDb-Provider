@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EnsureThat;
 using SisoDb.Dac;
 
 namespace SisoDb.Querying
@@ -20,8 +21,7 @@ namespace SisoDb.Querying
 
         public NamedQuery(string name)
         {
-            if(string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+			Ensure.That(name, "name").IsNotNullOrWhiteSpace();
 
             Name = name;
 

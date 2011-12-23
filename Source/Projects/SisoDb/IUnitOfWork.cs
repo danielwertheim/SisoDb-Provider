@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using PineCone.Structures.Schemas;
 
 namespace SisoDb
 {
@@ -11,20 +10,6 @@ namespace SisoDb
     /// </summary>
     public interface IUnitOfWork : IQueryEngine
     {
-        /// <summary>
-        /// Returns the schema associated with the Type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        IStructureSchema GetSchema(Type type);
-
-        /// <summary>
-        /// Returns the schema associated with the <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        IStructureSchema GetSchema<T>() where T : class;
-
         /// <summary>
         /// Commits your changes to the database. After a commit you
         /// can continue to work with your UnitOfWork. You do not have
@@ -69,7 +54,7 @@ namespace SisoDb
         /// so If you do have the instace pass that instead using other overload!</remarks>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
-        void InsertManyJson<T>(IList<string> json) where T : class;
+        void InsertManyJson<T>(IEnumerable<string> json) where T : class;
 
         /// <summary>
         /// Updates the sent structure. If it
@@ -80,6 +65,41 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="item"></param>
         void Update<T>(T item) where T : class;
+
+    	/// <summary>
+    	/// Traverses every structure in the set.
+    	/// and lets you apply changes to each yielded structure.
+    	/// During the yielding of structures, you can terminate the process by returning
+    	/// <see cref="UpdateManyModifierStatus.Abort"/>. To trash a structure return
+    	/// <see cref="UpdateManyModifierStatus.Trash"/> and to keep a structure return
+    	/// <see cref="UpdateManyModifierStatus.Keep"/>.
+    	/// </summary>
+    	/// <typeparam name="T"></typeparam>
+    	/// <param name="modifier"></param>
+    	/// <param name="expression"></param>
+    	/// <returns>
+    	/// False if you at anytime returned <see cref="UpdateManyModifierStatus.Abort"/>.
+    	/// True if everything went by and this indicates that you can commit the changes.</returns>
+    	bool UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class;
+
+    	/// <summary>
+    	/// Traverses every structure in the set.
+    	/// and lets you transform from <typeparamref name="TOld"/> to <typeparamref name="TNew"/>.
+    	/// During the yielding of structures, you can terminate the process by returning
+    	/// <see cref="UpdateManyModifierStatus.Abort"/>. To trash a structure return
+    	/// <see cref="UpdateManyModifierStatus.Trash"/> and to keep a structure return
+    	/// <see cref="UpdateManyModifierStatus.Keep"/>.
+    	/// </summary>
+    	/// <typeparam name="TOld"></typeparam>
+    	/// <typeparam name="TNew"></typeparam>
+    	/// <param name="modifier"></param>
+    	/// <param name="expression"></param>
+    	/// <returns>
+    	/// False if you at anytime returned <see cref="UpdateManyModifierStatus.Abort"/>.
+    	/// True if everything went by and this indicates that you can commit the changes.</returns>
+    	bool UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
+			where TOld : class
+			where TNew : class;
 
         /// <summary>
         /// Deletes structure by id.

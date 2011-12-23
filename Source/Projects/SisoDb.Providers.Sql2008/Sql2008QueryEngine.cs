@@ -1,21 +1,11 @@
-﻿using SisoDb.DbSchema;
+﻿using SisoDb.Dac;
 
 namespace SisoDb.Sql2008
 {
     public class Sql2008QueryEngine : DbQueryEngine
     {
-        internal Sql2008QueryEngine(
-            ISisoDatabase db,
-            IDbSchemaManager dbSchemaManager)
-            : base(db, dbSchemaManager, false)
+        internal Sql2008QueryEngine(IDbDatabase db, IDbClient dbClient)
+			: base(db, dbClient)
         {}
-
-        protected Sql2008QueryEngine(
-            ISisoDatabase db,
-            IDbSchemaManager dbSchemaManager,
-            bool transactional)
-            : base(db, dbSchemaManager, transactional)
-        {
-        }
     }
 }

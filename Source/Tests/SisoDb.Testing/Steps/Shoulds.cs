@@ -53,9 +53,9 @@ namespace SisoDb.Testing.Steps
         {
             var structureScema = db.StructureSchemas.GetSchema<T>();
 
-            using (var qe = db.CreateQueryEngine())
+            using (var rs = db.CreateQueryEngine())
             {
-                var items = qe.GetAll<T>().ToList();
+                var items = rs.Query<T>().ToList();
                 
                 structureScema.IdAccessor.GetValue(items[0]).Value.ShouldEqual(
                     structureScema.IdAccessor.GetValue(structures[0]).Value);
@@ -106,16 +106,16 @@ namespace SisoDb.Testing.Steps
 
         public static void should_have_valid_structures<T>(this ISisoDatabase db, Action<T> validationRule) where T : class
         {
-            using (var qe = db.CreateQueryEngine())
+            using (var rs = db.CreateQueryEngine())
             {
-                foreach (var structure in qe.GetAll<T>())
+                foreach (var structure in rs.Query<T>().ToEnumerable())
                     validationRule(structure);
             }
         }
 
         public static void should_have_one_structure_with_json_containing<T>(this ISisoDatabase db, params Expression<Func<T, object>>[] parts) where T : class
         {
-            var structureJson = db.ReadOnce().GetAllAsJson<T>().SingleOrDefault();
+            var structureJson = db.ReadOnce().Query<T>().ToListOfJson().SingleOrDefault();
             
             structureJson.ShouldNotBeEmpty();
 
@@ -127,7 +127,7 @@ namespace SisoDb.Testing.Steps
             where T1 : class
             where T2 : class
         {
-            var structureJson = db.ReadOnce().GetAllAsJson<T1>().SingleOrDefault();
+            var structureJson = db.ReadOnce().Query<T1>().ToListOfJson().SingleOrDefault();
 
             structureJson.ShouldNotBeEmpty();
 
@@ -137,7 +137,7 @@ namespace SisoDb.Testing.Steps
 
         public static void should_have_one_structure_with_json_not_containing<T1, T2>(this ISisoDatabase db, params Expression<Func<T2, object>>[] parts) where T1 : class where T2 : class 
         {
-            var structureJson = db.ReadOnce().GetAllAsJson<T1>().SingleOrDefault();
+            var structureJson = db.ReadOnce().Query<T1>().ToListOfJson().SingleOrDefault();
 
             structureJson.ShouldNotBeEmpty();
 

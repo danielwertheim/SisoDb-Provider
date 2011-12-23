@@ -32,17 +32,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ensure.That.0.5.0.32\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="Machine.Specifications, Version=0.4.24.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Machine.Specifications.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
-    </Reference>
-    <Reference Include="NCore, Version=0.21.0.66, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.42.0.82, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Machine.Specifications, Version=0.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\Machine.Specifications.0.5.2.0\lib\Machine.Specifications.dll</HintPath>
+    </Reference>
+    <Reference Include="NCore, Version=0.24.0.70, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.46.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,9 +74,6 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\Database\UpdateStructureSet.cs">
-      <Link>Database\UpdateStructureSet.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
       <Link>Database\UpsertStructureSet.cs</Link>
@@ -109,6 +108,9 @@
     <Compile Include="..\SisoDb.Specifications\Model\QueryNestedItemInfo.cs">
       <Link>Model\QueryNestedItemInfo.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\QueryNullableItem.cs">
+      <Link>Model\QueryNullableItem.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Model\QueryStringItem.cs">
       <Link>Model\QueryStringItem.cs</Link>
     </Compile>
@@ -120,9 +122,6 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\EnumerableFunctions\QxAny.cs">
       <Link>QueryEngine\EnumerableFunctions\QxAny.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetAll.cs">
-      <Link>QueryEngine\GetAll.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
       <Link>QueryEngine\GetById.cs</Link>
@@ -141,6 +140,12 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\Query.cs">
       <Link>QueryEngine\Query.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\QueryAll.cs">
+      <Link>QueryEngine\QueryAll.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\RawQueries.cs">
+      <Link>QueryEngine\RawQueries.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\EndsWith.cs">
       <Link>QueryEngine\StringFunctions\EndsWith.cs</Link>
@@ -175,9 +180,6 @@
     <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\ToUpper.cs">
       <Link>QueryEngine\StringFunctions\ToUpper.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Where.cs">
-      <Link>QueryEngine\Where.cs</Link>
-    </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
     </Compile>
@@ -202,16 +204,37 @@
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingInterfaces.cs">
       <Link>UnitOfWork\InsertsUsingInterfaces.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries.cs">
-      <Link>UnitOfWork\Queries.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Count.cs">
+      <Link>UnitOfWork\Queries\Count.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetById.cs">
+      <Link>UnitOfWork\Queries\GetById.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetByIdInterval.cs">
+      <Link>UnitOfWork\Queries\GetByIdInterval.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetByIds.cs">
+      <Link>UnitOfWork\Queries\GetByIds.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Query.cs">
+      <Link>UnitOfWork\Queries\Query.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\QueryAll.cs">
+      <Link>UnitOfWork\Queries\QueryAll.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Where.cs">
+      <Link>UnitOfWork\Queries\Where.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
       <Link>UnitOfWork\TransactionScopes.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\UpdateMany.cs">
+      <Link>UnitOfWork\UpdateMany.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Updates.cs">
       <Link>UnitOfWork\Updates.cs</Link>
     </Compile>
-    <Compile Include="AssemblyInitializer.cs" />
+    <Compile Include="AssemblyContext.cs" />
     <Compile Include="ContextCleanup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -233,7 +256,6 @@
       <Name>SisoDb.Testing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -52,7 +52,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             var parser = new IncludeParser();
             var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
 
-            Assert.AreEqual(1, parsedLambda.Nodes.Count);
+            Assert.AreEqual(1, parsedLambda.Nodes.Length);
             Assert.IsNotNull(parsedLambda.Nodes[0] as IncludeNode);
         }
 
@@ -89,8 +89,13 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
             var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
-            Assert.AreEqual("ChildWithGuidId", includeNode.ChildStructureName);
+            Assert.AreEqual("ChildWithGuidId", includeNode.ReferencedStructureName);
         }
+
+    	private static class StructureTypeNameFor<T> where T : class
+		{
+			public static readonly string Name = TypeFor<T>.Type.Name;
+		}
 
         private class Master
         {

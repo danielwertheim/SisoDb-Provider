@@ -3,7 +3,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database
 {
-    namespace DeleteIfExists
+    class DeleteIfExists
     {
         [Subject(typeof (ISisoDatabase), "Delete if exists")]
         public class when_database_exists

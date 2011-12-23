@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
 using NCore.Collections;
-using SisoDb.Providers;
+using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 using SisoDb.Structures;
@@ -23,71 +24,77 @@ namespace SisoDb.Querying
             SqlExpressionBuilder = new SqlExpressionBuilder();
         }
 
-        public SqlQuery GenerateQuery(IQueryCommand queryCommand)
+        public DbQuery GenerateQuery(IQuery query)
         {
-            Ensure.That(queryCommand, "queryCommand").IsNotNull();
+            Ensure.That(query, "query").IsNotNull();
 
-            return CreateSqlQuery(queryCommand);
+            return CreateSqlQuery(query);
         }
 
-        public SqlQuery GenerateQueryReturningStrutureIds(IQueryCommand queryCommand)
+        public DbQuery GenerateQueryReturningStrutureIds(IQuery query)
         {
-            Ensure.That(queryCommand, "queryCommand").IsNotNull();
+			Ensure.That(query, "query").IsNotNull();
 
-            if (!queryCommand.HasWhere || (queryCommand.HasTakeNumOfStructures || queryCommand.HasIncludes || queryCommand.HasSortings || queryCommand.HasPaging))
+			if (!query.HasWhere || (query.HasTakeNumOfStructures || query.HasIncludes || query.HasSortings || query.HasPaging))
                 throw new ArgumentException(ExceptionMessages.DbQueryGenerator_GenerateQueryReturningStrutureIds);
 
-            return CreateSqlQueryReturningStructureIds(queryCommand);
+			return CreateSqlQueryReturningStructureIds(query);
         }
 
-        protected abstract SqlQuery CreateSqlQuery(IQueryCommand queryCommand);
+		protected abstract DbQuery CreateSqlQuery(IQuery query);
 
-        protected abstract SqlQuery CreateSqlQueryReturningStructureIds(IQueryCommand queryCommand);
+		protected abstract DbQuery CreateSqlQueryReturningStructureIds(IQuery query);
 
-        protected virtual string GenerateStartString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected virtual string GenerateStartString(IQuery query, ISqlExpression sqlExpression)
         {
             return string.Empty;
         }
 
-        protected virtual string GenerateEndString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected virtual string GenerateEndString(IQuery query, ISqlExpression sqlExpression)
         {
             return string.Empty;
         }
 
-        protected virtual string GenerateTakeString(IQueryCommand queryCommand)
+		protected virtual string GenerateTakeString(IQuery query)
         {
-            if (!queryCommand.HasTakeNumOfStructures || queryCommand.HasPaging)
+			if (!query.HasTakeNumOfStructures || query.HasPaging)
                 return string.Empty;
 
-            return string.Format("top ({0})", queryCommand.TakeNumOfStructures);
+			return string.Format("top ({0})", query.TakeNumOfStructures);
         }
 
-        protected abstract string GeneratePagingString(IQueryCommand queryCommand, ISqlExpression sqlExpression);
+		protected abstract string GeneratePagingString(IQuery query, ISqlExpression sqlExpression);
 
-        protected virtual string GenerateOrderByMembersString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
-        {
-            var sortings = sqlExpression.SortingMembers.ToList();
+		protected virtual string GenerateOrderByMembersString(IQuery queryCommand, ISqlExpression sqlExpression)
+		{
+			var sortings = sqlExpression.SortingMembers.Select(
+				sorting => (sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name)
+					? string.Format("min(mem{0}.[{1}]) mem{0}", sorting.Index, sorting.IndexStorageColumnName)
+					: string.Empty).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
-            return sortings.Count == 0
+            return sortings.Length == 0
                 ? string.Empty
-                : string.Join(", ", sortings.Select(sorting => string.Format("min(mem{0}.[{1}]) mem{0}", sorting.Index, sorting.IndexStorageColumnName)));
+				: string.Join(", ", sortings);
         }
 
-        protected virtual string GenerateOrderByString(IQueryCommand queryCommand, ISqlExpression sqlExpression)
-        {
-            var sortings = sqlExpression.SortingMembers.ToList();
+		protected virtual string GenerateOrderByString(IQuery query, ISqlExpression sqlExpression)
+		{
+			var sortings = sqlExpression.SortingMembers.Select(
+				sorting => (sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name)
+				           	? string.Format("mem{0} {1}", sorting.Index, sorting.Direction)
+							: string.Format("s.[{0}] {1}", IndexStorageSchema.Fields.StructureId.Name, sorting.Direction)).ToArray();
 
-            return sortings.Count == 0
+            return sortings.Length == 0
                 ? string.Empty
-                : string.Join(", ", sortings.Select(sorting => string.Format("mem{0} {1}", sorting.Index, sorting.Direction)));
+                : string.Join(", ", sortings);
         }
 
-        protected virtual string GenerateWhereAndSortingJoins(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected virtual string GenerateWhereAndSortingJoins(IQuery query, ISqlExpression sqlExpression)
         {
             var wheres = sqlExpression.WhereMembers.ToList();
             var sortings = sqlExpression.SortingMembers.ToList();
 
-            var indexesTableName = queryCommand.StructureSchema.GetIndexesTableName();
+			var indexesTableName = query.StructureSchema.GetIndexesTableName();
 
             var joins = new List<string>(wheres.Count + sortings.Count);
 
@@ -119,14 +126,14 @@ namespace SisoDb.Querying
             return sqlExpression.WhereCriteria.CriteriaString;
         }
 
-        protected virtual string GenerateMatchingIncludesJoins(IQueryCommand queryCommand, ISqlExpression sqlExpression)
+		protected virtual string GenerateMatchingIncludesJoins(IQuery query, ISqlExpression sqlExpression)
         {
             var includes = sqlExpression.Includes.ToList();
             if (includes.Count == 0)
                 return string.Empty;
 
-            var indexesJoinString = string.Format("inner join [{0}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in ({1})", 
-                queryCommand.StructureSchema.GetIndexesTableName(),
+            var indexesJoinString = string.Format("inner join [{0}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in ({1})",
+				query.StructureSchema.GetIndexesTableName(),
                 string.Join(", ", includes.Select(inc => string.Format("'{0}'", inc.MemberPathReference))));
 
             const string joinFormat = "left join [{0}] cs{1} on cs{1}.[StructureId] = si.[{2}] and si.[MemberPath] = '{3}'";

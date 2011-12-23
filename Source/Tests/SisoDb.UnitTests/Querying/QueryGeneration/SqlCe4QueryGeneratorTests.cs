@@ -25,6 +25,121 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
         }
 
+		[Test]
+		public override void GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Bool1' where (mem0.[BoolValue] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual(true, sqlQuery.Parameters[0].Value);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[IntegerValue] is null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual(0, sqlQuery.Parameters.Count);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[IntegerValue] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual(0, sqlQuery.Parameters.Count);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[IntegerValue] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual(0, sqlQuery.Parameters.Count);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[IntegerValue] is null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual(0, sqlQuery.Parameters.Count);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where not (mem0.[IntegerValue] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual(0, sqlQuery.Parameters.Count);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[IntegerValue] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[IntegerValue] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
+		}
+
+    	[Test]
+		public override void GenerateQuery_WithChainedWheres_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithChainedWheres_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where ((mem0.[IntegerValue] >= @p0) and (mem0.[IntegerValue] <= @p1)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual(40, sqlQuery.Parameters[0].Value);
+
+			Assert.AreEqual("@p1", sqlQuery.Parameters[1].Name);
+			Assert.AreEqual(42, sqlQuery.Parameters[1].Value);
+		}
+
         [Test]
         public override void GenerateQuery_WithSorting_GeneratesCorrectQuery()
         {

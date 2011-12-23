@@ -3,7 +3,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database
 {
-    namespace CreateIfNotExists
+    class CreateIfNotExists
     {
         [Subject(typeof (ISisoDatabase), "Create if not exists")]
         public class when_no_database_exists

@@ -6,20 +6,20 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
-    namespace ToLower
+    class ToLower
     {
         //COLLATION FUCKS IT UP
-        //[Subject(typeof(IQueryEngine), "ToLower")]
+		//[Subject(typeof(IQueryEngine), "ToLower")]
         //public class when_query_does_not_match_any_items : SpecificationBase
         //{
         //    Establish context = () =>
         //    {
         //        TestContext = TestContextFactory.Create();
-        //        TestContext.Database.WriteOnce().InsertMany(StringFunctionsItem.CreateItems(5, "FOO").ToList());
+        //        TestContext.Database.DbWriteOnce().InsertMany(StringFunctionsItem.CreateItems(5, "FOO").ToList());
         //    };
 
         //    Because of = 
-        //        () => _fetchedStructures = TestContext.Database.ReadOnce().Where<StringFunctionsItem>(i => i.String1.ToLower() == "FOO1").ToList();
+        //        () => _fetchedStructures = TestContext.Database.DbReadOnce().Where<StringFunctionsItem>(i => i.String1.ToLower() == "FOO1").ToList();
 
         //    It should_not_have_fetched_any_structures =
         //        () => _fetchedStructures.Count.ShouldEqual(0);
@@ -37,8 +37,8 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             };
 
             Because of = 
-                () => _fetchedStructures = TestContext.Database.ReadOnce().Where<StringFunctionsItem>(
-                    i => i.String1.ToLower() == "efg2" || i.String1.ToLower() == "efg3").ToList();
+                () => _fetchedStructures = TestContext.Database.ReadOnce()
+					.Query<StringFunctionsItem>().Where(i => i.String1.ToLower() == "efg2" || i.String1.ToLower() == "efg3").ToList();
 
             It should_have_fetched_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

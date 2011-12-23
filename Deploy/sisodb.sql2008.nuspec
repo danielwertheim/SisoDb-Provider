@@ -3,28 +3,27 @@
 	<metadata>
 		<id>SisoDb.Sql2008</id>    
 		<title>SisoDb.Sql2008 - Simple Structure Oriented Db</title>
-		<version>6.1.1</version>
+		<version>7.0.0</version>
 		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
 		<owners>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</owners>
 		<copyright>Daniel Wertheim</copyright>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
 		<description>
-			SisoDb is a document-oriented provider over SQL-Server. This package is for SQL-Server 2008. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates.
+			SisoDb is a schemaless document-oriented provider over SQL-Server. This package is for SQL-Server 2008. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates.
 		</description>
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,json,sql,sql-server,sql2008,mssql2008</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[6.1.1]" />
+			<dependency id="SisoDb" version="[7.0.0]" />
 			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="[0.42.0]" />
+			<dependency id="PineCone" version="[0.46.0]" />
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.dll" target="lib" />
-	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.xml" target="lib" />
-	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\NCore*.dll" target="lib" />
-	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\License*.txt" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\SisoDb.Sql2008.xml" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2008\bin\Release\NCore*.dll" target="lib\net40\" />
 	</files>
 </package>

@@ -42,14 +42,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ensure.That.0.5.0.32\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.21.0.66, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.24.0.70, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
@@ -57,9 +58,9 @@
     <Reference Include="nunit.mocks">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.42.0.82, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.46.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.42.0.82\lib\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.46.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="pnunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
@@ -99,20 +100,19 @@
     <Compile Include="Connections\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\SortingParserTests.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\OrderByParserTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNodeTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserEnumerableExtensionsTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querying\PagingTests.cs" />
-    <Compile Include="Querying\QueryCommandBuilderTests.cs" />
-    <Compile Include="Querying\QueryCommandTests.cs" />
+    <Compile Include="Querying\QueryTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="Connections\SisoConnectionInfoTests.cs" />
     <Compile Include="Connections\SqlCe4ConnectionInfoTests.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
     <Compile Include="Stub.cs" />
-    <Compile Include="TestFactories\StructureSchemaTestFactory.cs" />
+    <Compile Include="TestFactories\StructureSchemaStubFactory.cs" />
     <Compile Include="TestFactories\StructurePropertyTestFactory.cs" />
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
@@ -141,10 +141,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sql2008\" />
-    <Folder Include="SqlCe4\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

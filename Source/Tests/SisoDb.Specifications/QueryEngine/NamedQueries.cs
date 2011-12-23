@@ -8,7 +8,8 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-    namespace NamedQueries
+#if Sql2008Provider
+	class NamedQueries
     {
         [Subject(typeof(IQueryEngine), "Named Query")]
         public class when_named_query_returns_no_result : SpecificationBase, ICleanupAfterEveryContextInAssembly
@@ -140,6 +141,7 @@ namespace SisoDb.Specifications.QueryEngine
             private const string ProcedureName = "NamedQueryAsJsonTest";
             private static IList<QueryGuidItem> _structures;
             private static IList<string> _fetchedStructures;
-        }
-    }
+		}
+	}
+#endif
 }

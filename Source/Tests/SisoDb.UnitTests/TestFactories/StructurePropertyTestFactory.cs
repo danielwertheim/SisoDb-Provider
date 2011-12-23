@@ -5,24 +5,26 @@ namespace SisoDb.UnitTests.TestFactories
 {
     internal static class StructurePropertyTestFactory
     {
+    	private static readonly StructureTypeReflecter Reflecter;
+
+    	static StructurePropertyTestFactory()
+    	{
+    		Reflecter = new StructureTypeReflecter();
+    	}
+
         internal static IStructureProperty GetIdProperty<T>()
         {
-            return SisoEnvironment.Resources.ResolveStructureSchemas().StructureTypeFactory.Reflecter
-                .GetIdProperty(typeof(T));
+            return Reflecter.GetIdProperty(typeof(T));
         }
 
         internal static IStructureProperty GetPropertyByPath<T>(string path)
         {
-            return SisoEnvironment.Resources.ResolveStructureSchemas().StructureTypeFactory.Reflecter
-                .GetIndexableProperties(typeof(T))
-                .Single(i => i.Path == path);
+            return Reflecter.GetIndexableProperties(typeof(T)).Single(i => i.Path == path);
         }
 
         internal static IStructureProperty GetPropertyByName<T>(string name)
         {
-            return SisoEnvironment.Resources.ResolveStructureSchemas().StructureTypeFactory.Reflecter
-                .GetIndexableProperties(typeof(T))
-                .Single(i => i.Name == name);
+            return Reflecter.GetIndexableProperties(typeof(T)).Single(i => i.Name == name);
         }
     }
 }

@@ -9,7 +9,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-    namespace GetByIdInterval
+	class GetByIdInterval
     {
         [Subject(typeof(IQueryEngine), "Get by Id interval")]
         public class when_getting_for_identities_and_no_items_exists : SpecificationBase
@@ -58,10 +58,10 @@ namespace SisoDb.Specifications.QueryEngine
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
+				CaughtException.ShouldBeOfType<SisoDbException>();
 
-                var ex = (SisoDbNotSupportedByProviderException)CaughtException;
-                ex.Message.ShouldContain(ExceptionMessages.QueryEngine_GetByIdInterval_WrongIdType);
+				var ex = (SisoDbException)CaughtException;
+                ex.Message.ShouldContain(ExceptionMessages.QuerySession_GetByIdInterval_WrongIdType);
             };
 
             private static Guid _idFrom, _idTo;
@@ -89,10 +89,10 @@ namespace SisoDb.Specifications.QueryEngine
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.ShouldBeOfType<SisoDbNotSupportedByProviderException>();
+				CaughtException.ShouldBeOfType<SisoDbException>();
 
-                var ex = (SisoDbNotSupportedByProviderException)CaughtException;
-                ex.Message.ShouldContain(ExceptionMessages.QueryEngine_GetByIdInterval_WrongIdType);
+				var ex = (SisoDbException)CaughtException;
+                ex.Message.ShouldContain(ExceptionMessages.QuerySession_GetByIdInterval_WrongIdType);
             };
 
             private static string _idFrom, _idTo;

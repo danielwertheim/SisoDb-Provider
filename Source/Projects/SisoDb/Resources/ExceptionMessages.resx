@@ -126,9 +126,6 @@
   <data name="AutoSchemaBuilder_MissingIndexableMembers" xml:space="preserve">
     <value>The Item of type '{0}' has no members that are indexable. There's no point in storing items that has nothing to index.</value>
   </data>
-  <data name="StringConverter_AsString_TypeOfValueIsNotSupported" xml:space="preserve">
-    <value>The value being retrieved is not of supported type. It must either be a string or the type needs to implement IConvertible or if Nullable&lt;T&gt;, then T needs to implement it.</value>
-  </data>
   <data name="Index_IsMissingName" xml:space="preserve">
     <value>An Index-instance must be provided with a name.</value>
   </data>
@@ -174,8 +171,8 @@
   <data name="SqlDatabase_InitializeExisting_DbDoesNotExist" xml:space="preserve">
     <value>The database '{0}' doesn't exist.</value>
   </data>
-  <data name="LambdaParser_NoMemberExpressions" xml:space="preserve">
-    <value>You cant only access a member in a query expression, you need to compare it against something. Eg. (x =&gt; x.HasItems) should be (x =&gt; x.HasItems == true)</value>
+  <data name="WhereExpressionParser_NoMemberExpressions" xml:space="preserve">
+    <value>You can't only access a member in a query expression unless it's a bool. You need to compare it against something.</value>
   </data>
   <data name="LambdaOperator_OperatorTypeIsNotSupported" xml:space="preserve">
     <value>Operator '{0}' is not supported!</value>
@@ -187,14 +184,8 @@
     <value>Could not evaluate the method call: '{0}'.
 Specific supported method exists as extensionmethods and are prefixed with 'Qx'. Import namespace 'SisoDb.Querying' to enable them.</value>
   </data>
-  <data name="SortingParser_UnsupportedMethodForSortingDirection" xml:space="preserve">
+  <data name="OrderByParser_UnsupportedMethodForSortingDirection" xml:space="preserve">
     <value>The only supported methods for marking sortings are Asc() and Desc().</value>
-  </data>
-  <data name="QueryCommandBuilder_SortingsAllreadyInitialized" xml:space="preserve">
-    <value>The Sortings has allready been initialized.</value>
-  </data>
-  <data name="QueryCommandBuilder_WhereAllreadyInitialized" xml:space="preserve">
-    <value>The Where expression has allready been initialized.</value>
   </data>
   <data name="GetCommand_SortingsAllreadyInitialized" xml:space="preserve">
     <value>The Sortings has allready been initialized.</value>
@@ -259,7 +250,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="UnitOfWork_DeleteByIdInterval_WrongIdType" xml:space="preserve">
     <value>DeleteByIdInterval is not supported when using other ID-types than identities.</value>
   </data>
-  <data name="QueryEngine_GetByIdInterval_WrongIdType" xml:space="preserve">
+  <data name="QuerySession_GetByIdInterval_WrongIdType" xml:space="preserve">
     <value>GetByIdInterval is not supported when using other ID-types than identities.</value>
   </data>
   <data name="StructureBuilders_CreateForInsert" xml:space="preserve">
@@ -273,5 +264,11 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="SqlDbUniquesSchemaBuilder_GenerateSql" xml:space="preserve">
     <value>Could not locate SQL for generating Structure-table for StructureId type: '{0}'.</value>
+  </data>
+  <data name="ReadOnceQueryable_YieldingNotSupported" xml:space="preserve">
+    <value>ReadOnceQueryable doesn't support yielding result. Use matching ToList method instead.</value>
+  </data>
+  <data name="UnitOfWork_UpdateMany_TOld_TNew_SameType" xml:space="preserve">
+    <value>UpdateMany&lt;TOld, TNew&gt; should not be used for same types. Use UpdateMany&lt;T&gt; instead.</value>
   </data>
 </root>

@@ -1,24 +1,23 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using PineCone.Structures.Schemas;
+﻿using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
-using SisoDb.Providers;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Sql2008.Dac;
+using SisoDb.Structures;
 
 namespace SisoDb.Sql2008
 {
-    public class Sql2008ProviderFactory : ISisoProviderFactory
+	public class Sql2008ProviderFactory : IDbProviderFactory
     {
-        private readonly Lazy<ISqlStatements> _sqlStatements;
-
+		private readonly IConnectionManager _connectionManager;
+        private readonly ISqlStatements _sqlStatements;
+		
         public Sql2008ProviderFactory()
         {
-            _sqlStatements = new Lazy<ISqlStatements>(() => new Sql2008Statements());
+			_connectionManager = new Sql2008ConnectionManager();
+            _sqlStatements = new Sql2008Statements();
         }
 
         public StorageProviders ProviderType
@@ -26,98 +25,49 @@ namespace SisoDb.Sql2008
             get { return StorageProviders.Sql2008; }
         }
 
-        public IDbConnection GetOpenServerConnection(IConnectionString connectionString)
+		public ISqlStatements GetSqlStatements()
+		{
+			return _sqlStatements;
+		}
+
+		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            var cn = new SqlConnection(connectionString.PlainString);
-            cn.Open();
-
-            return cn;
-        }
-
-        public void ReleaseServerConnection(IDbConnection dbConnection)
-        {
-            if (dbConnection == null)
-                return;
-
-            if (dbConnection.State != ConnectionState.Closed)
-                dbConnection.Close();
-
-            dbConnection.Dispose();
-        }
-
-        public IDbConnection GetOpenConnection(IConnectionString connectionString)
-        {
-            var cn = new SqlConnection(connectionString.PlainString);
-            cn.Open();
-
-            return cn;
-        }
-
-        public void ReleaseConnection(IDbConnection dbConnection)
-        {
-            if(dbConnection == null)
-                return;
-
-            if (dbConnection.State != ConnectionState.Closed)
-                dbConnection.Close();
-            
-            dbConnection.Dispose();
-        }
-
-        public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
-        {
-            return new Sql2008ServerClient((Sql2008ConnectionInfo)connectionInfo);
+            return new Sql2008ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
         public IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008DbClient(connectionInfo, true);
+            return new Sql2008DbClient(connectionInfo, true, _connectionManager, _sqlStatements);
         }
 
         public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008DbClient(connectionInfo, false);
+			return new Sql2008DbClient(connectionInfo, false, _connectionManager, _sqlStatements);
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()
         {
-            return new DbSchemaManager();
+			return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
         }
 
-        public virtual IDbSchemaUpserter GetDbSchemaUpserter(IDbClient dbClient)
-        {
-            return new SqlDbSchemaUpserter(dbClient);
-        }
-
-        public virtual ISqlStatements GetSqlStatements()
-        {
-            return _sqlStatements.Value;
-        }
-
-        public virtual IDbStructureInserter GetDbStructureInserter(IDbClient dbClient)
+        public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
             return new DbStructureInserter(dbClient);
         }
 
-        public virtual IDbQueryGenerator GetDbQueryGenerator()
+    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
+    	{
+    		return new DbIdentityStructureIdGenerator(dbClient);
+    	}
+
+    	public virtual IDbQueryGenerator GetDbQueryGenerator()
         {
-            return new Sql2008QueryGenerator(GetSqlStatements());
+            return new Sql2008QueryGenerator(_sqlStatements);
         }
 
-        public virtual IGetCommandBuilder<T> CreateGetCommandBuilder<T>() where T : class
-        {
-            return new GetCommandBuilder<T>(
-                new SortingParser(),
-                new IncludeParser());
-        }
-
-        public virtual IQueryCommandBuilder<T> CreateQueryCommandBuilder<T>(IStructureSchema structureSchema) where T : class
-        {
-            return new QueryCommandBuilder<T>(
-                structureSchema,
-                new WhereParser(),
-                new SortingParser(),
-                new IncludeParser());
-        }
+    	public IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
+    	{
+    		return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
+    	}
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Machine.Specifications;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
-    namespace StartsWith
+	class StartsWith
     {
         [Subject(typeof(IQueryEngine), "StartsWith")]
         public class when_two_items_has_string_that_does_not_match_query : SpecificationBase
@@ -21,8 +20,10 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                 }));
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.StartsWith("Foo")).ToList();
+            Because of = 
+				() => _fetchedStructures = TestContext.Database.ReadOnce()
+					.Query<QueryGuidItem>()
+                    .Where(i => i.StringValue.StartsWith("Foo")).ToList();
 
             It should_not_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -43,8 +44,9 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                 }));
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.StartsWith("Al")).ToList();
+            Because of = 
+				() => _fetchedStructures = TestContext.Database.ReadOnce()
+					.Query<QueryGuidItem>().Where(i => i.StringValue.StartsWith("Al")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -72,8 +74,9 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                 }));
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
-                    .Where<QueryGuidItem>(i => i.StringValue.StartsWith("Alpha")).ToList();
+            Because of = 
+				() => _fetchedStructures = TestContext.Database.ReadOnce()
+					.Query<QueryGuidItem>().Where(i => i.StringValue.StartsWith("Alpha")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

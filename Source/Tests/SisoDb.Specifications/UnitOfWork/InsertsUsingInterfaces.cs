@@ -6,7 +6,7 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace InsertsUsingInterfaces
+	class InsertsUsingInterfaces
     {
         [Subject(typeof(IUnitOfWork), "Insert (interfaces)")]
         public class when_inserting_subclass_as_subclass : SpecificationBase

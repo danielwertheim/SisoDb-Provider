@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using System.Data.SqlServerCe;
 using ErikEJ.SqlCe;
@@ -19,11 +20,12 @@ namespace SisoDb.SqlCe4.Dac
 
         public void Dispose()
         {
-            if(_innerBulkCopy != null)
+			if(_innerBulkCopy != null)
             {
                 _innerBulkCopy.Close();
                 _innerBulkCopy = null;
             }
+			GC.SuppressFinalize(this);
         }
 
         public string DestinationTableName

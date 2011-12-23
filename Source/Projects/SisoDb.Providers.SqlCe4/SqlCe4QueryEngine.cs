@@ -1,21 +1,11 @@
-﻿using SisoDb.DbSchema;
+﻿using SisoDb.Dac;
 
 namespace SisoDb.SqlCe4
 {
     public class SqlCe4QueryEngine : DbQueryEngine
     {
-        internal SqlCe4QueryEngine(
-            ISisoDatabase db,
-            IDbSchemaManager dbSchemaManager)
-            : base(db, dbSchemaManager, false)
+        internal SqlCe4QueryEngine(IDbDatabase db, IDbClient dbClient)
+            : base(db, dbClient)
         {}
-
-        protected SqlCe4QueryEngine(
-            ISisoDatabase db,
-            IDbSchemaManager dbSchemaManager,
-            bool transactional)
-            : base(db, dbSchemaManager, transactional)
-        {
-        }
     }
 }

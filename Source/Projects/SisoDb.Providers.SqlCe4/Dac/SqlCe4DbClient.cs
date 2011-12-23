@@ -7,6 +7,7 @@ using ErikEJ.SqlCe;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
@@ -15,8 +16,10 @@ namespace SisoDb.SqlCe4.Dac
 {
     public class SqlCe4DbClient : DbClientBase
     {
-        public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional)
-            : base(connectionInfo, transactional)
+    	private const int MaxBatchedIdsSize = 20;
+
+		public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(connectionInfo, transactional, connectionManager, sqlStatements)
         {
         }
 
@@ -94,18 +97,19 @@ namespace SisoDb.SqlCe4.Dac
 
             using (var cmd = CreateCommand(string.Empty))
             {
-                foreach (var batchedIds in ToBatchedIds(ids))
+                foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
-                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
+					cmd.Parameters.Clear();
+					cmd.AddParameters(batchedIds);
 
-                    cmd.AddParameters(batchedIds);
+                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        public override void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema)
+        public override void DeleteByQuery(DbQuery query, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -144,7 +148,7 @@ namespace SisoDb.SqlCe4.Dac
             return ExecuteScalar<int>(sql);
         }
 
-        public override int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query)
+        public override int RowCountByQuery(IStructureSchema structureSchema, DbQuery query)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -166,30 +170,11 @@ namespace SisoDb.SqlCe4.Dac
             return nextId;
         }
 
-        public override IEnumerable<string> GetJson(IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("GetAllById").Inject(structureSchema.GetStructureTableName());
-
-            using (var cmd = CreateCommand(sql))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetString(0);
-                    }
-                    reader.Close();
-                }
-            }
-        }
-
         public override string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var sql = SqlStatements.GetSql("GetById").Inject(structureSchema.GetStructureTableName());
+            var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
 
             return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
@@ -197,15 +182,16 @@ namespace SisoDb.SqlCe4.Dac
         public override IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
-            var sqlFormat = SqlStatements.GetSql("GetByIds").Inject(structureSchema.GetStructureTableName(), "{0}");
+            var sqlFormat = SqlStatements.GetSql("GetJsonByIds").Inject(structureSchema.GetStructureTableName(), "{0}");
 
             using (var cmd = CreateCommand(string.Empty))
             {
-                foreach (var batchedIds in ToBatchedIds(ids))
+				foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
-                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
-
+                    cmd.Parameters.Clear();
                     cmd.AddParameters(batchedIds);
+
+					var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
 
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
@@ -236,28 +222,6 @@ namespace SisoDb.SqlCe4.Dac
                     }
                     reader.Close();
                 }
-            }
-        }
-
-        private static IEnumerable<IDacParameter[]> ToBatchedIds(IEnumerable<IStructureId> ids)
-        {
-            var batch = new List<IDacParameter>();
-
-            foreach (var id in ids)
-            {
-                batch.Add(new DacParameter(string.Concat("id", batch.Count), id.Value));
-
-                if (batch.Count == 10)
-                {
-                    yield return batch.ToArray();
-                    batch.Clear();
-                }
-            }
-
-            if (batch.Count > 0)
-            {
-                yield return batch.ToArray();
-                batch.Clear();
             }
         }
     }

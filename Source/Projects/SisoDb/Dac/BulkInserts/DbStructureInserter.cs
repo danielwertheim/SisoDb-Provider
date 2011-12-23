@@ -8,7 +8,7 @@ using SisoDb.Structures;
 
 namespace SisoDb.Dac.BulkInserts
 {
-    public class DbStructureInserter : IDbStructureInserter
+    public class DbStructureInserter : IStructureInserter
     {
         private const int MaxStructureBatchSize = 1000;
         private const int MaxIndexesBatchSize = 6000;
@@ -73,8 +73,8 @@ namespace SisoDb.Dac.BulkInserts
                 using (var bulkInserter = _dbClient.GetBulkCopy())
                 {
                     bulkInserter.BatchSize = indexesReader.RecordsAffected > MaxIndexesBatchSize
-                                                 ? MaxIndexesBatchSize
-                                                 : indexesReader.RecordsAffected;
+						? MaxIndexesBatchSize
+						: indexesReader.RecordsAffected;
                     bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
 
                     foreach (var field in indexesReader.StorageSchema.GetFieldsOrderedByIndex())

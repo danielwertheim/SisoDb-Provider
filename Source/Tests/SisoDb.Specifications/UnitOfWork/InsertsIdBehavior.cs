@@ -7,7 +7,7 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-    namespace InsertsIdBehavior
+	class InsertsIdBehavior
     {
         [Subject(typeof(IUnitOfWork), "Insert (id behavior)")]
         public class when_4_identityitems : SpecificationBase

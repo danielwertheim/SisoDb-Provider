@@ -5,7 +5,6 @@ using System.Transactions;
 using EnsureThat;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Providers;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 
@@ -13,26 +12,29 @@ namespace SisoDb.Dac
 {
     public abstract class DbClientBase : IDbClient
     {
-        protected readonly ISisoProviderFactory ProviderFactory;
+    	protected readonly ISisoConnectionInfo ConnectionInfo;
+    	protected readonly IConnectionManager ConnectionManager;
         protected IDbConnection Connection;
         protected IDbTransaction Transaction;
         protected TransactionScope Ts;
+		protected readonly ISqlStatements SqlStatements;
 
         public bool IsTransactional 
         {
             get { return Transaction != null || Ts != null; }
         }
-
-        public ISqlStatements SqlStatements { get; private set; }
-
-        protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional)
+		
+        protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
-            
-            ProviderFactory = SisoEnvironment.ProviderFactories.Get(connectionInfo.ProviderType);
-            SqlStatements = ProviderFactory.GetSqlStatements();
+			Ensure.That(connectionManager, "connectionManager").IsNotNull();
+			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
-            Connection = ProviderFactory.GetOpenConnection(connectionInfo.ConnectionString);
+        	ConnectionInfo = connectionInfo;
+        	ConnectionManager = connectionManager;
+        	SqlStatements = sqlStatements;
+
+            Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
 
             if (System.Transactions.Transaction.Current == null)
                 Transaction = transactional ? Connection.BeginTransaction() : null;
@@ -42,7 +44,9 @@ namespace SisoDb.Dac
 
         public void Dispose()
         {
-            if (Transaction != null)
+			GC.SuppressFinalize(this);
+
+			if (Transaction != null)
             {
                 Transaction.Rollback();
                 Transaction.Dispose();
@@ -58,7 +62,7 @@ namespace SisoDb.Dac
             if (Connection == null)
                 return;
 
-            ProviderFactory.ReleaseConnection(Connection);
+            ConnectionManager.ReleaseDbConnection(Connection);
 
             Connection = null;
         }
@@ -109,7 +113,7 @@ namespace SisoDb.Dac
 
         public abstract void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public abstract void DeleteByQuery(SqlQuery query, IStructureSchema structureSchema);
+        public abstract void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
 
         public abstract void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
 
@@ -117,11 +121,9 @@ namespace SisoDb.Dac
 
         public abstract int RowCount(IStructureSchema structureSchema);
 
-        public abstract int RowCountByQuery(IStructureSchema structureSchema, SqlQuery query);
+        public abstract int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
 
         public abstract long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
-
-        public abstract IEnumerable<string> GetJson(IStructureSchema structureSchema);
 
         public abstract string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
 
