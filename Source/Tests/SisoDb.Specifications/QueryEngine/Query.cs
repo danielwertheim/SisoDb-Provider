@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using Machine.Specifications;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
@@ -9,7 +8,7 @@ namespace SisoDb.Specifications.QueryEngine
 	class Query
 	{
 		[Subject(typeof(IQueryEngine), "Query")]
-		public class when_using_plain_bool_and_nullable_value_type_hasvalue_in_expression : SpecificationBase
+		public class when_using_plain_bool_and_nullable_value_type_hasvalue_and_chained_wheres_in_expression : SpecificationBase
 		{
 			Establish context = () =>
 			{
@@ -26,7 +25,7 @@ namespace SisoDb.Specifications.QueryEngine
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNullableItem>()
-				.Where(i => i.BoolValue && i.NullableInt.HasValue && i.NullableInt != null).ToList();
+				.Where(i => i.BoolValue && i.NullableInt.HasValue && i.NullableInt != null).Where(i => i.NullableInt == 42).ToList();
 
 			It should_have_fetched_one_structure =
 				() => _fetchedStructures.Count.ShouldEqual(1);
