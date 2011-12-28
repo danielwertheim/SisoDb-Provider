@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>SisoDb.SqlCe4</id>    
+		<title>SisoDb.SqlCe4 - Simple Structure Oriented Db</title>
+		<version>7.0.1</version>
+		<authors>Daniel Wertheim - @@danielwertheim - http://daniel.wertheim.se</authors>
+		<copyright>Daniel Wertheim</copyright>
+		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
+		<description>
+			SisoDb is a schemaless document-oriented provider over SQL-Server. This package is for SQL-Server CE4. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates.
+		</description>
+		<projectUrl>http://www.sisodb.com</projectUrl>
+		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<tags>sisodb,document-database,json,sql,sql-server,sqlce,sqlce4,nosql</tags>
+		<dependencies>
+			<dependency id="SisoDb" version="[7.0.1]" />
+			<dependency id="Ensure.That" version="0.5.0" />
+			<dependency id="PineCone" version="0.46.0" />
+			<dependency id="SqlServerCompact" version="4.0.8482.1" />
+			<dependency id="ErikEJ.SqlCeBulkCopy" version="2.1.0.2" />
+		</dependencies>
+	</metadata>
+	<files>
+	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.xml" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\NCore*.dll" target="lib\net40\" />
+	</files>
+</package>
