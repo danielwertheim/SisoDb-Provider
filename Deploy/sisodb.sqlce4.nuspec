@@ -15,7 +15,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,json,sql,sql-server,sqlce,sqlce4,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[7.0.1]" />
+			<dependency id="SisoDb" version="[7.0.2]" />
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="0.46.0" />
 			<dependency id="SqlServerCompact" version="4.0.8482.1" />

@@ -60,7 +60,7 @@ namespace SisoDb
 
 		public virtual void Insert<T>(T item) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, IdentityStructureIdGenerator);
@@ -78,7 +78,7 @@ namespace SisoDb
 
 		public virtual void InsertMany<T>(IList<T> items) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, IdentityStructureIdGenerator);
@@ -94,7 +94,7 @@ namespace SisoDb
 
 		public virtual void Update<T>(T item) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
@@ -114,7 +114,7 @@ namespace SisoDb
 
 		public virtual bool UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
 		{
-			var spec = UpdateManySpec.Create<T>(Db.StructureSchemas);
+			var spec = UpdateManySpec.Create<T>(StructureSchemas);
 			UpsertStructureSet(spec.NewSchema);
 
 			IStructureId deleteIdFrom = null, deleteIdTo = null;
@@ -165,7 +165,7 @@ namespace SisoDb
 			where TOld : class
 			where TNew : class
 		{
-			var spec = UpdateManySpec.Create<TOld, TNew>(Db.StructureSchemas);
+			var spec = UpdateManySpec.Create<TOld, TNew>(StructureSchemas);
 			if (spec.TypesAreIdentical)
 				throw new SisoDbException(ExceptionMessages.UnitOfWork_UpdateMany_TOld_TNew_SameType);
 
@@ -173,7 +173,7 @@ namespace SisoDb
 			
 			if (spec.IsUpdatingSameSchema)
 			{
-				Db.StructureSchemas.RemoveSchema(spec.OldType);
+				StructureSchemas.RemoveSchema(spec.OldType);
 				Db.SchemaManager.RemoveFromCache(spec.OldSchema);
 				UpsertStructureSet(spec.NewSchema);
 
@@ -232,7 +232,7 @@ namespace SisoDb
 
 			if (!spec.IsUpdatingSameSchema)
 			{
-				Db.StructureSchemas.RemoveSchema(spec.OldType);
+				StructureSchemas.RemoveSchema(spec.OldType);
 				Db.SchemaManager.DropStructureSet(spec.OldSchema, DbClient);
 			}
 
@@ -241,7 +241,7 @@ namespace SisoDb
 
 		public virtual void DeleteById<T>(object id) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			DeleteById(structureSchema, StructureId.ConvertFrom(id));
@@ -256,7 +256,7 @@ namespace SisoDb
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			DbClient.DeleteByIds(ids.Select(StructureId.ConvertFrom), structureSchema);
@@ -264,7 +264,7 @@ namespace SisoDb
 
 		public virtual void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 
 			if (!structureSchema.IdAccessor.IdType.IsIdentity())
 				throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType));
@@ -278,17 +278,17 @@ namespace SisoDb
 		{
 			Ensure.That(expression, "expression").IsNotNull();
 
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
+			var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
 			queryBuilder.Where(expression);
 
 			var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
 			DbClient.DeleteByQuery(sql, structureSchema);
 		}
 
-		protected class UpdateManySpec
+		private class UpdateManySpec
 		{
 			public readonly IStructureSchema OldSchema;
 			public readonly IStructureSchema NewSchema;
@@ -306,12 +306,12 @@ namespace SisoDb
 				TypesAreIdentical = oldType.Equals(newType);
 			}
 
-			public static UpdateManySpec Create<T>(IStructureSchemas structureSchemas) where T : class
+			internal static UpdateManySpec Create<T>(IStructureSchemas structureSchemas) where T : class
 			{
 				return Create<T, T>(structureSchemas);
 			}
 
-			public static UpdateManySpec Create<TOld, TNew>(IStructureSchemas structureSchemas)
+			internal static UpdateManySpec Create<TOld, TNew>(IStructureSchemas structureSchemas)
 				where TOld : class
 				where TNew : class
 			{
@@ -326,7 +326,7 @@ namespace SisoDb
 				return new UpdateManySpec(oldSchema, oldType, newSchema, newType);
 			}
 
-			public IQuery BuildQuery<T>(IDbDatabase db, Expression<Func<T, bool>> expression = null) where T : class
+			internal IQuery BuildQuery<T>(IDbDatabase db, Expression<Func<T, bool>> expression = null) where T : class
 			{
 				var queryBuilder = db.ProviderFactory.GetQueryBuilder<T>(db.StructureSchemas);
 				if (expression != null)
