@@ -26,7 +26,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.Count<T>(QueryBuilder.Build());
+				return qe.Core.Count<T>(QueryBuilder.Build());
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.Count<T>(QueryBuilder.Build());
+				return qe.Core.Count<T>(QueryBuilder.Build());
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.Query<T>(QueryBuilder.Build()).ToList();
+				return qe.Core.Query<T>(QueryBuilder.Build()).ToList();
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
+				return qe.Core.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
 			}
 		}
 
@@ -73,7 +73,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.QueryAsJson<T>(QueryBuilder.Build()).ToList();
+				return qe.Core.QueryAsJson<T>(QueryBuilder.Build()).ToList();
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.Query<T>(QueryBuilder.Build()).Single();
+				return qe.Core.Query<T>(QueryBuilder.Build()).Single();
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.QueryAs<T, TResult>(QueryBuilder.Build()).Single();
+				return qe.Core.QueryAs<T, TResult>(QueryBuilder.Build()).Single();
 			}
 		}
 
@@ -97,7 +97,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.QueryAsJson<T>(QueryBuilder.Build()).Single();
+				return qe.Core.QueryAsJson<T>(QueryBuilder.Build()).Single();
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.Query<T>(QueryBuilder.Build()).SingleOrDefault();
+				return qe.Core.Query<T>(QueryBuilder.Build()).SingleOrDefault();
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.QueryAs<T, TResult>(QueryBuilder.Build()).SingleOrDefault();
+				return qe.Core.QueryAs<T, TResult>(QueryBuilder.Build()).SingleOrDefault();
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace SisoDb.Querying
 		{
 			using (var qe = QueryEngine)
 			{
-				return qe.QueryAsJson<T>(QueryBuilder.Build()).SingleOrDefault();
+				return qe.Core.QueryAsJson<T>(QueryBuilder.Build()).SingleOrDefault();
 			}
 		}
 	}
