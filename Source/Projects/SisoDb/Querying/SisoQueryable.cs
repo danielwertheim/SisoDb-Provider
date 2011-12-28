@@ -14,7 +14,7 @@ namespace SisoDb.Querying
 		public SisoQueryable(IQueryBuilder<T> queryBuilder, IQueryEngine queryEngine)
 			: this(queryBuilder)
 		{
-			Ensure.That(queryEngine, "QueryEngine").IsNotNull();
+			Ensure.That(queryEngine, "queryEngine").IsNotNull();
 			QueryEngine = queryEngine;
 		}
 
@@ -26,17 +26,17 @@ namespace SisoDb.Querying
 
 		public virtual IEnumerable<T> ToEnumerable()
 		{
-			return QueryEngine.Query<T>(QueryBuilder.Build());
+			return QueryEngine.Core.Query<T>(QueryBuilder.Build());
 		}
 
 		public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
 		{
-			return QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
+			return QueryEngine.Core.QueryAs<T, TResult>(QueryBuilder.Build());
 		}
 
 		public virtual IEnumerable<string> ToEnumerableOfJson()
 		{
-			return QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
+			return QueryEngine.Core.QueryAsJson<T>(QueryBuilder.Build());
 		}
 
 		public virtual IList<T> ToList()
@@ -88,14 +88,14 @@ namespace SisoDb.Querying
 		{
 			QueryBuilder.Clear();
 
-			return QueryEngine.Count<T>(QueryBuilder.Build());
+			return QueryEngine.Core.Count<T>(QueryBuilder.Build());
 		}
 
 		public virtual int Count(Expression<Func<T, bool>> expression)
 		{
 			QueryBuilder.Clear();
 
-			return QueryEngine.Count<T>(QueryBuilder.Where(expression).Build());
+			return QueryEngine.Core.Count<T>(QueryBuilder.Where(expression).Build());
 		}
 
 		public virtual ISisoQueryable<T> Take(int numOfStructures)

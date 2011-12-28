@@ -76,6 +76,7 @@
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="IDbDatabase.cs" />
+    <Compile Include="IQueryEngineCore.cs" />
     <Compile Include="IRawQuery.cs" />
     <Compile Include="IReadOnce.cs" />
     <Compile Include="IWriteOnce.cs" />

@@ -15,7 +15,7 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class DbQueryEngine : IQueryEngine, IAdvancedQueries
+	public abstract class DbQueryEngine : IQueryEngine, IQueryEngineCore, IAdvancedQueries
 	{
 		protected readonly IDbDatabase Db;
 		protected readonly IDbQueryGenerator QueryGenerator;
@@ -52,6 +52,11 @@ namespace SisoDb
 		public IStructureSchemas StructureSchemas
 		{
 			get { return Db.StructureSchemas; }
+		}
+
+		public virtual IQueryEngineCore Core
+		{
+			get { return this; }
 		}
 
 		public virtual IAdvancedQueries Advanced
