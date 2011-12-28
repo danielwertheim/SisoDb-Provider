@@ -6,6 +6,12 @@ namespace SisoDb
 {
 	public interface ISisoQueryable<T> where T : class
 	{
+		T[] ToArray();
+
+		TResult[] ToArrayOf<TResult>() where TResult : class;
+
+		string[] ToArrayOfJson();
+
 		IEnumerable<T> ToEnumerable();
 
 		IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class;
@@ -17,6 +23,18 @@ namespace SisoDb
 		IList<TResult> ToListOf<TResult>() where TResult : class;
 
 		IList<string> ToListOfJson();
+
+		T First();
+
+		TResult FirstAs<TResult>() where TResult : class;
+
+		string FirstAsJson();
+
+		T FirstOrDefault();
+
+		TResult FirstOrDefaultAs<TResult>() where TResult : class;
+
+		string FirstOrDefaultAsJson();
 
 		T Single();
 

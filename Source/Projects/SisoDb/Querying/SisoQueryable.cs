@@ -24,6 +24,21 @@ namespace SisoDb.Querying
 			QueryBuilder = queryBuilder;
 		}
 
+		public virtual T[] ToArray()
+		{
+			return ToEnumerable().ToArray();
+		}
+
+		public virtual TResult[] ToArrayOf<TResult>() where TResult : class
+		{
+			return ToEnumerableOf<TResult>().ToArray();
+		}
+
+		public virtual string[] ToArrayOfJson()
+		{
+			return ToEnumerableOfJson().ToArray();
+		}
+
 		public virtual IEnumerable<T> ToEnumerable()
 		{
 			return QueryEngine.Core.Query<T>(QueryBuilder.Build());
@@ -52,6 +67,36 @@ namespace SisoDb.Querying
 		public virtual IList<string> ToListOfJson()
 		{
 			return ToEnumerableOfJson().ToList();
+		}
+
+		public virtual T First()
+		{
+			return ToEnumerable().First();
+		}
+
+		public virtual TResult FirstAs<TResult>() where TResult : class
+		{
+			return ToEnumerableOf<TResult>().First();
+		}
+
+		public virtual string FirstAsJson()
+		{
+			return ToEnumerableOfJson().First();
+		}
+
+		public virtual T FirstOrDefault()
+		{
+			return ToEnumerable().FirstOrDefault();
+		}
+
+		public virtual TResult FirstOrDefaultAs<TResult>() where TResult : class
+		{
+			return ToEnumerableOf<TResult>().FirstOrDefault();
+		}
+
+		public virtual string FirstOrDefaultAsJson()
+		{
+			return ToEnumerableOfJson().FirstOrDefault();
 		}
 
 		public virtual T Single()
