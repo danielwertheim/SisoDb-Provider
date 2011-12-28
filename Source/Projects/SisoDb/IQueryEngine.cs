@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PineCone.Structures.Schemas;
 
 namespace SisoDb
 {
@@ -17,6 +18,13 @@ namespace SisoDb
 		/// Advances querying options.
 		/// </summary>
 		IAdvancedQueries Advanced { get; }
+
+		/// <summary>
+		/// Lets you get a hold of the schema associated with a certain structure.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		IStructureSchema GetStructureSchema<T>() where T : class;
 
 		/// <summary>
 		/// Returns one single structure identified

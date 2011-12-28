@@ -49,7 +49,7 @@ namespace SisoDb
 			Db.SchemaManager.UpsertStructureSet(structureSchema, DbClient);
 		}
 
-		public IStructureSchemas StructureSchemas
+		protected IStructureSchemas StructureSchemas
 		{
 			get { return Db.StructureSchemas; }
 		}
@@ -64,6 +64,11 @@ namespace SisoDb
 			get { return this; }
 		}
 
+		public IStructureSchema GetStructureSchema<T>() where T : class
+		{
+			return StructureSchemas.GetSchema<T>();
+		}
+
 		IEnumerable<T> IAdvancedQueries.NamedQuery<T>(INamedQuery query)
 		{
 			return Db.Serializer.DeserializeMany<T>(((IAdvancedQueries)this).NamedQueryAsJson<T>(query));
@@ -76,7 +81,7 @@ namespace SisoDb
 
 		IEnumerable<string> IAdvancedQueries.NamedQueryAsJson<T>(INamedQuery query)
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			return ConsumeReader(query.Name, true, query.Parameters.ToArray());
@@ -94,7 +99,7 @@ namespace SisoDb
 
 		IEnumerable<string> IAdvancedQueries.RawQueryAsJson<T>(IRawQuery query)
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			return ConsumeReader(query.QueryString, false, query.Parameters.ToArray());
@@ -106,8 +111,8 @@ namespace SisoDb
 
 			if (!query.HasWhere)
 				return Count<T>();
-			
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			var whereSql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
@@ -117,7 +122,7 @@ namespace SisoDb
 
 		private int Count<T>() where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			return DbClient.RowCount(structureSchema);
@@ -135,7 +140,7 @@ namespace SisoDb
 
 		public virtual IEnumerable<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 
 			if (!structureSchema.IdAccessor.IdType.IsIdentity())
 				throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.QuerySession_GetByIdInterval_WrongIdType));
@@ -161,7 +166,7 @@ namespace SisoDb
 
 		public virtual string GetByIdAsJson<T>(object id) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			return DbClient.GetJsonById(StructureId.ConvertFrom(id), structureSchema);
@@ -169,7 +174,7 @@ namespace SisoDb
 
 		public virtual IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class
 		{
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			return DbClient.GetJsonByIds(ids.Select(StructureId.ConvertFrom), structureSchema);
@@ -177,7 +182,7 @@ namespace SisoDb
 
 		public virtual ISisoQueryable<T> Query<T>() where T : class
 		{
-			return new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas), this);
+			return new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas), this);
 		}
 
 		public virtual IEnumerable<T> Query<T>(IQuery query) where T : class
@@ -194,7 +199,7 @@ namespace SisoDb
 		{
 			Ensure.That(query, "query").IsNotNull();
 
-			var structureSchema = Db.StructureSchemas.GetSchema<T>();
+			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
 			if(query.IsEmpty)
