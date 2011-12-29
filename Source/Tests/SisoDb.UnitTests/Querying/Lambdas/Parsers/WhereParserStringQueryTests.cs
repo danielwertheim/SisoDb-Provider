@@ -178,9 +178,251 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             Assert.AreEqual("%Foo%", operandNode.Value);
         }
 
+		[Test]
+		public void Parse_WhenStartsWithOnToStringOfNullable_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().StartsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (StartsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("42%", valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenQxStartsWithOnToStringOfNullable_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().QxStartsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (StartsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("42%", valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenStartsWithOnToStringOfNullableValue_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().StartsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (StartsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("42%", valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenQxStartsWithOnToStringOfNullableValue_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().QxStartsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (StartsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("42%", valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenEndsWithOnToStringOfNullable_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().EndsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (EndsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("%42", valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenQxEndsWithOnToStringOfNullable_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().QxEndsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (EndsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("%42", valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenEndsWithOnToStringOfNullableValue_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().EndsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (EndsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("%42", valueNode.Value);
+		}
+
+		[Test]
+		public void Parse_WhenQxEndsWithOnToStringOfNullableValue_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().QxEndsWith("42"));
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(7, listOfNodes.Count);
+
+			var memberNode1 = (NullableMemberNode)listOfNodes[0];
+			var isNotNode1 = (OperatorNode)listOfNodes[1];
+			var nullNode1 = (NullNode)listOfNodes[2];
+			var andNode = (OperatorNode)listOfNodes[3];
+			var memberNode2 = (EndsWithMemberNode)listOfNodes[4];
+			var likeNode = (OperatorNode)listOfNodes[5];
+			var valueNode = (ValueNode)listOfNodes[6];
+
+			Assert.AreEqual("NullableInt", memberNode1.Path);
+			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
+			Assert.AreEqual("null", nullNode1.ToString());
+			Assert.AreEqual("and", andNode.ToString());
+			Assert.AreEqual("NullableInt", memberNode2.Path);
+			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual("like", likeNode.Operator.ToString());
+			Assert.AreEqual("%42", valueNode.Value);
+		}
+
         private class MyClass
         {
             public string String1 { get; set; }
+
+			public int? NullableInt { get; set; }
         }
     }
 }

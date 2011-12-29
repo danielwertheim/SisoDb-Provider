@@ -12,7 +12,65 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             return new Sql2008QueryGenerator(new Sql2008Statements());
         }
 
-        [Test]
+		[Test]
+    	public override void GenerateQuery_for_Where_with_String_StartsWith_on_Nullable_ToString_GeneratesCorrectQuery()
+    	{
+			var sqlQuery = On_GenerateQuery_for_Where_with_String_StartsWith_on_Nullable_ToString_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual("42%", sqlQuery.Parameters[0].Value);
+    	}
+
+		[Test]
+    	public override void GenerateQuery_for_Where_with_String_Equals_and_StartsWith_on_String_GeneratesCorrectQuery()
+    	{
+			var sqlQuery = On_GenerateQuery_for_Where_with_String_Equals_and_StartsWith_on_String_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where ((mem0.[StringValue] = @p0) or (mem0.[StringValue] like @p1)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual("Foo", sqlQuery.Parameters[0].Value);
+
+			Assert.AreEqual("@p1", sqlQuery.Parameters[1].Name);
+			Assert.AreEqual("42%", sqlQuery.Parameters[1].Value);
+    	}
+
+		[Test]
+    	public override void GenerateQuery_for_Where_with_String_EndsWith_on_Nullable_ToString_GeneratesCorrectQuery()
+    	{
+			var sqlQuery = On_GenerateQuery_for_Where_with_String_EndsWith_on_Nullable_ToString_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[StringValue] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual("%42", sqlQuery.Parameters[0].Value);
+    	}
+
+		[Test]
+    	public override void GenerateQuery_for_Where_with_String_Equals_and_EndsWith_on_String_GeneratesCorrectQuery()
+    	{
+			var sqlQuery = On_GenerateQuery_for_Where_with_String_Equals_and_EndsWith_on_String_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where ((mem0.[StringValue] = @p0) or (mem0.[StringValue] like @p1)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual("Foo", sqlQuery.Parameters[0].Value);
+
+			Assert.AreEqual("@p1", sqlQuery.Parameters[1].Name);
+			Assert.AreEqual("%42", sqlQuery.Parameters[1].Value);
+    	}
+
+    	[Test]
         public override void GenerateQuery_for_Where_with_String_StartsWith_GeneratesCorrectQuery()
         {
             var sqlQuery = On_GenerateQuery_for_Where_with_String_StartsWith_GeneratesCorrectQuery();

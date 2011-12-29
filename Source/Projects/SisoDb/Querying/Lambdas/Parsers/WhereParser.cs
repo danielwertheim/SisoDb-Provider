@@ -221,22 +221,25 @@ namespace SisoDb.Querying.Lambdas.Parsers
         }
 
 		protected virtual Expression VisitStringMethodCall(MethodCallExpression e)
-        {
-            var member = (MemberExpression)e.Object;
+		{
+			var member = e.GetRightMostMember();
             var methodName = e.Method.Name;
             
             switch (methodName)
             {
                 case "StartsWith":
-                case "EndsWith":
-                    var useSuffix = methodName == "StartsWith";
-                    var usePrefix = methodName == "EndsWith";
-                    var argValue = ((ConstantExpression)e.Arguments[0]).Evaluate().ToStringOrNull();
-                    var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
-
-                    Visit(member);
+					var startsWithValue = ((ConstantExpression)e.Arguments[0]).Evaluate().ToStringOrNull();
+					//Visit(member);
+					_nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
                     _nodes.AddNode(new OperatorNode(Operator.Like()));
-                    Visit(Expression.Constant(newValue));
+                    Visit(Expression.Constant(string.Concat(startsWithValue, "%")));
+					break;
+                case "EndsWith":
+                    var endsWithValue = ((ConstantExpression)e.Arguments[0]).Evaluate().ToStringOrNull();
+					//Visit(member);
+					_nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
+                    _nodes.AddNode(new OperatorNode(Operator.Like()));
+                    Visit(Expression.Constant(string.Concat("%", endsWithValue)));
                     break;
                 case "ToLower":
                     _nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
@@ -250,8 +253,8 @@ namespace SisoDb.Querying.Lambdas.Parsers
         }
 
 		protected virtual Expression VisitStringQxMethodCall(MethodCallExpression e)
-        {
-            var member = (MemberExpression)e.Arguments[0];
+		{
+			var member = e.GetRightMostMember();
             var methodName = e.Method.Name;
 
             switch (methodName)
@@ -268,7 +271,13 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
                     var constant = Expression.Constant(newValue);
 
-                    Visit(member);
+					if(methodName == "QxStartsWith")
+						_nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
+					else if(methodName == "QxEndsWith")
+						_nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
+					else
+						Visit(member);
+
                     _nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(constant);
                     break;

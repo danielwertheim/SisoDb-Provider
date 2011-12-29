@@ -120,7 +120,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			Assert.AreEqual("null", nullNode2.ToString());
 		}
 
-    	[Test]
+		[Test]
     	public void Parse_WhenNullableIsComparedAgainstNullableVariableWithValue_ReturnsCorrectNodes()
     	{
     		var foo = (int?) 1;
