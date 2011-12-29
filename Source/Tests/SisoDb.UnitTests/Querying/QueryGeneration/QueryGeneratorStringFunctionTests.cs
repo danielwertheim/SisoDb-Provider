@@ -10,6 +10,46 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected abstract IDbQueryGenerator GetQueryGenerator();
 
+		public abstract void GenerateQuery_for_Where_with_String_StartsWith_on_Nullable_ToString_GeneratesCorrectQuery();
+
+		protected DbQuery On_GenerateQuery_for_Where_with_String_StartsWith_on_Nullable_ToString_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.Value.ToString().StartsWith("42")));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_for_Where_with_String_Equals_and_StartsWith_on_String_GeneratesCorrectQuery();
+
+		protected DbQuery On_GenerateQuery_for_Where_with_String_Equals_and_StartsWith_on_String_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.String1 == "Foo" || i.String1.StartsWith("42")));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_for_Where_with_String_EndsWith_on_Nullable_ToString_GeneratesCorrectQuery();
+
+		protected DbQuery On_GenerateQuery_for_Where_with_String_EndsWith_on_Nullable_ToString_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.NullableInt1.Value.ToString().EndsWith("42")));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
+		public abstract void GenerateQuery_for_Where_with_String_Equals_and_EndsWith_on_String_GeneratesCorrectQuery();
+
+		protected DbQuery On_GenerateQuery_for_Where_with_String_Equals_and_EndsWith_on_String_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.String1 == "Foo" || i.String1.EndsWith("42")));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
+
         public abstract void GenerateQuery_for_Where_with_String_StartsWith_GeneratesCorrectQuery();
 
         protected DbQuery On_GenerateQuery_for_Where_with_String_StartsWith_GeneratesCorrectQuery()
@@ -122,6 +162,8 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         private class MyClass
         {
             public string String1 { get; set; }
+
+			public int? NullableInt1 { get; set; }
         }
     }
 }

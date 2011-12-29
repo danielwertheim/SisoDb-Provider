@@ -12,7 +12,7 @@ namespace SisoDb.SqlCe4.Dac
 
         public SqlCe4DbBulkCopy(SqlCeConnection connection, SqlCeBulkCopyOptions options, SqlCeTransaction transaction)
         {
-            _innerBulkCopy = new SqlCeBulkCopy(connection, transaction, options)
+			_innerBulkCopy = new SqlCeBulkCopy(connection, options, transaction)
             {
                 NotifyAfter = 0
             };

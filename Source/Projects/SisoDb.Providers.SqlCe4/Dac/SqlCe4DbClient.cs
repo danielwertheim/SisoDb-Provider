@@ -33,7 +33,7 @@ namespace SisoDb.SqlCe4.Dac
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, SqlCeBulkCopyOptions.None, (SqlCeTransaction)Transaction);
+            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, SqlCeBulkCopyOptions.Default, (SqlCeTransaction)Transaction);
         }
 
         public override void Drop(IStructureSchema structureSchema)
