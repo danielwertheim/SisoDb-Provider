@@ -205,6 +205,9 @@
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingInterfaces.cs">
       <Link>UnitOfWork\InsertsUsingInterfaces.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsWithCustomStructureId.cs">
+      <Link>UnitOfWork\InsertsWithCustomStructureId.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Count.cs">
       <Link>UnitOfWork\Queries\Count.cs</Link>
     </Compile>

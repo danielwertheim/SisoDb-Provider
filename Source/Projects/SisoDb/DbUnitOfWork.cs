@@ -123,7 +123,7 @@ namespace SisoDb
 			var structureBuilder = Db.StructureBuilders.ForUpdates(spec.NewSchema);
 			var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
-			var query = spec.BuildQuery(Db, expression);
+			var query = spec.BuildQuery(Db, spec.NewSchema, expression);
 			foreach (var structure in Query<T>(query))
 			{
 				var structureId = spec.NewSchema.IdAccessor.GetValue(structure);
@@ -193,7 +193,7 @@ namespace SisoDb
 			var structureBuilder = Db.StructureBuilders.ForUpdates(spec.NewSchema);
 			var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
-			var query = spec.BuildQuery(Db, expression);
+			var query = spec.BuildQuery(Db, spec.OldSchema, expression);
 			foreach (var oldStructureJson in queryInvoker(query))
 			{
 				var oldStructure = Db.Serializer.Deserialize<TOld>(oldStructureJson);
@@ -326,13 +326,13 @@ namespace SisoDb
 				return new UpdateManySpec(oldSchema, oldType, newSchema, newType);
 			}
 
-			internal IQuery BuildQuery<T>(IDbDatabase db, Expression<Func<T, bool>> expression = null) where T : class
+			internal IQuery BuildQuery<T>(IDbDatabase db, IStructureSchema structureSchema, Expression<Func<T, bool>> expression = null) where T : class
 			{
 				var queryBuilder = db.ProviderFactory.GetQueryBuilder<T>(db.StructureSchemas);
 				if (expression != null)
 				{
-					queryBuilder.Where(expression); //TODO: This will have to adapt to typenameid, id
-					queryBuilder.OrderBy(ExpressionUtils.GetMemberExpression<T>("StructureId"));
+					queryBuilder.Where(expression);
+					queryBuilder.OrderBy(ExpressionUtils.GetMemberExpression<T>(structureSchema.IdAccessor.Path));
 				}
 
 				return queryBuilder.Build();
