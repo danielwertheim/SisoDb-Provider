@@ -331,8 +331,8 @@ namespace SisoDb
 				var queryBuilder = db.ProviderFactory.GetQueryBuilder<T>(db.StructureSchemas);
 				if (expression != null)
 				{
-					queryBuilder.Where(expression);
-					queryBuilder.OrderBy(ExpressionUtils.GetMemberExpression<T>(StructureSchema.IdMemberName));
+					queryBuilder.Where(expression); //TODO: This will have to adapt to typenameid, id
+					queryBuilder.OrderBy(ExpressionUtils.GetMemberExpression<T>("StructureId"));
 				}
 
 				return queryBuilder.Build();
