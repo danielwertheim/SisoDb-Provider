@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using NCore;
 using NCore.Reflections;
 
 namespace SisoDb.Core.Expressions
@@ -50,6 +51,20 @@ namespace SisoDb.Core.Expressions
             return new string(path.TakeWhile(char.IsLetterOrDigit).ToArray());
         }
 
+		public static object Evaluate(this Expression e)
+		{
+			if (e is MethodCallExpression)
+				return (e as MethodCallExpression).Evaluate();
+
+			if (e is MemberExpression)
+				return (e as MemberExpression).Evaluate();
+
+			if (e is ConstantExpression)
+				return (e as ConstantExpression).Evaluate();
+
+			throw new SisoDbException("Don't know how to evaluate the expression type: '{0}'".Inject(e.GetType().Name));
+		}
+
 		public static object Evaluate(this MethodCallExpression methodExpression)
 		{
 			return Expression.Lambda(methodExpression).Compile().DynamicInvoke();
@@ -63,11 +78,6 @@ namespace SisoDb.Core.Expressions
 		public static object Evaluate(this ConstantExpression constantExpression)
 		{
 			return constantExpression.Value;
-		}
-
-		public static T Evaluate<T>(this ConstantExpression constantExpression) where T : struct
-		{
-			return (T)constantExpression.Value;
 		}
     }
 }
