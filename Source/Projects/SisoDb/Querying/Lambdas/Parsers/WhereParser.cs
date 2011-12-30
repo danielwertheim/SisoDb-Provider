@@ -228,14 +228,14 @@ namespace SisoDb.Querying.Lambdas.Parsers
             switch (methodName)
             {
                 case "StartsWith":
-					var startsWithValue = ((ConstantExpression)e.Arguments[0]).Evaluate().ToStringOrNull();
+					var startsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
 					//Visit(member);
 					_nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
                     _nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(Expression.Constant(string.Concat(startsWithValue, "%")));
 					break;
                 case "EndsWith":
-                    var endsWithValue = ((ConstantExpression)e.Arguments[0]).Evaluate().ToStringOrNull();
+					var endsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
 					//Visit(member);
 					_nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
                     _nodes.AddNode(new OperatorNode(Operator.Like()));
@@ -267,7 +267,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 case "QxContains":
                     var useSuffix = methodName != "QxLike" && (methodName == "QxStartsWith" || methodName == "QxContains");
                     var usePrefix = methodName != "QxLike" && (methodName == "QxEndsWith" || methodName == "QxContains");
-                    var argValue = ((ConstantExpression)e.Arguments[1]).Evaluate().ToStringOrNull();
+					var argValue = e.Arguments[1].Evaluate().ToStringOrNull();
                     var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
                     var constant = Expression.Constant(newValue);
 

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
@@ -41,6 +42,34 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             Assert.AreEqual("=", operatorNode.Operator.ToString());
             Assert.AreEqual("foo", operandNode.Value);
         }
+
+		private class StartsWithQueryObject
+		{
+			public string Value { get; set; }
+
+			public LambdaExpression CreateExpression()
+			{
+				return Reflect<MyClass>.LambdaFrom(m => m.String1.StartsWith(Value));	
+			}
+		}
+
+		[Test]
+		public void Parse_WhenStartsWith_AgainstValueOfProperty_ReturnsCorrectNodes()
+		{
+			var q = new StartsWithQueryObject{Value = "Foo"};
+			var expression = q.CreateExpression();
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			var memberNode = (MemberNode)listOfNodes[0];
+			var operatorNode = (OperatorNode)listOfNodes[1];
+			var operandNode = (ValueNode)listOfNodes[2];
+			Assert.AreEqual("String1", memberNode.Path);
+			Assert.AreEqual("like", operatorNode.Operator.ToString());
+			Assert.AreEqual("Foo%", operandNode.Value);
+		}
 
         [Test]
         public void Parse_WhenStartsWith_ReturnsCorrectNodes()
