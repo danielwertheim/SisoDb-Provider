@@ -9,7 +9,7 @@ namespace SisoDb.DbSchema
     {
         public static class Fields
         {
-            public static readonly SchemaField Id = new SchemaField(0, StructureSchema.IdMemberName);
+            public static readonly SchemaField Id = new SchemaField(0, "StructureId");
             public static readonly SchemaField Json = new SchemaField(1, "Json");
         }
 

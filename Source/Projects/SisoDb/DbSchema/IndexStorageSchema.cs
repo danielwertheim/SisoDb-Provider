@@ -12,7 +12,7 @@ namespace SisoDb.DbSchema
     {
         public static class Fields
         {
-            public static readonly SchemaField StructureId = new SchemaField(0, StructureSchema.IdMemberName);
+            public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
             public static readonly SchemaField MemberPath = new SchemaField(1, "MemberPath");
             public static readonly SchemaField StringValue = new SchemaField(2, "StringValue");
             public static readonly SchemaField IntegerValue = new SchemaField(3, "IntegerValue");

@@ -9,7 +9,7 @@ namespace SisoDb.DbSchema
     {
         public static class Fields
         {
-            public static readonly SchemaField StructureId = new SchemaField(0, StructureSchema.IdMemberName);
+            public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
             public static readonly SchemaField UqStructureId = new SchemaField(1, "UqStructureId");
             public static readonly SchemaField UqMemberPath = new SchemaField(2, "UqMemberPath");
             public static readonly SchemaField UqValue = new SchemaField(3, "UqValue");
