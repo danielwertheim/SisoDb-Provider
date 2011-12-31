@@ -50,13 +50,13 @@ namespace SisoDb.UnitTests.Serialization
         }
 
         [Test]
-        public void Serialize_WhenItemIsYButSerializedAsX_OnlyXMembersAreSerialized()
+        public void Serialize_WhenItemIsYButSerializedAsX_AllYMembersAreSerialized()
         {
-            var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)) };
+            var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)).ToArray() };
 
             var json = _jsonSerializer.Serialize<JsonEntityX>(y);
 
-            Assert.AreEqual("{\"String1\":\"The String1\",\"Int1\":42}", json);
+			Assert.AreEqual("{\"Data\":\"TQEAAA==\",\"String1\":\"The String1\",\"Int1\":42}", json);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace SisoDb.UnitTests.Serialization
 
         private class JsonEntityY : JsonEntityX
         {
-            public Stream Data { get; set; }
+            public byte[] Data { get; set; }
         }
 
         private class Item

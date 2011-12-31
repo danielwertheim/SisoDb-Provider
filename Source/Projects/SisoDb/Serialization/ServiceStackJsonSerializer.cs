@@ -7,19 +7,16 @@ namespace SisoDb.Serialization
 {
     public class ServiceStackJsonSerializer : IJsonSerializer
     {
-        static ServiceStackJsonSerializer()
-        {
-            JsConfig.ExcludeTypeInfo = true;
-        }
-
-        public string Serialize<T>(T item) where T : class
+		public string Serialize<T>(T item) where T : class
         {
             if (item == null)
                 return string.Empty;
 
-            ServiceStackTypeConfig<T>.Config(item.GetType());
+			var itemType = item.GetType();
 
-            return JsonSerializer.SerializeToString(item);
+			ServiceStackTypeConfig<T>.Config(itemType);
+
+			return JsonSerializer.SerializeToString(item, itemType);
         }
 
         public T Deserialize<T>(string json) where T : class
