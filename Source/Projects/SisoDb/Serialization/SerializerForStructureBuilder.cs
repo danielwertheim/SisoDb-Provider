@@ -4,16 +4,16 @@ namespace SisoDb.Serialization
 {
     public class SerializerForStructureBuilder : IStructureSerializer
     {
-        private static readonly IJsonSerializer Serializer;
+        private readonly IJsonSerializer _serializer;
 
-        static SerializerForStructureBuilder()
+        public SerializerForStructureBuilder()
         {
-            Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+            _serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
         }
 
         public string Serialize<T>(T item) where T : class
         {
-            return Serializer.Serialize(item);
+            return _serializer.Serialize(item);
         }
     }
 }

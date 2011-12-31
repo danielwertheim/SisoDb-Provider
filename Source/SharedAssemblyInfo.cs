@@ -13,5 +13,5 @@
 [assembly: AssemblyCopyright("Copyright © Daniel Wertheim")]
 [assembly: AssemblyTrademark("")]
 
-[assembly: AssemblyVersion("7.1.3")]
-[assembly: AssemblyFileVersion("7.1.3")]
+[assembly: AssemblyVersion("8.0.0")]
+[assembly: AssemblyFileVersion("8.0.0")]
