@@ -269,11 +269,11 @@ if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[S
   </data>
   <data name="GetAllJson" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] order by [StructureId];</value>
+select Json from [dbo].[{0}] order by [StructureId];</value>
   </data>
   <data name="GetJsonById" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] where StructureId =@id;</value>
+select Json from [dbo].[{0}] where StructureId =@id;</value>
   </data>
   <data name="GetJsonByIds" xml:space="preserve">
     <value>set nocount on;
