@@ -142,18 +142,19 @@ namespace SisoDb
 						continue;
 
 					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
-					deleteIdFrom = deleteIdTo;
+					deleteIdFrom = null;
+					deleteIdTo = null;
 
 					structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 					keepQueue.Clear();
 				}
 			}
 
-			if(deleteIdFrom != null)
-				DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
-
 			if (keepQueue.Count > 0)
 			{
+				if (deleteIdFrom != null)
+					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
+
 				structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 				keepQueue.Clear();
 			}
@@ -214,18 +215,19 @@ namespace SisoDb
 						continue;
 
 					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
-					deleteIdFrom = deleteIdTo;
+					deleteIdFrom = null;
+					deleteIdTo = null;
 
 					structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 					keepQueue.Clear();
 				}
 			}
 
-			if (deleteIdFrom != null)
-				DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
-
 			if (keepQueue.Count > 0)
 			{
+				if (deleteIdFrom != null)
+					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
+
 				structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 				keepQueue.Clear();
 			}
