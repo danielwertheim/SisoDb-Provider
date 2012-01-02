@@ -26,18 +26,18 @@ namespace SisoDb.Profiling
 
 			//db.EnsureNewDatabase();
 
-			//ProfilingInserts(db, 10000, 5);
+			//ProfilingInserts(db, 100000, 5);
 
-			//InsertCustomers(1, 1000, db);
-			//ProfilingQueries(db, GetAllCustomers);
-			//ProfilingQueries(db, GetAllCustomersAsJson);
-			//ProfilingQueries(db, GetAllCustomersViaIndexesTable);
-			//ProfilingQueries(db, GetAllCustomersAsJsonViaIndexesTable);
+			//InsertCustomers(1, 100000, db);
+			//ProfilingQueries(() => GetAllCustomers(db));
+			//ProfilingQueries(() => GetAllCustomersAsJson(db));
+			//ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
+			//ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
 			//ProfilingUpdateStructureSet(db);
 
-			//Console.WriteLine("---- Done ----");
-			//Console.ReadKey();
+			Console.WriteLine("---- Done ----");
+			Console.ReadKey();
         }
 
         private static void ProfilingUpdateStructureSet(ISisoDatabase database)
@@ -85,15 +85,15 @@ namespace SisoDb.Profiling
             }
         }
 
-        private static void ProfilingQueries<T>(ISisoDatabase database, Func<ISisoDatabase, IList<T>> queryAction)
+		private static void ProfilingQueries(Func<int> queryAction)
         {
             var stopWatch = new Stopwatch();
             
             stopWatch.Start();
-            var customers = queryAction(database);
+            var customersCount = queryAction();
             stopWatch.Stop();
             
-            Console.WriteLine("customers.Count() = {0}", customers.Count());
+            Console.WriteLine("customers.Count() = {0}", customersCount);
             Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
         }
 
@@ -115,24 +115,33 @@ namespace SisoDb.Profiling
             }
         }
 
-        private static IList<Customer> GetAllCustomers(ISisoDatabase database)
+        private static int GetAllCustomers(ISisoDatabase database)
         {
-        	return database.ReadOnce().Query<Customer>().ToList();
+			using(var qe = database.CreateQueryEngine())
+			{
+				return qe.Query<Customer>().ToEnumerable().Count();
+			}
         }
 
-        private static IList<Customer> GetAllCustomersViaIndexesTable(ISisoDatabase database)
+    	private static int GetAllCustomersAsJson(ISisoDatabase database)
+    	{
+    		return database.ReadOnce().Query<Customer>().ToEnumerableOfJson().Count();
+    	}
+
+		private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			return database.ReadOnce().Query<Customer>().Where(c => c.StructureId == c.StructureId).ToList();
+			using (var qe = database.CreateQueryEngine())
+			{
+				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo).ToEnumerable().Count();
+			}
         }
 
-        private static IList<string> GetAllCustomersAsJsonViaIndexesTable(ISisoDatabase database)
+		private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			return database.ReadOnce().Query<Customer>().Where(c => c.StructureId == c.StructureId).ToListOfJson();
-        }
-
-        private static IList<string> GetAllCustomersAsJson(ISisoDatabase database)
-        {
-			return database.ReadOnce().Query<Customer>().ToListOfJson();
+			using (var qe = database.CreateQueryEngine())
+			{
+				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo).ToEnumerableOfJson().Count();
+			}
         }
     }
 }
