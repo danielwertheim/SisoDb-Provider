@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using ServiceStack.Text;
 
 namespace SisoDb.Serialization
@@ -27,40 +28,42 @@ namespace SisoDb.Serialization
 
         public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
-			return DeserializeManyInSequential<T>(sourceData);
+			return DeserializeManyInParallel<T>(sourceData);
         }
 
-		private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
-		{
-			return sourceData.Select(Deserialize<T>);
-		}
-
-		//private IEnumerable<T> DeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
+		//private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
 		//{
-		//    using (var q = new BlockingCollection<string>())
-		//    {
-		//        var task = new Task(() =>
-		//        {
-		//            foreach (var json in sourceData)
-		//                q.Add(json);
-		//        });
-
-		//        task.Start();
-
-		//        while (!task.IsCompleted)
-		//        {
-		//            string json;
-		//            if (q.TryTake(out json))
-		//                yield return Deserialize<T>(json);
-		//        }
-
-		//        Task.WaitAll(task);
-
-		//        q.CompleteAdding();
-
-		//        while (q.Count > 0)
-		//            yield return Deserialize<T>(q.Take());
-		//    }
+		//    return sourceData.Select(Deserialize<T>);
 		//}
+
+		private IEnumerable<T> DeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
+		{
+			using (var q = new BlockingCollection<string>())
+			{
+				using(var task = new Task(() =>
+				{
+					foreach (var json in sourceData)
+						q.Add(json);
+				}))
+				{
+					task.Start();
+
+					while (!task.IsCompleted)
+					{
+						string json;
+						if (q.TryTake(out json))
+							yield return Deserialize<T>(json);
+					}
+
+					Task.WaitAll(task);
+					task.Dispose();	
+				}
+
+				q.CompleteAdding();
+
+				while (q.Count > 0)
+					yield return Deserialize<T>(q.Take());
+			}
+		}
     }
 }
