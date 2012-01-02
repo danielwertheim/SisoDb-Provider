@@ -74,7 +74,7 @@ namespace SisoDb.Testing.Sql2008
                         where TABLE_NAME = @tableName;
                         end";
 
-            ExecuteSingleResultSequentialReader(CommandType.Text, sql,
+            ExecuteSingleResultSequentialReader(sql,
                 dr =>
                 {
                     var name = dr.GetString(0);
@@ -96,17 +96,14 @@ namespace SisoDb.Testing.Sql2008
             ExecuteSql(CommandType.Text, "if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end".Inject(spName));
         }
 
-        private void ExecuteSingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
+        private void ExecuteSingleResultSequentialReader(string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
         {
             using (var cn = CreateConnection())
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(commandType, sql, parameters))
+                using (var cmd = cn.CreateCommand(sql, parameters))
                 {
-                    cmd.CommandType = commandType;
-                    cmd.CommandText = sql;
-
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {
                         while (reader.Read())

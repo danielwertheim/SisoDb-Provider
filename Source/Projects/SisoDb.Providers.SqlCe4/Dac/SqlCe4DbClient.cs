@@ -170,15 +170,6 @@ namespace SisoDb.SqlCe4.Dac
             return nextId;
         }
 
-        public override string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
-
-            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
-        }
-
         public override IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
@@ -202,25 +193,6 @@ namespace SisoDb.SqlCe4.Dac
                         }
                         reader.Close();
                     }
-                }
-            }
-        }
-
-        public override IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
-
-            using (var cmd = CreateCommand(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value)))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetString(0);
-                    }
-                    reader.Close();
                 }
             }
         }

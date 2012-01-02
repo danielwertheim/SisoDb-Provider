@@ -127,7 +127,6 @@ namespace SisoDb
 			foreach (var structure in Query<T>(query))
 			{
 				var structureId = spec.NewSchema.IdAccessor.GetValue(structure);
-				
 				var status = modifier.Invoke(structure);
 				if (status == UpdateManyModifierStatus.Abort)
 					return false;
@@ -170,20 +169,20 @@ namespace SisoDb
 			if (spec.TypesAreIdentical)
 				throw new SisoDbException(ExceptionMessages.UnitOfWork_UpdateMany_TOld_TNew_SameType);
 
+			UpsertStructureSet(spec.NewSchema);
+
 			Func<IQuery, IEnumerable<string>> queryInvoker;
 			
 			if (spec.IsUpdatingSameSchema)
 			{
 				StructureSchemas.RemoveSchema(spec.OldType);
 				Db.SchemaManager.RemoveFromCache(spec.OldSchema);
-				UpsertStructureSet(spec.NewSchema);
-
+				
 				queryInvoker = QueryAsJson<TNew>;
 			}
 			else
 			{
 				UpsertStructureSet(spec.OldSchema);
-				UpsertStructureSet(spec.NewSchema);
 
 				queryInvoker = QueryAsJson<TOld>;
 			}

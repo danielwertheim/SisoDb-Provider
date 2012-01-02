@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Resources;
 using SisoDb.Structures;
@@ -84,7 +81,7 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			return ConsumeReader(query.Name, true, query.Parameters.ToArray());
+			return DbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray());
 		}
 
 		IEnumerable<T> IAdvancedQueries.RawQuery<T>(IRawQuery query)
@@ -102,7 +99,7 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			return ConsumeReader(query.QueryString, false, query.Parameters.ToArray());
+			return DbClient.YieldJson(query.QueryString, query.Parameters.ToArray());
 		}
 
 		public virtual int Count<T>(IQuery query) where T : class
@@ -205,78 +202,13 @@ namespace SisoDb
 			if(query.IsEmpty)
 			{
 				var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
-				return ConsumeReader(sql, false);
+				return DbClient.YieldJson(sql);
 			}
 
 			var sqlQuery = QueryGenerator.GenerateQuery(query);
 			var parameters = sqlQuery.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
-			return ConsumeReader(sqlQuery.Sql, false, parameters);
-		}
-
-		private IEnumerable<string> ConsumeReader(string sql, bool isStoredProcedure, params IDacParameter[] parameters)
-		{
-			using (var cmd = !isStoredProcedure ? DbClient.CreateCommand(sql, parameters) : DbClient.CreateSpCommand(sql, parameters))
-			{
-				using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-				{
-					Func<IDataRecord, IDictionary<int, string>, string> read = (dr, af) => dr.GetString(0);
-					IDictionary<int, string> additionalJsonFields = null;
-
-					if (reader.FieldCount > 1)
-					{
-						additionalJsonFields = GetAdditionalJsonFields(reader);
-						if (additionalJsonFields.Count > 0)
-							read = GetMergedJsonStructure;
-					}
-
-					while (reader.Read())
-					{
-						yield return read.Invoke(reader, additionalJsonFields);
-					}
-
-					reader.Close();
-				}
-			}
-		}
-
-		private IDictionary<int, string> GetAdditionalJsonFields(IDataRecord dataRecord)
-		{
-			var indices = new Dictionary<int, string>();
-			for (var i = 1; i < dataRecord.FieldCount; i++)
-			{
-				var name = dataRecord.GetName(i);
-				if (name.Contains(StructureStorageSchema.Fields.Json.Name))
-					indices.Add(i, name);
-				else
-					break;
-			}
-			return indices;
-		}
-
-		private static string GetMergedJsonStructure(IDataRecord dataRecord, IDictionary<int, string> additionalJsonFields)
-		{
-			var sb = new StringBuilder();
-			sb.Append(dataRecord.GetString(0));
-			sb = sb.Remove(sb.Length - 1, 1);
-
-			foreach (var childJson in ReadChildJson(dataRecord, additionalJsonFields))
-			{
-				sb.Append(",");
-				sb.Append(childJson);
-			}
-
-			sb.Append("}");
-
-			return sb.ToString();
-		}
-
-		private static IEnumerable<string> ReadChildJson(IDataRecord dataRecord, IEnumerable<KeyValuePair<int, string>> additionalJsonFields)
-		{
-			return additionalJsonFields.Select(additionalJsonField =>
-				string.Format("\"{0}\":{1}",
-				additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
-				dataRecord.GetString(additionalJsonField.Key)));
+			return DbClient.YieldJson(sqlQuery.Sql, parameters);
 		}
 	}
 }
