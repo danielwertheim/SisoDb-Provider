@@ -118,8 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CreateDatabase" xml:space="preserve">
-    <value>create database [{0}];
-alter database [{0}] set recovery simple;</value>
+    <value>create database [{0}];</value>
   </data>
   <data name="CreateIndexesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
@@ -269,11 +268,11 @@ if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[S
   </data>
   <data name="GetAllJson" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] order by [StructureId];</value>
+select Json from [dbo].[{0}] order by [StructureId];</value>
   </data>
   <data name="GetJsonById" xml:space="preserve">
     <value>set nocount on;
-select json from [dbo].[{0}] where StructureId =@id;</value>
+select Json from [dbo].[{0}] where StructureId =@id;</value>
   </data>
   <data name="GetJsonByIds" xml:space="preserve">
     <value>set nocount on;

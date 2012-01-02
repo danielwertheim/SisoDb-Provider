@@ -127,7 +127,6 @@ namespace SisoDb
 			foreach (var structure in Query<T>(query))
 			{
 				var structureId = spec.NewSchema.IdAccessor.GetValue(structure);
-				
 				var status = modifier.Invoke(structure);
 				if (status == UpdateManyModifierStatus.Abort)
 					return false;
@@ -142,18 +141,19 @@ namespace SisoDb
 						continue;
 
 					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
-					deleteIdFrom = deleteIdTo;
+					deleteIdFrom = null;
+					deleteIdTo = null;
 
 					structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 					keepQueue.Clear();
 				}
 			}
 
-			if(deleteIdFrom != null)
-				DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
-
 			if (keepQueue.Count > 0)
 			{
+				if (deleteIdFrom != null)
+					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.NewSchema);
+
 				structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 				keepQueue.Clear();
 			}
@@ -169,20 +169,20 @@ namespace SisoDb
 			if (spec.TypesAreIdentical)
 				throw new SisoDbException(ExceptionMessages.UnitOfWork_UpdateMany_TOld_TNew_SameType);
 
+			UpsertStructureSet(spec.NewSchema);
+
 			Func<IQuery, IEnumerable<string>> queryInvoker;
 			
 			if (spec.IsUpdatingSameSchema)
 			{
 				StructureSchemas.RemoveSchema(spec.OldType);
 				Db.SchemaManager.RemoveFromCache(spec.OldSchema);
-				UpsertStructureSet(spec.NewSchema);
-
+				
 				queryInvoker = QueryAsJson<TNew>;
 			}
 			else
 			{
 				UpsertStructureSet(spec.OldSchema);
-				UpsertStructureSet(spec.NewSchema);
 
 				queryInvoker = QueryAsJson<TOld>;
 			}
@@ -214,18 +214,19 @@ namespace SisoDb
 						continue;
 
 					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
-					deleteIdFrom = deleteIdTo;
+					deleteIdFrom = null;
+					deleteIdTo = null;
 
 					structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 					keepQueue.Clear();
 				}
 			}
 
-			if (deleteIdFrom != null)
-				DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
-
 			if (keepQueue.Count > 0)
 			{
+				if (deleteIdFrom != null)
+					DbClient.DeleteWhereIdIsBetween(deleteIdFrom, deleteIdTo ?? deleteIdFrom, spec.OldSchema);
+
 				structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 				keepQueue.Clear();
 			}

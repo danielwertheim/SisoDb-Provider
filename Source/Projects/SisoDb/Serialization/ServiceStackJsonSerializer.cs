@@ -28,40 +28,42 @@ namespace SisoDb.Serialization
 
         public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
-            return DeserializeManyInParallel<T>(sourceData);
+			return DeserializeManyInParallel<T>(sourceData);
         }
 
-        //private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
-        //{
-        //    return sourceData.Select(Deserialize<T>);
-        //}
+		//private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
+		//{
+		//    return sourceData.Select(Deserialize<T>);
+		//}
 
-        private IEnumerable<T> DeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
-        {
-            using (var q = new BlockingCollection<string>())
-            {
-                var task = new Task(() =>
-                {
-                    foreach (var json in sourceData)
-                        q.Add(json);
-                });
+		private IEnumerable<T> DeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
+		{
+			using (var q = new BlockingCollection<string>())
+			{
+				using(var task = new Task(() =>
+				{
+					foreach (var json in sourceData)
+						q.Add(json);
+				}))
+				{
+					task.Start();
 
-                task.Start();
+					while (!task.IsCompleted)
+					{
+						string json;
+						if (q.TryTake(out json))
+							yield return Deserialize<T>(json);
+					}
 
-                while (!task.IsCompleted)
-                {
-                    string json;
-                    if (q.TryTake(out json))
-                        yield return Deserialize<T>(json);
-                }
+					Task.WaitAll(task);
+					task.Dispose();	
+				}
 
-                Task.WaitAll(task);
+				q.CompleteAdding();
 
-                q.CompleteAdding();
-
-                while (q.Count > 0)
-                    yield return Deserialize<T>(q.Take());
-            }
-        }
+				while (q.Count > 0)
+					yield return Deserialize<T>(q.Take());
+			}
+		}
     }
 }

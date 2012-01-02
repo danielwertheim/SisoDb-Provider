@@ -49,6 +49,19 @@ namespace SisoDb
 		TOut GetByIdAs<TContract, TOut>(object id) where TContract : class where TOut : class;
 
 		/// <summary>
+		/// Returns one single structure identified
+		/// by an id, as Json. This is the most
+		/// effective return type, since the Json
+		/// is stored in the database, no deserialization
+		/// will take place.  
+		/// </summary>
+		/// <typeparam name="T">
+		/// Structure type, used as a contract defining the scheme.</typeparam>
+		/// <param name="id"></param>
+		/// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
+		string GetByIdAsJson<T>(object id) where T : class;
+
+		/// <summary>
 		/// Returns all structures for the defined structure <typeparamref name="T"/>
 		/// matching passed ids.
 		/// </summary>
@@ -70,6 +83,15 @@ namespace SisoDb
 		IEnumerable<TOut> GetByIdsAs<TContract, TOut>(params object[] ids) where TContract : class where TOut : class;
 
 		/// <summary>
+		/// Returns Json representation for all structures for the defined structure <typeparamref name="T"/>
+		/// matching passed ids.
+		/// </summary>
+		/// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+		/// <param name="ids">Ids used for matching the structures to return.</param>
+		/// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
+		IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class;
+
+		/// <summary>
 		/// Returns all structures for the defined structure <typeparamref name="T"/>
 		/// matching specified id interval.
 		/// </summary>
@@ -79,28 +101,6 @@ namespace SisoDb
 		/// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
 		/// /// <remarks>YOU COULD GET STRANGE RESULTS IF YOU HAVE SPECIFIED NON SEQUENTIAL GUIDS.</remarks>
 		IEnumerable<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class;
-
-		/// <summary>
-		/// Returns one single structure identified
-		/// by an id, as Json. This is the most
-		/// effective return type, since the Json
-		/// is stored in the database, no deserialization
-		/// will take place.  
-		/// </summary>
-		/// <typeparam name="T">
-		/// Structure type, used as a contract defining the scheme.</typeparam>
-		/// <param name="id"></param>
-		/// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
-		string GetByIdAsJson<T>(object id) where T : class;
-
-		/// <summary>
-		/// Returns Json representation for all structures for the defined structure <typeparamref name="T"/>
-		/// matching passed ids.
-		/// </summary>
-		/// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-		/// <param name="ids">Ids used for matching the structures to return.</param>
-		/// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
-		IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class;
 
 		/// <summary>
 		/// Lets you perform a Query defining things like

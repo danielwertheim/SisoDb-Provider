@@ -17,7 +17,7 @@ namespace SisoDb.Profiling
 			return;
 
             //********* SQL2008 ***********
-			//var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;");
+			//var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;MultipleActiveResultSets=true;");
 			//var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
 
             //********* SQLCE4 ***********
@@ -26,15 +26,15 @@ namespace SisoDb.Profiling
 
 			//db.EnsureNewDatabase();
 
-			//ProfilingInserts(db, 1, 5);
+			//ProfilingInserts(db, 10000, 5);
 
-            //InsertCustomers(1, 10000, db);
+			//InsertCustomers(1, 1000, db);
 			//ProfilingQueries(db, GetAllCustomers);
 			//ProfilingQueries(db, GetAllCustomersAsJson);
 			//ProfilingQueries(db, GetAllCustomersViaIndexesTable);
 			//ProfilingQueries(db, GetAllCustomersAsJsonViaIndexesTable);
 
-            //ProfilingUpdateStructureSet(db);
+			//ProfilingUpdateStructureSet(db);
 
 			//Console.WriteLine("---- Done ----");
 			//Console.ReadKey();

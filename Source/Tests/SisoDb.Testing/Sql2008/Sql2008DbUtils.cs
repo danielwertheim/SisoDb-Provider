@@ -45,7 +45,7 @@ namespace SisoDb.Testing.Sql2008
 
         public bool TableExists(string name)
         {
-            var sql = "select 1 from information_schema.tables where table_name = '{0}';".Inject(name);
+			var sql = "select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}';".Inject(name);
 
             return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
@@ -74,7 +74,7 @@ namespace SisoDb.Testing.Sql2008
                         where TABLE_NAME = @tableName;
                         end";
 
-            ExecuteSingleResultSequentialReader(CommandType.Text, sql,
+            ExecuteSingleResultSequentialReader(sql,
                 dr =>
                 {
                     var name = dr.GetString(0);
@@ -96,72 +96,14 @@ namespace SisoDb.Testing.Sql2008
             ExecuteSql(CommandType.Text, "if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end".Inject(spName));
         }
 
-//        public void AddColumns(string tableName, params string[] columns)
-//        {
-//            var columnString = string.Join(",", columns);
-//            var sql = "alter table [{0}] add {1};".Inject(tableName, columnString);
-
-//            ExecuteSql(CommandType.Text, sql);
-//        }
-
-//        public void DropColumns(string tableName, params string[] columnNames)
-//        {
-//            var columnString = string.Join(",", columnNames.Select(c => "[" + c + "]"));
-//            var sql = "alter table [{0}] drop column {1};".Inject(tableName, columnString);
-
-//            ExecuteSql(CommandType.Text, sql);
-//        }
-
-//        public bool ColumnsExist(string tableName, params string[] columnNames)
-//        {
-//            var sql = "select Column_Name from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '{0}';".Inject(tableName);
-//            var existingColums = new HashSet<string>();
-
-//            ExecuteSingleResultReader(CommandType.Text, sql, 
-//                dr => existingColums.Add(dr.GetString(0)));
-
-//            var notExisting = columnNames.Count(c => !existingColums.Contains(c));
-
-//            return notExisting < 1;
-//        }
-
-//        public DataTable GetTableBySql(string sql)
-//        {
-//            var table = new DataTable();
-
-//            using (var cn = CreateConnection())
-//            {
-//                cn.Open();
-
-//                using (var cmd = cn.CreateCommand())
-//                {
-//                    cmd.CommandType = CommandType.Text;
-//                    cmd.CommandText = sql;
-
-//                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
-//                    {
-//                        table.Load(reader);
-//                        reader.Close();
-//                    }
-//                }
-
-//                cn.Close();
-//            }
-
-//            return table;
-//        }
-
-        private void ExecuteSingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
+        private void ExecuteSingleResultSequentialReader(string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
         {
             using (var cn = CreateConnection())
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(commandType, sql, parameters))
+                using (var cmd = cn.CreateCommand(sql, parameters))
                 {
-                    cmd.CommandType = commandType;
-                    cmd.CommandText = sql;
-
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {
                         while (reader.Read())

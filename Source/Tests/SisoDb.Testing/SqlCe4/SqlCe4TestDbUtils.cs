@@ -75,7 +75,7 @@ namespace SisoDb.Testing.SqlCe4
 
             const string sql = @"select COLUMN_NAME, DATA_TYPE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = @tableName;";
 
-            ExecuteSingleResultSequentialReader(CommandType.Text, sql,
+            ExecuteSingleResultSequentialReader(sql,
                 dr =>
                 {
                     var name = dr.GetString(0);
@@ -182,17 +182,14 @@ namespace SisoDb.Testing.SqlCe4
             return e.GetRightMostMember().ToPath();
         }
 
-        private void ExecuteSingleResultSequentialReader(CommandType commandType, string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
+        private void ExecuteSingleResultSequentialReader(string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
         {
             using (var cn = CreateConnection())
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(commandType, sql, parameters))
+                using (var cmd = cn.CreateCommand(sql, parameters))
                 {
-                    cmd.CommandType = commandType;
-                    cmd.CommandText = sql;
-
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {
                         while (reader.Read())

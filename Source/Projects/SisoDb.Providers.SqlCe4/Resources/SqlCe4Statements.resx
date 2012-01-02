@@ -249,10 +249,10 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
     <value>drop table [{0}];</value>
   </data>
   <data name="GetAllJson" xml:space="preserve">
-    <value>select json from [{0}] order by [StructureId];</value>
+    <value>select Json from [{0}] order by [StructureId];</value>
   </data>
   <data name="GetJsonById" xml:space="preserve">
-    <value>select json from [{0}] where StructureId =@id;</value>
+    <value>select Json from [{0}] where StructureId =@id;</value>
   </data>
   <data name="GetJsonByIds" xml:space="preserve">
     <value>select Json from [{0}] where StructureId in ({1});</value>

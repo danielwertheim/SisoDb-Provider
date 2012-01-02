@@ -12,8 +12,6 @@ namespace SisoDb.Dac
         bool IsTransactional { get; }
         void Flush();
         
-        IDbCommand CreateCommand(string sql, params IDacParameter[] parameters);
-        IDbCommand CreateSpCommand(string sql, params IDacParameter[] parameters);
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
         IDbBulkCopy GetBulkCopy();
 
@@ -32,5 +30,8 @@ namespace SisoDb.Dac
         IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
 
         void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
+
+    	IEnumerable<string> YieldJson(string sql, params IDacParameter[] parameters);
+    	IEnumerable<string> YieldJsonBySp(string sql, params IDacParameter[] parameters);
     }
 }
