@@ -16,7 +16,6 @@ namespace SisoDb.Dac
         IDbBulkCopy GetBulkCopy();
 
         void Drop(IStructureSchema structureSchema);
-        void RefreshIndexes(IStructureSchema structureSchema);
         void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);

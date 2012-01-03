@@ -69,18 +69,6 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        public override void RefreshIndexes(IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("RefreshIndexes").Inject(
-                structureSchema.GetStructureTableName(),
-                structureSchema.GetIndexesTableName(),
-                structureSchema.GetUniquesTableName());
-
-            ExecuteNonQuery(sql);
-        }
-
         public override void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
