@@ -32,7 +32,8 @@ namespace SisoDb
         {
             Ensure.That(connectionStringOrName, "connectionStringOrName").IsNotNullOrWhiteSpace();
 
-            var config = ConfigurationManager.ConnectionStrings[connectionStringOrName];
+			var config = ConfigurationManager.ConnectionStrings[string.Concat(Environment.MachineName, "_", connectionStringOrName)];
+        	config = config ?? ConfigurationManager.ConnectionStrings[connectionStringOrName];
 
             return config == null ? new ConnectionString(connectionStringOrName) : new ConnectionString(config.ConnectionString);
         }
