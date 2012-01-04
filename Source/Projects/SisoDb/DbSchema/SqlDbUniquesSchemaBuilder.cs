@@ -6,7 +6,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.DbSchema
 {
-    public class SqlDbUniquesSchemaBuilder : IDbSchemaBuilder
+    public class SqlDbUniquesSchemaBuilder
     {
         private readonly ISqlStatements _sqlStatements;
 
@@ -15,19 +15,19 @@ namespace SisoDb.DbSchema
             _sqlStatements = sqlStatements;
         }
 
-        public string[] GenerateSql(IStructureSchema structureSchema)
+        public string GenerateSql(IStructureSchema structureSchema)
         {
             var uniquesTableName = structureSchema.GetUniquesTableName();
             var structureTableName = structureSchema.GetStructureTableName();
 
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.String)
-                return new[] { _sqlStatements.GetSql("CreateUniquesString").Inject(uniquesTableName, structureTableName) };
+                return _sqlStatements.GetSql("CreateUniquesString").Inject(uniquesTableName, structureTableName);
 
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.Guid)
-                return new[] { _sqlStatements.GetSql("CreateUniquesGuid").Inject(uniquesTableName, structureTableName) };
+                return _sqlStatements.GetSql("CreateUniquesGuid").Inject(uniquesTableName, structureTableName);
 
             if (structureSchema.IdAccessor.IdType.IsIdentity())
-                return new[] { _sqlStatements.GetSql("CreateUniquesIdentity").Inject(uniquesTableName, structureTableName) };
+                return _sqlStatements.GetSql("CreateUniquesIdentity").Inject(uniquesTableName, structureTableName);
 
             throw new SisoDbException(ExceptionMessages.SqlDbUniquesSchemaBuilder_GenerateSql.Inject(structureSchema.IdAccessor.IdType));
         }

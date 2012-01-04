@@ -232,9 +232,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConnectionString_MissingSisoDbPart" xml:space="preserve">
     <value>The connectionstring is missing the SisoDb-part, indicated by '{0}'. Example: '{1}'.</value>
   </data>
-  <data name="IndexStorageSchema_MissingValueSchemaField" xml:space="preserve">
-    <value>There's no index storage schema value column matching the type '{0}'.</value>
-  </data>
   <data name="StructureSetUpdater_MissmatchInIdTypes" xml:space="preserve">
     <value>Can not update structure set when Id type has changed.</value>
   </data>

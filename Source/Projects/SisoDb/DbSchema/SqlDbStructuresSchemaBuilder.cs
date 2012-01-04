@@ -6,7 +6,7 @@ using SisoDb.Resources;
 
 namespace SisoDb.DbSchema
 {
-	public class SqlDbStructuresSchemaBuilder : IDbSchemaBuilder
+	public class SqlDbStructuresSchemaBuilder
 	{
 		private readonly ISqlStatements _sqlStatements;
 
@@ -15,18 +15,18 @@ namespace SisoDb.DbSchema
 			_sqlStatements = sqlStatements;
 		}
 
-		public string[] GenerateSql(IStructureSchema structureSchema)
+		public string GenerateSql(IStructureSchema structureSchema)
 		{
 			var tableName = structureSchema.GetStructureTableName();
 
 			if (structureSchema.IdAccessor.IdType == StructureIdTypes.String)
-				return new[] { _sqlStatements.GetSql("CreateStructuresString").Inject(tableName) };
+				return _sqlStatements.GetSql("CreateStructuresString").Inject(tableName);
 
 			if (structureSchema.IdAccessor.IdType == StructureIdTypes.Guid)
-				return new[] { _sqlStatements.GetSql("CreateStructuresGuid").Inject(tableName) };
+				return _sqlStatements.GetSql("CreateStructuresGuid").Inject(tableName);
 
 			if (structureSchema.IdAccessor.IdType.IsIdentity())
-				return new[] { _sqlStatements.GetSql("CreateStructuresIdentity").Inject(tableName) };
+				return _sqlStatements.GetSql("CreateStructuresIdentity").Inject(tableName);
 
 			throw new SisoDbException(ExceptionMessages.SqlDbStructureSchemaBuilder_GenerateSql.Inject(structureSchema.IdAccessor.IdType));
 		}

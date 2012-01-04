@@ -1,9 +1,5 @@
 ﻿using System;
-using NCore;
-using NCore.Reflections;
 using PineCone.Structures.Schemas;
-using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
 {
@@ -14,60 +10,22 @@ namespace SisoDb.DbSchema
         {
             public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
             public static readonly SchemaField MemberPath = new SchemaField(1, "MemberPath");
-            public static readonly SchemaField StringValue = new SchemaField(2, "StringValue");
-            public static readonly SchemaField IntegerValue = new SchemaField(3, "IntegerValue");
-            public static readonly SchemaField FractalValue = new SchemaField(4, "FractalValue");
-            public static readonly SchemaField DateTimeValue = new SchemaField(5, "DateTimeValue");
-            public static readonly SchemaField BoolValue = new SchemaField(6, "BoolValue");
-            public static readonly SchemaField GuidValue = new SchemaField(7, "GuidValue");
+            public static readonly SchemaField Value = new SchemaField(2, "Value");
         }
         
         public static readonly SchemaField[] OrderedFields = new[]
         {
             Fields.StructureId,
             Fields.MemberPath,
-            Fields.StringValue,
-            Fields.IntegerValue,
-            Fields.FractalValue,
-            Fields.DateTimeValue,
-            Fields.BoolValue,
-            Fields.GuidValue
+            Fields.Value
         };
 
-        public static SchemaField GetValueSchemaFieldForType(Type dataType)
-        {
-            if (dataType.IsStringType())
-                return Fields.StringValue;
-
-            if (dataType.IsAnyIntegerNumberType())
-                return Fields.IntegerValue;
-
-            if (dataType.IsAnyFractalNumberType())
-                return Fields.FractalValue;
-
-            if (dataType.IsAnyDateTimeType())
-                return Fields.DateTimeValue;
-
-            if (dataType.IsAnyBoolType())
-                return Fields.BoolValue;
-
-            if (dataType.IsAnyGuidType())
-                return Fields.GuidValue;
-
-            if (dataType.IsEnumType())
-                return GetValueSchemaFieldForType(dataType.GetEnumUnderlyingType());
-
-            throw new SisoDbException(ExceptionMessages.IndexStorageSchema_MissingValueSchemaField.Inject(dataType.Name));
-        }
-
-        public IndexStorageSchema(IStructureSchema structureSchema)
-            : base(structureSchema, structureSchema.GetIndexesTableName())
-        {
-        }
-
-        protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
-        {
-            return OrderedFields;
-        }
+    	public IndexStorageSchema(IStructureSchema structureSchema, string storageSchemaName) 
+			: base(structureSchema, storageSchemaName) {}
+    	
+		protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
+		{
+			return OrderedFields;
+		}
     }
 }

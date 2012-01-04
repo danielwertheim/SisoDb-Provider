@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
 using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
@@ -45,9 +45,12 @@ namespace SisoDb.DbSchema
 			if (structuresTableExists && indexesTableStatuses.AllExists && uniquesTableExists)
 				return;
 
-			dbClient.ExecuteNonQuery(GenerateSql(structureSchema, structuresTableExists, indexesTableStatuses, uniquesTableExists),
-				new DacParameter("entityHash", structureSchema.Hash),
-				new DacParameter("entityName", structureSchema.Name));
+			foreach (var sql in GenerateSql(structureSchema, structuresTableExists, indexesTableStatuses, uniquesTableExists))
+			{
+				dbClient.ExecuteNonQuery(sql, 
+					new DacParameter("entityHash", structureSchema.Hash), 
+					new DacParameter("entityName", structureSchema.Name));
+			}
 		}
 
 		private static IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names, IDbClient dbClient)
@@ -63,24 +66,16 @@ namespace SisoDb.DbSchema
 			};
 		}
 
-		private string GenerateSql(IStructureSchema structureSchema, bool structuresTableExists, IndexesTableStatuses indexesTableStatuses, bool uniquesTableExists)
+		private IEnumerable<string> GenerateSql(IStructureSchema structureSchema, bool structuresTableExists, IndexesTableStatuses indexesTableStatuses, bool uniquesTableExists)
 		{
-			var structuresSql = structuresTableExists ? "" : _structuresDbSchemaBuilder.GenerateSql(structureSchema)[0];
-			var indexesSql = indexesTableStatuses.AllExists ? new[] { "" } : _indexesDbSchemaBuilder.GenerateSql(structureSchema);
-			var uniquesSql = uniquesTableExists ? "" : _uniquesDbSchemaBuilder.GenerateSql(structureSchema)[0];
-
-			var sql = new StringBuilder();
-
 			if (!structuresTableExists)
-				sql.AppendLine(structuresSql);
+				yield return _structuresDbSchemaBuilder.GenerateSql(structureSchema);
 
-			if (!indexesTableStatuses.AllExists)
-				sql.AppendLine(indexesSql);
+			if(!uniquesTableExists)
+				yield return _uniquesDbSchemaBuilder.GenerateSql(structureSchema);
 
-			if (!uniquesTableExists)
-				sql.AppendLine(uniquesSql);
-
-			return sql.ToString();
+			foreach (var sql in _indexesDbSchemaBuilder.GenerateSql(structureSchema, indexesTableStatuses))
+				yield return sql;
 		}
 	}
 }
