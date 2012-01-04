@@ -74,6 +74,10 @@
     <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
+    <Compile Include="DbSchema\DbNamingPolicy.cs" />
+    <Compile Include="DbSchema\IndexesTableNames.cs" />
+    <Compile Include="DbSchema\IndexesTableStatuses.cs" />
+    <Compile Include="DbSchema\IndexesTypes.cs" />
     <Compile Include="IDbDatabase.cs" />
     <Compile Include="IQueryEngineCore.cs" />
     <Compile Include="IRawQuery.cs" />
@@ -148,7 +152,6 @@
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
     <Compile Include="Structures\StructureBuilders.cs" />
-    <Compile Include="Structures\StructureSchemaExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />

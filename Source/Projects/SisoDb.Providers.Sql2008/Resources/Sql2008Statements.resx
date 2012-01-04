@@ -117,54 +117,204 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreateDatabase" xml:space="preserve">
-    <value>create database [{0}];</value>
-  </data>
-  <data name="CreateIndexesGuid" xml:space="preserve">
+  <data name="CreateBooleansIndexesGuid" xml:space="preserve">
     <value>create table dbo.[{0}] (
 [RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
-[StringValue] [nvarchar](max) null,
-[IntegerValue] [bigint] null,
-[FractalValue] [real] null,
-[DateTimeValue] [datetime] null,
-[BoolValue] [bit] null,
-[GuidValue] [uniqueidentifier] null);
+[Value] [bit] null);
 
-create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateIndexesIdentity" xml:space="preserve">
+  <data name="CreateBooleansIndexesIdentity" xml:space="preserve">
     <value>create table dbo.[{0}] (
 [RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
-[StringValue] [nvarchar](max) null,
-[IntegerValue] [bigint] null,
-[FractalValue] [real] null,
-[DateTimeValue] [datetime] null,
-[BoolValue] [bit] null,
-[GuidValue] [uniqueidentifier] null);
+[Value] [bit] null);
 
-create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateIndexesString" xml:space="preserve">
+  <data name="CreateBooleansIndexesStrings" xml:space="preserve">
     <value>create table dbo.[{0}] (
 [RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
-[StringValue] [nvarchar](max) null,
-[IntegerValue] [bigint] null,
-[FractalValue] [real] null,
-[DateTimeValue] [datetime] null,
-[BoolValue] [bit] null,
-[GuidValue] [uniqueidentifier] null);
+[Value] [bit] null);
 
-create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateDatabase" xml:space="preserve">
+    <value>create database [{0}];</value>
+  </data>
+  <data name="CreateDatesIndexesGuid" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [datetime] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateDatesIndexesIdentity" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [datetime] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateDatesIndexesStrings" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [datetime] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateFractalsIndexesGuid" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [real] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateFractalsIndexesIdentity" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [real] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateFractalsIndexesStrings" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [real] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateGuidsIndexesGuid" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [uniqueidentifier] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateGuidsIndexesIdentity" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [uniqueidentifier] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateGuidsIndexesStrings" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [uniqueidentifier] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateIntegersIndexesGuid" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bigint] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateIntegersIndexesIdentity" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bigint] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateIntegersIndexesStrings" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bigint] null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateStringsIndexesGuid" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](max) null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateStringsIndexesIdentity" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](max) null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
+
+alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateStringsIndexesStrings" xml:space="preserve">
+    <value>create table dbo.[{0}] (
+[RowId] [bigint] identity(1,1) not null constraint [PK_{0}] primary key nonclustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](max) null);
+
+--create index [IX_{0}_StructureId] on [{0}] ([StructureId]);
 
 alter table dbo.[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references dbo.[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>

@@ -4,6 +4,6 @@ namespace SisoDb.DbSchema
 {
     public interface IDbSchemaBuilder
     {
-        string GenerateSql(IStructureSchema structureSchema);
+        string[] GenerateSql(IStructureSchema structureSchema);
     }
 }
