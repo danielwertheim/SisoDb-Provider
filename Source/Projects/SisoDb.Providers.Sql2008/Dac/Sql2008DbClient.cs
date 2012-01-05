@@ -8,8 +8,8 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Core;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
-using SisoDb.Structures;
 
 namespace SisoDb.Sql2008.Dac
 {
@@ -29,8 +29,17 @@ namespace SisoDb.Sql2008.Dac
 
         public override void Drop(IStructureSchema structureSchema)
         {
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+        	var indexesTableNames = structureSchema.GetIndexesTableNames();
+
             var sql = SqlStatements.GetSql("DropStructureTables").Inject(
-                structureSchema.GetIndexesTableName(),
+                indexesTableNames.IntegersTableName,
+				indexesTableNames.FractalsTableName,
+				indexesTableNames.BooleansTableName,
+				indexesTableNames.DatesTableName,
+				indexesTableNames.GuidsTableName,
+				indexesTableNames.StringsTableName,
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 

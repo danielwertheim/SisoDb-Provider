@@ -14,7 +14,7 @@ namespace SisoDb.DbSchema
 
 		public static string GetStructureTableName(this IStructureSchema structureSchema)
 		{
-			return string.Concat(StructureNameGenerator, "Structure");
+			return string.Concat(StructureNameGenerator.Invoke(structureSchema), "Structure");
 		}
 
 		public static IndexesTableNames GetIndexesTableNames(this IStructureSchema structureSchema)
@@ -24,12 +24,12 @@ namespace SisoDb.DbSchema
 
 		public static string GetIndexesTableNameFor(this IStructureSchema structureSchema, IndexesTypes type)
 		{
-			return string.Concat(StructureNameGenerator, type.ToString());
+			return string.Concat(StructureNameGenerator.Invoke(structureSchema), type.ToString());
 		}
 
 		public static string GetUniquesTableName(this IStructureSchema structureSchema)
 		{
-			return string.Concat(StructureNameGenerator, "Uniques");
+			return string.Concat(StructureNameGenerator.Invoke(structureSchema), "Uniques");
 		}
 	}
 }

@@ -9,7 +9,6 @@ using NCore.Expressions;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Structures;
 
 namespace SisoDb.Testing.Sql2008
 {

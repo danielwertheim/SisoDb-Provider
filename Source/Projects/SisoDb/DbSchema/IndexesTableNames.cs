@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using NCore.Reflections;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
@@ -32,6 +32,26 @@ namespace SisoDb.DbSchema
 				GuidsTableName, 
 				StringsTableName
 			};
+		}
+
+		public string GetNameByType(Type dataType)
+		{
+			if (dataType.IsAnyIntegerNumberType())
+				return IntegersTableName;
+
+			if (dataType.IsAnyFractalNumberType())
+				return FractalsTableName;
+
+			if (dataType.IsAnyBoolType())
+				return BooleansTableName;
+
+			if (dataType.IsAnyDateTimeType())
+				return DatesTableName;
+
+			if (dataType.IsAnyGuidType())
+				return GuidsTableName;
+
+			return StringsTableName;
 		}
 	}
 }

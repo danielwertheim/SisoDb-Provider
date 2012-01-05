@@ -19,29 +19,31 @@ namespace SisoDb.DbSchema
 
 		public string[] GenerateSql(IStructureSchema structureSchema, IndexesTableStatuses indexesTableStatuses)
 		{
-			var indexesTableNames = structureSchema.GetIndexesTableNames();
+			if(indexesTableStatuses.AllExists)
+				return new string[]{};
+
 			var structureTableName = structureSchema.GetStructureTableName();
 			var sqlTemplateNameSuffix = GetSqlTemplateNameSuffix(structureSchema.IdAccessor.IdType);
 			var generators = new Func<string>[]
 			{
-				() => indexesTableStatuses.IntegersTableExists 
-					? GenerateSqlForIntegers(sqlTemplateNameSuffix, structureTableName, indexesTableNames.IntegersTableName) 
-					: "",
-				() => indexesTableStatuses.FractalsTableExists 
-					?GenerateSqlForFractals(sqlTemplateNameSuffix, structureTableName, indexesTableNames.FractalsTableName) 
-					: "",
-				() => indexesTableStatuses.BooleansTableExists 
-					? GenerateSqlForBooleans(sqlTemplateNameSuffix, structureTableName, indexesTableNames.BooleansTableName) 
-					: "",
-				() => indexesTableStatuses.DatesTableExists 
-					? GenerateSqlForDates(sqlTemplateNameSuffix, structureTableName, indexesTableNames.DatesTableName) 
-					: "",
-				() => indexesTableStatuses.GuidsTableExists 
-					? GenerateSqlForGuids(sqlTemplateNameSuffix, structureTableName, indexesTableNames.GuidsTableName) 
-					: "",
-				() => indexesTableStatuses.StringsTableExists 
-					? GenerateSqlForStrings(sqlTemplateNameSuffix, structureTableName, indexesTableNames.StringsTableName) 
-					: ""
+				() => !indexesTableStatuses.IntegersTableExists 
+					? GenerateSqlForIntegers(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.IntegersTableName) 
+					: string.Empty,
+				() => !indexesTableStatuses.FractalsTableExists 
+					? GenerateSqlForFractals(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.FractalsTableName) 
+					: string.Empty,
+				() => !indexesTableStatuses.BooleansTableExists 
+					? GenerateSqlForBooleans(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.BooleansTableName) 
+					: string.Empty,
+				() => !indexesTableStatuses.DatesTableExists 
+					? GenerateSqlForDates(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.DatesTableName) 
+					: string.Empty,
+				() => !indexesTableStatuses.GuidsTableExists 
+					? GenerateSqlForGuids(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.GuidsTableName) 
+					: string.Empty,
+				() => !indexesTableStatuses.StringsTableExists 
+					? GenerateSqlForStrings(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.StringsTableName) 
+					: string.Empty
 			};
 
 			return generators.Select(generator => generator()).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();

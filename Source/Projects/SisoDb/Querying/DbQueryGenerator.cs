@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
-using NCore.Collections;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.Querying
 {
@@ -94,7 +92,7 @@ namespace SisoDb.Querying
             var wheres = sqlExpression.WhereMembers.ToList();
             var sortings = sqlExpression.SortingMembers.ToList();
 
-			var indexesTableName = query.StructureSchema.GetIndexesTableName();
+			var indexesTableNames = query.StructureSchema.GetIndexesTableNames();
 
             var joins = new List<string>(wheres.Count + sortings.Count);
 
@@ -104,7 +102,7 @@ namespace SisoDb.Querying
             {
                 joins.AddRange(wheres.Select(where =>
                     string.Format(joinFormat,
-                    indexesTableName,
+                    indexesTableNames.GetNameByType(where.DataType),
                     where.Index,
                     where.MemberPath)));
             }
@@ -113,7 +111,7 @@ namespace SisoDb.Querying
             {
                 joins.AddRange(sortings.Select(sorting =>
                     string.Format(joinFormat,
-                    indexesTableName,
+					indexesTableNames.GetNameByType(sorting.DataType),
                     sorting.Index,
                     sorting.MemberPath)));
             }
@@ -127,19 +125,21 @@ namespace SisoDb.Querying
         }
 
 		protected virtual string GenerateMatchingIncludesJoins(IQuery query, ISqlExpression sqlExpression)
-        {
-            var includes = sqlExpression.Includes.ToList();
-            if (includes.Count == 0)
-                return string.Empty;
+		{
+			return string.Empty;
+			//TODO: FIX
+			//var includes = sqlExpression.Includes.ToList();
+			//if (includes.Count == 0)
+			//    return string.Empty;
 
-            var indexesJoinString = string.Format("inner join [{0}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in ({1})",
-				query.StructureSchema.GetIndexesTableName(),
-                string.Join(", ", includes.Select(inc => string.Format("'{0}'", inc.MemberPathReference))));
+			//var indexesJoinString = string.Format("inner join [{0}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in ({1})",
+			//    query.StructureSchema.GetIndexesTableName(),
+			//    string.Join(", ", includes.Select(inc => string.Format("'{0}'", inc.MemberPathReference))));
 
-            const string joinFormat = "left join [{0}] cs{1} on cs{1}.[StructureId] = si.[{2}] and si.[MemberPath] = '{3}'";
+			//const string joinFormat = "left join [{0}] cs{1} on cs{1}.[StructureId] = si.[{2}] and si.[MemberPath] = '{3}'";
 
-            return string.Join(" ", new [] { indexesJoinString }.MergeWith(includes.Select(inc => string.Format(joinFormat, inc.TableName, inc.Index, inc.IndexValueColumnName, inc.MemberPathReference))));
-        }
+			//return string.Join(" ", new [] { indexesJoinString }.MergeWith(includes.Select(inc => string.Format(joinFormat, inc.TableName, inc.Index, inc.IndexValueColumnName, inc.MemberPathReference))));
+		}
 
         protected virtual string GenerateIncludesJoins(ISqlExpression sqlExpression)
         {

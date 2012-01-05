@@ -1,7 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
 using PineCone.Structures.Schemas;
-using SisoDb.Structures;
+using SisoDb.DbSchema;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database

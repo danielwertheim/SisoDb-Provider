@@ -4,7 +4,6 @@ using Machine.Specifications;
 using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
-using SisoDb.Structures;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database

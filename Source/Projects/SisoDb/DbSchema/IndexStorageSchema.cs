@@ -18,7 +18,8 @@ namespace SisoDb.DbSchema
         {
             Fields.StructureId,
             Fields.MemberPath,
-            Fields.Value
+            Fields.Value,
+			Fields.StringValue
         };
 
     	public IndexStorageSchema(IStructureSchema structureSchema, string storageSchemaName) 

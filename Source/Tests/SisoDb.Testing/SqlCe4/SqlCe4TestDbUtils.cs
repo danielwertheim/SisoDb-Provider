@@ -12,7 +12,6 @@ using PineCone.Structures.Schemas;
 using SisoDb.Core.Io;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Structures;
 
 namespace SisoDb.Testing.SqlCe4
 {

@@ -61,7 +61,7 @@ namespace SisoDb.Querying.Sql
         			var memNode = (MemberNode) node;
 					var memberIndex = expression.GetExistingOrNewMemberIndexFor(memNode.Path);
 					if (!expression.ContainsWhereMemberFor(memNode.Path))
-						expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex));
+						expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex, memNode.MemberType));
 
         			if (memNode.MemberType.IsAnyBoolType())
         			{
@@ -105,7 +105,7 @@ namespace SisoDb.Querying.Sql
 
             foreach (var sortingNode in sortingsLambda.Nodes.OfType<SortingNode>())
             {
-                var valueField = IndexStorageSchema.GetValueSchemaFieldForType(sortingNode.MemberType);
+                var valueField = IndexStorageSchema.Fields.Value;
 
                 if(expression.ContainsSortingMemberFor(sortingNode.MemberPath))
                     continue;
@@ -116,7 +116,8 @@ namespace SisoDb.Querying.Sql
                     memberIndex,
                     sortingNode.MemberPath,
                     valueField.Name,
-                    sortingNode.Direction.ToString()));
+                    sortingNode.Direction.ToString(), 
+					sortingNode.MemberType));
             }
         }
 
@@ -130,9 +131,10 @@ namespace SisoDb.Querying.Sql
                 expression.AddInclude(new SqlInclude(
                     expression.GetNextNewIncludeIndex(),
                     includeNode.ReferencedStructureName,
-                    IndexStorageSchema.GetValueSchemaFieldForType(includeNode.MemberType).Name,
+                    IndexStorageSchema.Fields.Value.Name,
                     includeNode.IdReferencePath,
-                    includeNode.ObjectReferencePath));
+                    includeNode.ObjectReferencePath,
+					includeNode.MemberType));
             }
         }
     }

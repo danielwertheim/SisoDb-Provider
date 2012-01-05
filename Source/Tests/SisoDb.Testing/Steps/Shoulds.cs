@@ -8,7 +8,6 @@ using NCore;
 using NCore.Expressions;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
-using SisoDb.Structures;
 
 namespace SisoDb.Testing.Steps
 {

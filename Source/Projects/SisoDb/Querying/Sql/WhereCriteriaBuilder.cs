@@ -79,9 +79,9 @@ namespace SisoDb.Querying.Sql
                 memFormat = string.Format("upper({0})", memFormat);
 
 			if (member is StartsWithMemberNode || member is EndsWithMemberNode)
-				return string.Format(memFormat, memberIndex, IndexStorageSchema.GetValueSchemaFieldForType(typeof(string)).Name);
+				return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name);
 
-            return string.Format(memFormat, memberIndex, IndexStorageSchema.GetValueSchemaFieldForType(member.MemberType).Name);
+            return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
         }
 
         internal void AddOp(OperatorNode op)

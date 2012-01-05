@@ -29,9 +29,9 @@ namespace SisoDb.Dac.BulkInserts
             else
                 BulkInsertStructures(structureSchema, structures);
 
-            BulkInsertIndexes(structureSchema, structures);
+			BulkInsertIndexes(structureSchema, structures);
 
-            BulkInsertUniques(structureSchema, structures);
+			BulkInsertUniques(structureSchema, structures);
         }
 
         protected virtual void SingleInsertStructure(IStructureSchema structureSchema, IStructure structure)
@@ -70,7 +70,6 @@ namespace SisoDb.Dac.BulkInserts
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
         	var structureIndexes = structures.SelectMany(s => s.Indexes);
 
-			//TODO: Do in parallel
 			BulkInsertIndexes(structureSchema, indexesTableNames.IntegersTableName, structureIndexes.Where(i => i.DataType.IsAnyIntegerNumberType()));
 			BulkInsertIndexes(structureSchema, indexesTableNames.FractalsTableName, structureIndexes.Where(i => i.DataType.IsAnyFractalNumberType()));
 			BulkInsertIndexes(structureSchema, indexesTableNames.BooleansTableName, structureIndexes.Where(i => i.DataType.IsAnyBoolType()));
@@ -93,12 +92,13 @@ namespace SisoDb.Dac.BulkInserts
 					bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
 
 					var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex();
-					if (!storeAdditionalStringValue)
-						fields = fields.Where(f => f.Name != IndexStorageSchema.Fields.StringValue.Name);
-
 					foreach (var field in fields)
-						bulkInserter.AddColumnMapping(field.Name, field.Name);
+					{
+						if(field.Name == IndexStorageSchema.Fields.StringValue.Name && !storeAdditionalStringValue)
+							continue;
 
+						bulkInserter.AddColumnMapping(field.Name, field.Name);
+					}
 					bulkInserter.Write(indexesReader);
 				}
 			}

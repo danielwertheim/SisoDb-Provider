@@ -73,9 +73,10 @@ namespace SisoDb.DbSchema
 
 			if(!uniquesTableExists)
 				yield return _uniquesDbSchemaBuilder.GenerateSql(structureSchema);
-
-			foreach (var sql in _indexesDbSchemaBuilder.GenerateSql(structureSchema, indexesTableStatuses))
-				yield return sql;
+			
+			if(!indexesTableStatuses.AllExists)
+				foreach (var sql in _indexesDbSchemaBuilder.GenerateSql(structureSchema, indexesTableStatuses))
+					yield return sql;
 		}
 	}
 }

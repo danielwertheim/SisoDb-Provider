@@ -9,8 +9,8 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Core;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
-using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4.Dac
 {
@@ -38,7 +38,10 @@ namespace SisoDb.SqlCe4.Dac
 
         public override void Drop(IStructureSchema structureSchema)
         {
-            var indexesTableExists = TableExists(structureSchema.GetIndexesTableName());
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+        	var indexesTableNames = structureSchema.GetIndexesTableNames();
+        	var indexesTableStatuses = GetIndexesTableStatuses(indexesTableNames);
             var uniquesTableExists = TableExists(structureSchema.GetUniquesTableName());
             var structureTableExists = TableExists(structureSchema.GetStructureTableName());
 
@@ -46,11 +49,7 @@ namespace SisoDb.SqlCe4.Dac
 
             using (var cmd = CreateCommand(string.Empty, new DacParameter("entityHash", structureSchema.Hash)))
             {
-                if (indexesTableExists)
-                {
-                    cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetIndexesTableName());
-                    cmd.ExecuteNonQuery();
-                }
+				DropIndexesTables(cmd, indexesTableStatuses);
 
                 if (uniquesTableExists)
                 {
@@ -68,6 +67,60 @@ namespace SisoDb.SqlCe4.Dac
                 cmd.ExecuteNonQuery();
             }
         }
+
+		private void DropIndexesTables(IDbCommand cmd, IndexesTableStatuses indexesTableStatuses)
+		{
+			var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
+
+			if (indexesTableStatuses.IntegersTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.IntegersTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.FractalsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.FractalsTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.BooleansTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.BooleansTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.DatesTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.DatesTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.GuidsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.GuidsTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.StringsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.StringsTableName);
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		private IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
+		{
+			return new IndexesTableStatuses(names)
+			{
+				IntegersTableExists = TableExists(names.IntegersTableName),
+				FractalsTableExists = TableExists(names.FractalsTableName),
+				DatesTableExists = TableExists(names.DatesTableName),
+				BooleansTableExists = TableExists(names.BooleansTableName),
+				GuidsTableExists = TableExists(names.GuidsTableName),
+				StringsTableExists = TableExists(names.StringsTableName)
+			};
+		}
 
         public override void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
         {
