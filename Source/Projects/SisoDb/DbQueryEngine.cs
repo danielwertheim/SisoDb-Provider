@@ -6,9 +6,9 @@ using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb
 {

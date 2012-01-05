@@ -25,6 +25,9 @@ namespace SisoDb.Dac.BulkInserts
         	if (schemaField.Name == IndexStorageSchema.Fields.Value.Name)
         		return Enumerator.Current.Value;
 
+        	if (schemaField.Name == IndexStorageSchema.Fields.StringValue.Name)
+        		return SisoEnvironment.StringConverter.AsString(Enumerator.Current.Value);
+
         	throw new NotSupportedException();
         }
     }

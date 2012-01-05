@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NCore;
+using NCore.Reflections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
@@ -47,7 +48,7 @@ namespace SisoDb.Dac.BulkInserts
 
         protected virtual void BulkInsertStructures(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
-            var structureStorageSchema = new StructureStorageSchema(structureSchema);
+            var structureStorageSchema = new StructureStorageSchema(structureSchema, structureSchema.GetStructureTableName());
 
             using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
             {
@@ -66,24 +67,42 @@ namespace SisoDb.Dac.BulkInserts
 
         protected virtual void BulkInsertIndexes(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
-            var indexesStorageSchema = new IndexStorageSchema(structureSchema);
+			var indexesTableNames = structureSchema.GetIndexesTableNames();
+        	var structureIndexes = structures.SelectMany(s => s.Indexes);
 
-            using (var indexesReader = new IndexesReader(indexesStorageSchema, structures.SelectMany(s => s.Indexes)))
-            {
-                using (var bulkInserter = _dbClient.GetBulkCopy())
-                {
-                    bulkInserter.BatchSize = indexesReader.RecordsAffected > MaxIndexesBatchSize
+			//TODO: Do in parallel
+			BulkInsertIndexes(structureSchema, indexesTableNames.IntegersTableName, structureIndexes.Where(i => i.DataType.IsAnyIntegerNumberType()));
+			BulkInsertIndexes(structureSchema, indexesTableNames.FractalsTableName, structureIndexes.Where(i => i.DataType.IsAnyFractalNumberType()));
+			BulkInsertIndexes(structureSchema, indexesTableNames.BooleansTableName, structureIndexes.Where(i => i.DataType.IsAnyBoolType()));
+			BulkInsertIndexes(structureSchema, indexesTableNames.DatesTableName, structureIndexes.Where(i => i.DataType.IsAnyDateTimeType()));
+			BulkInsertIndexes(structureSchema, indexesTableNames.GuidsTableName, structureIndexes.Where(i => i.DataType.IsAnyGuidType()));
+			BulkInsertIndexes(structureSchema, indexesTableNames.StringsTableName, structureIndexes.Where(i => i.DataType.IsStringType() || i.DataType.IsAnyEnumType()), false);
+        }
+
+		protected virtual void BulkInsertIndexes(IStructureSchema structureSchema, string indexesTableName, IEnumerable<IStructureIndex> structureIndexes, bool storeAdditionalStringValue = true)
+		{
+			var indexesStorageSchema = new IndexStorageSchema(structureSchema, indexesTableName);
+
+			using (var indexesReader = new IndexesReader(indexesStorageSchema, structureIndexes))
+			{
+				using (var bulkInserter = _dbClient.GetBulkCopy())
+				{
+					bulkInserter.BatchSize = indexesReader.RecordsAffected > MaxIndexesBatchSize
 						? MaxIndexesBatchSize
 						: indexesReader.RecordsAffected;
-                    bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
+					bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
 
-                    foreach (var field in indexesReader.StorageSchema.GetFieldsOrderedByIndex())
-                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+					var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex();
+					if (!storeAdditionalStringValue)
+						fields = fields.Where(f => f.Name != IndexStorageSchema.Fields.StringValue.Name);
 
-                    bulkInserter.Write(indexesReader);
-                }
-            }
-        }
+					foreach (var field in fields)
+						bulkInserter.AddColumnMapping(field.Name, field.Name);
+
+					bulkInserter.Write(indexesReader);
+				}
+			}
+		}
 
         protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
@@ -91,7 +110,7 @@ namespace SisoDb.Dac.BulkInserts
             if (uniques.Length <= 0)
                 return;
 
-            var uniquesStorageSchema = new UniqueStorageSchema(structureSchema);
+            var uniquesStorageSchema = new UniqueStorageSchema(structureSchema, structureSchema.GetUniquesTableName());
 
             using (var uniquesReader = new UniquesReader(uniquesStorageSchema, uniques))
             {

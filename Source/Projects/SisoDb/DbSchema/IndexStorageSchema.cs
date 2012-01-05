@@ -11,6 +11,7 @@ namespace SisoDb.DbSchema
             public static readonly SchemaField StructureId = new SchemaField(0, "StructureId");
             public static readonly SchemaField MemberPath = new SchemaField(1, "MemberPath");
             public static readonly SchemaField Value = new SchemaField(2, "Value");
+			public static readonly SchemaField StringValue = new SchemaField(3, "StringValue");
         }
         
         public static readonly SchemaField[] OrderedFields = new[]
