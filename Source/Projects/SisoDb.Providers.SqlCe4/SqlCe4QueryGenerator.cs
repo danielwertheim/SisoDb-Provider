@@ -21,12 +21,10 @@ namespace SisoDb.SqlCe4
 				Take = GenerateTakeString(query),
                 IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
 				OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
-                IncludedRowIds = GenerateIncludedRowIdsString(sqlExpression),
 				MainStructureTable = query.StructureSchema.GetStructureTableName(),
 				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
-				MatchingIncludesJoins = GenerateMatchingIncludeJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
-                IncludesJoins = GenerateIncludesJoins(sqlExpression),
+                IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
 				OrderBy = GenerateOrderByString(query, sqlExpression),
 				Paging = GeneratePagingString(query, sqlExpression)
             };

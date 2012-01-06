@@ -58,7 +58,7 @@ namespace SisoDb.Querying
 		protected virtual IList<IParsedLambda> ParseIncludeLambdas(IEnumerable<KeyValuePair<string, List<LambdaExpression>>> includes)
 		{
 			return includes.Select(keyValuePair =>
-			                       ExpressionParsers.IncludeParser.Parse(keyValuePair.Key, keyValuePair.Value.ToArray())).ToList();
+				ExpressionParsers.IncludeParser.Parse(keyValuePair.Key, keyValuePair.Value.ToArray())).ToList();
 		}
 
 		protected virtual IParsedLambda ParseWhereLambdas(IEnumerable<LambdaExpression> wheres)

@@ -12,10 +12,8 @@ namespace SisoDb.Querying.Sql
         private const string TakePart = "Take";
         private const string IncludedJsonMembersPart = "IncludedJsonMembers";
         private const string OrderByMembersPart = "OrderByMembers";
-        private const string IncludedRowIdsPart = "IncludedRowIds";
         private const string MainStructureTablePart = "MainStructureTable";
         private const string WhereAndSortingJoinsPart = "WhereAndSortingJoins";
-        private const string MatchingIncludesJoinsPart = "MatchingIncludesJoins";
         private const string WhereCriteriaPart = "WhereCriteria";
         private const string IncludesJoinsPart = "IncludesJoins";
         private const string OrderByPart = "OrderBy";
@@ -31,10 +29,8 @@ namespace SisoDb.Querying.Sql
                 {TakePart, ""},
                 {IncludedJsonMembersPart, ""},
                 {OrderByMembersPart, ""},
-                {IncludedRowIdsPart, ""},
                 {MainStructureTablePart, ""},
                 {WhereAndSortingJoinsPart, ""},
-                {MatchingIncludesJoinsPart, ""},
                 {IncludesJoinsPart, ""},
                 {OrderByPart, ""},
                 {PagingPart, ""},
@@ -68,11 +64,6 @@ namespace SisoDb.Querying.Sql
             set { SetValue(OrderByMembersPart, value.PrependWith(", ")); }
         }
 
-        public string IncludedRowIds
-        {
-            set { SetValue(IncludedRowIdsPart, value.PrependWith(", ")); }
-        }
-
         public string MainStructureTable
         {
             set { SetValue(MainStructureTablePart, value); }
@@ -81,11 +72,6 @@ namespace SisoDb.Querying.Sql
         public string WhereAndSortingJoins
         {
             set { SetValue(WhereAndSortingJoinsPart, value.PrependWith(" ")); }
-        }
-
-        public string MatchingIncludesJoins
-        {
-            set { SetValue(MatchingIncludesJoinsPart, value.PrependWith(" ")); }
         }
 
         public string WhereCriteria
