@@ -181,21 +181,32 @@ namespace SisoDb.Specifications.QueryEngine
             internal static Album SetupStructuresForIncludes(ITestContext testContext)
             {
                 var genre = new Genre { Name = "Rock" };
+            	var secondGenre = new Genre {Name = "Pop"};
+
                 var artist = new Artist { Name = "Bruce" };
                 var secondArtist = new Artist { Name = "e-street" };
-                var album = new Album
+				var thirdArtist = new Artist { Name = "Foo artist" };
+                
+				var album = new Album
                 {
                     Name = "Born to run",
                     Genre = genre,
                     Artist = artist,
                     SecondArtist = secondArtist
                 };
+				var secondAlbum = new Album
+				{
+					Name = "Born to run (pop version)",
+					Genre = secondGenre,
+					Artist = artist,
+					SecondArtist = secondArtist
+				};
 
                 testContext.Database.WithUnitOfWork(uow =>
                 {
-                    uow.Insert(genre);
-                    uow.InsertMany<Artist>(new[] { artist, secondArtist });
-                    uow.Insert<IAlbumData>(album);
+                    uow.InsertMany(new [] { genre, secondGenre });
+                    uow.InsertMany(new [] { artist, secondArtist, thirdArtist });
+                    uow.InsertMany<IAlbumData>(new [] { album, secondAlbum });
                     uow.Commit();
                 });
 

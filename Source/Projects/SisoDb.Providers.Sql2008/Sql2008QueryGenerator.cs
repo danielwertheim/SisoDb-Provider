@@ -26,7 +26,7 @@ namespace SisoDb.Sql2008
                 IncludedRowIds = GenerateIncludedRowIdsString(sqlExpression),
 				MainStructureTable = query.StructureSchema.GetStructureTableName(),
 				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
-				MatchingIncludesJoins = GenerateMatchingIncludesJoins(query, sqlExpression),
+				MatchingIncludesJoins = GenerateMatchingIncludeJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
                 IncludesJoins = GenerateIncludesJoins(sqlExpression),
 				OrderBy = GenerateOrderByString(query, sqlExpression),

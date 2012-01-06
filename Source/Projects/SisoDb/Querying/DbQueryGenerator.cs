@@ -124,7 +124,7 @@ namespace SisoDb.Querying
             return sqlExpression.WhereCriteria.CriteriaString;
         }
 
-		protected virtual string GenerateMatchingIncludesJoins(IQuery query, ISqlExpression sqlExpression)
+		protected virtual string GenerateMatchingIncludeJoins(IQuery query, ISqlExpression sqlExpression)
 		{
 			return string.Empty;
 			//TODO: FIX
