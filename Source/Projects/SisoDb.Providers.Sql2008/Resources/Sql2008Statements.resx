@@ -245,7 +245,8 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [StringValue] [varchar](36) null);
 
 create nonclustered index [IX_{0}_Q]
-on [dbo].[{0}] ([MemberPath],[Value]);
+on [dbo].[{0}] ([MemberPath],[Value])
+include([StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -257,7 +258,8 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [StringValue] [varchar](36) null);
 
 create nonclustered index [IX_{0}_Q]
-on [dbo].[{0}] ([MemberPath],[Value]);
+on [dbo].[{0}] ([MemberPath],[Value])
+include([StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -269,7 +271,8 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [StringValue] [varchar](36) null);
 
 create nonclustered index [IX_{0}_Q]
-on [dbo].[{0}] ([MemberPath],[Value]);
+on [dbo].[{0}] ([MemberPath],[Value])
+include([StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -350,29 +353,20 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[RowId] [bigint] identity(1,1) not null,
 [StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key ([StructureId]),
-[Json] [nvarchar](max) not null);
-
-create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);</value>
+[Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[RowId] [bigint] identity(1,1) not null,
 [StructureId] [bigint] not null constraint [PK_{0}] primary key ([StructureId]),
 [Json] [nvarchar](max) not null);
-
-create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);
 
 insert into [dbo].[SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[RowId] [bigint] identity(1,1) not null,
 [StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key ([StructureId]),
-[Json] [nvarchar](max) not null);
-
-create unique index [UQ_{0}_RowId] on [{0}] ([RowId]);</value>
+[Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
