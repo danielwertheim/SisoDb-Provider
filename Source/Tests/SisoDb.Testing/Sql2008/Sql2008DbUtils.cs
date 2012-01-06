@@ -201,15 +201,15 @@ namespace SisoDb.Testing.Sql2008
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
-        public bool IndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
+        public bool AnyIndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
         {
 			var memberPath = GetMemberPath(member);
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
 			foreach (var indexesTableName in indexesTableNames.AllTableNames)
-				if (RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) == 0)
-					return false;
+				if (RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0)
+					return true;
 
-			return true;
+			return false;
         }
 
         public bool UniquesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class

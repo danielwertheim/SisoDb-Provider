@@ -141,7 +141,7 @@ on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateBooleansIndexesStrings" xml:space="preserve">
+  <data name="CreateBooleansIndexesString" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
@@ -177,7 +177,7 @@ on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateDatesIndexesStrings" xml:space="preserve">
+  <data name="CreateDatesIndexesString" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
@@ -213,7 +213,7 @@ on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateFractalsIndexesStrings" xml:space="preserve">
+  <data name="CreateFractalsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
@@ -249,7 +249,7 @@ on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateGuidsIndexesStrings" xml:space="preserve">
+  <data name="CreateGuidsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
@@ -285,7 +285,7 @@ on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateIntegersIndexesStrings" xml:space="preserve">
+  <data name="CreateIntegersIndexesString" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
@@ -319,7 +319,7 @@ on [{0}] ([StructureId], [MemberPath]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateStringsIndexesStrings" xml:space="preserve">
+  <data name="CreateStringsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,

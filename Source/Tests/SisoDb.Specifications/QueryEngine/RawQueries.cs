@@ -55,7 +55,7 @@ namespace SisoDb.Specifications.QueryEngine
 
 			Because of = () =>
 			{
-				var query = new RawQuery("select s.[Json] from (select s.[StructureId] from [QueryGuidItemStructure] s inner join [QueryGuidItemIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'SortOrder' where (mem0.[IntegerValue] between @minSortOrder and @maxSortOrder) group by s.[StructureId]) rs inner join [QueryGuidItemStructure] s on s.[StructureId] = rs.[StructureId];");
+				var query = new RawQuery("select s.[Json] from (select s.[StructureId] from [QueryGuidItemStructure] s inner join [QueryGuidItemIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'SortOrder' where (mem0.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId]) rs inner join [QueryGuidItemStructure] s on s.[StructureId] = rs.[StructureId];");
 				query.Add(
 					new DacParameter("minSortOrder", _structures[1].SortOrder),
 					new DacParameter("maxSortOrder", _structures[2].SortOrder));
@@ -87,7 +87,7 @@ namespace SisoDb.Specifications.QueryEngine
 
 			Because of = () =>
 			{
-				var query = new RawQuery("select s.[Json] from (select s.[StructureId] from [QueryGuidItemStructure] s inner join [QueryGuidItemIndexes] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'SortOrder' where (mem0.[IntegerValue] between @minSortOrder and @maxSortOrder) group by s.[StructureId]) rs inner join [QueryGuidItemStructure] s on s.[StructureId] = rs.[StructureId];");
+				var query = new RawQuery("select s.[Json] from (select s.[StructureId] from [QueryGuidItemStructure] s inner join [QueryGuidItemIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'SortOrder' where (mem0.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId]) rs inner join [QueryGuidItemStructure] s on s.[StructureId] = rs.[StructureId];");
 				query.Add(
 					new DacParameter("minSortOrder", _structures[1].SortOrder),
 					new DacParameter("maxSortOrder", _structures[2].SortOrder));

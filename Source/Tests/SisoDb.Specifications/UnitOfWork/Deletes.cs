@@ -43,10 +43,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -55,10 +55,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<GuidItem> _structures;
@@ -96,10 +96,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -108,10 +108,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<StringItem> _structures;
@@ -149,10 +149,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -161,10 +161,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<IdentityItem> _structures;
@@ -203,10 +203,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -215,10 +215,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<GuidItem> _structures;
@@ -257,10 +257,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_uniques_table =
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[0].StructureId);
@@ -275,10 +275,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_uniques_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[1].StructureId);
@@ -323,10 +323,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -335,10 +335,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<StringItem> _structures;
@@ -377,10 +377,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_uniques_table =
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[0].StructureId);
@@ -395,10 +395,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_uniques_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[1].StructureId);
@@ -443,10 +443,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -455,10 +455,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<IdentityItem> _structures;
@@ -497,10 +497,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_uniques_table =
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[0].StructureId);
@@ -515,10 +515,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_uniques_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[1].StructureId);
@@ -563,10 +563,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -575,10 +575,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<BigIdentityItem> _structures;
@@ -617,10 +617,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_uniques_table =
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_uniques_table(_structureSchema, _structures[0].StructureId);
@@ -635,10 +635,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_uniques_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_uniques_table(_structureSchema, _structures[1].StructureId);
@@ -748,10 +748,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -760,10 +760,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<GuidItem> _structures;
@@ -801,10 +801,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -813,10 +813,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<StringItem> _structures;
@@ -854,10 +854,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -866,10 +866,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<IdentityItem> _structures;
@@ -907,10 +907,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -919,10 +919,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<BigIdentityItem> _structures;
@@ -1026,10 +1026,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -1038,10 +1038,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<IdentityItem> _structures;
@@ -1079,10 +1079,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
 
             It should_not_have_deleted_first_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[0].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[0].StructureId);
 
             It should_not_have_deleted_last_item_from_indexes_table =
-                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_table(_structureSchema, _structures[3].StructureId);
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_indexes_tables(_structureSchema, _structures[3].StructureId);
 
             It should_have_deleted_second_item_from_structures_table =
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
@@ -1091,10 +1091,10 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
 
             It should_have_deleted_second_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[1].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
 
             It should_have_deleted_third_item_from_indexes_table =
-                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_table(_structureSchema, _structures[2].StructureId);
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
 
             private static IStructureSchema _structureSchema;
             private static IList<BigIdentityItem> _structures;

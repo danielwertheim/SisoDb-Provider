@@ -23,18 +23,21 @@ namespace SisoDb.Testing.Steps
 			db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(1);
 		}
 
-		public static void should_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
+		public static void should_have_been_deleted_from_indexes_tables(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
 		{
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
 			foreach (var indexesTableName in indexesTableNames.AllTableNames)
 				db.RowCount(indexesTableName, "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(0);
 		}
 
-		public static void should_not_have_been_deleted_from_indexes_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
+		public static void should_not_have_been_deleted_from_indexes_tables(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
 		{
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
+			var countSum = 0;
 			foreach (var indexesTableName in indexesTableNames.AllTableNames)
-				db.RowCount(indexesTableName, "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldBeGreaterThan(0);
+				countSum += db.RowCount(indexesTableName, "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId));
+
+			countSum.ShouldBeGreaterThan(0);
 		}
 
 		public static void should_have_been_deleted_from_uniques_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)

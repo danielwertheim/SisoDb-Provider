@@ -143,7 +143,7 @@ include ([StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateBooleansIndexesStrings" xml:space="preserve">
+  <data name="CreateBooleansIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
@@ -185,7 +185,7 @@ include ([StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateDatesIndexesStrings" xml:space="preserve">
+  <data name="CreateDatesIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
@@ -224,7 +224,7 @@ include ([StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateFractalsIndexesStrings" xml:space="preserve">
+  <data name="CreateFractalsIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
@@ -261,7 +261,7 @@ on [dbo].[{0}] ([MemberPath],[Value]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateGuidsIndexesStrings" xml:space="preserve">
+  <data name="CreateGuidsIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
@@ -299,7 +299,7 @@ include ([StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateIntegersIndexesStrings" xml:space="preserve">
+  <data name="CreateIntegersIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
@@ -336,7 +336,7 @@ include([StructureId], [Value]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
-  <data name="CreateStringsIndexesStrings" xml:space="preserve">
+  <data name="CreateStringsIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
@@ -435,15 +435,16 @@ begin
 end</value>
   </data>
   <data name="DropStructureTables" xml:space="preserve">
-    <value>if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[SisoDbIdentities] where [EntityHash] = @entityHash;
-if object_id(N'{0}', N'U') is not null drop table [dbo].[{0}];
+    <value>if object_id(N'{0}', N'U') is not null drop table [dbo].[{0}];
 if object_id(N'{1}', N'U') is not null drop table [dbo].[{1}];
 if object_id(N'{2}', N'U') is not null drop table [dbo].[{2}];
-if object_id(N'{2}', N'U') is not null drop table [dbo].[{3}];
-if object_id(N'{2}', N'U') is not null drop table [dbo].[{4}];
-if object_id(N'{2}', N'U') is not null drop table [dbo].[{5}];
-if object_id(N'{2}', N'U') is not null drop table [dbo].[{6}];
-if object_id(N'{2}', N'U') is not null drop table [dbo].[{7}];</value>
+if object_id(N'{3}', N'U') is not null drop table [dbo].[{3}];
+if object_id(N'{4}', N'U') is not null drop table [dbo].[{4}];
+if object_id(N'{5}', N'U') is not null drop table [dbo].[{5}];
+if object_id(N'{6}', N'U') is not null drop table [dbo].[{6}];
+if object_id(N'{7}', N'U') is not null drop table [dbo].[{7}];
+
+if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[SisoDbIdentities] where [EntityHash] = @entityHash;</value>
   </data>
   <data name="GetAllJson" xml:space="preserve">
     <value>set nocount on;

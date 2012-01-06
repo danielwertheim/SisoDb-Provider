@@ -40,7 +40,7 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.Database.should_have_identical_structures(_structure);
 
             It should_store_base_member_in_indexes_table = 
-                () => TestContext.DbHelper.IndexesTableHasMember<MyItem>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<MyItem>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
 
             It should_store_unique_base_member_in_uniques_table = 
                 () => TestContext.DbHelper.UniquesTableHasMember<MyItem>(_structureSchema, _structure.StructureId, x => x.MyItemBaseUniqueInt).ShouldBeTrue();
@@ -81,7 +81,7 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.Database.should_have_one_structure_with_json_containing<MyItemBase, MyItem>(x => x.MyItemInt);
 
             It should_store_base_member_in_indexes_table =
-                () => TestContext.DbHelper.IndexesTableHasMember<MyItemBase>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<MyItemBase>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
 
             It should_store_unique_base_member_in_uniques_table =
                 () => TestContext.DbHelper.UniquesTableHasMember<MyItemBase>(_structureSchema, _structure.StructureId, x => x.MyItemBaseUniqueInt).ShouldBeTrue();

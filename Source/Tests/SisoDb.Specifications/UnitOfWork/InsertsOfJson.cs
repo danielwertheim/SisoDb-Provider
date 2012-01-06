@@ -121,14 +121,14 @@ namespace SisoDb.Specifications.UnitOfWork
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<JsonItem>(1);
 
-            It should_not_map_back_member_with_wrong_casing = () =>
+            It should_map_back_member_with_wrong_casing = () =>
             {
                 JsonItem structure;
 
                 using (var qe = TestContext.Database.CreateQueryEngine())
                     structure = qe.Query<JsonItem>().Single();
 
-                structure.String1.ShouldNotEqual("1");
+                structure.String1.ShouldEqual("1");
             };
 
             private static string _json;
