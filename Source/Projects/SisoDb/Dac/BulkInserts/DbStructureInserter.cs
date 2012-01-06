@@ -70,12 +70,12 @@ namespace SisoDb.Dac.BulkInserts
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
         	var structureIndexes = structures.SelectMany(s => s.Indexes);
 
-			BulkInsertIndexes(structureSchema, indexesTableNames.IntegersTableName, structureIndexes.Where(i => i.DataType.IsAnyIntegerNumberType()));
-			BulkInsertIndexes(structureSchema, indexesTableNames.FractalsTableName, structureIndexes.Where(i => i.DataType.IsAnyFractalNumberType()));
-			BulkInsertIndexes(structureSchema, indexesTableNames.BooleansTableName, structureIndexes.Where(i => i.DataType.IsAnyBoolType()));
-			BulkInsertIndexes(structureSchema, indexesTableNames.DatesTableName, structureIndexes.Where(i => i.DataType.IsAnyDateTimeType()));
-			BulkInsertIndexes(structureSchema, indexesTableNames.GuidsTableName, structureIndexes.Where(i => i.DataType.IsAnyGuidType()));
-			BulkInsertIndexes(structureSchema, indexesTableNames.StringsTableName, structureIndexes.Where(i => i.DataType.IsStringType() || i.DataType.IsAnyEnumType()), false);
+			BulkInsertIndexes(structureSchema, indexesTableNames.IntegersTableName, structureIndexes.Where(i => i.DataType == DataType.IntegerNumber));
+			BulkInsertIndexes(structureSchema, indexesTableNames.FractalsTableName, structureIndexes.Where(i => i.DataType == DataType.FractalNumber));
+			BulkInsertIndexes(structureSchema, indexesTableNames.BooleansTableName, structureIndexes.Where(i => i.DataType == DataType.Bool));
+			BulkInsertIndexes(structureSchema, indexesTableNames.DatesTableName, structureIndexes.Where(i => i.DataType == DataType.DateTime));
+			BulkInsertIndexes(structureSchema, indexesTableNames.GuidsTableName, structureIndexes.Where(i => i.DataType == DataType.Guid));
+			BulkInsertIndexes(structureSchema, indexesTableNames.StringsTableName, structureIndexes.Where(i => i.DataType == DataType.String || i.DataType == DataType.Enum), false);
         }
 
 		protected virtual void BulkInsertIndexes(IStructureSchema structureSchema, string indexesTableName, IEnumerable<IStructureIndex> structureIndexes, bool storeAdditionalStringValue = true)

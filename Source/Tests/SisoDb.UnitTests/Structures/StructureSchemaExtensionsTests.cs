@@ -25,9 +25,14 @@ namespace SisoDb.UnitTests.Structures
             var schemaFake = new Mock<IStructureSchema>();
             schemaFake.Setup(s => s.Name).Returns("Customer");
 
-            var tableName = schemaFake.Object.GetIndexesTableName();
+            var tableNames = schemaFake.Object.GetIndexesTableNames();
 
-            Assert.AreEqual("CustomerIndexes", tableName);
+            Assert.AreEqual("CustomerIntegers", tableNames.IntegersTableName);
+			Assert.AreEqual("CustomerFractals", tableNames.FractalsTableName);
+			Assert.AreEqual("CustomerBooleans", tableNames.BooleansTableName);
+			Assert.AreEqual("CustomerDates", tableNames.DatesTableName);
+			Assert.AreEqual("CustomerGuids", tableNames.GuidsTableName);
+			Assert.AreEqual("CustomerStrings", tableNames.StringsTableName);
         }
 
         [Test]

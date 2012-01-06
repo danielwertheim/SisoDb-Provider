@@ -193,25 +193,6 @@ namespace SisoDb.Testing.Sql2008
             return cn;
         }
 
-//        public bool IndexExists(string tableName, string indexName)
-//        {
-//            var sql =
-//                @"
-//declare @tableName varchar(128);
-//declare @tableId int;
-//
-//set @tableName = '{0}';
-//set @tableId = OBJECT_ID(@tableName);
-//
-//declare @count int;
-//
-//set @count = (select count(*) from sys.indexes where object_id = @tableId and name = '{1}');
-//set @count = coalesce(@count, 0);
-//select case when @count > 0 then 1 else 0 end;".Inject(tableName, indexName);
-
-//            return ExecuteScalar<bool>(CommandType.Text, sql);
-//        }
-
         public int RowCount(string tableName, string where = null)
         {
             where = where ?? "1 = 1";
@@ -222,8 +203,13 @@ namespace SisoDb.Testing.Sql2008
 
         public bool IndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
         {
-            var memberPath = GetMemberPath(member);
-            return RowCount(structureSchema.GetIndexesTableName(), "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0;
+			var memberPath = GetMemberPath(member);
+			var indexesTableNames = structureSchema.GetIndexesTableNames();
+			foreach (var indexesTableName in indexesTableNames.AllTableNames)
+				if (RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) == 0)
+					return false;
+
+			return true;
         }
 
         public bool UniquesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class

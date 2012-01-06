@@ -157,7 +157,12 @@ namespace SisoDb.Testing.SqlCe4
         public bool IndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
         {
             var memberPath = GetMemberPath(member);
-            return RowCount(structureSchema.GetIndexesTableName(), "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0;
+			var indexesTableNames = structureSchema.GetIndexesTableNames();
+			foreach (var indexesTableName in indexesTableNames.AllTableNames)
+				if(RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) == 0)
+        			return false;
+
+        	return true;
         }
 
         public bool UniquesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class

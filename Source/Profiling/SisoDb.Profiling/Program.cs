@@ -12,16 +12,16 @@ namespace SisoDb.Profiling
     {
         static void Main(string[] args)
         {
-			Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and ensure that you are satisfied with the connection string.");
+			Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and App.config and ensure that you are satisfied with the connection string.");
 			Console.ReadKey();
 			return;
 
             //********* SQL2008 ***********
-			//var cnInfo = new Sql2008ConnectionInfo(@"sisodb:provider=Sql2008||plain:Data source=.\sqlexpress;initial catalog=SisoDb.Profiling;integrated security=SSPI;MultipleActiveResultSets=true;");
+			//var cnInfo = new Sql2008ConnectionInfo("SisoDb.Sql2008");
 			//var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
 
             //********* SQLCE4 ***********
-			//var cnInfo = new SqlCe4ConnectionInfo(@"sisodb:provider=SqlCe4||plain:Data source=D:\Temp\SisoDb.Profiling.sdf;");
+			//var cnInfo = new SqlCe4ConnectionInfo("SisoDb.SqlCe4");
 			//var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
 
 			//db.EnsureNewDatabase();
@@ -132,7 +132,7 @@ namespace SisoDb.Profiling
         {
 			using (var qe = database.CreateQueryEngine())
 			{
-				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo).ToEnumerable().Count();
+				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
 			}
         }
 
@@ -140,7 +140,7 @@ namespace SisoDb.Profiling
         {
 			using (var qe = database.CreateQueryEngine())
 			{
-				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo).ToEnumerableOfJson().Count();
+				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
 			}
         }
     }

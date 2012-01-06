@@ -120,128 +120,119 @@
   <data name="CreateBooleansIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [uniqueidentifier] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [bit] null,
-[StringValue] [varchar](5) null);
+[StringValue] [nvarchar](5) null);
 
 create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateBooleansIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [bigint] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [bit] null,
-[StringValue] [varchar](5) null);
+[StringValue] [nvarchar](5) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateBooleansIndexesStrings" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [bit] null,
-[StringValue] [varchar](5) null);
+[StringValue] [nvarchar](5) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [uniqueidentifier] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [datetime] null,
-[StringValue] [varchar](35) null);
+[StringValue] [nvarchar](35) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatesIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [bigint] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [datetime] null,
-[StringValue] [varchar](35) null);
+[StringValue] [nvarchar](35) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatesIndexesStrings" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [datetime] null,
-[StringValue] [varchar](35) null);
+[StringValue] [nvarchar](35) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateFractalsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [uniqueidentifier] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [varchar](30) null);
+[StringValue] [nvarchar](30) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateFractalsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [bigint] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [real] null,
-[StringValue] [varchar](30) null);
+[StringValue] [nvarchar](30) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateFractalsIndexesStrings" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [real] null,
-[StringValue] [varchar](30) null);
+[StringValue] [nvarchar](30) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateGuidsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [uniqueidentifier] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [uniqueidentifier] null,
-[StringValue] [varchar](36) null);
+[StringValue] [nvarchar](36) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
+create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
@@ -249,11 +240,11 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   <data name="CreateGuidsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [bigint] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [uniqueidentifier] null,
-[StringValue] [varchar](36) null);
+[StringValue] [nvarchar](36) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
+create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
@@ -261,11 +252,11 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   <data name="CreateGuidsIndexesStrings" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [uniqueidentifier] null,
-[StringValue] [varchar](36) null);
+[StringValue] [nvarchar](36) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
+create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
@@ -273,75 +264,69 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   <data name="CreateIntegersIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [uniqueidentifier] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [varchar](10) null);
+[StringValue] [nvarchar](10) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateIntegersIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [bigint] not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [varchar](10) null);
+[StringValue] [nvarchar](10) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateIntegersIndexesStrings" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
-[MemberPath] [varchar](250) not null,
+[MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [varchar](10) null);
+[StringValue] [nvarchar](10) null);
 
-create nonclustered index [IX_{0}_MemberPath_Value]
-on [{0}] ([MemberPath],[Value])
-include ([StructureId]);
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath],[Value]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStringsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [uniqueidentifier] not null,
-[MemberPath] [varchar](250) not null,
-[Value] [nvarchar](max) null);
+[MemberPath] [nvarchar](250) not null,
+[Value] [nvarchar](4000) null);
 
 create nonclustered index [IX_{0}_MemberPath]
-on [{0}] ([MemberPath])
-include ([StructureId], [Value]);
+on [{0}] ([StructureId], [MemberPath]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStringsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [bigint] not null,
-[MemberPath] [varchar](250) not null,
-[Value] [nvarchar](max) null);
+[MemberPath] [nvarchar](250) not null,
+[Value] [nvarchar](4000) null);
 
 create nonclustered index [IX_{0}_MemberPath]
-on [{0}] ([MemberPath])
-include ([StructureId], [Value]);
+on [{0}] ([StructureId], [MemberPath]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStringsIndexesStrings" xml:space="preserve">
     <value>create table [{0}] (
 [StructureId] [nvarchar](16) not null,
-[MemberPath] [varchar](250) not null,
-[Value] [nvarchar](max) null);
+[MemberPath] [nvarchar](250) not null,
+[Value] [nvarchar](4000) null);
 
 create nonclustered index [IX_{0}_MemberPath]
-on [{0}] ([MemberPath])
-include ([StructureId], [Value]);
+on [{0}] ([StructureId], [MemberPath]);
 
 alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>

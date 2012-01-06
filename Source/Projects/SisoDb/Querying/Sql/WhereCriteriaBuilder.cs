@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using EnsureThat;
+using NCore.Reflections;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas.Nodes;
@@ -78,10 +79,10 @@ namespace SisoDb.Querying.Sql
             if (member is ToUpperMemberNode)
                 memFormat = string.Format("upper({0})", memFormat);
 
-			if (member is StartsWithMemberNode || member is EndsWithMemberNode)
-				return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name);
+        	if ((member is StartsWithMemberNode || member is EndsWithMemberNode) && !(member.MemberType.IsStringType() || member.MemberType.IsAnyEnumType()))
+        		return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name);
 
-            return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
+        	return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
         }
 
         internal void AddOp(OperatorNode op)

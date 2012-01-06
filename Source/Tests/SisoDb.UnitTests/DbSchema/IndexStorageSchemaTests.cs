@@ -93,7 +93,7 @@ namespace SisoDb.UnitTests.DbSchema
 
             var fieldsByIndex = indexStorageSchema.GetFieldsOrderedByIndex().ToList();
 
-            Assert.AreEqual(8, fieldsByIndex.Count);
+            Assert.AreEqual(4, fieldsByIndex.Count);
 
             Assert.AreEqual(0, fieldsByIndex[0].Ordinal);
             Assert.AreEqual(IndexStorageSchema.Fields.StructureId.Name, fieldsByIndex[0].Name);
