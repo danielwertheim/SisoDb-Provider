@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 
 namespace SisoDb.Dac
@@ -21,6 +22,7 @@ namespace SisoDb.Dac
         void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
         void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
         bool TableExists(string name);
+    	IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names);
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
         long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);

@@ -11,5 +11,6 @@ namespace SisoDb.DbSchema
 		Booleans,
 		Guids,
 		Strings,
+		Texts
 	}
 }

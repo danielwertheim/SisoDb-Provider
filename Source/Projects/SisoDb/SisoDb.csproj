@@ -48,12 +48,13 @@
       <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NCore, Version=0.25.0.71, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.50.0\lib\net40\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.50.0.94, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.26.0.73, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.50.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.51.0\lib\net40\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.51.0.96, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.51.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.1.7.1816, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -71,7 +72,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ConnectionString.cs" />
-    <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="DbSchema\DbNamingPolicy.cs" />
@@ -162,6 +162,7 @@
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="GlobalResourceContainer.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
+    <Compile Include="Text.cs" />
     <Compile Include="UpdateManyModifierStatus.cs" />
     <Compile Include="IDbProviderFactory.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />

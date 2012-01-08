@@ -33,7 +33,7 @@ namespace SisoDb.DbSchema
 			var uniquesTableName = structureSchema.GetUniquesTableName();
 
 			var structuresTableExists = dbClient.TableExists(structuresTableName);
-			var indexesTableStatuses = GetIndexesTableStatuses(indexesTableNames, dbClient);
+			var indexesTableStatuses = dbClient.GetIndexesTableStatuses(indexesTableNames);
 			var uniquesTableExists = dbClient.TableExists(uniquesTableName);
 
 			if (indexesTableStatuses.AllExists)
@@ -51,19 +51,6 @@ namespace SisoDb.DbSchema
 					new DacParameter("entityHash", structureSchema.Hash), 
 					new DacParameter("entityName", structureSchema.Name));
 			}
-		}
-
-		private static IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names, IDbClient dbClient)
-		{
-			return new IndexesTableStatuses(names)
-			{
-				IntegersTableExists = dbClient.TableExists(names.IntegersTableName),
-				FractalsTableExists = dbClient.TableExists(names.FractalsTableName),
-				DatesTableExists = dbClient.TableExists(names.DatesTableName),
-				BooleansTableExists = dbClient.TableExists(names.BooleansTableName),
-				GuidsTableExists = dbClient.TableExists(names.GuidsTableName),
-				StringsTableExists = dbClient.TableExists(names.StringsTableName)
-			};
 		}
 
 		private IEnumerable<string> GenerateSql(IStructureSchema structureSchema, bool structuresTableExists, IndexesTableStatuses indexesTableStatuses, bool uniquesTableExists)

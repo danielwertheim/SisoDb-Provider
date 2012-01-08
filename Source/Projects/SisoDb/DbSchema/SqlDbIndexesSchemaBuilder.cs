@@ -27,22 +27,25 @@ namespace SisoDb.DbSchema
 			var generators = new Func<string>[]
 			{
 				() => !indexesTableStatuses.IntegersTableExists 
-					? GenerateSqlForIntegers(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.IntegersTableName) 
+					? GenerateSqlFor("CreateIntegersIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.IntegersTableName) 
 					: string.Empty,
 				() => !indexesTableStatuses.FractalsTableExists 
-					? GenerateSqlForFractals(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.FractalsTableName) 
+					? GenerateSqlFor("CreateFractalsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.FractalsTableName) 
 					: string.Empty,
 				() => !indexesTableStatuses.BooleansTableExists 
-					? GenerateSqlForBooleans(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.BooleansTableName) 
+					? GenerateSqlFor("CreateBooleansIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.BooleansTableName) 
 					: string.Empty,
 				() => !indexesTableStatuses.DatesTableExists 
-					? GenerateSqlForDates(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.DatesTableName) 
+					? GenerateSqlFor("CreateDatesIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.DatesTableName) 
 					: string.Empty,
 				() => !indexesTableStatuses.GuidsTableExists 
-					? GenerateSqlForGuids(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.GuidsTableName) 
+					? GenerateSqlFor("CreateGuidsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.GuidsTableName) 
 					: string.Empty,
 				() => !indexesTableStatuses.StringsTableExists 
-					? GenerateSqlForStrings(sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.StringsTableName) 
+					? GenerateSqlFor("CreateStringsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.StringsTableName) 
+					: string.Empty,
+				() => !indexesTableStatuses.TextsTableExists 
+					? GenerateSqlFor("CreateTextsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.TextsTableName) 
 					: string.Empty
 			};
 
@@ -63,50 +66,10 @@ namespace SisoDb.DbSchema
 			throw new SisoDbException(ExceptionMessages.SqlDbIndexesSchemaBuilder_GenerateSql.Inject(idType));
 		}
 
-		private string GenerateSqlForIntegers(string sqlTemplateNameSuffix, string structureTableName, string indexesTableName)
+		private string GenerateSqlFor(string sqlTemplateName, string sqlTemplateNameSuffix, string structureTableName, string indexesTableName)
 		{
 			return string.Format(
-				_sqlStatements.GetSql(string.Concat("CreateIntegersIndexes", sqlTemplateNameSuffix)),
-				indexesTableName,
-				structureTableName);
-		}
-
-		private string GenerateSqlForFractals(string sqlTemplateNameSuffix, string structureTableName, string indexesTableName)
-		{
-			return string.Format(
-				_sqlStatements.GetSql(string.Concat("CreateFractalsIndexes", sqlTemplateNameSuffix)),
-				indexesTableName,
-				structureTableName);
-		}
-
-		private string GenerateSqlForBooleans(string sqlTemplateNameSuffix, string structureTableName, string indexesTableName)
-		{
-			return string.Format(
-				_sqlStatements.GetSql(string.Concat("CreateBooleansIndexes", sqlTemplateNameSuffix)),
-				indexesTableName,
-				structureTableName);
-		}
-
-		private string GenerateSqlForDates(string sqlTemplateNameSuffix, string structureTableName, string indexesTableName)
-		{
-			return string.Format(
-				_sqlStatements.GetSql(string.Concat("CreateDatesIndexes", sqlTemplateNameSuffix)),
-				indexesTableName,
-				structureTableName);
-		}
-
-		private string GenerateSqlForGuids(string sqlTemplateNameSuffix, string structureTableName, string indexesTableName)
-		{
-			return string.Format(
-				_sqlStatements.GetSql(string.Concat("CreateGuidsIndexes", sqlTemplateNameSuffix)),
-				indexesTableName,
-				structureTableName);
-		}
-
-		private string GenerateSqlForStrings(string sqlTemplateNameSuffix, string structureTableName, string indexesTableName)
-		{
-			return string.Format(
-				_sqlStatements.GetSql(string.Concat("CreateStringsIndexes", sqlTemplateNameSuffix)),
+				_sqlStatements.GetSql(string.Concat(sqlTemplateName, sqlTemplateNameSuffix)),
 				indexesTableName,
 				structureTableName);
 		}

@@ -13,7 +13,8 @@ namespace SisoDb.DbSchema
 				       DatesTableExists &&
 				       BooleansTableExists &&
 				       GuidsTableExists &&
-				       StringsTableExists;
+				       StringsTableExists &&
+					   TextsTableExists;
 			}
 		}
 
@@ -23,6 +24,7 @@ namespace SisoDb.DbSchema
 		public bool BooleansTableExists { get; set; }
 		public bool GuidsTableExists { get; set; }
 		public bool StringsTableExists { get; set; }
+		public bool TextsTableExists { get; set; }
 
 		public IndexesTableStatuses(IndexesTableNames names)
 		{

@@ -7,6 +7,12 @@ namespace SisoDb.Serialization
 {
     public class ServiceStackJsonSerializer : IJsonSerializer
     {
+		static ServiceStackJsonSerializer()
+		{
+			JsConfig<Text>.DeSerializeFn = t => new Text(t);
+			JsConfig<Text>.SerializeFn = t => t.ToString();
+		}
+
 		public string Serialize<T>(T item) where T : class
         {
             if (item == null)

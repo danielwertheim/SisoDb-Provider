@@ -11,7 +11,6 @@ using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.Dac
 {
@@ -121,6 +120,20 @@ namespace SisoDb.Dac
 		public abstract void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
 
 		public abstract bool TableExists(string name);
+
+		public virtual IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
+		{
+			return new IndexesTableStatuses(names)
+			{
+				IntegersTableExists = TableExists(names.IntegersTableName),
+				FractalsTableExists = TableExists(names.FractalsTableName),
+				DatesTableExists = TableExists(names.DatesTableName),
+				BooleansTableExists = TableExists(names.BooleansTableName),
+				GuidsTableExists = TableExists(names.GuidsTableName),
+				StringsTableExists = TableExists(names.StringsTableName),
+				TextsTableExists = TableExists(names.TextsTableName)
+			};
+		}
 
 		public abstract int RowCount(IStructureSchema structureSchema);
 

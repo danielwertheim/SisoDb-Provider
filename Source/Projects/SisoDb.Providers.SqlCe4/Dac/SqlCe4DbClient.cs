@@ -5,9 +5,9 @@ using System.Linq;
 using EnsureThat;
 using ErikEJ.SqlCe;
 using NCore;
+using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
@@ -107,19 +107,6 @@ namespace SisoDb.SqlCe4.Dac
 				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.StringsTableName);
 				cmd.ExecuteNonQuery();
 			}
-		}
-
-		private IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
-		{
-			return new IndexesTableStatuses(names)
-			{
-				IntegersTableExists = TableExists(names.IntegersTableName),
-				FractalsTableExists = TableExists(names.FractalsTableName),
-				DatesTableExists = TableExists(names.DatesTableName),
-				BooleansTableExists = TableExists(names.BooleansTableName),
-				GuidsTableExists = TableExists(names.GuidsTableName),
-				StringsTableExists = TableExists(names.StringsTableName)
-			};
 		}
 
         public override void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
