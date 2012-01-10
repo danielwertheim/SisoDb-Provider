@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.Sql2008</id>    
 		<title>SisoDb.Sql2008 - Simple Structure Oriented Db</title>
-		<version>8.1.0</version>
+		<version>8.1.1</version>
 		<authors>Daniel Wertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
@@ -15,9 +15,9 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,json,sql,sql-server,sql2008,mssql2008,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[8.1.0]" />
+			<dependency id="SisoDb" version="[8.1.1]" />
 			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="0.49.0" />
+			<dependency id="PineCone" version="[0.53.1]" />
 		</dependencies>
 	</metadata>
 	<files>

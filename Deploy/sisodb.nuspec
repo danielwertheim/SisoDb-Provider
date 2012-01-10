@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb</id>    
 		<title>SisoDb - Simple Structure Oriented Db (core)</title>
-		<version>8.1.0</version>
+		<version>8.1.1</version>
 		<authors>Daniel Wertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
@@ -16,8 +16,8 @@
 		<tags>sisodb,document-database,json,sql,sql-server,sqlce,sqlce4,nosql</tags>
 		<dependencies>
 			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="0.49.0" />
-			<dependency id="ServiceStack.Text" version="3.1.6" />
+			<dependency id="PineCone" version="[0.53.1]" />
+			<dependency id="ServiceStack.Text" version="3.1.7" />
 		</dependencies>
 	</metadata>
 	<files>
