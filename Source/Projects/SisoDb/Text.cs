@@ -3,21 +3,26 @@
 namespace SisoDb
 {
 	[Serializable]
-	public class Text
+	public struct Text
 	{
 		private readonly string _value;
 
-		internal Text(string value)
+		public Text(string value)
 		{
 			_value = value;
 		}
 
-		public static implicit operator Text (string value)
+		public static Text Parse(string value)
+		{
+			return value == null ? null : new Text(value);
+		}
+
+		public static implicit operator Text(string value)
 		{
 			return new Text(value);
 		}
 
-		public static implicit operator string (Text item)
+		public static implicit operator string(Text item)
 		{
 			return item._value;
 		}

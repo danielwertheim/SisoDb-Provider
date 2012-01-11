@@ -51,6 +51,13 @@ namespace SisoDb.Testing
                 return;
             }
 
+        	var properties = type.GetProperties();
+			if(properties.Length == 0)
+			{
+				if(!Equals(a, b))
+					throw new SpecificationException("Instances of type '{0}' are not equal.".Inject(type.Name));
+			}
+
             foreach (var propertyInfo in type.GetProperties())
             {
                 var propertyType = propertyInfo.PropertyType;

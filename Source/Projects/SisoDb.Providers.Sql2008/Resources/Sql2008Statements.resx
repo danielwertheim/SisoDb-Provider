@@ -455,6 +455,7 @@ if object_id(N'{4}', N'U') is not null drop table [dbo].[{4}];
 if object_id(N'{5}', N'U') is not null drop table [dbo].[{5}];
 if object_id(N'{6}', N'U') is not null drop table [dbo].[{6}];
 if object_id(N'{7}', N'U') is not null drop table [dbo].[{7}];
+if object_id(N'{8}', N'U') is not null drop table [dbo].[{8}];
 
 if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[SisoDbIdentities] where [EntityHash] = @entityHash;</value>
   </data>

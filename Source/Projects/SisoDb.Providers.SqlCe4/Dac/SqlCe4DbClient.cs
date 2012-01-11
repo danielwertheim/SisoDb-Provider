@@ -107,6 +107,12 @@ namespace SisoDb.SqlCe4.Dac
 				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.StringsTableName);
 				cmd.ExecuteNonQuery();
 			}
+
+			if (indexesTableStatuses.TextsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.TextsTableName);
+				cmd.ExecuteNonQuery();
+			}
 		}
 
         public override void DeleteById(IStructureId structureId, IStructureSchema structureSchema)

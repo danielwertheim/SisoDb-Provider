@@ -40,6 +40,7 @@ namespace SisoDb.Sql2008.Dac
 				indexesTableNames.DatesTableName,
 				indexesTableNames.GuidsTableName,
 				indexesTableNames.StringsTableName,
+				indexesTableNames.TextsTableName,
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 

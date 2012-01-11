@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NCore;
+using PineCone;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
@@ -12,16 +13,17 @@ namespace SisoDb.Dac.BulkInserts
     public class DbStructureInserter : IStructureInserter
     {
     	private static readonly Type TextType;
+
         private const int MaxStructureBatchSize = 1000;
         private const int MaxIndexesBatchSize = 6000;
         private const int MaxUniquesBatchSize = 6000;
 
         private readonly IDbClient _dbClient;
 
-		static DbStructureInserter()
-		{
-			TextType = typeof (Text);
-		}
+    	static DbStructureInserter()
+    	{
+    		TextType = typeof (Text);
+    	}
 
         public DbStructureInserter(IDbClient dbClient)
         {
@@ -74,22 +76,40 @@ namespace SisoDb.Dac.BulkInserts
         protected virtual void BulkInsertIndexes(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
         {
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
-        	var structureIndexes = structures.SelectMany(s => s.Indexes);
+        	var structureIndexes = structures.SelectMany(s => s.Indexes).ToArray();
+			
+			var integerIndexes = structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.IntegerNumber).ToArray();
+			if(integerIndexes.Any())
+				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.IntegersTableName), integerIndexes));
 
-			BulkInsertIndexes(structureSchema, indexesTableNames.IntegersTableName, structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.IntegerNumber));
-			BulkInsertIndexes(structureSchema, indexesTableNames.FractalsTableName, structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.FractalNumber));
-			BulkInsertIndexes(structureSchema, indexesTableNames.BooleansTableName, structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.Bool));
-			BulkInsertIndexes(structureSchema, indexesTableNames.DatesTableName, structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.DateTime));
-			BulkInsertIndexes(structureSchema, indexesTableNames.GuidsTableName, structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.Guid));
-			BulkInsertIndexes(structureSchema, indexesTableNames.StringsTableName, structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.String || i.DataTypeCode == DataTypeCode.Enum), false);
-			BulkInsertIndexes(structureSchema, indexesTableNames.TextsTableName, structureIndexes.Where(i => i.DataType == TextType), false);
+			var fractalIndexes = structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.FractalNumber).ToArray();
+			if(fractalIndexes.Any())
+        		BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.FractalsTableName), fractalIndexes));
+
+			var boolIndexes = structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.Bool).ToArray();
+			if(boolIndexes.Any())
+				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.BooleansTableName), boolIndexes));
+
+			var dateIndexes = structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.DateTime).ToArray();
+			if(dateIndexes.Any())
+				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.DatesTableName), dateIndexes));
+
+			var guidIndexes = structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.Guid).ToArray();
+			if(guidIndexes.Any())
+				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.GuidsTableName), guidIndexes));
+
+			var stringIndexes = structureIndexes.Where(i => i.DataTypeCode == DataTypeCode.String || i.DataTypeCode == DataTypeCode.Enum).ToArray();
+			if(stringIndexes.Any())
+				BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), stringIndexes));
+
+			var textIndexes = structureIndexes.Where(i => i.DataType == TextType).ToArray();
+			if(textIndexes.Any())
+				BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), textIndexes));
         }
 
-		protected virtual void BulkInsertIndexes(IStructureSchema structureSchema, string indexesTableName, IEnumerable<IStructureIndex> structureIndexes, bool storeAdditionalStringValue = true)
+		protected virtual void BulkInsertIndexes(IndexesReader indexesReader)
 		{
-			var indexesStorageSchema = new IndexStorageSchema(structureSchema, indexesTableName);
-
-			using (var indexesReader = new IndexesReader(indexesStorageSchema, structureIndexes))
+			using (indexesReader)
 			{
 				using (var bulkInserter = _dbClient.GetBulkCopy())
 				{
@@ -101,7 +121,7 @@ namespace SisoDb.Dac.BulkInserts
 					var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex();
 					foreach (var field in fields)
 					{
-						if(field.Name == IndexStorageSchema.Fields.StringValue.Name && !storeAdditionalStringValue)
+						if(field.Name == IndexStorageSchema.Fields.StringValue.Name && !(indexesReader is ValueTypeIndexesReader))
 							continue;
 
 						bulkInserter.AddColumnMapping(field.Name, field.Name);
