@@ -17,7 +17,7 @@ namespace SisoDb.Structures
 
     	public IStructureId Generate(IStructureSchema structureSchema)
     	{
-    		var nextId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, 1);
+    		var nextId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, 1);
 
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.Identity)
                 return StructureId.Create((int)nextId);
@@ -36,7 +36,7 @@ namespace SisoDb.Structures
         private IStructureId[] GenerateIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
             var structureIds = new IStructureId[numOfIds];
-        	var startId = (int) DbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, numOfIds);
+        	var startId = (int) DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
 
             for (var c = 0; c < numOfIds; c++)
                 structureIds[c] = StructureId.Create(startId++);
@@ -47,7 +47,7 @@ namespace SisoDb.Structures
         private IStructureId[] GenerateBigIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
             var structureIds = new IStructureId[numOfIds];
-			var startId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Hash, numOfIds);
+			var startId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
 
             for (var c = 0; c < numOfIds; c++)
                 structureIds[c] = StructureId.Create(startId++);

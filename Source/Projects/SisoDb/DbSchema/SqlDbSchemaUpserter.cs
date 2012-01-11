@@ -46,11 +46,7 @@ namespace SisoDb.DbSchema
 				return;
 
 			foreach (var sql in GenerateSql(structureSchema, structuresTableExists, indexesTableStatuses, uniquesTableExists))
-			{
-				dbClient.ExecuteNonQuery(sql, 
-					new DacParameter("entityHash", structureSchema.Hash), 
-					new DacParameter("entityName", structureSchema.Name));
-			}
+				dbClient.ExecuteNonQuery(sql, new DacParameter("entityName", structureSchema.Name));
 		}
 
 		private IEnumerable<string> GenerateSql(IStructureSchema structureSchema, bool structuresTableExists, IndexesTableStatuses indexesTableStatuses, bool uniquesTableExists)

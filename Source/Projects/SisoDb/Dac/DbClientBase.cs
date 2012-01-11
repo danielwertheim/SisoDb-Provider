@@ -139,7 +139,7 @@ namespace SisoDb.Dac
 
 		public abstract int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
 
-		public abstract long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
+		public abstract long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
 
 		public virtual string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
 		{

@@ -44,7 +44,7 @@ namespace SisoDb.Sql2008.Dac
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(sql, new DacParameter("entityHash", structureSchema.Hash)))
+            using (var cmd = CreateCommand(sql, new DacParameter("entityName", structureSchema.Name)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -133,14 +133,14 @@ namespace SisoDb.Sql2008.Dac
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
 
-        public override long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
+        public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
         {
-            Ensure.That(entityHash, "entityHash").IsNotNullOrWhiteSpace();
+			Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
             return ExecuteScalar<long>(sql,
-                new DacParameter("entityHash", entityHash),
+				new DacParameter("entityName", entityName),
                 new DacParameter("numOfIds", numOfIds));
         }
 

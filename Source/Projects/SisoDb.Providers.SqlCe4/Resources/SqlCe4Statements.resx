@@ -340,7 +340,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 [StructureId] [bigint] not null constraint [PK_{0}] primary key,
 [Json] [ntext] not null);
 
-insert into [SisoDbIdentities] ([EntityHash], [EntityName]) values(@entityHash, @entityName);</value>
+insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [{0}] (
@@ -423,7 +423,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
     <value>delete from [{0}] where StructureId in({1});</value>
   </data>
   <data name="DeleteStructureFromSisoDbIdentitiesTable" xml:space="preserve">
-    <value>delete from [SisoDbIdentities] where [EntityHash] = @entityHash;</value>
+    <value>delete from [SisoDbIdentities] where [EntityName] = @entityName;</value>
   </data>
   <data name="DeleteWhereIdIsBetween" xml:space="preserve">
     <value>delete from [{0}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
@@ -468,20 +468,19 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
   <data name="Sys_Identities_Create" xml:space="preserve">
     <value>create table [SisoDbIdentities]
 (
-	[EntityHash] [nvarchar](8) NOT NULL,
 	[EntityName] [nvarchar](100) NOT NULL,
 	[CurrentId] [bigint] NOT NULL default(0),
-	constraint [PK_SisoDbIdentities] primary key([EntityHash])
+	constraint [PK_SisoDbIdentities] primary key([EntityName])
 );</value>
   </data>
   <data name="Sys_Identities_Exists" xml:space="preserve">
     <value>select count(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_NAME='SisoDbIdentities';</value>
   </data>
   <data name="Sys_Identities_GetNext" xml:space="preserve">
-    <value>select ([CurrentId] + 1) from [SisoDbIdentities] where [EntityHash] = @entityHash;</value>
+    <value>select ([CurrentId] + 1) from [SisoDbIdentities] where [EntityName] = @entityName;</value>
   </data>
   <data name="Sys_Identities_Increase" xml:space="preserve">
-    <value>update [SisoDbIdentities] set [CurrentId] = ([CurrentId] + @numOfIds) where [EntityHash] = @entityHash;</value>
+    <value>update [SisoDbIdentities] set [CurrentId] = ([CurrentId] + @numOfIds) where [EntityName] = @entityName;</value>
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>select count(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@tableName;</value>

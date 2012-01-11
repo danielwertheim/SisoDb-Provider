@@ -47,7 +47,7 @@ namespace SisoDb.SqlCe4.Dac
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-            using (var cmd = CreateCommand(string.Empty, new DacParameter("entityHash", structureSchema.Hash)))
+            using (var cmd = CreateCommand(string.Empty, new DacParameter("entityName", structureSchema.Name)))
             {
 				DropIndexesTables(cmd, indexesTableStatuses);
 
@@ -191,14 +191,14 @@ namespace SisoDb.SqlCe4.Dac
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
 
-        public override long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
+        public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
         {
-            Ensure.That(entityHash, "entityHash").IsNotNullOrWhiteSpace();
+			Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
-            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityHash", entityHash));
+			var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityName", entityName));
 
             ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
-                new DacParameter("entityHash", entityHash),
+				new DacParameter("entityName", entityName),
                 new DacParameter("numOfIds", numOfIds));
 
             return nextId;
