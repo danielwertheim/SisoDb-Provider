@@ -83,7 +83,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     Visit(e.Operand);
                     break;
                 case ExpressionType.Convert:
-                    if (!e.Type.IsNullablePrimitiveType())
+                    if (!(e.Type.IsNullablePrimitiveType() || e.Operand.Type.IsAnyEnumType()))
                         throw new NotSupportedException(ExceptionMessages.LambdaParser_VisitUnary_InvalidConvert);
                     Visit(e.Operand);
                     break;
@@ -111,7 +111,16 @@ namespace SisoDb.Querying.Lambdas.Parsers
             else
                 _nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
 
-            Visit(e.Right);
+			if(e.Left.NodeType == ExpressionType.Convert)
+			{
+				var convert = (UnaryExpression)e.Left;
+				if (convert.Operand.Type.IsAnyEnumType())
+					Visit(Expression<string>.Constant(Enum.Parse(convert.Operand.Type, e.Right.Evaluate().ToString()).ToString()));
+				else
+					Visit(e.Right);
+			}
+			else
+				Visit(e.Right);
 
             if (isGroupExpression)
                 _nodes.AddNode(new EndGroupNode());

@@ -234,5 +234,20 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 				"select s.[Json] from (select s.[StructureId], min(mem0.[Value]) mem0, min(mem1.[Value]) mem1 from [MyClassStructure] s inner join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' inner join [MyClassIntegers] mem1 on mem1.[StructureId] = s.[StructureId] and mem1.[MemberPath] = 'Int2' group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc, mem1 Asc;",
                 sqlQuery.Sql);
         }
+
+		[Test]
+		public override void GenerateQuery_WithEnum_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithEnum_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'MyEnum1' where ((mem0.[Value] = @p0) or (mem0.[Value] = @p1)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual("Value1", sqlQuery.Parameters[0].Value);
+			Assert.AreEqual("@p1", sqlQuery.Parameters[1].Name);
+			Assert.AreEqual("Value2", sqlQuery.Parameters[1].Value);
+		}
     }
 }

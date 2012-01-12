@@ -12,11 +12,6 @@ namespace SisoDb
 			_value = value;
 		}
 
-		public static Text Parse(string value)
-		{
-			return value == null ? null : new Text(value);
-		}
-
 		public static implicit operator Text(string value)
 		{
 			return new Text(value);

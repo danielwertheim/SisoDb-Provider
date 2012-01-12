@@ -1,4 +1,4 @@
-using System.IO;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Resources;
 using EnsureThat;
@@ -7,25 +7,37 @@ namespace SisoDb.Dac
 {
     public abstract class SqlStatementsBase : ISqlStatements
     {
-        private readonly ResourceManager _sqlStrings;
+    	private readonly Dictionary<string, string> _sqlStrings; 
 
-        protected SqlStatementsBase(Assembly assembly, string resxPath)
+        protected SqlStatementsBase(Assembly assembly, string resourcePath)
         {
             Ensure.That(assembly, "assembly").IsNotNull();
-            Ensure.That(resxPath, "resxPath").IsNotNullOrWhiteSpace();
+            Ensure.That(resourcePath, "resourcePath").IsNotNullOrWhiteSpace();
 
-            var extension = Path.GetExtension(resxPath);
-            if (!string.IsNullOrWhiteSpace(extension) && extension == ".resx")
-                resxPath = resxPath.Substring(0, resxPath.Length - extension.Length);
+			if (!resourcePath.EndsWith(".resources"))
+				resourcePath = string.Concat(resourcePath, ".resources");
 
-            resxPath = assembly.GetName().Name + "." + resxPath;
+            resourcePath = string.Concat(assembly.GetName().Name, ".", resourcePath);
+            
+			_sqlStrings = new Dictionary<string, string>();
 
-            _sqlStrings = new ResourceManager(resxPath, assembly);
+			using (var resourceStream = assembly.GetManifestResourceStream(resourcePath))
+			{
+				using (var reader = new ResourceReader(resourceStream))
+				{
+					var e = reader.GetEnumerator();
+					while (e.MoveNext())
+					{
+						_sqlStrings.Add(e.Key.ToString(), e.Value.ToString());
+					}
+				}
+				resourceStream.Close();
+			}
         }
 
         public string GetSql(string name)
         {
-            return _sqlStrings.GetString(name);
+        	return _sqlStrings[name];
         }
     }
 }
