@@ -40,12 +40,16 @@ namespace SisoDb.Serialization
 		{
 			using (var q = new BlockingCollection<string>())
 			{
-				using(var task = new Task(() =>
+				Task task = null;
+
+				try
 				{
-					foreach (var json in sourceData)
-						q.Add(json);
-				}))
-				{
+					task = new Task(() =>
+					{
+						foreach (var json in sourceData)
+							q.Add(json);
+					});
+
 					task.Start();
 
 					while (!task.IsCompleted)
@@ -56,13 +60,19 @@ namespace SisoDb.Serialization
 					}
 
 					Task.WaitAll(task);
-					task.Dispose();	
+				}
+				finally
+				{
+					if (task != null)
+					{
+						task.Dispose();
+					}
+
+					q.CompleteAdding();
 				}
 
-				q.CompleteAdding();
-
-				while (q.Count > 0)
-					yield return Deserialize<T>(q.Take());
+				foreach (var e in q.GetConsumingEnumerable())
+					yield return Deserialize<T>(e);
 			}
 		}
     }

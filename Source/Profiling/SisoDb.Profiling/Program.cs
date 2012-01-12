@@ -28,7 +28,7 @@ namespace SisoDb.Profiling
 
 			//ProfilingInserts(db, 1000, 5);
 
-			//InsertCustomers(1, 100000, db);
+			//InsertCustomers(1, 10000, db);
 			//ProfilingQueries(() => GetAllCustomers(db));
 			//ProfilingQueries(() => GetAllCustomersAsJson(db));
 			//ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
