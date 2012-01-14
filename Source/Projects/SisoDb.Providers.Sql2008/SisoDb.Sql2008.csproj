@@ -72,9 +72,9 @@
     <Compile Include="Sql2008ProviderFactory.cs" />
     <Compile Include="Sql2008ConnectionInfo.cs" />
     <Compile Include="Dac\Sql2008DbClient.cs" />
-    <Compile Include="Sql2008QueryEngine.cs" />
+    <Compile Include="Sql2008ReadSession.cs" />
     <Compile Include="Dac\Sql2008ServerClient.cs" />
-    <Compile Include="Sql2008UnitOfWork.cs" />
+    <Compile Include="Sql2008WriteSession.cs" />
     <Compile Include="Sql2008QueryGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

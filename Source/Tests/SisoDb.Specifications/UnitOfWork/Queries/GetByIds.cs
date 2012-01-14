@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class GetByIds
 	{
-		[Subject(typeof(IUnitOfWork), "Get by Ids")]
+		[Subject(typeof(IWriteSession), "Get by Ids")]
 		public class when_ids_matches_two_of_four_items_that_is_are_uncommitted_mode : SpecificationBase
 		{
 			Establish context = () =>
@@ -19,7 +19,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(_structures);
 
@@ -40,7 +40,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Get by Ids as Json")]
+		[Subject(typeof(IWriteSession), "Get by Ids as Json")]
 		public class when_ids_matches_two_of_four_json_items_that_are_in_uncommitted_mode : SpecificationBase
 		{
 			Establish context = () =>
@@ -51,7 +51,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(_structures);
 

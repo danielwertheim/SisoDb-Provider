@@ -1,6 +1,6 @@
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4DbFactory : ISisoDbFactory
+    public class SqlCe4DbFactory : ISisoDatabaseFactory
     {
 		public static IDbProviderFactory ProviderFactory { get; set; }
 

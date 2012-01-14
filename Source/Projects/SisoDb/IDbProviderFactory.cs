@@ -7,8 +7,8 @@ using SisoDb.Structures;
 namespace SisoDb
 {
 	/// <summary>
-	/// When targeting a Database oriented provider, e.g all providers extending <see cref="DbDatabase"/>, the infrastructure
-	/// could make use of this factory to ease the interaction with <see cref="DbDatabase"/>.
+	/// When targeting a Database oriented provider, e.g all providers extending <see cref="SisoDbDatabase"/>, the infrastructure
+	/// could make use of this factory to ease the interaction with <see cref="SisoDbDatabase"/>.
 	/// </summary>
 	public interface IDbProviderFactory
     {

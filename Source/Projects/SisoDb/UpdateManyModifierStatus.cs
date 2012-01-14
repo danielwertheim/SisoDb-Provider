@@ -16,10 +16,6 @@ namespace SisoDb
         /// in keeping the structure, hence it will be
         /// deleted.
         /// </summary>
-        Trash,
-        /// <summary>
-        /// Abort and rollback the process.
-        /// </summary>
-        Abort
+        Trash
     }
 }

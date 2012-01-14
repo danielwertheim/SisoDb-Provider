@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsWithCustomStructureId
 	{
-		[Subject(typeof(IUnitOfWork), "Insert (custom structure id)")]
+		[Subject(typeof(IWriteSession), "Insert (custom structure id)")]
 		public class when_structure_has_structure_id_with_name_matching_interface_and_query_targets_first_and_last_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
@@ -43,7 +43,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static IList<MyEvent> _fetchedStructures;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Insert (custom structure id)")]
+		[Subject(typeof(IWriteSession), "Insert (custom structure id)")]
 		public class when_structure_has_type_named_structure_id_and_query_targets_first_and_last_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
@@ -79,7 +79,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static IList<CustomAlpha> _fetchedStructures;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Insert (custom structure id)")]
+		[Subject(typeof(IWriteSession), "Insert (custom structure id)")]
 		public class when_structure_has_id_named_structure_id_and_query_targets_first_and_last_of_four_items : SpecificationBase
 		{
 			Establish context = () =>

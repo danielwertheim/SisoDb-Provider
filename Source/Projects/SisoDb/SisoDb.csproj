@@ -80,8 +80,9 @@
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
-    <Compile Include="IDbDatabase.cs" />
-    <Compile Include="IQueryEngineCore.cs" />
+    <Compile Include="DbWriteSessionProxy.cs" />
+    <Compile Include="ISisoDbDatabase.cs" />
+    <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
     <Compile Include="IReadOnce.cs" />
     <Compile Include="IWriteOnce.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="IAdvancedQueries.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
-    <Compile Include="IQueryEngine.cs" />
+    <Compile Include="IReadSession.cs" />
     <Compile Include="ISisoQueryable.cs" />
     <Compile Include="Querying\IQueryBuilder.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ToLowerMemberNode.cs" />
@@ -125,7 +126,7 @@
     <Compile Include="Querying\Lambdas\Parsers\OrderByParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereExpressionChainer.cs" />
     <Compile Include="Querying\Query.cs" />
-    <Compile Include="DbQueryEngine.cs" />
+    <Compile Include="DbReadSession.cs" />
     <Compile Include="Querying\QueryBuilder.cs" />
     <Compile Include="Querying\SisoReadOnceQueryable.cs" />
     <Compile Include="Querying\SisoQueryable.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\DbQuery.cs" />
     <Compile Include="IConnectionString.cs" />
-    <Compile Include="ISisoDbFactory.cs" />
+    <Compile Include="ISisoDatabaseFactory.cs" />
     <Compile Include="Dac\BulkInserts\IndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\SingleResultReaderBase.cs" />
     <Compile Include="Dac\BulkInserts\StructuresReader.cs" />
@@ -148,8 +149,8 @@
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
-    <Compile Include="DbDatabase.cs" />
-    <Compile Include="DbUnitOfWork.cs" />
+    <Compile Include="SisoDbDatabase.cs" />
+    <Compile Include="DbWriteSession.cs" />
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
@@ -213,7 +214,7 @@
     <Compile Include="Querying\Sql\SqlWhereMember.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
-    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="IWriteSession.cs" />
     <Compile Include="TypeFor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">

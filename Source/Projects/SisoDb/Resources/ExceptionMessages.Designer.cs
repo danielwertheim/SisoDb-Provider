@@ -260,20 +260,29 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GetByIdInterval is not supported when using other ID-types than identities..
-        /// </summary>
-        public static string QuerySession_GetByIdInterval_WrongIdType {
-            get {
-                return ResourceManager.GetString("QuerySession_GetByIdInterval_WrongIdType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to ReadOnceQueryable doesn&apos;t support yielding result. Use matching ToList method instead..
         /// </summary>
         public static string ReadOnceQueryable_YieldingNotSupported {
             get {
                 return ResourceManager.GetString("ReadOnceQueryable_YieldingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Read session has allready been disposed..
+        /// </summary>
+        public static string ReadSession_AllreadyDisposed {
+            get {
+                return ResourceManager.GetString("ReadSession_AllreadyDisposed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GetByIdInterval is not supported when using other ID-types than identities..
+        /// </summary>
+        public static string ReadSession_GetByIdInterval_WrongIdType {
+            get {
+                return ResourceManager.GetString("ReadSession_GetByIdInterval_WrongIdType", resourceCulture);
             }
         }
         
@@ -458,42 +467,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DeleteByIdInterval is not supported when using other ID-types than identities..
-        /// </summary>
-        public static string UnitOfWork_DeleteByIdInterval_WrongIdType {
-            get {
-                return ResourceManager.GetString("UnitOfWork_DeleteByIdInterval_WrongIdType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
-        /// </summary>
-        public static string UnitOfWork_DoIdentityInsert_RootItemsMissmatch {
-            get {
-                return ResourceManager.GetString("UnitOfWork_DoIdentityInsert_RootItemsMissmatch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is no &apos;{0}&apos;-structure to update matching the sent Id &apos;{1}&apos;..
-        /// </summary>
-        public static string UnitOfWork_NoItemExistsForUpdate {
-            get {
-                return ResourceManager.GetString("UnitOfWork_NoItemExistsForUpdate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UpdateMany&lt;TOld, TNew&gt; should not be used for same types. Use UpdateMany&lt;T&gt; instead..
-        /// </summary>
-        public static string UnitOfWork_UpdateMany_TOld_TNew_SameType {
-            get {
-                return ResourceManager.GetString("UnitOfWork_UpdateMany_TOld_TNew_SameType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t only access a member in a query expression unless it&apos;s a bool. You need to compare it against something..
         /// </summary>
         public static string WhereExpressionParser_NoMemberExpressions {
@@ -508,6 +481,51 @@ namespace SisoDb.Resources {
         public static string WhereParser_QxEnumerables_OperatorNotSupported {
             get {
                 return ResourceManager.GetString("WhereParser_QxEnumerables_OperatorNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Write session has allready been disposed..
+        /// </summary>
+        public static string WriteSession_AllreadyDisposed {
+            get {
+                return ResourceManager.GetString("WriteSession_AllreadyDisposed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DeleteByIdInterval is not supported when using other ID-types than identities..
+        /// </summary>
+        public static string WriteSession_DeleteByIdInterval_WrongIdType {
+            get {
+                return ResourceManager.GetString("WriteSession_DeleteByIdInterval_WrongIdType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
+        /// </summary>
+        public static string WriteSession_DoIdentityInsert_RootItemsMissmatch {
+            get {
+                return ResourceManager.GetString("WriteSession_DoIdentityInsert_RootItemsMissmatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no &apos;{0}&apos;-structure to update matching the sent Id &apos;{1}&apos;..
+        /// </summary>
+        public static string WriteSession_NoItemExistsForUpdate {
+            get {
+                return ResourceManager.GetString("WriteSession_NoItemExistsForUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UpdateMany&lt;TOld, TNew&gt; should not be used for same types. Use UpdateMany&lt;T&gt; instead..
+        /// </summary>
+        public static string WriteSession_UpdateMany_TOld_TNew_SameType {
+            get {
+                return ResourceManager.GetString("WriteSession_UpdateMany_TOld_TNew_SameType", resourceCulture);
             }
         }
     }

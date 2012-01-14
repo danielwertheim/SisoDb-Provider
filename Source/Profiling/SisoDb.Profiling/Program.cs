@@ -34,26 +34,25 @@ namespace SisoDb.Profiling
 			//ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
 			//ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
-			//ProfilingUpdateStructureSet(db);
+			//ProfilingUpdateMany(db);
 
 			//Console.WriteLine("---- Done ----");
 			//Console.ReadKey();
         }
 
-        private static void ProfilingUpdateStructureSet(ISisoDatabase database)
+        private static void ProfilingUpdateMany(ISisoDatabase database)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-        	using (var uow = database.CreateUnitOfWork())
+        	using (var session = database.BeginWriteSession())
         	{
-        		if(uow.UpdateMany<Customer>(customer => UpdateManyModifierStatus.Keep))
-					uow.Commit();
+        		session.UpdateMany<Customer>(customer => UpdateManyModifierStatus.Keep);
         	}
 
             stopWatch.Stop();
             Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
 
-            using (var rs = database.CreateQueryEngine())
+            using (var rs = database.BeginReadSession())
             {
 				var rowCount = rs.Query<Customer>().Count();
 
@@ -77,7 +76,7 @@ namespace SisoDb.Profiling
                 stopWatch.Reset();
             }
 
-            using (var rs = database.CreateQueryEngine())
+            using (var rs = database.BeginReadSession())
             {
                 var rowCount = rs.Query<Customer>().Count();
 
@@ -108,16 +107,15 @@ namespace SisoDb.Profiling
 
         private static void InsertCustomers(IList<Customer> customers, ISisoDatabase database)
         {
-            using (var unitOfWork = database.CreateUnitOfWork())
+            using (var unitOfWork = database.BeginWriteSession())
             {
                 unitOfWork.InsertMany(customers);
-                unitOfWork.Commit();
             }
         }
 
         private static int GetAllCustomers(ISisoDatabase database)
         {
-			using(var qe = database.CreateQueryEngine())
+			using(var qe = database.BeginReadSession())
 			{
 				return qe.Query<Customer>().ToEnumerable().Count();
 			}
@@ -130,7 +128,7 @@ namespace SisoDb.Profiling
 
 		private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			using (var qe = database.CreateQueryEngine())
+			using (var qe = database.BeginReadSession())
 			{
 				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
 			}
@@ -138,7 +136,7 @@ namespace SisoDb.Profiling
 
 		private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			using (var qe = database.CreateQueryEngine())
+			using (var qe = database.BeginReadSession())
 			{
 				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
 			}

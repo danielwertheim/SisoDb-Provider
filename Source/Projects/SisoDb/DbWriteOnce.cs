@@ -9,9 +9,9 @@ namespace SisoDb
     [DebuggerStepThrough]
     public class DbWriteOnce : IWriteOnce
     {
-    	private readonly IDbDatabase _db;
+    	private readonly ISisoDbDatabase _db;
 
-        public DbWriteOnce(IDbDatabase db)
+        public DbWriteOnce(ISisoDbDatabase db)
         {
             _db = db;
         }
@@ -20,10 +20,9 @@ namespace SisoDb
 		{
 			Ensure.That(item, "item").IsNotNull();
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.Insert(item);
-				uow.Commit();
 			}
 
 			return item;
@@ -33,10 +32,9 @@ namespace SisoDb
 		{
 			Ensure.That(json, "json").IsNotNullOrWhiteSpace();
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.InsertJson<T>(json);
-				uow.Commit();
 			}
 		}
 
@@ -44,10 +42,9 @@ namespace SisoDb
 		{
 			Ensure.That(items, "items").HasItems();
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.InsertMany(items);
-				uow.Commit();
 			}
 
 			return items;
@@ -57,10 +54,9 @@ namespace SisoDb
 		{
 			Ensure.That(json, "json").HasItems();
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.InsertManyJson<T>(json);
-				uow.Commit();
 			}
 		}
 
@@ -68,55 +64,41 @@ namespace SisoDb
 		{
 			Ensure.That(item, "item").IsNotNull();
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.Update(item);
-				uow.Commit();
 			}
 
 			return item;
 		}
 
-		public bool UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
+		public void UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
 		{
 			Ensure.That(modifier, "modifier").IsNotNull();
-			bool result;
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
-				result = uow.UpdateMany(modifier, expression);
-				
-				if(result)
-					uow.Commit();
+				uow.UpdateMany(modifier, expression);
 			}
-
-			return result;
 		}
 
-		public bool UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
+		public void UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
 			where TOld : class
 			where TNew : class
 		{
 			Ensure.That(modifier, "modifier").IsNotNull();
-			bool result;
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
-				result = uow.UpdateMany(modifier, expression);
-
-				if (result)
-					uow.Commit();
+				uow.UpdateMany(modifier, expression);
 			}
-
-			return result;
 		}
 
 		public void DeleteById<T>(object id) where T : class
 		{
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.DeleteById<T>(id);
-				uow.Commit();
 			}
 		}
 
@@ -124,28 +106,25 @@ namespace SisoDb
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.DeleteByIds<T>(ids);
-				uow.Commit();
 			}
 		}
 
 		public void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.DeleteByIdInterval<T>(idFrom, idTo);
-				uow.Commit();
 			}
 		}
 
 		public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
 		{
-			using (var uow = _db.CreateUnitOfWork())
+			using (var uow = _db.BeginWriteSession())
 			{
 				uow.DeleteByQuery(expression);
-				uow.Commit();
 			}
 		}
     }

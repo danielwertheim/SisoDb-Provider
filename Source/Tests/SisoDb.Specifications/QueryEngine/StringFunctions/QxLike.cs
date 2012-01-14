@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
 	class QxLike
     {
-        [Subject(typeof(IQueryEngine), "QxLike")]
+        [Subject(typeof(IReadSession), "QxLike")]
         public class when_two_items_has_string_that_does_not_match_query : SpecificationBase
         {
             Establish context = () =>
@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxLike")]
+        [Subject(typeof(IReadSession), "QxLike")]
         public class when_two_items_has_string_that_starts_with_queried_argument : SpecificationBase
         {
             Establish context = () =>
@@ -58,7 +58,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxLike")]
+        [Subject(typeof(IReadSession), "QxLike")]
         public class when_two_items_has_string_that_partially_matches_queried_argument : SpecificationBase
         {
             Establish context = () =>
@@ -87,7 +87,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxLike")]
+        [Subject(typeof(IReadSession), "QxLike")]
         public class when_two_items_has_string_that_ends_with_queried_argument : SpecificationBase
         {
             Establish context = () =>
@@ -116,7 +116,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxLike")]
+        [Subject(typeof(IReadSession), "QxLike")]
         public class when_two_items_has_string_that_completely_matches_argument : SpecificationBase
         {
             Establish context = () =>

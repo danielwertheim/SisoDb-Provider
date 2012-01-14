@@ -3,10 +3,10 @@ using SisoDb.Structures;
 
 namespace SisoDb.Sql2008
 {
-    public class Sql2008UnitOfWork : DbUnitOfWork
+    public class Sql2008WriteSession : DbWriteSession
     {
-        protected internal Sql2008UnitOfWork(
-			IDbDatabase db,
+        protected internal Sql2008WriteSession(
+			ISisoDbDatabase db,
 			IDbClient dbClientTransactional,
 			IDbClient dbClientNonTransactional,
 			IIdentityStructureIdGenerator identityStructureIdGenerator)

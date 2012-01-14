@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class Includes
     {
-        [Subject(typeof(IQueryEngine), "Includes using Get all as X")]
+        [Subject(typeof(IReadSession), "Includes using Get all as X")]
         public class when_getting_all_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -35,7 +35,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes using Get all as X")]
+        [Subject(typeof(IReadSession), "Includes using Get all as X")]
         public class when_getting_all_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -59,7 +59,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes with Where, Paging and Sorting using Query as X")]
+        [Subject(typeof(IReadSession), "Includes with Where, Paging and Sorting using Query as X")]
         public class when_querying_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -95,7 +95,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes using Query as X")]
+        [Subject(typeof(IReadSession), "Includes using Query as X")]
         public class when_querying_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -205,12 +205,11 @@ namespace SisoDb.Specifications.QueryEngine
 					SecondArtist = secondArtist
 				};
 
-                testContext.Database.WithUnitOfWork(uow =>
+                testContext.Database.WithWriteSession(uow =>
                 {
                     uow.InsertMany(new [] { genre, secondGenre });
                     uow.InsertMany(new [] { artist, secondArtist, thirdArtist });
                     uow.InsertMany<IAlbumData>(new [] { album, secondAlbum });
-                    uow.Commit();
                 });
 
                 return new [] { album, secondAlbum };
@@ -229,12 +228,11 @@ namespace SisoDb.Specifications.QueryEngine
                     SecondArtist = secondArtist
                 };
 
-                testContext.Database.WithUnitOfWork(uow =>
+                testContext.Database.WithWriteSession(uow =>
                 {
                     uow.Insert<IGenreData>(genre);
                     uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
                     uow.Insert<IAlbumData>(album);
-                    uow.Commit();
                 });
 
                 return album;

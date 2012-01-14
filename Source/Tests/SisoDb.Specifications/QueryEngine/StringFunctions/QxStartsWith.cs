@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
 	class QxStartsWith
     {
-        [Subject(typeof(IQueryEngine), "QxStartsWith")]
+        [Subject(typeof(IReadSession), "QxStartsWith")]
         public class when_two_items_has_string_that_does_not_match_query : SpecificationBase
         {
             Establish context = () =>
@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxStartsWith")]
+        [Subject(typeof(IReadSession), "QxStartsWith")]
         public class when_two_items_has_string_that_starts_with_queried_argument : SpecificationBase
         {
             Establish context = () =>
@@ -58,7 +58,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxStartsWith")]
+        [Subject(typeof(IReadSession), "QxStartsWith")]
         public class when_two_items_has_string_that_completely_matches_argument : SpecificationBase
         {
             Establish context = () =>
@@ -87,7 +87,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-		[Subject(typeof(IQueryEngine), "StartsWith")]
+		[Subject(typeof(IReadSession), "StartsWith")]
 		public class when_two_first_items_has_string_that_starts_with_queried_argument_on_tostring_of_int : SpecificationBase
 		{
 			Establish context = () =>
@@ -119,7 +119,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IQueryEngine), "QxStartsWith")]
+		[Subject(typeof(IReadSession), "QxStartsWith")]
 		public class when_two_last_items_has_string_that_starts_with_queried_argument_on_tostring_of_int : SpecificationBase
 		{
 			Establish context = () =>
@@ -151,7 +151,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IQueryEngine), "QxStartsWith")]
+		[Subject(typeof(IReadSession), "QxStartsWith")]
 		public class when_two_first_items_has_string_that_starts_with_queried_argument_on_tostring_of_nullable_int : SpecificationBase
 		{
 			Establish context = () =>
@@ -183,7 +183,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryNullableItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IQueryEngine), "QxStartsWith")]
+		[Subject(typeof(IReadSession), "QxStartsWith")]
 		public class when_two_last_items_has_string_that_starts_with_queried_argument_on_tostring_of_nullable_int_value : SpecificationBase
 		{
 			Establish context = () =>

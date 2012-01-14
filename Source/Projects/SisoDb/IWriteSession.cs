@@ -5,19 +5,11 @@ using System.Linq.Expressions;
 namespace SisoDb
 {
     /// <summary>
-    /// All operations within the unit of work are transactional.
-    /// Use <see cref="Commit"/> to make your changes persistant.
+    /// Represents a Writable session. If the provider allows, it will be Transactional and
+    /// implicitly committed when disposed.
     /// </summary>
-    public interface IUnitOfWork : IQueryEngine
+    public interface IWriteSession : IReadSession
     {
-        /// <summary>
-        /// Commits your changes to the database. After a commit you
-        /// can continue to work with your UnitOfWork. You do not have
-        /// to create a new instance of your UnitOfWork, as it will
-        /// reset it self.
-        /// </summary>
-        void Commit();
-
         /// <summary>
         /// Inserts a single structure using the <typeparamref name="T"/> as
         /// the contract for the structure being inserted.
@@ -67,39 +59,22 @@ namespace SisoDb
         void Update<T>(T item) where T : class;
 
     	/// <summary>
-    	/// Traverses every structure in the set.
-    	/// and lets you apply changes to each yielded structure.
-    	/// During the yielding of structures, you can terminate the process by returning
-    	/// <see cref="UpdateManyModifierStatus.Abort"/>. To trash a structure return
-    	/// <see cref="UpdateManyModifierStatus.Trash"/> and to keep a structure return
-    	/// <see cref="UpdateManyModifierStatus.Keep"/>.
+    	/// Traverses every structure in the set and lets you apply changes to each yielded structure.
     	/// </summary>
     	/// <typeparam name="T"></typeparam>
     	/// <param name="modifier"></param>
     	/// <param name="expression"></param>
-    	/// <returns>
-    	/// False if you at anytime returned <see cref="UpdateManyModifierStatus.Abort"/>.
-    	/// True if everything went by and this indicates that you can commit the changes.</returns>
-    	bool UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class;
+    	void UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class;
 
     	/// <summary>
     	/// Traverses every structure in the set.
     	/// and lets you transform from <typeparamref name="TOld"/> to <typeparamref name="TNew"/>.
-    	/// During the yielding of structures, you can terminate the process by returning
-    	/// <see cref="UpdateManyModifierStatus.Abort"/>. To trash a structure return
-    	/// <see cref="UpdateManyModifierStatus.Trash"/> and to keep a structure return
-    	/// <see cref="UpdateManyModifierStatus.Keep"/>.
     	/// </summary>
     	/// <typeparam name="TOld"></typeparam>
     	/// <typeparam name="TNew"></typeparam>
     	/// <param name="modifier"></param>
     	/// <param name="expression"></param>
-    	/// <returns>
-    	/// False if you at anytime returned <see cref="UpdateManyModifierStatus.Abort"/>.
-    	/// True if everything went by and this indicates that you can commit the changes.</returns>
-    	bool UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
-			where TOld : class
-			where TNew : class;
+    	void UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null) where TOld : class where TNew : class;
 
         /// <summary>
         /// Deletes structure by id.

@@ -99,13 +99,12 @@ namespace SisoDb.Specifications.Database
                 TestContext.Database.UpsertStructureSet<OrgModel.MyClass>();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
 
-                using(var uow = TestContext.Database.CreateUnitOfWork())
+                using(var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.Insert(new OrgModel.MyClass
                     {
                         IndexableMember1 = "My string", IndexableMember2 = 42
                     });
-                    uow.Commit();
                 }
 
                 TestContext = TestContextFactory.Create();

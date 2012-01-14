@@ -94,7 +94,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 
     	private static class StructureTypeNameFor<T> where T : class
 		{
-			public static readonly string Name = TypeFor<T>.Type.Name;
+			public static readonly string Name = typeof(T).Name;
 		}
 
         private class Master

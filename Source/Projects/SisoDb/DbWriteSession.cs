@@ -13,7 +13,7 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class DbUnitOfWork : DbQueryEngine, IUnitOfWork
+	public abstract class DbWriteSession : DbReadSession, IWriteSession
 	{
 		protected const int MaxUpdateManyBatchSize = 1000;
 
@@ -21,8 +21,8 @@ namespace SisoDb
 
 		protected readonly IIdentityStructureIdGenerator IdentityStructureIdGenerator;
 
-		protected DbUnitOfWork(
-			IDbDatabase db, 
+		protected DbWriteSession(
+			ISisoDbDatabase db,
 			IDbClient dbClientTransactional,
 			IDbClient dbClientNonTransactional,
 			IIdentityStructureIdGenerator identityStructureIdGenerator)
@@ -37,25 +37,47 @@ namespace SisoDb
 
 		public override void Dispose()
 		{
-			base.Dispose();
+			DisposeResources(true);
+		}
 
-			if (DbClientNonTransactional != null)
+		public virtual void DisposeWhenFailed()
+		{
+			DisposeResources(false);
+		}
+
+		protected virtual void DisposeResources(bool commitChanges)
+		{
+			GC.SuppressFinalize(this);
+
+			if (DbClientNonTransactional == null)
+				throw new ObjectDisposedException(ExceptionMessages.WriteSession_AllreadyDisposed);
+
+			Exception exception = null;
+
+			if (commitChanges)
 			{
-				DbClientNonTransactional.Dispose();
-				DbClientNonTransactional = null;
+				try
+				{
+					DbClient.Flush();
+				}
+				catch (Exception ex)
+				{
+					exception = ex;
+				}
 			}
 
-			GC.SuppressFinalize(this);
+			base.Dispose();
+
+			DbClientNonTransactional.Dispose();
+			DbClientNonTransactional = null;
+
+			if (exception != null)
+				throw exception;
 		}
 
 		protected override void UpsertStructureSet(IStructureSchema structureSchema)
 		{
 			Db.SchemaManager.UpsertStructureSet(structureSchema, DbClientNonTransactional);
-		}
-
-		public virtual void Commit()
-		{
-			DbClient.Flush();
 		}
 
 		public virtual void Insert<T>(T item) where T : class
@@ -104,15 +126,15 @@ namespace SisoDb
 			var existingItem = DbClient.GetJsonById(updatedStructure.Id, structureSchema);
 
 			if (string.IsNullOrWhiteSpace(existingItem))
-				throw new SisoDbException(ExceptionMessages.UnitOfWork_NoItemExistsForUpdate.Inject(updatedStructure.Name, updatedStructure.Id.Value));
+				throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(updatedStructure.Name, updatedStructure.Id.Value));
 
-			DeleteById(structureSchema, updatedStructure.Id);
+			DbClient.DeleteById(updatedStructure.Id, structureSchema);
 
 			var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 			bulkInserter.Insert(structureSchema, new[] { updatedStructure });
 		}
 
-		public virtual bool UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
+		public virtual void UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
 		{
 			var spec = UpdateManySpec.Create<T>(StructureSchemas);
 			UpsertStructureSet(spec.NewSchema);
@@ -128,9 +150,7 @@ namespace SisoDb
 			{
 				var structureId = spec.NewSchema.IdAccessor.GetValue(structure);
 				var status = modifier.Invoke(structure);
-				if (status == UpdateManyModifierStatus.Abort)
-					return false;
-				
+
 				deleteIdFrom = deleteIdFrom ?? structureId;
 				deleteIdTo = structureId;
 
@@ -157,27 +177,25 @@ namespace SisoDb
 				structureInserter.Insert(spec.NewSchema, structureBuilder.CreateStructures(keepQueue, spec.NewSchema));
 				keepQueue.Clear();
 			}
-
-			return true;
 		}
 
-		public virtual bool UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
+		public virtual void UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
 			where TOld : class
 			where TNew : class
 		{
 			var spec = UpdateManySpec.Create<TOld, TNew>(StructureSchemas);
 			if (spec.TypesAreIdentical)
-				throw new SisoDbException(ExceptionMessages.UnitOfWork_UpdateMany_TOld_TNew_SameType);
+				throw new SisoDbException(ExceptionMessages.WriteSession_UpdateMany_TOld_TNew_SameType);
 
 			UpsertStructureSet(spec.NewSchema);
 
 			Func<IQuery, IEnumerable<string>> queryInvoker;
-			
+
 			if (spec.IsUpdatingSameSchema)
 			{
 				StructureSchemas.RemoveSchema(spec.OldType);
 				Db.SchemaManager.RemoveFromCache(spec.OldSchema);
-				
+
 				queryInvoker = QueryAsJson<TNew>;
 			}
 			else
@@ -199,10 +217,8 @@ namespace SisoDb
 				var oldStructure = Db.Serializer.Deserialize<TOld>(oldStructureJson);
 				var newStructure = Db.Serializer.Deserialize<TNew>(oldStructureJson);
 				var structureId = spec.OldSchema.IdAccessor.GetValue(oldStructure);
-				
+
 				var status = modifier.Invoke(oldStructure, newStructure);
-				if (status == UpdateManyModifierStatus.Abort)
-					return false;
 
 				deleteIdFrom = deleteIdFrom ?? structureId;
 				deleteIdTo = structureId;
@@ -236,8 +252,6 @@ namespace SisoDb
 				StructureSchemas.RemoveSchema(spec.OldType);
 				Db.SchemaManager.DropStructureSet(spec.OldSchema, DbClient);
 			}
-
-			return true;
 		}
 
 		public virtual void DeleteById<T>(object id) where T : class
@@ -245,12 +259,7 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			DeleteById(structureSchema, StructureId.ConvertFrom(id));
-		}
-
-		private void DeleteById(IStructureSchema structureSchema, IStructureId structureId)
-		{
-			DbClient.DeleteById(structureId, structureSchema);
+			DbClient.DeleteById(StructureId.ConvertFrom(id), structureSchema);
 		}
 
 		public virtual void DeleteByIds<T>(params object[] ids) where T : class
@@ -268,7 +277,7 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 
 			if (!structureSchema.IdAccessor.IdType.IsIdentity())
-				throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType));
+				throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.WriteSession_DeleteByIdInterval_WrongIdType));
 
 			UpsertStructureSet(structureSchema);
 
@@ -327,7 +336,7 @@ namespace SisoDb
 				return new UpdateManySpec(oldSchema, oldType, newSchema, newType);
 			}
 
-			internal IQuery BuildQuery<T>(IDbDatabase db, IStructureSchema structureSchema, Expression<Func<T, bool>> expression = null) where T : class
+			internal IQuery BuildQuery<T>(ISisoDbDatabase db, IStructureSchema structureSchema, Expression<Func<T, bool>> expression = null) where T : class
 			{
 				var queryBuilder = db.ProviderFactory.GetQueryBuilder<T>(db.StructureSchemas);
 				if (expression != null)

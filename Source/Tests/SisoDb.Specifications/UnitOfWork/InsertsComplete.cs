@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsComplete
     {
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_guid_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -31,7 +31,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteGuidEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_guid_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -52,7 +52,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteGuidEntity> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_string_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -73,7 +73,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteStringEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_string_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -94,7 +94,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteStringEntity> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_identity_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -115,7 +115,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteIdentityEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_identity_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -136,7 +136,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteIdentityEntity> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_big_identity_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -157,7 +157,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteBigIdentityEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_big_identity_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>

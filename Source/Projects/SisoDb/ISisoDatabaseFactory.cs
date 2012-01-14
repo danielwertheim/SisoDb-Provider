@@ -4,7 +4,7 @@
 	/// Factory used to create an <see cref="ISisoDatabase"/> which
 	/// is the starting point to consume SisoDb.
 	/// </summary>
-    public interface ISisoDbFactory
+    public interface ISisoDatabaseFactory
     {
         ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo);
     }

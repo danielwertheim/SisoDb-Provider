@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class Where
 	{
-		[Subject(typeof(IUnitOfWork), "Where")]
+		[Subject(typeof(IWriteSession), "Where")]
 		public class when_expression_matches_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
 		{
 			Establish context = () =>
@@ -18,7 +18,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(_structures);
 

@@ -10,7 +10,7 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class DbDatabase : IDbDatabase
+	public abstract class SisoDbDatabase : ISisoDbDatabase
     {
 		private readonly ISisoConnectionInfo _connectionInfo;
 		private readonly IDbProviderFactory _providerFactory;
@@ -74,7 +74,7 @@ namespace SisoDb
             }
         }
 
-    	protected DbDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
+    	protected SisoDbDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 			Ensure.That(dbProviderFactory, "dbProviderFactory").IsNotNull();
@@ -189,9 +189,18 @@ namespace SisoDb
             }
         }
 
-    	public abstract IQueryEngine CreateQueryEngine();
+    	public virtual IReadSession BeginReadSession()
+    	{
+    		return CreateReadSession();
+    	}
 
-    	public abstract IUnitOfWork CreateUnitOfWork();
+    	public virtual IWriteSession BeginWriteSession()
+    	{
+    		return new DbWriteSessionProxy(CreateWriteSession());
+    	}
+
+		protected abstract DbReadSession CreateReadSession();
+		protected abstract DbWriteSession CreateWriteSession();
 
     	[DebuggerStepThrough]
         public IReadOnce ReadOnce()
@@ -206,27 +215,27 @@ namespace SisoDb
         }
 
     	[DebuggerStepThrough]
-        public void WithUnitOfWork(Action<IUnitOfWork> consumer)
+        public void WithWriteSession(Action<IWriteSession> consumer)
         {
-            using (var uow = CreateUnitOfWork())
+            using (var uow = BeginWriteSession())
             {
                 consumer.Invoke(uow);
             }
         }
 
     	[DebuggerStepThrough]
-        public void WithQueryEngine(Action<IQueryEngine> consumer)
+        public void WithReadSession(Action<IReadSession> consumer)
         {
-            using (var qe = CreateQueryEngine())
+            using (var qe = BeginReadSession())
             {
                 consumer.Invoke(qe);
             }
         }
 
 		[DebuggerStepThrough]
-		public T WithQueryEngine<T>(Func<IQueryEngine, T> consumer)
+		public T WithReadSession<T>(Func<IReadSession, T> consumer)
 		{
-			using (var qe = CreateQueryEngine())
+			using (var qe = BeginReadSession())
 			{
 				return consumer.Invoke(qe);
 			}

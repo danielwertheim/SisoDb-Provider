@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class UpdateMany
 	{
-		[Subject(typeof(IUnitOfWork), "Update many")]
+		[Subject(typeof(IWriteSession), "Update many")]
 		public class when_stored_as_person_and_transformed_to_sales_person_with_more_fine_grained_properties : SpecificationBase
 		{
 			Establish context = () =>
@@ -17,10 +17,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				TestContext = TestContextFactory.Create();
 
 				var orgItem = new ModelComplexUpdates.Person { Name = "Daniel Wertheim", Address = "The Street 1\r\n12345\r\nThe City" };
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
 					uow.Insert(orgItem);
-					uow.Commit();
 				}
 
 				_personId = orgItem.StructureId;
@@ -28,9 +27,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
-					var updatedSet = uow.UpdateMany<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
+					uow.UpdateMany<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
 					{
 						var names = p.Name.Split(' ');
 						sp.Firstname = names[0];
@@ -43,15 +42,12 @@ namespace SisoDb.Specifications.UnitOfWork
 
 						return UpdateManyModifierStatus.Keep;
 					});
-
-					if (updatedSet)
-						uow.Commit();
 				}
 			};
 
 			It should_have_removed_the_person = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					q.Query<ModelComplexUpdates.Person>().Count().ShouldEqual(0);
 				}
@@ -59,7 +55,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_created_a_salesperson_from_the_person = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					var refetchedSalesPerson = q.GetById<ModelComplexUpdates.SalesPerson>(_personId);
 					refetchedSalesPerson.Firstname.ShouldEqual("Daniel");
@@ -73,7 +69,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static Guid _personId;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Update many")]
+		[Subject(typeof(IWriteSession), "Update many")]
 		public class when_three_structures_with_identities_exists_and_trash_is_made_on_second : SpecificationBase
 		{
 			Establish context = () =>
@@ -83,10 +79,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem3 = new ModelOld.ItemForPropChange { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.CreateUnitOfWork())
+				using (var uow = testContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
-					uow.Commit();
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -98,9 +93,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
-					var updatedSet = uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+					uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 					{
 						newItem.NewString1 = oldItem.String1;
 
@@ -109,15 +104,12 @@ namespace SisoDb.Specifications.UnitOfWork
 
 						return UpdateManyModifierStatus.Keep;
 					});
-
-					if (updatedSet)
-						uow.Commit();
 				}
 			};
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					var newItem1 = q.GetById<ModelNew.ItemForPropChange>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
@@ -127,7 +119,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_removed_the_second_item = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					var newItem2 = q.GetById<ModelNew.ItemForPropChange>(_orgItem2Id);
 					newItem2.ShouldBeNull();
@@ -136,7 +128,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_last_item = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					var newItem3 = q.GetById<ModelNew.ItemForPropChange>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
@@ -147,7 +139,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static int _orgItem1Id, _orgItem2Id, _orgItem3Id;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Update many")]
+		[Subject(typeof(IWriteSession), "Update many")]
 		public class when_three_structures_with_guids_exists_and_trash_is_made_on_second : SpecificationBase
 		{
 			Establish context = () =>
@@ -157,10 +149,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem3 = new ModelOld.GuidItemForPropChange { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.CreateUnitOfWork())
+				using (var uow = testContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
-					uow.Commit();
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -172,9 +163,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
-					var updatedSet = uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+					uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 					{
 						newItem.NewString1 = oldItem.String1;
 
@@ -183,14 +174,12 @@ namespace SisoDb.Specifications.UnitOfWork
 
 						return UpdateManyModifierStatus.Keep;
 					});
-					if (updatedSet)
-						uow.Commit();
 				}
 			};
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					var newItem1 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
@@ -200,7 +189,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_removed_the_second_item = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					var newItem2 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem2Id);
 					newItem2.ShouldBeNull();
@@ -209,7 +198,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_last_item = () =>
 			{
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					var newItem3 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
@@ -220,70 +209,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static Guid _orgItem1Id, _orgItem2Id, _orgItem3Id;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Update many")]
-		public class when_two_structures_exists_and_abort_is_made_on_last : SpecificationBase
-		{
-			Establish context = () =>
-			{
-				var orgItem1 = new ModelOld.GuidItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
-
-				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.CreateUnitOfWork())
-				{
-					uow.InsertMany(new[] { orgItem1, orgItem2 });
-					uow.Commit();
-				}
-
-				_orgItem1Id = orgItem1.StructureId;
-				_orgItem2Id = orgItem2.StructureId;
-
-				TestContext = TestContextFactory.Create();
-			};
-
-			Because of = () =>
-			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
-				{
-					var updatedSet = uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
-					{
-						newItem.NewString1 = "New" + oldItem.String1;
-
-						if (oldItem.StructureId == _orgItem2Id)
-							return UpdateManyModifierStatus.Abort;
-
-						return UpdateManyModifierStatus.Keep;
-					});
-
-					if (updatedSet)
-						uow.Commit();
-				}
-			};
-
-			It should_have_kept_old_items_untouched = () =>
-			{
-				TestContext.Database.StructureSchemas.Clear();
-
-				IList<ModelOld.GuidItemForPropChange> items;
-
-				using (var q = TestContext.Database.CreateQueryEngine())
-				{
-					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
-				}
-
-				items[0].StructureId.ShouldEqual(_orgItem1Id);
-				items[0].Int1.ShouldEqual(142);
-				items[0].String1.ShouldEqual("A");
-
-				items[1].StructureId.ShouldEqual(_orgItem2Id);
-				items[1].Int1.ShouldEqual(242);
-				items[1].String1.ShouldEqual("B");
-			};
-
-			private static Guid _orgItem1Id, _orgItem2Id;
-		}
-
-		[Subject(typeof(IUnitOfWork), "Update many")]
+		[Subject(typeof(IWriteSession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_not_get_a_identity_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -292,10 +218,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.CreateUnitOfWork())
+				using (var uow = testContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(new[] { orgItem1, orgItem2 });
-					uow.Commit();
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -306,9 +231,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
-					var updatedSet = uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+					uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = 0;
@@ -317,9 +242,6 @@ namespace SisoDb.Specifications.UnitOfWork
 
 						return UpdateManyModifierStatus.Keep;
 					});
-
-					if (updatedSet)
-						uow.Commit();
 				}
 			};
 
@@ -329,7 +251,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.ItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					items = q.Query<ModelNew.ItemForPropChange>().ToList();
 				}
@@ -346,7 +268,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static int _orgItem1Id, _orgItem2Id;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Update many")]
+		[Subject(typeof(IWriteSession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_not_get_a_guid_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -355,10 +277,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.CreateUnitOfWork())
+				using (var uow = testContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(new[] { orgItem1, orgItem2 });
-					uow.Commit();
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -369,9 +290,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
-					var updatedSet = uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+					uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = Guid.Empty;
@@ -380,9 +301,6 @@ namespace SisoDb.Specifications.UnitOfWork
 
 						return UpdateManyModifierStatus.Keep;
 					});
-
-					if (updatedSet)
-						uow.Commit();
 				}
 			};
 
@@ -392,7 +310,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
 				}
@@ -409,7 +327,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static Guid _orgItem1Id, _orgItem2Id;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Update many")]
+		[Subject(typeof(IWriteSession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_get_a_new_identity_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -418,10 +336,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.CreateUnitOfWork())
+				using (var uow = testContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(new[] { orgItem1, orgItem2 });
-					uow.Commit();
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -433,9 +350,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
-					var updatedSet = uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+					uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = _newItem2Id;
@@ -444,9 +361,6 @@ namespace SisoDb.Specifications.UnitOfWork
 
 						return UpdateManyModifierStatus.Keep;
 					});
-
-					if (updatedSet)
-						uow.Commit();
 				}
 			};
 
@@ -456,7 +370,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.ItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					items = q.Query<ModelNew.ItemForPropChange>().ToList();
 				}
@@ -474,7 +388,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static int _newItem2Id;
 		}
 
-		[Subject(typeof(IUnitOfWork), "Update many")]
+		[Subject(typeof(IWriteSession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_get_a_new_guid_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -483,10 +397,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.CreateUnitOfWork())
+				using (var uow = testContext.Database.BeginWriteSession())
 				{
 					uow.InsertMany(new[] { orgItem1, orgItem2 });
-					uow.Commit();
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -498,9 +411,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.CreateUnitOfWork())
+				using (var uow = TestContext.Database.BeginWriteSession())
 				{
-					var updatedSet = uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+					uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = _newItem2Id;
@@ -509,9 +422,6 @@ namespace SisoDb.Specifications.UnitOfWork
 
 						return UpdateManyModifierStatus.Keep;
 					});
-
-					if (updatedSet)
-						uow.Commit();
 				}
 			};
 
@@ -521,7 +431,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ModelNew.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.CreateQueryEngine())
+				using (var q = TestContext.Database.BeginReadSession())
 				{
 					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
 				}

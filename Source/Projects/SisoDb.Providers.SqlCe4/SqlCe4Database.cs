@@ -1,25 +1,25 @@
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4Database : DbDatabase
+    public class SqlCe4Database : SisoDbDatabase
     {
         protected internal SqlCe4Database(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
             : base(connectionInfo, dbProviderFactory)
         {
         }
 
-		public override IQueryEngine CreateQueryEngine()
+		protected override DbReadSession CreateReadSession()
         {
-            return new SqlCe4QueryEngine(
+            return new SqlCe4ReadSession(
 				this,
 				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo));
         }
 
-        public override IUnitOfWork CreateUnitOfWork()
+        protected override DbWriteSession CreateWriteSession()
         {
 			var dbClient = ProviderFactory.GetTransactionalDbClient(ConnectionInfo);
 			var dbClientNonTransactional = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo);
 
-			return new SqlCe4UnitOfWork(
+			return new SqlCe4WriteSession(
 				this,
 				dbClient,
 				dbClientNonTransactional,

@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
 {
     namespace QxAny
     {
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_strings_and_criteria_matches_first_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -37,7 +37,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_strings_and_second_criteria_matches_middle_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -68,7 +68,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_ints_and_criteria_matches_first_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -98,7 +98,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_ints_and_criteria_matches_middle_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -129,7 +129,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_strings_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -159,7 +159,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_strings_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -190,7 +190,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_decimals_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -220,7 +220,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_decimals_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -251,7 +251,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_child_list_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -299,7 +299,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_child_list_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -347,7 +347,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_list_on_child_list_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -395,7 +395,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_list_on_child_list_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -443,7 +443,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_grandchild_list_on_child_list_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -491,7 +491,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "QxAny")]
+        [Subject(typeof(IReadSession), "QxAny")]
         public class when_querying_grandchild_list_on_child_list_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>

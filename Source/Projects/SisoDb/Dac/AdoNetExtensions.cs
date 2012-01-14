@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SisoDb.Dac
 {
-    internal static class AdoNetExtensions
+	public static class AdoNetExtensions
     {
-        internal static T GetScalarResult<T>(this IDbCommand cmd)
+		public static T GetScalarResult<T>(this IDbCommand cmd)
         {
             var value = cmd.ExecuteScalar();
 
@@ -16,17 +16,17 @@ namespace SisoDb.Dac
             return (T)Convert.ChangeType(value, typeof(T));
         }
 
-        internal static IDbCommand CreateCommand(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+		public static IDbCommand CreateCommand(this IDbConnection connection, string sql, params IDacParameter[] parameters)
         {
             return CreateCommand(connection, null, CommandType.Text, sql, parameters);
         }
 
-		internal static IDbCommand CreateCommand(this IDbConnection connection, IDbTransaction transaction, string sql, params IDacParameter[] parameters)
+		public static IDbCommand CreateCommand(this IDbConnection connection, IDbTransaction transaction, string sql, params IDacParameter[] parameters)
 		{
 			return CreateCommand(connection, transaction, CommandType.Text, sql, parameters);
 		}
 
-		internal static IDbCommand CreateSpCommand(this IDbConnection connection, IDbTransaction transaction, string sql, params IDacParameter[] parameters)
+		public static IDbCommand CreateSpCommand(this IDbConnection connection, IDbTransaction transaction, string sql, params IDacParameter[] parameters)
 		{
 			return CreateCommand(connection, transaction, CommandType.StoredProcedure, sql, parameters);
 		}
@@ -48,7 +48,7 @@ namespace SisoDb.Dac
             return cmd;
         }
 
-        internal static void AddParameters(this IDbCommand cmd, params IDacParameter[] parameters)
+		public static void AddParameters(this IDbCommand cmd, params IDacParameter[] parameters)
         {
             foreach (var dacParam in parameters)
             {
@@ -60,7 +60,7 @@ namespace SisoDb.Dac
             }
         }
 
-        internal static void ExecuteNonQuery(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+		public static void ExecuteNonQuery(this IDbConnection connection, string sql, params IDacParameter[] parameters)
         {
             using(var cmd = connection.CreateCommand(sql, parameters))
             {
@@ -68,7 +68,7 @@ namespace SisoDb.Dac
             }
         }
 
-        internal static void ExecuteNonQuery(this IDbConnection connection, IDbTransaction transaction, string sql, params IDacParameter[] parameters)
+		public static void ExecuteNonQuery(this IDbConnection connection, IDbTransaction transaction, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = connection.CreateCommand(transaction, sql, parameters))
             {
@@ -76,7 +76,7 @@ namespace SisoDb.Dac
             }
         }
 
-        internal static void ExecuteNonQuery(this IDbConnection connection, IDbTransaction transaction, string[] sqls, params IDacParameter[] parameters)
+		public static void ExecuteNonQuery(this IDbConnection connection, IDbTransaction transaction, string[] sqls, params IDacParameter[] parameters)
         {
             using (var cmd = connection.CreateCommand(transaction, string.Empty, parameters))
             {
@@ -88,7 +88,7 @@ namespace SisoDb.Dac
             }
         }
 
-        internal static T ExecuteScalarResult<T>(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+		public static T ExecuteScalarResult<T>(this IDbConnection connection, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = connection.CreateCommand(sql, parameters))
             {

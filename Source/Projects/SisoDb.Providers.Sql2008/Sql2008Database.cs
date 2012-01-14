@@ -1,25 +1,25 @@
 namespace SisoDb.Sql2008
 {
-    public class Sql2008Database : DbDatabase
+    public class Sql2008Database : SisoDbDatabase
     {
         protected internal Sql2008Database(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory) 
 			: base(connectionInfo, dbProviderFactory)
         {
         }
 
-		public override IQueryEngine CreateQueryEngine()
+		protected override DbReadSession CreateReadSession()
         {
-            return new Sql2008QueryEngine(
+            return new Sql2008ReadSession(
 				this,
 				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo));
         }
 
-        public override IUnitOfWork CreateUnitOfWork()
+        protected override DbWriteSession CreateWriteSession()
         {
         	var dbClient = ProviderFactory.GetTransactionalDbClient(ConnectionInfo);
 			var dbClientNonTransactional = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo);
 
-			return new Sql2008UnitOfWork(
+			return new Sql2008WriteSession(
 				this,
 				dbClient,
 				dbClientNonTransactional,

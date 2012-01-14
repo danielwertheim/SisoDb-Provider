@@ -11,7 +11,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
     class Deletes
     {
-        [Subject(typeof(IUnitOfWork), "Delete by query")]
+        [Subject(typeof(IWriteSession), "Delete by query")]
         public class when_guiditem_and_deleting_two_of_four_items_using_query : SpecificationBase
         {
             Establish context = () =>
@@ -23,10 +23,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using(var uow = TestContext.Database.CreateUnitOfWork())
+                using(var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByQuery<GuidItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
-                    uow.Commit();
                 }
             };
 
@@ -64,7 +63,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<GuidItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by query")]
+        [Subject(typeof(IWriteSession), "Delete by query")]
         public class when_stringitem_and_deleting_two_of_four_items_using_query : SpecificationBase
         {
             Establish context = () =>
@@ -76,10 +75,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
-                    uow.Commit();
                 }
             };
 
@@ -117,7 +115,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<StringItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by query")]
+        [Subject(typeof(IWriteSession), "Delete by query")]
         public class when_identityitem_and_deleting_two_of_four_items_using_query : SpecificationBase
         {
             Establish context = () =>
@@ -129,10 +127,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByQuery<IdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
-                    uow.Commit();
                 }
             };
 
@@ -170,7 +167,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<IdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        [Subject(typeof(IWriteSession), "Delete by id")]
         public class when_guiditem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -182,11 +179,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<GuidItem>(_structures[1].StructureId);
                     uow.DeleteById<GuidItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -224,7 +220,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<GuidItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id (uniques)")]
+        [Subject(typeof(IWriteSession), "Delete by id (uniques)")]
         public class when_uniqueguiditem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -236,11 +232,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<UniqueGuidItem>(_structures[1].StructureId);
                     uow.DeleteById<UniqueGuidItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -290,7 +285,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<UniqueGuidItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        [Subject(typeof(IWriteSession), "Delete by id")]
         public class when_stringitem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -302,11 +297,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<StringItem>(_structures[1].StructureId);
                     uow.DeleteById<StringItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -344,7 +338,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<StringItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id (uniques)")]
+        [Subject(typeof(IWriteSession), "Delete by id (uniques)")]
         public class when_uniquestringitem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -356,11 +350,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<UniqueStringItem>(_structures[1].StructureId);
                     uow.DeleteById<UniqueStringItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -410,7 +403,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<UniqueStringItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        [Subject(typeof(IWriteSession), "Delete by id")]
         public class when_identityitem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -422,11 +415,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<IdentityItem>(_structures[1].StructureId);
                     uow.DeleteById<IdentityItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -464,7 +456,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<IdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id (uniques)")]
+        [Subject(typeof(IWriteSession), "Delete by id (uniques)")]
         public class when_uniqueidentityitem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -476,11 +468,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<UniqueIdentityItem>(_structures[1].StructureId);
                     uow.DeleteById<UniqueIdentityItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -530,7 +521,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<UniqueIdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        [Subject(typeof(IWriteSession), "Delete by id")]
         public class when_bigidentityitem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -542,11 +533,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<BigIdentityItem>(_structures[1].StructureId);
                     uow.DeleteById<BigIdentityItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -584,7 +574,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<BigIdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id (uniques)")]
+        [Subject(typeof(IWriteSession), "Delete by id (uniques)")]
         public class when_uniquebigidentityitem_and_deleting_two_of_four_items_using_id : SpecificationBase
         {
             Establish context = () =>
@@ -596,11 +586,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteById<UniqueBigIdentityItem>(_structures[1].StructureId);
                     uow.DeleteById<UniqueBigIdentityItem>(_structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -650,7 +639,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<UniqueBigIdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        [Subject(typeof(IWriteSession), "Delete by id")]
         public class when_guiditem_and_deleting_item_by_id_in_empty_set : SpecificationBase
         {
             Establish context = 
@@ -660,10 +649,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() => 
                 {
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var uow = TestContext.Database.BeginWriteSession())
                     {
                         uow.DeleteById<GuidItem>(Guid.Parse("F875F861-24DC-420C-988A-196977A21C43"));
-                        uow.Commit();
                     }
                 });
             };
@@ -672,7 +660,7 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => CaughtException.ShouldBeNull();
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        [Subject(typeof(IWriteSession), "Delete by id")]
         public class when_stringitem_and_deleting_item_by_id_in_empty_set : SpecificationBase
         {
             Establish context =
@@ -682,10 +670,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var uow = TestContext.Database.BeginWriteSession())
                     {
                         uow.DeleteById<StringItem>("foo");
-                        uow.Commit();
                     }
                 });
             };
@@ -694,7 +681,7 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => CaughtException.ShouldBeNull();
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id")]
+        [Subject(typeof(IWriteSession), "Delete by id")]
         public class when_identityitem_and_deleting_item_by_id_in_empty_set : SpecificationBase
         {
             Establish context =
@@ -704,10 +691,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var uow = TestContext.Database.BeginWriteSession())
                     {
                         uow.DeleteById<IdentityItem>(1);
-                        uow.Commit();
                     }
                 });
             };
@@ -716,7 +702,7 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => CaughtException.ShouldBeNull();
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by ids")]
+        [Subject(typeof(IWriteSession), "Delete by ids")]
         public class when_guiditem_and_deleting_two_of_four_items_using_ids : SpecificationBase
         {
             Establish context = () =>
@@ -728,10 +714,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByIds<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -769,7 +754,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<GuidItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by ids")]
+        [Subject(typeof(IWriteSession), "Delete by ids")]
         public class when_stringitem_and_deleting_two_of_four_items_using_ids : SpecificationBase
         {
             Establish context = () =>
@@ -781,10 +766,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByIds<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -822,7 +806,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<StringItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by ids")]
+        [Subject(typeof(IWriteSession), "Delete by ids")]
         public class when_identityitem_and_deleting_two_of_four_items_using_ids : SpecificationBase
         {
             Establish context = () =>
@@ -834,10 +818,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByIds<IdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -875,7 +858,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<IdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by ids")]
+        [Subject(typeof(IWriteSession), "Delete by ids")]
         public class when_bigidentityitem_and_deleting_two_of_four_items_using_ids : SpecificationBase
         {
             Establish context = () =>
@@ -887,10 +870,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByIds<BigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -928,7 +910,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<BigIdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id interval")]
+        [Subject(typeof(IWriteSession), "Delete by id interval")]
         public class when_guiditem_throws_not_supported_exception : SpecificationBase
         {
             Establish context = () =>
@@ -941,10 +923,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var uow = TestContext.Database.BeginWriteSession())
                     {
                         uow.DeleteByIdInterval<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
-                        uow.Commit();
                     }
                 });
             };
@@ -955,13 +936,13 @@ namespace SisoDb.Specifications.UnitOfWork
 				CaughtException.ShouldBeOfType<SisoDbException>();
 
 				var ex = (SisoDbException)CaughtException;
-                ex.Message.ShouldContain(ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
+				ex.Message.ShouldContain(ExceptionMessages.WriteSession_DeleteByIdInterval_WrongIdType);
             };
 
             private static IList<GuidItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id interval")]
+        [Subject(typeof(IWriteSession), "Delete by id interval")]
         public class when_stringitem_throws_not_supported_exception : SpecificationBase
         {
             Establish context = () =>
@@ -974,10 +955,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var uow = TestContext.Database.BeginWriteSession())
                     {
                         uow.DeleteByIdInterval<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
-                        uow.Commit();
                     }
                 });
             };
@@ -988,13 +968,13 @@ namespace SisoDb.Specifications.UnitOfWork
 				CaughtException.ShouldBeOfType<SisoDbException>();
 
 				var ex = (SisoDbException)CaughtException;
-                ex.Message.ShouldContain(ExceptionMessages.UnitOfWork_DeleteByIdInterval_WrongIdType);
+				ex.Message.ShouldContain(ExceptionMessages.WriteSession_DeleteByIdInterval_WrongIdType);
             };
 
             private static IList<StringItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id interval")]
+        [Subject(typeof(IWriteSession), "Delete by id interval")]
         public class when_identityitem_and_deleting_two_of_four_items_using_id_interval : SpecificationBase
         {
             Establish context = () =>
@@ -1006,10 +986,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByIdInterval<IdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 
@@ -1047,7 +1026,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<IdentityItem> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Delete by id interval")]
+        [Subject(typeof(IWriteSession), "Delete by id interval")]
         public class when_bigidentityitem_and_deleting_two_of_four_items_using_id_interval : SpecificationBase
         {
             Establish context = () =>
@@ -1059,10 +1038,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.DeleteByIdInterval<BigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
-                    uow.Commit();
                 }
             };
 

@@ -11,7 +11,7 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class GetByIdInterval
     {
-        [Subject(typeof(IQueryEngine), "Get by Id interval")]
+        [Subject(typeof(IReadSession), "Get by Id interval")]
         public class when_getting_for_identities_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryIdentityItem> _result;
         }
 
-        [Subject(typeof(IQueryEngine), "Get by Id interval")]
+        [Subject(typeof(IReadSession), "Get by Id interval")]
         public class when_getting_for_big_identities_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -37,7 +37,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryBigIdentityItem> _result;
         }
 
-        [Subject(typeof(IQueryEngine), "Get by Id interval")]
+        [Subject(typeof(IReadSession), "Get by Id interval")]
         public class when_getting_for_guids : SpecificationBase
         {
             Establish context = () =>
@@ -61,14 +61,14 @@ namespace SisoDb.Specifications.QueryEngine
 				CaughtException.ShouldBeOfType<SisoDbException>();
 
 				var ex = (SisoDbException)CaughtException;
-                ex.Message.ShouldContain(ExceptionMessages.QuerySession_GetByIdInterval_WrongIdType);
+                ex.Message.ShouldContain(ExceptionMessages.ReadSession_GetByIdInterval_WrongIdType);
             };
 
             private static Guid _idFrom, _idTo;
             private static IList<QueryGuidItem> _result;
         }
 
-        [Subject(typeof(IQueryEngine), "Get by Id interval")]
+        [Subject(typeof(IReadSession), "Get by Id interval")]
         public class when_getting_for_strings : SpecificationBase
         {
             Establish context = () =>
@@ -92,20 +92,20 @@ namespace SisoDb.Specifications.QueryEngine
 				CaughtException.ShouldBeOfType<SisoDbException>();
 
 				var ex = (SisoDbException)CaughtException;
-                ex.Message.ShouldContain(ExceptionMessages.QuerySession_GetByIdInterval_WrongIdType);
+                ex.Message.ShouldContain(ExceptionMessages.ReadSession_GetByIdInterval_WrongIdType);
             };
 
             private static string _idFrom, _idTo;
             private static IList<QueryStringItem> _result;
         }
 
-        [Subject(typeof(IQueryEngine), "Get by Id interval")]
+        [Subject(typeof(IReadSession), "Get by Id interval")]
         public class when_getting_for_identities_and_range_matches_subset_of_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.InsertMany(new[]
                     {
@@ -114,8 +114,6 @@ namespace SisoDb.Specifications.QueryEngine
                         new QueryIdentityItem{SortOrder = 3, StringValue = "C"},
                         new QueryIdentityItem{SortOrder = 4, StringValue = "D"},
                     });
-
-                    uow.Commit();
                 }
             };
 
@@ -133,13 +131,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryIdentityItem> _result;
         }
 
-        [Subject(typeof(IQueryEngine), "Get by Id interval")]
+        [Subject(typeof(IReadSession), "Get by Id interval")]
         public class when_getting_for_big_identities_and_range_matches_subset_of_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var uow = TestContext.Database.BeginWriteSession())
                 {
                     uow.InsertMany(new[]
                     {
@@ -148,8 +146,6 @@ namespace SisoDb.Specifications.QueryEngine
                         new QueryBigIdentityItem{SortOrder = 3, StringValue = "C"},
                         new QueryBigIdentityItem{SortOrder = 4, StringValue = "D"},
                     });
-
-                    uow.Commit();
                 }
             };
 

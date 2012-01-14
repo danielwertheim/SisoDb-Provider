@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class RawQueries
     {
-        [Subject(typeof(IQueryEngine), "Raw Query")]
+        [Subject(typeof(IReadSession), "Raw Query")]
         public class when_raw_query_returns_no_result : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-		[Subject(typeof(IQueryEngine), "Raw Query as Json")]
+		[Subject(typeof(IReadSession), "Raw Query as Json")]
 		public class when_raw_query_returns_no_json_result : SpecificationBase
 		{
 			Establish context = () => TestContext = TestContextFactory.Create();
@@ -44,7 +44,7 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<string> _fetchedStructures;
 		}
 
-		[Subject(typeof(IQueryEngine), "Raw Query")]
+		[Subject(typeof(IReadSession), "Raw Query")]
 		public class when_raw_query_with_parameters : SpecificationBase
 		{
 			Establish context = () =>
@@ -76,7 +76,7 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IQueryEngine), "Raw Query as Json")]
+		[Subject(typeof(IReadSession), "Raw Query as Json")]
 		public class when_raw_query_with_parameters_returning_json : SpecificationBase
 		{
 			Establish context = () =>
