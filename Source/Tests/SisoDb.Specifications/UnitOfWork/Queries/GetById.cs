@@ -18,11 +18,11 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(_structures);
+					session.InsertMany(_structures);
 
-					_fetchedStructure = uow.GetById<QueryGuidItem>(_structures[1].StructureId);
+					_fetchedStructure = session.GetById<QueryGuidItem>(_structures[1].StructureId);
 				}
 			};
 

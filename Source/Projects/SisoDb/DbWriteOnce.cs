@@ -20,9 +20,9 @@ namespace SisoDb
 		{
 			Ensure.That(item, "item").IsNotNull();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.Insert(item);
+				session.Insert(item);
 			}
 
 			return item;
@@ -32,9 +32,9 @@ namespace SisoDb
 		{
 			Ensure.That(json, "json").IsNotNullOrWhiteSpace();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.InsertJson<T>(json);
+				session.InsertJson<T>(json);
 			}
 		}
 
@@ -42,9 +42,9 @@ namespace SisoDb
 		{
 			Ensure.That(items, "items").HasItems();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.InsertMany(items);
+				session.InsertMany(items);
 			}
 
 			return items;
@@ -54,9 +54,9 @@ namespace SisoDb
 		{
 			Ensure.That(json, "json").HasItems();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.InsertManyJson<T>(json);
+				session.InsertManyJson<T>(json);
 			}
 		}
 
@@ -64,9 +64,9 @@ namespace SisoDb
 		{
 			Ensure.That(item, "item").IsNotNull();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.Update(item);
+				session.Update(item);
 			}
 
 			return item;
@@ -76,9 +76,9 @@ namespace SisoDb
 		{
 			Ensure.That(modifier, "modifier").IsNotNull();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.UpdateMany(modifier, expression);
+				session.UpdateMany(modifier, expression);
 			}
 		}
 
@@ -88,17 +88,17 @@ namespace SisoDb
 		{
 			Ensure.That(modifier, "modifier").IsNotNull();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.UpdateMany(modifier, expression);
+				session.UpdateMany(modifier, expression);
 			}
 		}
 
 		public void DeleteById<T>(object id) where T : class
 		{
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.DeleteById<T>(id);
+				session.DeleteById<T>(id);
 			}
 		}
 
@@ -106,25 +106,25 @@ namespace SisoDb
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.DeleteByIds<T>(ids);
+				session.DeleteByIds<T>(ids);
 			}
 		}
 
 		public void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.DeleteByIdInterval<T>(idFrom, idTo);
+				session.DeleteByIdInterval<T>(idFrom, idTo);
 			}
 		}
 
 		public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
 		{
-			using (var uow = _db.BeginWriteSession())
+			using (var session = _db.BeginWriteSession())
 			{
-				uow.DeleteByQuery(expression);
+				session.DeleteByQuery(expression);
 			}
 		}
     }

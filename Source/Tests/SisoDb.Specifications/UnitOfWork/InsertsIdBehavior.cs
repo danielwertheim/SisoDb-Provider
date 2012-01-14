@@ -60,9 +60,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -90,9 +90,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -120,9 +120,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -157,9 +157,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -187,9 +187,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -217,9 +217,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -247,9 +247,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -284,9 +284,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -314,9 +314,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -344,9 +344,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -374,9 +374,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -411,9 +411,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 

@@ -17,9 +17,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				TestContext = TestContextFactory.Create();
 
 				var orgItem = new ModelComplexUpdates.Person { Name = "Daniel Wertheim", Address = "The Street 1\r\n12345\r\nThe City" };
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.Insert(orgItem);
+					session.Insert(orgItem);
 				}
 
 				_personId = orgItem.StructureId;
@@ -27,9 +27,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.UpdateMany<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
+					session.UpdateMany<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
 					{
 						var names = p.Name.Split(' ');
 						sp.Firstname = names[0];
@@ -79,9 +79,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem3 = new ModelOld.ItemForPropChange { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
+					session.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -93,9 +93,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+					session.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 					{
 						newItem.NewString1 = oldItem.String1;
 
@@ -149,9 +149,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem3 = new ModelOld.GuidItemForPropChange { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
+					session.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -163,9 +163,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+					session.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 					{
 						newItem.NewString1 = oldItem.String1;
 
@@ -218,9 +218,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(new[] { orgItem1, orgItem2 });
+					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -231,9 +231,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+					session.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = 0;
@@ -277,9 +277,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(new[] { orgItem1, orgItem2 });
+					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -290,9 +290,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+					session.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = Guid.Empty;
@@ -336,9 +336,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(new[] { orgItem1, orgItem2 });
+					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -350,9 +350,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+					session.UpdateMany<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = _newItem2Id;
@@ -397,9 +397,9 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var uow = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(new[] { orgItem1, orgItem2 });
+					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -411,9 +411,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+					session.UpdateMany<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 					{
 						if (oldItem.StructureId == _orgItem2Id)
 							newItem.StructureId = _newItem2Id;

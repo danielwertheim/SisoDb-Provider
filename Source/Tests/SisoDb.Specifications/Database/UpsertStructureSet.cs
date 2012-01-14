@@ -99,9 +99,9 @@ namespace SisoDb.Specifications.Database
                 TestContext.Database.UpsertStructureSet<OrgModel.MyClass>();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
 
-                using(var uow = TestContext.Database.BeginWriteSession())
+                using(var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(new OrgModel.MyClass
+                    session.Insert(new OrgModel.MyClass
                     {
                         IndexableMember1 = "My string", IndexableMember2 = 42
                     });

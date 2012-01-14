@@ -13,11 +13,11 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+					session.InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
 
-					_count = uow.Query<QueryGuidItem>().Count(x => x.SortOrder >= 3);
+					_count = session.Query<QueryGuidItem>().Count(x => x.SortOrder >= 3);
 				}
 			};
 

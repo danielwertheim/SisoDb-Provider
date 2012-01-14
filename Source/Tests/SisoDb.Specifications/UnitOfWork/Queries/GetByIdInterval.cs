@@ -22,9 +22,9 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 			{
 				CaughtException = Catch.Exception(() =>
 				{
-					using (var uow = TestContext.Database.BeginWriteSession())
+					using (var session = TestContext.Database.BeginWriteSession())
 					{
-						_fetchedStructures = uow.GetByIdInterval<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+						_fetchedStructures = session.GetByIdInterval<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 					}
 				});
 			};

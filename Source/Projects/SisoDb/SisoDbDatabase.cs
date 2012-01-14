@@ -217,27 +217,27 @@ namespace SisoDb
     	[DebuggerStepThrough]
         public void WithWriteSession(Action<IWriteSession> consumer)
         {
-            using (var uow = BeginWriteSession())
+            using (var session = BeginWriteSession())
             {
-                consumer.Invoke(uow);
+				consumer.Invoke(session);
             }
         }
 
     	[DebuggerStepThrough]
         public void WithReadSession(Action<IReadSession> consumer)
         {
-            using (var qe = BeginReadSession())
+			using (var session = BeginReadSession())
             {
-                consumer.Invoke(qe);
+				consumer.Invoke(session);
             }
         }
 
 		[DebuggerStepThrough]
 		public T WithReadSession<T>(Func<IReadSession, T> consumer)
 		{
-			using (var qe = BeginReadSession())
+			using (var session = BeginReadSession())
 			{
-				return consumer.Invoke(qe);
+				return consumer.Invoke(session);
 			}
 		}
     }

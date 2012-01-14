@@ -105,9 +105,9 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertMany(new[]
+                    session.InsertMany(new[]
                     {
                         new QueryIdentityItem{SortOrder = 1, StringValue = "A"},
                         new QueryIdentityItem{SortOrder = 2, StringValue = "B"},
@@ -137,9 +137,9 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertMany(new[]
+                    session.InsertMany(new[]
                     {
                         new QueryBigIdentityItem{SortOrder = 1, StringValue = "A"},
                         new QueryBigIdentityItem{SortOrder = 2, StringValue = "B"},

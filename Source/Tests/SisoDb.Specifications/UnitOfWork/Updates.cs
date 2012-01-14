@@ -24,13 +24,13 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
                     _structures[1].Value += 10;
-                    uow.Update(_structures[1]);
+                    session.Update(_structures[1]);
 
                     _structures[2].Value += 10;
-                    uow.Update(_structures[2]);
+                    session.Update(_structures[2]);
                 }
             };
 
@@ -67,13 +67,13 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
                     _structures[1].Value += 10;
-                    uow.Update(_structures[1]);
+                    session.Update(_structures[1]);
 
                     _structures[2].Value += 10;
-                    uow.Update(_structures[2]);
+                    session.Update(_structures[2]);
                 }
             };
 
@@ -110,13 +110,13 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
                     _structures[1].Value += 10;
-                    uow.Update(_structures[1]);
+                    session.Update(_structures[1]);
 
                     _structures[2].Value += 10;
-                    uow.Update(_structures[2]);
+                    session.Update(_structures[2]);
                 }
             };
 
@@ -153,13 +153,13 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
                     _structures[1].Value += 10;
-                    uow.Update(_structures[1]);
+                    session.Update(_structures[1]);
 
                     _structures[2].Value += 10;
-                    uow.Update(_structures[2]);
+                    session.Update(_structures[2]);
                 }
             };
 
@@ -198,10 +198,10 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
                         _structures[0].UniqueValue = _structures[1].UniqueValue;
-                        uow.Update(_structures[0]);
+                        session.Update(_structures[0]);
                     }
                 });
             };
@@ -244,10 +244,10 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
                         _structures[0].UniqueValue = _structures[1].UniqueValue;
-                        uow.Update(_structures[0]);
+                        session.Update(_structures[0]);
                     }
                 });
             };
@@ -290,10 +290,10 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
                         _structures[0].UniqueValue = _structures[1].UniqueValue;
-                        uow.Update(_structures[0]);
+                        session.Update(_structures[0]);
                     }
                 });
             };
@@ -334,10 +334,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
                     _structures[0].UniqueValue = 42;
-                    uow.Update(_structures[0]);
+                    session.Update(_structures[0]);
                 }
             };
 
@@ -374,10 +374,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
                     _structures[0].UniqueValue = 42;
-                    uow.Update(_structures[0]);
+                    session.Update(_structures[0]);
                 }
             };
 
@@ -414,10 +414,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
                     _structures[0].UniqueValue = 42;
-                    uow.Update(_structures[0]);
+                    session.Update(_structures[0]);
                 }
             };
 

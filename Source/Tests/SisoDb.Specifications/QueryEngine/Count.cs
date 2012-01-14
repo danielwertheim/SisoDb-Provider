@@ -44,9 +44,9 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertMany(new[]
+                    session.InsertMany(new[]
                     {
                         new QueryGuidItem{SortOrder = 1, StringValue = "A"},
                         new QueryGuidItem{SortOrder = 2, StringValue = "B"}
@@ -56,8 +56,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.BeginReadSession())
-                    _itemsCount = qe.Query<QueryGuidItem>().Count();
+                using (var session =TestContext.Database.BeginReadSession())
+                    _itemsCount = session.Query<QueryGuidItem>().Count();
             };
 
             It should_be_2 = () => _itemsCount.ShouldEqual(2);
@@ -71,9 +71,9 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertMany(new[]
+                    session.InsertMany(new[]
                     {
                         new QueryGuidItem{SortOrder = 1, StringValue = "A"},
                         new QueryGuidItem{SortOrder = 2, StringValue = "B"},
@@ -84,8 +84,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.BeginReadSession())
-                    _itemsCount = qe.Query<QueryGuidItem>().Count(x => x.SortOrder > 1);
+                using (var session =TestContext.Database.BeginReadSession())
+                    _itemsCount = session.Query<QueryGuidItem>().Count(x => x.SortOrder > 1);
             };
 
             It should_be_2 = () => _itemsCount.ShouldEqual(2);
@@ -99,9 +99,9 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertMany(new[]
+                    session.InsertMany(new[]
                     {
                         new QueryGuidItem{SortOrder = 1, StringValue = "A"},
                         new QueryGuidItem{SortOrder = 2, StringValue = "B"},
@@ -112,8 +112,8 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var qe = TestContext.Database.BeginReadSession())
-                    _itemsCount = qe.Query<QueryGuidItem>().Count(x => x.SortOrder < 1);
+                using (var session =TestContext.Database.BeginReadSession())
+                    _itemsCount = session.Query<QueryGuidItem>().Count(x => x.SortOrder < 1);
             };
 
             It should_be_0 = () => _itemsCount.ShouldEqual(0);

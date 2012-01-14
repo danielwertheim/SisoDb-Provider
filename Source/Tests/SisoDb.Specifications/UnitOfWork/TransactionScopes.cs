@@ -17,9 +17,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var ts = new TransactionScope())
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 1 }, 
                             new IdentityItem { Value = 2 }, 
@@ -27,9 +27,9 @@ namespace SisoDb.Specifications.UnitOfWork
                         });
                     }
 
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 4 }, 
                             new IdentityItem { Value = 5 }, 
@@ -41,9 +41,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginReadSession())
                 {
-					qe.Query<IdentityItem>().Count().ShouldEqual(0);
+					session.Query<IdentityItem>().Count().ShouldEqual(0);
                 }
             };
         }
@@ -57,9 +57,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var ts = new TransactionScope())
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 1 }, 
                             new IdentityItem { Value = 2 }, 
@@ -67,9 +67,9 @@ namespace SisoDb.Specifications.UnitOfWork
                         });
                     }
 
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 4 }, 
                             new IdentityItem { Value = 5 }, 
@@ -83,9 +83,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginReadSession())
                 {
-					qe.Query<IdentityItem>().Count().ShouldEqual(6);
+					session.Query<IdentityItem>().Count().ShouldEqual(6);
                 }
             };
         }

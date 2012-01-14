@@ -75,10 +75,10 @@ namespace SisoDb.Testing.Steps
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var qe = db.BeginReadSession())
+			using (var session =db.BeginReadSession())
 			{
 				foreach (var id in ids)
-					qe.GetById<T>(id).ShouldNotBeNull();
+					session.GetById<T>(id).ShouldNotBeNull();
 			}
 		}
 
@@ -86,10 +86,10 @@ namespace SisoDb.Testing.Steps
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var qe = db.BeginReadSession())
+			using (var session =db.BeginReadSession())
 			{
 				foreach (var id in ids)
-					qe.GetById<T>(id).ShouldBeNull();
+					session.GetById<T>(id).ShouldBeNull();
 			}
 		}
 
@@ -99,12 +99,12 @@ namespace SisoDb.Testing.Steps
 
 			var structureSchema = db.StructureSchemas.GetSchema(typeof(T));
 
-			using (var qe = db.BeginReadSession())
+			using (var session =db.BeginReadSession())
 			{
 				foreach (var structure in structures)
 				{
 					var id = structureSchema.IdAccessor.GetValue(structure);
-					var refetched = qe.GetById<T>(id.Value);
+					var refetched = session.GetById<T>(id.Value);
 					refetched.ShouldBeValueEqualTo(structure);
 				}
 			}

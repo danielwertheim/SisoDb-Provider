@@ -115,9 +115,9 @@ namespace SisoDb.Profiling
 
         private static int GetAllCustomers(ISisoDatabase database)
         {
-			using(var qe = database.BeginReadSession())
+			using(var session =database.BeginReadSession())
 			{
-				return qe.Query<Customer>().ToEnumerable().Count();
+				return session.Query<Customer>().ToEnumerable().Count();
 			}
         }
 
@@ -128,17 +128,17 @@ namespace SisoDb.Profiling
 
 		private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			using (var qe = database.BeginReadSession())
+			using (var session =database.BeginReadSession())
 			{
-				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
+				return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
 			}
         }
 
 		private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			using (var qe = database.BeginReadSession())
+			using (var session =database.BeginReadSession())
 			{
-				return qe.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
+				return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
 			}
         }
     }

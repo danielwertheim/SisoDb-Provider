@@ -23,9 +23,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using(var uow = TestContext.Database.BeginWriteSession())
+                using(var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByQuery<GuidItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.DeleteByQuery<GuidItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -75,9 +75,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -127,9 +127,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByQuery<IdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.DeleteByQuery<IdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -179,10 +179,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<GuidItem>(_structures[1].StructureId);
-                    uow.DeleteById<GuidItem>(_structures[2].StructureId);
+                    session.DeleteById<GuidItem>(_structures[1].StructureId);
+                    session.DeleteById<GuidItem>(_structures[2].StructureId);
                 }
             };
 
@@ -232,10 +232,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<UniqueGuidItem>(_structures[1].StructureId);
-                    uow.DeleteById<UniqueGuidItem>(_structures[2].StructureId);
+                    session.DeleteById<UniqueGuidItem>(_structures[1].StructureId);
+                    session.DeleteById<UniqueGuidItem>(_structures[2].StructureId);
                 }
             };
 
@@ -297,10 +297,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<StringItem>(_structures[1].StructureId);
-                    uow.DeleteById<StringItem>(_structures[2].StructureId);
+                    session.DeleteById<StringItem>(_structures[1].StructureId);
+                    session.DeleteById<StringItem>(_structures[2].StructureId);
                 }
             };
 
@@ -350,10 +350,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<UniqueStringItem>(_structures[1].StructureId);
-                    uow.DeleteById<UniqueStringItem>(_structures[2].StructureId);
+                    session.DeleteById<UniqueStringItem>(_structures[1].StructureId);
+                    session.DeleteById<UniqueStringItem>(_structures[2].StructureId);
                 }
             };
 
@@ -415,10 +415,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<IdentityItem>(_structures[1].StructureId);
-                    uow.DeleteById<IdentityItem>(_structures[2].StructureId);
+                    session.DeleteById<IdentityItem>(_structures[1].StructureId);
+                    session.DeleteById<IdentityItem>(_structures[2].StructureId);
                 }
             };
 
@@ -468,10 +468,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<UniqueIdentityItem>(_structures[1].StructureId);
-                    uow.DeleteById<UniqueIdentityItem>(_structures[2].StructureId);
+                    session.DeleteById<UniqueIdentityItem>(_structures[1].StructureId);
+                    session.DeleteById<UniqueIdentityItem>(_structures[2].StructureId);
                 }
             };
 
@@ -533,10 +533,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<BigIdentityItem>(_structures[1].StructureId);
-                    uow.DeleteById<BigIdentityItem>(_structures[2].StructureId);
+                    session.DeleteById<BigIdentityItem>(_structures[1].StructureId);
+                    session.DeleteById<BigIdentityItem>(_structures[2].StructureId);
                 }
             };
 
@@ -586,10 +586,10 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteById<UniqueBigIdentityItem>(_structures[1].StructureId);
-                    uow.DeleteById<UniqueBigIdentityItem>(_structures[2].StructureId);
+                    session.DeleteById<UniqueBigIdentityItem>(_structures[1].StructureId);
+                    session.DeleteById<UniqueBigIdentityItem>(_structures[2].StructureId);
                 }
             };
 
@@ -649,9 +649,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() => 
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.DeleteById<GuidItem>(Guid.Parse("F875F861-24DC-420C-988A-196977A21C43"));
+                        session.DeleteById<GuidItem>(Guid.Parse("F875F861-24DC-420C-988A-196977A21C43"));
                     }
                 });
             };
@@ -670,9 +670,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.DeleteById<StringItem>("foo");
+                        session.DeleteById<StringItem>("foo");
                     }
                 });
             };
@@ -691,9 +691,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.DeleteById<IdentityItem>(1);
+                        session.DeleteById<IdentityItem>(1);
                     }
                 });
             };
@@ -714,9 +714,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByIds<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
+                    session.DeleteByIds<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
                 }
             };
 
@@ -766,9 +766,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByIds<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
+                    session.DeleteByIds<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
                 }
             };
 
@@ -818,9 +818,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByIds<IdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
+                    session.DeleteByIds<IdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
                 }
             };
 
@@ -870,9 +870,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByIds<BigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
+                    session.DeleteByIds<BigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
                 }
             };
 
@@ -923,9 +923,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.DeleteByIdInterval<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
+                        session.DeleteByIdInterval<GuidItem>(_structures[1].StructureId, _structures[2].StructureId);
                     }
                 });
             };
@@ -955,9 +955,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var uow = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.DeleteByIdInterval<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
+                        session.DeleteByIdInterval<StringItem>(_structures[1].StructureId, _structures[2].StructureId);
                     }
                 });
             };
@@ -986,9 +986,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByIdInterval<IdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
+                    session.DeleteByIdInterval<IdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
                 }
             };
 
@@ -1038,9 +1038,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.DeleteByIdInterval<BigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
+                    session.DeleteByIdInterval<BigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId);
                 }
             };
 

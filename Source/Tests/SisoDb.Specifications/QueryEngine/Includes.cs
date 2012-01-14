@@ -205,11 +205,11 @@ namespace SisoDb.Specifications.QueryEngine
 					SecondArtist = secondArtist
 				};
 
-                testContext.Database.WithWriteSession(uow =>
+                testContext.Database.WithWriteSession(session =>
                 {
-                    uow.InsertMany(new [] { genre, secondGenre });
-                    uow.InsertMany(new [] { artist, secondArtist, thirdArtist });
-                    uow.InsertMany<IAlbumData>(new [] { album, secondAlbum });
+                    session.InsertMany(new [] { genre, secondGenre });
+                    session.InsertMany(new [] { artist, secondArtist, thirdArtist });
+                    session.InsertMany<IAlbumData>(new [] { album, secondAlbum });
                 });
 
                 return new [] { album, secondAlbum };
@@ -228,11 +228,11 @@ namespace SisoDb.Specifications.QueryEngine
                     SecondArtist = secondArtist
                 };
 
-                testContext.Database.WithWriteSession(uow =>
+                testContext.Database.WithWriteSession(session =>
                 {
-                    uow.Insert<IGenreData>(genre);
-                    uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
-                    uow.Insert<IAlbumData>(album);
+                    session.Insert<IGenreData>(genre);
+                    session.InsertMany<IArtistData>(new[] { artist, secondArtist });
+                    session.Insert<IAlbumData>(album);
                 });
 
                 return album;

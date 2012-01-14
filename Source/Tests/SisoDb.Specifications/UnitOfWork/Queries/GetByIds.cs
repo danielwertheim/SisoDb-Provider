@@ -19,11 +19,11 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(_structures);
+					session.InsertMany(_structures);
 
-					_fetchedStructures = uow.GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+					_fetchedStructures = session.GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 				}
 			};
 
@@ -51,11 +51,11 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(_structures);
+					session.InsertMany(_structures);
 
-					_fetchedStructures = uow.GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+					_fetchedStructures = session.GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 				}
 			};
 

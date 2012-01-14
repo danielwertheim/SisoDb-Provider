@@ -18,11 +18,11 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(_structures);
+					session.InsertMany(_structures);
 
-					_fetchedStructures = uow.Query<QueryGuidItem>().ToList();
+					_fetchedStructures = session.Query<QueryGuidItem>().ToList();
 				}
 			};
 
@@ -52,11 +52,11 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var uow = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginWriteSession())
 				{
-					uow.InsertMany(_structures);
+					session.InsertMany(_structures);
 
-					_fetchedStructures = uow.Query<QueryGuidItem>().ToListOfJson();
+					_fetchedStructures = session.Query<QueryGuidItem>().ToListOfJson();
 				}
 			};
 

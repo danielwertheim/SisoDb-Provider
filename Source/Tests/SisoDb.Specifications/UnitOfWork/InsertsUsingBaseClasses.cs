@@ -26,9 +26,9 @@ namespace SisoDb.Specifications.UnitOfWork
                     MyItemInt = 242
                 };
 
-                using(var uow = TestContext.Database.BeginWriteSession())
+                using(var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
+                    session.Insert(_structure);
                 }
             };
 
@@ -66,9 +66,9 @@ namespace SisoDb.Specifications.UnitOfWork
                     MyItemInt = 242
                 };
 
-                using (var uow = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert<MyItemBase>(_structure);
+                    session.Insert<MyItemBase>(_structure);
                 }
             };
 
