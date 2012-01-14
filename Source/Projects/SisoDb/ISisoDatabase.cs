@@ -148,5 +148,14 @@ namespace SisoDb
         /// <param name="consumer"></param>
         [DebuggerStepThrough]
 		void WithQueryEngine(Action<IQueryEngine> consumer);
+
+		/// <summary>
+		/// Simplifies usage of <see cref="IQueryEngine"/>.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="consumer"></param>
+		/// <returns></returns>
+		[DebuggerStepThrough]
+		T WithQueryEngine<T>(Func<IQueryEngine, T> consumer);
     }
 }

@@ -222,5 +222,14 @@ namespace SisoDb
                 consumer.Invoke(qe);
             }
         }
+
+		[DebuggerStepThrough]
+		public T WithQueryEngine<T>(Func<IQueryEngine, T> consumer)
+		{
+			using (var qe = CreateQueryEngine())
+			{
+				return consumer.Invoke(qe);
+			}
+		}
     }
 }
