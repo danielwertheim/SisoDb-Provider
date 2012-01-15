@@ -62,19 +62,9 @@ namespace SisoDb
     	/// Traverses every structure in the set and lets you apply changes to each yielded structure.
     	/// </summary>
     	/// <typeparam name="T"></typeparam>
+		/// <param name="expression"></param>
     	/// <param name="modifier"></param>
-    	/// <param name="expression"></param>
-    	void UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class;
-
-    	/// <summary>
-    	/// Traverses every structure in the set.
-    	/// and lets you transform from <typeparamref name="TOld"/> to <typeparamref name="TNew"/>.
-    	/// </summary>
-    	/// <typeparam name="TOld"></typeparam>
-    	/// <typeparam name="TNew"></typeparam>
-    	/// <param name="modifier"></param>
-    	/// <param name="expression"></param>
-    	void UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null) where TOld : class where TNew : class;
+    	void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class;
 
         /// <summary>
         /// Deletes structure by id.

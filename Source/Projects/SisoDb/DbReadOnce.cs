@@ -35,6 +35,8 @@ namespace SisoDb
 
 		public T GetById<T>(object id) where T : class
 		{
+			Ensure.That(id, "id").IsNotNull();
+
 			using (var session =_db.BeginReadSession())
 			{
 				return session.GetById<T>(id);
@@ -43,6 +45,8 @@ namespace SisoDb
 
 		public TOut GetByIdAs<TContract, TOut>(object id) where TContract : class where TOut : class
 		{
+			Ensure.That(id, "id").IsNotNull();
+
 			using (var session =_db.BeginReadSession())
 			{
 				return session.GetByIdAs<TContract, TOut>(id);
@@ -51,6 +55,8 @@ namespace SisoDb
 
     	public string GetByIdAsJson<T>(object id) where T : class
     	{
+			Ensure.That(id, "id").IsNotNull();
+
     		using (var session =_db.BeginReadSession())
     		{
     			return session.GetByIdAsJson<T>(id);
@@ -89,6 +95,9 @@ namespace SisoDb
 
     	public IList<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
+			Ensure.That(idFrom, "idFrom").IsNotNull();
+			Ensure.That(idTo, "idTo").IsNotNull();
+
 			using (var session =_db.BeginReadSession())
 			{
 				return session.GetByIdInterval<T>(idFrom, idTo).ToList();

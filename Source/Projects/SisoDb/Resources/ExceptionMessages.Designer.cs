@@ -422,7 +422,7 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can not update structure set when Id type has changed..
+        ///   Looks up a localized string similar to Can not migrate structure set when Id type has changed..
         /// </summary>
         public static string StructureSetUpdater_MissmatchInIdTypes {
             get {
@@ -431,7 +431,7 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can not update structure set. No Id could be extracted from the new structure..
+        ///   Looks up a localized string similar to Can not migrate structure set. No Id could be extracted from the new structure..
         /// </summary>
         public static string StructureSetUpdater_NewIdDoesNotExist {
             get {
@@ -440,11 +440,20 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Id of the new structure &apos;{0}&apos; does not match the Id of the old structure &apos;{1}&apos;..
+        ///   Looks up a localized string similar to The Id &apos;{0}&apos; of the new structure does not match the Id of the old structure &apos;{1}&apos;..
         /// </summary>
         public static string StructureSetUpdater_NewIdDoesNotMatchOldId {
             get {
                 return ResourceManager.GetString("StructureSetUpdater_NewIdDoesNotMatchOldId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Migrate&lt;TOld, TNew&gt; should not be used for same types. Use Migrate&lt;T&gt; instead..
+        /// </summary>
+        public static string StructureSetUpdater_TOld_TNew_SameType {
+            get {
+                return ResourceManager.GetString("StructureSetUpdater_TOld_TNew_SameType", resourceCulture);
             }
         }
         
@@ -521,11 +530,11 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UpdateMany&lt;TOld, TNew&gt; should not be used for same types. Use UpdateMany&lt;T&gt; instead..
+        ///   Looks up a localized string similar to The Id &apos;{0}&apos; of the new structure does not match the Id of the old structure &apos;{1}&apos;..
         /// </summary>
-        public static string WriteSession_UpdateMany_TOld_TNew_SameType {
+        public static string WriteSession_UpdateMany_NewIdDoesNotMatchOldId {
             get {
-                return ResourceManager.GetString("WriteSession_UpdateMany_TOld_TNew_SameType", resourceCulture);
+                return ResourceManager.GetString("WriteSession_UpdateMany_NewIdDoesNotMatchOldId", resourceCulture);
             }
         }
     }

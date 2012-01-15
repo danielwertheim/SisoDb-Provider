@@ -6,7 +6,6 @@ using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Resources;
 
@@ -202,16 +201,12 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			if(query.IsEmpty)
-			{
-				var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
-				return DbClient.YieldJson(sql);
-			}
+			if (query.IsEmpty)
+				return DbClient.GetJsonOrderedByStructureId(structureSchema);
 
 			var sqlQuery = QueryGenerator.GenerateQuery(query);
-			var parameters = sqlQuery.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
-			return DbClient.YieldJson(sqlQuery.Sql, parameters);
+			return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
 		}
 	}
 }

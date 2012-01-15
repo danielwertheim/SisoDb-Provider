@@ -26,17 +26,15 @@ namespace SisoDb
 			if (InnerSession == null)
 				throw new ObjectDisposedException(ExceptionMessages.WriteSession_AllreadyDisposed);
 
-			if (Exception == null)
+			if (Exception != null)
 			{
-				InnerSession.Dispose();
+				InnerSession.DisposeWhenFailed();
 				InnerSession = null;
-				return;
+				throw Exception;
 			}
 
-			InnerSession.DisposeWhenFailed();
+			InnerSession.Dispose();
 			InnerSession = null;
-
-			throw Exception;
 		}
 
 		protected virtual void ExecuteOperation(Action operation)
@@ -201,16 +199,9 @@ namespace SisoDb
 			ExecuteOperation(() => InnerSession.Update(item));
 		}
 
-		public void UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
+		public void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class
 		{
-			ExecuteOperation(() => InnerSession.UpdateMany(modifier, expression));
-		}
-
-		public void UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
-			where TOld : class
-			where TNew : class
-		{
-			ExecuteOperation(() => InnerSession.UpdateMany(modifier, expression));
+			ExecuteOperation(() => InnerSession.UpdateMany(expression, modifier));
 		}
 
 		public void DeleteById<T>(object id) where T : class

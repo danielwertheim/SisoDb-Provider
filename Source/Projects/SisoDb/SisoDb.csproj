@@ -49,11 +49,11 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.55.0\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.55.0.102, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.56.0.104, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.55.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.2.2.5660, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -85,6 +85,7 @@
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
     <Compile Include="IReadOnce.cs" />
+    <Compile Include="IStructureSetMigrator.cs" />
     <Compile Include="IWriteOnce.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
@@ -96,6 +97,8 @@
     <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
+    <Compile Include="DbStructureSetMigrator.cs" />
+    <Compile Include="StructureSetMigratorStatuses.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
@@ -166,7 +169,6 @@
     <Compile Include="GlobalResourceContainer.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
     <Compile Include="Text.cs" />
-    <Compile Include="UpdateManyModifierStatus.cs" />
     <Compile Include="IDbProviderFactory.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />

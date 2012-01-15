@@ -6,15 +6,15 @@ using EnsureThat;
 
 namespace SisoDb
 {
-    [DebuggerStepThrough]
-    public class DbWriteOnce : IWriteOnce
-    {
-    	private readonly ISisoDbDatabase _db;
+	[DebuggerStepThrough]
+	public class DbWriteOnce : IWriteOnce
+	{
+		private readonly ISisoDbDatabase _db;
 
-        public DbWriteOnce(ISisoDbDatabase db)
-        {
-            _db = db;
-        }
+		public DbWriteOnce(ISisoDbDatabase db)
+		{
+			_db = db;
+		}
 
 		public T Insert<T>(T item) where T : class
 		{
@@ -72,30 +72,19 @@ namespace SisoDb
 			return item;
 		}
 
-		public void UpdateMany<T>(Func<T, UpdateManyModifierStatus> modifier, Expression<Func<T, bool>> expression = null) where T : class
+		public void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class
 		{
+			Ensure.That(expression, "expression").IsNotNull();
 			Ensure.That(modifier, "modifier").IsNotNull();
 
 			using (var session = _db.BeginWriteSession())
-			{
-				session.UpdateMany(modifier, expression);
-			}
-		}
-
-		public void UpdateMany<TOld, TNew>(Func<TOld, TNew, UpdateManyModifierStatus> modifier, Expression<Func<TOld, bool>> expression = null)
-			where TOld : class
-			where TNew : class
-		{
-			Ensure.That(modifier, "modifier").IsNotNull();
-
-			using (var session = _db.BeginWriteSession())
-			{
-				session.UpdateMany(modifier, expression);
-			}
+				session.UpdateMany(expression, modifier);
 		}
 
 		public void DeleteById<T>(object id) where T : class
 		{
+			Ensure.That(id, "id").IsNotNull();
+
 			using (var session = _db.BeginWriteSession())
 			{
 				session.DeleteById<T>(id);
@@ -114,18 +103,21 @@ namespace SisoDb
 
 		public void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
+			Ensure.That(idFrom, "idFrom").IsNotNull();
+			Ensure.That(idTo, "idTo").IsNotNull();
+
 			using (var session = _db.BeginWriteSession())
-			{
 				session.DeleteByIdInterval<T>(idFrom, idTo);
-			}
 		}
 
 		public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
 		{
+			Ensure.That(expression, "expression").IsNotNull();
+
 			using (var session = _db.BeginWriteSession())
 			{
 				session.DeleteByQuery(expression);
 			}
 		}
-    }
+	}
 }

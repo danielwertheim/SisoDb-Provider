@@ -34,19 +34,21 @@ namespace SisoDb.Profiling
 			//ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
 			//ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
-			//ProfilingUpdateMany(db);
+			//ProfilingUpdateMany(db, 500, 550);
 
 			//Console.WriteLine("---- Done ----");
 			//Console.ReadKey();
         }
 
-        private static void ProfilingUpdateMany(ISisoDatabase database)
+		private static void ProfilingUpdateMany(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
         	using (var session = database.BeginWriteSession())
         	{
-        		session.UpdateMany<Customer>(customer => UpdateManyModifierStatus.Keep);
+				session.UpdateMany<Customer>(
+					c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo,
+					customer => { customer.Firstname += "Udated"; });
         	}
 
             stopWatch.Stop();

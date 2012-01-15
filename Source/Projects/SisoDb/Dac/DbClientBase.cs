@@ -150,6 +150,15 @@ namespace SisoDb.Dac
 			return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
 		}
 
+		public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
+		{
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+			var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
+
+			return YieldJson(sql);
+		}
+
 		public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
 		public virtual IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
