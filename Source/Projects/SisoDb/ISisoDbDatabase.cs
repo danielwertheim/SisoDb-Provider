@@ -6,7 +6,7 @@ namespace SisoDb
 	/// Represents a database targetting a plain database and not e.g
 	/// an in-memory database.
 	/// </summary>
-	public interface IDbDatabase : ISisoDatabase
+	public interface ISisoDbDatabase : ISisoDatabase
 	{
 		IDbProviderFactory ProviderFactory { get; }
 

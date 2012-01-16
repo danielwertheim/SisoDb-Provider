@@ -15,12 +15,15 @@ namespace SisoDb.Serialization
 			var itemType = item.GetType();
 
 			ServiceStackTypeConfig<T>.Config(itemType);
+			JsConfig<Text>.SerializeFn = t => t.ToString();
 
 			return JsonSerializer.SerializeToString(item, itemType);
         }
 
         public T Deserialize<T>(string json) where T : class
-        {
+		{
+			JsConfig<Text>.DeSerializeFn = t => new Text(t);
+
             return string.IsNullOrWhiteSpace(json)
                 ? null
                 : JsonSerializer.DeserializeFromString<T>(json);

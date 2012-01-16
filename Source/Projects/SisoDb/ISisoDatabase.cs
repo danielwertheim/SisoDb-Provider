@@ -39,6 +39,13 @@ namespace SisoDb
         /// </summary>
         IJsonSerializer Serializer { get; set; }
 
+		/// <summary>
+		/// Returns an <see cref="IStructureSetMigrator"/> used for
+		/// assisting you with model migrations.
+		/// </summary>
+		/// <returns></returns>
+    	IStructureSetMigrator GetStructureSetMigrator();
+
         /// <summary>
         /// Ensures that a new fresh database will exists. Drops any existing database.
         /// </summary>
@@ -103,50 +110,59 @@ namespace SisoDb
         void UpsertStructureSet(Type type);
 
         /// <summary>
-		/// Creates a NON Transactional <see cref="IQueryEngine"/> used for searching.
-        /// Is designed for being short lived. Create, consume and dispose.
+		/// Creates a NON Transactional <see cref="IReadSession"/>, used for searching.
+        /// The Session is designed for being short lived. Create, consume and dispose.
         /// </summary>
         /// <returns></returns>
-        IQueryEngine CreateQueryEngine();
+        IReadSession BeginReadSession();
 
         /// <summary>
-        /// Creates a Transactional UnitOfWork <see cref="IUnitOfWork"/>, which is designed
-        /// for being shortlived. Create, consume and dispose.
+        /// Creates a Transactional <see cref="IWriteSession"/>, used for writing or searching.
+		/// The Session is designed for being short lived. Create, consume and dispose.
         /// </summary>
         /// <returns></returns>
-        IUnitOfWork CreateUnitOfWork();
+        IWriteSession BeginWriteSession();
 
         /// <summary>
-        /// Use when you want to execute a single Fetch against the <see cref="ISisoDatabase"/>
-		/// via an <see cref="IQueryEngine"/>.
+        /// Use when you want to execute a single search operation against the <see cref="ISisoDatabase"/>
+		/// via an <see cref="IReadSession"/>.
         /// </summary>
         /// <returns></returns>
-        /// <remarks>If you need to do multiple queries, use <see cref="CreateQueryEngine"/> instead.</remarks>
+        /// <remarks>If you need to do multiple queries, use <see cref="BeginReadSession"/> instead.</remarks>
         [DebuggerStepThrough]
         IReadOnce ReadOnce();
 
         /// <summary>
         /// Use when you want to execute a single Insert, Update or Delete against 
-        /// the <see cref="ISisoDatabase"/> via an <see cref="IUnitOfWork"/>.
+        /// the <see cref="ISisoDatabase"/> via an <see cref="IWriteSession"/>.
         /// </summary>
         /// <returns></returns>
-        /// <remarks>If you need to do multiple operations in the <see cref="IUnitOfWork"/>,
-        /// use <see cref="ISisoDatabase.CreateUnitOfWork"/> instead.</remarks>
+        /// <remarks>If you need to do multiple operations in the <see cref="IWriteSession"/>,
+        /// use <see cref="BeginWriteSession"/> instead.</remarks>
         [DebuggerStepThrough]
         IWriteOnce WriteOnce();
 
         /// <summary>
-        /// Simplifies usage of <see cref="IUnitOfWork"/>.
+        /// Simplifies usage of <see cref="IWriteSession"/>.
         /// </summary>
         /// <param name="consumer"></param>
         [DebuggerStepThrough]
-        void WithUnitOfWork(Action<IUnitOfWork> consumer);
+        void WithWriteSession(Action<IWriteSession> consumer);
 
         /// <summary>
-		/// Simplifies usage of <see cref="IQueryEngine"/>.
+		/// Simplifies usage of <see cref="IReadSession"/>.
         /// </summary>
         /// <param name="consumer"></param>
         [DebuggerStepThrough]
-		void WithQueryEngine(Action<IQueryEngine> consumer);
+		void WithReadSession(Action<IReadSession> consumer);
+
+		/// <summary>
+		/// Simplifies usage of <see cref="IReadSession"/>.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="consumer"></param>
+		/// <returns></returns>
+		[DebuggerStepThrough]
+		T WithReadSession<T>(Func<IReadSession, T> consumer);
     }
 }

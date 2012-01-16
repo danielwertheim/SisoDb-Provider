@@ -12,7 +12,6 @@ using PineCone.Structures.Schemas;
 using SisoDb.Core.Io;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Structures;
 
 namespace SisoDb.Testing.SqlCe4
 {
@@ -155,10 +154,15 @@ namespace SisoDb.Testing.SqlCe4
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
-        public bool IndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
+        public bool AnyIndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
         {
-            var memberPath = GetMemberPath(member);
-            return RowCount(structureSchema.GetIndexesTableName(), "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0;
+			var memberPath = GetMemberPath(member);
+			var indexesTableNames = structureSchema.GetIndexesTableNames();
+			foreach (var indexesTableName in indexesTableNames.AllTableNames)
+				if (RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0)
+					return true;
+
+			return false;
         }
 
         public bool UniquesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class

@@ -1,27 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Linq;
 using EnsureThat;
 using ErikEJ.SqlCe;
 using NCore;
+using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Core;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
-using SisoDb.Structures;
+using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4.Dac
 {
     public class SqlCe4DbClient : DbClientBase
     {
-    	private const int MaxBatchedIdsSize = 20;
+    	private const int MaxBatchedIdsSize = 32;
 
 		public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
             : base(connectionInfo, transactional, connectionManager, sqlStatements)
         {
         }
+
+		public override void Commit()
+		{
+			if (Ts != null)
+			{
+				Ts.Complete();
+				Ts.Dispose();
+				Ts = null;
+				return;
+			}
+
+			if (System.Transactions.Transaction.Current != null)
+				return;
+
+			if (Transaction == null)
+				throw new NotSupportedException(ExceptionMessages.DbClient_Commit_NonTransactional);
+
+			((SqlCeTransaction)Transaction).Commit(CommitMode.Immediate);
+			Transaction.Dispose();
+			Transaction = null;
+		}
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
@@ -38,19 +61,18 @@ namespace SisoDb.SqlCe4.Dac
 
         public override void Drop(IStructureSchema structureSchema)
         {
-            var indexesTableExists = TableExists(structureSchema.GetIndexesTableName());
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+        	var indexesTableNames = structureSchema.GetIndexesTableNames();
+        	var indexesTableStatuses = GetIndexesTableStatuses(indexesTableNames);
             var uniquesTableExists = TableExists(structureSchema.GetUniquesTableName());
             var structureTableExists = TableExists(structureSchema.GetStructureTableName());
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-            using (var cmd = CreateCommand(string.Empty, new DacParameter("entityHash", structureSchema.Hash)))
+            using (var cmd = CreateCommand(string.Empty, new DacParameter("entityName", structureSchema.Name)))
             {
-                if (indexesTableExists)
-                {
-                    cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetIndexesTableName());
-                    cmd.ExecuteNonQuery();
-                }
+				DropIndexesTables(cmd, indexesTableStatuses);
 
                 if (uniquesTableExists)
                 {
@@ -68,6 +90,53 @@ namespace SisoDb.SqlCe4.Dac
                 cmd.ExecuteNonQuery();
             }
         }
+
+		private void DropIndexesTables(IDbCommand cmd, IndexesTableStatuses indexesTableStatuses)
+		{
+			var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
+
+			if (indexesTableStatuses.IntegersTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.IntegersTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.FractalsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.FractalsTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.BooleansTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.BooleansTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.DatesTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.DatesTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.GuidsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.GuidsTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.StringsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.StringsTableName);
+				cmd.ExecuteNonQuery();
+			}
+
+			if (indexesTableStatuses.TextsTableExists)
+			{
+				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.TextsTableName);
+				cmd.ExecuteNonQuery();
+			}
+		}
 
         public override void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
         {
@@ -145,14 +214,14 @@ namespace SisoDb.SqlCe4.Dac
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
 
-        public override long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
+        public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
         {
-            Ensure.That(entityHash, "entityHash").IsNotNullOrWhiteSpace();
+			Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
-            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityHash", entityHash));
+			var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityName", entityName));
 
             ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
-                new DacParameter("entityHash", entityHash),
+				new DacParameter("entityName", entityName),
                 new DacParameter("numOfIds", numOfIds));
 
             return nextId;

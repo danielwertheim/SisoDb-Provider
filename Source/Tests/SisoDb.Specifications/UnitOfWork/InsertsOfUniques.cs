@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsOfUniquesPerType
     {
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_guid_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithGuidId _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_guid_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -42,7 +42,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithGuidId> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_guid_entities : SpecificationBase
         {
             Establish context = () =>
@@ -69,7 +69,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithGuidId _orgStructure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_string_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -83,7 +83,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithStringId _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_string_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -101,7 +101,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithStringId> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_string_entities : SpecificationBase
         {
             Establish context = () =>
@@ -128,7 +128,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithStringId _orgStructure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_identity_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -142,7 +142,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithIdentityId _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_identity_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -160,7 +160,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithIdentityId> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_identity_entities : SpecificationBase
         {
             Establish context = () =>
@@ -187,7 +187,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithIdentityId _orgStructure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_big_identity_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -201,7 +201,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithBigIdentityId _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_big_identity_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -219,7 +219,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithBigIdentityId> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (unique per type)")]
+        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_big_identity_entities : SpecificationBase
         {
             Establish context = () =>

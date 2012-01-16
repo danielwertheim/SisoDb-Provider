@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
+using PineCone;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -9,7 +10,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsComplete
     {
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_guid_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -30,7 +31,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteGuidEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_guid_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -51,7 +52,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteGuidEntity> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_string_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -72,7 +73,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteStringEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_string_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -93,7 +94,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteStringEntity> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_identity_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -114,7 +115,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteIdentityEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_identity_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -135,7 +136,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteIdentityEntity> _structures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_complete_big_identity_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -156,7 +157,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteBigIdentityEntity _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (complete)")]
+        [Subject(typeof(IWriteSession), "Insert (complete)")]
         public class when_inserting_two_complete_big_identity_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -196,7 +197,8 @@ namespace SisoDb.Specifications.UnitOfWork
                             Guid = Guid.Parse("60D977F9-95FC-40FD-9A7E-6827E920370F"),
                             Int = 42,
                             Long = 142,
-                            String = "String in NullValuesContainer."
+                            String = "String in NullValuesContainer.",
+							Text= "Some text."
                         },
                         NullValuesContainerWithNulls = new NullValuesContainer(),
                         Values = new ValuesContainer
@@ -208,7 +210,8 @@ namespace SisoDb.Specifications.UnitOfWork
                             Guid = Guid.Parse("19ADFA6D-A127-48E0-9291-AEB75E8CA23C"),
                             Int = 42,
                             Long = 142,
-                            String = "String in ValuesContainer."
+                            String = "String in ValuesContainer.",
+							Text = "Some text."
                         },
                         ValuesInArray = new[] { new Value { Is = 1 }, new Value { Is = 2 }, new Value { Is = 3 } },
                         //ValuesInISet = new HashSet<Value> { new Value { Is = 11 }, new Value { Is = 12 }, new Value { Is = 13 } },
@@ -304,6 +307,8 @@ namespace SisoDb.Specifications.UnitOfWork
 
             public string String { get; set; }
 
+			public Text Text { get; set; }
+
             public double Double { get; set; }
 
             public decimal Decimal { get; set; }
@@ -321,6 +326,8 @@ namespace SisoDb.Specifications.UnitOfWork
             public long? Long { get; set; }
 
             public string String { get; set; }
+
+			public Text Text { get; set; }
 
             public double? Double { get; set; }
 

@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 		//    private static IList<StringFunctionsItem> _fetchedStructures;
 		//}
 
-		[Subject(typeof(IQueryEngine), "QxToUpper")]
+		[Subject(typeof(IReadSession), "QxToUpper")]
 		public class when_query_matches_subset_of_2_items : SpecificationBase
 		{
 			Establish context = () =>

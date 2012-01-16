@@ -3,11 +3,10 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
 {
-    public class SqlDbUniquesSchemaBuilder : IDbSchemaBuilder
+    public class SqlDbUniquesSchemaBuilder
     {
         private readonly ISqlStatements _sqlStatements;
 

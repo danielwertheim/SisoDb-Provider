@@ -207,6 +207,16 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 			return generator.GenerateQuery(queryCommand);
 		}
+
+		public abstract void GenerateQuery_WithEnum_GeneratesCorrectQuery();
+
+		protected DbQuery On_GenerateQuery_WithEnum_GeneratesCorrectQuery()
+		{
+			var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.MyEnum1 == MyEnum.Value1 || i.MyEnum1 == MyEnum.Value2));
+			var generator = GetQueryGenerator();
+
+			return generator.GenerateQuery(queryCommand);
+		}
 		
 		protected virtual IQuery BuildQuery<T>(Action<IQueryBuilder<T>> commandInitializer) where T : class
 		{
@@ -219,6 +229,8 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 		private class MyClass
 		{
+			public MyEnum MyEnum1 { get; set; }
+
 			public int Int1 { get; set; }
 
 			public int Int2 { get; set; }
@@ -228,6 +240,12 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 			public string String1 { get; set; }
 
 			public int? NullableInt1 { get; set; }
+		}
+
+		private enum MyEnum
+		{
+			Value1,
+			Value2
 		}
 	}
 }

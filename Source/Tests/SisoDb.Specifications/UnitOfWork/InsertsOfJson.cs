@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsOfJson
     {
-        [Subject(typeof(IUnitOfWork), "Insert (json)")]
+        [Subject(typeof(IWriteSession), "Insert (json)")]
         public class when_json_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -21,10 +21,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using(var uow = TestContext.Database.CreateUnitOfWork())
+                using(var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertJson<JsonItem>(_json);
-                    uow.Commit();
+                    session.InsertJson<JsonItem>(_json);
                 }
             };
 
@@ -35,8 +34,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 string json;
 
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    json = qe.Query<JsonItem>().SingleAsJson();
+                using (var session =TestContext.Database.BeginReadSession())
+                    json = session.Query<JsonItem>().SingleAsJson();
 
                 var jsonWithoutStructureId = "{" + json.Remove(0, 50);
                 jsonWithoutStructureId.ShouldEqual(_json);
@@ -46,9 +45,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var qe = TestContext.Database.CreateQueryEngine())
+                using (var session =TestContext.Database.BeginReadSession())
                 {
-                    structure = qe.Query<JsonItem>().Single();
+                    structure = session.Query<JsonItem>().Single();
                 }
 
                 structure.String1.ShouldEqual("1");
@@ -61,7 +60,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static string _json;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (json)")]
+        [Subject(typeof(IWriteSession), "Insert (json)")]
         public class when_json_with_value_for_id_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -73,10 +72,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertJson<JsonItem>(_json);
-                    uow.Commit();
+                    session.InsertJson<JsonItem>(_json);
                 }
             };
 
@@ -90,8 +88,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
                 
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    structure = qe.Query<JsonItem>().Single();
+                using (var session =TestContext.Database.BeginReadSession())
+                    structure = session.Query<JsonItem>().Single();
 
                 structure.StructureId.ShouldNotEqual(Guid.Parse(_idString));
             };
@@ -100,7 +98,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static string _idString;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (json)")]
+        [Subject(typeof(IWriteSession), "Insert (json)")]
         public class when_json_with_wrong_member_casing_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -111,10 +109,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.InsertJson<JsonItem>(_json);
-                    uow.Commit();
+                    session.InsertJson<JsonItem>(_json);
                 }
             };
 
@@ -125,8 +122,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var qe = TestContext.Database.CreateQueryEngine())
-                    structure = qe.Query<JsonItem>().Single();
+                using (var session =TestContext.Database.BeginReadSession())
+                    structure = session.Query<JsonItem>().Single();
 
                 structure.String1.ShouldEqual("1");
             };

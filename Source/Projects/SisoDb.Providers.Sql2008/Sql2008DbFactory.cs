@@ -1,6 +1,6 @@
 ﻿namespace SisoDb.Sql2008
 {
-    public class Sql2008DbFactory : ISisoDbFactory
+    public class Sql2008DbFactory : ISisoDatabaseFactory
     {
 		public static IDbProviderFactory ProviderFactory { get; set; }
 

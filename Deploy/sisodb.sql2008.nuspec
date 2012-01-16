@@ -3,21 +3,24 @@
 	<metadata>
 		<id>SisoDb.Sql2008</id>    
 		<title>SisoDb.Sql2008 - Simple Structure Oriented Db</title>
-		<version>8.1.2</version>
+		<version>9.0.0</version>
 		<authors>Daniel Wertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
+		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
 		<description>
-			SisoDb is a schemaless document-oriented provider over SQL-Server. This package is for SQL-Server 2008. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates.
+			SisoDb is a schemaless document-oriented provider for SQL-Server. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
+			This package is for SQL-Server 2008.
 		</description>
+		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,json,sql,sql-server,sql2008,mssql2008,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[8.1.2]" />
+			<dependency id="SisoDb" version="[9.0.0]" />
 			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="[0.55.0]" />
+			<dependency id="PineCone" version="0.56.0" />
 		</dependencies>
 	</metadata>
 	<files>

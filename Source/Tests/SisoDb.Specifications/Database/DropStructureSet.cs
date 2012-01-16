@@ -1,7 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
 using PineCone.Structures.Schemas;
-using SisoDb.Structures;
+using SisoDb.DbSchema;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database
@@ -24,8 +24,23 @@ namespace SisoDb.Specifications.Database
             It should_have_dropped_structure_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetStructureTableName()).ShouldBeFalse();
 
-            It should_have_dropped_indexes_table =
-                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableName()).ShouldBeFalse();
+            It should_have_dropped_integers_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers)).ShouldBeFalse();
+
+			It should_have_dropped_fractals_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals)).ShouldBeFalse();
+
+			It should_have_dropped_booleans_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans)).ShouldBeFalse();
+
+			It should_have_dropped_dates_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates)).ShouldBeFalse();
+			
+			It should_have_dropped_guids_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids)).ShouldBeFalse();
+
+			It should_have_dropped_strings_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeFalse();
 
             It should_have_dropped_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeFalse();
@@ -60,8 +75,23 @@ namespace SisoDb.Specifications.Database
             It should_have_dropped_structure_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetStructureTableName()).ShouldBeFalse();
 
-            It should_have_dropped_indexes_table =
-                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableName()).ShouldBeFalse();
+			It should_have_dropped_integers_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers)).ShouldBeFalse();
+
+			It should_have_dropped_fractals_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals)).ShouldBeFalse();
+
+			It should_have_dropped_booleans_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans)).ShouldBeFalse();
+
+			It should_have_dropped_dates_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates)).ShouldBeFalse();
+
+			It should_have_dropped_guids_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids)).ShouldBeFalse();
+
+			It should_have_dropped_strings_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeFalse();
 
             It should_have_dropped_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeFalse();

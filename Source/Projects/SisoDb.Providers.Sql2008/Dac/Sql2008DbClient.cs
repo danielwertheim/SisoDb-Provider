@@ -4,12 +4,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using EnsureThat;
 using NCore;
+using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Core;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
-using SisoDb.Structures;
 
 namespace SisoDb.Sql2008.Dac
 {
@@ -29,12 +29,22 @@ namespace SisoDb.Sql2008.Dac
 
         public override void Drop(IStructureSchema structureSchema)
         {
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+        	var indexesTableNames = structureSchema.GetIndexesTableNames();
+
             var sql = SqlStatements.GetSql("DropStructureTables").Inject(
-                structureSchema.GetIndexesTableName(),
+                indexesTableNames.IntegersTableName,
+				indexesTableNames.FractalsTableName,
+				indexesTableNames.BooleansTableName,
+				indexesTableNames.DatesTableName,
+				indexesTableNames.GuidsTableName,
+				indexesTableNames.StringsTableName,
+				indexesTableNames.TextsTableName,
                 structureSchema.GetUniquesTableName(),
                 structureSchema.GetStructureTableName());
 
-            using (var cmd = CreateCommand(sql, new DacParameter("entityHash", structureSchema.Hash)))
+            using (var cmd = CreateCommand(sql, new DacParameter("entityName", structureSchema.Name)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -123,14 +133,14 @@ namespace SisoDb.Sql2008.Dac
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
 
-        public override long CheckOutAndGetNextIdentity(string entityHash, int numOfIds)
+        public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
         {
-            Ensure.That(entityHash, "entityHash").IsNotNullOrWhiteSpace();
+			Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
             return ExecuteScalar<long>(sql,
-                new DacParameter("entityHash", entityHash),
+				new DacParameter("entityName", entityName),
                 new DacParameter("numOfIds", numOfIds));
         }
 

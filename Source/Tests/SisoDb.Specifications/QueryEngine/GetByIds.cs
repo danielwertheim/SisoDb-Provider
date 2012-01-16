@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class GetByIds
     {
-        [Subject(typeof(IUnitOfWork), "Get by Ids")]
+        [Subject(typeof(IWriteSession), "Get by Ids")]
         public class when_guid_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -34,7 +34,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Get by Ids")]
+        [Subject(typeof(IWriteSession), "Get by Ids")]
         public class when_string_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -59,7 +59,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryStringItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Get by Ids")]
+        [Subject(typeof(IWriteSession), "Get by Ids")]
         public class when_identity_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -84,7 +84,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryIdentityItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Get by Ids")]
+        [Subject(typeof(IWriteSession), "Get by Ids")]
         public class when_big_identity_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -109,7 +109,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryBigIdentityItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Get by Ids")]
+        [Subject(typeof(IWriteSession), "Get by Ids")]
         public class when_guid_id_set_matches_two_of_four_items_and_has_one_non_matching_id : SpecificationBase
         {
             Establish context = () =>
@@ -136,7 +136,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Get by Ids as Json")]
+        [Subject(typeof(IWriteSession), "Get by Ids as Json")]
         public class when_guid_id_set_matches_two_of_four_json_items : SpecificationBase
         {
             Establish context = () =>
@@ -161,7 +161,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IUnitOfWork), "Get by Ids as Json")]
+        [Subject(typeof(IWriteSession), "Get by Ids as Json")]
         public class when_guid_id_set_matches_two_of_four_json_items_and_has_one_non_matching_id : SpecificationBase
         {
             Establish context = () =>

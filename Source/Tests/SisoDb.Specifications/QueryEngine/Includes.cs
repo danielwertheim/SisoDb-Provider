@@ -8,13 +8,13 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class Includes
     {
-        [Subject(typeof(IQueryEngine), "Includes using Get all as X")]
+        [Subject(typeof(IReadSession), "Includes using Get all as X")]
         public class when_getting_all_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structure = Establishments.SetupStructuresForIncludes(TestContext);
+                _structures = Establishments.SetupStructuresForIncludes(TestContext);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -22,17 +22,20 @@ namespace SisoDb.Specifications.QueryEngine
                 .Include<Genre>(a => a.GenreId)
                 .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
 
-            It should_have_fetched_1_album = 
-                () => _fetchedStructures.Count.ShouldEqual(1);
+            It should_have_fetched_2_albums = 
+                () => _fetchedStructures.Count.ShouldEqual(2);
 
-            It should_have_fetched_album = 
-                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+            It should_have_fetched_albums_correctly = () =>
+            {
+            	_fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+				_fetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
+			};
 
-            private static Album _structure;
+			private static IList<Album> _structures;
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes using Get all as X")]
+        [Subject(typeof(IReadSession), "Includes using Get all as X")]
         public class when_getting_all_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -56,13 +59,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes with Where, Paging and Sorting using Query as X")]
+        [Subject(typeof(IReadSession), "Includes with Where, Paging and Sorting using Query as X")]
         public class when_querying_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structure = Establishments.SetupStructuresForIncludes(TestContext);
+                _structures = Establishments.SetupStructuresForIncludes(TestContext);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -77,22 +80,22 @@ namespace SisoDb.Specifications.QueryEngine
                 () => _fetchedStructures.Count.ShouldEqual(1);
 
             It should_have_fetched_album =
-                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
 
             It should_not_have_stored_genere_and_artists_in_the_json = () =>
             {
-                var json = TestContext.Database.ReadOnce().GetByIdAsJson<IAlbumData>(_structure.StructureId);
+                var json = TestContext.Database.ReadOnce().GetByIdAsJson<IAlbumData>(_structures[0].StructureId);
                 json.Length.ShouldEqual(214);
                 json.ShouldNotContain("\"Genre\"");
                 json.ShouldNotContain("\"Artist\"");
                 json.ShouldNotContain("\"SecondArtist\"");
             };
 
-            private static Album _structure;
+			private static IList<Album> _structures;
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IQueryEngine), "Includes using Query as X")]
+        [Subject(typeof(IReadSession), "Includes using Query as X")]
         public class when_querying_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -123,8 +126,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structure = Establishments.SetupStructuresForIncludes(TestContext);
-                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [GenreStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='GenreId' left join [ArtistStructure] as cs1 on cs1.[StructureId] = si.[GuidValue] and si.[MemberPath]='ArtistId' left join [ArtistStructure] as cs2 on cs2.[StructureId] = si.[GuidValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+                _structures = Establishments.SetupStructuresForIncludes(TestContext);
+                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataStrings] mem0 on mem0.StructureId = s.StructureId and mem0.MemberPath = 'Name' inner join [IAlbumDataGuids] as si on si.[StructureId] = s.[StructureId] left join [GenreStructure] as cs0 on cs0.[StructureId] = si.[Value] and si.[MemberPath]='GenreId' left join [ArtistStructure] as cs1 on cs1.[StructureId] = si.[Value] and si.[MemberPath]='ArtistId' left join [ArtistStructure] as cs2 on cs2.[StructureId] = si.[Value] and si.[MemberPath]='SecondArtistId' where mem0.Value = 'Born to run' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
             public void AfterContextCleanup()
@@ -139,10 +142,10 @@ namespace SisoDb.Specifications.QueryEngine
                 () => _fetchedStructures.Count.ShouldEqual(1);
 
             It should_have_fetched_album =
-                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structure);
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
 
             private const string ProcedureName = "NamedQueryIncludeTest";
-            private static Album _structure;
+			private static IList<Album> _structures;
             private static IList<Album> _fetchedStructures;
         }
 
@@ -153,7 +156,7 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 TestContext = TestContextFactory.Create();
                 _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
-                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataIndexes] as si on si.[StructureId] = s.[StructureId] left join [IGenreDataStructure] as cs0 on cs0.[StructureId] = si.[GuidValue] and si.[MemberPath]='GenreId' left join [IArtistDataStructure] as cs1 on cs1.[StructureId] = si.[GuidValue] and si.[MemberPath]='ArtistId' left join [IArtistDataStructure] as cs2 on cs2.[StructureId] = si.[GuidValue] and si.[MemberPath]='SecondArtistId' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select s.Json,min(cs0.Json) as [GenreJson], min(cs1.Json) as [ArtistJson], min(cs2.Json) as [SecondArtistJson] from [IAlbumDataStructure] as s inner join [IAlbumDataStrings] mem0 on mem0.StructureId = s.StructureId and mem0.MemberPath = 'Name' inner join [IAlbumDataGuids] as si on si.[StructureId] = s.[StructureId] left join [IGenreDataStructure] as cs0 on cs0.[StructureId] = si.[Value] and si.[MemberPath]='GenreId' left join [IArtistDataStructure] as cs1 on cs1.[StructureId] = si.[Value] and si.[MemberPath]='ArtistId' left join [IArtistDataStructure] as cs2 on cs2.[StructureId] = si.[Value] and si.[MemberPath]='SecondArtistId' where mem0.Value = 'Born to run' group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
             public void AfterContextCleanup()
@@ -178,28 +181,38 @@ namespace SisoDb.Specifications.QueryEngine
 
 		internal static class Establishments
         {
-            internal static Album SetupStructuresForIncludes(ITestContext testContext)
+            internal static Album[] SetupStructuresForIncludes(ITestContext testContext)
             {
                 var genre = new Genre { Name = "Rock" };
+            	var secondGenre = new Genre {Name = "Pop"};
+
                 var artist = new Artist { Name = "Bruce" };
                 var secondArtist = new Artist { Name = "e-street" };
-                var album = new Album
+				var thirdArtist = new Artist { Name = "Foo artist" };
+                
+				var album = new Album
                 {
                     Name = "Born to run",
                     Genre = genre,
                     Artist = artist,
                     SecondArtist = secondArtist
                 };
+				var secondAlbum = new Album
+				{
+					Name = "Born to run (pop version)",
+					Genre = secondGenre,
+					Artist = artist,
+					SecondArtist = secondArtist
+				};
 
-                testContext.Database.WithUnitOfWork(uow =>
+                testContext.Database.WithWriteSession(session =>
                 {
-                    uow.Insert(genre);
-                    uow.InsertMany<Artist>(new[] { artist, secondArtist });
-                    uow.Insert<IAlbumData>(album);
-                    uow.Commit();
+                    session.InsertMany(new [] { genre, secondGenre });
+                    session.InsertMany(new [] { artist, secondArtist, thirdArtist });
+                    session.InsertMany<IAlbumData>(new [] { album, secondAlbum });
                 });
 
-                return album;
+                return new [] { album, secondAlbum };
             }
 
             internal static Album SetupStructuresUsingInterfacesForIncludes(ITestContext testContext)
@@ -215,12 +228,11 @@ namespace SisoDb.Specifications.QueryEngine
                     SecondArtist = secondArtist
                 };
 
-                testContext.Database.WithUnitOfWork(uow =>
+                testContext.Database.WithWriteSession(session =>
                 {
-                    uow.Insert<IGenreData>(genre);
-                    uow.InsertMany<IArtistData>(new[] { artist, secondArtist });
-                    uow.Insert<IAlbumData>(album);
-                    uow.Commit();
+                    session.Insert<IGenreData>(genre);
+                    session.InsertMany<IArtistData>(new[] { artist, secondArtist });
+                    session.Insert<IAlbumData>(album);
                 });
 
                 return album;

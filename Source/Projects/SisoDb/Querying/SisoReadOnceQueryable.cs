@@ -8,14 +8,14 @@ namespace SisoDb.Querying
 {
 	public class SisoReadOnceQueryable<T> : SisoQueryable<T> where T : class 
 	{
-		private readonly Func<IQueryEngine> _queryEngineFactory;
+		private readonly Func<IReadSession> _queryEngineFactory;
 
-		protected override IQueryEngine QueryEngine
+		protected override IReadSession ReadSession
 		{
 			get { return _queryEngineFactory.Invoke(); }
 		}
 
-		public SisoReadOnceQueryable(IQueryBuilder<T> queryBuilder, Func<IQueryEngine> queryEngineFactory) : base(queryBuilder)
+		public SisoReadOnceQueryable(IQueryBuilder<T> queryBuilder, Func<IReadSession> queryEngineFactory) : base(queryBuilder)
 		{
 			Ensure.That(queryEngineFactory, "queryEngineFactory").IsNotNull();
 
@@ -24,17 +24,89 @@ namespace SisoDb.Querying
 
 		public override int Count()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.Count<T>(QueryBuilder.Build());
+				return session.QueryEngine.Count<T>(QueryBuilder.Build());
 			}
 		}
 
 		public override int Count(System.Linq.Expressions.Expression<Func<T, bool>> expression)
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.Count<T>(QueryBuilder.Build());
+				return session.QueryEngine.Count<T>(QueryBuilder.Build());
+			}
+		}
+		
+		public override T First()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.Query<T>(QueryBuilder.Build()).First();
+			}
+		}
+
+		public override TResult FirstAs<TResult>()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).First();
+			}
+		}
+
+		public override string FirstAsJson()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).First();
+			}
+		}
+
+		public override T FirstOrDefault()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.Query<T>(QueryBuilder.Build()).FirstOrDefault();
+			}
+		}
+
+		public override TResult FirstOrDefaultAs<TResult>()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).FirstOrDefault();
+			}
+		}
+
+		public override string FirstOrDefaultAsJson()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).FirstOrDefault();
+			}
+		}
+
+		public override T[] ToArray()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.Query<T>(QueryBuilder.Build()).ToArray();
+			}
+		}
+
+		public override TResult[] ToArrayOf<TResult>()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToArray();
+			}
+		}
+
+		public override string[] ToArrayOfJson()
+		{
+			using (var session = ReadSession)
+			{
+				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).ToArray();
 			}
 		}
 
@@ -55,73 +127,73 @@ namespace SisoDb.Querying
 
 		public override IList<T> ToList()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.Query<T>(QueryBuilder.Build()).ToList();
+				return session.QueryEngine.Query<T>(QueryBuilder.Build()).ToList();
 			}
 		}
 
 		public override IList<TResult> ToListOf<TResult>()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
+				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
 			}
 		}
 
 		public override IList<string> ToListOfJson()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.QueryAsJson<T>(QueryBuilder.Build()).ToList();
+				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).ToList();
 			}
 		}
 
 		public override T Single()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.Query<T>(QueryBuilder.Build()).Single();
+				return session.QueryEngine.Query<T>(QueryBuilder.Build()).Single();
 			}
 		}
 
 		public override TResult SingleAs<TResult>()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.QueryAs<T, TResult>(QueryBuilder.Build()).Single();
+				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).Single();
 			}
 		}
 
 		public override string SingleAsJson()
 		{
-			using (var qe = QueryEngine)
+			using (var session =ReadSession)
 			{
-				return qe.Core.QueryAsJson<T>(QueryBuilder.Build()).Single();
+				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).Single();
 			}
 		}
 
 		public override T SingleOrDefault()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.Query<T>(QueryBuilder.Build()).SingleOrDefault();
+				return session.QueryEngine.Query<T>(QueryBuilder.Build()).SingleOrDefault();
 			}
 		}
 
 		public override TResult SingleOrDefaultAs<TResult>()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.QueryAs<T, TResult>(QueryBuilder.Build()).SingleOrDefault();
+				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).SingleOrDefault();
 			}
 		}
 
 		public override string SingleOrDefaultAsJson()
 		{
-			using (var qe = QueryEngine)
+			using (var session = ReadSession)
 			{
-				return qe.Core.QueryAsJson<T>(QueryBuilder.Build()).SingleOrDefault();
+				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).SingleOrDefault();
 			}
 		}
 	}

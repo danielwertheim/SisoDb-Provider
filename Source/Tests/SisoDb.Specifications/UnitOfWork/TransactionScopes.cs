@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.UnitOfWork
 #if Sql2008Provider
 	class TransactionScopes
     {
-        [Subject(typeof(IUnitOfWork), "Transaction scopes")]
+        [Subject(typeof(IWriteSession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_commiting_ts : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -17,40 +17,38 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var ts = new TransactionScope())
                 {
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 1 }, 
                             new IdentityItem { Value = 2 }, 
                             new IdentityItem { Value = 3 }
                         });
-                        uow.Commit();
                     }
 
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 4 }, 
                             new IdentityItem { Value = 5 }, 
                             new IdentityItem { Value = 6 }
                         });
-                        uow.Commit();
                     }
                 }
             };
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.CreateQueryEngine())
+                using (var session =TestContext.Database.BeginReadSession())
                 {
-					qe.Query<IdentityItem>().Count().ShouldEqual(0);
+					session.Query<IdentityItem>().Count().ShouldEqual(0);
                 }
             };
         }
 
-        [Subject(typeof(IUnitOfWork), "Transaction scopes")]
+        [Subject(typeof(IWriteSession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_committing_uow_but_committing_ts : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -59,9 +57,9 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var ts = new TransactionScope())
                 {
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 1 }, 
                             new IdentityItem { Value = 2 }, 
@@ -69,9 +67,9 @@ namespace SisoDb.Specifications.UnitOfWork
                         });
                     }
 
-                    using (var uow = TestContext.Database.CreateUnitOfWork())
+                    using (var session = TestContext.Database.BeginWriteSession())
                     {
-                        uow.InsertMany(new[]
+                        session.InsertMany(new[]
                         {
                             new IdentityItem { Value = 4 }, 
                             new IdentityItem { Value = 5 }, 
@@ -85,9 +83,9 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var qe = TestContext.Database.CreateQueryEngine())
+                using (var session =TestContext.Database.BeginReadSession())
                 {
-					qe.Query<IdentityItem>().Count().ShouldEqual(6);
+					session.Query<IdentityItem>().Count().ShouldEqual(6);
                 }
             };
         }

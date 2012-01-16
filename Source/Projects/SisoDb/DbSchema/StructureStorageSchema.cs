@@ -15,10 +15,10 @@ namespace SisoDb.DbSchema
 
         public static readonly SchemaField[] OrderedFields = new[] { Fields.Id, Fields.Json };
 
-        public StructureStorageSchema(IStructureSchema structureSchema) 
-            : base(structureSchema, structureSchema.GetStructureTableName())
-        {
-        }
+		public StructureStorageSchema(IStructureSchema structureSchema, string storageSchemaName)
+			: base(structureSchema, storageSchemaName)
+		{
+		}
 
         protected override SchemaField[] GetSchemaFields(IStructureSchema structureSchema)
         {

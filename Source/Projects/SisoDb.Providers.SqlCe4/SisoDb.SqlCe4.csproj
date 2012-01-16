@@ -39,19 +39,19 @@
     <Reference Include="EnsureThat">
       <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="ErikEJ.SqlCe40, Version=2.1.5.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ErikEJ.SqlCe40, Version=2.1.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ErikEJ.SqlCeBulkCopy.2.1.5.1\lib\net40\ErikEJ.SqlCe40.dll</HintPath>
+      <HintPath>..\..\packages\ErikEJ.SqlCeBulkCopy.2.1.6.0\lib\net40\ErikEJ.SqlCe40.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.55.0\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.55.0.102, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.56.0.104, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.55.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="Salient.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ErikEJ.SqlCeBulkCopy.2.1.5.1\lib\net40\Salient.Data.dll</HintPath>
+      <HintPath>..\..\packages\ErikEJ.SqlCeBulkCopy.2.1.6.0\lib\net40\Salient.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -80,8 +80,8 @@
     </Compile>
     <Compile Include="SqlCe4ConnectionManager.cs" />
     <Compile Include="SqlCe4QueryGenerator.cs" />
-    <Compile Include="SqlCe4UnitOfWork.cs" />
-    <Compile Include="SqlCe4QueryEngine.cs" />
+    <Compile Include="SqlCe4WriteSession.cs" />
+    <Compile Include="SqlCe4ReadSession.cs" />
     <Compile Include="SqlCe4ConnectionInfo.cs" />
     <Compile Include="SqlCe4Database.cs" />
     <Compile Include="SqlCe4DbFactory.cs" />

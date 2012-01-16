@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
-using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4
 {
@@ -21,12 +21,10 @@ namespace SisoDb.SqlCe4
 				Take = GenerateTakeString(query),
                 IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
 				OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
-                IncludedRowIds = GenerateIncludedRowIdsString(sqlExpression),
 				MainStructureTable = query.StructureSchema.GetStructureTableName(),
 				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
-				MatchingIncludesJoins = GenerateMatchingIncludesJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
-                IncludesJoins = GenerateIncludesJoins(sqlExpression),
+                IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
 				OrderBy = GenerateOrderByString(query, sqlExpression),
 				Paging = GeneratePagingString(query, sqlExpression)
             };

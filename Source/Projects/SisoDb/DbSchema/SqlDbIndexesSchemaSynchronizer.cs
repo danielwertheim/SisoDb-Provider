@@ -4,7 +4,6 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
 {
@@ -21,37 +20,39 @@ namespace SisoDb.DbSchema
 
         public void Synchronize(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            var keyNamesToDrop = GetKeyNamesToDrop(structureSchema, dbClient);
+			var structureFields = new HashSet<string>(structureSchema.IndexAccessors.Select(iac => iac.Path));
+			var indexesTableNames = structureSchema.GetIndexesTableNames();
+			foreach (var indexesTableName in indexesTableNames.AllTableNames)
+        	{
+				var keyNamesToDrop = GetMemberPathsToDrop(indexesTableName, structureFields, dbClient);
 
-            if (keyNamesToDrop.Count > 0)
-                DeleteRecordsMatchingKeyNames(structureSchema, keyNamesToDrop, dbClient);
+				if (keyNamesToDrop.Length > 0)
+					DeleteRecordsMatchingKeyNames(indexesTableName, keyNamesToDrop, dbClient);	
+        	}
         }
 
-		private void DeleteRecordsMatchingKeyNames(IStructureSchema structureSchema, IEnumerable<string> names, IDbClient dbClient)
+		private void DeleteRecordsMatchingKeyNames(string indexesTableName, IEnumerable<string> names, IDbClient dbClient)
         {
             var inString = string.Join(",", names.Select(n => "'" + n + "'"));
             var sql = _sqlStatements.GetSql("IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames")
-                .Inject(structureSchema.GetIndexesTableName(), IndexStorageSchema.Fields.MemberPath.Name, inString);
+                .Inject(indexesTableName, IndexStorageSchema.Fields.MemberPath.Name, inString);
 
             dbClient.ExecuteNonQuery(sql);
         }
 
-		private IList<string> GetKeyNamesToDrop(IStructureSchema structureSchema, IDbClient dbClient)
+		private string[] GetMemberPathsToDrop(string indexesTableName, HashSet<string> structureFields, IDbClient dbClient)
         {
-            var structureFields = new HashSet<string>(structureSchema.IndexAccessors.Select(iac => iac.Path));
-            var keyNames = GetKeyNames(structureSchema, dbClient);
-
-            return keyNames.Where(kn => !structureFields.Contains(kn)).ToList();
+			return GetExistingDbMemberPaths(indexesTableName, dbClient).Where(kn => !structureFields.Contains(kn)).ToArray();
         }
 
-		private IEnumerable<string> GetKeyNames(IStructureSchema structureSchema, IDbClient dbClient)
+		private IEnumerable<string> GetExistingDbMemberPaths(string indexesTableName, IDbClient dbClient)
         {
             var dbColumns = new List<string>();
 
             dbClient.SingleResultSequentialReader(
                 _sqlStatements.GetSql("IndexesSchemaSynchronizer_GetKeyNames").Inject(
                     IndexStorageSchema.Fields.MemberPath.Name,
-                    structureSchema.GetIndexesTableName()),
+                    indexesTableName),
                     dr => dbColumns.Add(dr.GetString(0)));
 
             return dbColumns;

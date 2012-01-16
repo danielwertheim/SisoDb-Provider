@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
-using NCore.Collections;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.Querying
 {
@@ -94,7 +92,7 @@ namespace SisoDb.Querying
             var wheres = sqlExpression.WhereMembers.ToList();
             var sortings = sqlExpression.SortingMembers.ToList();
 
-			var indexesTableName = query.StructureSchema.GetIndexesTableName();
+			var indexesTableNames = query.StructureSchema.GetIndexesTableNames();
 
             var joins = new List<string>(wheres.Count + sortings.Count);
 
@@ -104,7 +102,7 @@ namespace SisoDb.Querying
             {
                 joins.AddRange(wheres.Select(where =>
                     string.Format(joinFormat,
-                    indexesTableName,
+                    indexesTableNames.GetNameByType(where.DataType),
                     where.Index,
                     where.MemberPath)));
             }
@@ -113,7 +111,7 @@ namespace SisoDb.Querying
             {
                 joins.AddRange(sortings.Select(sorting =>
                     string.Format(joinFormat,
-                    indexesTableName,
+					indexesTableNames.GetNameByType(sorting.DataType),
                     sorting.Index,
                     sorting.MemberPath)));
             }
@@ -126,30 +124,25 @@ namespace SisoDb.Querying
             return sqlExpression.WhereCriteria.CriteriaString;
         }
 
-		protected virtual string GenerateMatchingIncludesJoins(IQuery query, ISqlExpression sqlExpression)
+        protected virtual string GenerateIncludesJoins(IQuery query, ISqlExpression sqlExpression)
         {
             var includes = sqlExpression.Includes.ToList();
-            if (includes.Count == 0)
-                return string.Empty;
+			if (includes.Count == 0)
+				return string.Empty;
 
-            var indexesJoinString = string.Format("inner join [{0}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] in ({1})",
-				query.StructureSchema.GetIndexesTableName(),
-                string.Join(", ", includes.Select(inc => string.Format("'{0}'", inc.MemberPathReference))));
+        	var structureTableName = query.StructureSchema.GetStructureTableName();
+        	var indexesTableNames = query.StructureSchema.GetIndexesTableNames();
 
-            const string joinFormat = "left join [{0}] cs{1} on cs{1}.[StructureId] = si.[{2}] and si.[MemberPath] = '{3}'";
+			const string joinFormat = "left join (select si.[StructureId], cs.[Json] [{1}Json] from [{2}] s inner join [{3}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] = '{4}' left join [{5}] cs on cs.[StructureId] = si.[Value]) inc{0} on inc{0}.[StructureId] = s.[StructureId]";
 
-            return string.Join(" ", new [] { indexesJoinString }.MergeWith(includes.Select(inc => string.Format(joinFormat, inc.TableName, inc.Index, inc.IndexValueColumnName, inc.MemberPathReference))));
-        }
-
-        protected virtual string GenerateIncludesJoins(ISqlExpression sqlExpression)
-        {
-            var includes = sqlExpression.Includes.ToList();
-
-            const string joinFormat = "left join [{0}] cs{1} on cs{1}.[RowId] = rs.[{2}RowId]";
-
-            return includes.Count == 0
-                ? string.Empty
-                : string.Join(" ", includes.Select(inc => string.Format(joinFormat, inc.TableName, inc.Index, inc.ObjectReferencePath)));
+			return string.Join(" ", includes.Select(include => 
+				string.Format(joinFormat,
+					include.Index,
+					include.ObjectReferencePath,
+					structureTableName,
+					indexesTableNames.GetNameByType(include.DataType),
+					include.MemberPathReference,
+					include.TableName)));
         }
 
         protected virtual string GenerateIncludedJsonMembersString(ISqlExpression sqlExpression)
@@ -158,16 +151,7 @@ namespace SisoDb.Querying
 
             return includes.Count == 0
                 ? string.Empty
-                : string.Join(", ", includes.Select(inc => string.Format("cs{0}.[Json] [{1}Json]", inc.Index, inc.ObjectReferencePath)));
-        }
-
-        protected virtual string GenerateIncludedRowIdsString(ISqlExpression sqlExpression)
-        {
-            var includes = sqlExpression.Includes.ToList();
-
-            return includes.Count == 0
-                ? string.Empty
-                : string.Join(", ", includes.Select(inc => string.Format("min(cs{0}.[RowId]) [{1}RowId]", inc.Index, inc.ObjectReferencePath)));
+                : string.Join(", ", includes.Select(inc => string.Format("inc{0}.[{1}Json]", inc.Index, inc.ObjectReferencePath)));
         }
     }
 }

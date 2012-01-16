@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class GetByIdInterval
 	{
-		[Subject(typeof(IUnitOfWork), "Get by Id interval")]
+		[Subject(typeof(IWriteSession), "Get by Id interval")]
 		public class when_getting_for_guids : SpecificationBase
 		{
 			Establish context = () =>
@@ -22,11 +22,9 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 			{
 				CaughtException = Catch.Exception(() =>
 				{
-					using (var uow = TestContext.Database.CreateUnitOfWork())
+					using (var session = TestContext.Database.BeginWriteSession())
 					{
-						uow.InsertMany(_structures);
-
-						_fetchedStructures = uow.GetByIdInterval<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+						_fetchedStructures = session.GetByIdInterval<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 					}
 				});
 			};
@@ -37,7 +35,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 				CaughtException.ShouldBeOfType<SisoDbException>();
 
 				var ex = (SisoDbException)CaughtException;
-				ex.Message.ShouldContain(ExceptionMessages.QuerySession_GetByIdInterval_WrongIdType);
+				ex.Message.ShouldContain(ExceptionMessages.ReadSession_GetByIdInterval_WrongIdType);
 			};
 
 			private static IList<QueryGuidItem> _structures;

@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsUsingBaseClasses
     {
-        [Subject(typeof(IUnitOfWork), "Insert (base classes)")]
+        [Subject(typeof(IWriteSession), "Insert (base classes)")]
         public class when_inserting_subclass_as_subclass : SpecificationBase
         {
             Establish context = () =>
@@ -26,10 +26,9 @@ namespace SisoDb.Specifications.UnitOfWork
                     MyItemInt = 242
                 };
 
-                using(var uow = TestContext.Database.CreateUnitOfWork())
+                using(var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(_structure);
-                    uow.Commit();
+                    session.Insert(_structure);
                 }
             };
 
@@ -40,7 +39,7 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.Database.should_have_identical_structures(_structure);
 
             It should_store_base_member_in_indexes_table = 
-                () => TestContext.DbHelper.IndexesTableHasMember<MyItem>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<MyItem>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
 
             It should_store_unique_base_member_in_uniques_table = 
                 () => TestContext.DbHelper.UniquesTableHasMember<MyItem>(_structureSchema, _structure.StructureId, x => x.MyItemBaseUniqueInt).ShouldBeTrue();
@@ -49,7 +48,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static MyItem _structure;
         }
 
-        [Subject(typeof(IUnitOfWork), "Insert (base classes)")]
+        [Subject(typeof(IWriteSession), "Insert (base classes)")]
         public class when_inserting_subclass_as_baseclass : SpecificationBase
         {
             Establish context = () =>
@@ -67,10 +66,9 @@ namespace SisoDb.Specifications.UnitOfWork
                     MyItemInt = 242
                 };
 
-                using (var uow = TestContext.Database.CreateUnitOfWork())
+                using (var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert<MyItemBase>(_structure);
-                    uow.Commit();
+                    session.Insert<MyItemBase>(_structure);
                 }
             };
 
@@ -81,7 +79,7 @@ namespace SisoDb.Specifications.UnitOfWork
                 () => TestContext.Database.should_have_one_structure_with_json_containing<MyItemBase, MyItem>(x => x.MyItemInt);
 
             It should_store_base_member_in_indexes_table =
-                () => TestContext.DbHelper.IndexesTableHasMember<MyItemBase>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<MyItemBase>(_structureSchema, _structure.StructureId, x => x.MyItemBaseInt).ShouldBeTrue();
 
             It should_store_unique_base_member_in_uniques_table =
                 () => TestContext.DbHelper.UniquesTableHasMember<MyItemBase>(_structureSchema, _structure.StructureId, x => x.MyItemBaseUniqueInt).ShouldBeTrue();

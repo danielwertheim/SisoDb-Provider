@@ -11,7 +11,6 @@ using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb.Dac
 {
@@ -42,9 +41,9 @@ namespace SisoDb.Dac
 			Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
 
 			if (System.Transactions.Transaction.Current == null)
-				Transaction = transactional ? Connection.BeginTransaction() : null;
+				Transaction = transactional ? Connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted) : null;
 			else
-				Ts = new TransactionScope(TransactionScopeOption.Suppress);
+				Ts = new TransactionScope(TransactionScopeOption.Suppress, new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted});
 		}
 
 		public void Dispose()
@@ -68,17 +67,16 @@ namespace SisoDb.Dac
 				return;
 
 			ConnectionManager.ReleaseDbConnection(Connection);
-
 			Connection = null;
 		}
 
-		public void Flush()
+		public virtual void Commit()
 		{
 			if (Ts != null)
 			{
 				Ts.Complete();
 				Ts.Dispose();
-				Ts = new TransactionScope(TransactionScopeOption.Suppress);
+				Ts = null;
 				return;
 			}
 
@@ -86,11 +84,11 @@ namespace SisoDb.Dac
 				return;
 
 			if (Transaction == null)
-				throw new NotSupportedException(ExceptionMessages.SqlDbClient_Flus_NonTransactional);
+				throw new NotSupportedException(ExceptionMessages.DbClient_Commit_NonTransactional);
 
 			Transaction.Commit();
 			Transaction.Dispose();
-			Transaction = Connection.BeginTransaction();
+			Transaction = null;
 		}
 
 		protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
@@ -122,11 +120,25 @@ namespace SisoDb.Dac
 
 		public abstract bool TableExists(string name);
 
+		public virtual IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
+		{
+			return new IndexesTableStatuses(names)
+			{
+				IntegersTableExists = TableExists(names.IntegersTableName),
+				FractalsTableExists = TableExists(names.FractalsTableName),
+				DatesTableExists = TableExists(names.DatesTableName),
+				BooleansTableExists = TableExists(names.BooleansTableName),
+				GuidsTableExists = TableExists(names.GuidsTableName),
+				StringsTableExists = TableExists(names.StringsTableName),
+				TextsTableExists = TableExists(names.TextsTableName)
+			};
+		}
+
 		public abstract int RowCount(IStructureSchema structureSchema);
 
 		public abstract int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
 
-		public abstract long CheckOutAndGetNextIdentity(string entityHash, int numOfIds);
+		public abstract long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
 
 		public virtual string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
 		{
@@ -135,6 +147,15 @@ namespace SisoDb.Dac
 			var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
 
 			return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
+		}
+
+		public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
+		{
+			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+			var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
+
+			return YieldJson(sql);
 		}
 
 		public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);

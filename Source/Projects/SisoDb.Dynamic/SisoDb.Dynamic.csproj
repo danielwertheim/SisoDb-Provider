@@ -40,11 +40,11 @@
       <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.55.0\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.55.0.102, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.56.0.104, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.55.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.2.2.5660, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

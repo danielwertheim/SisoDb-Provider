@@ -53,7 +53,7 @@ namespace SisoDb.UnitTests.DbSchema
         {
             var structureSchema = CreateStructureSchemaFakeWithPlainAndUniques();
 
-            var structureStorageSchema = new StructureStorageSchema(structureSchema);
+            var structureStorageSchema = new StructureStorageSchema(structureSchema, "foo");
 
             var fieldsByIndex = structureStorageSchema.GetFieldsOrderedByIndex().ToList();
 

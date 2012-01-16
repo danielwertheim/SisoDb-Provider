@@ -4,7 +4,6 @@ using Machine.Specifications;
 using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
-using SisoDb.Structures;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database
@@ -27,8 +26,23 @@ namespace SisoDb.Specifications.Database
             It should_have_created_structure_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetStructureTableName()).ShouldBeTrue();
 
-            It should_have_created_indexes_table =
-                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableName()).ShouldBeTrue();
+            It should_have_created_integers_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers)).ShouldBeTrue();
+
+			It should_have_created_fractals_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals)).ShouldBeTrue();
+
+			It should_have_created_booleans_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans)).ShouldBeTrue();
+
+			It should_have_created_dates_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates)).ShouldBeTrue();
+
+			It should_have_created_guids_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids)).ShouldBeTrue();
+
+			It should_have_created_strings_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeTrue();
 
             It should_have_created_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
@@ -52,8 +66,23 @@ namespace SisoDb.Specifications.Database
             It should_have_created_structure_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetStructureTableName()).ShouldBeTrue();
 
-            It should_have_created_indexes_table =
-                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableName()).ShouldBeTrue();
+			It should_have_created_integers_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers)).ShouldBeTrue();
+
+			It should_have_created_fractals_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals)).ShouldBeTrue();
+
+			It should_have_created_booleans_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans)).ShouldBeTrue();
+
+			It should_have_created_dates_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates)).ShouldBeTrue();
+
+			It should_have_created_guids_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids)).ShouldBeTrue();
+
+			It should_have_created_strings_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeTrue();
 
             It should_have_created_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
@@ -70,13 +99,12 @@ namespace SisoDb.Specifications.Database
                 TestContext.Database.UpsertStructureSet<OrgModel.MyClass>();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
 
-                using(var uow = TestContext.Database.CreateUnitOfWork())
+                using(var session = TestContext.Database.BeginWriteSession())
                 {
-                    uow.Insert(new OrgModel.MyClass
+                    session.Insert(new OrgModel.MyClass
                     {
                         IndexableMember1 = "My string", IndexableMember2 = 42
                     });
-                    uow.Commit();
                 }
 
                 TestContext = TestContextFactory.Create();
@@ -86,7 +114,7 @@ namespace SisoDb.Specifications.Database
                 () => TestContext.Database.UpsertStructureSet<DroppedColumnModel.MyClass>();
 
             It should_have_dropped_all_indexes_for_dropped_member = 
-                () => TestContext.DbHelper.RowCount(_structureSchema.GetIndexesTableName(),
+                () => TestContext.DbHelper.RowCount(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings),
                     "[{0}]='IndexableMember1'".Inject(IndexStorageSchema.Fields.MemberPath.Name)).ShouldEqual(0);
 
             private static IStructureSchema _structureSchema;
@@ -118,9 +146,24 @@ namespace SisoDb.Specifications.Database
                 column.ShouldNotBeNull();
                 column.DbDataType.ShouldEqual("uniqueidentifier");
             };
+			
+			It should_still_have_integers_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers)).ShouldBeTrue();
 
-            It should_still_have_indexes_table = () =>
-                TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableName()).ShouldBeTrue();
+			It should_still_have_fractals_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals)).ShouldBeTrue();
+
+			It should_still_have_booleans_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans)).ShouldBeTrue();
+
+			It should_still_have_dates_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates)).ShouldBeTrue();
+
+			It should_still_have_guids_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids)).ShouldBeTrue();
+
+			It should_still_have_strings_indexes_table =
+				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeTrue();
 
             It should_still_have_original_structureid_in_indexes_table = () =>
             {

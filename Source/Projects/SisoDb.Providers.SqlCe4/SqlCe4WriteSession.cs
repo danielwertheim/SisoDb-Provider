@@ -3,10 +3,10 @@ using SisoDb.Structures;
 
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4UnitOfWork : DbUnitOfWork
+    public class SqlCe4WriteSession : DbWriteSession
     {
-		protected internal SqlCe4UnitOfWork(
-			IDbDatabase db, 
+		protected internal SqlCe4WriteSession(
+			ISisoDbDatabase db, 
 			IDbClient dbClientTransactional, 
 			IDbClient dbClientNonTransactional, 
 			IIdentityStructureIdGenerator identityStructureIdGenerator)

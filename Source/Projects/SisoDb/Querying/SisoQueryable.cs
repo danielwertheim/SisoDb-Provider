@@ -8,14 +8,14 @@ namespace SisoDb.Querying
 {
 	public class SisoQueryable<T> : ISisoQueryable<T> where T : class
 	{
-		protected virtual IQueryEngine QueryEngine { get; private set; }
+		protected virtual IReadSession ReadSession { get; private set; }
 		protected readonly IQueryBuilder<T> QueryBuilder;
 
-		public SisoQueryable(IQueryBuilder<T> queryBuilder, IQueryEngine queryEngine)
+		public SisoQueryable(IQueryBuilder<T> queryBuilder, IReadSession readSession)
 			: this(queryBuilder)
 		{
-			Ensure.That(queryEngine, "queryEngine").IsNotNull();
-			QueryEngine = queryEngine;
+			Ensure.That(readSession, "ReadSession").IsNotNull();
+			ReadSession = readSession;
 		}
 
 		protected SisoQueryable(IQueryBuilder<T> queryBuilder)
@@ -41,17 +41,17 @@ namespace SisoDb.Querying
 
 		public virtual IEnumerable<T> ToEnumerable()
 		{
-			return QueryEngine.Core.Query<T>(QueryBuilder.Build());
+			return ReadSession.QueryEngine.Query<T>(QueryBuilder.Build());
 		}
 
 		public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
 		{
-			return QueryEngine.Core.QueryAs<T, TResult>(QueryBuilder.Build());
+			return ReadSession.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
 		}
 
 		public virtual IEnumerable<string> ToEnumerableOfJson()
 		{
-			return QueryEngine.Core.QueryAsJson<T>(QueryBuilder.Build());
+			return ReadSession.QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
 		}
 
 		public virtual IList<T> ToList()
@@ -133,14 +133,14 @@ namespace SisoDb.Querying
 		{
 			QueryBuilder.Clear();
 
-			return QueryEngine.Core.Count<T>(QueryBuilder.Build());
+			return ReadSession.QueryEngine.Count<T>(QueryBuilder.Build());
 		}
 
 		public virtual int Count(Expression<Func<T, bool>> expression)
 		{
 			QueryBuilder.Clear();
 
-			return QueryEngine.Core.Count<T>(QueryBuilder.Where(expression).Build());
+			return ReadSession.QueryEngine.Count<T>(QueryBuilder.Where(expression).Build());
 		}
 
 		public virtual ISisoQueryable<T> Take(int numOfStructures)

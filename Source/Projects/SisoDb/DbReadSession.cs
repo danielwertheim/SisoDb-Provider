@@ -8,18 +8,17 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Resources;
-using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class DbQueryEngine : IQueryEngine, IQueryEngineCore, IAdvancedQueries
+	public abstract class DbReadSession : IReadSession, IQueryEngine, IAdvancedQueries
 	{
-		protected readonly IDbDatabase Db;
+		protected readonly ISisoDbDatabase Db;
 		protected readonly IDbQueryGenerator QueryGenerator;
 		protected readonly ISqlStatements SqlStatements;
 		protected IDbClient DbClient;
 
-		protected DbQueryEngine(IDbDatabase db, IDbClient dbClient)
+		protected DbReadSession(ISisoDbDatabase db, IDbClient dbClient)
 		{
 			Ensure.That(db, "db").IsNotNull();
 			Ensure.That(dbClient, "dbClient").IsNotNull();
@@ -32,13 +31,16 @@ namespace SisoDb
 
 		public virtual void Dispose()
 		{
+			GC.SuppressFinalize(this);
+
+			if (DbClient == null)
+				throw new ObjectDisposedException(ExceptionMessages.ReadSession_AllreadyDisposed);
+
 			if (DbClient != null)
 			{
 				DbClient.Dispose();
 				DbClient = null;
 			}
-
-			GC.SuppressFinalize(this);
 		}
 
 		protected virtual void UpsertStructureSet(IStructureSchema structureSchema)
@@ -51,7 +53,7 @@ namespace SisoDb
 			get { return Db.StructureSchemas; }
 		}
 
-		public virtual IQueryEngineCore Core
+		public virtual IQueryEngine QueryEngine
 		{
 			get { return this; }
 		}
@@ -140,7 +142,7 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 
 			if (!structureSchema.IdAccessor.IdType.IsIdentity())
-				throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.QuerySession_GetByIdInterval_WrongIdType));
+				throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.ReadSession_GetByIdInterval_WrongIdType));
 
 			UpsertStructureSet(structureSchema);
 
@@ -199,16 +201,12 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			if(query.IsEmpty)
-			{
-				var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
-				return DbClient.YieldJson(sql);
-			}
+			if (query.IsEmpty)
+				return DbClient.GetJsonOrderedByStructureId(structureSchema);
 
 			var sqlQuery = QueryGenerator.GenerateQuery(query);
-			var parameters = sqlQuery.Parameters.Select(p => new DacParameter(p.Name, p.Value)).ToArray();
 
-			return DbClient.YieldJson(sqlQuery.Sql, parameters);
+			return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
 		}
 	}
 }
