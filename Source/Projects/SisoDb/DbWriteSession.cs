@@ -57,7 +57,7 @@ namespace SisoDb
 			{
 				try
 				{
-					DbClient.Flush();
+					DbClient.Commit();
 				}
 				catch (Exception ex)
 				{

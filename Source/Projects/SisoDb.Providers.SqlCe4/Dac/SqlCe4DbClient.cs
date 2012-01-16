@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Linq;
@@ -11,6 +12,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
+using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4.Dac
 {
@@ -22,6 +24,27 @@ namespace SisoDb.SqlCe4.Dac
             : base(connectionInfo, transactional, connectionManager, sqlStatements)
         {
         }
+
+		public override void Commit()
+		{
+			if (Ts != null)
+			{
+				Ts.Complete();
+				Ts.Dispose();
+				Ts = null;
+				return;
+			}
+
+			if (System.Transactions.Transaction.Current != null)
+				return;
+
+			if (Transaction == null)
+				throw new NotSupportedException(ExceptionMessages.DbClient_Commit_NonTransactional);
+
+			((SqlCeTransaction)Transaction).Commit(CommitMode.Immediate);
+			Transaction.Dispose();
+			Transaction = null;
+		}
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {

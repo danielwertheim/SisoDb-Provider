@@ -67,17 +67,16 @@ namespace SisoDb.Dac
 				return;
 
 			ConnectionManager.ReleaseDbConnection(Connection);
-
 			Connection = null;
 		}
 
-		public void Flush()
+		public virtual void Commit()
 		{
 			if (Ts != null)
 			{
 				Ts.Complete();
 				Ts.Dispose();
-				Ts = new TransactionScope(TransactionScopeOption.Suppress);
+				Ts = null;
 				return;
 			}
 
@@ -85,11 +84,11 @@ namespace SisoDb.Dac
 				return;
 
 			if (Transaction == null)
-				throw new NotSupportedException(ExceptionMessages.SqlDbClient_Flus_NonTransactional);
+				throw new NotSupportedException(ExceptionMessages.DbClient_Commit_NonTransactional);
 
 			Transaction.Commit();
 			Transaction.Dispose();
-			Transaction = Connection.BeginTransaction();
+			Transaction = null;
 		}
 
 		protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)

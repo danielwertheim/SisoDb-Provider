@@ -7,7 +7,7 @@ namespace SisoDb.Sql2008
         {
         }
 
-		protected override DbReadSession CreateReadSession()
+    	protected override DbReadSession CreateReadSession()
         {
             return new Sql2008ReadSession(
 				this,

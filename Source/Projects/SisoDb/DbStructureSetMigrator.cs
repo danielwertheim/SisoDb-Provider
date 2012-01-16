@@ -48,7 +48,7 @@ namespace SisoDb
 					Db.SchemaManager.UpsertStructureSet(structureSchemaNew, dbClientTransactional);
 
 					if (OnUpdate(structureSchemaOld, structureSchemaNew, dbClientTransactional, modifier))
-						dbClientTransactional.Flush();
+						dbClientTransactional.Commit();
 				}
 				finally
 				{

@@ -90,7 +90,12 @@ namespace SisoDb
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
         }
 
-    	public virtual void EnsureNewDatabase()
+		public virtual IStructureSetMigrator GetStructureSetMigrator()
+		{
+			return new DbStructureSetMigrator(this);
+		}
+
+		public virtual void EnsureNewDatabase()
         {
             lock (DbOperationsLock)
             {
@@ -160,10 +165,10 @@ namespace SisoDb
 
                         SchemaManager.DropStructureSet(structureSchema, dbClient);
 
-                        dbClient.Flush();
-
                         _structureSchemas.RemoveSchema(type);
                     }
+
+					dbClient.Commit();
                 }
             }
         }
@@ -184,7 +189,7 @@ namespace SisoDb
                     var structureSchema = _structureSchemas.GetSchema(type);
                     SchemaManager.UpsertStructureSet(structureSchema, dbClient);
 
-                    dbClient.Flush();
+                    dbClient.Commit();
                 }
             }
         }

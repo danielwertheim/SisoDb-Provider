@@ -39,6 +39,13 @@ namespace SisoDb
         /// </summary>
         IJsonSerializer Serializer { get; set; }
 
+		/// <summary>
+		/// Returns an <see cref="IStructureSetMigrator"/> used for
+		/// assisting you with model migrations.
+		/// </summary>
+		/// <returns></returns>
+    	IStructureSetMigrator GetStructureSetMigrator();
+
         /// <summary>
         /// Ensures that a new fresh database will exists. Drops any existing database.
         /// </summary>

@@ -11,7 +11,7 @@ namespace SisoDb.Dac
     public interface IDbClient : IDisposable
     {
         bool IsTransactional { get; }
-        void Flush();
+        void Commit();
 
 		IDbBulkCopy GetBulkCopy();
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);

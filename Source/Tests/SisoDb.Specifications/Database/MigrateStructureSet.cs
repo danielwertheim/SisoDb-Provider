@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
 				{
 					var names = p.Name.Split(' ');
@@ -91,7 +91,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = oldItem.String1;
@@ -159,7 +159,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = oldItem.String1;
@@ -223,7 +223,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = "New" + oldItem.String1;
@@ -278,7 +278,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
@@ -342,7 +342,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
@@ -407,7 +407,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
@@ -473,7 +473,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
@@ -538,7 +538,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = "New" + oldItem.String1;
@@ -592,7 +592,7 @@ namespace SisoDb.Specifications.Database
 
 			Because of = () =>
 			{
-				var migrator = new DbStructureSetMigrator((ISisoDbDatabase)TestContext.Database);
+				var migrator = TestContext.Database.GetStructureSetMigrator();
 				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = "New" + oldItem.String1;

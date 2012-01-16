@@ -142,6 +142,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can not commit/flush a non transational DbClient..
+        /// </summary>
+        public static string DbClient_Commit_NonTransactional {
+            get {
+                return ResourceManager.GetString("DbClient_Commit_NonTransactional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The query should only return StructureIds and then onle Where expressions are allowed. Take, Paging and Sorting etc is not allowed..
         /// </summary>
         public static string DbQueryGenerator_GenerateQueryReturningStrutureIds {
@@ -310,15 +319,6 @@ namespace SisoDb.Resources {
         public static string SqlDatabase_InitializeExisting_DbDoesNotExist {
             get {
                 return ResourceManager.GetString("SqlDatabase_InitializeExisting_DbDoesNotExist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You can not flush a non transational DbClient..
-        /// </summary>
-        public static string SqlDbClient_Flus_NonTransactional {
-            get {
-                return ResourceManager.GetString("SqlDbClient_Flus_NonTransactional", resourceCulture);
             }
         }
         
