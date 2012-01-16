@@ -41,9 +41,9 @@ namespace SisoDb.Dac
 			Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
 
 			if (System.Transactions.Transaction.Current == null)
-				Transaction = transactional ? Connection.BeginTransaction() : null;
+				Transaction = transactional ? Connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted) : null;
 			else
-				Ts = new TransactionScope(TransactionScopeOption.Suppress);
+				Ts = new TransactionScope(TransactionScopeOption.Suppress, new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted});
 		}
 
 		public void Dispose()
