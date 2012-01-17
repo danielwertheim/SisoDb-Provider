@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlServerCe;
 using System.Linq;
 using EnsureThat;
-using ErikEJ.SqlCe;
 using NCore;
 using NCore.Collections;
 using PineCone.Structures;
@@ -56,7 +55,7 @@ namespace SisoDb.SqlCe4.Dac
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, SqlCeBulkCopyOptions.Default, (SqlCeTransaction)Transaction);
+            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, (SqlCeTransaction)Transaction);
         }
 
         public override void Drop(IStructureSchema structureSchema)

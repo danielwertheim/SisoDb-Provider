@@ -9,9 +9,9 @@ namespace SisoDb.Sql2008.Dac
     {
         private SqlBulkCopy _innerBulkCopy;
 
-        public Sql2008DbBulkCopy(SqlConnection connection, SqlBulkCopyOptions options, SqlTransaction transaction)
+        public Sql2008DbBulkCopy(SqlConnection connection, SqlTransaction transaction)
         {
-            _innerBulkCopy = new SqlBulkCopy(connection, options, transaction)
+			_innerBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction)
             {
                 NotifyAfter = 0
             };
@@ -19,12 +19,12 @@ namespace SisoDb.Sql2008.Dac
 
         public void Dispose()
         {
+			GC.SuppressFinalize(this);
 			if(_innerBulkCopy != null)
             {
                 _innerBulkCopy.Close();
                 _innerBulkCopy = null;
             }
-			GC.SuppressFinalize(this);
         }
 
         public string DestinationTableName
