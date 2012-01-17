@@ -117,7 +117,7 @@ namespace SisoDb.Profiling
 
         private static int GetAllCustomers(ISisoDatabase database)
         {
-			using(var session =database.BeginReadSession())
+			using(var session = database.BeginReadSession())
 			{
 				return session.Query<Customer>().ToEnumerable().Count();
 			}
@@ -130,7 +130,7 @@ namespace SisoDb.Profiling
 
 		private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			using (var session =database.BeginReadSession())
+			using (var session = database.BeginReadSession())
 			{
 				return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
 			}
@@ -138,7 +138,7 @@ namespace SisoDb.Profiling
 
 		private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			using (var session =database.BeginReadSession())
+			using (var session = database.BeginReadSession())
 			{
 				return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
 			}

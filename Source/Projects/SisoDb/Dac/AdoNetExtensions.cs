@@ -16,6 +16,11 @@ namespace SisoDb.Dac
             return (T)Convert.ChangeType(value, typeof(T));
         }
 
+		public static IDbCommand CreateCommand(this IDbConnection connection, IDbTransaction transaction)
+		{
+			return CreateCommand(connection, transaction, CommandType.Text, null);
+		}
+
 		public static IDbCommand CreateCommand(this IDbConnection connection, string sql, params IDacParameter[] parameters)
         {
             return CreateCommand(connection, null, CommandType.Text, sql, parameters);

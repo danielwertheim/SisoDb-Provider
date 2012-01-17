@@ -40,7 +40,7 @@ namespace SisoDb.Dac.BulkInserts
 
         public override bool HasRows
         {
-            get { return Items != null && Items.Count() > 0; }
+            get { return Items != null && Items.Any(); }
         }
 
         public override void Close()
