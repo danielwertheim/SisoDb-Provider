@@ -266,7 +266,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [nvarchar](11) null);
+[StringValue] [nvarchar](20) null);
 
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
@@ -278,7 +278,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [nvarchar](11) null);
+[StringValue] [nvarchar](20) null);
 
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
@@ -290,7 +290,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [nvarchar](11) null);
+[StringValue] [nvarchar](20) null);
 
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);

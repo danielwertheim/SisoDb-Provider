@@ -269,7 +269,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [varchar](11) null);
+[StringValue] [varchar](20) null);
 
 create nonclustered index [IX_{0}_Q]
 on [dbo].[{0}] ([MemberPath],[Value], [StructureId]);
@@ -281,7 +281,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [varchar](11) null);
+[StringValue] [varchar](20) null);
 
 create nonclustered index [IX_{0}_Q]
 on [dbo].[{0}] ([MemberPath],[Value], [StructureId]);
@@ -293,7 +293,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bigint] null,
-[StringValue] [varchar](11) null);
+[StringValue] [varchar](20) null);
 
 create nonclustered index [IX_{0}_Q]
 on [dbo].[{0}] ([MemberPath],[Value], [StructureId]);
