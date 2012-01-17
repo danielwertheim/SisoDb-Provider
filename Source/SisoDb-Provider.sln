@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		License-ServiceStack.txt = License-ServiceStack.txt
 		License-SisoDb.txt = License-SisoDb.txt
-		License-SqlCe4BulkCopy.txt = License-SqlCe4BulkCopy.txt
 		Releasenotes.txt = Releasenotes.txt
 		Samples.txt = Samples.txt
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
