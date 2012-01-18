@@ -59,6 +59,27 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		}
 
 		[Test]
+		public void Parse_WhenBoolWithComparisionOperator_ReturnsCorrectNodes()
+		{
+			var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1 == true);
+
+			var parser = new WhereParser();
+			var parsedLambda = parser.Parse(expression);
+
+			var listOfNodes = parsedLambda.Nodes.ToList();
+			Assert.AreEqual(3, listOfNodes.Count);
+
+			var memberNode = (MemberNode)listOfNodes[0];
+			var equalNode = (OperatorNode)listOfNodes[1];
+			var valueNode = (ValueNode)listOfNodes[2];
+
+			Assert.AreEqual("Bool1", memberNode.Path);
+			Assert.AreEqual(typeof(bool), memberNode.MemberType);
+			Assert.AreEqual("=", equalNode.ToString());
+			Assert.AreEqual(true, valueNode.Value);
+		}
+
+		[Test]
 		public void Parse_WhenBoolWithoutComparisionOperatorAndWithNullable_ReturnsCorrectNodes()
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1 || m.NullableInt1.HasValue);
