@@ -5,6 +5,7 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Resources;
@@ -176,7 +177,7 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			return DbClient.GetJsonByIds(ids.Select(StructureId.ConvertFrom), structureSchema);
+			return DbClient.GetJsonByIds(ids.Yield().Select(StructureId.ConvertFrom), structureSchema);
 		}
 
 		public virtual ISisoQueryable<T> Query<T>() where T : class

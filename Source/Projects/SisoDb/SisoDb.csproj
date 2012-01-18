@@ -71,6 +71,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ConnectionString.cs" />
+    <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />

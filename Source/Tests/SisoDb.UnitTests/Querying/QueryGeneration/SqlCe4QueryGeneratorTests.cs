@@ -26,9 +26,22 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         }
 
 		[Test]
-		public override void GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery()
+		public override void GenerateQuery_WithWhereHavingImplicitBool_GeneratesCorrectQuery()
 		{
-			var sqlQuery = On_GenerateQuery_WithWhereHavingBoolWithoutOperator_GeneratesCorrectQuery();
+			var sqlQuery = On_GenerateQuery_WithWhereHavingImplicitBool_GeneratesCorrectQuery();
+
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassBooleans] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Bool1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+				sqlQuery.Sql);
+
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual(true, sqlQuery.Parameters[0].Value);
+		}
+
+		[Test]
+		public override void GenerateQuery_WithWhereHavingExplicitBool_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithWhereHavingExplicitBool_GeneratesCorrectQuery();
 
 			Assert.AreEqual(
 				"select s.[Json] from (select s.[StructureId] from [MyClassStructure] s inner join [MyClassBooleans] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Bool1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",

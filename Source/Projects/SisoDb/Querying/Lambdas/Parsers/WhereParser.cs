@@ -115,7 +115,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			{
 				var convert = (UnaryExpression)e.Left;
 				if (convert.Operand.Type.IsAnyEnumType())
-					Visit(Expression<string>.Constant(Enum.Parse(convert.Operand.Type, e.Right.Evaluate().ToString()).ToString()));
+					Visit(Expression.Constant(Enum.Parse(convert.Operand.Type, e.Right.Evaluate().ToString()).ToString()));
 				else
 					Visit(e.Right);
 			}
@@ -143,13 +143,18 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected override Expression VisitMember(MemberExpression e)
         {
-			//if (e.Expression.NodeType == ExpressionType.Parameter)
-			//{
-			//    var memberNode = CreateNewMemberNode(e);
-			//    _nodes.AddNode(memberNode);
+			var isMember = e.Expression != null && e.Expression.NodeType == ExpressionType.Parameter;
+        	var isNullableMember = e.Expression != null && e.Expression.NodeType == ExpressionType.MemberAccess 
+				&& ((MemberExpression) e.Expression).Expression != null 
+				&& ((MemberExpression) e.Expression).Expression.NodeType == ExpressionType.Parameter;
+			
+        	if (isMember || isNullableMember)
+			{
+				var memberNode = CreateNewMemberNode(e);
+				_nodes.AddNode(memberNode);
 
-			//    return e;
-			//}
+				return e;
+			}
 
             try
             {

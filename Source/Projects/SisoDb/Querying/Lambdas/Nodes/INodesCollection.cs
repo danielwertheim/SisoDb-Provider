@@ -11,5 +11,6 @@ namespace SisoDb.Querying.Lambdas.Nodes
 		void AddNode(INode node);
 
 		void AddNodes(params INode[] nodes);
+		INode GetItemOrNullByIndex(int index);
 	}
 }
