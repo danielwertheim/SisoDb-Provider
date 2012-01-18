@@ -14,7 +14,7 @@ namespace SisoDb.Dac
                 throw new ArgumentNullException("name");
 
             Name = name;
-            Value = value;
+            Value = value ?? DBNull.Value;
         }
 
         public override bool Equals(object obj)
