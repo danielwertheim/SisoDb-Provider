@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb</id>    
 		<title>SisoDb - Simple Structure Oriented Db (core)</title>
-		<version>9.0.2</version>
+		<version>9.1.0</version>
 		<authors>Daniel Wertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
@@ -16,11 +16,11 @@
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb,document-database,json,sql,sqlserver,sql-server,sqlce,sqlce4,nosql</tags>
+		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
 		<dependencies>
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="0.56.0" />
-			<dependency id="ServiceStack.Text" version="3.2.2" />
+			<dependency id="ServiceStack.Text" version="3.3.4" />
 		</dependencies>
 	</metadata>
 	<files>

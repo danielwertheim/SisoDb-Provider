@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
 	<metadata>
-		<id>SisoDb.SqlCe4</id>    
-		<title>SisoDb.SqlCe4 - Simple Structure Oriented Db</title>
+		<id>SisoDb.Sql2012</id>    
+		<title>SisoDb.Sql2012 - Simple Structure Oriented Db</title>
 		<version>9.1.0</version>
 		<authors>Daniel Wertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
@@ -10,23 +10,22 @@
 		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
 		<description>
 			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
-			This package is for SQL-Server CE4.
+			This package is for SQL-Server 2012.
 		</description>
 		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sqlce,sqlce4,nosql</tags>
+		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sql2012,mssql2012,nosql</tags>
 		<dependencies>
 			<dependency id="SisoDb" version="[9.1.0]" />
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="0.56.0" />
-			<dependency id="SqlServerCompact" version="4.0.8482.1" />
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.xml" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\NCore*.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2012\bin\Release\SisoDb.Sql2012.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2012\bin\Release\SisoDb.Sql2012.xml" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Providers.Sql2012\bin\Release\NCore*.dll" target="lib\net40\" />
 	</files>
 </package>
