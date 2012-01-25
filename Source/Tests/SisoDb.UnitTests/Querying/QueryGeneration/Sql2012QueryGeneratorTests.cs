@@ -209,24 +209,24 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
         }
 
-        [Test]
-        public override void GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery()
-        {
-            var sqlQuery = On_GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery();
+		[Test]
+		public override void GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery()
+		{
+			var sqlQuery = On_GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-				"select s.[Json] from (select s.[StructureId] , row_number() over (order by min(mem0.[Value]) Asc) RowNum from [MyClassStructure] s inner join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] where rs.RowNum between @pagingFrom and @pagingTo;",
-                sqlQuery.Sql);
+			Assert.AreEqual(
+				"select s.[Json] from (select s.[StructureId], min(mem0.[Value]) mem0 from [MyClassStructure] s inner join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc offset @offsetRows rows fetch next @takeRows rows only;",
+				sqlQuery.Sql);
 
-            Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
-            Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
+			Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+			Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
 
-            Assert.AreEqual("@pagingFrom", sqlQuery.Parameters[1].Name);
-            Assert.AreEqual(1, sqlQuery.Parameters[1].Value);
-            
-            Assert.AreEqual("@pagingTo", sqlQuery.Parameters[2].Name);
-            Assert.AreEqual(10, sqlQuery.Parameters[2].Value);
-        }
+			Assert.AreEqual("@offsetRows", sqlQuery.Parameters[1].Name);
+			Assert.AreEqual(0, sqlQuery.Parameters[1].Value);
+
+			Assert.AreEqual("@takeRows", sqlQuery.Parameters[2].Name);
+			Assert.AreEqual(10, sqlQuery.Parameters[2].Value);
+		}
 
         [Test]
         public override void GenerateQuery_WithExplicitSortingOnTwoDifferentMemberTypesAndSorting_GeneratesCorrectQuery()

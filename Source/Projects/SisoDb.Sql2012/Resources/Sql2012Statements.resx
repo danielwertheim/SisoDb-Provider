@@ -485,7 +485,7 @@ select distinct [{0}] from [dbo].[{1}];</value>
   </data>
   <data name="Query" xml:space="preserve">
     <value>[%Start%]
-select [%Take%]s.[Json][%IncludedJsonMembers%] from (select s.[StructureId][%OrderByMembers%][%Paging%] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%] group by s.[StructureId]) rs inner join [[%MainStructureTable%]] s on s.[StructureId] = rs.[StructureId][%IncludesJoins%][%OrderBy%]
+select [%Take%]s.[Json][%IncludedJsonMembers%] from (select s.[StructureId][%OrderByMembers%] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%] group by s.[StructureId]) rs inner join [[%MainStructureTable%]] s on s.[StructureId] = rs.[StructureId][%IncludesJoins%][%OrderBy%][%Paging%]
 [%End%];</value>
   </data>
   <data name="QueryReturningStructureIds" xml:space="preserve">

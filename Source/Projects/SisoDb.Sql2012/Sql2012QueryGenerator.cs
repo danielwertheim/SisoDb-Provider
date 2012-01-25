@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
@@ -28,24 +26,24 @@ namespace SisoDb.Sql2012
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
                 IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
 				OrderBy = GenerateOrderByString(query, sqlExpression),
-				Paging = GeneratePagingString(query, sqlExpression).PrependWith(", "),
+				Paging = GeneratePagingString(query, sqlExpression),
             };
 
             IDacParameter[] parameters;
 
 			if (query.HasPaging)
-            {
-				var takeFromRowNum = (query.Paging.PageIndex * query.Paging.PageSize) + 1;
-				var takeToRowNum = (takeFromRowNum + query.Paging.PageSize) - 1;
+			{
+				var offsetRows = (query.Paging.PageIndex * query.Paging.PageSize);
+				var takeRows = query.Paging.PageSize;
 
-                parameters = new List<IDacParameter>(sqlExpression.WhereCriteria.Parameters)
+				parameters = new List<IDacParameter>(sqlExpression.WhereCriteria.Parameters)
                 {
-                    new DacParameter("@pagingFrom", takeFromRowNum),
-                    new DacParameter("@pagingTo", takeToRowNum)
+                    new DacParameter("@offsetRows", offsetRows),
+                    new DacParameter("@takeRows", takeRows)
                 }.ToArray();
-            }
-            else
-                parameters = sqlExpression.WhereCriteria.Parameters;
+			}
+			else
+				parameters = sqlExpression.WhereCriteria.Parameters;
 
             return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
         }
@@ -64,38 +62,32 @@ namespace SisoDb.Sql2012
             return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), sqlExpression.WhereCriteria.Parameters);
         }
 
-		protected override string GenerateOrderByMembersString(IQuery query, ISqlExpression sqlExpression)
-        {
-			return query.HasPaging
-                ? string.Empty
-				: base.GenerateOrderByMembersString(query, sqlExpression);
-        }
+		//protected override string GenerateOrderByMembersString(IQuery query, ISqlExpression sqlExpression)
+		//{
+		//    return query.HasPaging
+		//        ? string.Empty
+		//        : base.GenerateOrderByMembersString(query, sqlExpression);
+		//}
 
-		protected override string GenerateOrderByString(IQuery query, ISqlExpression sqlExpression)
-        {
-			return query.HasPaging
-                ? string.Empty
-				: base.GenerateOrderByString(query, sqlExpression);
-        }
+		//protected override string GenerateOrderByString(IQuery query, ISqlExpression sqlExpression)
+		//{
+		//    return query.HasPaging
+		//        ? string.Empty
+		//        : base.GenerateOrderByString(query, sqlExpression);
+		//}
 
-		protected override string GeneratePagingString(IQuery query, ISqlExpression sqlExpression)
-        {
-			if (!query.HasPaging)
-                return string.Empty;
+		protected override string GeneratePagingString(IQuery queryCommand, ISqlExpression sqlExpression)
+		{
+			return queryCommand.HasPaging
+				? "offset @offsetRows rows fetch next @takeRows rows only"
+				: string.Empty;
+		}
 
-            var s = string.Join(", ", sqlExpression.SortingMembers.Select(
-				sorting => sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name 
-					? string.Format("min(mem{0}.[{1}]) {2}", sorting.Index, sorting.IndexStorageColumnName, sorting.Direction)
-					: string.Format("s.[{0}] {1}", IndexStorageSchema.Fields.StructureId.Name, sorting.Direction)));
-            
-            return string.Format("row_number() over (order by {0}) RowNum", s);
-        }
-
-		protected override string GenerateEndString(IQuery query, ISqlExpression sqlExpression)
-        {
-			return query.HasPaging
-                ? "where rs.RowNum between @pagingFrom and @pagingTo"
-                : string.Empty;
-        }
+		//protected override string GenerateEndString(IQuery query, ISqlExpression sqlExpression)
+		//{
+		//    return query.HasPaging
+		//        ? "where rs.RowNum between @pagingFrom and @pagingTo"
+		//        : string.Empty;
+		//}
     }
 }
