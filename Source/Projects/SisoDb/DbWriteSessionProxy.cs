@@ -8,6 +8,7 @@ using SisoDb.Resources;
 
 namespace SisoDb
 {
+	[DebuggerStepThrough]
 	public class DbWriteSessionProxy : IWriteSession, IQueryEngine, IAdvancedQueries
 	{
 		protected DbWriteSession InnerSession;
