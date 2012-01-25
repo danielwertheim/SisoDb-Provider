@@ -80,6 +80,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Connections\ConnectionStringTests.cs" />
+    <Compile Include="Connections\Sql2012ConnectionInfoTests.cs" />
     <Compile Include="CustomAssert.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserStringQueryTests.cs" />
+    <Compile Include="Querying\QueryGeneration\Sql2012QueryGeneratorStringFunctionTests.cs" />
+    <Compile Include="Querying\QueryGeneration\Sql2012QueryGeneratorTests.cs" />
     <Compile Include="Querying\QueryGeneration\QueryGeneratorStringFunctionTests.cs" />
     <Compile Include="Querying\QueryGeneration\QueryGeneratorTests.cs" />
     <Compile Include="Querying\QueryGeneration\Sql2008QueryGeneratorStringFunctionTests.cs" />
@@ -120,15 +123,15 @@
       <Project>{A6AEE197-668A-4A08-98A7-F0CB76D359C0}</Project>
       <Name>SisoDb.Dynamic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj">
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlAzure\SisoDb.SqlAzure.csproj">
-      <Project>{BE01AA89-F64C-4CDF-B936-EC973868E0F8}</Project>
-      <Name>SisoDb.SqlAzure</Name>
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2012\SisoDb.Sql2012.csproj">
+      <Project>{8F79E2CB-91D6-4359-833A-A236BB0F814D}</Project>
+      <Name>SisoDb.Sql2012</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlCe4\SisoDb.SqlCe4.csproj">
+    <ProjectReference Include="..\..\Projects\SisoDb.SqlCe4\SisoDb.SqlCe4.csproj">
       <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
       <Name>SisoDb.SqlCe4</Name>
     </ProjectReference>

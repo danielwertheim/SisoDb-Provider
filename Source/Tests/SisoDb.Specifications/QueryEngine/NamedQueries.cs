@@ -8,7 +8,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-#if Sql2008Provider
+#if Sql2008Provider || Sql2012Provider
 	class NamedQueries
     {
         [Subject(typeof(IReadSession), "Named Query")]

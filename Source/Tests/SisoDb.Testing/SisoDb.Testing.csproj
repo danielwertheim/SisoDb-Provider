@@ -46,19 +46,21 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\..\packages\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Sql2012\Sql2012TestDbUtils.cs" />
+    <Compile Include="Sql2012\Sql2008TestContext.cs" />
     <Compile Include="DbColumn.cs" />
     <Compile Include="ITestContext.cs" />
     <Compile Include="ITestDbUtils.cs" />
@@ -101,15 +103,15 @@
       <Project>{A6AEE197-668A-4A08-98A7-F0CB76D359C0}</Project>
       <Name>SisoDb.Dynamic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj">
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlAzure\SisoDb.SqlAzure.csproj">
-      <Project>{BE01AA89-F64C-4CDF-B936-EC973868E0F8}</Project>
-      <Name>SisoDb.SqlAzure</Name>
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2012\SisoDb.Sql2012.csproj">
+      <Project>{8F79E2CB-91D6-4359-833A-A236BB0F814D}</Project>
+      <Name>SisoDb.Sql2012</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlCe4\SisoDb.SqlCe4.csproj">
+    <ProjectReference Include="..\..\Projects\SisoDb.SqlCe4\SisoDb.SqlCe4.csproj">
       <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
       <Name>SisoDb.SqlCe4</Name>
     </ProjectReference>
