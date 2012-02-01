@@ -184,7 +184,7 @@ namespace SisoDb
 		{
             Ensure.That(ids, "ids").HasItems();
 
-			return Db.Serializer.DeserializeMany<TOut>(GetByIdsAsJson<TContract>(ids.Select(i => i).ToArray()));
+			return Db.Serializer.DeserializeMany<TOut>(GetByIdsAsJson<TContract>(ids.Yield().Select(i => i).ToArray()));
 		}
 
 		public virtual string GetByIdAsJson<T>(object id) where T : class
@@ -204,7 +204,7 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			return DbClient.GetJsonByIds(ids.Yield().Select(StructureId.ConvertFrom), structureSchema);
+			return DbClient.GetJsonByIds(ids.Yield().Select(StructureId.ConvertFrom).ToArray(), structureSchema);
 		}
 
 		public virtual ISisoQueryable<T> Query<T>() where T : class
