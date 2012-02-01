@@ -131,7 +131,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -156,7 +157,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+			    _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -181,7 +183,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -206,7 +209,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -231,7 +235,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -256,7 +261,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -281,7 +287,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -310,7 +317,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -339,7 +347,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -368,7 +377,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -397,7 +407,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -426,7 +437,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -455,7 +467,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryNestedGuidItem.CreateFourNestedItems());
+				_structures = QueryNestedGuidItem.CreateFourNestedItems();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -484,7 +497,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryNestedGuidItem.CreateFourNestedItems());
+				_structures = QueryNestedGuidItem.CreateFourNestedItems();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -513,7 +527,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryNestedGuidItem.CreateFourNestedItems());
+				_structures = QueryNestedGuidItem.CreateFourNestedItems();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -542,7 +557,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -567,7 +583,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -592,7 +609,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+			    _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -617,7 +635,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -642,7 +661,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -667,7 +687,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -692,7 +713,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateTenItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>()
@@ -716,7 +738,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateTenItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>()
@@ -740,7 +763,8 @@ namespace SisoDb.Specifications.QueryEngine
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateTenItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>()

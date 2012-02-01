@@ -71,7 +71,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
                 TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] @minSortOrder int, @maxSortOrder int as begin select s.Json from [QueryGuidItemStructure] as s inner join [QueryGuidItemIntegers] as si on si.[StructureId] = s.[StructureId] where (si.[MemberPath]='SortOrder' and si.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
@@ -110,7 +111,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
                 TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] @minSortOrder int, @maxSortOrder int as begin select s.Json from [QueryGuidItemStructure] as s inner join [QueryGuidItemIntegers] as si on si.[StructureId] = s.[StructureId] where (si.[MemberPath]='SortOrder' and si.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 

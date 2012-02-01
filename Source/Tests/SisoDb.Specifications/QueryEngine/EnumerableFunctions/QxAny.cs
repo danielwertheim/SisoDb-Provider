@@ -13,12 +13,13 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{Strings = new[]{"Alpha", "Bravo"}},
                     new QueryItemForQxAnyQueries{Strings = new[]{"Bravo", "Alpha"}},
                     new QueryItemForQxAnyQueries{Strings = new[]{"Charlie", "Delta"}}
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -43,13 +44,14 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{Strings = new[]{"Alpha", "Bravo", "Charlie"}},
                     new QueryItemForQxAnyQueries{Strings = new[]{"Alpha", "Bravo", "Charlie"}},
                     new QueryItemForQxAnyQueries{Strings = new[]{"Charlie", "Delta", "Echo"}},
                     new QueryItemForQxAnyQueries{Strings = new[]{"Charlie", "Delta", "Echo"}}
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -74,12 +76,13 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{Integers = new[]{1, 2}},
                     new QueryItemForQxAnyQueries{Integers = new[]{2, 1}},
                     new QueryItemForQxAnyQueries{Integers = new[]{3, 4}}
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -104,13 +107,14 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{Integers = new[]{1, 2, 3}},
                     new QueryItemForQxAnyQueries{Integers = new[]{1, 2, 3}},
                     new QueryItemForQxAnyQueries{Integers = new[]{4, 5, 6}},
                     new QueryItemForQxAnyQueries{Integers = new[]{4, 5, 6}}
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -135,12 +139,13 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{StringList = new[]{"Alpha", "Bravo"}},
                     new QueryItemForQxAnyQueries{StringList = new[]{"Bravo", "Alpha"}},
                     new QueryItemForQxAnyQueries{StringList = new[]{"Charlie", "Delta"}}
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -165,13 +170,14 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{StringList = new[]{"Alpha", "Bravo", "Charlie"}},
                     new QueryItemForQxAnyQueries{StringList = new[]{"Alpha", "Bravo", "Charlie"}},
                     new QueryItemForQxAnyQueries{StringList = new[]{"Charlie", "Delta", "Echo"}},
                     new QueryItemForQxAnyQueries{StringList = new[]{"Charlie", "Delta", "Echo"}}
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -196,12 +202,13 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{DecimalList = new[]{1.11m, 2.12m}},
                     new QueryItemForQxAnyQueries{DecimalList = new[]{2.12m, 1.11m}},
                     new QueryItemForQxAnyQueries{DecimalList = new[]{3.13m, 4.14m}}
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -226,13 +233,14 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries{DecimalList = new[]{1.11m, 2.12m, 3.13m}},
                     new QueryItemForQxAnyQueries{DecimalList = new[]{1.11m, 2.12m, 3.13m}},
                     new QueryItemForQxAnyQueries{DecimalList = new[]{4.14m, 5.15m, 6.16m}},
                     new QueryItemForQxAnyQueries{DecimalList = new[]{4.14m, 5.15m, 6.16m}},
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -257,7 +265,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries
                     {
@@ -280,7 +288,8 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                             new ChildItem { Int = 100 }, new ChildItem { Int = 500 }, new ChildItem { Int = 1000 }
                         }
                     }
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -305,7 +314,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries
                     {
@@ -328,7 +337,8 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                             new ChildItem { Int = 100 }, new ChildItem { Int = 500 }, new ChildItem { Int = 1000 }
                         }
                     }
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -353,7 +363,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries
                     {
@@ -376,7 +386,8 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                             new ChildItem { IntegerList = new[]{100, 500, 1000} }, new ChildItem { IntegerList = new[]{100, 500, 1000} }, new ChildItem { IntegerList = new[]{100, 500, 1000} }
                         }
                     }
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -401,7 +412,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries
                     {
@@ -424,7 +435,8 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                             new ChildItem { IntegerList = new[]{100, 500, 1000} }, new ChildItem { IntegerList = new[]{100, 500, 1000} }, new ChildItem { IntegerList = new[]{100, 500, 1000} }
                         }
                     }
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -449,7 +461,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries
                     {
@@ -472,7 +484,8 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                             new ChildItem { GrandChildItemList = new []{new GrandChildItem{Int = 100}, new GrandChildItem{Int = 500}, new GrandChildItem{Int = 1000}}}
                         }
                     }
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -497,7 +510,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+                _structures = new[]
                 {
                     new QueryItemForQxAnyQueries
                     {
@@ -520,7 +533,8 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                             new ChildItem { GrandChildItemList = new []{new GrandChildItem{Int = 100}, new GrandChildItem{Int = 500}, new GrandChildItem{Int = 1000}}}
                         }
                     }
-                });
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()

@@ -131,7 +131,7 @@
             <param name="structureSchema"></param>
             <returns></returns>
         </member>
-        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructures``1(System.Collections.Generic.IList{``0},PineCone.Structures.Schemas.IStructureSchema)">
+        <member name="M:PineCone.Structures.IStructureBuilder.CreateStructures``1(``0[],PineCone.Structures.Schemas.IStructureSchema)">
             <summary>
             Yields each item as an <see cref="T:PineCone.Structures.IStructure"/>.
             All items will be assigned a new Sequential Guid Id as StructureId.

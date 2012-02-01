@@ -37,11 +37,12 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+				_structures = QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
 				{
 					item.SortOrder = i + 1;
 					item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
-				}));
+				});
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of =
@@ -67,11 +68,12 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+				_structures = QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
 				{
 					item.SortOrder = i + 1;
 					item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
-				}));
+				});
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of =
@@ -97,13 +99,14 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(new[]
+				_structures = new[]
 				{
 					new QueryGuidItem{IntegerValue = 141},
  					new QueryGuidItem{IntegerValue = 142},
 					new QueryGuidItem{IntegerValue = 241},
 					new QueryGuidItem{IntegerValue = 242}
-				});
+				};
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of =
@@ -129,13 +132,14 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(new[]
+				_structures = new[]
 				{
 					new QueryGuidItem{IntegerValue = 141},
  					new QueryGuidItem{IntegerValue = 142},
 					new QueryGuidItem{IntegerValue = 241},
 					new QueryGuidItem{IntegerValue = 242}
-				});
+				};
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of =
@@ -161,13 +165,14 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(new[]
+				_structures = new[]
 				{
 					new QueryNullableItem{NullableInt = 141},
  					new QueryNullableItem{NullableInt = 142},
 					new QueryNullableItem{NullableInt = 241},
 					new QueryNullableItem{NullableInt = 242}
-				});
+				};
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of =
@@ -193,13 +198,14 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(new[]
+				_structures = new[]
 				{
 					new QueryNullableItem{NullableInt = 141},
  					new QueryNullableItem{NullableInt = 142},
 					new QueryNullableItem{NullableInt = 241},
 					new QueryNullableItem{NullableInt = 242}
-				});
+				};
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of =

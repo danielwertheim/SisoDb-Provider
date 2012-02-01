@@ -33,7 +33,8 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(StringFunctionsItem.CreateItems(5, "ABC").MergeWith(StringFunctionsItem.CreateItems(5, "EFG")).ToList());
+				_structures = StringFunctionsItem.CreateItems(5, "ABC").MergeWith(StringFunctionsItem.CreateItems(5, "EFG")).ToList();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of =

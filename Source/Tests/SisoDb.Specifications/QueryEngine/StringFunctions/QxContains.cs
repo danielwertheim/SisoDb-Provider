@@ -35,11 +35,12 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+                _structures = QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
                 {
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
-                }));
+                });
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -64,11 +65,12 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+                _structures = QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
                 {
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
-                }));
+                });
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -93,11 +95,12 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+                _structures = QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
                 {
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
-                }));
+                });
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
@@ -122,11 +125,12 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+                _structures = QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
                 {
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
-                }));
+                });
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()

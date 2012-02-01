@@ -10,6 +10,7 @@ namespace SisoDb.UnitTests.DbSchema
     {
         protected static IStructureSchema CreateStructureSchemaFakeWithPlainAndUniques()
         {
+            var structureTypeFake = new Mock<IStructureType>();
             var idAccessorFake = new Mock<IIdAccessor>();
 
             var indexAccessorFake1 = new Mock<IIndexAccessor>();
@@ -28,7 +29,7 @@ namespace SisoDb.UnitTests.DbSchema
             uniqueIndexAccessorFake2.Setup(x => x.Path).Returns("Unique2");
             uniqueIndexAccessorFake2.Setup(x => x.IsUnique).Returns(true);
 
-            return new StructureSchema("FakeName", "FakeHash", idAccessorFake.Object,
+            return new StructureSchema(structureTypeFake.Object, "FakeHash", idAccessorFake.Object,
                 new[]
                 {
                     indexAccessorFake1.Object,

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
 using NCore;
+using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
@@ -14,7 +15,8 @@ namespace SisoDb
 {
 	public abstract class DbWriteSession : DbReadSession, IWriteSession
 	{
-		protected const int MaxUpdateManyBatchSize = 500;
+        protected const int MaxInsertManyBatchSize = 500;
+        protected const int MaxUpdateManyBatchSize = 500;
 
 		protected IDbClient DbClientNonTransactional;
 
@@ -97,15 +99,17 @@ namespace SisoDb
 			Insert(Db.Serializer.Deserialize<T>(json));
 		}
 
-		public virtual void InsertMany<T>(IList<T> items) where T : class
+        public virtual void InsertMany<T>(IEnumerable<T> items) where T : class
 		{
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, IdentityStructureIdGenerator);
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, IdentityStructureIdGenerator);
 
-			var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-			bulkInserter.Insert(structureSchema, structureBuilder.CreateStructures(items, structureSchema));
+            var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
+
+            foreach (var structuresBatch in items.Batch(MaxInsertManyBatchSize))
+                structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
 		}
 
 		public virtual void InsertManyJson<T>(IEnumerable<string> json) where T : class
@@ -168,7 +172,7 @@ namespace SisoDb
 				DbClient.DeleteByIds(deleteIds, structureSchema);
 				deleteIds.Clear();
 
-				structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(keepQueue, structureSchema));
+				structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
 				keepQueue.Clear();
 			}
 
@@ -177,7 +181,7 @@ namespace SisoDb
 				DbClient.DeleteByIds(deleteIds, structureSchema);
 				deleteIds.Clear();
 
-				structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(keepQueue, structureSchema));
+				structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
 				keepQueue.Clear();
 			}
 		}

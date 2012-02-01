@@ -126,7 +126,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -145,7 +146,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryStringItem.CreateFourItems<QueryStringItem>());
+                _structures = QueryStringItem.CreateFourItems<QueryStringItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -164,7 +166,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
+                _structures = QueryIdentityItem.CreateFourItems<QueryIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -183,7 +186,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
+                _structures = QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -202,7 +206,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -221,7 +226,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryStringItem.CreateFourItems<QueryStringItem>());
+                _structures = QueryStringItem.CreateFourItems<QueryStringItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -240,7 +246,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
+                _structures = QueryIdentityItem.CreateFourItems<QueryIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -259,7 +266,8 @@ namespace SisoDb.Specifications.QueryEngine
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
+                _structures = QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =

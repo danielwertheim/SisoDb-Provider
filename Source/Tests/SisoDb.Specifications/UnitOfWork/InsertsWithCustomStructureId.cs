@@ -13,13 +13,14 @@ namespace SisoDb.Specifications.UnitOfWork
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany<IEvent>(new[]
-				{
-					new MyEvent{IntValue = 1},
-					new MyEvent{IntValue = 2},
-					new MyEvent{IntValue = 3},
-					new MyEvent{IntValue = 4}
-				});
+			    _structures = new[]
+			    {
+			        new MyEvent { IntValue = 1 },
+			        new MyEvent { IntValue = 2 },
+			        new MyEvent { IntValue = 3 },
+			        new MyEvent { IntValue = 4 }
+			    };
+				TestContext.Database.WriteOnce().InsertMany<IEvent>(_structures);
 			};
 
 			Because of = () =>
@@ -49,13 +50,14 @@ namespace SisoDb.Specifications.UnitOfWork
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(new[]
+				_structures = new[]
 				{
 					new CustomAlpha{IntValue = 1},
 					new CustomAlpha{IntValue = 2},
 					new CustomAlpha{IntValue = 3},
 					new CustomAlpha{IntValue = 4}
-				});
+				};
+                TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -85,13 +87,14 @@ namespace SisoDb.Specifications.UnitOfWork
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(new[]
+				_structures = new[]
 				{
 					new CustomBeta{IntValue = 1},
 					new CustomBeta{IntValue = 2},
 					new CustomBeta{IntValue = 3},
 					new CustomBeta{IntValue = 4}
-				});
+				};
+			    TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>

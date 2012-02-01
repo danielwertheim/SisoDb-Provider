@@ -38,21 +38,19 @@ namespace SisoDb
 			}
 		}
 
-		public IList<T> InsertMany<T>(IList<T> items) where T : class
+        public void InsertMany<T>(IEnumerable<T> items) where T : class
 		{
-			Ensure.That(items, "items").HasItems();
+            Ensure.That(items, "items").IsNotNull();
 
 			using (var session = _db.BeginWriteSession())
 			{
 				session.InsertMany(items);
 			}
-
-			return items;
 		}
 
-		public void InsertManyJson<T>(IList<string> json) where T : class
+        public void InsertManyJson<T>(IEnumerable<string> json) where T : class
 		{
-			Ensure.That(json, "json").HasItems();
+			Ensure.That(json, "json").IsNotNull();
 
 			using (var session = _db.BeginWriteSession())
 			{

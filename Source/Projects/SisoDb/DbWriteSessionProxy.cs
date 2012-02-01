@@ -210,7 +210,7 @@ namespace SisoDb
 		}
 
 		[DebuggerStepThrough]
-		public void InsertMany<T>(IList<T> items) where T : class
+        public void InsertMany<T>(IEnumerable<T> items) where T : class
 		{
 			ExecuteOperation(() => InnerSession.InsertMany(items));
 		}
