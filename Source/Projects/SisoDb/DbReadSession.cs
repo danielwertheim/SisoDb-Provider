@@ -71,16 +71,22 @@ namespace SisoDb
 
 		IEnumerable<T> IAdvancedQueries.NamedQuery<T>(INamedQuery query)
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			return Db.Serializer.DeserializeMany<T>(((IAdvancedQueries)this).NamedQueryAsJson<T>(query));
 		}
 
 		IEnumerable<TOut> IAdvancedQueries.NamedQueryAs<TContract, TOut>(INamedQuery query)
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			return Db.Serializer.DeserializeMany<TOut>(((IAdvancedQueries)this).NamedQueryAsJson<TContract>(query));
 		}
 
 		IEnumerable<string> IAdvancedQueries.NamedQueryAsJson<T>(INamedQuery query)
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
@@ -89,16 +95,22 @@ namespace SisoDb
 
 		IEnumerable<T> IAdvancedQueries.RawQuery<T>(IRawQuery query)
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			return Db.Serializer.DeserializeMany<T>(((IAdvancedQueries)this).RawQueryAsJson<T>(query));
 		}
 
 		IEnumerable<TOut> IAdvancedQueries.RawQueryAs<TContract, TOut>(IRawQuery query)
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			return Db.Serializer.DeserializeMany<TOut>(((IAdvancedQueries)this).RawQueryAsJson<TContract>(query));
 		}
 
 		IEnumerable<string> IAdvancedQueries.RawQueryAsJson<T>(IRawQuery query)
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
@@ -130,16 +142,23 @@ namespace SisoDb
 
 		public virtual T GetById<T>(object id) where T : class
 		{
+            Ensure.That(id, "id").IsNotNull();
+
 			return Db.Serializer.Deserialize<T>(GetByIdAsJson<T>(id));
 		}
 
 		public virtual IEnumerable<T> GetByIds<T>(params object[] ids) where T : class
 		{
+            Ensure.That(ids, "ids").HasItems();
+
 			return Db.Serializer.DeserializeMany<T>(GetByIdsAsJson<T>(ids));
 		}
 
 		public virtual IEnumerable<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
+            Ensure.That(idFrom, "idFrom").IsNotNull();
+            Ensure.That(idTo, "idTo").IsNotNull();
+
 			var structureSchema = GetStructureSchema<T>();
 
 			if (!structureSchema.IdAccessor.IdType.IsIdentity())
@@ -154,6 +173,8 @@ namespace SisoDb
 			where TContract : class
 			where TOut : class
 		{
+            Ensure.That(id, "id").IsNotNull();
+
 			return Db.Serializer.Deserialize<TOut>(GetByIdAsJson<TContract>(id));
 		}
 
@@ -161,11 +182,15 @@ namespace SisoDb
 			where TContract : class
 			where TOut : class
 		{
+            Ensure.That(ids, "ids").HasItems();
+
 			return Db.Serializer.DeserializeMany<TOut>(GetByIdsAsJson<TContract>(ids.Select(i => i).ToArray()));
 		}
 
 		public virtual string GetByIdAsJson<T>(object id) where T : class
 		{
+            Ensure.That(id, "id").IsNotNull();
+
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
@@ -174,6 +199,8 @@ namespace SisoDb
 
 		public virtual IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class
 		{
+            Ensure.That(ids, "ids").HasItems();
+
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
@@ -187,11 +214,15 @@ namespace SisoDb
 
 		public virtual IEnumerable<T> Query<T>(IQuery query) where T : class
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			return Db.Serializer.DeserializeMany<T>(QueryAsJson<T>(query));
 		}
 
 		public IEnumerable<TResult> QueryAs<T, TResult>(IQuery query) where T : class where TResult : class
 		{
+            Ensure.That(query, "query").IsNotNull();
+
 			return Db.Serializer.DeserializeMany<TResult>(QueryAsJson<T>(query));
 		}
 
