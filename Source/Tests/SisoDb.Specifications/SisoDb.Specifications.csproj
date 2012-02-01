@@ -114,7 +114,6 @@
     <Compile Include="UnitOfWork\Queries\GetByIdInterval.cs" />
     <Compile Include="UnitOfWork\Queries\GetByIds.cs" />
     <Compile Include="UnitOfWork\Queries\Query.cs" />
-    <Compile Include="UnitOfWork\Queries\Where.cs" />
     <Compile Include="UnitOfWork\TransactionScopes.cs" />
     <Compile Include="UnitOfWork\Updates.cs" />
   </ItemGroup>
