@@ -4,7 +4,7 @@
 		<id>SisoDb</id>    
 		<title>SisoDb - Simple Structure Oriented Db (core)</title>
 		<version>9.1.0</version>
-		<authors>Daniel Wertheim</authors>
+		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
 		<summary>SisoDb is a document-oriented provider for SQL-Server.</summary>
