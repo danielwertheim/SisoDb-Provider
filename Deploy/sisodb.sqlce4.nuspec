@@ -25,8 +25,8 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\SisoDb.SqlCe4.xml" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Providers.SqlCe4\bin\Release\NCore*.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.SqlCe4\bin\Release\SisoDb.SqlCe4.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.SqlCe4\bin\Release\SisoDb.SqlCe4.xml" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.SqlCe4\bin\Release\NCore*.dll" target="lib\net40\" />
 	</files>
 </package>

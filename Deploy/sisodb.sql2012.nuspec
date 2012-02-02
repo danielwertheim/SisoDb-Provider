@@ -24,8 +24,8 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.Providers.Sql2012\bin\Release\SisoDb.Sql2012.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Providers.Sql2012\bin\Release\SisoDb.Sql2012.xml" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Providers.Sql2012\bin\Release\NCore*.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Sql2012\bin\Release\SisoDb.Sql2012.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Sql2012\bin\Release\SisoDb.Sql2012.xml" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Sql2012\bin\Release\NCore*.dll" target="lib\net40\" />
 	</files>
 </package>
