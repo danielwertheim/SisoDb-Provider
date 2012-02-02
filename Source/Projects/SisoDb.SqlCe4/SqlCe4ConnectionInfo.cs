@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlServerCe;
+using System.Globalization;
 using System.IO;
 using System.Web;
 using NCore;
@@ -53,7 +54,7 @@ namespace SisoDb.SqlCe4
             _filePath = cnStringBuilder.DataSource;
 
             const string dataDirectorySwitch = "|DataDirectory|";
-            if(_filePath.StartsWith(dataDirectorySwitch, StringComparison.InvariantCultureIgnoreCase))
+            if(_filePath.StartsWith(dataDirectorySwitch, StringComparison.OrdinalIgnoreCase))
             {
                 _filePath = _filePath.Substring(dataDirectorySwitch.Length);
                 if (HttpContext.Current != null)

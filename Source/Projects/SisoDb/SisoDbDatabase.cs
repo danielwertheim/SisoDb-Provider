@@ -32,6 +32,7 @@ namespace SisoDb
             get { return _connectionInfo; }
         }
 
+		public ICacheProvider CacheProvider { get; set; }
 		public IDbProviderFactory ProviderFactory
 		{
 			get { return _providerFactory; }
@@ -40,6 +41,10 @@ namespace SisoDb
 		public IDbSchemaManager SchemaManager
 		{
 			get { return _dbSchemaManager; }
+		}
+		public bool CachingIsEnabled
+		{
+			get { return CacheProvider != null; }
 		}
 
     	public IStructureSchemas StructureSchemas
@@ -99,6 +104,8 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
+				if (CachingIsEnabled)
+					CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.EnsureNewDb();
             }
@@ -108,6 +115,8 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
+				if (CachingIsEnabled)
+					CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.CreateDbIfItDoesNotExist();
             }
@@ -117,6 +126,8 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
+				if (CachingIsEnabled)
+					CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.InitializeExistingDb();
             }
@@ -126,6 +137,8 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
+				if (CachingIsEnabled)
+					CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.DropDbIfItExists();
             }
@@ -161,6 +174,8 @@ namespace SisoDb
                 {
                     foreach (var type in types)
                     {
+						if (CachingIsEnabled && CacheProvider.Handles(type))
+							CacheProvider[type].Clear();
                         var structureSchema = _structureSchemas.GetSchema(type);
 
                         SchemaManager.DropStructureSet(structureSchema, dbClient);
@@ -184,6 +199,8 @@ namespace SisoDb
 
             lock (DbOperationsLock)
             {
+				if (CachingIsEnabled && CacheProvider.Handles(type))
+					CacheProvider[type].Clear();
                 using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
                     var structureSchema = _structureSchemas.GetSchema(type);
@@ -220,6 +237,7 @@ namespace SisoDb
         }
 
     	[DebuggerStepThrough]
+		[Obsolete("Will be removed in version 10.0")]
         public void WithWriteSession(Action<IWriteSession> consumer)
         {
             using (var session = BeginWriteSession())
@@ -229,6 +247,7 @@ namespace SisoDb
         }
 
     	[DebuggerStepThrough]
+        [Obsolete("Will be removed in version 10.0")]
         public void WithReadSession(Action<IReadSession> consumer)
         {
 			using (var session = BeginReadSession())
@@ -238,6 +257,7 @@ namespace SisoDb
         }
 
 		[DebuggerStepThrough]
+        [Obsolete("Will be removed in version 10.0")]
 		public T WithReadSession<T>(Func<IReadSession, T> consumer)
 		{
 			using (var session = BeginReadSession())

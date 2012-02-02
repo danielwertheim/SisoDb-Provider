@@ -35,7 +35,7 @@ namespace SisoDb
 			var structureSchemaNew = Db.StructureSchemas.GetSchema(newType);
 			EnsureSchemasAreCompatible(structureSchemaOld, structureSchemaNew);
 
-			var isUpdatingSameSchema = structureSchemaOld.Name.Equals(structureSchemaNew.Name, StringComparison.InvariantCultureIgnoreCase);
+			var isUpdatingSameSchema = structureSchemaOld.Name.Equals(structureSchemaNew.Name, StringComparison.OrdinalIgnoreCase);
 			if (isUpdatingSameSchema)
 			{
 				Db.StructureSchemas.RemoveSchema(oldType);

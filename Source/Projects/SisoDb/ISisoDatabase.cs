@@ -23,7 +23,17 @@ namespace SisoDb
         /// </summary>
         ISisoConnectionInfo ConnectionInfo { get; }
 
-    	/// <summary>
+		/// <summary>
+		/// By assigning a <see cref="ICacheProvider"/> you get
+		/// the possibility of preventing the query from
+		/// hitting the database for certain queries.
+		/// </summary>
+		ICacheProvider CacheProvider { get; set; }
+		/// <summary>
+		/// Get a value indicating if the Database has a <see cref="CacheProvider"/>
+		/// assigned.
+		/// </summary>
+		bool CachingIsEnabled { get; }
 		/// Cached Structure schemas, which holds information
 		/// about members to index etc.
         /// </summary>

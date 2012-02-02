@@ -14,9 +14,8 @@ namespace SisoDb.Dac.BulkInserts
 	{
 		private static readonly Type TextType;
 
-		private const int MaxStructureBatchSize = 1000;
-		private const int MaxIndexesBatchSize = 6000;
-		private const int MaxUniquesBatchSize = 6000;
+		private const int MaxIndexesBatchSize = 5000;
+		private const int MaxUniquesBatchSize = 5000;
 
 		private readonly IDbClient _dbClient;
 
@@ -92,7 +91,7 @@ namespace SisoDb.Dac.BulkInserts
 			{
 				using (var bulkInserter = _dbClient.GetBulkCopy())
 				{
-					bulkInserter.BatchSize = structuresReader.RecordsAffected > MaxStructureBatchSize ? MaxStructureBatchSize : structuresReader.RecordsAffected;
+					bulkInserter.BatchSize = structuresReader.RecordsAffected;
 					bulkInserter.DestinationTableName = structuresReader.StorageSchema.Name;
 
 					foreach (var field in structuresReader.StorageSchema.GetFieldsOrderedByIndex())

@@ -277,4 +277,13 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="WriteSession_UpdateMany_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
   </data>
+  <data name="WriteSession_DeleteByIdIntervalAndCachingNotSupported" xml:space="preserve">
+    <value>DeleteByIdInterval can not be used when caching is enabled for structure: '{0}'.</value>
+  </data>
+  <data name="WriteSession_DeleteByQueryAndCachingNotSupported" xml:space="preserve">
+    <value>DeleteByQuery can not be used when caching is enabled for structure: '{0}'.</value>
+  </data>
+  <data name="InMemoryCacheProvider_Clear_failed" xml:space="preserve">
+    <value>Could not clear all structure set cache entries. See contained exceptions for more info.</value>
+  </data>
 </root>

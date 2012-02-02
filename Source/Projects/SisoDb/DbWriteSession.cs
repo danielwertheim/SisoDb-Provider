@@ -7,6 +7,8 @@ using NCore;
 using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Caching;
+using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Resources;
 using SisoDb.Structures;
@@ -76,6 +78,10 @@ namespace SisoDb
 				throw exception;
 		}
 
+		protected override CacheConsumeModes GetCacheConsumeMode()
+		{
+			return CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+		}
 		protected override void UpsertStructureSet(IStructureSchema structureSchema)
 		{
 			Db.SchemaManager.UpsertStructureSet(structureSchema, DbClientNonTransactional);
@@ -88,10 +94,9 @@ namespace SisoDb
 
 			var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, IdentityStructureIdGenerator);
 
-			var structure = structureBuilder.CreateStructure(item, structureSchema);
 
 			var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-			bulkInserter.Insert(structureSchema, new[] { structure });
+			bulkInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
 		}
 
 		public virtual void InsertJson<T>(string json) where T : class
@@ -119,6 +124,7 @@ namespace SisoDb
 
 		public virtual void Update<T>(T item) where T : class
 		{
+			Ensure.That(item, "item").IsNotNull();
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
@@ -131,6 +137,7 @@ namespace SisoDb
 			if (string.IsNullOrWhiteSpace(existingItem))
 				throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(updatedStructure.Name, updatedStructure.Id.Value));
 
+			Db.CacheProvider.NotifyDeleting(structureSchema, updatedStructure.Id);
 			DbClient.DeleteById(updatedStructure.Id, structureSchema);
 
 			var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
@@ -169,6 +176,7 @@ namespace SisoDb
 				if (keepQueue.Count < MaxUpdateManyBatchSize)
 					continue;
 
+				Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
 				DbClient.DeleteByIds(deleteIds, structureSchema);
 				deleteIds.Clear();
 
@@ -178,6 +186,7 @@ namespace SisoDb
 
 			if (keepQueue.Count > 0)
 			{
+				Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
 				DbClient.DeleteByIds(deleteIds, structureSchema);
 				deleteIds.Clear();
 
@@ -188,10 +197,13 @@ namespace SisoDb
 
 		public virtual void DeleteById<T>(object id) where T : class
 		{
+			Ensure.That(id, "id").IsNotNull();
+			var structureId = StructureId.ConvertFrom(id);
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			DbClient.DeleteById(StructureId.ConvertFrom(id), structureSchema);
+			Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
+			DbClient.DeleteById(structureId, structureSchema);
 		}
 
 		public virtual void DeleteByIds<T>(params object[] ids) where T : class
@@ -201,7 +213,9 @@ namespace SisoDb
 			var structureSchema = GetStructureSchema<T>();
 			UpsertStructureSet(structureSchema);
 
-			DbClient.DeleteByIds(ids.Select(StructureId.ConvertFrom), structureSchema);
+			var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
+			Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
+			DbClient.DeleteByIds(structureIds, structureSchema);
 		}
 
 		public virtual void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
@@ -210,6 +224,9 @@ namespace SisoDb
 
 			if (!structureSchema.IdAccessor.IdType.IsIdentity())
 				throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.WriteSession_DeleteByIdInterval_WrongIdType));
+
+			if(Db.CacheProvider.IsEnabledFor(structureSchema))
+				throw new SisoDbException(ExceptionMessages.WriteSession_DeleteByIdIntervalAndCachingNotSupported.Inject(structureSchema.Name));
 
 			UpsertStructureSet(structureSchema);
 
@@ -221,7 +238,10 @@ namespace SisoDb
 			Ensure.That(expression, "expression").IsNotNull();
 
 			var structureSchema = GetStructureSchema<T>();
-			UpsertStructureSet(structureSchema);
+            if (Db.CacheProvider.IsEnabledFor(structureSchema))
+				throw new SisoDbException(ExceptionMessages.WriteSession_DeleteByQueryAndCachingNotSupported.Inject(structureSchema.Name));
+			
+            UpsertStructureSet(structureSchema);
 
 			var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
 			queryBuilder.Where(expression);
