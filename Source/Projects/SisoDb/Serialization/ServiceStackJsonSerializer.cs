@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,12 +32,9 @@ namespace SisoDb.Serialization
 
         public virtual T Deserialize<T>(string json) where T : class
         {
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
-            return JsonSerializer.DeserializeFromString<T>(json);
+            return OnDeserialize<T>(json);
         }
 
         public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
@@ -44,16 +42,43 @@ namespace SisoDb.Serialization
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
             return DeserializeManyInParallel
-                    ? OnDeserializeManyInParallel<T>(sourceData)
-                    : OnDeserializeManyInSequential<T>(sourceData);
+                    ? OnDeserializeManyInParallel(sourceData, OnDeserialize<T>)
+                    : OnDeserializeManyInSequential(sourceData, OnDeserialize<T>);
         }
 
-        protected virtual IEnumerable<T> OnDeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
+        public IEnumerable<T> DeserializeManyAnonymous<T>(IEnumerable<string> sourceData, T template) where T : class
         {
-            return sourceData.Select(Deserialize<T>);
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            TypeConfig<T>.EnableAnonymousFieldSetters = true;
+            var templateType = template.GetType();
+
+            return DeserializeManyInParallel
+                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserializeAnonymous<T>(json, templateType))
+                    : OnDeserializeManyInSequential(sourceData, json => OnDeserializeAnonymous<T>(json, templateType));
         }
 
-        protected virtual IEnumerable<T> OnDeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
+        protected virtual T OnDeserialize<T>(string json) where T : class
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            return JsonSerializer.DeserializeFromString<T>(json);
+        }
+
+        protected virtual T OnDeserializeAnonymous<T>(string json, Type templateType) where T : class
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            return JsonSerializer.DeserializeFromString(json, templateType) as T;
+        }
+
+        protected virtual IEnumerable<T> OnDeserializeManyInSequential<T>(IEnumerable<string> sourceData, Func<string, T> deserializer) where T : class
+        {
+            return sourceData.Select(deserializer);
+        }
+
+        protected virtual IEnumerable<T> OnDeserializeManyInParallel<T>(IEnumerable<string> sourceData, Func<string, T> deserializer) where T : class
         {
             using (var q = new BlockingCollection<string>())
             {
@@ -72,7 +97,7 @@ namespace SisoDb.Serialization
                     task.Start();
 
                     foreach (var e in q.GetConsumingEnumerable())
-                        yield return JsonSerializer.DeserializeFromString<T>(e);
+                        yield return deserializer.Invoke(e);
                 }
                 finally
                 {

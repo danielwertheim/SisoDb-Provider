@@ -286,6 +286,13 @@ namespace SisoDb
             return Db.Serializer.DeserializeMany<TResult>(QueryAsJson<T>(query));
         }
 
+        public IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, TResult template) where T : class where TResult : class
+        {
+            Ensure.That(query, "query").IsNotNull();
+
+            return Db.Serializer.DeserializeManyAnonymous(QueryAsJson<T>(query), template);
+        }
+
         public IEnumerable<string> QueryAsJson<T>(IQuery query) where T : class
         {
             Ensure.That(query, "query").IsNotNull();

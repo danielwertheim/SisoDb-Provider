@@ -34,6 +34,13 @@ namespace SisoDb.Querying
 			return ToEnumerableOf<TResult>().ToArray();
 		}
 
+        public virtual TResult[] ToArrayOf<TResult>(TResult template) where TResult : class
+        {
+            Ensure.That(template, "template").IsNotNull();
+
+            return ToEnumerableOf(template).ToArray();
+        }
+
 		public virtual string[] ToArrayOfJson()
 		{
 			return ToEnumerableOfJson().ToArray();
@@ -49,6 +56,13 @@ namespace SisoDb.Querying
 			return ReadSession.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
 		}
 
+        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template) where TResult : class
+        {
+            Ensure.That(template, "template").IsNotNull();
+
+            return ReadSession.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
+        }
+
 		public virtual IEnumerable<string> ToEnumerableOfJson()
 		{
 			return ReadSession.QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
@@ -63,8 +77,15 @@ namespace SisoDb.Querying
 		{
 			return ToEnumerableOf<TResult>().ToList();
 		}
+        
+	    public IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
+	    {
+	        Ensure.That(template, "template").IsNotNull();
 
-		public virtual IList<string> ToListOfJson()
+	        return ToEnumerableOf(template).ToList();
+	    }
+
+	    public virtual IList<string> ToListOfJson()
 		{
 			return ToEnumerableOfJson().ToList();
 		}

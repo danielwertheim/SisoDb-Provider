@@ -97,7 +97,13 @@ namespace SisoDb
 			return ExecuteOperation(() => InnerSession.QueryEngine.QueryAs<T, TResult>(query));
 		}
 
-		[DebuggerStepThrough]
+        [DebuggerStepThrough]
+	    public IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, TResult template) where T : class where TResult : class
+	    {
+            return ExecuteOperation(() => InnerSession.QueryEngine.QueryAsAnonymous<T, TResult>(query, template)); 
+	    }
+
+	    [DebuggerStepThrough]
 		IEnumerable<string> IQueryEngine.QueryAsJson<T>(IQuery query)
 		{
 			return ExecuteOperation(() => InnerSession.QueryEngine.QueryAsJson<T>(query));
