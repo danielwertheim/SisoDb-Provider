@@ -30,7 +30,12 @@ namespace SisoDb.Caching
 			_items.Clear();
 		}
 
-		public T GetById<T>(IStructureId id) where T : class
+	    public bool Exists<T>(IStructureId id) where T : class
+	    {
+	        return _items.ContainsKey(id);
+	    }
+
+	    public T GetById<T>(IStructureId id) where T : class
 		{
 			object structure;
 			_items.TryGetValue(id, out structure);

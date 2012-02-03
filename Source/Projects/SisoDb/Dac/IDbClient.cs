@@ -28,7 +28,9 @@ namespace SisoDb.Dac
         
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
-        
+
+        bool Exists(IStructureId structureId, IStructureSchema structureSchema);
+
 		string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
     	IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema);
 		IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);

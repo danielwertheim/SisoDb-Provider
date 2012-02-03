@@ -145,6 +145,22 @@ namespace SisoDb
             return DbClient.RowCount(structureSchema);
         }
 
+        public bool Exists<T>(object id) where T : class
+        {
+            Ensure.That(id, "id").IsNotNull();
+
+            var structureSchema = GetStructureSchema<T>();
+            var structureId = StructureId.ConvertFrom(id);
+
+            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
+                return DbClient.Exists(structureId, structureSchema);
+
+            return Db.CacheProvider.Exists<T>(
+                structureSchema,
+                structureId,
+                sid => DbClient.Exists(sid, structureSchema));
+        }
+
         public virtual T GetById<T>(object id) where T : class
         {
             Ensure.That(id, "id").IsNotNull();
@@ -239,6 +255,7 @@ namespace SisoDb
             var structureSchema = GetStructureSchema<T>();
             return OnGetByIdAsJson(structureSchema, StructureId.ConvertFrom(id));
         }
+
         protected virtual string OnGetByIdAsJson(IStructureSchema structureSchema, IStructureId structureId)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

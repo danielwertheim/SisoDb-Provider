@@ -124,6 +124,9 @@
     <Compile Include="..\SisoDb.Specifications\QueryEngine\EnumerableFunctions\QxAny.cs">
       <Link>QueryEngine\EnumerableFunctions\QxAny.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Exists.cs">
+      <Link>QueryEngine\Exists.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
       <Link>QueryEngine\GetById.cs</Link>
     </Compile>

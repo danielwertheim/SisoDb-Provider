@@ -58,7 +58,7 @@ namespace SisoDb
 
 		int Count(Expression<Func<T, bool>> expression);
 
-		ISisoQueryable<T> Take(int numOfStructures);
+	    ISisoQueryable<T> Take(int numOfStructures);
 
 		ISisoQueryable<T> Page(int pageIndex, int pageSize);
 

@@ -459,6 +459,10 @@ if object_id(N'{8}', N'U') is not null drop table [dbo].[{8}];
 
 if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null delete from [dbo].[SisoDbIdentities] where [EntityName] = @entityName;</value>
   </data>
+  <data name="ExistsById" xml:space="preserve">
+    <value>set nocount on;
+select 1 from [dbo].[{0}] where StructureId =@id;</value>
+  </data>
   <data name="GetAllJson" xml:space="preserve">
     <value>set nocount on;
 select Json from [dbo].[{0}] order by [StructureId];</value>

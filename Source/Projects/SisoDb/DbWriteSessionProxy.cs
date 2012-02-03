@@ -150,8 +150,13 @@ namespace SisoDb
 		{
 			return ExecuteOperation(() => InnerSession.GetStructureSchema<T>());
 		}
+        [DebuggerStepThrough]
+	    public bool Exists<T>(object id) where T : class
+	    {
+            return ExecuteOperation(() => InnerSession.Exists<T>(id));
+	    }
 
-		[DebuggerStepThrough]
+	    [DebuggerStepThrough]
 		public T GetById<T>(object id) where T : class
 		{
 			return ExecuteOperation(() => InnerSession.GetById<T>(id));

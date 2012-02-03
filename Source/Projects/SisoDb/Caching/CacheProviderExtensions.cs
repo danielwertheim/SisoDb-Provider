@@ -30,6 +30,16 @@ namespace SisoDb.Caching
 			cacheProvider[structureSchema.Type.Type].Remove(structureIds);
 		}
 
+        internal static bool Exists<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, bool> nonCacheQuery) where T : class
+        {
+            if (!cacheProvider.IsEnabledFor(structureSchema))
+                return nonCacheQuery.Invoke(structureId);
+
+            var cache = cacheProvider[structureSchema.Type.Type];
+
+            return cache.Exists<T>(structureId);
+        }
+
 		internal static T Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, T> nonCacheQuery, CacheConsumeModes consumeMode) where T : class
 		{
             if (!cacheProvider.IsEnabledFor(structureSchema))

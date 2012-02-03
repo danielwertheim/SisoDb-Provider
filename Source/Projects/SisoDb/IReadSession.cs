@@ -26,6 +26,14 @@ namespace SisoDb
 		/// <returns></returns>
 		IStructureSchema GetStructureSchema<T>() where T : class;
 
+        /// <summary>
+        /// Returns value indicating of structure exists or not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool Exists<T>(object id) where T : class;
+
 		/// <summary>
 		/// Returns one single structure identified
 		/// by an id.

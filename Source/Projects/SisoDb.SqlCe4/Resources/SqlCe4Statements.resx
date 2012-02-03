@@ -431,6 +431,9 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   <data name="DropTable" xml:space="preserve">
     <value>drop table [{0}];</value>
   </data>
+  <data name="ExistsById" xml:space="preserve">
+    <value>select 1 from [{0}] where StructureId =@id;</value>
+  </data>
   <data name="GetAllJson" xml:space="preserve">
     <value>select Json from [{0}] order by [StructureId];</value>
   </data>
