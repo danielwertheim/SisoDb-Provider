@@ -29,11 +29,14 @@ namespace SisoDb
 		/// hitting the database for certain queries.
 		/// </summary>
 		ICacheProvider CacheProvider { get; set; }
+
 		/// <summary>
 		/// Get a value indicating if the Database has a <see cref="CacheProvider"/>
 		/// assigned.
 		/// </summary>
 		bool CachingIsEnabled { get; }
+
+        /// <summary>
 		/// Cached Structure schemas, which holds information
 		/// about members to index etc.
         /// </summary>
