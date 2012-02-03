@@ -33,7 +33,17 @@ namespace SisoDb
 			return Query<T>().Count(expression);
 		}
 
-		public T GetById<T>(object id) where T : class
+        public bool Exists<T>(object id) where T : class
+        {
+            Ensure.That(id, "id").IsNotNull();
+
+            using (var session = _db.BeginReadSession())
+            {
+                return session.Exists<T>(id);
+            } 
+        }
+
+        public T GetById<T>(object id) where T : class
 		{
 			Ensure.That(id, "id").IsNotNull();
 

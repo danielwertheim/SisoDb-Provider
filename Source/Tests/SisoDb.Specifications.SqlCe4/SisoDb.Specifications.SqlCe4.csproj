@@ -38,17 +38,15 @@
       <HintPath>..\..\packages\Machine.Specifications.0.5.2.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.56.0.104, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.58.0.108, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -125,6 +123,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\EnumerableFunctions\QxAny.cs">
       <Link>QueryEngine\EnumerableFunctions\QxAny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\QueryEngine\Exists.cs">
+      <Link>QueryEngine\Exists.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
       <Link>QueryEngine\GetById.cs</Link>
@@ -228,9 +229,6 @@
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\QueryAll.cs">
       <Link>UnitOfWork\Queries\QueryAll.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Where.cs">
-      <Link>UnitOfWork\Queries\Where.cs</Link>
-    </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
       <Link>UnitOfWork\TransactionScopes.cs</Link>
     </Compile>
@@ -249,7 +247,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Projects\SisoDb.Providers.SqlCe4\SisoDb.SqlCe4.csproj">
+    <ProjectReference Include="..\..\Projects\SisoDb.SqlCe4\SisoDb.SqlCe4.csproj">
       <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
       <Name>SisoDb.SqlCe4</Name>
     </ProjectReference>

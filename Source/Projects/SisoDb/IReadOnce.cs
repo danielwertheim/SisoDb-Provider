@@ -8,7 +8,9 @@ namespace SisoDb
 	{
 		int Count<T>() where T : class;
 		int Count<T>(Expression<Func<T, bool>> expression) where T : class;
-		
+
+        bool Exists<T>(object id) where T : class;
+
 		T GetById<T>(object id) where T : class;
 		TOut GetByIdAs<TContract, TOut>(object id) where TContract : class where TOut : class;
 		string GetByIdAsJson<T>(object id) where T : class;

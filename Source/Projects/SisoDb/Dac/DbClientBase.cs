@@ -140,6 +140,15 @@ namespace SisoDb.Dac
 
 		public abstract long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
 
+        public virtual bool Exists(IStructureId structureId, IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("ExistsById").Inject(structureSchema.GetStructureTableName());
+
+            return ExecuteScalar<int>(sql, new DacParameter("id", structureId.Value)) > 0;
+        }
+
 		public virtual string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
 		{
 			Ensure.That(structureSchema, "structureSchema").IsNotNull();

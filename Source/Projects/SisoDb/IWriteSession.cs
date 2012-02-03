@@ -36,7 +36,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="items"></param>
-        void InsertMany<T>(IList<T> items) where T : class;
+        void InsertMany<T>(IEnumerable<T> items) where T : class;
 
         /// <summary>
         /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as

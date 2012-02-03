@@ -31,12 +31,12 @@ namespace SisoDb
 
             var parts = GetParts(value);
 
-            var plainString = parts.SingleOrDefault(p => p.StartsWith(PlainMarker, StringComparison.InvariantCultureIgnoreCase));
+            var plainString = parts.SingleOrDefault(p => p.StartsWith(PlainMarker, StringComparison.OrdinalIgnoreCase));
             if (plainString == null)
                 throw new ArgumentException(ExceptionMessages.ConnectionString_MissingPlainPart.Inject(PlainMarker, Example));
             PlainString = plainString.Substring(PlainMarker.Length);
 
-            var sisoDbString = parts.SingleOrDefault(p => p.StartsWith(SisoDbMarker, StringComparison.InvariantCultureIgnoreCase));
+			var sisoDbString = parts.SingleOrDefault(p => p.StartsWith(SisoDbMarker, StringComparison.OrdinalIgnoreCase));
             if (sisoDbString == null)
                 throw new ArgumentException(ExceptionMessages.ConnectionString_MissingSisoDbPart.Inject(SisoDbMarker, Example));
             SisoDbString = sisoDbString.Substring(SisoDbMarker.Length);

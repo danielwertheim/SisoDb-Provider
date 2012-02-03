@@ -49,15 +49,15 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.56.0.104, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.58.0.108, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.2.2.5660, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Text, Version=3.4.3.1319, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.2.2\lib\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.4.3\lib\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -70,7 +70,10 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Caching\CacheConsumeModes.cs" />
+    <Compile Include="Caching\CacheProviderExtensions.cs" />
     <Compile Include="ConnectionString.cs" />
+    <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
@@ -81,6 +84,8 @@
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
     <Compile Include="DbWriteSessionProxy.cs" />
+    <Compile Include="ICache.cs" />
+    <Compile Include="ICacheProvider.cs" />
     <Compile Include="ISisoDbDatabase.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
@@ -98,6 +103,11 @@
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="DbStructureSetMigrator.cs" />
+    <Compile Include="Resources\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="StructureSetMigratorStatuses.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
@@ -219,11 +229,6 @@
     <Compile Include="IWriteSession.cs" />
     <Compile Include="TypeFor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\ExceptionMessages.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ExceptionMessages.resx</DependentUpon>
-    </Compile>
     <Compile Include="Serialization\ServiceStackJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
     <Compile Include="SisoDbException.cs" />

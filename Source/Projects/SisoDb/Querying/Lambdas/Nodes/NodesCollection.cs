@@ -34,6 +34,11 @@ namespace SisoDb.Querying.Lambdas.Nodes
     		_nodes.AddRange(nodes);
     	}
 
+		public INode GetItemOrNullByIndex(int index)
+		{
+			return index < _nodes.Count ? _nodes[index] : null;
+		}
+
     	IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

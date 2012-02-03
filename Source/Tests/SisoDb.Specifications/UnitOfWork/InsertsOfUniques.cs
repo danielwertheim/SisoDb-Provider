@@ -29,11 +29,15 @@ namespace SisoDb.Specifications.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+            Because of = () =>
             {
-                new VehicleWithGuidId { VehRegNo = "ABC123" }, 
-                new VehicleWithGuidId { VehRegNo = "ABC321" }
-            });
+                _structures = new[]
+                {
+                    new VehicleWithGuidId { VehRegNo = "ABC123" },
+                    new VehicleWithGuidId { VehRegNo = "ABC321" }
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
+            };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(2);
 
@@ -88,11 +92,15 @@ namespace SisoDb.Specifications.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+            Because of = () =>
             {
-                new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" }, 
-                new VehicleWithStringId { StructureId = "A2", VehRegNo = "ABC321" }
-            });
+                _structures = new[]
+                {
+                    new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" },
+                    new VehicleWithStringId { StructureId = "A2", VehRegNo = "ABC321" }
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
+            };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(2);
 
@@ -147,11 +155,15 @@ namespace SisoDb.Specifications.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+            Because of = () =>
             {
-                new VehicleWithIdentityId { VehRegNo = "ABC123" }, 
-                new VehicleWithIdentityId { VehRegNo = "ABC321" }
-            });
+                _structures = new[]
+                {
+                    new VehicleWithIdentityId { VehRegNo = "ABC123" },
+                    new VehicleWithIdentityId { VehRegNo = "ABC321" }
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
+            };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(2);
 
@@ -206,11 +218,15 @@ namespace SisoDb.Specifications.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structures = TestContext.Database.WriteOnce().InsertMany(new[]
+            Because of = () =>
             {
-                new VehicleWithBigIdentityId { VehRegNo = "ABC123" }, 
-                new VehicleWithBigIdentityId { VehRegNo = "ABC321" }
-            });
+                _structures = new[]
+                {
+                    new VehicleWithBigIdentityId { VehRegNo = "ABC123" },
+                    new VehicleWithBigIdentityId { VehRegNo = "ABC321" }
+                };
+                TestContext.Database.WriteOnce().InsertMany(_structures);
+            };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(2);
 

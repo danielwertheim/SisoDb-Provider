@@ -197,8 +197,8 @@ namespace SisoDb.Specifications.UnitOfWork
                             Guid = Guid.Parse("60D977F9-95FC-40FD-9A7E-6827E920370F"),
                             Int = 42,
                             Long = 142,
-                            String = "String in NullValuesContainer.",
-							Text= "Some text."
+                            String = "String in nullvaluescontainer with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>.",
+                            Text = "Text with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>."
                         },
                         NullValuesContainerWithNulls = new NullValuesContainer(),
                         Values = new ValuesContainer
@@ -210,8 +210,8 @@ namespace SisoDb.Specifications.UnitOfWork
                             Guid = Guid.Parse("19ADFA6D-A127-48E0-9291-AEB75E8CA23C"),
                             Int = 42,
                             Long = 142,
-                            String = "String in ValuesContainer.",
-							Text = "Some text."
+                            String = "String in valuescontainer with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>.",
+							Text = "Some text with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>."
                         },
                         ValuesInArray = new[] { new Value { Is = 1 }, new Value { Is = 2 }, new Value { Is = 3 } },
                         //ValuesInISet = new HashSet<Value> { new Value { Is = 11 }, new Value { Is = 12 }, new Value { Is = 13 } },

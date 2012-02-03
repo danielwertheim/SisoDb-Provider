@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EnsureThat;
 using NCore;
 using PineCone.Structures;
@@ -34,7 +35,7 @@ namespace SisoDb
 			var structureSchemaNew = Db.StructureSchemas.GetSchema(newType);
 			EnsureSchemasAreCompatible(structureSchemaOld, structureSchemaNew);
 
-			var isUpdatingSameSchema = structureSchemaOld.Name.Equals(structureSchemaNew.Name, StringComparison.InvariantCultureIgnoreCase);
+			var isUpdatingSameSchema = structureSchemaOld.Name.Equals(structureSchemaNew.Name, StringComparison.OrdinalIgnoreCase);
 			if (isUpdatingSameSchema)
 			{
 				Db.StructureSchemas.RemoveSchema(oldType);
@@ -155,7 +156,8 @@ namespace SisoDb
 			if (keepQueue.Count < 1)
 				return;
 
-			var structures = structureBuilder.CreateStructures(keepQueue, structureSchema);
+			var structures = structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema);
+            keepQueue.Clear();
 
 			if (structures.Length == 0)
 				return;

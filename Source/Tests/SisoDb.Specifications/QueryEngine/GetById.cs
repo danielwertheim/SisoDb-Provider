@@ -6,9 +6,9 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-	class GetById
+    class GetById
     {
-        [Subject(typeof(IWriteSession), "Get by Id (guid)")]
+        [Subject(typeof(IReadSession), "Get by Id (guid)")]
         public class when_set_with_guid_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -22,7 +22,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryGuidItem _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id (string)")]
+        [Subject(typeof(IReadSession), "Get by Id (string)")]
         public class when_set_with_string_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -36,7 +36,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryStringItem _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id (identity)")]
+        [Subject(typeof(IReadSession), "Get by Id (identity)")]
         public class when_set_with_identity_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -50,7 +50,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryIdentityItem _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id (big identity)")]
+        [Subject(typeof(IReadSession), "Get by Id (big identity)")]
         public class when_set_with_big_identity_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -64,7 +64,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryBigIdentityItem _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id as Json (guid)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (guid)")]
         public class when_json_set_with_guid_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -78,7 +78,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static string _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id as Json (string)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (string)")]
         public class when_json_set_with_string_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -92,7 +92,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static string _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id as Json (identity)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (identity)")]
         public class when_json_set_with_identity_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -106,7 +106,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static string _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id as Json (big identity)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (big identity)")]
         public class when_json_set_with_big_identity_id_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -120,13 +120,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static string _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id (guid)")]
+        [Subject(typeof(IReadSession), "Get by Id (guid)")]
         public class when_set_with_guid_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -139,13 +140,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryGuidItem _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id (string)")]
+        [Subject(typeof(IReadSession), "Get by Id (string)")]
         public class when_set_with_string_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryStringItem.CreateFourItems<QueryStringItem>());
+                _structures = QueryStringItem.CreateFourItems<QueryStringItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -158,13 +160,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryStringItem _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id (identity)")]
+        [Subject(typeof(IReadSession), "Get by Id (identity)")]
         public class when_set_with_identity_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
+                _structures = QueryIdentityItem.CreateFourItems<QueryIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -177,13 +180,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryIdentityItem _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id (big identity)")]
+        [Subject(typeof(IReadSession), "Get by Id (big identity)")]
         public class when_set_with_big_identity_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
+                _structures = QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -196,13 +200,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static QueryBigIdentityItem _fetchedStructure;
         }
         
-        [Subject(typeof(IWriteSession), "Get by Id as Json (guid)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (guid)")]
         public class when_json_set_with_guid_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -215,13 +220,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static string _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id as Json (string)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (string)")]
         public class when_json_set_with_string_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryStringItem.CreateFourItems<QueryStringItem>());
+                _structures = QueryStringItem.CreateFourItems<QueryStringItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -234,13 +240,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static string _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id as Json (identity)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (identity)")]
         public class when_json_set_with_identity_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryIdentityItem.CreateFourItems<QueryIdentityItem>());
+                _structures = QueryIdentityItem.CreateFourItems<QueryIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =
@@ -253,13 +260,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static string _fetchedStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Id as Json (big identity)")]
+        [Subject(typeof(IReadSession), "Get by Id as Json (big identity)")]
         public class when_json_set_with_big_identity_id_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structures = TestContext.Database.WriteOnce().InsertMany(QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>());
+                _structures = QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>();
+                TestContext.Database.WriteOnce().InsertMany(_structures);
             };
 
             Because of =

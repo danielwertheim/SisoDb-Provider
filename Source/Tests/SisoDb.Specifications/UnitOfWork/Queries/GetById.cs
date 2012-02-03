@@ -13,7 +13,8 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				_structures = TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+			    TestContext.Database.WriteOnce().InsertMany(_structures);
 			};
 
 			Because of = () =>
