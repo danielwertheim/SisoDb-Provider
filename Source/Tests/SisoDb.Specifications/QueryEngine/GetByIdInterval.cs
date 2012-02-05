@@ -11,33 +11,33 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class GetByIdInterval
     {
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(ISession), "Get by Id interval")]
         public class when_getting_for_identities_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
             Because of = 
-                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryIdentityItem>(1, 3).ToList();
+                () => _result = TestContext.Database.UseOnceTo().GetByIdInterval<QueryIdentityItem>(1, 3).ToList();
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
             private static IList<QueryIdentityItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(ISession), "Get by Id interval")]
         public class when_getting_for_big_identities_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
             Because of =
-                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryBigIdentityItem>(1, 3).ToList();
+                () => _result = TestContext.Database.UseOnceTo().GetByIdInterval<QueryBigIdentityItem>(1, 3).ToList();
 
             It should_return_empty_result = () => _result.Count.ShouldEqual(0);
 
             private static IList<QueryBigIdentityItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(ISession), "Get by Id interval")]
         public class when_getting_for_guids : SpecificationBase
         {
             Establish context = () =>
@@ -51,7 +51,7 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
+                    _result = TestContext.Database.UseOnceTo().GetByIdInterval<QueryGuidItem>(_idFrom, _idTo).ToList();
                 });
             };
 
@@ -68,7 +68,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(ISession), "Get by Id interval")]
         public class when_getting_for_strings : SpecificationBase
         {
             Establish context = () =>
@@ -82,7 +82,7 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryStringItem>(_idFrom, _idTo).ToList();
+                    _result = TestContext.Database.UseOnceTo().GetByIdInterval<QueryStringItem>(_idFrom, _idTo).ToList();
                 });
             };
 
@@ -99,13 +99,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryStringItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(ISession), "Get by Id interval")]
         public class when_getting_for_identities_and_range_matches_subset_of_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertMany(new[]
                     {
@@ -118,7 +118,7 @@ namespace SisoDb.Specifications.QueryEngine
             };
 
             Because of = 
-                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryIdentityItem>(2, 3).ToList();
+                () => _result = TestContext.Database.UseOnceTo().GetByIdInterval<QueryIdentityItem>(2, 3).ToList();
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 
@@ -131,13 +131,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryIdentityItem> _result;
         }
 
-        [Subject(typeof(IReadSession), "Get by Id interval")]
+        [Subject(typeof(ISession), "Get by Id interval")]
         public class when_getting_for_big_identities_and_range_matches_subset_of_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertMany(new[]
                     {
@@ -150,7 +150,7 @@ namespace SisoDb.Specifications.QueryEngine
             };
 
             Because of =
-                () => _result = TestContext.Database.ReadOnce().GetByIdInterval<QueryBigIdentityItem>(2, 3).ToList();
+                () => _result = TestContext.Database.UseOnceTo().GetByIdInterval<QueryBigIdentityItem>(2, 3).ToList();
 
             It should_have_subset_count_of_2 = () => _result.Count.ShouldEqual(2);
 

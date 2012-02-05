@@ -6,14 +6,14 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class Count
     {
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(ISession), "Count")]
         public class when_counting_all_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
             Because of = () =>
             {
-                using (var rs = TestContext.Database.BeginReadSession())
+                using (var rs = TestContext.Database.BeginSession())
                     _itemsCount = rs.Query<QueryGuidItem>().Count();
             };
 
@@ -22,14 +22,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(ISession), "Count")]
         public class when_counting_using_query_and_no_items_exists : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
             Because of = () =>
             {
-                using (var rs = TestContext.Database.BeginReadSession())
+                using (var rs = TestContext.Database.BeginSession())
 					_itemsCount = rs.Query<QueryGuidItem>().Count(x => x.StringValue == "Goofy");
             };
 
@@ -38,13 +38,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(ISession), "Count")]
         public class when_two_items_exists_in_committed_unit_of_work : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertMany(new[]
                     {
@@ -56,7 +56,7 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                     _itemsCount = session.Query<QueryGuidItem>().Count();
             };
 
@@ -65,13 +65,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(ISession), "Count")]
         public class when_query_matches_two_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertMany(new[]
                     {
@@ -84,7 +84,7 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                     _itemsCount = session.Query<QueryGuidItem>().Count(x => x.SortOrder > 1);
             };
 
@@ -93,13 +93,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static int _itemsCount;
         }
 
-        [Subject(typeof(IReadSession), "Count")]
+        [Subject(typeof(ISession), "Count")]
         public class when_query_matches_none_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertMany(new[]
                     {
@@ -112,7 +112,7 @@ namespace SisoDb.Specifications.QueryEngine
 
             Because of = () =>
             {
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                     _itemsCount = session.Query<QueryGuidItem>().Count(x => x.SortOrder < 1);
             };
 

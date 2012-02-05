@@ -7,20 +7,20 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
 	class QxLike
     {
-        [Subject(typeof(IReadSession), "QxLike")]
+        [Subject(typeof(ISession), "QxLike")]
         public class when_two_items_has_string_that_does_not_match_query : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+                TestContext.Database.UseOnceTo().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
                 {
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
                 }));
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.StringValue.QxLike("%Foo%")).ToList();
 
             It should_not_have_fetched_two_structures =
@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxLike")]
+        [Subject(typeof(ISession), "QxLike")]
         public class when_two_items_has_string_that_starts_with_queried_argument : SpecificationBase
         {
             Establish context = () =>
@@ -40,10 +40,10 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
                 });
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.StringValue.QxLike("Al%")).ToList();
 
             It should_have_fetched_two_structures =
@@ -59,7 +59,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxLike")]
+        [Subject(typeof(ISession), "QxLike")]
         public class when_two_items_has_string_that_partially_matches_queried_argument : SpecificationBase
         {
             Establish context = () =>
@@ -70,10 +70,10 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
                 });
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.StringValue.QxLike("%lp%")).ToList();
 
             It should_have_fetched_two_structures =
@@ -89,7 +89,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxLike")]
+        [Subject(typeof(ISession), "QxLike")]
         public class when_two_items_has_string_that_ends_with_queried_argument : SpecificationBase
         {
             Establish context = () =>
@@ -100,10 +100,10 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
                 });
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.StringValue.QxLike("%ha")).ToList();
 
             It should_have_fetched_two_structures =
@@ -119,7 +119,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxLike")]
+        [Subject(typeof(ISession), "QxLike")]
         public class when_two_items_has_string_that_completely_matches_argument : SpecificationBase
         {
             Establish context = () =>
@@ -130,10 +130,10 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
                     item.SortOrder = i + 1;
                     item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
                 });
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.StringValue.QxLike("Alpha")).ToList();
 
             It should_have_fetched_two_structures =

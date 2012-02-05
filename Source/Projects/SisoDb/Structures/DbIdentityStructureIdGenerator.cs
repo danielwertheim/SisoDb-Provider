@@ -1,23 +1,23 @@
 using EnsureThat;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Dac;
 
 namespace SisoDb.Structures
 {
 	public class DbIdentityStructureIdGenerator : IIdentityStructureIdGenerator
-    {
-    	protected readonly IDbClient DbClient;
+	{
+        private readonly CheckOutAngGetNextIdentity _checkOutAndGetNextIdentity;
 
-        public DbIdentityStructureIdGenerator(IDbClient dbClient)
+        public DbIdentityStructureIdGenerator(CheckOutAngGetNextIdentity checkOutAndGetNextIdentity)
         {
-        	Ensure.That(dbClient, "dbClient").IsNotNull();
-        	DbClient = dbClient;
+            Ensure.That(checkOutAndGetNextIdentity, "checkOutAndGetNextIdentity").IsNotNull();
+            
+            _checkOutAndGetNextIdentity = checkOutAndGetNextIdentity;
         }
 
-    	public IStructureId Generate(IStructureSchema structureSchema)
+	    public IStructureId Generate(IStructureSchema structureSchema)
     	{
-    		var nextId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, 1);
+    		var nextId = _checkOutAndGetNextIdentity(structureSchema, 1);
 
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.Identity)
                 return StructureId.Create((int)nextId);
@@ -36,7 +36,7 @@ namespace SisoDb.Structures
         private IStructureId[] GenerateIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
             var structureIds = new IStructureId[numOfIds];
-        	var startId = (int) DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
+        	var startId = (int) _checkOutAndGetNextIdentity(structureSchema, numOfIds);
 
             for (var c = 0; c < numOfIds; c++)
                 structureIds[c] = StructureId.Create(startId++);
@@ -47,7 +47,7 @@ namespace SisoDb.Structures
         private IStructureId[] GenerateBigIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
             var structureIds = new IStructureId[numOfIds];
-			var startId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
+			var startId = _checkOutAndGetNextIdentity(structureSchema, numOfIds);
 
             for (var c = 0; c < numOfIds; c++)
                 structureIds[c] = StructureId.Create(startId++);

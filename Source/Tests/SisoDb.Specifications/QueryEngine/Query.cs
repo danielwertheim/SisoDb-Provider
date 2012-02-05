@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.QueryEngine
 {
     class Query
     {
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_using_plain_bool_and_nullable_value_type_hasvalue_and_chained_wheres_in_expression : SpecificationBase
         {
             Establish context = () =>
@@ -23,10 +23,10 @@ namespace SisoDb.Specifications.QueryEngine
 					new QueryNullableItem { NullableInt = 42, BoolValue = true, StringValue = "Fourthy two"}
 				};
 
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNullableItem>()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
                 .Where(i => i.BoolValue && i.NullableInt.HasValue && i.NullableInt != null).Where(i => i.NullableInt == 42).ToList();
 
             It should_have_fetched_one_structure =
@@ -40,7 +40,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryNullableItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_using_nullable_value_types_in_expression : SpecificationBase
         {
             Establish context = () =>
@@ -54,10 +54,10 @@ namespace SisoDb.Specifications.QueryEngine
 					new QueryNullableItem { NullableInt = 42, StringValue = "Fourthy two"}
 				};
 
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNullableItem>()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
                 .Where(i => i.NullableInt.HasValue && i.NullableInt != null).ToList();
 
             It should_have_fetched_two_structures =
@@ -73,16 +73,16 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryNullableItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_expression_does_not_match_any_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                TestContext.Database.UseOnceTo().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder < 0).ToList();
 
             It should_not_have_fetched_any_structures =
@@ -91,16 +91,16 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(ISession), "Query as Json")]
         public class when_expression_does_not_match_any_json_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                TestContext.Database.UseOnceTo().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder < 0).ToListOfJson();
 
             It should_not_have_fetched_any_structures =
@@ -109,16 +109,16 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(ISession), "Query as X")]
         public class when_expression_does_not_match_any_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                TestContext.Database.UseOnceTo().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder < 0).ToListOf<QueryItemInfo>();
 
             It should_not_have_fetched_any_structures =
@@ -127,17 +127,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder >= 2 && i.SortOrder <= 3).ToList();
 
             It should_have_fetched_two_structures =
@@ -153,17 +153,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(ISession), "Query as Json")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder >= 2 && i.SortOrder <= 3).ToListOfJson();
 
             It should_have_fetched_two_structures =
@@ -179,17 +179,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(ISession), "Query as X")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder >= 2 && i.SortOrder <= 3).ToListOf<QueryItemInfo>();
 
             It should_have_fetched_two_structures =
@@ -205,17 +205,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_expression_contains_item_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder >= _structures[1].SortOrder && i.SortOrder <= _structures[2].SortOrder).ToList();
 
             It should_have_fetched_two_structures =
@@ -231,17 +231,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(ISession), "Query as Json")]
         public class when_expression_contains_item_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder >= _structures[1].SortOrder && i.SortOrder <= _structures[2].SortOrder).ToListOfJson();
 
             It should_have_fetched_two_structures =
@@ -257,17 +257,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(ISession), "Query as X")]
         public class when_expression_contains_item_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                     .Query<QueryGuidItem>().Where(i => i.SortOrder >= _structures[1].SortOrder && i.SortOrder <= _structures[2].SortOrder).ToListOf<QueryItemInfo>();
 
             It should_have_fetched_two_structures =
@@ -283,21 +283,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_expression_contains_local_constants_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 const int @from = 2;
                 const int @to = 3;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -313,21 +313,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(ISession), "Query as Json")]
         public class when_expression_contains_local_constants_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 const int @from = 2;
                 const int @to = 3;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOfJson();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOfJson();
             };
 
             It should_have_fetched_two_structures =
@@ -343,21 +343,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(ISession), "Query as X")]
         public class when_expression_contains_local_constants_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 const int @from = 2;
                 const int @to = 3;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOf<QueryItemInfo>();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOf<QueryItemInfo>();
             };
 
             It should_have_fetched_two_structures =
@@ -373,21 +373,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_expression_contains_variables_matching_two_middle_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 var @from = 2;
                 var @to = 3;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -403,21 +403,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json")]
+        [Subject(typeof(ISession), "Query as Json")]
         public class when_expression_contains_variables_matching_two_middle_json_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 var @from = 2;
                 var @to = 3;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOfJson();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOfJson();
             };
 
             It should_have_fetched_two_structures =
@@ -433,21 +433,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X")]
+        [Subject(typeof(ISession), "Query as X")]
         public class when_expression_contains_variables_matching_two_middle_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 var @from = 2;
                 var @to = 3;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOf<QueryItemInfo>();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(i => i.SortOrder >= @from && i.SortOrder <= @to).ToListOf<QueryItemInfo>();
             };
 
             It should_have_fetched_two_structures =
@@ -463,21 +463,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query (nested items)")]
+        [Subject(typeof(ISession), "Query (nested items)")]
         public class when_expression_contains_variables_matching_two_middle_nested_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryNestedGuidItem.CreateFourNestedItems();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 var @from = 12;
                 var @to = 13;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNestedGuidItem>().Where(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNestedGuidItem>().Where(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -493,21 +493,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryNestedGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json (nested items)")]
+        [Subject(typeof(ISession), "Query as Json (nested items)")]
         public class when_expression_contains_variables_matching_two_middle_nested_json_structures : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryNestedGuidItem.CreateFourNestedItems();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 var @from = 12;
                 var @to = 13;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNestedGuidItem>().Where(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToListOfJson();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNestedGuidItem>().Where(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToListOfJson();
             };
 
             It should_have_fetched_two_structures =
@@ -523,21 +523,21 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X (nested items)")]
+        [Subject(typeof(ISession), "Query as X (nested items)")]
         public class when_expression_contains_variables_matching_two_middle_nested_structures_and_expects_X_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryNestedGuidItem.CreateFourNestedItems();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
             {
                 var @from = 12;
                 var @to = 13;
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryNestedGuidItem>().Where(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToListOf<QueryNestedItemInfo>();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNestedGuidItem>().Where(i => i.Container.NestedInt >= @from && i.Container.NestedInt <= @to).ToListOf<QueryNestedItemInfo>();
             };
 
             It should_have_fetched_two_structures =
@@ -553,17 +553,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryNestedItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query with Take")]
+        [Subject(typeof(ISession), "Query with Take")]
         public class when_query_matches_the_three_last_structures_of_four_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>().Where(i => i.SortOrder >= 2 && i.SortOrder <= 4).Take(2).ToList();
 
             It should_have_fetched_two_structures =
@@ -579,17 +579,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json with Take")]
+        [Subject(typeof(ISession), "Query as Json with Take")]
         public class when_query_matches_the_three_last_json_structures_of_four_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>().Where(i => i.SortOrder >= 2 && i.SortOrder <= 4).Take(2).ToListOfJson();
 
             It should_have_fetched_two_structures =
@@ -605,17 +605,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X with Take")]
+        [Subject(typeof(ISession), "Query as X with Take")]
         public class when_query_matches_the_three_last_structures_of_four_and_take_is_two_as_X : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>().Where(i => i.SortOrder >= 2 && i.SortOrder <= 4).Take(2).ToListOf<QueryItemInfo>();
 
             It should_have_fetched_two_structures =
@@ -631,17 +631,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query with Take and Sort")]
+        [Subject(typeof(ISession), "Query with Take and Sort")]
         public class when_set_is_unsorted_and_query_matches_three_of_four_structures_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>().Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).OrderBy(i => i.StringValue).ToList();
 
             It should_have_fetched_two_structures =
@@ -657,17 +657,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json with Take and Sort")]
+        [Subject(typeof(ISession), "Query as Json with Take and Sort")]
         public class when_set_is_unsorted_and_query_matches_three_of_four_json_structures_and_take_is_two : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>().Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).OrderBy(i => i.StringValue).ToListOfJson();
 
             It should_have_fetched_two_structures =
@@ -683,17 +683,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X with Take and Sort")]
+        [Subject(typeof(ISession), "Query as X with Take and Sort")]
         public class when_set_is_unsorted_and_query_matches_three_of_four_structures_and_take_is_two_as_X : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>().Where(i => i.SortOrder == 2 || (i.SortOrder == 1 && i.StringValue == "B")).Take(2).OrderBy(i => i.StringValue, i => i.SortOrder).ToListOf<QueryItemInfo>();
 
             It should_have_fetched_two_structures =
@@ -709,17 +709,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query with Sort and Page")]
+        [Subject(typeof(ISession), "Query with Sort and Page")]
         public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>()
                 .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
                 .OrderBy(i => i.SortOrder)
                 .Page(1, 7).ToList();
@@ -734,17 +734,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Json Sort and Page")]
+        [Subject(typeof(ISession), "Query as Json Sort and Page")]
         public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page_as_Json : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>()
                 .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
                 .OrderBy(i => i.SortOrder)
                 .Page(1, 7).ToListOfJson();
@@ -759,17 +759,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as X with Sort and Page")]
+        [Subject(typeof(ISession), "Query as X with Sort and Page")]
         public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page_as_X : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>()
                 .Where(i => i.SortOrder > 1 && i.SortOrder < 10)
                 .OrderBy(i => i.SortOrder)
                 .Page(1, 7).ToListOf<QueryItemInfo>();
@@ -784,16 +784,16 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Anonymous array")]
+        [Subject(typeof(ISession), "Query as Anonymous array")]
         public class when_expression_does_not_match_any_structures_and_expects_array_of_anonymous_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                TestContext.Database.UseOnceTo().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                                                         .Query<QueryGuidItem>()
                                                         .Where(i => i.SortOrder < 0)
                                                         .ToArrayOf(new { IntegerValue = 0, StringValue = "" })
@@ -806,17 +806,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Tuple<int, string>> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Anonymous array")]
+        [Subject(typeof(ISession), "Query as Anonymous array")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_structures_and_expects_array_of_anonymous_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>()
                 .Where(i => i.SortOrder >= 2 && i.SortOrder <= 3)
                 .ToArrayOf(new { IntegerValue = 0, StringValue = "" })
@@ -839,16 +839,16 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Tuple<int, string>> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Anonymous list")]
+        [Subject(typeof(ISession), "Query as Anonymous list")]
         public class when_expression_does_not_match_any_structures_and_expects_list_of_anonymous_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
+                TestContext.Database.UseOnceTo().InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                                                         .Query<QueryGuidItem>()
                                                         .Where(i => i.SortOrder < 0)
                                                         .ToListOf(new { IntegerValue = 0, StringValue = "" })
@@ -861,17 +861,17 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Tuple<int, string>> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Query as Anonymous list")]
+        [Subject(typeof(ISession), "Query as Anonymous list")]
         public class when_providing_inline_constants_in_expression_matching_two_middle_structures_and_expects_lists_of_anonymous_as_result : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>()
                 .Where(i => i.SortOrder >= 2 && i.SortOrder <= 3)
                 .ToListOf(new { IntegerValue = 0, StringValue = "" })

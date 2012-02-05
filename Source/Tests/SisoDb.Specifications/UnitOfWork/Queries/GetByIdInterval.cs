@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class GetByIdInterval
 	{
-		[Subject(typeof(IWriteSession), "Get by Id interval")]
+		[Subject(typeof(ISession), "Get by Id interval")]
 		public class when_getting_for_guids : SpecificationBase
 		{
 			Establish context = () =>
@@ -22,7 +22,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 			{
 				CaughtException = Catch.Exception(() =>
 				{
-					using (var session = TestContext.Database.BeginWriteSession())
+					using (var session = TestContext.Database.BeginSession())
 					{
 						_fetchedStructures = session.GetByIdInterval<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 					}

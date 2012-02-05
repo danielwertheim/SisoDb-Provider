@@ -64,9 +64,8 @@
     <Compile Include="Sql2012DbFactory.cs" />
     <Compile Include="Sql2012ProviderFactory.cs" />
     <Compile Include="Sql2012QueryGenerator.cs" />
-    <Compile Include="Sql2012ReadSession.cs" />
+    <Compile Include="Sql2012Session.cs" />
     <Compile Include="Sql2012Statements.cs" />
-    <Compile Include="Sql2012WriteSession.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SisoDb\SisoDb.csproj">

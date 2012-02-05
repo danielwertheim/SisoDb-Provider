@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class QueryAll
 	{
-		[Subject(typeof(IWriteSession), "Get all")]
+		[Subject(typeof(ISession), "Get all")]
 		public class when_set_with_guid_contains_four_items_that_are_in_uncommitted_mode : SpecificationBase
 		{
 			Establish context = () =>
@@ -18,7 +18,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.InsertMany(_structures);
 
@@ -41,7 +41,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IWriteSession), "Get all as Json")]
+		[Subject(typeof(ISession), "Get all as Json")]
 		public class when_set_with_guid_contains_four_json_items_that_are_in_uncommitted_mode : SpecificationBase
 		{
 			Establish context = () =>
@@ -52,7 +52,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
 			Because of = () =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.InsertMany(_structures);
 

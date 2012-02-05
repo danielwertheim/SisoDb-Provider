@@ -10,12 +10,12 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsOfUniquesPerType
     {
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_guid_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.WriteOnce().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
+            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
 
@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithGuidId _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_guid_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -36,7 +36,7 @@ namespace SisoDb.Specifications.UnitOfWork
                     new VehicleWithGuidId { VehRegNo = "ABC123" },
                     new VehicleWithGuidId { VehRegNo = "ABC321" }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(2);
@@ -46,18 +46,18 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithGuidId> _structures;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_guid_entities : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
 
-                _orgStructure = TestContext.Database.WriteOnce().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
+                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
             };
 
             Because of =
-                () => CaughtException = Catch.Exception(() => TestContext.Database.WriteOnce().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" }));
+                () => CaughtException = Catch.Exception(() => TestContext.Database.UseOnceTo().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" }));
 
 
             It should_have_failed = () =>
@@ -73,12 +73,12 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithGuidId _orgStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_string_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.WriteOnce().Insert(new VehicleWithStringId { StructureId = "A123", VehRegNo = "ABC123" });
+            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithStringId { StructureId = "A123", VehRegNo = "ABC123" });
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(1);
 
@@ -87,7 +87,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithStringId _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_string_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -99,7 +99,7 @@ namespace SisoDb.Specifications.UnitOfWork
                     new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" },
                     new VehicleWithStringId { StructureId = "A2", VehRegNo = "ABC321" }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(2);
@@ -109,18 +109,18 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithStringId> _structures;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_string_entities : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
 
-                _orgStructure = TestContext.Database.WriteOnce().Insert(new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" });
+                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" });
             };
 
             Because of =
-                () => CaughtException = Catch.Exception(() => TestContext.Database.WriteOnce().Insert(new VehicleWithStringId { StructureId = "A2", VehRegNo = "ABC123" }));
+                () => CaughtException = Catch.Exception(() => TestContext.Database.UseOnceTo().Insert(new VehicleWithStringId { StructureId = "A2", VehRegNo = "ABC123" }));
 
 
             It should_have_failed = () =>
@@ -136,12 +136,12 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithStringId _orgStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_identity_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.WriteOnce().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
+            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
 
@@ -150,7 +150,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithIdentityId _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_identity_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -162,7 +162,7 @@ namespace SisoDb.Specifications.UnitOfWork
                     new VehicleWithIdentityId { VehRegNo = "ABC123" },
                     new VehicleWithIdentityId { VehRegNo = "ABC321" }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(2);
@@ -172,18 +172,18 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithIdentityId> _structures;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_identity_entities : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
 
-                _orgStructure = TestContext.Database.WriteOnce().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
+                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
             };
 
             Because of =
-                () => CaughtException = Catch.Exception(() => TestContext.Database.WriteOnce().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" }));
+                () => CaughtException = Catch.Exception(() => TestContext.Database.UseOnceTo().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" }));
 
 
             It should_have_failed = () =>
@@ -199,12 +199,12 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithIdentityId _orgStructure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_big_identity_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.WriteOnce().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
+            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
 
@@ -213,7 +213,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static VehicleWithBigIdentityId _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_unique_per_type_big_identity_entities : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -225,7 +225,7 @@ namespace SisoDb.Specifications.UnitOfWork
                     new VehicleWithBigIdentityId { VehRegNo = "ABC123" },
                     new VehicleWithBigIdentityId { VehRegNo = "ABC321" }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(2);
@@ -235,18 +235,18 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<VehicleWithBigIdentityId> _structures;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (unique per type)")]
+        [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_two_non_unique_per_type_big_identity_entities : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
 
-                _orgStructure = TestContext.Database.WriteOnce().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
+                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
             };
 
             Because of =
-                () => CaughtException = Catch.Exception(() => TestContext.Database.WriteOnce().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" }));
+                () => CaughtException = Catch.Exception(() => TestContext.Database.UseOnceTo().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" }));
 
 
             It should_have_failed = () =>

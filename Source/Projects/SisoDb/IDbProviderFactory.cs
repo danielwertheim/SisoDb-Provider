@@ -18,15 +18,13 @@ namespace SisoDb
 
         IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
 
-        IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo);
-
-        IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
+        IDbClient GetDbClient(ISisoConnectionInfo connectionInfo);
 
         IDbSchemaManager GetDbSchemaManager();
 
 		IStructureInserter GetStructureInserter(IDbClient dbClient);
 
-    	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
+    	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action);
 
 		IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
 		

@@ -268,12 +268,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="StructureSetUpdater_TOld_TNew_SameType" xml:space="preserve">
     <value>Migrate&lt;TOld, TNew&gt; should not be used for same types. Use Migrate&lt;T&gt; instead.</value>
   </data>
-  <data name="ReadSession_AllreadyDisposed" xml:space="preserve">
-    <value>The Read session has allready been disposed.</value>
-  </data>
-  <data name="WriteSession_AllreadyDisposed" xml:space="preserve">
-    <value>The Write session has allready been disposed.</value>
-  </data>
   <data name="WriteSession_UpdateMany_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
   </data>
@@ -285,5 +279,11 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="InMemoryCacheProvider_Clear_failed" xml:space="preserve">
     <value>Could not clear all structure set cache entries. See contained exceptions for more info.</value>
+  </data>
+  <data name="DbTransaction_MarkAsFailed_ForSuppressedTransaction" xml:space="preserve">
+    <value>There is no point in calling mark as failed on a Suppressed transaction.</value>
+  </data>
+  <data name="Session_AllreadyDisposed" xml:space="preserve">
+    <value>The Session has allready been disposed.</value>
   </data>
 </root>

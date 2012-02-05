@@ -67,8 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCe4ConnectionManager.cs" />
     <Compile Include="SqlCe4QueryGenerator.cs" />
-    <Compile Include="SqlCe4WriteSession.cs" />
-    <Compile Include="SqlCe4ReadSession.cs" />
+    <Compile Include="SqlCe4Session.cs" />
     <Compile Include="SqlCe4ConnectionInfo.cs" />
     <Compile Include="SqlCe4Database.cs" />
     <Compile Include="SqlCe4DbFactory.cs" />

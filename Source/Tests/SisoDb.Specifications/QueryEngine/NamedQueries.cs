@@ -11,7 +11,7 @@ namespace SisoDb.Specifications.QueryEngine
 #if Sql2008Provider || Sql2012Provider
 	class NamedQueries
     {
-        [Subject(typeof(IReadSession), "Named Query")]
+        [Subject(typeof(ISession), "Named Query")]
         public class when_named_query_returns_no_result : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
             Establish context = () =>
@@ -28,7 +28,7 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 var query = new NamedQuery(ProcedureName);
-                _fetchedStructures = TestContext.Database.ReadOnce().NamedQuery<QueryGuidItem>(query).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQuery<QueryGuidItem>(query).ToList();
             };
 
             It should_have_fetched_0_structures =
@@ -38,7 +38,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Named Query as Json")]
+        [Subject(typeof(ISession), "Named Query as Json")]
         public class when_named_query_returns_no_json_result : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
             Establish context = () =>
@@ -55,7 +55,7 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 var query = new NamedQuery(ProcedureName);
-                _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAsJson<QueryGuidItem>(query).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQueryAsJson<QueryGuidItem>(query).ToList();
             };
 
             It should_have_fetched_0_structures =
@@ -65,14 +65,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Named Query")]
+        [Subject(typeof(ISession), "Named Query")]
         public class when_named_query_with_parameters : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
                 TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] @minSortOrder int, @maxSortOrder int as begin select s.Json from [QueryGuidItemStructure] as s inner join [QueryGuidItemIntegers] as si on si.[StructureId] = s.[StructureId] where (si.[MemberPath]='SortOrder' and si.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
@@ -88,7 +88,7 @@ namespace SisoDb.Specifications.QueryEngine
                     new DacParameter("minSortOrder", _structures[1].SortOrder), 
                     new DacParameter("maxSortOrder", _structures[2].SortOrder));
 
-                _fetchedStructures = TestContext.Database.ReadOnce().NamedQuery<QueryGuidItem>(query).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQuery<QueryGuidItem>(query).ToList();
             };
 
             It should_have_fetched_two_structures =
@@ -105,14 +105,14 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Named Query as Json")]
+        [Subject(typeof(ISession), "Named Query as Json")]
         public class when_named_query_with_parameters_returning_json : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
                 TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] @minSortOrder int, @maxSortOrder int as begin select s.Json from [QueryGuidItemStructure] as s inner join [QueryGuidItemIntegers] as si on si.[StructureId] = s.[StructureId] where (si.[MemberPath]='SortOrder' and si.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
@@ -128,7 +128,7 @@ namespace SisoDb.Specifications.QueryEngine
                     new DacParameter("minSortOrder", _structures[1].SortOrder),
                     new DacParameter("maxSortOrder", _structures[2].SortOrder));
 
-                _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAsJson<QueryGuidItem>(query).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQueryAsJson<QueryGuidItem>(query).ToList();
             };
 
             It should_have_fetched_two_structures =

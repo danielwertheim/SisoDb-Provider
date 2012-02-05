@@ -8,14 +8,14 @@ namespace SisoDb.Querying
 {
 	public class SisoReadOnceQueryable<T> : SisoQueryable<T> where T : class 
 	{
-		private readonly Func<IReadSession> _queryEngineFactory;
+		private readonly Func<ISession> _queryEngineFactory;
 
-		protected override IReadSession ReadSession
+		protected override ISession Session
 		{
 			get { return _queryEngineFactory.Invoke(); }
 		}
 
-		public SisoReadOnceQueryable(IQueryBuilder<T> queryBuilder, Func<IReadSession> queryEngineFactory) : base(queryBuilder)
+		public SisoReadOnceQueryable(IQueryBuilder<T> queryBuilder, Func<ISession> queryEngineFactory) : base(queryBuilder)
 		{
 			Ensure.That(queryEngineFactory, "queryEngineFactory").IsNotNull();
 
@@ -24,7 +24,7 @@ namespace SisoDb.Querying
 
 		public override int Count()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Count<T>(QueryBuilder.Build());
 			}
@@ -32,7 +32,7 @@ namespace SisoDb.Querying
 
 		public override int Count(System.Linq.Expressions.Expression<Func<T, bool>> expression)
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Count<T>(QueryBuilder.Build());
 			}
@@ -40,7 +40,7 @@ namespace SisoDb.Querying
 		
 		public override T First()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).First();
 			}
@@ -48,7 +48,7 @@ namespace SisoDb.Querying
 
 		public override TResult FirstAs<TResult>()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).First();
 			}
@@ -56,7 +56,7 @@ namespace SisoDb.Querying
 
 		public override string FirstAsJson()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).First();
 			}
@@ -64,7 +64,7 @@ namespace SisoDb.Querying
 
 		public override T FirstOrDefault()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).FirstOrDefault();
 			}
@@ -72,7 +72,7 @@ namespace SisoDb.Querying
 
 		public override TResult FirstOrDefaultAs<TResult>()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).FirstOrDefault();
 			}
@@ -80,7 +80,7 @@ namespace SisoDb.Querying
 
 		public override string FirstOrDefaultAsJson()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).FirstOrDefault();
 			}
@@ -88,7 +88,7 @@ namespace SisoDb.Querying
 
 		public override T[] ToArray()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).ToArray();
 			}
@@ -96,7 +96,7 @@ namespace SisoDb.Querying
 
 		public override TResult[] ToArrayOf<TResult>()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToArray();
 			}
@@ -104,7 +104,7 @@ namespace SisoDb.Querying
 
 		public override string[] ToArrayOfJson()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).ToArray();
 			}
@@ -127,7 +127,7 @@ namespace SisoDb.Querying
 
 		public override IList<T> ToList()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).ToList();
 			}
@@ -135,7 +135,7 @@ namespace SisoDb.Querying
 
 		public override IList<TResult> ToListOf<TResult>()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
 			}
@@ -143,7 +143,7 @@ namespace SisoDb.Querying
 
 		public override IList<string> ToListOfJson()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).ToList();
 			}
@@ -151,7 +151,7 @@ namespace SisoDb.Querying
 
 		public override T Single()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).Single();
 			}
@@ -159,7 +159,7 @@ namespace SisoDb.Querying
 
 		public override TResult SingleAs<TResult>()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).Single();
 			}
@@ -167,7 +167,7 @@ namespace SisoDb.Querying
 
 		public override string SingleAsJson()
 		{
-			using (var session =ReadSession)
+			using (var session =Session)
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).Single();
 			}
@@ -175,7 +175,7 @@ namespace SisoDb.Querying
 
 		public override T SingleOrDefault()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).SingleOrDefault();
 			}
@@ -183,7 +183,7 @@ namespace SisoDb.Querying
 
 		public override TResult SingleOrDefaultAs<TResult>()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).SingleOrDefault();
 			}
@@ -191,7 +191,7 @@ namespace SisoDb.Querying
 
 		public override string SingleOrDefaultAsJson()
 		{
-			using (var session = ReadSession)
+			using (var session = Session)
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).SingleOrDefault();
 			}

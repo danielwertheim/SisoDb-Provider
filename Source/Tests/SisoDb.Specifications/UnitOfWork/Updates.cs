@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class Updates
     {
-        [Subject(typeof(IWriteSession), "Update")]
+        [Subject(typeof(ISession), "Update")]
         public class when_guiditem_and_updating_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     _structures[1].Value += 10;
                     session.Update(_structures[1]);
@@ -53,7 +53,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static GuidItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update")]
+        [Subject(typeof(ISession), "Update")]
         public class when_stringitem_and_updating_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -67,7 +67,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     _structures[1].Value += 10;
                     session.Update(_structures[1]);
@@ -96,7 +96,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static StringItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update")]
+        [Subject(typeof(ISession), "Update")]
         public class when_identityitem_and_updating_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -110,7 +110,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     _structures[1].Value += 10;
                     session.Update(_structures[1]);
@@ -139,7 +139,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IdentityItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update")]
+        [Subject(typeof(ISession), "Update")]
         public class when_bigidentityitem_and_updating_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -153,7 +153,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     _structures[1].Value += 10;
                     session.Update(_structures[1]);
@@ -182,7 +182,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static BigIdentityItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update (uniques)")]
+        [Subject(typeof(ISession), "Update (uniques)")]
         public class when_uniqueguiditem_and_updating_from_unique_to_non_unique : SpecificationBase
         {
             Establish context = () =>
@@ -198,7 +198,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var session = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginSession())
                     {
                         _structures[0].UniqueValue = _structures[1].UniqueValue;
                         session.Update(_structures[0]);
@@ -228,7 +228,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static UniqueGuidItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update (uniques)")]
+        [Subject(typeof(ISession), "Update (uniques)")]
         public class when_uniqueidentityitem_and_updating_from_unique_to_non_unique : SpecificationBase
         {
             Establish context = () =>
@@ -244,7 +244,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var session = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginSession())
                     {
                         _structures[0].UniqueValue = _structures[1].UniqueValue;
                         session.Update(_structures[0]);
@@ -274,7 +274,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static UniqueIdentityItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update (uniques)")]
+        [Subject(typeof(ISession), "Update (uniques)")]
         public class when_uniquebigidentityitem_and_updating_from_unique_to_non_unique : SpecificationBase
         {
             Establish context = () =>
@@ -290,7 +290,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 CaughtException = Catch.Exception(() =>
                 {
-                    using (var session = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginSession())
                     {
                         _structures[0].UniqueValue = _structures[1].UniqueValue;
                         session.Update(_structures[0]);
@@ -320,7 +320,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static UniqueBigIdentityItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update (uniques)")]
+        [Subject(typeof(ISession), "Update (uniques)")]
         public class when_uniqueguiditem_and_updating_from_unique_to_other_unique : SpecificationBase
         {
             Establish context = () =>
@@ -334,7 +334,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     _structures[0].UniqueValue = 42;
                     session.Update(_structures[0]);
@@ -360,7 +360,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static UniqueGuidItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update (uniques)")]
+        [Subject(typeof(ISession), "Update (uniques)")]
         public class when_uniqueidentityitem_and_updating_from_unique_to_other_unique : SpecificationBase
         {
             Establish context = () =>
@@ -374,7 +374,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     _structures[0].UniqueValue = 42;
                     session.Update(_structures[0]);
@@ -400,7 +400,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static UniqueIdentityItem _orgItem1, _orgItem2;
         }
 
-        [Subject(typeof(IWriteSession), "Update (uniques)")]
+        [Subject(typeof(ISession), "Update (uniques)")]
         public class when_uniquebigidentityitem_and_updating_from_unique_to_other_unique : SpecificationBase
         {
             Establish context = () =>
@@ -414,7 +414,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     _structures[0].UniqueValue = 42;
                     session.Update(_structures[0]);

@@ -7,13 +7,13 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 {
 	class StartsWith
 	{
-		[Subject(typeof(IReadSession), "StartsWith")]
+		[Subject(typeof(ISession), "StartsWith")]
 		public class when_two_items_has_string_that_does_not_match_query : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
-				TestContext.Database.WriteOnce().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
+				TestContext.Database.UseOnceTo().InsertMany(QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
 				{
 					item.SortOrder = i + 1;
 					item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
@@ -21,7 +21,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			};
 
 			Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce()
+				() => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>()
 					.Where(i => i.StringValue.StartsWith("Foo")).ToList();
 
@@ -31,7 +31,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "StartsWith")]
+		[Subject(typeof(ISession), "StartsWith")]
 		public class when_two_items_has_string_that_starts_with_queried_argument : SpecificationBase
 		{
 			Establish context = () =>
@@ -42,11 +42,11 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 					item.SortOrder = i + 1;
 					item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
 				});
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce()
+				() => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.StringValue.StartsWith("Al")).ToList();
 
 			It should_have_fetched_two_structures =
@@ -62,7 +62,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "StartsWith")]
+		[Subject(typeof(ISession), "StartsWith")]
 		public class when_two_items_has_string_that_completely_matches_argument : SpecificationBase
 		{
 			Establish context = () =>
@@ -73,11 +73,11 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 					item.SortOrder = i + 1;
 					item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
 				});
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce()
+				() => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.StringValue.StartsWith("Alpha")).ToList();
 
 			It should_have_fetched_two_structures =
@@ -93,7 +93,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "StartsWith")]
+		[Subject(typeof(ISession), "StartsWith")]
 		public class when_two_first_items_has_string_that_starts_with_queried_argument_on_tostring_of_int : SpecificationBase
 		{
 			Establish context = () =>
@@ -106,11 +106,11 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 					new QueryGuidItem{IntegerValue = 241},
 					new QueryGuidItem{IntegerValue = 242}
 				};
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce()
+				() => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.IntegerValue.ToString().StartsWith("14")).ToList();
 
 			It should_have_fetched_two_structures =
@@ -126,7 +126,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "StartsWith")]
+		[Subject(typeof(ISession), "StartsWith")]
 		public class when_two_last_items_has_string_that_starts_with_queried_argument_on_tostring_of_int : SpecificationBase
 		{
 			Establish context = () =>
@@ -139,11 +139,11 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 					new QueryGuidItem{IntegerValue = 241},
 					new QueryGuidItem{IntegerValue = 242}
 				};
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce()
+				() => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryGuidItem>().Where(i => i.IntegerValue.ToString().StartsWith("24")).ToList();
 
 			It should_have_fetched_two_structures =
@@ -159,7 +159,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "StartsWith")]
+		[Subject(typeof(ISession), "StartsWith")]
 		public class when_two_first_items_has_string_that_starts_with_queried_argument_on_tostring_of_nullable_int : SpecificationBase
 		{
 			Establish context = () =>
@@ -172,11 +172,11 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 					new QueryNullableItem{NullableInt = 241},
 					new QueryNullableItem{NullableInt = 242}
 				};
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce()
+				() => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryNullableItem>().Where(i => i.NullableInt.ToString().StartsWith("14")).ToList();
 
 			It should_have_fetched_two_structures =
@@ -192,7 +192,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 			private static IList<QueryNullableItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "StartsWith")]
+		[Subject(typeof(ISession), "StartsWith")]
 		public class when_two_last_items_has_string_that_starts_with_queried_argument_on_tostring_of_nullable_int_value : SpecificationBase
 		{
 			Establish context = () =>
@@ -205,11 +205,11 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
 					new QueryNullableItem{NullableInt = 241},
 					new QueryNullableItem{NullableInt = 242}
 				};
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce()
+				() => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<QueryNullableItem>().Where(i => i.NullableInt.Value.ToString().StartsWith("24")).ToList();
 
 			It should_have_fetched_two_structures =

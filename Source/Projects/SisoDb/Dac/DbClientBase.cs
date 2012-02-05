@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Transactions;
 using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
-using SisoDb.Resources;
 
 namespace SisoDb.Dac
 {
@@ -18,17 +16,10 @@ namespace SisoDb.Dac
 	{
 		protected readonly ISisoConnectionInfo ConnectionInfo;
 		protected readonly IConnectionManager ConnectionManager;
-		protected IDbConnection Connection;
-		protected IDbTransaction Transaction;
-		protected TransactionScope Ts;
+        protected IDbConnection Connection;
 		protected readonly ISqlStatements SqlStatements;
 
-		public bool IsTransactional
-		{
-			get { return Transaction != null || Ts != null; }
-		}
-
-		protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+		protected DbClientBase(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
 		{
 			Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 			Ensure.That(connectionManager, "connectionManager").IsNotNull();
@@ -36,79 +27,29 @@ namespace SisoDb.Dac
 
 			ConnectionInfo = connectionInfo;
 			ConnectionManager = connectionManager;
-			SqlStatements = sqlStatements;
-
-			Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
-
-			if (System.Transactions.Transaction.Current == null)
-				Transaction = transactional ? Connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted) : null;
-			else
-				Ts = new TransactionScope(TransactionScopeOption.Suppress, new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted});
+            Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
+            SqlStatements = sqlStatements;
 		}
 
-		public void Dispose()
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+
+            if (Connection == null)
+                return;
+
+            ConnectionManager.ReleaseDbConnection(Connection);
+            Connection = null;
+        }
+
+	    public abstract IDbBulkCopy GetBulkCopy();
+
+	    public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
 		{
-			GC.SuppressFinalize(this);
-
-			if (Transaction != null)
-			{
-				Transaction.Rollback();
-				Transaction.Dispose();
-				Transaction = null;
-			}
-
-			if (Ts != null)
-			{
-				Ts.Dispose();
-				Ts = null;
-			}
-
-			if (Connection == null)
-				return;
-
-			ConnectionManager.ReleaseDbConnection(Connection);
-			Connection = null;
+			Connection.ExecuteNonQuery(sql, parameters);
 		}
 
-		public virtual void Commit()
-		{
-			if (Ts != null)
-			{
-				Ts.Complete();
-				Ts.Dispose();
-				Ts = null;
-				return;
-			}
-
-			if (System.Transactions.Transaction.Current != null)
-				return;
-
-			if (Transaction == null)
-				throw new NotSupportedException(ExceptionMessages.DbClient_Commit_NonTransactional);
-
-			Transaction.Commit();
-			Transaction.Dispose();
-			Transaction = null;
-		}
-
-		protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
-		{
-			return Connection.CreateCommand(Transaction, sql, parameters);
-		}
-
-		protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
-		{
-			return Connection.CreateSpCommand(Transaction, sp, parameters);
-		}
-
-		public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
-		{
-			Connection.ExecuteNonQuery(Transaction, sql, parameters);
-		}
-
-		public abstract IDbBulkCopy GetBulkCopy();
-
-		public abstract void Drop(IStructureSchema structureSchema);
+	    public abstract void Drop(IStructureSchema structureSchema);
 
 		public abstract void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
 
@@ -283,5 +224,15 @@ namespace SisoDb.Dac
 				additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
 				dataRecord.GetString(additionalJsonField.Key)));
 		}
+
+        protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
+        {
+            return Connection.CreateCommand(sql, parameters);
+        }
+
+        protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
+        {
+            return Connection.CreateSpCommand(sp, parameters);
+        }
 	}
 }

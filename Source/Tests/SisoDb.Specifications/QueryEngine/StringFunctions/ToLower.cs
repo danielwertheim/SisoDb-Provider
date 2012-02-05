@@ -19,7 +19,7 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
         //    };
 
         //    Because of = 
-        //        () => _fetchedStructures = TestContext.Database.DbReadOnce().Where<StringFunctionsItem>(i => i.String1.ToLower() == "FOO1").ToList();
+        //        () => _fetchedStructures = TestContext.Database.UseOnceTo().Where<StringFunctionsItem>(i => i.String1.ToLower() == "FOO1").ToList();
 
         //    It should_not_have_fetched_any_structures =
         //        () => _fetchedStructures.Count.ShouldEqual(0);
@@ -27,18 +27,18 @@ namespace SisoDb.Specifications.QueryEngine.StringFunctions
         //    private static IList<StringFunctionsItem> _fetchedStructures;
         //}
 
-        [Subject(typeof(IReadSession), "ToLower")]
+        [Subject(typeof(ISession), "ToLower")]
         public class when_query_matches_subset_of_2_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = StringFunctionsItem.CreateItems(5, "ABC").MergeWith(StringFunctionsItem.CreateItems(5, "EFG")).ToList();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = 
-                () => _fetchedStructures = TestContext.Database.ReadOnce()
+                () => _fetchedStructures = TestContext.Database.UseOnceTo()
 					.Query<StringFunctionsItem>().Where(i => i.String1.ToLower() == "efg2" || i.String1.ToLower() == "efg3").ToList();
 
             It should_have_fetched_2_structures =

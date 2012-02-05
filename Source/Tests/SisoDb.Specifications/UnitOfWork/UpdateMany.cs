@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class UpdateMany
 	{
-		[Subject(typeof(IWriteSession), "Update many")]
+		[Subject(typeof(ISession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_not_get_an_identity_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -18,7 +18,7 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.UpdateMany<ItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
@@ -54,7 +54,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ItemForPropChange>().ToList();
 				}
@@ -73,7 +73,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static int _orgItem1Id, _orgItem2Id;
 		}
 
-		[Subject(typeof(IWriteSession), "Update many")]
+		[Subject(typeof(ISession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_not_get_a_guid_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -82,7 +82,7 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -95,7 +95,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.UpdateMany<GuidItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
@@ -120,7 +120,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<GuidItemForPropChange>().ToList();
 				}
@@ -139,7 +139,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static Guid _orgItem1Id, _orgItem2Id;
 		}
 
-		[Subject(typeof(IWriteSession), "Update many")]
+		[Subject(typeof(ISession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_get_a_new_identity_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -148,7 +148,7 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -162,7 +162,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.UpdateMany<ItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
@@ -187,7 +187,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ItemForPropChange>().ToList();
 				}
@@ -207,7 +207,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static int _newItem2Id;
 		}
 
-		[Subject(typeof(IWriteSession), "Update many")]
+		[Subject(typeof(ISession), "Update many")]
 		public class when_the_second_of_two_new_structures_does_get_a_new_guid_id : SpecificationBase
 		{
 			Establish context = () =>
@@ -216,7 +216,7 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -230,7 +230,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () => CaughtException = Catch.Exception(() =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.UpdateMany<GuidItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
@@ -255,7 +255,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<GuidItemForPropChange>().ToList();
 				}
@@ -275,7 +275,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static Guid _newItem2Id;
 		}
 
-		[Subject(typeof(IWriteSession), "Update many")]
+		[Subject(typeof(ISession), "Update many")]
 		public class when_all_identity_items_are_updated : SpecificationBase
 		{
 			Establish context = () =>
@@ -284,7 +284,7 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -298,7 +298,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.UpdateMany<ItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
@@ -316,7 +316,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<ItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ItemForPropChange>().ToList();
 				}
@@ -334,7 +334,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static int _newItem2Id;
 		}
 
-		[Subject(typeof(IWriteSession), "Update many")]
+		[Subject(typeof(ISession), "Update many")]
 		public class when_all_guid_items_are_updated : SpecificationBase
 		{
 			Establish context = () =>
@@ -343,7 +343,7 @@ namespace SisoDb.Specifications.UnitOfWork
 				var orgItem2 = new GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -357,7 +357,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 			Because of = () =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.UpdateMany<GuidItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
@@ -375,7 +375,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
 				IList<GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<GuidItemForPropChange>().ToList();
 				}

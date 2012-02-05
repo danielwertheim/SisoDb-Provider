@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using EnsureThat;
 using SisoDb.Dac;
 
 namespace SisoDb.Sql2012.Dac
@@ -9,9 +10,11 @@ namespace SisoDb.Sql2012.Dac
     {
         private SqlBulkCopy _innerBulkCopy;
 
-        public Sql2012DbBulkCopy(SqlConnection connection, SqlTransaction transaction)
+        public Sql2012DbBulkCopy(SqlConnection connection)
         {
-			_innerBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction)
+            Ensure.That(connection, "connection").IsNotNull();
+
+			_innerBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, null)
             {
                 NotifyAfter = 0
             };

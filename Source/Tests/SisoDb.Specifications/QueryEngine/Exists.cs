@@ -8,18 +8,18 @@ namespace SisoDb.Specifications.QueryEngine
 {
     class Exists
     {
-        [Subject(typeof(IReadSession), "Exists by Id (guid)")]
+        [Subject(typeof(ISession), "Exists by Id (guid)")]
         public class when_set_with_guid_id_contains_match : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () => 
-                         _exists = TestContext.Database.ReadOnce().Exists<QueryGuidItem>(_structures[1].StructureId);
+                         _exists = TestContext.Database.UseOnceTo().Exists<QueryGuidItem>(_structures[1].StructureId);
 
             It should_return_true = () => _exists.ShouldBeTrue();
 
@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static bool _exists;
         }
 
-        [Subject(typeof(IReadSession), "Exists by Id (guid)")]
+        [Subject(typeof(ISession), "Exists by Id (guid)")]
         public class when_set_with_guid_id_contains_no_match : SpecificationBase
         {
             Establish context = () =>
@@ -36,11 +36,11 @@ namespace SisoDb.Specifications.QueryEngine
 
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
-                         _exists = TestContext.Database.ReadOnce().Exists<QueryGuidItem>(_fooId);
+                         _exists = TestContext.Database.UseOnceTo().Exists<QueryGuidItem>(_fooId);
 
             It should_return_false = () => _exists.ShouldBeFalse();
 

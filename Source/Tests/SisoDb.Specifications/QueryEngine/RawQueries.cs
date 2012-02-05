@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class RawQueries
     {
-        [Subject(typeof(IReadSession), "Raw Query")]
+        [Subject(typeof(ISession), "Raw Query")]
         public class when_raw_query_returns_no_result : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -18,7 +18,7 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
 				var query = new RawQuery(@"select '{}' as Json where 1=2;");
-                _fetchedStructures = TestContext.Database.ReadOnce().RawQuery<QueryGuidItem>(query).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().RawQuery<QueryGuidItem>(query).ToList();
             };
 
             It should_have_fetched_0_structures =
@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-		[Subject(typeof(IReadSession), "Raw Query as Json")]
+		[Subject(typeof(ISession), "Raw Query as Json")]
 		public class when_raw_query_returns_no_json_result : SpecificationBase
 		{
 			Establish context = () => TestContext = TestContextFactory.Create();
@@ -35,7 +35,7 @@ namespace SisoDb.Specifications.QueryEngine
 			Because of = () =>
 			{
 				var query = new RawQuery(@"select '{}' as Json where 1=2;");
-				_fetchedStructures = TestContext.Database.ReadOnce().RawQueryAsJson<QueryGuidItem>(query).ToList();
+				_fetchedStructures = TestContext.Database.UseOnceTo().RawQueryAsJson<QueryGuidItem>(query).ToList();
 			};
 
 			It should_have_fetched_0_structures =
@@ -44,14 +44,14 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<string> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "Raw Query")]
+		[Subject(typeof(ISession), "Raw Query")]
 		public class when_raw_query_with_parameters : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
 				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -61,7 +61,7 @@ namespace SisoDb.Specifications.QueryEngine
 					new DacParameter("minSortOrder", _structures[1].SortOrder),
 					new DacParameter("maxSortOrder", _structures[2].SortOrder));
 
-				_fetchedStructures = TestContext.Database.ReadOnce().RawQuery<QueryGuidItem>(query).ToList();
+				_fetchedStructures = TestContext.Database.UseOnceTo().RawQuery<QueryGuidItem>(query).ToList();
 			};
 
 			It should_have_fetched_two_structures =
@@ -77,14 +77,14 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-		[Subject(typeof(IReadSession), "Raw Query as Json")]
+		[Subject(typeof(ISession), "Raw Query as Json")]
 		public class when_raw_query_with_parameters_returning_json : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
 				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
@@ -94,7 +94,7 @@ namespace SisoDb.Specifications.QueryEngine
 					new DacParameter("minSortOrder", _structures[1].SortOrder),
 					new DacParameter("maxSortOrder", _structures[2].SortOrder));
 
-				_fetchedStructures = TestContext.Database.ReadOnce().RawQueryAsJson<QueryGuidItem>(query).ToList();
+				_fetchedStructures = TestContext.Database.UseOnceTo().RawQueryAsJson<QueryGuidItem>(query).ToList();
 			};
 
 			It should_have_fetched_two_structures =

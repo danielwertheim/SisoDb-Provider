@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
 {
     namespace QxAny
     {
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_strings_and_criteria_matches_first_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -19,10 +19,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{Strings = new[]{"Bravo", "Alpha"}},
                     new QueryItemForQxAnyQueries{Strings = new[]{"Charlie", "Delta"}}
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryItemForQxAnyQueries>().Where(i => i.Strings.QxAny(e => e == "Alpha")).ToList();
 
             It should_have_fetched_two_structures =
@@ -38,7 +38,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_strings_and_second_criteria_matches_middle_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -51,10 +51,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{Strings = new[]{"Charlie", "Delta", "Echo"}},
                     new QueryItemForQxAnyQueries{Strings = new[]{"Charlie", "Delta", "Echo"}}
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.Strings.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
 
             It should_have_fetched_two_structures =
@@ -70,7 +70,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_ints_and_criteria_matches_first_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -82,10 +82,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{Integers = new[]{2, 1}},
                     new QueryItemForQxAnyQueries{Integers = new[]{3, 4}}
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 1)).ToList();
 
             It should_have_fetched_two_structures =
@@ -101,7 +101,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_ints_and_criteria_matches_middle_element_in_array_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -114,10 +114,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{Integers = new[]{4, 5, 6}},
                     new QueryItemForQxAnyQueries{Integers = new[]{4, 5, 6}}
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 0 || e == 2)).ToList();
 
             It should_have_fetched_two_structures =
@@ -133,7 +133,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_strings_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -145,10 +145,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{StringList = new[]{"Bravo", "Alpha"}},
                     new QueryItemForQxAnyQueries{StringList = new[]{"Charlie", "Delta"}}
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Alpha")).ToList();
 
             It should_have_fetched_two_structures =
@@ -164,7 +164,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_strings_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -177,10 +177,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{StringList = new[]{"Charlie", "Delta", "Echo"}},
                     new QueryItemForQxAnyQueries{StringList = new[]{"Charlie", "Delta", "Echo"}}
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
 
             It should_have_fetched_two_structures =
@@ -196,7 +196,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_decimals_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -208,10 +208,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{DecimalList = new[]{2.12m, 1.11m}},
                     new QueryItemForQxAnyQueries{DecimalList = new[]{3.13m, 4.14m}}
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 1.11m)).ToList();
 
             It should_have_fetched_two_structures =
@@ -227,7 +227,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_decimals_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -240,10 +240,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                     new QueryItemForQxAnyQueries{DecimalList = new[]{4.14m, 5.15m, 6.16m}},
                     new QueryItemForQxAnyQueries{DecimalList = new[]{4.14m, 5.15m, 6.16m}},
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 0m || e == 2.12m)).ToList();
 
             It should_have_fetched_two_structures =
@@ -259,7 +259,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_child_list_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -289,10 +289,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                         }
                     }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 			   .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == -10)).ToList();
 
             It should_have_fetched_two_structures =
@@ -308,7 +308,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_child_list_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -338,10 +338,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                         }
                     }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == 0 || e.Int == 5)).ToList();
 
             It should_have_fetched_two_structures =
@@ -357,7 +357,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_list_on_child_list_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -387,10 +387,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                         }
                     }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == -10))).ToList();
 
             It should_have_fetched_two_structures =
@@ -406,7 +406,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_list_on_child_list_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -436,10 +436,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                         }
                     }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == 0 || il == 5))).ToList();
 
             It should_have_fetched_two_structures =
@@ -455,7 +455,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_grandchild_list_on_child_list_and_criteria_matches_first_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -485,10 +485,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                         }
                     }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == -10))).ToList();
 
             It should_have_fetched_two_structures =
@@ -504,7 +504,7 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "QxAny")]
+        [Subject(typeof(ISession), "QxAny")]
         public class when_querying_grandchild_list_on_child_list_and_second_criteria_matches_middle_element_in_list_for_two_items : SpecificationBase
         {
             Establish context = () =>
@@ -534,10 +534,10 @@ namespace SisoDb.Specifications.QueryEngine.EnumerableFunctions
                         }
                     }
                 };
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == 0 || gcl.Int == 5))).ToList();
 
             It should_have_fetched_two_structures =

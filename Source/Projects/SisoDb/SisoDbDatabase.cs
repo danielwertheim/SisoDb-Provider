@@ -170,21 +170,22 @@ namespace SisoDb
 
             lock (DbOperationsLock)
             {
-                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+                SisoDbTransaction.ExecuteRequired(t =>
                 {
-                    foreach (var type in types)
+                    using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
                     {
-						if (CachingIsEnabled && CacheProvider.Handles(type))
-							CacheProvider[type].Clear();
-                        var structureSchema = _structureSchemas.GetSchema(type);
+                        foreach (var type in types)
+                        {
+                            if (CachingIsEnabled && CacheProvider.Handles(type))
+                                CacheProvider[type].Clear();
+                            var structureSchema = _structureSchemas.GetSchema(type);
 
-                        SchemaManager.DropStructureSet(structureSchema, dbClient);
+                            SchemaManager.DropStructureSet(structureSchema, dbClient);
 
-                        _structureSchemas.RemoveSchema(type);
+                            _structureSchemas.RemoveSchema(type);
+                        }
                     }
-
-					dbClient.Commit();
-                }
+                });
             }
         }
 
@@ -201,69 +202,29 @@ namespace SisoDb
             {
 				if (CachingIsEnabled && CacheProvider.Handles(type))
 					CacheProvider[type].Clear();
-                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+
+                SisoDbTransaction.ExecuteRequired(t =>
                 {
-                    var structureSchema = _structureSchemas.GetSchema(type);
-                    SchemaManager.UpsertStructureSet(structureSchema, dbClient);
-
-                    dbClient.Commit();
-                }
+                    using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
+                    {
+                        var structureSchema = _structureSchemas.GetSchema(type);
+                        SchemaManager.UpsertStructureSet(structureSchema, dbClient);
+                    }
+                });
             }
         }
 
-    	public virtual IReadSession BeginReadSession()
+    	public virtual ISession BeginSession()
     	{
-    		return CreateReadSession();
+    		return CreateSession();
     	}
 
-    	public virtual IWriteSession BeginWriteSession()
-    	{
-    		return new DbWriteSessionProxy(CreateWriteSession());
-    	}
-
-		protected abstract DbReadSession CreateReadSession();
-		protected abstract DbWriteSession CreateWriteSession();
+		protected abstract DbSession CreateSession();
 
     	[DebuggerStepThrough]
-        public IReadOnce ReadOnce()
+        public ISingleOperationSession UseOnceTo()
         {
-            return new DbReadOnce(this);
+            return new DbSingleOperationSession(this);
         }
-
-    	[DebuggerStepThrough]
-        public IWriteOnce WriteOnce()
-        {
-            return new DbWriteOnce(this);
-        }
-
-    	[DebuggerStepThrough]
-		[Obsolete("Will be removed in version 10.0")]
-        public void WithWriteSession(Action<IWriteSession> consumer)
-        {
-            using (var session = BeginWriteSession())
-            {
-				consumer.Invoke(session);
-            }
-        }
-
-    	[DebuggerStepThrough]
-        [Obsolete("Will be removed in version 10.0")]
-        public void WithReadSession(Action<IReadSession> consumer)
-        {
-			using (var session = BeginReadSession())
-            {
-				consumer.Invoke(session);
-            }
-        }
-
-		[DebuggerStepThrough]
-        [Obsolete("Will be removed in version 10.0")]
-		public T WithReadSession<T>(Func<IReadSession, T> consumer)
-		{
-			using (var session = BeginReadSession())
-			{
-				return consumer.Invoke(session);
-			}
-		}
     }
 }

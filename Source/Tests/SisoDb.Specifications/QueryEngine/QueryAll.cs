@@ -8,13 +8,13 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class QueryAll
     {
-        [Subject(typeof(IWriteSession), "Query all")]
+        [Subject(typeof(ISession), "Query all")]
         public class when_set_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
             
             Because of = () =>
-                _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().ToList();
 
             It should_fetch_0_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -22,13 +22,13 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Query all as Json")]
+        [Subject(typeof(ISession), "Query all as Json")]
         public class when_set_of_json_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
             Because of = () =>
-				_fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().ToListOfJson();
+				_fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().ToListOfJson();
 
             It should_fetch_0_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -36,18 +36,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Query all")]
+        [Subject(typeof(ISession), "Query all")]
         public class when_set_contains_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().ToList();
+				() => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -64,18 +64,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Query all as Json")]
+        [Subject(typeof(ISession), "Query all as Json")]
         public class when_set_contains_four_json_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().ToListOfJson();
+				() => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().ToListOfJson();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -92,18 +92,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Query all, with sorting")]
+        [Subject(typeof(ISession), "Query all, with sorting")]
         public class when_set_contains_four_items_inserted_unordered : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().OrderBy(i => i.SortOrder).ToList();
+				() => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().OrderBy(i => i.SortOrder).ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -120,18 +120,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Query all as Json, with sorting")]
+        [Subject(typeof(ISession), "Query all as Json, with sorting")]
         public class when_set_contains_four_json_items_inserted_unordered : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().OrderBy(i => i.SortOrder).ToListOfJson();
+				() => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().OrderBy(i => i.SortOrder).ToListOfJson();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -148,18 +148,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Query all, with multiple sorting")]
+        [Subject(typeof(ISession), "Query all, with multiple sorting")]
         public class when_set_contains_four_items_inserted_unordered_and_sorted_by_two_criterias : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().OrderBy(i => i.SortOrder, i => i.StringValue).ToList();
+				() => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().OrderBy(i => i.SortOrder, i => i.StringValue).ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);
@@ -176,18 +176,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Query all, with sorting")]
+        [Subject(typeof(ISession), "Query all, with sorting")]
         public class when_set_contains_four_items_inserted_unordered_and_sorting_on_different_members_but_same_datatype : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of =
-				() => _fetchedStructures = TestContext.Database.ReadOnce().Query<QueryGuidItem>().OrderBy(i => i.SortOrder, i => i.IntegerValue).ToList();
+				() => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().OrderBy(i => i.SortOrder, i => i.IntegerValue).ToList();
 
             It should_fetch_all_4_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);

@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.UnitOfWork
 #if Sql2008Provider || Sql2012Provider
 	class TransactionScopes
     {
-        [Subject(typeof(IWriteSession), "Transaction scopes")]
+        [Subject(typeof(ISession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_commiting_ts : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -17,7 +17,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var ts = new TransactionScope())
                 {
-                    using (var session = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginSession())
                     {
                         session.InsertMany(new[]
                         {
@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.UnitOfWork
                         });
                     }
 
-                    using (var session = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginSession())
                     {
                         session.InsertMany(new[]
                         {
@@ -41,14 +41,14 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                 {
 					session.Query<IdentityItem>().Count().ShouldEqual(0);
                 }
             };
         }
 
-        [Subject(typeof(IWriteSession), "Transaction scopes")]
+        [Subject(typeof(ISession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_committing_uow_but_committing_ts : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -57,7 +57,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var ts = new TransactionScope())
                 {
-                    using (var session = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginSession())
                     {
                         session.InsertMany(new[]
                         {
@@ -67,7 +67,7 @@ namespace SisoDb.Specifications.UnitOfWork
                         });
                     }
 
-                    using (var session = TestContext.Database.BeginWriteSession())
+                    using (var session = TestContext.Database.BeginSession())
                     {
                         session.InsertMany(new[]
                         {
@@ -83,7 +83,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_not_have_inserted_anything = () =>
             {
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                 {
 					session.Query<IdentityItem>().Count().ShouldEqual(6);
                 }

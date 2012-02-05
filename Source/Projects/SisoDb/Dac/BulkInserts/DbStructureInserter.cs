@@ -36,9 +36,9 @@ namespace SisoDb.Dac.BulkInserts
 			else
 				BulkInsertStructures(structureSchema, structures);
 
-			InsertIndexes(structureSchema, structures);
+            BulkInsertUniques(structureSchema, structures);
 
-			BulkInsertUniques(structureSchema, structures);
+			InsertIndexes(structureSchema, structures);
 		}
 
 		protected virtual void SingleInsertStructure(IStructureSchema structureSchema, IStructure structure)

@@ -35,14 +35,9 @@ namespace SisoDb.Sql2012
             return new Sql2012ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2012DbClient(connectionInfo, true, _connectionManager, _sqlStatements);
-        }
-
-        public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
-        {
-			return new Sql2012DbClient(connectionInfo, false, _connectionManager, _sqlStatements);
+            return new Sql2012DbClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()
@@ -55,9 +50,9 @@ namespace SisoDb.Sql2012
             return new DbStructureInserter(dbClient);
         }
 
-    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
+    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
     	{
-    		return new DbIdentityStructureIdGenerator(dbClient);
+    		return new DbIdentityStructureIdGenerator(action);
     	}
 
     	public virtual IDbQueryGenerator GetDbQueryGenerator()

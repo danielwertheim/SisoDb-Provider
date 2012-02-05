@@ -35,14 +35,9 @@ namespace SisoDb.SqlCe4
             return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
         {
-			return new SqlCe4DbClient(connectionInfo, true, _connectionManager, _sqlStatements);
-        }
-
-        public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
-        {
-			return new SqlCe4DbClient(connectionInfo, false, _connectionManager, _sqlStatements);
+			return new SqlCe4DbClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()
@@ -55,9 +50,9 @@ namespace SisoDb.SqlCe4
             return new DbStructureInserter(dbClient);
         }
 
-    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
+    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
     	{
-    		return new DbIdentityStructureIdGenerator(dbClient);
+    		return new DbIdentityStructureIdGenerator(action);
     	}
 
     	public virtual IDbQueryGenerator GetDbQueryGenerator()

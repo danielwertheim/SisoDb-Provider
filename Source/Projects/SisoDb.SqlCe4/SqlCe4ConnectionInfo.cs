@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlServerCe;
-using System.Globalization;
 using System.IO;
 using System.Web;
 using NCore;
@@ -49,7 +48,10 @@ namespace SisoDb.SqlCe4
 
         private void InitializeDbNameAndServerConnectionString()
         {
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(ConnectionString.PlainString);
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(ConnectionString.PlainString)
+            {
+                Enlist = true
+            };
 
             _filePath = cnStringBuilder.DataSource;
 

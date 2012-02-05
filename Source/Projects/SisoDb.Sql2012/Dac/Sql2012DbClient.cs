@@ -17,14 +17,14 @@ namespace SisoDb.Sql2012.Dac
     {
 		private const int MaxBatchedIdsSize = 100;
 
-		public Sql2012DbClient(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(connectionInfo, transactional, connectionManager, sqlStatements)
+		public Sql2012DbClient(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(connectionInfo, connectionManager, sqlStatements)
         {
         }
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new Sql2012DbBulkCopy((SqlConnection)Connection, (SqlTransaction)Transaction);
+            return new Sql2012DbBulkCopy((SqlConnection)Connection);
         }
 
         public override void Drop(IStructureSchema structureSchema)

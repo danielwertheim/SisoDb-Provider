@@ -9,18 +9,18 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class GetByIds
     {
-		[Subject(typeof(IWriteSession), "Get by Ids")]
+		[Subject(typeof(ISession), "Get by Ids")]
 		public class when_guid_id_array_matches_two_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
 				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-			    TestContext.Database.WriteOnce().InsertMany(_structures);
+			    TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
-				_fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryGuidItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
+				_fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryGuidItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
 
 			It should_fetch_2_structures =
 				() => _fetchedStructures.Count.ShouldEqual(2);
@@ -35,18 +35,18 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<QueryGuidItem> _fetchedStructures;
 		}
 
-        [Subject(typeof(IWriteSession), "Get by Ids")]
+        [Subject(typeof(ISession), "Get by Ids")]
         public class when_guid_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () => 
-                _fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
             
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -61,18 +61,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-		[Subject(typeof(IWriteSession), "Get by Ids")]
+		[Subject(typeof(ISession), "Get by Ids")]
 		public class when_string_id_array_matches_two_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
 				_structures = QueryStringItem.CreateFourItems<QueryStringItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
-				_fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryStringItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
+				_fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryStringItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
 
 			It should_fetch_2_structures =
 				() => _fetchedStructures.Count.ShouldEqual(2);
@@ -87,18 +87,18 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<QueryStringItem> _fetchedStructures;
 		}
 
-        [Subject(typeof(IWriteSession), "Get by Ids")]
+        [Subject(typeof(ISession), "Get by Ids")]
         public class when_string_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryStringItem.CreateFourItems<QueryStringItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryStringItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryStringItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -113,18 +113,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryStringItem> _fetchedStructures;
         }
 
-		[Subject(typeof(IWriteSession), "Get by Ids")]
+		[Subject(typeof(ISession), "Get by Ids")]
 		public class when_identity_id_array_matches_two_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
 				_structures = QueryIdentityItem.CreateFourItems<QueryIdentityItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
-				_fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryIdentityItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
+				_fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryIdentityItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
 
 			It should_fetch_2_structures =
 				() => _fetchedStructures.Count.ShouldEqual(2);
@@ -139,18 +139,18 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<QueryIdentityItem> _fetchedStructures;
 		}
 
-        [Subject(typeof(IWriteSession), "Get by Ids")]
+        [Subject(typeof(ISession), "Get by Ids")]
         public class when_identity_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryIdentityItem.CreateFourItems<QueryIdentityItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryIdentityItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryIdentityItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -165,18 +165,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryIdentityItem> _fetchedStructures;
         }
 
-		[Subject(typeof(IWriteSession), "Get by Ids")]
+		[Subject(typeof(ISession), "Get by Ids")]
 		public class when_big_identity_id_array_matches_two_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
 				_structures = QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
-				_fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryBigIdentityItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
+				_fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryBigIdentityItem>(new []{_structures[1].StructureId, _structures[2].StructureId}).ToList();
 
 			It should_fetch_2_structures =
 				() => _fetchedStructures.Count.ShouldEqual(2);
@@ -191,18 +191,18 @@ namespace SisoDb.Specifications.QueryEngine
 			private static IList<QueryBigIdentityItem> _fetchedStructures;
 		}
 
-        [Subject(typeof(IWriteSession), "Get by Ids")]
+        [Subject(typeof(ISession), "Get by Ids")]
         public class when_big_identity_id_set_matches_two_of_four_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryBigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryBigIdentityItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -217,19 +217,19 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryBigIdentityItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Ids")]
+        [Subject(typeof(ISession), "Get by Ids")]
         public class when_guid_id_set_matches_two_of_four_items_and_has_one_non_matching_id : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
                 _nonMatchingId = Guid.Parse("DA2809E1-17A2-4D6C-8546-E2A86D29CF2B");
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.ReadOnce().GetByIds<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().GetByIds<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -245,18 +245,18 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Ids as Json")]
+        [Subject(typeof(ISession), "Get by Ids as Json")]
         public class when_guid_id_set_matches_two_of_four_json_items : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.ReadOnce().GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().GetByIdsAsJson<QueryGuidItem>(_structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -271,19 +271,19 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(IWriteSession), "Get by Ids as Json")]
+        [Subject(typeof(ISession), "Get by Ids as Json")]
         public class when_guid_id_set_matches_two_of_four_json_items_and_has_one_non_matching_id : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
                 _nonMatchingId = Guid.Parse("81EC4983-F58B-4459-84F8-0D000F06F43D");
             };
 
             Because of = () =>
-                _fetchedStructures = TestContext.Database.ReadOnce().GetByIdsAsJson<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
+                _fetchedStructures = TestContext.Database.UseOnceTo().GetByIdsAsJson<QueryGuidItem>(_nonMatchingId, _structures[1].StructureId, _structures[2].StructureId).ToList();
 
             It should_fetch_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);

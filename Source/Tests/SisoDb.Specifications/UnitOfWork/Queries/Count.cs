@@ -6,14 +6,14 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class Count
 	{
-		[Subject(typeof(IWriteSession), "Count")]
+		[Subject(typeof(ISession), "Count")]
 		public class when_counting_using_expression_matching_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
 		{
 			Establish context = () => TestContext = TestContextFactory.Create();
 
 			Because of = () =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
 

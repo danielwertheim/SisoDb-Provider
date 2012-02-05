@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsIdBehavior
     {
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_4_identityitems : SpecificationBase
         {
             Establish context = () =>
@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.UnitOfWork
                             .ShouldEqual(4);
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_4_bigidentityitems : SpecificationBase
         {
             Establish context = () =>
@@ -49,7 +49,7 @@ namespace SisoDb.Specifications.UnitOfWork
                             .ShouldEqual(4);
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_guiditem_with_private_unassigned_id_setter : SpecificationBase
         {
             Establish context = () =>
@@ -60,7 +60,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -78,7 +78,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static GuidItemWithPrivateIdSetter _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_guiditem_with_private_assigned_id_setter : SpecificationBase
         {
             Establish context = () =>
@@ -90,7 +90,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -109,7 +109,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static Guid _orgId;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_guiditem_with_unassigned_nullable_id : SpecificationBase
         {
             Establish context = () =>
@@ -120,7 +120,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -145,7 +145,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static GuidItemWithNullableId _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_guiditem_with_assigned_nullable_id : SpecificationBase
         {
             Establish context = () =>
@@ -157,7 +157,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -176,7 +176,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static Guid? _orgId;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_identityitem_with_private_unassigned_id_setter : SpecificationBase
         {
             Establish context = () =>
@@ -187,7 +187,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -205,7 +205,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IdentityItemWithPrivateIdSetter _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_identityitem_with_private_assigned_id_setter : SpecificationBase
         {
             Establish context = () =>
@@ -217,7 +217,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -236,7 +236,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static int _orgId;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_identityitem_with_unassigned_nullable_id : SpecificationBase
         {
             Establish context = () =>
@@ -247,7 +247,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -272,7 +272,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IdentityItemWithNullableId _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_identityitem_with_assigned_nullable_id : SpecificationBase
         {
             Establish context = () =>
@@ -284,7 +284,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -303,7 +303,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static int? _orgId;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_bigidentityitem_with_private_unassigned_id_setter : SpecificationBase
         {
             Establish context = () =>
@@ -314,7 +314,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -332,7 +332,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static BigIdentityItemWithPrivateIdSetter _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_bigidentityitem_with_private_assigned_id_setter : SpecificationBase
         {
             Establish context = () =>
@@ -344,7 +344,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -363,7 +363,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static long _orgId;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_bigidentityitem_with_unassigned_nullable_id : SpecificationBase
         {
             Establish context = () =>
@@ -374,7 +374,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -399,7 +399,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static BigIdentityItemWithNullableId _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (id behavior)")]
+        [Subject(typeof(ISession), "Insert (id behavior)")]
         public class when_bigidentityitem_with_assigned_nullable_id : SpecificationBase
         {
             Establish context = () =>
@@ -411,7 +411,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
