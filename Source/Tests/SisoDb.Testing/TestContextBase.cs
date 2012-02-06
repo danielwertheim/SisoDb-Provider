@@ -5,7 +5,7 @@ namespace SisoDb.Testing
     public abstract class TestContextBase : ITestContext
     {
         public ISisoDatabase Database { get; private set; }
-        protected IDbProviderFactory ProviderFactory { get; private set; }
+        public IDbProviderFactory ProviderFactory { get; private set; }
         public ITestDbUtils DbHelper { get; protected set; }
         public ITestDbUtils DbHelperForServer { get; protected set; }
 

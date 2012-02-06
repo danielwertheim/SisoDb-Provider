@@ -35,7 +35,17 @@ namespace SisoDb.Sql2008
             return new Sql2008ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
+	    public ISisoTransaction GetRequiredTransaction()
+	    {
+	        return Sql2008DbTransaction.CreateRequired();
+	    }
+
+	    public ISisoTransaction GetSuppressedTransaction()
+	    {
+            return Sql2008DbTransaction.CreateSuppressed();
+	    }
+
+	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
         {
             return new Sql2008DbClient(connectionInfo, _connectionManager, _sqlStatements);
         }

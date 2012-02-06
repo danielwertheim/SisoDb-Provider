@@ -53,6 +53,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dac\Sql2012DbTransaction.cs" />
     <Compile Include="Dac\Sql2012DbBulkCopy.cs" />
     <Compile Include="Dac\Sql2012DbClient.cs" />
     <Compile Include="Dac\Sql2012IdsTableParam.cs" />

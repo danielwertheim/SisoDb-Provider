@@ -27,7 +27,7 @@ namespace SisoDb
         protected readonly ISisoDbDatabase Db;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlStatements SqlStatements;
-        protected ISisoDbTransaction Transaction;
+        protected ISisoTransaction Transaction;
         protected IDbClient TransactionalDbClient;
         protected IDbClient NonTransactionalDbClient;
 
@@ -54,10 +54,10 @@ namespace SisoDb
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
 
-            Transaction = SisoDbTransaction.CreateRequired();
+            Transaction = Db.ProviderFactory.GetRequiredTransaction();
             TransactionalDbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo);
 
-            using (SisoDbTransaction.CreateSuppressed())
+            using (Db.ProviderFactory.GetSuppressedTransaction())
                 NonTransactionalDbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo);
         }
 

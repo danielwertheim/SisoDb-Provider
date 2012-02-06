@@ -42,7 +42,7 @@ namespace SisoDb
                 Db.SchemaManager.RemoveFromCache(structureSchemaOld);
             }
 
-            using(var t = SisoDbTransaction.CreateRequired())
+            using (var t = Db.ProviderFactory.GetRequiredTransaction())
             {
                 using (var dbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo))
                 {
@@ -50,7 +50,7 @@ namespace SisoDb
                     {
                         Db.SchemaManager.UpsertStructureSet(structureSchemaNew, dbClient);
 
-                        if (OnUpdate(structureSchemaOld, structureSchemaNew, dbClient, modifier))
+                        if (!OnUpdate(structureSchemaOld, structureSchemaNew, dbClient, modifier))
                             t.MarkAsFailed();
                     }
                     finally
@@ -88,48 +88,53 @@ namespace SisoDb
             var keepQueue = new List<TNew>();
             var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaNew);
             var deleteIdInterval = new StructureIdInterval();
-
-            using(SisoDbTransaction.CreateSuppressed())
+            
+            using (var dbClient = GetNonTransactionalDbClient())
             {
-                using (var dbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo))
+                foreach (var json in dbClient.GetJsonOrderedByStructureId(structureSchemaOld))
                 {
-                    foreach (var json in dbClient.GetJsonOrderedByStructureId(structureSchemaOld))
+                    var oldItem = serializer.Deserialize<TOld>(json);
+                    var oldId = GetOldStructureId(structureSchemaOld, oldItem);
+
+                    var newItem = serializer.Deserialize<TNew>(json);
+
+                    var modifierStatus = modifier.Invoke(oldItem, newItem);
+                    if (modifierStatus == StructureSetMigratorStatuses.Abort)
+                        return false;
+
+                    var newId = GetNewStructureId(structureSchemaNew, newItem);
+                    EnsureNewIdEqualsOldId(oldId, newId);
+
+                    switch (modifierStatus)
                     {
-                        var oldItem = serializer.Deserialize<TOld>(json);
-                        var oldId = GetOldStructureId(structureSchemaOld, oldItem);
+                        case StructureSetMigratorStatuses.Keep:
+                            deleteIdInterval.Set(oldId);
+                            keepQueue.Add(newItem);
+                            break;
+                        case StructureSetMigratorStatuses.Trash:
+                            deleteIdInterval.Set(oldId);
+                            break;
+                    }
 
-                        var newItem = serializer.Deserialize<TNew>(json);
-
-                        var modifierStatus = modifier.Invoke(oldItem, newItem);
-                        if (modifierStatus == StructureSetMigratorStatuses.Abort)
-                            return false;
-
-                        var newId = GetNewStructureId(structureSchemaNew, newItem);
-                        EnsureNewIdEqualsOldId(oldId, newId);
-
-                        switch (modifierStatus)
-                        {
-                            case StructureSetMigratorStatuses.Keep:
-                                deleteIdInterval.Set(oldId);
-                                keepQueue.Add(newItem);
-                                break;
-                            case StructureSetMigratorStatuses.Trash:
-                                deleteIdInterval.Set(oldId);
-                                break;
-                        }
-
-                        if (keepQueue.Count == MaxKeepQueueSize)
-                        {
-                            ProcessTrashQueue(deleteIdInterval, structureSchemaOld, dbClientTransactional);
-                            ProcessKeepQueue(keepQueue, structureSchemaNew, dbClientTransactional, structureBuilder);
-                        }
+                    if (keepQueue.Count == MaxKeepQueueSize)
+                    {
+                        ProcessTrashQueue(deleteIdInterval, structureSchemaOld, dbClientTransactional);
+                        ProcessKeepQueue(keepQueue, structureSchemaNew, dbClientTransactional, structureBuilder);
                     }
                 }
+            }
 
-                ProcessTrashQueue(deleteIdInterval, structureSchemaOld, dbClientTransactional);
-                ProcessKeepQueue(keepQueue, structureSchemaNew, dbClientTransactional, structureBuilder);
+            ProcessTrashQueue(deleteIdInterval, structureSchemaOld, dbClientTransactional);
+            ProcessKeepQueue(keepQueue, structureSchemaNew, dbClientTransactional, structureBuilder);
 
-                return true;
+            return true;
+        }
+
+        private IDbClient GetNonTransactionalDbClient()
+        {
+            using (Db.ProviderFactory.GetSuppressedTransaction())
+            {
+                return Db.ProviderFactory.GetDbClient(Db.ConnectionInfo);
             }
         }
 

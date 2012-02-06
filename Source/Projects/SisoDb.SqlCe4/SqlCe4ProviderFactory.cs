@@ -35,7 +35,17 @@ namespace SisoDb.SqlCe4
             return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
+        public ISisoTransaction GetRequiredTransaction()
+        {
+            return SqlCe4DbTransaction.CreateRequired();
+        }
+
+        public ISisoTransaction GetSuppressedTransaction()
+        {
+            return SqlCe4DbTransaction.CreateSuppressed();
+        }
+
+	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
         {
 			return new SqlCe4DbClient(connectionInfo, _connectionManager, _sqlStatements);
         }

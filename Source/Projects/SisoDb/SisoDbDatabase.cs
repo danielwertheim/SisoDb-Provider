@@ -170,7 +170,7 @@ namespace SisoDb
 
             lock (DbOperationsLock)
             {
-                using(SisoDbTransaction.CreateRequired())
+                using(ProviderFactory.GetRequiredTransaction())
                 {
                     using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
                     {
@@ -203,7 +203,7 @@ namespace SisoDb
 				if (CachingIsEnabled && CacheProvider.Handles(type))
 					CacheProvider[type].Clear();
 
-                using(SisoDbTransaction.CreateRequired())
+                using (ProviderFactory.GetRequiredTransaction())
                 {
                     using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
                     {

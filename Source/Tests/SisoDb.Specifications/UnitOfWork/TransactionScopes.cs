@@ -1,6 +1,4 @@
-﻿using System.Transactions;
-using Machine.Specifications;
-using SisoDb.Dac;
+﻿using Machine.Specifications;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
 
@@ -16,7 +14,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             private Because of = () =>
             {
-                using (var t = SisoDbTransaction.CreateRequired())
+                using (var t = TestContext.ProviderFactory.GetRequiredTransaction())
                 {
                     using (var session = TestContext.Database.BeginSession())
                     {
@@ -57,7 +55,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             private Because of = () =>
             {
-                using (var t = SisoDbTransaction.CreateRequired())
+                using (var t = TestContext.ProviderFactory.GetRequiredTransaction())
                 {
                     using (var session = TestContext.Database.BeginSession())
                     {

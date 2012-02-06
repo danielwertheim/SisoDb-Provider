@@ -1,8 +1,8 @@
 using System;
 
-namespace SisoDb.Dac
+namespace SisoDb
 {
-    public interface ISisoDbTransaction : IDisposable
+    public interface ISisoTransaction : IDisposable
     {
         bool Failed { get; set; }
         void MarkAsFailed();

@@ -35,7 +35,17 @@ namespace SisoDb.Sql2012
             return new Sql2012ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
+        public ISisoTransaction GetRequiredTransaction()
+        {
+            return Sql2012DbTransaction.CreateRequired();
+        }
+
+        public ISisoTransaction GetSuppressedTransaction()
+        {
+            return Sql2012DbTransaction.CreateSuppressed();
+        }
+
+	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
         {
             return new Sql2012DbClient(connectionInfo, _connectionManager, _sqlStatements);
         }
