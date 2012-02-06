@@ -1,6 +1,5 @@
 using System;
 using System.Transactions;
-using EnsureThat;
 using SisoDb.Resources;
 
 namespace SisoDb.Dac
@@ -9,6 +8,8 @@ namespace SisoDb.Dac
     {
         private readonly TransactionScopeOption _option;
         private TransactionScope _ts;
+        //private DependentTransaction _dt;
+        private Transaction _old;
 
         public bool Failed { get; set; }
 
@@ -23,19 +24,47 @@ namespace SisoDb.Dac
         private SisoDbTransaction(TransactionScopeOption option)
         {
             _option = option;
-            _ts = new TransactionScope(_option, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted });
+            _old = Transaction.Current;
+
+            //if (option == TransactionScopeOption.Suppress)
+            //{
+            //    _ts = new TransactionScope(_option, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }, EnterpriseServicesInteropOption.None);
+            //    return;
+            //}
+
+            _ts = new TransactionScope(_option, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }, EnterpriseServicesInteropOption.None);
+
+            //if (_old != null)
+            //{
+            //    _dt = _old.DependentClone(DependentCloneOption.BlockCommitUntilComplete);
+            //    Transaction.Current = _dt;
+            //}
         }
-        
+
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
+
+            //if (_dt != null)
+            //{
+            //    if (Failed)
+            //        _dt.Rollback();
+
+            //    _dt.Complete();
+            //    _dt.Dispose();
+            //    _dt = null;
+            //}
+
             if (_ts != null)
             {
-                if (!Failed)
+                if (!Failed && _option != TransactionScopeOption.Suppress)
                     _ts.Complete();
 
                 _ts.Dispose();
                 _ts = null;
             }
+
+            Transaction.Current = _old;
         }
 
         public static ISisoDbTransaction CreateRequired()
@@ -74,61 +103,62 @@ namespace SisoDb.Dac
             }
         }
 
-        public static void ExecuteRequired(Action<ISisoDbTransaction> action)
-        {
-            Ensure.That(action, "action").IsNotNull();
+        //public static void ExecuteRequired(Action<ISisoDbTransaction> action)
+        //{
+        //    Ensure.That(action, "action").IsNotNull();
 
-            using (var t = new SisoDbTransaction(TransactionScopeOption.Required))
-            {
-                try
-                {
-                    action.Invoke(t);
-                }
-                catch
-                {
-                    t.MarkAsFailed();
-                    throw;
-                }
-            }
-        }
+        //    using (var t = new SisoDbTransaction(TransactionScopeOption.Required))
+        //    {
+        //        try
+        //        {
+        //            action.Invoke(t);
+        //        }
+        //        catch
+        //        {
+        //            t.MarkAsFailed();
+        //            throw;
+        //        }
+        //    }
+        //}
 
-        public static T ExecuteRequired<T>(Func<ISisoDbTransaction, T> action)
-        {
-            Ensure.That(action, "action").IsNotNull();
-                        
-            using (var t = new SisoDbTransaction(TransactionScopeOption.Required))
-            {
-                T r;
+        //public static T ExecuteRequired<T>(Func<ISisoDbTransaction, T> action)
+        //{
+        //    Ensure.That(action, "action").IsNotNull();
 
-                try
-                {
-                    r = action.Invoke(t);
-                }
-                catch
-                {
-                    t.MarkAsFailed();
-                    throw;
-                }
-                return r;
-            }
-        }
+        //    using (var t = new SisoDbTransaction(TransactionScopeOption.Required))
+        //    {
+        //        T r;
 
-        public static void ExecuteSuppressed(Action action)
-        {
-            Ensure.That(action, "action").IsNotNull();
+        //        try
+        //        {
+        //            r = action.Invoke(t);
+        //        }
+        //        catch
+        //        {
+        //            t.MarkAsFailed();
+        //            throw;
+        //        }
+        //        return r;
+        //    }
+        //}
 
-            using (new SisoDbTransaction(TransactionScopeOption.Suppress)) {
-                action.Invoke();
-            }
-        }
+        //public static void ExecuteSuppressed(Action action)
+        //{
+        //    Ensure.That(action, "action").IsNotNull();
 
-        public static T ExecuteSuppressed<T>(Func<T> action)
-        {
-            Ensure.That(action, "action").IsNotNull();
+        //    using (new SisoDbTransaction(TransactionScopeOption.Suppress)) {
+        //        action.Invoke();
+        //    }
+        //}
 
-            using (new SisoDbTransaction(TransactionScopeOption.Suppress)) {
-                return action.Invoke();
-            }
-        }
+        //public static T ExecuteSuppressed<T>(Func<T> action)
+        //{
+        //    Ensure.That(action, "action").IsNotNull();
+
+        //    using (new SisoDbTransaction(TransactionScopeOption.Suppress))
+        //    {
+        //        return action.Invoke();
+        //    }
+        //}
     }
 }

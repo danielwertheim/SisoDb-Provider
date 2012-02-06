@@ -170,7 +170,7 @@ namespace SisoDb
 
             lock (DbOperationsLock)
             {
-                SisoDbTransaction.ExecuteRequired(t =>
+                using(SisoDbTransaction.CreateRequired())
                 {
                     using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
                     {
@@ -185,7 +185,7 @@ namespace SisoDb
                             _structureSchemas.RemoveSchema(type);
                         }
                     }
-                });
+                }
             }
         }
 
@@ -203,14 +203,14 @@ namespace SisoDb
 				if (CachingIsEnabled && CacheProvider.Handles(type))
 					CacheProvider[type].Clear();
 
-                SisoDbTransaction.ExecuteRequired(t =>
+                using(SisoDbTransaction.CreateRequired())
                 {
                     using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
                     {
                         var structureSchema = _structureSchemas.GetSchema(type);
                         SchemaManager.UpsertStructureSet(structureSchema, dbClient);
                     }
-                });
+                }
             }
         }
 

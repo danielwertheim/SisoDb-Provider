@@ -268,7 +268,9 @@ namespace SisoDb
             Ensure.That(idTo, "idTo").IsNotNull();
 
             using (var session = _db.BeginSession())
+            {
                 session.DeleteByIdInterval<T>(idFrom, idTo);
+            }
         }
 
         public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class

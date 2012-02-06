@@ -78,7 +78,7 @@ namespace SisoDb.Querying
 			return ToEnumerableOf<TResult>().ToList();
 		}
         
-	    public IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
+	    public virtual IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
 	    {
 	        Ensure.That(template, "template").IsNotNull();
 

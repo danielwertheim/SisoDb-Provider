@@ -102,6 +102,14 @@ namespace SisoDb.Querying
 			}
 		}
 
+        public override TResult[] ToArrayOf<TResult>(TResult template)
+        {
+            using (var session = Session)
+            {
+                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template).ToArray();
+            }
+        }
+
 		public override string[] ToArrayOfJson()
 		{
 			using (var session = Session)
@@ -120,12 +128,17 @@ namespace SisoDb.Querying
 			throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 		}
 
-		public override IEnumerable<string> ToEnumerableOfJson()
+	    public override IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template)
+	    {
+	        throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
+	    }
+
+	    public override IEnumerable<string> ToEnumerableOfJson()
 		{
 			throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 		}
 
-		public override IList<T> ToList()
+	    public override IList<T> ToList()
 		{
 			using (var session = Session)
 			{
@@ -133,7 +146,7 @@ namespace SisoDb.Querying
 			}
 		}
 
-		public override IList<TResult> ToListOf<TResult>()
+	    public override IList<TResult> ToListOf<TResult>()
 		{
 			using (var session = Session)
 			{
@@ -141,7 +154,15 @@ namespace SisoDb.Querying
 			}
 		}
 
-		public override IList<string> ToListOfJson()
+        public override IList<TResult> ToListOf<TResult>(TResult template)
+        {
+            using (var session = Session)
+            {
+                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template).ToList();
+            }
+        }
+
+	    public override IList<string> ToListOfJson()
 		{
 			using (var session = Session)
 			{
@@ -149,7 +170,7 @@ namespace SisoDb.Querying
 			}
 		}
 
-		public override T Single()
+	    public override T Single()
 		{
 			using (var session = Session)
 			{

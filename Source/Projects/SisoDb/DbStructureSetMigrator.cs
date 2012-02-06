@@ -42,7 +42,7 @@ namespace SisoDb
                 Db.SchemaManager.RemoveFromCache(structureSchemaOld);
             }
 
-            SisoDbTransaction.ExecuteRequired(t =>
+            using(var t = SisoDbTransaction.CreateRequired())
             {
                 using (var dbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo))
                 {
@@ -62,7 +62,7 @@ namespace SisoDb
                         }
                     }
                 }
-            });
+            }
         }
 
         protected void EnsureThatTypesAreNotTheSame(Type newType, Type oldType)
@@ -89,7 +89,7 @@ namespace SisoDb
             var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaNew);
             var deleteIdInterval = new StructureIdInterval();
 
-            return SisoDbTransaction.ExecuteSuppressed(() =>
+            using(SisoDbTransaction.CreateSuppressed())
             {
                 using (var dbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo))
                 {
@@ -130,7 +130,7 @@ namespace SisoDb
                 ProcessKeepQueue(keepQueue, structureSchemaNew, dbClientTransactional, structureBuilder);
 
                 return true;
-            });
+            }
         }
 
         protected IStructureId GetOldStructureId<T>(IStructureSchema structureSchema, T oldStructure) where T : class
