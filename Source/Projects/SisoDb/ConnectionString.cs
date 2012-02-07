@@ -25,6 +25,11 @@ namespace SisoDb
             get { return _sisoDbKeyValues["provider"]; }
         }
 
+        public string ParallelInserts
+        {
+            get { return _sisoDbKeyValues["parallelinserts"]; }
+        }
+
         public ConnectionString(string value)
         {
             Ensure.That(value, "value").IsNotNullOrWhiteSpace();
@@ -46,7 +51,7 @@ namespace SisoDb
 
         private static string[] GetParts(string value)
         {
-            var parts = value.Split(new string[]{"||"}, StringSplitOptions.RemoveEmptyEntries);
+            var parts = value.Split(new[]{"||"}, StringSplitOptions.RemoveEmptyEntries);
 
             if (parts.Length != 2)
                 throw new ArgumentException(ExceptionMessages.ConnectionString_MissingParts.Inject(SisoDbMarker, PlainMarker, Example));
@@ -57,11 +62,13 @@ namespace SisoDb
         private void InitializeSisoDbKeyValues()
         {
             _sisoDbKeyValues = new Dictionary<string, string>();
+            _sisoDbKeyValues["provider"] = string.Empty;
+            _sisoDbKeyValues["parallelinserts"] = string.Empty;
 
             var keyValues = SisoDbString.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (var parts in
                 keyValues.Select(keyValue => keyValue.Split("=".ToCharArray(), StringSplitOptions.None)))
-                _sisoDbKeyValues.Add(parts[0].ToLower(), parts[1]);
+                _sisoDbKeyValues[parts[0].ToLower()] = parts[1] ?? string.Empty;
 
             EnsureRequiredSisoDbKeysExists();
         }

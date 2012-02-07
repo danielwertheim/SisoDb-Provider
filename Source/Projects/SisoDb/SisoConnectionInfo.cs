@@ -11,6 +11,8 @@ namespace SisoDb
 
         public StorageProviders ProviderType { get; private set; }
 
+        public ParallelInserts ParallelInserts { get; private set; }
+
         public IConnectionString ConnectionString { get; private set; }
 
         public abstract IConnectionString ServerConnectionString { get; }
@@ -26,6 +28,9 @@ namespace SisoDb
             ConnectionString = connectionString;
 
             ProviderType = (StorageProviders)Enum.Parse(typeof(StorageProviders), ConnectionString.Provider, true);
+
+            if(!string.IsNullOrWhiteSpace(ConnectionString.ParallelInserts))
+                ParallelInserts = (ParallelInserts)Enum.Parse(typeof(ParallelInserts), ConnectionString.ParallelInserts, true);
         }
 
         protected static IConnectionString GetConnectionString(string connectionStringOrName)

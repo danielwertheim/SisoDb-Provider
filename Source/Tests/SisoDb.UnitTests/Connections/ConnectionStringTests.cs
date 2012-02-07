@@ -107,13 +107,5 @@ namespace SisoDb.UnitTests.Connections
                 "The connectionstring is missing the Plain-part, indicated by 'plain:'." +
                 " Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
         }
-
-        [Test]
-        public void CnString_SisoDbPartMissesStorageProviderKey_ThrowsArgumentException()
-        {
-            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("sisodb:k1=v1||plain:x"));
-
-            Assert.AreEqual("The SisoDb-part is missing required key: 'provider'.", ex.Message);
-        }
     }
 }
