@@ -14,8 +14,9 @@ namespace SisoDb.Dac
 {
 	public abstract class DbClientBase : IDbClient
 	{
-		protected readonly ISisoConnectionInfo ConnectionInfo;
-		protected readonly IConnectionManager ConnectionManager;
+        public ISisoConnectionInfo ConnectionInfo { get; private set; }
+
+	    protected readonly IConnectionManager ConnectionManager;
         protected IDbConnection Connection;
 		protected readonly ISqlStatements SqlStatements;
 

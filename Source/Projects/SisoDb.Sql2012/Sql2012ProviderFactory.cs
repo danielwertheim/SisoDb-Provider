@@ -1,4 +1,5 @@
-﻿using PineCone.Structures.Schemas;
+﻿using System;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -57,7 +58,7 @@ namespace SisoDb.Sql2012
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
-            return new DbStructureInserter(dbClient);
+            return new DbStructureInserter(dbClient, () => GetDbClient(dbClient.ConnectionInfo));
         }
 
     	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)

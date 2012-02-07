@@ -10,7 +10,9 @@ namespace SisoDb.Dac
 {
     public interface IDbClient : IDisposable
     {
-		IDbBulkCopy GetBulkCopy();
+        ISisoConnectionInfo ConnectionInfo { get; }
+
+        IDbBulkCopy GetBulkCopy();
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
 		void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
