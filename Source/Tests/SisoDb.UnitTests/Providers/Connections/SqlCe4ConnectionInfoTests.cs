@@ -61,5 +61,19 @@ namespace SisoDb.UnitTests.Providers.Connections
 
             Assert.AreEqual("SisoDbTestsTemp", cnInfo.DbName);
         }
+
+        [Test]
+        public void Ctor_WhenCorrectConnectionString_PartsExtracted()
+        {
+            var cnString = new ConnectionString(@"sisodb:provider=SqlCe4;parallelinsertmode=Full||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;");
+
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
+
+            Assert.AreEqual(StorageProviders.SqlCe4, cnInfo.ProviderType);
+            Assert.AreEqual(ParallelInsertMode.Full, cnInfo.ParallelInsertMode);
+            Assert.AreEqual("SisoDbTestsTemp", cnInfo.DbName);
+            Assert.AreEqual(@"Data Source=d:\#Temp\SisoDb;Enlist=True", cnInfo.ServerConnectionString.PlainString);
+            Assert.AreEqual(@"data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;", cnInfo.ConnectionString.PlainString);
+        }
     }
 }
