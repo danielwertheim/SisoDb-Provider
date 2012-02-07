@@ -223,7 +223,7 @@ namespace SisoDb.Dac.BulkInserts
                 case DataTypeCode.Unknown:
                     container.Data = container.Data.Where(i => i.DataType == TextType).ToArray();
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data), dbClient);
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data), dbClient);
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => SingleInsertIntoStringishIndexesOfX(indexesTableNames.TextsTableName, data[0], dbClient);
                     break;
