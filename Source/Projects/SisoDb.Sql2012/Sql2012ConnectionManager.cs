@@ -18,9 +18,7 @@ namespace SisoDb.Sql2012
 			if (dbConnection == null)
 				return;
 
-			if (dbConnection.State != ConnectionState.Closed)
-				dbConnection.Close();
-
+            dbConnection.Close();
 			dbConnection.Dispose();
 		}
 
@@ -39,9 +37,7 @@ namespace SisoDb.Sql2012
 			if (dbConnection == null)
 				return;
 
-			if (dbConnection.State != ConnectionState.Closed)
-				dbConnection.Close();
-
+            dbConnection.Close();
 			dbConnection.Dispose();
 		}
 	}

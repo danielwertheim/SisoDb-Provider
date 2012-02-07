@@ -3,7 +3,7 @@ using System;
 namespace SisoDb
 {
     [Serializable]
-    public enum ParallelInserts
+    public enum ParallelInsertMode
     {
         /// <summary>
         /// Default. Within the same insert operation, NO parallel inserts are made.

@@ -8,7 +8,7 @@
 
         string Provider { get; }
 
-        string ParallelInserts { get; }
+        string ParallelInsertMode { get; }
 
         IConnectionString ReplacePlain(string plainString);
     }

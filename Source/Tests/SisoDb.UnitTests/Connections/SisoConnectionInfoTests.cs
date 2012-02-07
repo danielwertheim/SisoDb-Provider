@@ -18,25 +18,25 @@ namespace SisoDb.UnitTests.Connections
         }
 
         [Test]
-        public void ParallelInserts_WhenValueIsSimple_ValueIsReflectedInProperty()
+        public void ParallelInsertMode_WhenValueIsSimple_ValueIsReflectedInProperty()
         {
             var connectionStringFake = new Mock<IConnectionString>();
             connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
-            connectionStringFake.Setup(f => f.ParallelInserts).Returns(ParallelInserts.Simple.ToString());
+            connectionStringFake.Setup(f => f.ParallelInsertMode).Returns(ParallelInsertMode.Simple.ToString());
             var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
-            Assert.AreEqual(ParallelInserts.Simple, connectionInfo.ParallelInserts);
+            Assert.AreEqual(ParallelInsertMode.Simple, connectionInfo.ParallelInsertMode);
         }
 
         [Test]
-        public void ParallelInserts_WhenNoValueIsSpecified_ValueIsNone()
+        public void ParallelInsertMode_WhenNoValueIsSpecified_ValueIsNone()
         {
             var connectionStringFake = new Mock<IConnectionString>();
             connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
-            connectionStringFake.Setup(f => f.ParallelInserts).Returns(null as string);
+            connectionStringFake.Setup(f => f.ParallelInsertMode).Returns(null as string);
             var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
-            Assert.AreEqual(ParallelInserts.None, connectionInfo.ParallelInserts);
+            Assert.AreEqual(ParallelInsertMode.None, connectionInfo.ParallelInsertMode);
         }
 
         [Test]

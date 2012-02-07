@@ -25,9 +25,9 @@ namespace SisoDb
             get { return _sisoDbKeyValues["provider"]; }
         }
 
-        public string ParallelInserts
+        public string ParallelInsertMode
         {
-            get { return _sisoDbKeyValues["parallelinserts"]; }
+            get { return _sisoDbKeyValues["parallelinsertmode"]; }
         }
 
         public ConnectionString(string value)
@@ -63,7 +63,7 @@ namespace SisoDb
         {
             _sisoDbKeyValues = new Dictionary<string, string>();
             _sisoDbKeyValues["provider"] = string.Empty;
-            _sisoDbKeyValues["parallelinserts"] = string.Empty;
+            _sisoDbKeyValues["parallelinsertmode"] = string.Empty;
 
             var keyValues = SisoDbString.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (var parts in

@@ -33,9 +33,7 @@ namespace SisoDb.SqlCe4
 			if (dbConnection == null)
 				return;
 
-			if (dbConnection.State != ConnectionState.Closed)
-				dbConnection.Close();
-
+			dbConnection.Close();
 			dbConnection.Dispose();
 		}
 
@@ -70,9 +68,7 @@ namespace SisoDb.SqlCe4
 								IDbConnection cn;
 								if (connections.TryTake(out cn) && cn != null)
 								{
-									if (cn.State != ConnectionState.Closed)
-										cn.Close();
-
+									cn.Close();
 									cn.Dispose();
 								}
 							}

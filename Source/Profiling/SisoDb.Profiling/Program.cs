@@ -36,8 +36,8 @@ namespace SisoDb.Profiling
 
 			//ProfilingUpdateMany(db, 500, 550);
 
-            //Console.WriteLine("---- Done ----");
-            //Console.ReadKey();
+            Console.WriteLine("---- Done ----");
+            Console.ReadKey();
         }
 
 		private static void ProfilingUpdateMany(ISisoDatabase database, int customerNoFrom, int customerNoTo)
