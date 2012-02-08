@@ -41,7 +41,7 @@ namespace SisoDb.UnitTests.Providers.Connections
             Assert.AreEqual(ParallelInsertMode.Full, cnInfo.ParallelInsertMode);
             Assert.AreEqual("SisoDbTests.Temp", cnInfo.DbName);
             Assert.AreEqual(@"Data Source=.;Initial Catalog=;Integrated Security=True", cnInfo.ServerConnectionString.PlainString);
-            Assert.AreEqual(@"data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;", cnInfo.ConnectionString.PlainString);
+            Assert.AreEqual(@"data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;", cnInfo.ClientConnectionString.PlainString);
         }
     }
 }

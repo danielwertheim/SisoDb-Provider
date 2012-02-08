@@ -28,7 +28,7 @@ namespace SisoDb.Dac
 
 			ConnectionInfo = connectionInfo;
 			ConnectionManager = connectionManager;
-            Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
+            Connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
             SqlStatements = sqlStatements;
 		}
 
@@ -39,7 +39,7 @@ namespace SisoDb.Dac
             if (Connection == null)
                 return;
 
-            ConnectionManager.ReleaseDbConnection(Connection);
+            ConnectionManager.ReleaseClientDbConnection(Connection);
             Connection = null;
         }
 

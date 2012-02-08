@@ -40,14 +40,6 @@ namespace SisoDb.UnitTests.Connections
         }
 
         [Test]
-        public void Constructor_WhenNoConnectionStringOrNameIsPassed_ThrowsArgumentException()
-        {
-            var ex = Assert.Throws<ArgumentException>(() => new SisoConnectionInfoImplementation(null as string));
-
-            Assert.AreEqual("connectionStringOrName", ex.ParamName);
-        }
-
-        [Test]
         public void Constructor_WhenNoConnectionStringIsPassed_ThrowsArgumentNullException()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => new SisoConnectionInfoImplementation(null as IConnectionString));
@@ -58,9 +50,6 @@ namespace SisoDb.UnitTests.Connections
         private class SisoConnectionInfoImplementation : SisoConnectionInfo
         {
             public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(connectionString)
-            {}
-
-            public SisoConnectionInfoImplementation(string connectionStringOrName) : base(connectionStringOrName)
             {}
 
             public override string DbName

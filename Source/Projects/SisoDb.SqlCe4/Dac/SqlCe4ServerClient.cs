@@ -32,7 +32,7 @@ namespace SisoDb.SqlCe4.Dac
 
             try
             {
-                cn = _connectionManager.OpenServerConnection(_connectionInfo.ConnectionString);
+                cn = _connectionManager.OpenServerConnection(_connectionInfo);
                 cnConsumer.Invoke(cn);
             }
             finally
@@ -54,7 +54,7 @@ namespace SisoDb.SqlCe4.Dac
 
             _connectionManager.ReleaseAllDbConnections();
 
-            using (var engine = new SqlCeEngine(_connectionInfo.ConnectionString.PlainString))
+            using (var engine = new SqlCeEngine(_connectionInfo.ClientConnectionString.PlainString))
             {
                 engine.CreateDatabase();
             }

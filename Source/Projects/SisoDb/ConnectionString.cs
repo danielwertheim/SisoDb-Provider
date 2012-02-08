@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using EnsureThat;
 using NCore;
@@ -47,6 +48,19 @@ namespace SisoDb
             SisoDbString = sisoDbString.Substring(SisoDbMarker.Length);
 
             InitializeSisoDbKeyValues();
+        }
+
+        public static IConnectionString Get(string connectionStringOrName)
+        {
+            Ensure.That(connectionStringOrName, "connectionStringOrName").IsNotNullOrWhiteSpace();
+
+            var config =
+                ConfigurationManager.ConnectionStrings[string.Concat(Environment.MachineName, "_", connectionStringOrName)]
+                ?? ConfigurationManager.ConnectionStrings[connectionStringOrName];
+
+            return config == null
+                ? new ConnectionString(connectionStringOrName)
+                : new ConnectionString(config.ConnectionString);
         }
 
         private static string[] GetParts(string value)

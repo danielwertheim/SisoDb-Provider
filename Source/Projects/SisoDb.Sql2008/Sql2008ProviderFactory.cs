@@ -1,5 +1,4 @@
-﻿using System;
-using PineCone.Structures.Schemas;
+﻿using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -24,6 +23,11 @@ namespace SisoDb.Sql2008
         public StorageProviders ProviderType
         {
             get { return StorageProviders.Sql2008; }
+        }
+
+        public IConnectionManager ConnectionManager
+        {
+            get { return _connectionManager; }
         }
 
 		public ISqlStatements GetSqlStatements()

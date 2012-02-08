@@ -8,7 +8,7 @@ namespace SisoDb
 
         ParallelInsertMode ParallelInsertMode { get; }
 
-        IConnectionString ConnectionString { get; }
+        IConnectionString ClientConnectionString { get; }
 
         IConnectionString ServerConnectionString { get; }
     }

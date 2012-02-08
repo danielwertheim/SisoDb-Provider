@@ -5,34 +5,34 @@ namespace SisoDb.Sql2012
 {
 	public class Sql2012ConnectionManager : IConnectionManager
 	{
-		public IDbConnection OpenServerConnection(IConnectionString connectionString)
+		public IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
 		{
-			var cn = new SqlConnection(connectionString.PlainString);
+            var cn = new SqlConnection(connectionInfo.ServerConnectionString.PlainString);
 			cn.Open();
 
 			return cn;
 		}
 
-		public void ReleaseServerConnection(IDbConnection dbConnection)
+	    public IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
 		{
-			if (dbConnection == null)
-				return;
-
-            dbConnection.Close();
-			dbConnection.Dispose();
-		}
-
-		public IDbConnection OpenDbConnection(IConnectionString connectionString)
-		{
-			var cn = new SqlConnection(connectionString.PlainString);
+			var cn = new SqlConnection(connectionInfo.ClientConnectionString.PlainString);
 			cn.Open();
 
 			return cn;
 		}
 
-		public void ReleaseAllDbConnections() { }
+	    public void ReleaseAllDbConnections() { }
 
-		public void ReleaseDbConnection(IDbConnection dbConnection)
+	    public void ReleaseServerConnection(IDbConnection dbConnection)
+	    {
+	        if (dbConnection == null)
+	            return;
+
+	        dbConnection.Close();
+	        dbConnection.Dispose();
+	    }
+
+	    public void ReleaseClientDbConnection(IDbConnection dbConnection)
 		{
 			if (dbConnection == null)
 				return;

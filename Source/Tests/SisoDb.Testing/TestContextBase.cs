@@ -22,6 +22,11 @@ namespace SisoDb.Testing
 				Database.DropStructureSets(Database.StructureSchemas.GetRegistrations().Select(r => r.Key).ToArray());
 				Database = null;
 			}
+
+            if(ProviderFactory != null)
+            {
+                ProviderFactory.ConnectionManager.ReleaseAllDbConnections();
+            }
         }
     }
 }

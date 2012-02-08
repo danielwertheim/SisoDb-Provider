@@ -25,7 +25,12 @@ namespace SisoDb.SqlCe4
             get { return StorageProviders.SqlCe4; }
         }
 
-		public ISqlStatements GetSqlStatements()
+	    public IConnectionManager ConnectionManager
+	    {
+            get { return _connectionManager; }
+	    }
+
+	    public ISqlStatements GetSqlStatements()
 		{
 			return _sqlStatements;
 		}
