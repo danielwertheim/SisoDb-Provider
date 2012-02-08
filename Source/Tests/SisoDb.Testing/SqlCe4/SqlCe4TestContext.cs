@@ -7,8 +7,7 @@ namespace SisoDb.Testing.SqlCe4
         public SqlCe4TestContext(string connectionStringName)
             : base(new SqlCe4DbFactory(), new SqlCe4ConnectionInfo(connectionStringName), new SqlCe4ProviderFactory())
         {
-            DbHelper = 
-            DbHelperForServer = new SqlCe4TestDbUtils(Database.ConnectionInfo.ServerConnectionString);
+            DbHelper = new SqlCe4TestDbUtils(Database.ConnectionInfo.ClientConnectionString);
         }
     }
 }

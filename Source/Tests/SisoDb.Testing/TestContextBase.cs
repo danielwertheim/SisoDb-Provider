@@ -7,7 +7,6 @@ namespace SisoDb.Testing
         public ISisoDatabase Database { get; private set; }
         public IDbProviderFactory ProviderFactory { get; private set; }
         public ITestDbUtils DbHelper { get; protected set; }
-        public ITestDbUtils DbHelperForServer { get; protected set; }
 
         protected TestContextBase(ISisoDatabaseFactory dbFactory, ISisoConnectionInfo connectionInfo, IDbProviderFactory providerFactory)
         {

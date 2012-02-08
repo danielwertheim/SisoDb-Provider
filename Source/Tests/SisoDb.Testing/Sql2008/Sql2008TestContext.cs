@@ -8,7 +8,6 @@ namespace SisoDb.Testing.Sql2008
             : base(new Sql2008DbFactory(), new Sql2008ConnectionInfo(connectionStringName), new Sql2008ProviderFactory())
         {
             DbHelper = new Sql2008TestDbUtils(Database.ConnectionInfo.ClientConnectionString.PlainString);
-            DbHelperForServer = new Sql2008TestDbUtils(Database.ConnectionInfo.ServerConnectionString.PlainString);
         }
     }
 }

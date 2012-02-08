@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlServerCe;
-using System.IO;
 using System.Linq.Expressions;
 using EnsureThat;
 using NCore;
 using NCore.Expressions;
 using PineCone.Structures.Schemas;
-using SisoDb.Core.Io;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 
@@ -22,34 +20,11 @@ namespace SisoDb.Testing.SqlCe4
 
         public SqlCe4TestDbUtils(IConnectionString connectionString)
         {
-            _connectionString = connectionString;
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString.PlainString);
+            cnStringBuilder.Enlist = false;
+
+            _connectionString = connectionString.ReplacePlain(cnStringBuilder.ConnectionString);
             _factory = DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0");
-        }
-
-        private string GetDbFilePath(string name)
-        {
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(_connectionString.PlainString);
-            return cnStringBuilder.DataSource;
-        }
-        
-        public void DropDatabaseIfExists(string name)
-        {
-            var dbFilePath = GetDbFilePath(name);
-
-            IoHelper.DeleteIfFileExists(dbFilePath);
-        }
-
-        public void EnsureDbExists(string name)
-        {
-            var dbFilePath = GetDbFilePath(name);
-
-            if(IoHelper.FileExists(dbFilePath))
-                return;
-
-            using (var engine = new SqlCeEngine(_connectionString.PlainString))
-            {
-                engine.CreateDatabase();
-            }
         }
 
         public bool TableExists(string name)
