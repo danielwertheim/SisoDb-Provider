@@ -7,7 +7,6 @@ namespace SisoDb.Specifications.Sql2008
         public void AfterContextCleanup()
         {
             //SysDateTime.SetFixed(TestConstants.FixedDateTime);
-            //FirestarterRuntime.Reinitialize();
         }
     }
 }
