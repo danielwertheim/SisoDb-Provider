@@ -17,10 +17,10 @@ namespace SisoDb.Testing.SqlCe4
 {
     public class SqlCe4TestDbUtils : ITestDbUtils
     {
-        private readonly string _connectionString;
+        private readonly IConnectionString _connectionString;
         private readonly DbProviderFactory _factory;
 
-        public SqlCe4TestDbUtils(string connectionString)
+        public SqlCe4TestDbUtils(IConnectionString connectionString)
         {
             _connectionString = connectionString;
             _factory = DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0");
@@ -28,9 +28,10 @@ namespace SisoDb.Testing.SqlCe4
 
         private string GetDbFilePath(string name)
         {
-            return Path.Combine(_connectionString.ToLower().Replace("data source=", string.Empty), name + ".sdf");
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(_connectionString.PlainString);
+            return cnStringBuilder.DataSource;
         }
-
+        
         public void DropDatabaseIfExists(string name)
         {
             var dbFilePath = GetDbFilePath(name);
@@ -45,7 +46,7 @@ namespace SisoDb.Testing.SqlCe4
             if(IoHelper.FileExists(dbFilePath))
                 return;
 
-            using (var engine = new SqlCeEngine(Path.Combine(_connectionString, name + ".sdf")))
+            using (var engine = new SqlCeEngine(_connectionString.PlainString))
             {
                 engine.CreateDatabase();
             }
@@ -176,7 +177,7 @@ namespace SisoDb.Testing.SqlCe4
             var cn = _factory.CreateConnection();
 
             if (cn != null)
-                cn.ConnectionString = _connectionString;
+                cn.ConnectionString = _connectionString.PlainString;
 
             return cn;
         }
