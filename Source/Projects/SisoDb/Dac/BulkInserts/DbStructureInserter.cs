@@ -35,7 +35,7 @@ namespace SisoDb.Dac.BulkInserts
             get
             {
                 return
-                    MainDbClient.ConnectionInfo.ParallelInsertMode != ParallelInsertMode.None
+                    MainDbClient.ConnectionInfo.ParallelInserts == ParallelInserts.On
                     && DbClientFnForParallelInserts != null;
             }
         }
@@ -53,111 +53,49 @@ namespace SisoDb.Dac.BulkInserts
 
         public virtual void Insert(IStructureSchema structureSchema, IStructure[] structures)
         {
-            var groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures);
+            var groupedIndexInsertActions = new IndexInsertAction[0];
+
+            using(var task = Task.Factory.StartNew(() => groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures)))
+            {
+                InsertStructures(structureSchema, structures);
+                BulkInsertUniques(structureSchema, structures);
+
+                Task.WaitAll(task);
+            }
 
             if (!SupportsParallelInserts || !groupedIndexInsertActions.Any() || structures.Length < MaxNumOfStructuresBeforeParallelEscalation)
             {
-                SequentialInsert(structureSchema, structures, groupedIndexInsertActions);
+                InsertIndexes(groupedIndexInsertActions);
                 return;
             }
 
-            if (MainDbClient.ConnectionInfo.ParallelInsertMode == ParallelInsertMode.Simple || groupedIndexInsertActions.Length <= 1)
-            {
-                SimpleParallelInsert(structureSchema, structures, groupedIndexInsertActions);
-                return;
-            }
-            
-            FullParallelInsert(structureSchema, structures, groupedIndexInsertActions);
+            ParallelInsert(structureSchema, structures, groupedIndexInsertActions);
         }
 
-        protected void SequentialInsert(IStructureSchema structureSchema, IStructure[] structures, IndexInsertAction[] groupedIndexInsertActions)
-        {
-            InsertStructures(structureSchema, structures);
-            BulkInsertUniques(structureSchema, structures);
-            InsertIndexes(groupedIndexInsertActions);
-        }
-
-        protected virtual void SimpleParallelInsert(IStructureSchema structureSchema, IStructure[] structures, IndexInsertAction[] groupedIndexInsertActions)
-        {
-            if (!groupedIndexInsertActions.Any())
-                return;
-
-            var indexesDbClient = DbClientFnForParallelInserts.Invoke();
-            var tasks = new Task[2];
-
-            try
-            {
-                tasks[0] = Task.Factory.StartNew(() =>
-                {
-                    InsertStructures(structureSchema, structures);
-                    BulkInsertUniques(structureSchema, structures);
-                });
-
-                //TODO: if tasks[0] is completed, there's no need of additional task
-                tasks[1] = Task.Factory.StartNew(() =>
-                {
-                    foreach (var insertAction in groupedIndexInsertActions)
-                        insertAction.Action.Invoke(insertAction.Data, indexesDbClient);
-                });
-
-                Task.WaitAll(tasks);
-            }
-            finally
-            {
-                Disposer.TryDispose(indexesDbClient);
-                indexesDbClient = null;
-
-                for (var c = 0; c < tasks.Length; c++)
-                {
-                    Disposer.TryDispose(tasks[c]);
-                    tasks[c] = null;
-                }
-            }
-        }
-
-        protected virtual void FullParallelInsert(IStructureSchema structureSchema, IStructure[] structures, IndexInsertAction[] groupedIndexInsertActions)
+        protected virtual void ParallelInsert(IStructureSchema structureSchema, IStructure[] structures, IndexInsertAction[] groupedIndexInsertActions)
         {
             if (!groupedIndexInsertActions.Any())
                 return;
 
             var indexesDbClients = new IDbClient[groupedIndexInsertActions.Length];
-            var tasks = new Task[2];
-
+            
             try
             {
                 for (var c = 0; c < groupedIndexInsertActions.Length; c++)
                     indexesDbClients[c] = DbClientFnForParallelInserts.Invoke();
 
-                tasks[0] = Task.Factory.StartNew(() =>
-                {
-                    InsertStructures(structureSchema, structures);
-                    BulkInsertUniques(structureSchema, structures);
-                });
-
-                //TODO: if tasks[0] is completed, there's no need of additional task
-                tasks[1] = Task.Factory.StartNew(() =>
-                {
-                    Parallel.For(0, groupedIndexInsertActions.Length, new ParallelOptions {MaxDegreeOfParallelism = indexesDbClients.Length},
-                        i =>
+                Parallel.For(0, groupedIndexInsertActions.Length, new ParallelOptions { MaxDegreeOfParallelism = indexesDbClients.Length },
+                    i =>
+                    {
+                        using (var indexesDbClient = indexesDbClients[i])
                         {
-                            using (var indexesDbClient = indexesDbClients[i])
-                            {
-                                groupedIndexInsertActions[i].Action.Invoke(groupedIndexInsertActions[i].Data, indexesDbClient);
-                            }
-                            indexesDbClients[i] = null;    
-                        });
-                });
-
-                Task.WaitAll(tasks);
+                            groupedIndexInsertActions[i].Action.Invoke(groupedIndexInsertActions[i].Data, indexesDbClient);
+                        }
+                        indexesDbClients[i] = null;
+                    });
             }
             finally
             {
-                for (var c = 0; c < tasks.Length; c++)
-                {
-                    Disposer.TryDispose(tasks[c]);
-                    tasks[c] = null;
-                }
-
                 for (var c = 0; c < indexesDbClients.Length; c++)
                 {
                     Disposer.TryDispose(indexesDbClients[c]);

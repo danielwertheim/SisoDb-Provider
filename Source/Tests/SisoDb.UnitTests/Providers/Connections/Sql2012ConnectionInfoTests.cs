@@ -33,15 +33,25 @@ namespace SisoDb.UnitTests.Providers.Connections
         [Test]
         public void Ctor_WhenCorrectConnectionString_PartsExtracted()
         {
-            var cnString = new ConnectionString(@"sisodb:provider=Sql2012;parallelinsertmode=Full||plain:data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;");
+            var cnString = new ConnectionString(@"sisodb:provider=Sql2012;parallelinserts=On||plain:data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;");
 
 			var cnInfo = new Sql2012ConnectionInfo(cnString);
 
             Assert.AreEqual(StorageProviders.Sql2012, cnInfo.ProviderType);
-            Assert.AreEqual(ParallelInsertMode.Full, cnInfo.ParallelInsertMode);
+            Assert.AreEqual(ParallelInserts.On, cnInfo.ParallelInserts);
             Assert.AreEqual("SisoDbTests.Temp", cnInfo.DbName);
             Assert.AreEqual(@"Data Source=.;Initial Catalog=;Integrated Security=True", cnInfo.ServerConnectionString.PlainString);
             Assert.AreEqual(@"data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;", cnInfo.ClientConnectionString.PlainString);
+        }
+
+        [Test]
+        public void Ctor_WhenParallelInsertsIsMissing_DefaultsToOff()
+        {
+            var cnString = new ConnectionString(@"sisodb:provider=Sql2012||plain:data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;");
+
+            var cnInfo = new Sql2012ConnectionInfo(cnString);
+
+            Assert.AreEqual(ParallelInserts.Off, cnInfo.ParallelInserts);
         }
     }
 }

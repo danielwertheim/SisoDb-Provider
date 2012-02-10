@@ -13,7 +13,7 @@ namespace SisoDb.UnitTests.Dac.BulkInserts
         public void Ctor_WhenNoDbClientFnIsPassedAndConnectionInfoSupportsParallelInserts_StructureInserterWillNotSupportParallelInserts()
         {
             var cnInfoFake = new Mock<ISisoConnectionInfo>();
-            cnInfoFake.Setup(f => f.ParallelInsertMode).Returns(ParallelInsertMode.Full);
+            cnInfoFake.Setup(f => f.ParallelInserts).Returns(ParallelInserts.On);
             var dbClientFake = new Mock<IDbClient>();
             dbClientFake.Setup(f => f.ConnectionInfo).Returns(cnInfoFake.Object);
 

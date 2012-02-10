@@ -22,7 +22,7 @@ namespace SisoDb.Sql2008.Dac
         private Sql2008DbTransaction(TransactionScopeOption option)
         {
             _option = option;
-            _ts = new TransactionScope(_option, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }, EnterpriseServicesInteropOption.None);
+            _ts = new TransactionScope(_option, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted });
         }
 
         public void Dispose()

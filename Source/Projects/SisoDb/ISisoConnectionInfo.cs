@@ -6,7 +6,7 @@ namespace SisoDb
 
         StorageProviders ProviderType { get; }
 
-        ParallelInsertMode ParallelInsertMode { get; }
+        ParallelInserts ParallelInserts { get; }
 
         IConnectionString ClientConnectionString { get; }
 
