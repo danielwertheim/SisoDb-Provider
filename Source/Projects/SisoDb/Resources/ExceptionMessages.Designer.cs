@@ -97,6 +97,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provider &apos;{0}&apos; does not support parallel inserts..
+        /// </summary>
+        public static string ConnectionInfo_ParallelInsertsNotSupported {
+            get {
+                return ResourceManager.GetString("ConnectionInfo_ParallelInsertsNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Storageprovider &apos;{0}&apos; is unsupported. The storageprovider should be: &apos;{1}&apos;..
         /// </summary>
         public static string ConnectionInfo_UnsupportedProviderSpecified {

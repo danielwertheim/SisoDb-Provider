@@ -283,4 +283,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DbTransaction_MarkAsFailed_ForSuppressedTransaction" xml:space="preserve">
     <value>There is no point in calling mark as failed on a Suppressed transaction.</value>
   </data>
+  <data name="ConnectionInfo_ParallelInsertsNotSupported" xml:space="preserve">
+    <value>The provider '{0}' does not support parallel inserts.</value>
+  </data>
 </root>
