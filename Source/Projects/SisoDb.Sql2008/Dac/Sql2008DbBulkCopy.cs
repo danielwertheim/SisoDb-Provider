@@ -9,15 +9,19 @@ namespace SisoDb.Sql2008.Dac
     public class Sql2008DbBulkCopy : IDbBulkCopy
     {
         private SqlBulkCopy _innerBulkCopy;
+        private readonly IDbClient _dbClient;
 
-        public Sql2008DbBulkCopy(SqlConnection connection)
+        public Sql2008DbBulkCopy(SqlConnection connection, IDbClient dbClient)
         {
             Ensure.That(connection, "connection").IsNotNull();
+            Ensure.That(dbClient, "dbClient").IsNotNull();
 
-			_innerBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, null)
+			_innerBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.KeepNulls, null)
             {
                 NotifyAfter = 0
             };
+
+            _dbClient = dbClient;
         }
 
         public void Dispose()
@@ -47,6 +51,7 @@ namespace SisoDb.Sql2008.Dac
 
         public void Write(IDataReader reader)
         {
+            _dbClient.ExecuteNonQuery("SET XACT_ABORT ON");
             _innerBulkCopy.WriteToServer(reader);
         }
     }

@@ -9,7 +9,7 @@ namespace SisoDb.Sql2012.Dac
         private readonly TransactionScopeOption _option;
         private TransactionScope _ts;
 
-        public bool Failed { get; set; }
+        public bool Failed { get; private set; }
 
         public void MarkAsFailed()
         {

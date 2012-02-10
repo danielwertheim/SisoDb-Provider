@@ -24,7 +24,7 @@ namespace SisoDb.Sql2012.Dac
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new Sql2012DbBulkCopy((SqlConnection)Connection);
+            return new Sql2012DbBulkCopy((SqlConnection)Connection, this);
         }
 
         public override void Drop(IStructureSchema structureSchema)

@@ -24,9 +24,9 @@ namespace SisoDb.Profiling
 			//var cnInfo = new SqlCe4ConnectionInfo("SisoDb.SqlCe4");
 			//var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
 
-            //db.EnsureNewDatabase();
+            db.EnsureNewDatabase();
 
-            //ProfilingInserts(db, 1000, 5);
+            ProfilingInserts(db, 1000, 5);
 
 			//InsertCustomers(1, 10000, db);
 			//ProfilingQueries(() => GetAllCustomers(db));
@@ -36,8 +36,8 @@ namespace SisoDb.Profiling
 
 			//ProfilingUpdateMany(db, 500, 550);
 
-            Console.WriteLine("---- Done ----");
-            Console.ReadKey();
+            //Console.WriteLine("---- Done ----");
+            //Console.ReadKey();
         }
 
 		private static void ProfilingUpdateMany(ISisoDatabase database, int customerNoFrom, int customerNoTo)
