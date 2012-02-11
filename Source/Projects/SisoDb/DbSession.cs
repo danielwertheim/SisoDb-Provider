@@ -516,18 +516,36 @@ namespace SisoDb
                 Ensure.That(item, "item").IsNotNull();
 
                 var structureSchema = Db.StructureSchemas.GetSchema<T>();
+                var structureId = structureSchema.IdAccessor.GetValue(item);
                 Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
+                
+                if(!structureSchema.HasConcurrencyToken)
+                {
+                    var exists = TransactionalDbClient.Exists(structureId, structureSchema);
+                    if(!exists)
+                        throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
+                }
+                else
+                {
+                    var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
+
+                    if (string.IsNullOrWhiteSpace(existingJson))
+                        throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
+
+                    var existingItem = Db.Serializer.Deserialize<T>(existingJson);
+                    var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
+                    var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(item);
+                    if(updatingToken != existingToken)
+                        throw new SisoDbConcurrencyException(structureId.Value, structureSchema.Name, "Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store.");
+
+                    structureSchema.ConcurrencyTokenAccessor.SetValue(item, Guid.NewGuid());
+                }
+
+                Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
+                TransactionalDbClient.DeleteById(structureId, structureSchema);
 
                 var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
                 var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
-                var existingItem = TransactionalDbClient.GetJsonById(updatedStructure.Id, structureSchema);
-
-                if (string.IsNullOrWhiteSpace(existingItem))
-                    throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(
-                        updatedStructure.Name, updatedStructure.Id.Value));
-
-                Db.CacheProvider.NotifyDeleting(structureSchema, updatedStructure.Id);
-                TransactionalDbClient.DeleteById(updatedStructure.Id, structureSchema);
 
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 bulkInserter.Insert(structureSchema, new[] { updatedStructure });

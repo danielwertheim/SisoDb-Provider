@@ -46,14 +46,24 @@
               Looks up a localized string similar to The Item of type &apos;{0}&apos; has no members that are indexable. There&apos;s no point in treating items that has nothing to index..
             </summary>
         </member>
+        <member name="P:PineCone.Resources.ExceptionMessages.ConcurrencyTokenAccessor_Invalid_Type">
+            <summary>
+              Looks up a localized string similar to The type of the Concurrency token member &apos;{0}&apos; should be a Guid..
+            </summary>
+        </member>
+        <member name="P:PineCone.Resources.ExceptionMessages.ConcurrencyTokenAccessor_InvalidLevel">
+            <summary>
+              Looks up a localized string similar to Concurrency token member &apos;{0}&apos; must lie on the root object..
+            </summary>
+        </member>
         <member name="P:PineCone.Resources.ExceptionMessages.Getter_Unsupported_type">
             <summary>
               Looks up a localized string similar to The type &apos;{0}&apos; is unsupported and a getter for the StructureId accessor can not be created..
             </summary>
         </member>
-        <member name="P:PineCone.Resources.ExceptionMessages.IdAccessor_GetIdValue_InvalidLevel">
+        <member name="P:PineCone.Resources.ExceptionMessages.IdAccessor_InvalidLevel">
             <summary>
-              Looks up a localized string similar to Id values must lie on the root object..
+              Looks up a localized string similar to Id members must lie on the root object..
             </summary>
         </member>
         <member name="P:PineCone.Resources.ExceptionMessages.IdAccessor_UnsupportedPropertyType">

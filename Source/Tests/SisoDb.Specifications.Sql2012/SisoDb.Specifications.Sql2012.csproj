@@ -37,11 +37,12 @@
     <Reference Include="Machine.Specifications, Version=0.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Machine.Specifications.0.5.2.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PineCone.0.59.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.59.0.109, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.59.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -236,6 +237,9 @@
     </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\Updates.cs">
       <Link>UnitOfWork\Updates.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\UpdatesHandlingConcurreny.cs">
+      <Link>UnitOfWork\UpdatesHandlingConcurreny.cs</Link>
     </Compile>
     <Compile Include="AssemblyContext.cs" />
     <Compile Include="ContextCleanup.cs" />

@@ -29,7 +29,7 @@ namespace SisoDb.UnitTests.DbSchema
             uniqueIndexAccessorFake2.Setup(x => x.Path).Returns("Unique2");
             uniqueIndexAccessorFake2.Setup(x => x.IsUnique).Returns(true);
 
-            return new StructureSchema(structureTypeFake.Object, "FakeHash", idAccessorFake.Object,
+            return new StructureSchema(structureTypeFake.Object, "FakeHash", idAccessorFake.Object, null,
                 new[]
                 {
                     indexAccessorFake1.Object,
