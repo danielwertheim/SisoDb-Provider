@@ -23,7 +23,8 @@ namespace SisoDb
 	    IList<TOut> RawQueryAs<TContract, TOut>(IRawQuery query) where TContract : class where TOut : class;
 	    IList<string> RawQueryAsJson<T>(IRawQuery query) where T : class;
 	    ISisoQueryable<T> Query<T>() where T : class;
-	    T Insert<T>(T item) where T : class;
+	    void Insert<T>(T item) where T : class;
+        void InsertTo<TContract>(object item) where TContract : class;
 	    void InsertJson<T>(string json) where T : class;
 	    void InsertMany<T>(IEnumerable<T> items) where T : class;
 	    void InsertManyJson<T>(IEnumerable<string> json) where T : class;

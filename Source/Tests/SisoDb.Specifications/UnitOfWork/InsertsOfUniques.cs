@@ -8,14 +8,18 @@ using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-	class InsertsOfUniquesPerType
+    class InsertsOfUniquesPerType
     {
         [Subject(typeof(ISession), "Insert (unique per type)")]
         public class when_inserting_one_unique_per_type_guid_entity : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
+            Because of = () =>
+            {
+                _structure = new VehicleWithGuidId { VehRegNo = "ABC123" };
+                TestContext.Database.UseOnceTo().Insert(_structure);
+            };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
 
@@ -52,8 +56,8 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-
-                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithGuidId { VehRegNo = "ABC123" });
+                _orgStructure = new VehicleWithGuidId { VehRegNo = "ABC123" };
+                TestContext.Database.UseOnceTo().Insert(_orgStructure);
             };
 
             Because of =
@@ -78,7 +82,11 @@ namespace SisoDb.Specifications.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithStringId { StructureId = "A123", VehRegNo = "ABC123" });
+            Because of = () =>
+            {
+                _structure = new VehicleWithStringId { StructureId = "A123", VehRegNo = "ABC123" };
+                TestContext.Database.UseOnceTo().Insert(_structure);
+            };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(1);
 
@@ -115,8 +123,8 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-
-                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" });
+                _orgStructure = new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" };
+                TestContext.Database.UseOnceTo().Insert(_orgStructure);
             };
 
             Because of =
@@ -141,7 +149,11 @@ namespace SisoDb.Specifications.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
+            Because of = () =>
+            {
+                _structure = new VehicleWithIdentityId { VehRegNo = "ABC123" };
+                TestContext.Database.UseOnceTo().Insert(_structure);
+            };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
 
@@ -178,8 +190,8 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-
-                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithIdentityId { VehRegNo = "ABC123" });
+                _orgStructure = new VehicleWithIdentityId {VehRegNo = "ABC123"};
+                TestContext.Database.UseOnceTo().Insert(_orgStructure);
             };
 
             Because of =
@@ -204,7 +216,11 @@ namespace SisoDb.Specifications.UnitOfWork
         {
             Establish context = () => TestContext = TestContextFactory.Create();
 
-            Because of = () => _structure = TestContext.Database.UseOnceTo().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
+            Because of = () =>
+            {
+                _structure = new VehicleWithBigIdentityId {VehRegNo = "ABC123"};
+                TestContext.Database.UseOnceTo().Insert(_structure);
+            };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
 
@@ -242,7 +258,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 TestContext = TestContextFactory.Create();
 
-                _orgStructure = TestContext.Database.UseOnceTo().Insert(new VehicleWithBigIdentityId { VehRegNo = "ABC123" });
+                _orgStructure = new VehicleWithBigIdentityId {VehRegNo = "ABC123"};
+                TestContext.Database.UseOnceTo().Insert(_orgStructure);
             };
 
             Because of =

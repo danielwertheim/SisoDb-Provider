@@ -179,7 +179,7 @@ namespace SisoDb
 			return new SisoReadOnceQueryable<T>(_db.ProviderFactory.GetQueryBuilder<T>(_db.StructureSchemas), () => _db.BeginSession());
 		}
 
-        public T Insert<T>(T item) where T : class
+        public void Insert<T>(T item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
 
@@ -187,8 +187,16 @@ namespace SisoDb
             {
                 session.Insert(item);
             }
+        }
 
-            return item;
+        public void InsertTo<TContract>(object item) where TContract : class
+        {
+            Ensure.That(item, "item").IsNotNull();
+
+            using (var session = _db.BeginSession())
+            {
+                session.InsertTo<TContract>(item);
+            }
         }
 
         public void InsertJson<T>(string json) where T : class

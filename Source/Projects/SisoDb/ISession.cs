@@ -133,6 +133,16 @@ namespace SisoDb
         void Insert<T>(T item) where T : class;
 
         /// <summary>
+        /// Inserts a single structure using the <typeparamref name="TContract"/> as
+        /// the contract for the structure being inserted. As item, you can pass
+        /// any type that has partial or full match of the contract, without extending it.
+        /// E.g An anonymous type.
+        /// </summary>
+        /// <typeparam name="TContract"></typeparam>
+        /// <param name="item"></param>
+	    void InsertTo<TContract>(object item) where TContract : class;
+
+        /// <summary>
         /// Inserts Json strcutures using the <typeparamref name="T"/> as
         /// the contract for the structure being inserted.
         /// </summary>
