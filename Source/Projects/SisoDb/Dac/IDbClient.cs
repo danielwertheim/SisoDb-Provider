@@ -41,5 +41,6 @@ namespace SisoDb.Dac
         void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema);
         void SingleInsertOfValueTypeIndex(IStructureIndex structureIndex, string valueTypeIndexesTableName);
         void SingleInsertOfStringTypeIndex(IStructureIndex structureIndex, string stringishIndexesTableName);
+        void SingleInsertOfUniqueIndex(IStructureIndex uniqueStructureIndex, IStructureSchema structureSchema);
     }
 }

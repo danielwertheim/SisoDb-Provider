@@ -57,7 +57,7 @@ namespace SisoDb.Dac.BulkInserts
             using(var task = Task.Factory.StartNew(() => groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures)))
             {
                 InsertStructures(structureSchema, structures);
-                BulkInsertUniques(structureSchema, structures);
+                InsertUniques(structureSchema, structures);
 
                 Task.WaitAll(task);
             }
@@ -167,9 +167,23 @@ namespace SisoDb.Dac.BulkInserts
             }
         }
 
-        protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructure[] structures)
+        protected virtual void InsertUniques(IStructureSchema structureSchema, IStructure[] structures)
         {
+            if (!structures.Any())
+                return;
+
             var uniques = structures.SelectMany(s => s.Uniques).ToArray();
+            if (!uniques.Any())
+                return;
+
+            if (uniques.Length == 1)
+                MainDbClient.SingleInsertOfUniqueIndex(uniques[0], structureSchema);
+            else
+                BulkInsertUniques(structureSchema, uniques);
+        }
+
+        protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructureIndex[] uniques)
+        {
             if (!uniques.Any())
                 return;
 

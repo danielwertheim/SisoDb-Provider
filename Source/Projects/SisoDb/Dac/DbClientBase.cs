@@ -203,6 +203,26 @@ namespace SisoDb.Dac
                 new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value.ToString()));
 	    }
 
+        public virtual void SingleInsertOfUniqueIndex(IStructureIndex uniqueStructureIndex, IStructureSchema structureSchema)
+        {
+            var sql = SqlStatements.GetSql("SingleInsertOfUniqueIndex").Inject(
+                structureSchema.GetUniquesTableName(),
+                UniqueStorageSchema.Fields.StructureId.Name,
+                UniqueStorageSchema.Fields.UqStructureId.Name,
+                UniqueStorageSchema.Fields.UqMemberPath.Name,
+                UniqueStorageSchema.Fields.UqValue.Name);
+
+            var parameters = new DacParameter[4];
+            parameters[0] = new DacParameter(UniqueStorageSchema.Fields.StructureId.Name, uniqueStructureIndex.StructureId.Value);
+            parameters[1] = (uniqueStructureIndex.IndexType == StructureIndexType.UniquePerType)
+                                ? new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, DBNull.Value)
+                                : new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, uniqueStructureIndex.StructureId.Value);
+            parameters[2] = new DacParameter(UniqueStorageSchema.Fields.UqMemberPath.Name, uniqueStructureIndex.Path);
+            parameters[3] = new DacParameter(UniqueStorageSchema.Fields.UqValue.Name, SisoEnvironment.HashService.GenerateHash(SisoEnvironment.StringConverter.AsString(uniqueStructureIndex.Value)));
+
+            ExecuteNonQuery(sql, parameters);
+        }
+
 	    private IEnumerable<string> YieldJson(IDbCommand cmd)
 		{
 			Func<IDataRecord, IDictionary<int, string>, string> read = (dr, af) => dr.GetString(0);

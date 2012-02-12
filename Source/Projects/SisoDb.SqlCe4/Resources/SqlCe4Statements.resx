@@ -471,6 +471,9 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
     <value>insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
   </data>
+  <data name="SingleInsertOfUniqueIndex" xml:space="preserve">
+    <value>insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
+  </data>
   <data name="SingleInsertOfValueTypeIndex" xml:space="preserve">
     <value>insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
   </data>
