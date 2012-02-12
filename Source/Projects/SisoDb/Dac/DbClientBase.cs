@@ -161,7 +161,49 @@ namespace SisoDb.Dac
 			}
 		}
 
-		private IEnumerable<string> YieldJson(IDbCommand cmd)
+	    public virtual void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema)
+	    {
+            var sql = SqlStatements.GetSql("SingleInsertStructure").Inject(
+                structureSchema.GetStructureTableName(),
+                StructureStorageSchema.Fields.Id.Name,
+                StructureStorageSchema.Fields.Json.Name);
+
+            ExecuteNonQuery(sql,
+                new DacParameter(StructureStorageSchema.Fields.Id.Name, structure.Id.Value),
+                new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data));
+	    }
+
+	    public virtual void SingleInsertOfValueTypeIndex(IStructureIndex structureIndex, string valueTypeIndexesTableName)
+	    {
+            var sql = SqlStatements.GetSql("SingleInsertOfValueTypeIndex").Inject(
+                valueTypeIndexesTableName,
+                IndexStorageSchema.Fields.StructureId.Name,
+                IndexStorageSchema.Fields.MemberPath.Name,
+                IndexStorageSchema.Fields.Value.Name,
+                IndexStorageSchema.Fields.StringValue.Name);
+
+            ExecuteNonQuery(sql,
+                new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
+                new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
+                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value),
+                new DacParameter(IndexStorageSchema.Fields.StringValue.Name, SisoEnvironment.StringConverter.AsString(structureIndex.Value)));
+	    }
+
+	    public virtual void SingleInsertOfStringTypeIndex(IStructureIndex structureIndex, string stringishIndexesTableName)
+	    {
+            var sql = SqlStatements.GetSql("SingleInsertOfStringTypeIndex").Inject(
+                stringishIndexesTableName,
+                IndexStorageSchema.Fields.StructureId.Name,
+                IndexStorageSchema.Fields.MemberPath.Name,
+                IndexStorageSchema.Fields.Value.Name);
+
+            ExecuteNonQuery(sql,
+                new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
+                new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
+                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value.ToString()));
+	    }
+
+	    private IEnumerable<string> YieldJson(IDbCommand cmd)
 		{
 			Func<IDataRecord, IDictionary<int, string>, string> read = (dr, af) => dr.GetString(0);
 			IDictionary<int, string> additionalJsonFields = null;

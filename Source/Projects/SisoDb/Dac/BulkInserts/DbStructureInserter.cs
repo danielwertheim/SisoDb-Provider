@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NCore;
 using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
@@ -110,21 +109,9 @@ namespace SisoDb.Dac.BulkInserts
                 return;
 
             if (structures.Length == 1)
-                SingleInsertStructure(structureSchema, structures[0]);
+                MainDbClient.SingleInsertStructure(structures[0], structureSchema);
             else
                 BulkInsertStructures(structureSchema, structures);
-        }
-
-        protected virtual void SingleInsertStructure(IStructureSchema structureSchema, IStructure structure)
-        {
-            var sql = "insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});".Inject(
-                structureSchema.GetStructureTableName(),
-                StructureStorageSchema.Fields.Id.Name,
-                StructureStorageSchema.Fields.Json.Name);
-
-            MainDbClient.ExecuteNonQuery(sql,
-                new DacParameter(StructureStorageSchema.Fields.Id.Name, structure.Id.Value),
-                new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data));
         }
 
         protected virtual void BulkInsertStructures(IStructureSchema structureSchema, IStructure[] structures)
@@ -153,36 +140,6 @@ namespace SisoDb.Dac.BulkInserts
         {
             foreach (var groupedIndexInsertAction in groupedIndexInsertActions)
                 groupedIndexInsertAction.Action.Invoke(groupedIndexInsertAction.Data, MainDbClient);
-        }
-
-        protected virtual void SingleInsertIntoValueTypeIndexesOfX(string valueTypeIndexesTableName, IStructureIndex structureIndex, IDbClient dbClient)
-        {
-            var sql = "insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4})".Inject(
-                valueTypeIndexesTableName,
-                IndexStorageSchema.Fields.StructureId.Name,
-                IndexStorageSchema.Fields.MemberPath.Name,
-                IndexStorageSchema.Fields.Value.Name,
-                IndexStorageSchema.Fields.StringValue.Name);
-
-            dbClient.ExecuteNonQuery(sql,
-                new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
-                new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
-                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value),
-                new DacParameter(IndexStorageSchema.Fields.StringValue.Name, SisoEnvironment.StringConverter.AsString(structureIndex.Value)));
-        }
-
-        protected virtual void SingleInsertIntoStringishIndexesOfX(string stringishIndexesTableName, IStructureIndex structureIndex, IDbClient dbClient)
-        {
-            var sql = "insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3})".Inject(
-                stringishIndexesTableName,
-                IndexStorageSchema.Fields.StructureId.Name,
-                IndexStorageSchema.Fields.MemberPath.Name,
-                IndexStorageSchema.Fields.Value.Name);
-
-            dbClient.ExecuteNonQuery(sql,
-                new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
-                new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
-                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value.ToString()));
         }
 
         protected virtual void BulkInsertIndexes(IndexesReader indexesReader, IDbClient dbClient)
@@ -265,45 +222,45 @@ namespace SisoDb.Dac.BulkInserts
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.IntegersTableName), data), dbClient);
                     if (container.Data.Length == 1)
-                        container.Action = (data, dbClient) => SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.IntegersTableName, data[0], dbClient);
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.IntegersTableName);
                     break;
                 case DataTypeCode.FractalNumber:
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.FractalsTableName), data), dbClient);
                     if (container.Data.Length == 1)
-                        container.Action = (data, dbClient) => SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.FractalsTableName, data[0], dbClient);
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.FractalsTableName);
                     break;
                 case DataTypeCode.Bool:
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.BooleansTableName), data), dbClient);
                     if (container.Data.Length == 1)
-                        container.Action = (data, dbClient) => SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.BooleansTableName, data[0], dbClient);
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.BooleansTableName);
                     break;
                 case DataTypeCode.DateTime:
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.DatesTableName), data), dbClient);
                     if (container.Data.Length == 1)
-                        container.Action = (data, dbClient) => SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.DatesTableName, data[0], dbClient);
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.DatesTableName);
                     break;
                 case DataTypeCode.Guid:
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.GuidsTableName), data), dbClient);
                     if (container.Data.Length == 1)
-                        container.Action = (data, dbClient) => SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.GuidsTableName, data[0], dbClient);
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.GuidsTableName);
                     break;
                 case DataTypeCode.String:
                 case DataTypeCode.Enum:
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data), dbClient);
                     if (container.Data.Length == 1)
-                        container.Action = (data, dbClient) => SingleInsertIntoStringishIndexesOfX(indexesTableNames.StringsTableName, data[0], dbClient);
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.StringsTableName);
                     break;
                 case DataTypeCode.Unknown:
                     container.Data = container.Data.Where(i => i.DataType == TextType).ToArray();
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data), dbClient);
                     if (container.Data.Length == 1)
-                        container.Action = (data, dbClient) => SingleInsertIntoStringishIndexesOfX(indexesTableNames.TextsTableName, data[0], dbClient);
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.TextsTableName);
                     break;
             }
 

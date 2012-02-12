@@ -37,5 +37,9 @@ namespace SisoDb.Dac
 		
 		IEnumerable<string> YieldJson(string sql, params IDacParameter[] parameters);
     	IEnumerable<string> YieldJsonBySp(string sql, params IDacParameter[] parameters);
+
+        void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema);
+        void SingleInsertOfValueTypeIndex(IStructureIndex structureIndex, string valueTypeIndexesTableName);
+        void SingleInsertOfStringTypeIndex(IStructureIndex structureIndex, string stringishIndexesTableName);
     }
 }
