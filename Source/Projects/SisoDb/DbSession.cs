@@ -553,17 +553,7 @@ namespace SisoDb
                 }
                 else
                 {
-                    var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
-
-                    if (string.IsNullOrWhiteSpace(existingJson))
-                        throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
-
-                    var existingItem = Db.Serializer.Deserialize<T>(existingJson);
-                    var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
-                    var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(item);
-                    if(updatingToken != existingToken)
-                        throw new SisoDbConcurrencyException(structureId.Value, structureSchema.Name, "Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store.");
-
+                    EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
                     structureSchema.ConcurrencyTokenAccessor.SetValue(item, Guid.NewGuid());
                 }
 
@@ -576,6 +566,55 @@ namespace SisoDb
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 bulkInserter.Insert(structureSchema, new[] { updatedStructure });
             });
+        }
+
+        public void Update<T>(object id, Action<T> modifier) where T : class
+        {
+            Transaction.Try(() =>
+            {
+                Ensure.That(id, "id").IsNotNull();
+                Ensure.That(modifier, "modifier").IsNotNull();
+
+                var structureSchema = Db.StructureSchemas.GetSchema<T>();
+                var structureId = StructureId.ConvertFrom(id);
+                Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
+
+                var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
+                if (string.IsNullOrWhiteSpace(existingJson))
+                    throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
+                var item = Db.Serializer.Deserialize<T>(existingJson);
+
+                modifier.Invoke(item);
+
+                if (structureSchema.HasConcurrencyToken)
+                {
+                    EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
+                    structureSchema.ConcurrencyTokenAccessor.SetValue(item, Guid.NewGuid());
+                }
+
+                Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
+                TransactionalDbClient.DeleteById(structureId, structureSchema);
+
+                var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
+                var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
+
+                var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                bulkInserter.Insert(structureSchema, new[] { updatedStructure });
+            });
+        }
+
+        protected virtual void EnsureConcurrencyTokenIsValid<T>(IStructureSchema structureSchema, IStructureId structureId, T newItem) where T : class
+        {
+            var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
+
+            if (string.IsNullOrWhiteSpace(existingJson))
+                throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
+
+            var existingItem = Db.Serializer.Deserialize<T>(existingJson);
+            var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
+            var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
+            if (updatingToken != existingToken)
+                throw new SisoDbConcurrencyException(structureId.Value, structureSchema.Name, "Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store.");
         }
 
         public virtual void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class

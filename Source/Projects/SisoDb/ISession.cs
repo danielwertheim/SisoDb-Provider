@@ -182,6 +182,16 @@ namespace SisoDb
         void Update<T>(T item) where T : class;
 
         /// <summary>
+        /// Uses sent id to locate a structure and then calls sent <paramref name="modifier"/>
+        /// to apply the changes. Useful to minimize the concurrency scope in
+        /// e.g an event denormalizer.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="modifier"></param>
+        void Update<T>(object id, Action<T> modifier) where T : class;
+
+        /// <summary>
         /// Traverses every structure in the set and lets you apply changes to each yielded structure.
         /// </summary>
         /// <typeparam name="T"></typeparam>

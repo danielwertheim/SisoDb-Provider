@@ -229,7 +229,7 @@ namespace SisoDb
             }
         }
 
-        public T Update<T>(T item) where T : class
+        public void Update<T>(T item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
 
@@ -237,8 +237,17 @@ namespace SisoDb
             {
                 session.Update(item);
             }
+        }
 
-            return item;
+        public void Update<T>(object id, Action<T> modifier) where T : class
+        {
+            Ensure.That(id, "id").IsNotNull();
+            Ensure.That(modifier, "modifier").IsNotNull();
+
+            using (var session = _db.BeginSession())
+            {
+                session.Update(id, modifier);
+            }
         }
 
         public void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class
