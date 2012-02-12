@@ -73,104 +73,104 @@ namespace SisoDb
     		}
     	}
 
-    	public IList<T> GetByIds<T>(params object[] ids) where T : class
+    	public T[] GetByIds<T>(params object[] ids) where T : class
 		{
 			Ensure.That(ids, "ids").HasItems();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.GetByIds<T>(ids).ToList();
+				return session.GetByIds<T>(ids).ToArray();
 			}
 		}
 
-    	public IList<TOut> GetByIdsAs<TContract, TOut>(params object[] ids) where TContract : class where TOut : class
+    	public TOut[] GetByIdsAs<TContract, TOut>(params object[] ids) where TContract : class where TOut : class
 		{
 			Ensure.That(ids, "ids").HasItems();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.GetByIdsAs<TContract, TOut>(ids).ToList();
+				return session.GetByIdsAs<TContract, TOut>(ids).ToArray();
 			}
 		}
 
-    	public IList<string> GetByIdsAsJson<T>(params object[] ids) where T : class
+    	public string[] GetByIdsAsJson<T>(params object[] ids) where T : class
     	{
     		Ensure.That(ids, "ids").HasItems();
 
     		using (var session =_db.BeginSession())
     		{
-    			return session.GetByIdsAsJson<T>(ids).ToList();
+    			return session.GetByIdsAsJson<T>(ids).ToArray();
     		}
     	}
 
-    	public IList<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
+    	public T[] GetByIdInterval<T>(object idFrom, object idTo) where T : class
 		{
 			Ensure.That(idFrom, "idFrom").IsNotNull();
 			Ensure.That(idTo, "idTo").IsNotNull();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.GetByIdInterval<T>(idFrom, idTo).ToList();
+				return session.GetByIdInterval<T>(idFrom, idTo).ToArray();
 			}
 		}
 
-    	public IList<T> NamedQuery<T>(INamedQuery query) where T : class
+    	public T[] NamedQuery<T>(INamedQuery query) where T : class
 		{
 			Ensure.That(query, "query").IsNotNull();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.Advanced.NamedQuery<T>(query).ToList();
+				return session.Advanced.NamedQuery<T>(query).ToArray();
 			}
 		}
 
-		public IList<TOut> NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class
+		public TOut[] NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class
 		{
 			Ensure.That(query, "query").IsNotNull();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.Advanced.NamedQueryAs<TContract, TOut>(query).ToList();
+				return session.Advanced.NamedQueryAs<TContract, TOut>(query).ToArray();
 			}
 		}
 
-		public IList<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
+		public string[] NamedQueryAsJson<T>(INamedQuery query) where T : class
 		{
 			Ensure.That(query, "query").IsNotNull();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.Advanced.NamedQueryAsJson<T>(query).ToList();
+				return session.Advanced.NamedQueryAsJson<T>(query).ToArray();
 			}
 		}
 
-		public IList<T> RawQuery<T>(IRawQuery query) where T : class
+		public T[] RawQuery<T>(IRawQuery query) where T : class
     	{
 			Ensure.That(query, "query").IsNotNull();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.Advanced.RawQuery<T>(query).ToList();
+				return session.Advanced.RawQuery<T>(query).ToArray();
 			}
     	}
 
-		public IList<TOut> RawQueryAs<TContract, TOut>(IRawQuery query) where TContract : class where TOut : class
+		public TOut[] RawQueryAs<TContract, TOut>(IRawQuery query) where TContract : class where TOut : class
     	{
 			Ensure.That(query, "query").IsNotNull();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.Advanced.RawQueryAs<TContract, TOut>(query).ToList();
+				return session.Advanced.RawQueryAs<TContract, TOut>(query).ToArray();
 			}
     	}
 
-		public IList<string> RawQueryAsJson<T>(IRawQuery query) where T : class
+		public string[] RawQueryAsJson<T>(IRawQuery query) where T : class
     	{
 			Ensure.That(query, "query").IsNotNull();
 
 			using (var session =_db.BeginSession())
 			{
-				return session.Advanced.RawQueryAsJson<T>(query).ToList();
+				return session.Advanced.RawQueryAsJson<T>(query).ToArray();
 			}
     	}
 
