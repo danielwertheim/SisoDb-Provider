@@ -86,7 +86,7 @@ namespace SisoDb.Serialization
 
                 try
                 {
-                    task = new Task(() =>
+                    task = Task.Factory.StartNew(() =>
                     {
                         foreach (var json in sourceData)
                             q.Add(json);
@@ -94,18 +94,15 @@ namespace SisoDb.Serialization
                         q.CompleteAdding();
                     });
 
-                    task.Start();
-
                     foreach (var e in q.GetConsumingEnumerable())
                         yield return deserializer.Invoke(e);
+
+                    Task.WaitAll(task);
                 }
                 finally
                 {
-                    if (task != null)
-                    {
-                        Task.WaitAll(task);
+                    if (task != null && task.Status == TaskStatus.RanToCompletion)
                         task.Dispose();
-                    }
 
                     q.CompleteAdding();
                 }

@@ -54,12 +54,20 @@ namespace SisoDb.Dac.BulkInserts
         {
             var groupedIndexInsertActions = new IndexInsertAction[0];
 
-            using(var task = Task.Factory.StartNew(() => groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures)))
+            Task task = null;
+            try
             {
+                task = Task.Factory.StartNew(() => groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures));
+
                 InsertStructures(structureSchema, structures);
                 InsertUniques(structureSchema, structures);
 
                 Task.WaitAll(task);
+            }
+            finally
+            {
+                if (task != null && task.Status == TaskStatus.RanToCompletion)
+                    task.Dispose();
             }
 
             if (!SupportsParallelInserts || !groupedIndexInsertActions.Any() || structures.Length < MaxNumOfStructuresBeforeParallelEscalation)
