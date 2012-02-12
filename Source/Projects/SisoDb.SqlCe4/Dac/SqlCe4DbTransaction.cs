@@ -22,7 +22,7 @@ namespace SisoDb.SqlCe4.Dac
         private SqlCe4DbTransaction(TransactionScopeOption option)
         {
             _option = option;
-            _ts = new TransactionScope(_option, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }, EnterpriseServicesInteropOption.None);
+            _ts = new TransactionScope(_option, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted });
         }
 
         public void Dispose()
