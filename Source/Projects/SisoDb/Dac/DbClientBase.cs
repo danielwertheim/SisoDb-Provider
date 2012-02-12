@@ -50,6 +50,14 @@ namespace SisoDb.Dac
 			Connection.ExecuteNonQuery(sql, parameters);
 		}
 
+        public virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
+        {
+            using (var cmd = CreateCommand(sql, parameters))
+            {
+                return cmd.GetScalarResult<T>();
+            }
+        }
+
 	    public abstract void Drop(IStructureSchema structureSchema);
 
 		public abstract void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
@@ -118,14 +126,6 @@ namespace SisoDb.Dac
 			var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
 
 			return YieldJson(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value));
-		}
-
-		protected virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
-		{
-			using (var cmd = CreateCommand(sql, parameters))
-			{
-				return cmd.GetScalarResult<T>();
-			}
 		}
 
 		public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)

@@ -13,7 +13,10 @@ namespace SisoDb.Dac
         ISisoConnectionInfo ConnectionInfo { get; }
 
         IDbBulkCopy GetBulkCopy();
+
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
+        T ExecuteScalar<T>(string sql, params IDacParameter[] parameters);
+
 		void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
         void Drop(IStructureSchema structureSchema);
