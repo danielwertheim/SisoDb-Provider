@@ -475,6 +475,10 @@ select Json from [dbo].[{0}] where StructureId =@id;</value>
     <value>set nocount on;
 select Json from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
   </data>
+  <data name="GetJsonByIdWithLock" xml:space="preserve">
+    <value>set nocount on;
+select Json from [dbo].[{0}] with(xlock, rowlock) where StructureId =@id;</value>
+  </data>
   <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
     <value>set nocount on;
 select Json from [dbo].[{0}] where StructureId between @idFrom and @idTo;</value>

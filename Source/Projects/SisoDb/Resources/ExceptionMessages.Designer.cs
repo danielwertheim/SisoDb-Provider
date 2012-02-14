@@ -88,6 +88,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store..
+        /// </summary>
+        public static string ConcurrencyException {
+            get {
+                return ResourceManager.GetString("ConcurrencyException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The name of the database could not be extracted from the connection-info..
         /// </summary>
         public static string ConnectionInfo_MissingName {

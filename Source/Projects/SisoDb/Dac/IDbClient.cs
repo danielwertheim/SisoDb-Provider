@@ -34,6 +34,8 @@ namespace SisoDb.Dac
         bool Exists(IStructureId structureId, IStructureSchema structureSchema);
 
 		string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
+        string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema);
+
     	IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema);
 		IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);

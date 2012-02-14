@@ -579,7 +579,8 @@ namespace SisoDb
                 var structureId = StructureId.ConvertFrom(id);
                 Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
 
-                var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
+                var existingJson = TransactionalDbClient.GetJsonByIdWithLock(structureId, structureSchema);
+                
                 if (string.IsNullOrWhiteSpace(existingJson))
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
                 var item = Db.Serializer.Deserialize<T>(existingJson);
@@ -614,7 +615,7 @@ namespace SisoDb
             var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
             var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
             if (updatingToken != existingToken)
-                throw new SisoDbConcurrencyException(structureId.Value, structureSchema.Name, "Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store.");
+                throw new SisoDbConcurrencyException(structureId.Value, structureSchema.Name, ExceptionMessages.ConcurrencyException);
         }
 
         public virtual void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class

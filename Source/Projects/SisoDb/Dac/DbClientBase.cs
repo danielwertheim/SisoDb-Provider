@@ -108,7 +108,16 @@ namespace SisoDb.Dac
 			return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
 		}
 
-		public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
+	    public virtual string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema)
+	    {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("GetJsonByIdWithLock").Inject(structureSchema.GetStructureTableName());
+
+            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
+	    }
+
+	    public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
 		{
 			Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
