@@ -40,7 +40,6 @@ namespace SisoDb
 
 	    void DeleteById<T>(object id) where T : class;
 	    void DeleteByIds<T>(params object[] ids) where T : class;
-	    void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class;
 	    void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
 	}
 }

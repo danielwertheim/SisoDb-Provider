@@ -268,17 +268,6 @@ namespace SisoDb
             }
         }
 
-        public void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
-        {
-            Ensure.That(idFrom, "idFrom").IsNotNull();
-            Ensure.That(idTo, "idTo").IsNotNull();
-
-            using (var session = _db.BeginSession())
-            {
-                session.DeleteByIdInterval<T>(idFrom, idTo);
-            }
-        }
-
         public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
             Ensure.That(expression, "expression").IsNotNull();

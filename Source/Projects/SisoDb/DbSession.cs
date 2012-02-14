@@ -683,29 +683,6 @@ namespace SisoDb
             });
         }
 
-        public virtual void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class
-        {
-            Transaction.Try(() =>
-            {
-                Ensure.That(idFrom, "idFrom").IsNotNull();
-                Ensure.That(idTo, "idTo").IsNotNull();
-
-                var structureIdFrom = StructureId.ConvertFrom(idFrom);
-                var structureIdTo = StructureId.ConvertFrom(idTo);
-                var structureSchema = Db.StructureSchemas.GetSchema<T>();
-                Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
-
-                if (!structureSchema.IdAccessor.IdType.IsIdentity())
-                    throw new SisoDbException(ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(
-                        Db.ProviderFactory.ProviderType, ExceptionMessages.WriteSession_DeleteByIdInterval_WrongIdType));
-
-                if (Db.CacheProvider.IsEnabledFor(structureSchema))
-                    throw new SisoDbException(ExceptionMessages.WriteSession_DeleteByIdIntervalAndCachingNotSupported.Inject(structureSchema.Name));
-
-                TransactionalDbClient.DeleteWhereIdIsBetween(structureIdFrom, structureIdTo, structureSchema);
-            });
-        }
-
         public virtual void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
         {
             Transaction.Try(() =>

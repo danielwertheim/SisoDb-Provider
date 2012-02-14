@@ -205,16 +205,6 @@ namespace SisoDb
         void DeleteByIds<T>(params object[] ids) where T : class;
 
         /// <summary>
-        /// Deletes all structures for the defined structure <typeparamref name="T"/>
-        /// having an id in the intervall.
-        /// </summary>
-        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="idFrom"></param>
-        /// <param name="idTo"></param>
-        /// <remarks>ONLY SUPPORTED BY IDENTITIES! If not sequenced ids are used, you could be doomed!</remarks>
-        void DeleteByIdInterval<T>(object idFrom, object idTo) where T : class;
-
-        /// <summary>
         /// Deletes one or more structures matchings the sent
         /// expression.
         /// </summary>
