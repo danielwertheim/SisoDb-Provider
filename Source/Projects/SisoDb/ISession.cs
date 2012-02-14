@@ -178,7 +178,8 @@ namespace SisoDb
 	    /// <typeparam name="T"></typeparam>
 	    /// <param name="id"></param>
 	    /// <param name="modifier"></param>
-	    void Update<T>(object id, Action<T> modifier) where T : class;
+        /// <param name="proceed">True to continue with update;False to abort</param>
+        void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
 
         /// <summary>
         /// Deletes structure by id.

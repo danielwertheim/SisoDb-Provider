@@ -323,6 +323,45 @@ namespace SisoDb.Specifications.UnitOfWork
         }
 
         [Subject(typeof(ISession), "Update inline (concurrencies)")]
+        public class when_updating_using_inline_modifier_and_item_has_enabled_concurrency_check_and_update_is_latest_but_process_is_manually_aborted : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
+                TestContext.Database.UseOnceTo().Insert(_orgItem);
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    session.Update<ModelWithGuidToken>(_orgItem.Id, x =>
+                    {
+                        x.StringValue = "From first update";
+                        x.IntValue = 142;
+                    });
+                    session.Update<ModelWithGuidToken>(_orgItem.Id, x => x.StringValue = "From second update", x => false);
+                }
+            };
+
+            It should_only_have_one_item_stored =
+                () => TestContext.Database.should_have_X_num_of_items<ModelWithGuidToken>(1);
+
+            It should_not_have_changed_ids_of_the_structure_in_database =
+                () => TestContext.Database.should_have_ids<ModelWithGuidToken>(_orgItem.Id);
+
+            It should_only_have_updated_values_from_first_update = () =>
+            {
+                var refetched = TestContext.Database.UseOnceTo().GetById<ModelWithGuidToken>(_orgItem.Id);
+                refetched.IntValue.ShouldEqual(142);
+                refetched.StringValue.ShouldEqual("From first update");
+            };
+
+            private static ModelWithGuidToken _orgItem;
+        }
+
+        [Subject(typeof(ISession), "Update inline (concurrencies)")]
         public class when_updating_using_inline_modifier_and_other_session_tries_to_read_the_same_item : SpecificationBase
         {
             Establish context = () =>

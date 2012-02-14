@@ -27,7 +27,7 @@ namespace SisoDb
 	    void InsertManyJson<T>(IEnumerable<string> json) where T : class;
 
 	    void Update<T>(T item) where T : class;
-        void Update<T>(object id, Action<T> modifier) where T : class;
+        void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
 
 	    void DeleteById<T>(object id) where T : class;
 	    void DeleteByIds<T>(params object[] ids) where T : class;

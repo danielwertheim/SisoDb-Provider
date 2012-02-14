@@ -620,7 +620,7 @@ namespace SisoDb
             });
         }
 
-        public void Update<T>(object id, Action<T> modifier) where T : class
+        public virtual void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
         {
             Transaction.Try(() =>
             {
@@ -638,6 +638,8 @@ namespace SisoDb
                 var item = Db.Serializer.Deserialize<T>(existingJson);
 
                 modifier.Invoke(item);
+                if(proceed != null && !proceed.Invoke(item))
+                    return;
 
                 if (structureSchema.HasConcurrencyToken)
                     EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);

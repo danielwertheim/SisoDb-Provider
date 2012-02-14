@@ -168,14 +168,14 @@ namespace SisoDb
             }
         }
 
-        public void Update<T>(object id, Action<T> modifier) where T : class
+        public void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
         {
             Ensure.That(id, "id").IsNotNull();
             Ensure.That(modifier, "modifier").IsNotNull();
 
             using (var session = _db.BeginSession())
             {
-                session.Update(id, modifier);
+                session.Update(id, modifier, proceed);
             }
         }
 
