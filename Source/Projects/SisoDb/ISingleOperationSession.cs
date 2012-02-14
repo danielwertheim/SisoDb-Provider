@@ -17,7 +17,6 @@ namespace SisoDb
 	    T[] GetByIds<T>(params object[] ids) where T : class;
 	    TOut[] GetByIdsAs<TContract, TOut>(params object[] ids) where TContract : class where TOut : class;
 	    string[] GetByIdsAsJson<T>(params object[] ids) where T : class;
-	    T[] GetByIdInterval<T>(object idFrom, object idTo) where T : class;
 
 	    T[] NamedQuery<T>(INamedQuery query) where T : class;
 	    TOut[] NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class;

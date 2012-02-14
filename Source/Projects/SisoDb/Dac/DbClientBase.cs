@@ -128,15 +128,6 @@ namespace SisoDb.Dac
 
 		public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-		public virtual IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
-		{
-			Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-			var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
-
-			return YieldJson(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value));
-		}
-
 		public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
 		{
 			using (var cmd = CreateCommand(sql, parameters))

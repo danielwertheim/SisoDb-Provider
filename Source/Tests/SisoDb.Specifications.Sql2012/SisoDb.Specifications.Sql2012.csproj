@@ -130,9 +130,6 @@
     <Compile Include="..\sisodb.specifications\queryengine\GetById.cs">
       <Link>QueryEngine\GetById.cs</Link>
     </Compile>
-    <Compile Include="..\sisodb.specifications\queryengine\GetByIdInterval.cs">
-      <Link>QueryEngine\GetByIdInterval.cs</Link>
-    </Compile>
     <Compile Include="..\sisodb.specifications\queryengine\GetByIds.cs">
       <Link>QueryEngine\GetByIds.cs</Link>
     </Compile>
@@ -219,9 +216,6 @@
     </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\queries\GetById.cs">
       <Link>UnitOfWork\Queries\GetById.cs</Link>
-    </Compile>
-    <Compile Include="..\sisodb.specifications\unitofwork\queries\GetByIdInterval.cs">
-      <Link>UnitOfWork\Queries\GetByIdInterval.cs</Link>
     </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\queries\GetByIds.cs">
       <Link>UnitOfWork\Queries\GetByIds.cs</Link>

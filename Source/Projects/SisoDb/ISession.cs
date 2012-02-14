@@ -101,17 +101,6 @@ namespace SisoDb
 		IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class;
 
 		/// <summary>
-		/// Returns all structures for the defined structure <typeparamref name="T"/>
-		/// matching specified id interval.
-		/// </summary>
-		/// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-		/// <param name="idFrom"></param>
-		/// <param name="idTo"></param>
-		/// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-		/// /// <remarks>YOU COULD GET STRANGE RESULTS IF YOU HAVE SPECIFIED NON SEQUENTIAL GUIDS.</remarks>
-		IEnumerable<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class;
-
-		/// <summary>
 		/// Lets you perform a Query defining things like
 		/// <see cref="ISisoQueryable{T}.Take"/>
 		/// <see cref="ISisoQueryable{T}.Where"/>

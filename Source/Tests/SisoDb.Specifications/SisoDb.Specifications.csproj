@@ -85,7 +85,6 @@
     <Compile Include="QueryEngine\Count.cs" />
     <Compile Include="QueryEngine\QueryAll.cs" />
     <Compile Include="QueryEngine\GetById.cs" />
-    <Compile Include="QueryEngine\GetByIdInterval.cs" />
     <Compile Include="QueryEngine\GetByIds.cs" />
     <Compile Include="QueryEngine\Includes.cs" />
     <Compile Include="QueryEngine\NamedQueries.cs" />
@@ -113,7 +112,6 @@
     <Compile Include="UnitOfWork\Queries\Count.cs" />
     <Compile Include="UnitOfWork\Queries\QueryAll.cs" />
     <Compile Include="UnitOfWork\Queries\GetById.cs" />
-    <Compile Include="UnitOfWork\Queries\GetByIdInterval.cs" />
     <Compile Include="UnitOfWork\Queries\GetByIds.cs" />
     <Compile Include="UnitOfWork\Queries\Query.cs" />
     <Compile Include="UnitOfWork\TransactionScopes.cs" />

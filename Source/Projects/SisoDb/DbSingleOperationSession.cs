@@ -103,17 +103,6 @@ namespace SisoDb
     		}
     	}
 
-    	public T[] GetByIdInterval<T>(object idFrom, object idTo) where T : class
-		{
-			Ensure.That(idFrom, "idFrom").IsNotNull();
-			Ensure.That(idTo, "idTo").IsNotNull();
-
-			using (var session =_db.BeginSession())
-			{
-				return session.GetByIdInterval<T>(idFrom, idTo).ToArray();
-			}
-		}
-
     	public T[] NamedQuery<T>(INamedQuery query) where T : class
 		{
 			Ensure.That(query, "query").IsNotNull();

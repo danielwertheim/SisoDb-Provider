@@ -256,28 +256,6 @@ namespace SisoDb
             });
         }
 
-        public virtual IEnumerable<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class
-        {
-            return Transaction.Try(() =>
-            {
-                Ensure.That(idFrom, "idFrom").IsNotNull();
-                Ensure.That(idTo, "idTo").IsNotNull();
-
-                var structureIdFrom = StructureId.ConvertFrom(idFrom);
-                var structureIdTo = StructureId.ConvertFrom(idTo);
-
-                var structureSchema = Db.StructureSchemas.GetSchema<T>();
-                Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
-
-                if (!structureSchema.IdAccessor.IdType.IsIdentity())
-                    throw new SisoDbException(
-                        ExceptionMessages.SisoDbNotSupportedByProviderException.Inject(Db.ProviderFactory.ProviderType, ExceptionMessages.ReadSession_GetByIdInterval_WrongIdType));
-
-                return Db.Serializer.DeserializeMany<T>(
-                    TransactionalDbClient.GetJsonWhereIdIsBetween(structureIdFrom, structureIdTo, structureSchema).ToArray());
-            });
-        }
-
         public virtual TOut GetByIdAs<TContract, TOut>(object id)
             where TContract : class
             where TOut : class

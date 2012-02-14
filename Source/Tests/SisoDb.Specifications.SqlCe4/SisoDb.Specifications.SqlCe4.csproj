@@ -130,9 +130,6 @@
     <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
       <Link>QueryEngine\GetById.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIdInterval.cs">
-      <Link>QueryEngine\GetByIdInterval.cs</Link>
-    </Compile>
     <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIds.cs">
       <Link>QueryEngine\GetByIds.cs</Link>
     </Compile>
@@ -219,9 +216,6 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetById.cs">
       <Link>UnitOfWork\Queries\GetById.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetByIdInterval.cs">
-      <Link>UnitOfWork\Queries\GetByIdInterval.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetByIds.cs">
       <Link>UnitOfWork\Queries\GetByIds.cs</Link>
