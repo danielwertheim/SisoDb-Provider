@@ -479,10 +479,6 @@ select Json from [dbo].[{0}] where StructureId in (select Id from @ids);</value>
     <value>set nocount on;
 select Json from [dbo].[{0}] with(xlock, rowlock) where StructureId =@id;</value>
   </data>
-  <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
-    <value>set nocount on;
-select Json from [dbo].[{0}] where StructureId between @idFrom and @idTo;</value>
-  </data>
   <data name="IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
     <value>set nocount on;
 delete from [dbo].[{0}] where [{1}] in({2});</value>

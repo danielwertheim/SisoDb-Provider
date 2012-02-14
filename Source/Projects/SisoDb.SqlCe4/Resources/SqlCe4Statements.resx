@@ -446,9 +446,6 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   <data name="GetJsonByIdWithLock" xml:space="preserve">
     <value>select Json from [{0}] with (xlock, rowlock) where StructureId =@id;</value>
   </data>
-  <data name="GetJsonWhereIdIsBetween" xml:space="preserve">
-    <value>select Json from [{0}] where StructureId between @idFrom and @idTo;</value>
-  </data>
   <data name="IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
     <value>delete from [{0}] where [{1}] in({2});</value>
   </data>
