@@ -118,13 +118,13 @@ namespace SisoDb
             }
         }
 
-        public void InsertTo<TContract>(object item) where TContract : class
+        public void InsertAs<T>(object item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
 
             using (var session = _db.BeginSession())
             {
-                session.InsertTo<TContract>(item);
+                session.InsertAs<T>(item);
             }
         }
 

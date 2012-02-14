@@ -65,7 +65,7 @@
     <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="QueryEngine\Exists.cs" />
     <Compile Include="QueryEngine\RawQueries.cs" />
-    <Compile Include="UnitOfWork\InsertTo.cs" />
+    <Compile Include="UnitOfWork\InsertAs.cs" />
     <Compile Include="UnitOfWork\InsertsWithCustomStructureId.cs" />
     <Compile Include="UnitOfWork\UpdateMany.cs" />
     <Compile Include="Database\UpsertStructureSet.cs" />

@@ -187,6 +187,9 @@
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Deletes.cs">
       <Link>UnitOfWork\Deletes.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertAs.cs">
+      <Link>UnitOfWork\InsertAs.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsComplete.cs">
       <Link>UnitOfWork\InsertsComplete.cs</Link>
     </Compile>
@@ -207,9 +210,6 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsWithCustomStructureId.cs">
       <Link>UnitOfWork\InsertsWithCustomStructureId.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertTo.cs">
-      <Link>UnitOfWork\InsertTo.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Count.cs">
       <Link>UnitOfWork\Queries\Count.cs</Link>

@@ -518,16 +518,16 @@ namespace SisoDb
             });
         }
 
-        public void InsertTo<TContract>(object item) where TContract : class
+        public void InsertAs<T>(object item) where T : class
         {
             Transaction.Try(() =>
             {
                 Ensure.That(item, "item").IsNotNull();
 
                 var json = Db.Serializer.Serialize(item);
-                var realItem = Db.Serializer.Deserialize<TContract>(json);
+                var realItem = Db.Serializer.Deserialize<T>(json);
 
-                var structureSchema = Db.StructureSchemas.GetSchema<TContract>();
+                var structureSchema = Db.StructureSchemas.GetSchema<T>();
                 Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
 
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(CheckOutAndGetNextIdentity));
