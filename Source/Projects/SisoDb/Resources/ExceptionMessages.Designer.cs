@@ -314,15 +314,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GetByIdInterval is not supported when using other ID-types than identities..
-        /// </summary>
-        public static string ReadSession_GetByIdInterval_WrongIdType {
-            get {
-                return ResourceManager.GetString("ReadSession_GetByIdInterval_WrongIdType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The provided StorageProvider &apos;{0}&apos; is not supported..
         /// </summary>
         public static string SisoDbFactory_UnknownStorageProvider {
@@ -521,38 +512,11 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DeleteByIdInterval is not supported when using other ID-types than identities..
-        /// </summary>
-        public static string WriteSession_DeleteByIdInterval_WrongIdType {
-            get {
-                return ResourceManager.GetString("WriteSession_DeleteByIdInterval_WrongIdType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DeleteByIdInterval can not be used when caching is enabled for structure: &apos;{0}&apos;..
-        /// </summary>
-        public static string WriteSession_DeleteByIdIntervalAndCachingNotSupported {
-            get {
-                return ResourceManager.GetString("WriteSession_DeleteByIdIntervalAndCachingNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to DeleteByQuery can not be used when caching is enabled for structure: &apos;{0}&apos;..
         /// </summary>
         public static string WriteSession_DeleteByQueryAndCachingNotSupported {
             get {
                 return ResourceManager.GetString("WriteSession_DeleteByQueryAndCachingNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
-        /// </summary>
-        public static string WriteSession_DoIdentityInsert_RootItemsMissmatch {
-            get {
-                return ResourceManager.GetString("WriteSession_DoIdentityInsert_RootItemsMissmatch", resourceCulture);
             }
         }
         

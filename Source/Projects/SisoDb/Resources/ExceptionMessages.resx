@@ -144,9 +144,6 @@
   <data name="AutoSchemaBuilder_UnsupportedIdAccessorType" xml:space="preserve">
     <value>The id property: '{0}'; is not of suported type. Only Guid and Int is accepted.</value>
   </data>
-  <data name="WriteSession_DoIdentityInsert_RootItemsMissmatch" xml:space="preserve">
-    <value>The number of passed root items is not equal to the number of inserted root items!</value>
-  </data>
   <data name="ExpressionEvaluator_EvaluateMemberExpression_NotSupported" xml:space="preserve">
     <value>Direct memberaccess of node: '{0}'; with with membertype: '{1}'; is not supported!</value>
   </data>
@@ -244,12 +241,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SisoDbNotSupportedByProviderException" xml:space="preserve">
     <value>The provider: '{0}' does not support operation: {1}.</value>
   </data>
-  <data name="WriteSession_DeleteByIdInterval_WrongIdType" xml:space="preserve">
-    <value>DeleteByIdInterval is not supported when using other ID-types than identities.</value>
-  </data>
-  <data name="ReadSession_GetByIdInterval_WrongIdType" xml:space="preserve">
-    <value>GetByIdInterval is not supported when using other ID-types than identities.</value>
-  </data>
   <data name="StructureBuilders_CreateForInsert" xml:space="preserve">
     <value>Could not create StructureBuilder for Inserts and Id-type '{0}' for Schema '{1}'.</value>
   </data>
@@ -270,9 +261,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="WriteSession_UpdateMany_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
-  </data>
-  <data name="WriteSession_DeleteByIdIntervalAndCachingNotSupported" xml:space="preserve">
-    <value>DeleteByIdInterval can not be used when caching is enabled for structure: '{0}'.</value>
   </data>
   <data name="WriteSession_DeleteByQueryAndCachingNotSupported" xml:space="preserve">
     <value>DeleteByQuery can not be used when caching is enabled for structure: '{0}'.</value>
