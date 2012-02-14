@@ -48,7 +48,7 @@
         </member>
         <member name="P:PineCone.Resources.ExceptionMessages.ConcurrencyTokenAccessor_Invalid_Type">
             <summary>
-              Looks up a localized string similar to The type of the Concurrency token member &apos;{0}&apos; should be a Guid..
+              Looks up a localized string similar to The type of the Concurrency token member &apos;{0}&apos; should be a Guid, Int, or Long..
             </summary>
         </member>
         <member name="P:PineCone.Resources.ExceptionMessages.ConcurrencyTokenAccessor_InvalidLevel">

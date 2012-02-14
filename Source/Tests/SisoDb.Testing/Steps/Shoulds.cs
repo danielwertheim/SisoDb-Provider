@@ -23,7 +23,7 @@ namespace SisoDb.Testing.Steps
 			db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(1);
 		}
 
-		public static void should_have_been_deleted_from_indexes_tables(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
+        public static void should_have_been_deleted_from_indexes_tables(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
 		{
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
 			foreach (var indexesTableName in indexesTableNames.AllTableNames)
@@ -152,6 +152,17 @@ namespace SisoDb.Testing.Steps
 			foreach (var part in parts.Select(GetMemberPath))
 				structureJson.Contains("\"{0}\"".Inject(part)).ShouldBeFalse();
 		}
+
+        public static void should_not_have_stored_member_in_indexes_table<T>(this ITestDbUtils db, IStructureSchema structureSchema, object structureId, Expression<Func<T, object>> memberExpression, Type memberType)
+        {
+            var memberPath = GetMemberPath(memberExpression);
+            structureSchema.IndexAccessors.Count(iac => iac.Path == memberPath).ShouldEqual(0);
+            
+            var tablename = structureSchema.GetIndexesTableNames().GetNameByType(memberType);
+            db.RowCount(tablename, "{0} = '{1}' and {2} = '{3}'".Inject(
+                IndexStorageSchema.Fields.StructureId.Name, structureId,
+                IndexStorageSchema.Fields.MemberPath.Name, memberPath)).ShouldEqual(0);
+        }
 
 		private static string GetMemberPath<T>(Expression<Func<T, object>> e)
 		{

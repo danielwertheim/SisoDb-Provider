@@ -277,4 +277,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConcurrencyException" xml:space="preserve">
     <value>Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store.</value>
   </data>
+  <data name="ConcurrencyTokenIsOfWrongType" xml:space="preserve">
+    <value>The ConcurrencyToken member should be either: Guid, Int or Long.</value>
+  </data>
 </root>

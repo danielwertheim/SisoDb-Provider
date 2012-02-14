@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Machine.Specifications;
+using PineCone.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -15,7 +16,7 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _orgItem = new Model { StringValue = "Org string", IntValue = 42 };
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
                 TestContext.Database.UseOnceTo().Insert(_orgItem);
             };
 
@@ -23,8 +24,8 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var copy1 = session.GetById<Model>(_orgItem.Id);
-                    var copy2 = session.GetById<Model>(_orgItem.Id);
+                    var copy1 = session.GetById<ModelWithGuidToken>(_orgItem.Id);
+                    var copy2 = session.GetById<ModelWithGuidToken>(_orgItem.Id);
 
                     copy1.StringValue = "From copy 1";
                     session.Update(copy1);
@@ -42,16 +43,106 @@ namespace SisoDb.Specifications.UnitOfWork
 
                 var ex = (SisoDbConcurrencyException)CaughtException;
                 ex.StructureId.ShouldEqual(_orgItem.Id);
-                ex.StructureName.ShouldEqual(typeof(Model).Name);
+                ex.StructureName.ShouldEqual(typeof(ModelWithGuidToken).Name);
             };
 
             It should_not_have_changed_ids_of_the_structure_in_database =
-                () => TestContext.Database.should_have_ids<Model>(_orgItem.Id);
+                () => TestContext.Database.should_have_ids<ModelWithGuidToken>(_orgItem.Id);
 
             It should_not_have_updated_any_values =
                 () => TestContext.Database.should_have_identical_structures(new[] { _orgItem });
 
-            private static Model _orgItem;
+            private static ModelWithGuidToken _orgItem;
+        }
+
+        [Subject(typeof(ISession), "Update (concurrencies)")]
+        public class when_item_has_enabled_int_concurrency_check_and_update_is_not_latest : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _orgItem = new ModelWithIntToken { StringValue = "Org string", IntValue = 42 };
+                TestContext.Database.UseOnceTo().Insert(_orgItem);
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var copy1 = session.GetById<ModelWithIntToken>(_orgItem.Id);
+                    var copy2 = session.GetById<ModelWithIntToken>(_orgItem.Id);
+
+                    copy1.StringValue = "From copy 1";
+                    session.Update(copy1);
+
+                    copy2.StringValue = "From copy 2";
+
+                    CaughtException = Catch.Exception(() => session.Update(copy2));
+                }
+            };
+
+            It should_have_thrown_SisoDbConcurrencyException = () =>
+            {
+                CaughtException.ShouldNotBeNull();
+                CaughtException.ShouldBeOfType<SisoDbConcurrencyException>();
+
+                var ex = (SisoDbConcurrencyException)CaughtException;
+                ex.StructureId.ShouldEqual(_orgItem.Id);
+                ex.StructureName.ShouldEqual(typeof(ModelWithIntToken).Name);
+            };
+
+            It should_not_have_changed_ids_of_the_structure_in_database =
+                () => TestContext.Database.should_have_ids<ModelWithIntToken>(_orgItem.Id);
+
+            It should_not_have_updated_any_values =
+                () => TestContext.Database.should_have_identical_structures(new[] { _orgItem });
+
+            private static ModelWithIntToken _orgItem;
+        }
+
+        [Subject(typeof(ISession), "Update (concurrencies)")]
+        public class when_item_has_enabled_long_concurrency_check_and_update_is_not_latest : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _orgItem = new ModelWithLongToken { StringValue = "Org string", IntValue = 42 };
+                TestContext.Database.UseOnceTo().Insert(_orgItem);
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var copy1 = session.GetById<ModelWithLongToken>(_orgItem.Id);
+                    var copy2 = session.GetById<ModelWithLongToken>(_orgItem.Id);
+
+                    copy1.StringValue = "From copy 1";
+                    session.Update(copy1);
+
+                    copy2.StringValue = "From copy 2";
+
+                    CaughtException = Catch.Exception(() => session.Update(copy2));
+                }
+            };
+
+            It should_have_thrown_SisoDbConcurrencyException = () =>
+            {
+                CaughtException.ShouldNotBeNull();
+                CaughtException.ShouldBeOfType<SisoDbConcurrencyException>();
+
+                var ex = (SisoDbConcurrencyException)CaughtException;
+                ex.StructureId.ShouldEqual(_orgItem.Id);
+                ex.StructureName.ShouldEqual(typeof(ModelWithLongToken).Name);
+            };
+
+            It should_not_have_changed_ids_of_the_structure_in_database =
+                () => TestContext.Database.should_have_ids<ModelWithLongToken>(_orgItem.Id);
+
+            It should_not_have_updated_any_values =
+                () => TestContext.Database.should_have_identical_structures(new[] { _orgItem });
+
+            private static ModelWithLongToken _orgItem;
         }
 
         [Subject(typeof(ISession), "Update (concurrencies)")]
@@ -60,7 +151,8 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _orgItem = new Model { StringValue = "Org string", IntValue = 42 };
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<ModelWithGuidToken>();
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
                 TestContext.Database.UseOnceTo().Insert(_orgItem);
             };
 
@@ -68,27 +160,127 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    _copy1 = session.GetById<Model>(_orgItem.Id);
+                    _copy1 = session.GetById<ModelWithGuidToken>(_orgItem.Id);
                     _copy1.StringValue = "From copy 1";
                     session.Update(_copy1);
 
-                    _copy2 = session.GetById<Model>(_orgItem.Id);
+                    _copy2 = session.GetById<ModelWithGuidToken>(_orgItem.Id);
                     _copy2.StringValue = "From copy 2";
                     session.Update(_copy2);
                 }
             };
 
             It should_only_have_one_item_stored =
-                () => TestContext.Database.should_have_X_num_of_items<Model>(1);
+                () => TestContext.Database.should_have_X_num_of_items<ModelWithGuidToken>(1);
 
             It should_not_have_changed_ids_of_the_structure_in_database =
-                () => TestContext.Database.should_have_ids<Model>(_orgItem.Id);
+                () => TestContext.Database.should_have_ids<ModelWithGuidToken>(_orgItem.Id);
 
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(new[] { _copy2 });
 
-            private static Model _orgItem;
-            private static Model _copy1, _copy2;
+            It should_not_have_stored_the_concurrency_token_in_the_index_table =
+                () => TestContext.DbHelper.should_not_have_stored_member_in_indexes_table<ModelWithGuidToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(Guid));
+
+            private static IStructureSchema _structureSchema;
+            private static ModelWithGuidToken _orgItem;
+            private static ModelWithGuidToken _copy1, _copy2;
+        }
+
+        [Subject(typeof(ISession), "Update (concurrencies)")]
+        public class when_item_has_enabled_int_concurrency_check_and_update_is_latest : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<ModelWithIntToken>();
+                _orgItem = new ModelWithIntToken { StringValue = "Org string", IntValue = 42 };
+                TestContext.Database.UseOnceTo().Insert(_orgItem);
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _copy1 = session.GetById<ModelWithIntToken>(_orgItem.Id);
+                    _copy1.StringValue = "From copy 1";
+                    session.Update(_copy1);
+
+                    _copy2 = session.GetById<ModelWithIntToken>(_orgItem.Id);
+                    _copy2.StringValue = "From copy 2";
+                    session.Update(_copy2);
+                }
+            };
+
+            It should_only_have_one_item_stored =
+                () => TestContext.Database.should_have_X_num_of_items<ModelWithIntToken>(1);
+
+            It should_not_have_changed_ids_of_the_structure_in_database =
+                () => TestContext.Database.should_have_ids<ModelWithIntToken>(_orgItem.Id);
+
+            It should_have_updated_values_in_database =
+                () => TestContext.Database.should_have_identical_structures(new[] { _copy2 });
+
+            It should_have_updated_the_concurrency_token = () =>
+            {
+                _copy1.ConcurrencyToken = 1;
+                _copy2.ConcurrencyToken = 2;
+            };
+
+            It should_not_have_stored_the_concurrency_token_in_the_index_table =
+                () => TestContext.DbHelper.should_not_have_stored_member_in_indexes_table<ModelWithIntToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(int));
+
+            private static IStructureSchema _structureSchema;
+            private static ModelWithIntToken _orgItem;
+            private static ModelWithIntToken _copy1, _copy2;
+        }
+
+        [Subject(typeof(ISession), "Update (concurrencies)")]
+        public class when_item_has_enabled_long_concurrency_check_and_update_is_latest : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<ModelWithLongToken>();
+                _orgItem = new ModelWithLongToken { StringValue = "Org string", IntValue = 42 };
+                TestContext.Database.UseOnceTo().Insert(_orgItem);
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _copy1 = session.GetById<ModelWithLongToken>(_orgItem.Id);
+                    _copy1.StringValue = "From copy 1";
+                    session.Update(_copy1);
+
+                    _copy2 = session.GetById<ModelWithLongToken>(_orgItem.Id);
+                    _copy2.StringValue = "From copy 2";
+                    session.Update(_copy2);
+                }
+            };
+
+            It should_only_have_one_item_stored =
+                () => TestContext.Database.should_have_X_num_of_items<ModelWithLongToken>(1);
+
+            It should_not_have_changed_ids_of_the_structure_in_database =
+                () => TestContext.Database.should_have_ids<ModelWithLongToken>(_orgItem.Id);
+
+            It should_have_updated_values_in_database =
+                () => TestContext.Database.should_have_identical_structures(new[] { _copy2 });
+
+            It should_have_updated_the_concurrency_token = () =>
+            {
+                _copy1.ConcurrencyToken = 1;
+                _copy2.ConcurrencyToken = 2;
+            };
+
+            It should_not_have_stored_the_concurrency_token_in_the_index_table =
+                () => TestContext.DbHelper.should_not_have_stored_member_in_indexes_table<ModelWithLongToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(long));
+
+            private static IStructureSchema _structureSchema;
+            private static ModelWithLongToken _orgItem;
+            private static ModelWithLongToken _copy1, _copy2;
         }
 
         [Subject(typeof(ISession), "Update inline (concurrencies)")]
@@ -97,7 +289,7 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _orgItem = new Model { StringValue = "Org string", IntValue = 42 };
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
                 TestContext.Database.UseOnceTo().Insert(_orgItem);
             };
 
@@ -105,29 +297,29 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.Update<Model>(_orgItem.Id, x =>
+                    session.Update<ModelWithGuidToken>(_orgItem.Id, x =>
                     {
                         x.StringValue = "From first update";
                         x.IntValue = 142;
                     });
-                    session.Update<Model>(_orgItem.Id, x => x.StringValue = "From second update");
+                    session.Update<ModelWithGuidToken>(_orgItem.Id, x => x.StringValue = "From second update");
                 }
             };
 
             It should_only_have_one_item_stored =
-                () => TestContext.Database.should_have_X_num_of_items<Model>(1);
+                () => TestContext.Database.should_have_X_num_of_items<ModelWithGuidToken>(1);
 
             It should_not_have_changed_ids_of_the_structure_in_database =
-                () => TestContext.Database.should_have_ids<Model>(_orgItem.Id);
+                () => TestContext.Database.should_have_ids<ModelWithGuidToken>(_orgItem.Id);
 
             It should_have_updated_values_from_both_updates = () =>
             {
-                var refetched = TestContext.Database.UseOnceTo().GetById<Model>(_orgItem.Id);
+                var refetched = TestContext.Database.UseOnceTo().GetById<ModelWithGuidToken>(_orgItem.Id);
                 refetched.IntValue.ShouldEqual(142);
                 refetched.StringValue.ShouldEqual("From second update");
             };
 
-            private static Model _orgItem;
+            private static ModelWithGuidToken _orgItem;
         }
 
         [Subject(typeof(ISession), "Update inline (concurrencies)")]
@@ -136,7 +328,7 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _orgItem = new Model { StringValue = "Org string", IntValue = 42 };
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
                 TestContext.Database.UseOnceTo().Insert(_orgItem);
             };
 
@@ -151,7 +343,7 @@ namespace SisoDb.Specifications.UnitOfWork
                         {
                             using (var session = TestContext.Database.BeginSession())
                             {
-                                session.Update<Model>(_orgItem.Id, x =>
+                                session.Update<ModelWithGuidToken>(_orgItem.Id, x =>
                                 {
                                     semaphore.Release();
                                     Task.WaitAll(task2);
@@ -165,7 +357,7 @@ namespace SisoDb.Specifications.UnitOfWork
                         task2 = new Task(() =>
                         {
                             semaphore.Wait();
-                            CaughtException = Catch.Exception(() => _getByIdResult = TestContext.Database.UseOnceTo().GetById<Model>(_orgItem.Id));
+                            CaughtException = Catch.Exception(() => _getByIdResult = TestContext.Database.UseOnceTo().GetById<ModelWithGuidToken>(_orgItem.Id));
                             semaphore.Release();
                         });
 
@@ -197,10 +389,10 @@ namespace SisoDb.Specifications.UnitOfWork
 #endif
 
             It should_only_have_one_item_stored =
-                () => TestContext.Database.should_have_X_num_of_items<Model>(1);
+                () => TestContext.Database.should_have_X_num_of_items<ModelWithGuidToken>(1);
 
             It should_not_have_changed_ids_of_the_structure_in_database =
-                () => TestContext.Database.should_have_ids<Model>(_orgItem.Id);
+                () => TestContext.Database.should_have_ids<ModelWithGuidToken>(_orgItem.Id);
 
 #if Sql2008Provider || Sql2012Provider
             It should_not_have_returned_item_for_concurrent_get_by_id = () => _getByIdResult.ShouldBeNull();
@@ -212,13 +404,13 @@ namespace SisoDb.Specifications.UnitOfWork
 
             It should_have_updated_values_from_update = () =>
             {
-                var refetched = TestContext.Database.UseOnceTo().GetById<Model>(_orgItem.Id);
+                var refetched = TestContext.Database.UseOnceTo().GetById<ModelWithGuidToken>(_orgItem.Id);
                 refetched.IntValue.ShouldEqual(142);
                 refetched.StringValue.ShouldEqual("I am updated");
             };
 
-            private static Model _orgItem;
-            private static Model _getByIdResult;
+            private static ModelWithGuidToken _orgItem;
+            private static ModelWithGuidToken _getByIdResult;
         }
 
         [Subject(typeof(ISession), "Update inline (concurrencies)")]
@@ -227,7 +419,7 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _orgItem = new Model { StringValue = "Org string", IntValue = 42 };
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
                 TestContext.Database.UseOnceTo().Insert(_orgItem);
             };
 
@@ -242,7 +434,7 @@ namespace SisoDb.Specifications.UnitOfWork
                         {
                             using (var session = TestContext.Database.BeginSession())
                             {
-                                session.Update<Model>(_orgItem.Id, x =>
+                                session.Update<ModelWithGuidToken>(_orgItem.Id, x =>
                                 {
                                     semaphore.Release();
                                     Task.WaitAll(task2);
@@ -256,7 +448,7 @@ namespace SisoDb.Specifications.UnitOfWork
                         task2 = new Task(() =>
                         {
                             semaphore.Wait();
-                            CaughtException = Catch.Exception(() => TestContext.Database.UseOnceTo().Update<Model>(_orgItem.Id, x => x.StringValue = "I am a nasty concurrent update."));
+                            CaughtException = Catch.Exception(() => TestContext.Database.UseOnceTo().Update<ModelWithGuidToken>(_orgItem.Id, x => x.StringValue = "I am a nasty concurrent update."));
                             semaphore.Release();
                         });
 
@@ -292,26 +484,48 @@ namespace SisoDb.Specifications.UnitOfWork
 #endif
 
             It should_only_have_one_item_stored =
-                () => TestContext.Database.should_have_X_num_of_items<Model>(1);
+                () => TestContext.Database.should_have_X_num_of_items<ModelWithGuidToken>(1);
 
             It should_not_have_changed_ids_of_the_structure_in_database =
-                () => TestContext.Database.should_have_ids<Model>(_orgItem.Id);
+                () => TestContext.Database.should_have_ids<ModelWithGuidToken>(_orgItem.Id);
 
             It should_have_updated_values_from_update = () =>
             {
-                var refetched = TestContext.Database.UseOnceTo().GetById<Model>(_orgItem.Id);
+                var refetched = TestContext.Database.UseOnceTo().GetById<ModelWithGuidToken>(_orgItem.Id);
                 refetched.IntValue.ShouldEqual(142);
                 refetched.StringValue.ShouldEqual("I am updated");
             };
 
-            private static Model _orgItem;
+            private static ModelWithGuidToken _orgItem;
         }
 
-        private class Model
+        private class ModelWithGuidToken
         {
             public Guid Id { get; set; }
 
             public Guid ConcurrencyToken { get; set; }
+
+            public string StringValue { get; set; }
+
+            public int IntValue { get; set; }
+        }
+
+        private class ModelWithIntToken
+        {
+            public Guid Id { get; set; }
+
+            public int ConcurrencyToken { get; set; }
+
+            public string StringValue { get; set; }
+
+            public int IntValue { get; set; }
+        }
+
+        private class ModelWithLongToken
+        {
+            public Guid Id { get; set; }
+
+            public long ConcurrencyToken { get; set; }
 
             public string StringValue { get; set; }
 

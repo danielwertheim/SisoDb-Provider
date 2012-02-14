@@ -599,18 +599,15 @@ namespace SisoDb
                 var structureSchema = Db.StructureSchemas.GetSchema<T>();
                 var structureId = structureSchema.IdAccessor.GetValue(item);
                 Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
-                
-                if(!structureSchema.HasConcurrencyToken)
+
+                if (!structureSchema.HasConcurrencyToken)
                 {
                     var exists = TransactionalDbClient.Exists(structureId, structureSchema);
-                    if(!exists)
+                    if (!exists)
                         throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
                 }
                 else
-                {
                     EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
-                    structureSchema.ConcurrencyTokenAccessor.SetValue(item, Guid.NewGuid());
-                }
 
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
                 TransactionalDbClient.DeleteById(structureId, structureSchema);
@@ -635,7 +632,7 @@ namespace SisoDb
                 Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
 
                 var existingJson = TransactionalDbClient.GetJsonByIdWithLock(structureId, structureSchema);
-                
+
                 if (string.IsNullOrWhiteSpace(existingJson))
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
                 var item = Db.Serializer.Deserialize<T>(existingJson);
@@ -643,10 +640,7 @@ namespace SisoDb
                 modifier.Invoke(item);
 
                 if (structureSchema.HasConcurrencyToken)
-                {
                     EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
-                    structureSchema.ConcurrencyTokenAccessor.SetValue(item, Guid.NewGuid());
-                }
 
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
                 TransactionalDbClient.DeleteById(structureId, structureSchema);
@@ -669,8 +663,31 @@ namespace SisoDb
             var existingItem = Db.Serializer.Deserialize<T>(existingJson);
             var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
             var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
-            if (updatingToken != existingToken)
+
+            if (!Equals(updatingToken, existingToken))
                 throw new SisoDbConcurrencyException(structureId.Value, structureSchema.Name, ExceptionMessages.ConcurrencyException);
+
+            if (existingToken is Guid)
+            {
+                structureSchema.ConcurrencyTokenAccessor.SetValue(newItem, Guid.NewGuid());
+                return;
+            }
+
+            if (existingToken is int)
+            {
+                var existingNumericToken = (int)existingToken;
+                structureSchema.ConcurrencyTokenAccessor.SetValue(newItem, existingNumericToken + 1);
+                return;
+            }
+
+            if (existingToken is long)
+            {
+                var existingNumericToken = (long)existingToken;
+                structureSchema.ConcurrencyTokenAccessor.SetValue(newItem, existingNumericToken + 1);
+                return;
+            }
+
+            throw new SisoDbException(ExceptionMessages.ConcurrencyTokenIsOfWrongType);
         }
 
         public virtual void DeleteById<T>(object id) where T : class

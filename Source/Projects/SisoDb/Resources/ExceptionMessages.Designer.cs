@@ -97,6 +97,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The ConcurrencyToken member should be either: Guid, Int or Long..
+        /// </summary>
+        public static string ConcurrencyTokenIsOfWrongType {
+            get {
+                return ResourceManager.GetString("ConcurrencyTokenIsOfWrongType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The name of the database could not be extracted from the connection-info..
         /// </summary>
         public static string ConnectionInfo_MissingName {
