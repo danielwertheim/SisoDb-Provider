@@ -15,7 +15,7 @@ using SisoDb.Resources;
 
 namespace SisoDb
 {
-    public abstract class DbSession : ISession, IQueryEngine, IAdvancedQueries
+    public abstract class DbSession : ISession, IQueryEngine, IAdvanced
     {
         protected const int MaxInsertManyBatchSize = 500;
         protected const int MaxUpdateManyBatchSize = 500;
@@ -41,7 +41,7 @@ namespace SisoDb
             get { return this; }
         }
 
-        public virtual IAdvancedQueries Advanced
+        public virtual IAdvanced Advanced
         {
             get { return this; }
         }
@@ -95,7 +95,84 @@ namespace SisoDb
             return Transaction.Try(() => StructureSchemas.GetSchema<T>());
         }
 
-        IEnumerable<T> IAdvancedQueries.NamedQuery<T>(INamedQuery query)
+        void IAdvanced.DeleteByQuery<T>(Expression<Func<T, bool>> expression)
+        {
+            Transaction.Try(() =>
+            {
+                Ensure.That(expression, "expression").IsNotNull();
+
+                var structureSchema = Db.StructureSchemas.GetSchema<T>();
+                Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
+
+                if (Db.CacheProvider.IsEnabledFor(structureSchema))
+                    throw new SisoDbException(ExceptionMessages.WriteSession_DeleteByQueryAndCachingNotSupported.Inject(structureSchema.Name));
+
+                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
+                queryBuilder.Where(expression);
+
+                var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
+                TransactionalDbClient.DeleteByQuery(sql, structureSchema);
+            });
+        }
+
+        void IAdvanced.UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier)
+        {
+            Transaction.Try(() =>
+            {
+                Ensure.That(expression, "expression").IsNotNull();
+                Ensure.That(modifier, "modifier").IsNotNull();
+
+                var structureSchema = Db.StructureSchemas.GetSchema<T>();
+                Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
+
+                var deleteIds = new List<IStructureId>(MaxUpdateManyBatchSize);
+                var keepQueue = new List<T>(MaxUpdateManyBatchSize);
+                var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
+                var query = queryBuilder.Where(expression).Build();
+                var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+                foreach (var structure in Db.Serializer.DeserializeMany<T>(
+                    TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray())))
+                {
+                    var structureIdBefore = structureSchema.IdAccessor.GetValue(structure);
+                    modifier.Invoke(structure);
+                    var structureIdAfter = structureSchema.IdAccessor.GetValue(structure);
+
+                    if (!structureIdBefore.Value.Equals(structureIdAfter.Value))
+                        throw new SisoDbException(ExceptionMessages.WriteSession_UpdateMany_NewIdDoesNotMatchOldId.Inject(
+                                structureIdAfter.Value, structureIdBefore.Value));
+
+                    deleteIds.Add(structureIdBefore);
+
+                    keepQueue.Add(structure);
+                    if (keepQueue.Count < MaxUpdateManyBatchSize)
+                        continue;
+
+                    Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
+                    TransactionalDbClient.DeleteByIds(deleteIds, structureSchema);
+                    deleteIds.Clear();
+
+                    structureInserter.Insert(structureSchema,
+                                             structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
+                    keepQueue.Clear();
+                }
+
+                if (keepQueue.Count > 0)
+                {
+                    Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
+                    TransactionalDbClient.DeleteByIds(deleteIds, structureSchema);
+                    deleteIds.Clear();
+
+                    structureInserter.Insert(structureSchema,
+                                             structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
+                    keepQueue.Clear();
+                }
+            });
+        }
+
+        IEnumerable<T> IAdvanced.NamedQuery<T>(INamedQuery query)
         {
             return Transaction.Try(() =>
             {
@@ -109,7 +186,7 @@ namespace SisoDb
             });
         }
 
-        IEnumerable<TOut> IAdvancedQueries.NamedQueryAs<TContract, TOut>(INamedQuery query)
+        IEnumerable<TOut> IAdvanced.NamedQueryAs<TContract, TOut>(INamedQuery query)
         {
             return Transaction.Try(() =>
             {
@@ -123,7 +200,7 @@ namespace SisoDb
             });
         }
 
-        IEnumerable<string> IAdvancedQueries.NamedQueryAsJson<T>(INamedQuery query)
+        IEnumerable<string> IAdvanced.NamedQueryAsJson<T>(INamedQuery query)
         {
             return Transaction.Try(() =>
             {
@@ -136,7 +213,7 @@ namespace SisoDb
             });
         }
 
-        IEnumerable<T> IAdvancedQueries.RawQuery<T>(IRawQuery query)
+        IEnumerable<T> IAdvanced.RawQuery<T>(IRawQuery query)
         {
             return Transaction.Try(() =>
             {
@@ -150,7 +227,7 @@ namespace SisoDb
             });
         }
 
-        IEnumerable<TOut> IAdvancedQueries.RawQueryAs<TContract, TOut>(IRawQuery query)
+        IEnumerable<TOut> IAdvanced.RawQueryAs<TContract, TOut>(IRawQuery query)
         {
             return Transaction.Try(() =>
             {
@@ -164,7 +241,7 @@ namespace SisoDb
             });
         }
 
-        IEnumerable<string> IAdvancedQueries.RawQueryAsJson<T>(IRawQuery query)
+        IEnumerable<string> IAdvanced.RawQueryAsJson<T>(IRawQuery query)
         {
             return Transaction.Try(() =>
             {
@@ -596,63 +673,6 @@ namespace SisoDb
                 throw new SisoDbConcurrencyException(structureId.Value, structureSchema.Name, ExceptionMessages.ConcurrencyException);
         }
 
-        public virtual void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class
-        {
-            Transaction.Try(() =>
-            {
-                Ensure.That(expression, "expression").IsNotNull();
-                Ensure.That(modifier, "modifier").IsNotNull();
-
-                var structureSchema = Db.StructureSchemas.GetSchema<T>();
-                Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
-
-                var deleteIds = new List<IStructureId>(MaxUpdateManyBatchSize);
-                var keepQueue = new List<T>(MaxUpdateManyBatchSize);
-                var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
-                var query = queryBuilder.Where(expression).Build();
-                var sqlQuery = QueryGenerator.GenerateQuery(query);
-
-                foreach (var structure in Db.Serializer.DeserializeMany<T>(
-                    TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray())))
-                {
-                    var structureIdBefore = structureSchema.IdAccessor.GetValue(structure);
-                    modifier.Invoke(structure);
-                    var structureIdAfter = structureSchema.IdAccessor.GetValue(structure);
-
-                    if (!structureIdBefore.Value.Equals(structureIdAfter.Value))
-                        throw new SisoDbException(ExceptionMessages.WriteSession_UpdateMany_NewIdDoesNotMatchOldId.Inject(
-                                structureIdAfter.Value, structureIdBefore.Value));
-
-                    deleteIds.Add(structureIdBefore);
-
-                    keepQueue.Add(structure);
-                    if (keepQueue.Count < MaxUpdateManyBatchSize)
-                        continue;
-
-                    Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
-                    TransactionalDbClient.DeleteByIds(deleteIds, structureSchema);
-                    deleteIds.Clear();
-
-                    structureInserter.Insert(structureSchema,
-                                             structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
-                    keepQueue.Clear();
-                }
-
-                if (keepQueue.Count > 0)
-                {
-                    Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
-                    TransactionalDbClient.DeleteByIds(deleteIds, structureSchema);
-                    deleteIds.Clear();
-
-                    structureInserter.Insert(structureSchema,
-                                             structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
-                    keepQueue.Clear();
-                }
-            });
-        }
-
         public virtual void DeleteById<T>(object id) where T : class
         {
             Transaction.Try(() =>
@@ -680,26 +700,6 @@ namespace SisoDb
 
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
                 TransactionalDbClient.DeleteByIds(structureIds, structureSchema);
-            });
-        }
-
-        public virtual void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
-        {
-            Transaction.Try(() =>
-            {
-                Ensure.That(expression, "expression").IsNotNull();
-
-                var structureSchema = Db.StructureSchemas.GetSchema<T>();
-                Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
-
-                if (Db.CacheProvider.IsEnabledFor(structureSchema))
-                    throw new SisoDbException(ExceptionMessages.WriteSession_DeleteByQueryAndCachingNotSupported.Inject(structureSchema.Name));
-
-                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
-                queryBuilder.Where(expression);
-
-                var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
-                TransactionalDbClient.DeleteByQuery(sql, structureSchema);
             });
         }
     }

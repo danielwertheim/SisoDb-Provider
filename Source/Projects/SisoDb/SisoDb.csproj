@@ -124,7 +124,7 @@
     <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
-    <Compile Include="IAdvancedQueries.cs" />
+    <Compile Include="IAdvanced.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
     <Compile Include="ISession.cs" />

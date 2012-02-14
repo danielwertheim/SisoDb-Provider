@@ -18,7 +18,7 @@ namespace SisoDb
 		/// <summary>
 		/// Advances querying options.
 		/// </summary>
-		IAdvancedQueries Advanced { get; }
+		IAdvanced Advanced { get; }
 
 		/// <summary>
 		/// Lets you get a hold of the schema associated with a certain structure.
@@ -181,14 +181,6 @@ namespace SisoDb
 	    void Update<T>(object id, Action<T> modifier) where T : class;
 
         /// <summary>
-        /// Traverses every structure in the set and lets you apply changes to each yielded structure.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
-        /// <param name="modifier"></param>
-        void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class;
-
-        /// <summary>
         /// Deletes structure by id.
         /// </summary>
         /// <typeparam name="T">
@@ -203,14 +195,5 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
         void DeleteByIds<T>(params object[] ids) where T : class;
-
-        /// <summary>
-        /// Deletes one or more structures matchings the sent
-        /// expression.
-        /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="expression"></param>
-        void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
 	}
 }

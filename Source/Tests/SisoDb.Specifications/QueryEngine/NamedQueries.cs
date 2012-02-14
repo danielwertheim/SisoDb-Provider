@@ -28,7 +28,10 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 var query = new NamedQuery(ProcedureName);
-                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQuery<QueryGuidItem>(query).ToList();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQuery<QueryGuidItem>(query).ToList();
+                }
             };
 
             It should_have_fetched_0_structures =
@@ -55,7 +58,10 @@ namespace SisoDb.Specifications.QueryEngine
             Because of = () =>
             {
                 var query = new NamedQuery(ProcedureName);
-                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQueryAsJson<QueryGuidItem>(query).ToList();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQueryAsJson<QueryGuidItem>(query).ToList();
+                }
             };
 
             It should_have_fetched_0_structures =
@@ -87,8 +93,10 @@ namespace SisoDb.Specifications.QueryEngine
                 query.Add(
                     new DacParameter("minSortOrder", _structures[1].SortOrder), 
                     new DacParameter("maxSortOrder", _structures[2].SortOrder));
-
-                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQuery<QueryGuidItem>(query).ToList();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQuery<QueryGuidItem>(query).ToList();
+                }
             };
 
             It should_have_fetched_two_structures =
@@ -127,8 +135,10 @@ namespace SisoDb.Specifications.QueryEngine
                 query.Add(
                     new DacParameter("minSortOrder", _structures[1].SortOrder),
                     new DacParameter("maxSortOrder", _structures[2].SortOrder));
-
-                _fetchedStructures = TestContext.Database.UseOnceTo().NamedQueryAsJson<QueryGuidItem>(query).ToList();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQueryAsJson<QueryGuidItem>(query).ToList();
+                }
             };
 
             It should_have_fetched_two_structures =

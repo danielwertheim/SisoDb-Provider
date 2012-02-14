@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Machine.Specifications;
 using SisoDb.Querying;
 using SisoDb.Testing;
@@ -135,8 +136,14 @@ namespace SisoDb.Specifications.QueryEngine
                 TestContext.DbHelper.DropProcedure(ProcedureName);
             }
 
-            Because of =
-                () => _fetchedStructures = TestContext.Database.UseOnceTo().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName));
+            Because of = () =>
+            {
+                var query = new NamedQuery(ProcedureName);
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQueryAs<IAlbumData, Album>(query).ToList();
+                }
+            };
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -164,8 +171,14 @@ namespace SisoDb.Specifications.QueryEngine
                 TestContext.DbHelper.DropProcedure(ProcedureName);
             }
 
-            Because of =
-                () => _fetchedStructures = TestContext.Database.UseOnceTo().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName));
+            Because of = () =>
+            {
+                var query = new NamedQuery(ProcedureName);
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQueryAs<IAlbumData, Album>(query).ToList();
+                }
+            };
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);

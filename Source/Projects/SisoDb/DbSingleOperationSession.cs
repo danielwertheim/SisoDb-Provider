@@ -103,66 +103,6 @@ namespace SisoDb
     		}
     	}
 
-    	public T[] NamedQuery<T>(INamedQuery query) where T : class
-		{
-			Ensure.That(query, "query").IsNotNull();
-
-			using (var session =_db.BeginSession())
-			{
-				return session.Advanced.NamedQuery<T>(query).ToArray();
-			}
-		}
-
-		public TOut[] NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class
-		{
-			Ensure.That(query, "query").IsNotNull();
-
-			using (var session =_db.BeginSession())
-			{
-				return session.Advanced.NamedQueryAs<TContract, TOut>(query).ToArray();
-			}
-		}
-
-		public string[] NamedQueryAsJson<T>(INamedQuery query) where T : class
-		{
-			Ensure.That(query, "query").IsNotNull();
-
-			using (var session =_db.BeginSession())
-			{
-				return session.Advanced.NamedQueryAsJson<T>(query).ToArray();
-			}
-		}
-
-		public T[] RawQuery<T>(IRawQuery query) where T : class
-    	{
-			Ensure.That(query, "query").IsNotNull();
-
-			using (var session =_db.BeginSession())
-			{
-				return session.Advanced.RawQuery<T>(query).ToArray();
-			}
-    	}
-
-		public TOut[] RawQueryAs<TContract, TOut>(IRawQuery query) where TContract : class where TOut : class
-    	{
-			Ensure.That(query, "query").IsNotNull();
-
-			using (var session =_db.BeginSession())
-			{
-				return session.Advanced.RawQueryAs<TContract, TOut>(query).ToArray();
-			}
-    	}
-
-		public string[] RawQueryAsJson<T>(IRawQuery query) where T : class
-    	{
-			Ensure.That(query, "query").IsNotNull();
-
-			using (var session =_db.BeginSession())
-			{
-				return session.Advanced.RawQueryAsJson<T>(query).ToArray();
-			}
-    	}
-
     	public ISisoQueryable<T> Query<T>() where T : class
 		{
 			return new SisoReadOnceQueryable<T>(_db.ProviderFactory.GetQueryBuilder<T>(_db.StructureSchemas), () => _db.BeginSession());
@@ -239,15 +179,6 @@ namespace SisoDb
             }
         }
 
-        public void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class
-        {
-            Ensure.That(expression, "expression").IsNotNull();
-            Ensure.That(modifier, "modifier").IsNotNull();
-
-            using (var session = _db.BeginSession())
-                session.UpdateMany(expression, modifier);
-        }
-
         public void DeleteById<T>(object id) where T : class
         {
             Ensure.That(id, "id").IsNotNull();
@@ -265,16 +196,6 @@ namespace SisoDb
             using (var session = _db.BeginSession())
             {
                 session.DeleteByIds<T>(ids);
-            }
-        }
-
-        public void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class
-        {
-            Ensure.That(expression, "expression").IsNotNull();
-
-            using (var session = _db.BeginSession())
-            {
-                session.DeleteByQuery(expression);
             }
         }
     }

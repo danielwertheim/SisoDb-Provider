@@ -46,8 +46,8 @@ namespace SisoDb.Profiling
             stopWatch.Start();
         	using (var session = database.BeginSession())
         	{
-				session.UpdateMany<Customer>(
-					c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo,
+				session.Advanced.UpdateMany<Customer>(
+                    c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo,
 					customer => { customer.Firstname += "Udated"; });
         	}
 

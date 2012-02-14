@@ -25,7 +25,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using(var session = TestContext.Database.BeginSession())
                 {
-                    session.DeleteByQuery<GuidItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.Advanced.DeleteByQuery<GuidItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -77,7 +77,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.Advanced.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -129,7 +129,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.DeleteByQuery<IdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.Advanced.DeleteByQuery<IdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 

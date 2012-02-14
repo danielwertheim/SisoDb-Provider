@@ -1,12 +1,32 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SisoDb
 {
     /// <summary>
     /// Used to execute some more advances query operations against the database.
     /// </summary>
-    public interface IAdvancedQueries
+    public interface IAdvanced
     {
+        /// <summary>
+        /// Deletes one or more structures matchings the sent
+        /// expression.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="expression"></param>
+        /// <remarks>Does not notify the cache provider.</remarks>
+        void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
+
+        /// <summary>
+        /// Traverses every structure in the set and lets you apply changes to each yielded structure.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="modifier"></param>
+        void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class;
+
         /// <summary>
         /// Lets you invoke stored procedures that returns Json,
         /// which will get deserialized to <typeparamref name="T"/>.

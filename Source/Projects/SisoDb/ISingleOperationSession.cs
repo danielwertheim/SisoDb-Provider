@@ -18,14 +18,6 @@ namespace SisoDb
 	    TOut[] GetByIdsAs<TContract, TOut>(params object[] ids) where TContract : class where TOut : class;
 	    string[] GetByIdsAsJson<T>(params object[] ids) where T : class;
 
-	    T[] NamedQuery<T>(INamedQuery query) where T : class;
-	    TOut[] NamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class;
-	    string[] NamedQueryAsJson<T>(INamedQuery query) where T : class;
-
-	    T[] RawQuery<T>(IRawQuery query) where T : class;
-	    TOut[] RawQueryAs<TContract, TOut>(IRawQuery query) where TContract : class where TOut : class;
-	    string[] RawQueryAsJson<T>(IRawQuery query) where T : class;
-
 	    ISisoQueryable<T> Query<T>() where T : class;
 
 	    void Insert<T>(T item) where T : class;
@@ -36,10 +28,8 @@ namespace SisoDb
 
 	    void Update<T>(T item) where T : class;
         void Update<T>(object id, Action<T> modifier) where T : class;
-	    void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class;
 
 	    void DeleteById<T>(object id) where T : class;
 	    void DeleteByIds<T>(params object[] ids) where T : class;
-	    void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
 	}
 }
