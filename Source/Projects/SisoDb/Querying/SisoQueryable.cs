@@ -8,14 +8,14 @@ namespace SisoDb.Querying
 {
 	public class SisoQueryable<T> : ISisoQueryable<T> where T : class
 	{
-		protected virtual IReadSession ReadSession { get; private set; }
+		protected virtual ISession Session { get; private set; }
 		protected readonly IQueryBuilder<T> QueryBuilder;
 
-		public SisoQueryable(IQueryBuilder<T> queryBuilder, IReadSession readSession)
+		public SisoQueryable(IQueryBuilder<T> queryBuilder, ISession session)
 			: this(queryBuilder)
 		{
-			Ensure.That(readSession, "ReadSession").IsNotNull();
-			ReadSession = readSession;
+			Ensure.That(session, "Session").IsNotNull();
+			Session = session;
 		}
 
 		protected SisoQueryable(IQueryBuilder<T> queryBuilder)
@@ -48,24 +48,24 @@ namespace SisoDb.Querying
 
 		public virtual IEnumerable<T> ToEnumerable()
 		{
-			return ReadSession.QueryEngine.Query<T>(QueryBuilder.Build());
+			return Session.QueryEngine.Query<T>(QueryBuilder.Build());
 		}
 
 		public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
 		{
-			return ReadSession.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
+			return Session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
 		}
 
         public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template) where TResult : class
         {
             Ensure.That(template, "template").IsNotNull();
 
-            return ReadSession.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
+            return Session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
         }
 
 		public virtual IEnumerable<string> ToEnumerableOfJson()
 		{
-			return ReadSession.QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
+			return Session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
 		}
 
 		public virtual IList<T> ToList()
@@ -78,7 +78,7 @@ namespace SisoDb.Querying
 			return ToEnumerableOf<TResult>().ToList();
 		}
         
-	    public IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
+	    public virtual IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
 	    {
 	        Ensure.That(template, "template").IsNotNull();
 
@@ -154,14 +154,14 @@ namespace SisoDb.Querying
 		{
 			QueryBuilder.Clear();
 
-			return ReadSession.QueryEngine.Count<T>(QueryBuilder.Build());
+			return Session.QueryEngine.Count<T>(QueryBuilder.Build());
 		}
 
 		public virtual int Count(Expression<Func<T, bool>> expression)
 		{
 			QueryBuilder.Clear();
 
-			return ReadSession.QueryEngine.Count<T>(QueryBuilder.Where(expression).Build());
+			return Session.QueryEngine.Count<T>(QueryBuilder.Where(expression).Build());
 		}
 
 		public virtual ISisoQueryable<T> Take(int numOfStructures)

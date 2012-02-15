@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Machine.Specifications;
 using SisoDb.Querying;
 using SisoDb.Testing;
@@ -8,7 +9,7 @@ namespace SisoDb.Specifications.QueryEngine
 {
 	class Includes
     {
-        [Subject(typeof(IReadSession), "Includes using Get all as X")]
+        [Subject(typeof(ISession), "Includes using Get all as X")]
         public class when_getting_all_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -17,7 +18,7 @@ namespace SisoDb.Specifications.QueryEngine
                 _structures = Establishments.SetupStructuresForIncludes(TestContext);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<IAlbumData>()
                 .Include<Genre>(a => a.GenreId)
                 .Include<Artist>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
@@ -35,7 +36,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Includes using Get all as X")]
+        [Subject(typeof(ISession), "Includes using Get all as X")]
         public class when_getting_all_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -44,7 +45,7 @@ namespace SisoDb.Specifications.QueryEngine
                 _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<IAlbumData>()
 				.Include<IGenreData>(a => a.GenreId)
                 .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
@@ -59,7 +60,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Includes with Where, Paging and Sorting using Query as X")]
+        [Subject(typeof(ISession), "Includes with Where, Paging and Sorting using Query as X")]
         public class when_querying_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -68,7 +69,7 @@ namespace SisoDb.Specifications.QueryEngine
                 _structures = Establishments.SetupStructuresForIncludes(TestContext);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<IAlbumData>()
                 .Where(a => a.Name == "Born to run")
                 .OrderBy(a => a.Name)
@@ -84,7 +85,7 @@ namespace SisoDb.Specifications.QueryEngine
 
             It should_not_have_stored_genere_and_artists_in_the_json = () =>
             {
-                var json = TestContext.Database.ReadOnce().GetByIdAsJson<IAlbumData>(_structures[0].StructureId);
+                var json = TestContext.Database.UseOnceTo().GetByIdAsJson<IAlbumData>(_structures[0].StructureId);
                 json.Length.ShouldEqual(214);
                 json.ShouldNotContain("\"Genre\"");
                 json.ShouldNotContain("\"Artist\"");
@@ -95,7 +96,7 @@ namespace SisoDb.Specifications.QueryEngine
             private static IList<Album> _fetchedStructures;
         }
 
-        [Subject(typeof(IReadSession), "Includes using Query as X")]
+        [Subject(typeof(ISession), "Includes using Query as X")]
         public class when_querying_using_interfaces_and_including_different_firstlevel_members : SpecificationBase
         {
             Establish context = () =>
@@ -104,7 +105,7 @@ namespace SisoDb.Specifications.QueryEngine
                 _structure = Establishments.SetupStructuresUsingInterfacesForIncludes(TestContext);
             };
 
-            Because of = () => _fetchedStructures = TestContext.Database.ReadOnce()
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
 				.Query<IAlbumData>()
                 .Include<IGenreData>(a => a.GenreId)
                 .Include<IArtistData>(a => a.ArtistId, a => a.SecondArtistId).ToListOf<Album>();
@@ -135,8 +136,14 @@ namespace SisoDb.Specifications.QueryEngine
                 TestContext.DbHelper.DropProcedure(ProcedureName);
             }
 
-            Because of =
-                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName));
+            Because of = () =>
+            {
+                var query = new NamedQuery(ProcedureName);
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQueryAs<IAlbumData, Album>(query).ToList();
+                }
+            };
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -164,8 +171,14 @@ namespace SisoDb.Specifications.QueryEngine
                 TestContext.DbHelper.DropProcedure(ProcedureName);
             }
 
-            Because of =
-                () => _fetchedStructures = TestContext.Database.ReadOnce().NamedQueryAs<IAlbumData, Album>(new NamedQuery(ProcedureName));
+            Because of = () =>
+            {
+                var query = new NamedQuery(ProcedureName);
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Advanced.NamedQueryAs<IAlbumData, Album>(query).ToList();
+                }
+            };
 
             It should_have_fetched_1_album =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -205,12 +218,12 @@ namespace SisoDb.Specifications.QueryEngine
 					SecondArtist = secondArtist
 				};
 
-                testContext.Database.WithWriteSession(session =>
+                using(var session = testContext.Database.BeginSession())
                 {
-                    session.InsertMany(new [] { genre, secondGenre });
-                    session.InsertMany(new [] { artist, secondArtist, thirdArtist });
-                    session.InsertMany<IAlbumData>(new [] { album, secondAlbum });
-                });
+                    session.InsertMany(new[] { genre, secondGenre });
+                    session.InsertMany(new[] { artist, secondArtist, thirdArtist });
+                    session.InsertMany<IAlbumData>(new[] { album, secondAlbum });
+                }
 
                 return new [] { album, secondAlbum };
             }
@@ -228,12 +241,12 @@ namespace SisoDb.Specifications.QueryEngine
                     SecondArtist = secondArtist
                 };
 
-                testContext.Database.WithWriteSession(session =>
+                using(var session = testContext.Database.BeginSession())
                 {
                     session.Insert<IGenreData>(genre);
                     session.InsertMany<IArtistData>(new[] { artist, secondArtist });
                     session.Insert<IAlbumData>(album);
-                });
+                }
 
                 return album;
             }

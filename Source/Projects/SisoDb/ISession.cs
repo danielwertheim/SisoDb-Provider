@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb
 {
 	/// <summary>
-	/// Used to query the database.
+	/// A short lived sessioni used to interact with the database.
 	/// </summary>
-	public interface IReadSession : IDisposable
+	public interface ISession : IDisposable
 	{
 		/// <summary>
 		/// Low level API that executes queries as <see cref="IQuery"/>.
@@ -17,7 +18,7 @@ namespace SisoDb
 		/// <summary>
 		/// Advances querying options.
 		/// </summary>
-		IAdvancedQueries Advanced { get; }
+		IAdvanced Advanced { get; }
 
 		/// <summary>
 		/// Lets you get a hold of the schema associated with a certain structure.
@@ -100,17 +101,6 @@ namespace SisoDb
 		IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class;
 
 		/// <summary>
-		/// Returns all structures for the defined structure <typeparamref name="T"/>
-		/// matching specified id interval.
-		/// </summary>
-		/// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-		/// <param name="idFrom"></param>
-		/// <param name="idTo"></param>
-		/// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
-		/// /// <remarks>YOU COULD GET STRANGE RESULTS IF YOU HAVE SPECIFIED NON SEQUENTIAL GUIDS.</remarks>
-		IEnumerable<T> GetByIdInterval<T>(object idFrom, object idTo) where T : class;
-
-		/// <summary>
 		/// Lets you perform a Query defining things like
 		/// <see cref="ISisoQueryable{T}.Take"/>
 		/// <see cref="ISisoQueryable{T}.Where"/>
@@ -121,5 +111,90 @@ namespace SisoDb
 		/// <returns></returns>
 		/// <remarks>The query is defered and is executed when you start yield the result.</remarks>
 		ISisoQueryable<T> Query<T>() where T : class;
+
+        /// <summary>
+        /// Inserts a single structure using the <typeparamref name="T"/> as
+        /// the contract for the structure being inserted.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="item"></param>
+        void Insert<T>(T item) where T : class;
+
+        /// <summary>
+        /// Inserts a single structure using the <typeparamref name="T"/> as
+        /// the contract for the structure being inserted. As item, you can pass
+        /// any type that has partial or full match of the contract, without extending it.
+        /// E.g An anonymous type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+	    void InsertAs<T>(object item) where T : class;
+
+        /// <summary>
+        /// Inserts Json strcutures using the <typeparamref name="T"/> as
+        /// the contract for the structure being inserted.
+        /// </summary>
+        /// <remarks>Deserialization of the Json structure will take place, 
+        /// so If you do have the instace pass that instead using other overload!</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        void InsertJson<T>(string json) where T : class;
+
+        /// <summary>
+        /// Inserts multiple structures using the <typeparamref name="T"/> as
+        /// the contract for the structures being inserted. 
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="items"></param>
+        void InsertMany<T>(IEnumerable<T> items) where T : class;
+
+        /// <summary>
+        /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
+        /// the contract for the structures being inserted.
+        /// </summary>
+        /// <remarks>Deserialization of the Json structures will take place, 
+        /// so If you do have the instace pass that instead using other overload!</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        void InsertManyJson<T>(IEnumerable<string> json) where T : class;
+
+        /// <summary>
+        /// Updates the sent structure. If it
+        /// does not exist, an <see cref="SisoDbException"/> will be
+        /// thrown.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="item"></param>
+        void Update<T>(T item) where T : class;
+
+	    /// <summary>
+	    /// Uses sent id to locate a structure and then calls sent <paramref name="modifier"/>
+	    /// to apply the changes. Will also place an rowlock, which makes it highly
+	    /// useful in a concurrent environment like in an event denormalizer.
+	    /// </summary>
+	    /// <typeparam name="T"></typeparam>
+	    /// <param name="id"></param>
+	    /// <param name="modifier"></param>
+        /// <param name="proceed">True to continue with update;False to abort</param>
+        void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
+
+        /// <summary>
+        /// Deletes structure by id.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="id"></param>
+        void DeleteById<T>(object id) where T : class;
+
+        /// <summary>
+        /// Deletes all structures for the defined structure <typeparamref name="T"/>
+        /// matching passed ids.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids used for matching the structures to delete.</param>
+        void DeleteByIds<T>(params object[] ids) where T : class;
 	}
 }

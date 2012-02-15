@@ -6,108 +6,106 @@ using System.Data.SqlServerCe;
 
 namespace SisoDb.SqlCe4
 {
-	public class SqlCe4ConnectionManager : IConnectionManager
-	{
-		private readonly ConcurrentDictionary<string, BlockingCollection<IDbConnection>> _clientConnections;
+    public class SqlCe4ConnectionManager : IConnectionManager
+    {
+        private readonly ConcurrentDictionary<string, IDbConnection> _warmupConnections;
 
-		public SqlCe4ConnectionManager()
-		{
-			_clientConnections = new ConcurrentDictionary<string, BlockingCollection<IDbConnection>>();
-		}
+        public SqlCe4ConnectionManager()
+        {
+            _warmupConnections = new ConcurrentDictionary<string, IDbConnection>();
+        }
 
-		~SqlCe4ConnectionManager()
-		{
-			ReleaseAllDbConnections();
-		}
+        ~SqlCe4ConnectionManager()
+        {
+            ReleaseAllDbConnections();
+        }
 
-		public IDbConnection OpenServerConnection(IConnectionString connectionString)
-		{
-			var cn = new SqlCeConnection(connectionString.PlainString);
-			cn.Open();
+        public IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
+        {
+            EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
+            
+            var cn = new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString);
+            cn.Open();
 
-			return cn;
-		}
+            return cn;
+        }
 
-		public void ReleaseServerConnection(IDbConnection dbConnection)
-		{
-			if (dbConnection == null)
-				return;
+        public IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        {
+            EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
 
-			if (dbConnection.State != ConnectionState.Closed)
-				dbConnection.Close();
+            var cn = new SqlCeConnection(connectionInfo.ClientConnectionString.PlainString);
+            cn.Open();
 
-			dbConnection.Dispose();
-		}
+            return cn;
+        }
 
-		public IDbConnection OpenDbConnection(IConnectionString connectionString)
-		{
-			IDbConnection cn;
+        public void ReleaseAllDbConnections()
+        {
+            var exceptions = new List<Exception>();
 
-			var connectionsPerCnString = GetConnectionsForConnectionString(connectionString.PlainString);
-			if (connectionsPerCnString.TryTake(out cn))
-				return cn;
+            foreach (var key in _warmupConnections.Keys)
+            {
+                try
+                {
+                    IDbConnection connection;
+                    if (_warmupConnections.TryRemove(key, out connection))
+                    {
+                        try
+                        {
+                           if(connection != null)
+                           {
+                               connection.Close();
+                               connection.Dispose();
+                           }
+                        }
+                        catch (Exception ex)
+                        {
+                            exceptions.Add(ex);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            }
 
-			cn = new SqlCeConnection(connectionString.PlainString);
-			cn.Open();
-			return cn;
-		}
+            _warmupConnections.Clear();
 
-		public void ReleaseAllDbConnections()
-		{
-			var exceptions = new List<Exception>();
+            if (exceptions.Count > 0)
+                throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
+        }
 
-			foreach (var key in _clientConnections.Keys)
-			{
-				try
-				{
-					BlockingCollection<IDbConnection> connections;
-					if (_clientConnections.TryRemove(key, out connections))
-					{
-						while (connections.Count > 0)
-						{
-							try
-							{
-								IDbConnection cn;
-								if (connections.TryTake(out cn) && cn != null)
-								{
-									if (cn.State != ConnectionState.Closed)
-										cn.Close();
+        public void ReleaseServerConnection(IDbConnection dbConnection)
+        {
+            if (dbConnection == null)
+                return;
 
-									cn.Dispose();
-								}
-							}
-							catch (Exception ex)
-							{
-								exceptions.Add(ex);
-							}
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					exceptions.Add(ex);
-				}
-			}
+            dbConnection.Close();
+            dbConnection.Dispose();
+        }
 
-			_clientConnections.Clear();
+        public void ReleaseClientDbConnection(IDbConnection dbConnection)
+        {
+            if (dbConnection == null)
+                return;
 
-			if (exceptions.Count > 0)
-				throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
-		}
+            dbConnection.Close();
+            dbConnection.Dispose();
+        }
 
-		public void ReleaseDbConnection(IDbConnection dbConnection)
-		{
-			var connectionsPerCnString = GetConnectionsForConnectionString(dbConnection.ConnectionString);
-			if (!connectionsPerCnString.TryAdd(dbConnection))
-			{
-				dbConnection.Close();
-				dbConnection.Dispose();
-			}
-		}
+        private void EnsureWarmedUp(SqlCe4ConnectionInfo connectionInfo)
+        {
+            if(_warmupConnections.ContainsKey(connectionInfo.FilePath))
+                return;
 
-		private BlockingCollection<IDbConnection> GetConnectionsForConnectionString(string connectionString)
-		{
-			return _clientConnections.GetOrAdd(connectionString, new BlockingCollection<IDbConnection>());
-		}
-	}
+            _warmupConnections.GetOrAdd(connectionInfo.FilePath, cnString =>
+            {
+                var cn = new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString);
+                cn.Open();
+                return cn;
+            });
+        }
+    }
 }

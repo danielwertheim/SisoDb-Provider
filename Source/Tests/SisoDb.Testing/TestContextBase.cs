@@ -5,9 +5,8 @@ namespace SisoDb.Testing
     public abstract class TestContextBase : ITestContext
     {
         public ISisoDatabase Database { get; private set; }
-        protected IDbProviderFactory ProviderFactory { get; private set; }
+        public IDbProviderFactory ProviderFactory { get; private set; }
         public ITestDbUtils DbHelper { get; protected set; }
-        public ITestDbUtils DbHelperForServer { get; protected set; }
 
         protected TestContextBase(ISisoDatabaseFactory dbFactory, ISisoConnectionInfo connectionInfo, IDbProviderFactory providerFactory)
         {
@@ -22,6 +21,11 @@ namespace SisoDb.Testing
 				Database.DropStructureSets(Database.StructureSchemas.GetRegistrations().Select(r => r.Key).ToArray());
 				Database = null;
 			}
+
+            if(ProviderFactory != null)
+            {
+                ProviderFactory.ConnectionManager.ReleaseAllDbConnections();
+            }
         }
     }
 }

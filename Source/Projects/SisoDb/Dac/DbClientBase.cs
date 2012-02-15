@@ -3,32 +3,24 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Transactions;
 using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
-using SisoDb.Resources;
 
 namespace SisoDb.Dac
 {
 	public abstract class DbClientBase : IDbClient
 	{
-		protected readonly ISisoConnectionInfo ConnectionInfo;
-		protected readonly IConnectionManager ConnectionManager;
-		protected IDbConnection Connection;
-		protected IDbTransaction Transaction;
-		protected TransactionScope Ts;
+        public ISisoConnectionInfo ConnectionInfo { get; private set; }
+
+	    protected readonly IConnectionManager ConnectionManager;
+        protected IDbConnection Connection;
 		protected readonly ISqlStatements SqlStatements;
 
-		public bool IsTransactional
-		{
-			get { return Transaction != null || Ts != null; }
-		}
-
-		protected DbClientBase(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+		protected DbClientBase(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
 		{
 			Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 			Ensure.That(connectionManager, "connectionManager").IsNotNull();
@@ -36,79 +28,37 @@ namespace SisoDb.Dac
 
 			ConnectionInfo = connectionInfo;
 			ConnectionManager = connectionManager;
-			SqlStatements = sqlStatements;
-
-			Connection = ConnectionManager.OpenDbConnection(connectionInfo.ConnectionString);
-
-			if (System.Transactions.Transaction.Current == null)
-				Transaction = transactional ? Connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted) : null;
-			else
-				Ts = new TransactionScope(TransactionScopeOption.Suppress, new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted});
+            Connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+            SqlStatements = sqlStatements;
 		}
 
-		public void Dispose()
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+
+            if (Connection == null)
+                return;
+
+            ConnectionManager.ReleaseClientDbConnection(Connection);
+            Connection = null;
+        }
+
+	    public abstract IDbBulkCopy GetBulkCopy();
+
+	    public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
 		{
-			GC.SuppressFinalize(this);
-
-			if (Transaction != null)
-			{
-				Transaction.Rollback();
-				Transaction.Dispose();
-				Transaction = null;
-			}
-
-			if (Ts != null)
-			{
-				Ts.Dispose();
-				Ts = null;
-			}
-
-			if (Connection == null)
-				return;
-
-			ConnectionManager.ReleaseDbConnection(Connection);
-			Connection = null;
+			Connection.ExecuteNonQuery(sql, parameters);
 		}
 
-		public virtual void Commit()
-		{
-			if (Ts != null)
-			{
-				Ts.Complete();
-				Ts.Dispose();
-				Ts = null;
-				return;
-			}
+        public virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
+        {
+            using (var cmd = CreateCommand(sql, parameters))
+            {
+                return cmd.GetScalarResult<T>();
+            }
+        }
 
-			if (System.Transactions.Transaction.Current != null)
-				return;
-
-			if (Transaction == null)
-				throw new NotSupportedException(ExceptionMessages.DbClient_Commit_NonTransactional);
-
-			Transaction.Commit();
-			Transaction.Dispose();
-			Transaction = null;
-		}
-
-		protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
-		{
-			return Connection.CreateCommand(Transaction, sql, parameters);
-		}
-
-		protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
-		{
-			return Connection.CreateSpCommand(Transaction, sp, parameters);
-		}
-
-		public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
-		{
-			Connection.ExecuteNonQuery(Transaction, sql, parameters);
-		}
-
-		public abstract IDbBulkCopy GetBulkCopy();
-
-		public abstract void Drop(IStructureSchema structureSchema);
+	    public abstract void Drop(IStructureSchema structureSchema);
 
 		public abstract void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
 
@@ -158,7 +108,16 @@ namespace SisoDb.Dac
 			return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
 		}
 
-		public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
+	    public virtual string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema)
+	    {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("GetJsonByIdWithLock").Inject(structureSchema.GetStructureTableName());
+
+            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
+	    }
+
+	    public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
 		{
 			Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -168,23 +127,6 @@ namespace SisoDb.Dac
 		}
 
 		public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
-
-		public virtual IEnumerable<string> GetJsonWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
-		{
-			Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-			var sql = SqlStatements.GetSql("GetJsonWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
-
-			return YieldJson(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value));
-		}
-
-		protected virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
-		{
-			using (var cmd = CreateCommand(sql, parameters))
-			{
-				return cmd.GetScalarResult<T>();
-			}
-		}
 
 		public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
 		{
@@ -219,7 +161,69 @@ namespace SisoDb.Dac
 			}
 		}
 
-		private IEnumerable<string> YieldJson(IDbCommand cmd)
+	    public virtual void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema)
+	    {
+            var sql = SqlStatements.GetSql("SingleInsertStructure").Inject(
+                structureSchema.GetStructureTableName(),
+                StructureStorageSchema.Fields.Id.Name,
+                StructureStorageSchema.Fields.Json.Name);
+
+            ExecuteNonQuery(sql,
+                new DacParameter(StructureStorageSchema.Fields.Id.Name, structure.Id.Value),
+                new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data));
+	    }
+
+	    public virtual void SingleInsertOfValueTypeIndex(IStructureIndex structureIndex, string valueTypeIndexesTableName)
+	    {
+            var sql = SqlStatements.GetSql("SingleInsertOfValueTypeIndex").Inject(
+                valueTypeIndexesTableName,
+                IndexStorageSchema.Fields.StructureId.Name,
+                IndexStorageSchema.Fields.MemberPath.Name,
+                IndexStorageSchema.Fields.Value.Name,
+                IndexStorageSchema.Fields.StringValue.Name);
+
+            ExecuteNonQuery(sql,
+                new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
+                new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
+                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value),
+                new DacParameter(IndexStorageSchema.Fields.StringValue.Name, SisoEnvironment.StringConverter.AsString(structureIndex.Value)));
+	    }
+
+	    public virtual void SingleInsertOfStringTypeIndex(IStructureIndex structureIndex, string stringishIndexesTableName)
+	    {
+            var sql = SqlStatements.GetSql("SingleInsertOfStringTypeIndex").Inject(
+                stringishIndexesTableName,
+                IndexStorageSchema.Fields.StructureId.Name,
+                IndexStorageSchema.Fields.MemberPath.Name,
+                IndexStorageSchema.Fields.Value.Name);
+
+            ExecuteNonQuery(sql,
+                new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
+                new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
+                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value.ToString()));
+	    }
+
+        public virtual void SingleInsertOfUniqueIndex(IStructureIndex uniqueStructureIndex, IStructureSchema structureSchema)
+        {
+            var sql = SqlStatements.GetSql("SingleInsertOfUniqueIndex").Inject(
+                structureSchema.GetUniquesTableName(),
+                UniqueStorageSchema.Fields.StructureId.Name,
+                UniqueStorageSchema.Fields.UqStructureId.Name,
+                UniqueStorageSchema.Fields.UqMemberPath.Name,
+                UniqueStorageSchema.Fields.UqValue.Name);
+
+            var parameters = new DacParameter[4];
+            parameters[0] = new DacParameter(UniqueStorageSchema.Fields.StructureId.Name, uniqueStructureIndex.StructureId.Value);
+            parameters[1] = (uniqueStructureIndex.IndexType == StructureIndexType.UniquePerType)
+                                ? new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, DBNull.Value)
+                                : new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, uniqueStructureIndex.StructureId.Value);
+            parameters[2] = new DacParameter(UniqueStorageSchema.Fields.UqMemberPath.Name, uniqueStructureIndex.Path);
+            parameters[3] = new DacParameter(UniqueStorageSchema.Fields.UqValue.Name, SisoEnvironment.HashService.GenerateHash(SisoEnvironment.StringConverter.AsString(uniqueStructureIndex.Value)));
+
+            ExecuteNonQuery(sql, parameters);
+        }
+
+	    private IEnumerable<string> YieldJson(IDbCommand cmd)
 		{
 			Func<IDataRecord, IDictionary<int, string>, string> read = (dr, af) => dr.GetString(0);
 			IDictionary<int, string> additionalJsonFields = null;
@@ -283,5 +287,15 @@ namespace SisoDb.Dac
 				additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
 				dataRecord.GetString(additionalJsonField.Key)));
 		}
+
+        protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
+        {
+            return Connection.CreateCommand(sql, parameters);
+        }
+
+        protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
+        {
+            return Connection.CreateSpCommand(sp, parameters);
+        }
 	}
 }

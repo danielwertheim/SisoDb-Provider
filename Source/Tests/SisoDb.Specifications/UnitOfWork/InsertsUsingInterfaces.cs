@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsUsingInterfaces
     {
-        [Subject(typeof(IWriteSession), "Insert (interfaces)")]
+        [Subject(typeof(ISession), "Insert (interfaces)")]
         public class when_inserting_subclass_as_subclass : SpecificationBase
         {
             Establish context = () =>
@@ -26,7 +26,7 @@ namespace SisoDb.Specifications.UnitOfWork
                     MyItemInt = 242
                 };
 
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }
@@ -48,7 +48,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static MyItemWithInterface _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (interfaces)")]
+        [Subject(typeof(ISession), "Insert (interfaces)")]
         public class when_inserting_subclass_as_interface : SpecificationBase
         {
             Establish context = () =>
@@ -66,7 +66,7 @@ namespace SisoDb.Specifications.UnitOfWork
                     MyItemInt = 242
                 };
 
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(_structure);
                 }

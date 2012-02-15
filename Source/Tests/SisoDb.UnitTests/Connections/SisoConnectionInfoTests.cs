@@ -8,21 +8,46 @@ namespace SisoDb.UnitTests.Connections
     public class SisoConnectionInfoTests : UnitTestBase
     {
         [Test]
-        public void ProviderType_WhenProviderNameIsSql2008_ValueIsReflectedInProperty()
+        public void Provider_WhenProviderNameIsSql2008_ValueIsReflectedInProperty()
         {
             var connectionStringFake = new Mock<IConnectionString>();
-            connectionStringFake.Setup(f => f.Provider).Returns("Sql2008");
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
             var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
             Assert.AreEqual(StorageProviders.Sql2008, connectionInfo.ProviderType);
         }
 
         [Test]
-        public void Constructor_WhenNoConnectionStringOrNameIsPassed_ThrowsArgumentException()
+        public void ParallelInserts_WhenValueIsOn_ValueIsReflectedInProperty()
         {
-            var ex = Assert.Throws<ArgumentException>(() => new SisoConnectionInfoImplementation(null as string));
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            connectionStringFake.Setup(f => f.ParallelInserts).Returns(ParallelInserts.On.ToString());
+            var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
-            Assert.AreEqual("connectionStringOrName", ex.ParamName);
+            Assert.AreEqual(ParallelInserts.On, connectionInfo.ParallelInserts);
+        }
+
+        [Test]
+        public void ParallelInserts_WhenValueIsOff_ValueIsReflectedInProperty()
+        {
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            connectionStringFake.Setup(f => f.ParallelInserts).Returns(ParallelInserts.Off.ToString());
+            var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
+
+            Assert.AreEqual(ParallelInserts.Off, connectionInfo.ParallelInserts);
+        }
+
+        [Test]
+        public void ParallelInserts_WhenNoValueIsSpecified_ValueIsNone()
+        {
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            connectionStringFake.Setup(f => f.ParallelInserts).Returns(null as string);
+            var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
+
+            Assert.AreEqual(ParallelInserts.Off, connectionInfo.ParallelInserts);
         }
 
         [Test]
@@ -36,9 +61,6 @@ namespace SisoDb.UnitTests.Connections
         private class SisoConnectionInfoImplementation : SisoConnectionInfo
         {
             public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(connectionString)
-            {}
-
-            public SisoConnectionInfoImplementation(string connectionStringOrName) : base(connectionStringOrName)
             {}
 
             public override string DbName

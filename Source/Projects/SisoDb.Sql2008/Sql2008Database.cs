@@ -7,23 +7,9 @@ namespace SisoDb.Sql2008
         {
         }
 
-    	protected override DbReadSession CreateReadSession()
-        {
-            return new Sql2008ReadSession(
-				this,
-				ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo));
-        }
-
-        protected override DbWriteSession CreateWriteSession()
-        {
-        	var dbClient = ProviderFactory.GetTransactionalDbClient(ConnectionInfo);
-			var dbClientNonTransactional = ProviderFactory.GetNonTransactionalDbClient(ConnectionInfo);
-
-			return new Sql2008WriteSession(
-				this,
-				dbClient,
-				dbClientNonTransactional,
-				ProviderFactory.GetIdentityStructureIdGenerator(dbClientNonTransactional));
-        }
+    	protected override DbSession CreateSession()
+    	{
+    	    return new Sql2008Session(this);
+    	}
     }
 }

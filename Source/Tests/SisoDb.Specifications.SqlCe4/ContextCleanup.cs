@@ -7,7 +7,6 @@ namespace SisoDb.Specifications.SqlCe4
         public void AfterContextCleanup()
         {
             //SysDateTime.SetFixed(TestConstants.FixedDateTime);
-            //FirestarterRuntime.Reinitialize();
         }
     }
 }

@@ -99,7 +99,7 @@ namespace SisoDb.Specifications.Database
                 TestContext.Database.UpsertStructureSet<OrgModel.MyClass>();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
 
-                using(var session = TestContext.Database.BeginWriteSession())
+                using(var session = TestContext.Database.BeginSession())
                 {
                     session.Insert(new OrgModel.MyClass
                     {

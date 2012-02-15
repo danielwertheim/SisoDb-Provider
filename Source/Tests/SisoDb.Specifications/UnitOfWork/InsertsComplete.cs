@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsComplete
     {
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_complete_guid_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -20,7 +20,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteGuidEntity>(1);
@@ -31,7 +31,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteGuidEntity _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_two_complete_guid_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -41,7 +41,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(_structures);
+                () => TestContext.Database.UseOnceTo().InsertMany(_structures);
 
             It should_have_inserted_both =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteGuidEntity>(2);
@@ -52,7 +52,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteGuidEntity> _structures;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_complete_string_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -62,7 +62,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteStringEntity>(1);
@@ -73,7 +73,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteStringEntity _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_two_complete_string_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -83,7 +83,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(_structures);
+                () => TestContext.Database.UseOnceTo().InsertMany(_structures);
 
             It should_have_inserted_both =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteStringEntity>(2);
@@ -94,7 +94,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteStringEntity> _structures;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_complete_identity_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -104,7 +104,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteIdentityEntity>(1);
@@ -115,7 +115,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteIdentityEntity _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_two_complete_identity_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -125,7 +125,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(_structures);
+                () => TestContext.Database.UseOnceTo().InsertMany(_structures);
 
             It should_have_inserted_both =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteIdentityEntity>(2);
@@ -136,7 +136,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static IList<CompleteIdentityEntity> _structures;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_complete_big_identity_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -146,7 +146,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteBigIdentityEntity>(1);
@@ -157,7 +157,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static CompleteBigIdentityEntity _structure;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (complete)")]
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_two_complete_big_identity_entities_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -167,7 +167,7 @@ namespace SisoDb.Specifications.UnitOfWork
             };
 
             Because of =
-                () => TestContext.Database.WriteOnce().InsertMany(_structures);
+                () => TestContext.Database.UseOnceTo().InsertMany(_structures);
 
             It should_have_inserted_both =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteBigIdentityEntity>(2);

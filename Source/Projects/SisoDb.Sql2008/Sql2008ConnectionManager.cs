@@ -5,44 +5,40 @@ namespace SisoDb.Sql2008
 {
 	public class Sql2008ConnectionManager : IConnectionManager
 	{
-		public IDbConnection OpenServerConnection(IConnectionString connectionString)
-		{
-			var cn = new SqlConnection(connectionString.PlainString);
-			cn.Open();
+        public IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
+        {
+            var cn = new SqlConnection(connectionInfo.ServerConnectionString.PlainString);
+            cn.Open();
 
-			return cn;
-		}
+            return cn;
+        }
 
-		public void ReleaseServerConnection(IDbConnection dbConnection)
-		{
-			if (dbConnection == null)
-				return;
+        public IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        {
+            var cn = new SqlConnection(connectionInfo.ClientConnectionString.PlainString);
+            cn.Open();
 
-			if (dbConnection.State != ConnectionState.Closed)
-				dbConnection.Close();
+            return cn;
+        }
 
-			dbConnection.Dispose();
-		}
+        public void ReleaseAllDbConnections() { }
 
-		public IDbConnection OpenDbConnection(IConnectionString connectionString)
-		{
-			var cn = new SqlConnection(connectionString.PlainString);
-			cn.Open();
+        public void ReleaseServerConnection(IDbConnection dbConnection)
+        {
+            if (dbConnection == null)
+                return;
 
-			return cn;
-		}
+            dbConnection.Close();
+            dbConnection.Dispose();
+        }
 
-		public void ReleaseAllDbConnections() { }
+        public void ReleaseClientDbConnection(IDbConnection dbConnection)
+        {
+            if (dbConnection == null)
+                return;
 
-		public void ReleaseDbConnection(IDbConnection dbConnection)
-		{
-			if (dbConnection == null)
-				return;
-
-			if (dbConnection.State != ConnectionState.Closed)
-				dbConnection.Close();
-
-			dbConnection.Dispose();
-		}
+            dbConnection.Close();
+            dbConnection.Dispose();
+        }
 	}
 }

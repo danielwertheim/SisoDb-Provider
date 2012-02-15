@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Linq;
 using Machine.Specifications;
 using NCore;
@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsOfJson
     {
-        [Subject(typeof(IWriteSession), "Insert (json)")]
+        [Subject(typeof(ISession), "Insert (json)")]
         public class when_json_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -21,7 +21,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using(var session = TestContext.Database.BeginWriteSession())
+                using(var session = TestContext.Database.BeginSession())
                 {
                     session.InsertJson<JsonItem>(_json);
                 }
@@ -34,7 +34,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 string json;
 
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                     json = session.Query<JsonItem>().SingleAsJson();
 
                 var jsonWithoutStructureId = "{" + json.Remove(0, 50);
@@ -45,7 +45,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                 {
                     structure = session.Query<JsonItem>().Single();
                 }
@@ -60,7 +60,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static string _json;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (json)")]
+        [Subject(typeof(ISession), "Insert (json)")]
         public class when_json_with_value_for_id_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -72,7 +72,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertJson<JsonItem>(_json);
                 }
@@ -88,7 +88,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
                 
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                     structure = session.Query<JsonItem>().Single();
 
                 structure.StructureId.ShouldNotEqual(Guid.Parse(_idString));
@@ -98,7 +98,7 @@ namespace SisoDb.Specifications.UnitOfWork
             private static string _idString;
         }
 
-        [Subject(typeof(IWriteSession), "Insert (json)")]
+        [Subject(typeof(ISession), "Insert (json)")]
         public class when_json_with_wrong_member_casing_is_inserted : SpecificationBase
         {
             Establish context = () =>
@@ -109,7 +109,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertJson<JsonItem>(_json);
                 }
@@ -122,7 +122,7 @@ namespace SisoDb.Specifications.UnitOfWork
             {
                 JsonItem structure;
 
-                using (var session =TestContext.Database.BeginReadSession())
+                using (var session =TestContext.Database.BeginSession())
                     structure = session.Query<JsonItem>().Single();
 
                 structure.String1.ShouldEqual("1");

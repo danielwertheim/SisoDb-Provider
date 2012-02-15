@@ -14,19 +14,23 @@ namespace SisoDb
     {
         StorageProviders ProviderType { get; }
 
-		ISqlStatements GetSqlStatements();
+	    IConnectionManager ConnectionManager { get; }
+
+	    ISqlStatements GetSqlStatements();
 
         IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
 
-        IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo);
+	    ISisoTransaction GetRequiredTransaction();
 
-        IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
+        ISisoTransaction GetSuppressedTransaction();
+
+        IDbClient GetDbClient(ISisoConnectionInfo connectionInfo);
 
         IDbSchemaManager GetDbSchemaManager();
 
 		IStructureInserter GetStructureInserter(IDbClient dbClient);
 
-    	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
+    	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action);
 
 		IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
 		

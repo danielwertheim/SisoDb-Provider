@@ -21,8 +21,8 @@ namespace SisoDb.Sql2008
             get { return _serverConnectionString; }
         }
 
-        public Sql2008ConnectionInfo(string connectionStringOrName) 
-            : this(GetConnectionString(connectionStringOrName)) 
+        public Sql2008ConnectionInfo(string connectionStringOrName)
+            : this(ConnectionString.Get(connectionStringOrName)) 
         { }
 
         public Sql2008ConnectionInfo(IConnectionString connectionString) 
@@ -36,7 +36,7 @@ namespace SisoDb.Sql2008
 
         private void InitializeDbNameAndServerConnectionString()
         {
-            var cnStringBuilder = new SqlConnectionStringBuilder(ConnectionString.PlainString);
+            var cnStringBuilder = new SqlConnectionStringBuilder(ClientConnectionString.PlainString);
 
             _dbName = cnStringBuilder.InitialCatalog;
 
@@ -45,7 +45,7 @@ namespace SisoDb.Sql2008
 
             cnStringBuilder.InitialCatalog = string.Empty;
 
-            _serverConnectionString = ConnectionString.ReplacePlain(cnStringBuilder.ConnectionString);
+            _serverConnectionString = ClientConnectionString.ReplacePlain(cnStringBuilder.ConnectionString);
         }
     }
 }

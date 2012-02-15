@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class Query
     {
-        [Subject(typeof(IWriteSession), "Query")]
+        [Subject(typeof(ISession), "Query")]
         public class when_query_matches_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () =>
@@ -18,7 +18,7 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 
             Because of = () =>
             {
-                using (var session = TestContext.Database.BeginWriteSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.InsertMany(_structures);
 

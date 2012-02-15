@@ -10,16 +10,13 @@ namespace SisoDb.SqlCe4.Dac
     public class SqlCe4DbBulkCopy : IDbBulkCopy
     {
     	private readonly SqlCeConnection _connection;
-    	private readonly SqlCeTransaction _transaction;
     	private readonly Dictionary<string, string> _columnMappings; 
 
-        public SqlCe4DbBulkCopy(SqlCeConnection connection, SqlCeTransaction transaction)
+        public SqlCe4DbBulkCopy(SqlCeConnection connection)
         {
         	Ensure.That(connection, "connection").IsNotNull();
-			Ensure.That(transaction, "transaction").IsNotNull();
 
         	_connection = connection;
-        	_transaction = transaction;
         	_columnMappings = new Dictionary<string, string>();
         }
 
@@ -41,7 +38,7 @@ namespace SisoDb.SqlCe4.Dac
         {
         	var columnsCount = _columnMappings.Count;
 
-			using(var cmd = (SqlCeCommand)_connection.CreateCommand(_transaction))
+			using(var cmd = _connection.CreateCommand())
 			{
 				cmd.CommandText = DestinationTableName;
 				cmd.CommandType = CommandType.TableDirect;

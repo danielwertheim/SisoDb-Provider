@@ -11,8 +11,7 @@ namespace SisoDb.Specifications.Database
             Establish context = () =>
             {
                 _testContext = TestContextFactory.CreateTemp();
-                _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
-                _testContext.DbHelperForServer.EnsureDbExists(_testContext.Database.Name);
+                _testContext.Database.EnsureNewDatabase();
             };
 
             Because of = 
@@ -47,7 +46,7 @@ namespace SisoDb.Specifications.Database
             Establish context = () =>
             {
                 _testContext = TestContextFactory.CreateTemp();
-                _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
+                _testContext.Database.DeleteIfExists();
             };
 
             Because of =

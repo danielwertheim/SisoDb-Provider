@@ -30,7 +30,7 @@ namespace SisoDb.Caching
 			_items.Clear();
 		}
 
-	    public bool Exists<T>(IStructureId id) where T : class
+	    public bool Exists(IStructureId id)
 	    {
 	        return _items.ContainsKey(id);
 	    }

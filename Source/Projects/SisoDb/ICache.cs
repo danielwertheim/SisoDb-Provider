@@ -25,10 +25,9 @@ namespace SisoDb
         /// Returns bool indicating if there is a structure for
         /// the passed structure id in the cache.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
         /// <returns></returns>
-	    bool Exists<T>(IStructureId id) where T : class;
+	    bool Exists(IStructureId id);
 
 		/// <summary>
 		/// Returns either null or the structure matching the

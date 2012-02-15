@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Linq;
@@ -11,7 +10,6 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
-using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4.Dac
 {
@@ -19,43 +17,22 @@ namespace SisoDb.SqlCe4.Dac
     {
     	private const int MaxBatchedIdsSize = 32;
 
-		public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, bool transactional, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(connectionInfo, transactional, connectionManager, sqlStatements)
+		public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(connectionInfo, connectionManager, sqlStatements)
         {
         }
 
-		public override void Commit()
-		{
-			if (Ts != null)
-			{
-				Ts.Complete();
-				Ts.Dispose();
-				Ts = null;
-				return;
-			}
-
-			if (System.Transactions.Transaction.Current != null)
-				return;
-
-			if (Transaction == null)
-				throw new NotSupportedException(ExceptionMessages.DbClient_Commit_NonTransactional);
-
-			((SqlCeTransaction)Transaction).Commit(CommitMode.Immediate);
-			Transaction.Dispose();
-			Transaction = null;
-		}
+        public override IDbBulkCopy GetBulkCopy()
+        {
+            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection);
+        }
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
             if (!sql.Contains(";"))
                 base.ExecuteNonQuery(sql, parameters);
             else
-                Connection.ExecuteNonQuery(Transaction, sql.Split(';'), parameters);
-        }
-
-        public override IDbBulkCopy GetBulkCopy()
-        {
-            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, (SqlCeTransaction)Transaction);
+                Connection.ExecuteNonQuery(sql.Split(';'), parameters);
         }
 
         public override void Drop(IStructureSchema structureSchema)

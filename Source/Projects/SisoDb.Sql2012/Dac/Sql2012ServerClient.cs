@@ -30,7 +30,7 @@ namespace SisoDb.Sql2012.Dac
 
             try
             {
-				cn = _connectionManager.OpenServerConnection(_connectionInfo.ServerConnectionString);
+				cn = _connectionManager.OpenServerConnection(_connectionInfo);
                 cnConsumer.Invoke(cn);
             }
             finally
@@ -46,7 +46,7 @@ namespace SisoDb.Sql2012.Dac
 
             try
             {
-				cn = _connectionManager.OpenServerConnection(_connectionInfo.ServerConnectionString);
+				cn = _connectionManager.OpenServerConnection(_connectionInfo);
                 result = cnConsumer.Invoke(cn);
             }
             finally

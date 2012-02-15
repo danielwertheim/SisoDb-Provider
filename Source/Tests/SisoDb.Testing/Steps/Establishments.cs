@@ -24,7 +24,7 @@ namespace SisoDb.Testing.Steps
                 }));
             }
 
-            db.WriteOnce().InsertManyJson<T>(itemsAsJson);
+            db.UseOnceTo().InsertManyJson<T>(itemsAsJson);
 
             return itemsAsJson;
         }
@@ -45,7 +45,7 @@ namespace SisoDb.Testing.Steps
                 });
             }
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
             
             return items;
         }
@@ -57,7 +57,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new GuidItem { Value = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
             
             return items;
         }
@@ -69,7 +69,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new StringItem { StructureId = (c + 1).ToString(), Value = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
 
             return items;
         }
@@ -81,7 +81,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueGuidItem { UniqueValue = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
 
             return items;
         }
@@ -93,7 +93,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueStringItem { StructureId = (c + 1).ToString(), UniqueValue = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
 
             return items;
         }
@@ -105,7 +105,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new IdentityItem { Value = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
 
             return items;
         }
@@ -117,7 +117,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueIdentityItem { UniqueValue = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
 
             return items;
         }
@@ -129,7 +129,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new BigIdentityItem { Value = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
 
             return items;
         }
@@ -141,7 +141,7 @@ namespace SisoDb.Testing.Steps
             for (var c = 0; c < numOfItems; c++)
                 items.Add(new UniqueBigIdentityItem { UniqueValue = c + 1 });
 
-            db.WriteOnce().InsertMany(items);
+            db.UseOnceTo().InsertMany(items);
 
             return items;
         }

@@ -25,6 +25,11 @@ namespace SisoDb.Sql2008
             get { return StorageProviders.Sql2008; }
         }
 
+        public IConnectionManager ConnectionManager
+        {
+            get { return _connectionManager; }
+        }
+
 		public ISqlStatements GetSqlStatements()
 		{
 			return _sqlStatements;
@@ -35,14 +40,19 @@ namespace SisoDb.Sql2008
             return new Sql2008ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
-        {
-            return new Sql2008DbClient(connectionInfo, true, _connectionManager, _sqlStatements);
-        }
+	    public ISisoTransaction GetRequiredTransaction()
+	    {
+	        return Sql2008DbTransaction.CreateRequired();
+	    }
 
-        public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+	    public ISisoTransaction GetSuppressedTransaction()
+	    {
+            return Sql2008DbTransaction.CreateSuppressed();
+	    }
+
+	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
         {
-			return new Sql2008DbClient(connectionInfo, false, _connectionManager, _sqlStatements);
+            return new Sql2008DbClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
         public virtual IDbSchemaManager GetDbSchemaManager()
@@ -52,12 +62,12 @@ namespace SisoDb.Sql2008
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
-            return new DbStructureInserter(dbClient);
+            return new DbStructureInserter(dbClient, () => GetDbClient(dbClient.ConnectionInfo));
         }
 
-    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
+    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
     	{
-    		return new DbIdentityStructureIdGenerator(dbClient);
+    		return new DbIdentityStructureIdGenerator(action);
     	}
 
     	public virtual IDbQueryGenerator GetDbQueryGenerator()

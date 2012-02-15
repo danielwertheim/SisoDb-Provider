@@ -8,6 +8,8 @@
 
         string Provider { get; }
 
+        string ParallelInserts { get; }
+
         IConnectionString ReplacePlain(string plainString);
     }
 }

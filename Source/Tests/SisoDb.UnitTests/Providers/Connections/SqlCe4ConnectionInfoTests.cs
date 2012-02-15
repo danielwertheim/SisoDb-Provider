@@ -61,5 +61,40 @@ namespace SisoDb.UnitTests.Providers.Connections
 
             Assert.AreEqual("SisoDbTestsTemp", cnInfo.DbName);
         }
+
+        [Test]
+        public void Ctor_WhenCorrectConnectionString_PartsExtracted()
+        {
+            var cnString = new ConnectionString(@"sisodb:provider=SqlCe4;parallelinserts=Off||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=True");
+
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
+
+            Assert.AreEqual(StorageProviders.SqlCe4, cnInfo.ProviderType);
+            Assert.AreEqual(ParallelInserts.Off, cnInfo.ParallelInserts);
+            Assert.AreEqual("SisoDbTestsTemp", cnInfo.DbName);
+            Assert.AreEqual(@"d:\#Temp\SisoDb", cnInfo.ServerPath);
+            Assert.AreEqual(@"Data Source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=False", cnInfo.ServerConnectionString.PlainString);
+            Assert.AreEqual(@"data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=True", cnInfo.ClientConnectionString.PlainString);
+        }
+
+        [Test]
+        public void Ctor_WhenParallelInsertsIsMissing_DefaultsToOff()
+        {
+            var cnString = new ConnectionString(@"sisodb:provider=SqlCe4||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=True");
+
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
+
+            Assert.AreEqual(ParallelInserts.Off, cnInfo.ParallelInserts);
+        }
+
+        [Test]
+        public void Ctor_WhenParallelInsertsIsOn_ThrowsSisoDbException()
+        {
+            var cnString = new ConnectionString(@"sisodb:provider=SqlCe4;parallelinserts=On||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=True");
+
+            var ex = Assert.Throws<SisoDbException>(() => new SqlCe4ConnectionInfo(cnString));
+
+            Assert.AreEqual(ExceptionMessages.ConnectionInfo_ParallelInsertsNotSupported.Inject(StorageProviders.SqlCe4), ex.Message);
+        }
     }
 }

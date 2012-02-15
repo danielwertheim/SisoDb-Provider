@@ -17,7 +17,7 @@ namespace SisoDb.Specifications.Database
 				TestContext = TestContextFactory.Create();
 
 				var orgItem = new ModelComplexUpdates.Person { Name = "Daniel Wertheim", Address = "The Street 1\r\n12345\r\nThe City" };
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.Insert(orgItem);
 				}
@@ -45,7 +45,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_removed_the_person = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					q.Query<ModelComplexUpdates.Person>().Count().ShouldEqual(0);
 				}
@@ -53,7 +53,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_created_a_salesperson_from_the_person = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					var refetchedSalesPerson = q.GetById<ModelComplexUpdates.SalesPerson>(_personId);
 					refetchedSalesPerson.Firstname.ShouldEqual("Daniel");
@@ -77,7 +77,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem3 = new ModelOld.ItemForPropChange { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
 				}
@@ -105,7 +105,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					var newItem1 = q.GetById<ModelNew.ItemForPropChange>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
@@ -115,7 +115,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_removed_the_second_item = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					var newItem2 = q.GetById<ModelNew.ItemForPropChange>(_orgItem2Id);
 					newItem2.ShouldBeNull();
@@ -124,7 +124,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_last_item = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					var newItem3 = q.GetById<ModelNew.ItemForPropChange>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
@@ -145,7 +145,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem3 = new ModelOld.GuidItemForPropChange { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2, orgItem3 });
 				}
@@ -173,7 +173,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					var newItem1 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
@@ -183,7 +183,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_removed_the_second_item = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					var newItem2 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem2Id);
 					newItem2.ShouldBeNull();
@@ -192,7 +192,7 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_last_item = () =>
 			{
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					var newItem3 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
@@ -212,7 +212,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 					session.InsertMany(new[] {orgItem1, orgItem2});
 
 				_orgItem1Id = orgItem1.StructureId;
@@ -241,7 +241,7 @@ namespace SisoDb.Specifications.Database
 
 				IList<ModelOld.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
 
 				items[0].StructureId.ShouldEqual(_orgItem1Id);
@@ -265,7 +265,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -301,7 +301,7 @@ namespace SisoDb.Specifications.Database
 
 				IList<ModelOld.ItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ModelOld.ItemForPropChange>().ToList();
 				}
@@ -329,7 +329,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -365,7 +365,7 @@ namespace SisoDb.Specifications.Database
 
 				IList<ModelOld.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
 				}
@@ -393,7 +393,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -430,7 +430,7 @@ namespace SisoDb.Specifications.Database
 
 				IList<ModelOld.ItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ModelOld.ItemForPropChange>().ToList();
 				}
@@ -459,7 +459,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -496,7 +496,7 @@ namespace SisoDb.Specifications.Database
 
 				IList<ModelOld.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
 				}
@@ -525,7 +525,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -553,7 +553,7 @@ namespace SisoDb.Specifications.Database
 
 				IList<ModelNew.ItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ModelNew.ItemForPropChange>().ToList();
 				}
@@ -579,7 +579,7 @@ namespace SisoDb.Specifications.Database
 				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
-				using (var session = testContext.Database.BeginWriteSession())
+				using (var session = testContext.Database.BeginSession())
 				{
 					session.InsertMany(new[] { orgItem1, orgItem2 });
 				}
@@ -607,7 +607,7 @@ namespace SisoDb.Specifications.Database
 
 				IList<ModelNew.GuidItemForPropChange> items;
 
-				using (var q = TestContext.Database.BeginReadSession())
+				using (var q = TestContext.Database.BeginSession())
 				{
 					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
 				}

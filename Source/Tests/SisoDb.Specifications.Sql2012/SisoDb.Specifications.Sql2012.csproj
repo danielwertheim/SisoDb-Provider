@@ -37,11 +37,12 @@
     <Reference Include="Machine.Specifications, Version=0.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Machine.Specifications.0.5.2.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.61.0.111, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -129,9 +130,6 @@
     <Compile Include="..\sisodb.specifications\queryengine\GetById.cs">
       <Link>QueryEngine\GetById.cs</Link>
     </Compile>
-    <Compile Include="..\sisodb.specifications\queryengine\GetByIdInterval.cs">
-      <Link>QueryEngine\GetByIdInterval.cs</Link>
-    </Compile>
     <Compile Include="..\sisodb.specifications\queryengine\GetByIds.cs">
       <Link>QueryEngine\GetByIds.cs</Link>
     </Compile>
@@ -189,6 +187,9 @@
     <Compile Include="..\sisodb.specifications\unitofwork\Deletes.cs">
       <Link>UnitOfWork\Deletes.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertAs.cs">
+      <Link>UnitOfWork\InsertAs.cs</Link>
+    </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\InsertsComplete.cs">
       <Link>UnitOfWork\InsertsComplete.cs</Link>
     </Compile>
@@ -216,9 +217,6 @@
     <Compile Include="..\sisodb.specifications\unitofwork\queries\GetById.cs">
       <Link>UnitOfWork\Queries\GetById.cs</Link>
     </Compile>
-    <Compile Include="..\sisodb.specifications\unitofwork\queries\GetByIdInterval.cs">
-      <Link>UnitOfWork\Queries\GetByIdInterval.cs</Link>
-    </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\queries\GetByIds.cs">
       <Link>UnitOfWork\Queries\GetByIds.cs</Link>
     </Compile>
@@ -236,6 +234,9 @@
     </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\Updates.cs">
       <Link>UnitOfWork\Updates.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\UpdatesHandlingConcurreny.cs">
+      <Link>UnitOfWork\UpdatesHandlingConcurreny.cs</Link>
     </Compile>
     <Compile Include="AssemblyContext.cs" />
     <Compile Include="ContextCleanup.cs" />

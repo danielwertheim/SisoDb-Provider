@@ -14,6 +14,12 @@ namespace SisoDb.Caching
             return (cacheProvider != null && cacheProvider.Handles(structureSchema.Type.Type));
         }
 
+        internal static void NotifyOfPurge(this ICacheProvider cacheProvider, IStructureSchema structureSchema)
+        {
+            if(cacheProvider.IsEnabledFor(structureSchema))
+                cacheProvider[structureSchema.Type.Type].Clear();
+        }
+
 		internal static void NotifyDeleting(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId)
 		{
 			if(!cacheProvider.IsEnabledFor(structureSchema))
@@ -30,14 +36,14 @@ namespace SisoDb.Caching
 			cacheProvider[structureSchema.Type.Type].Remove(structureIds);
 		}
 
-        internal static bool Exists<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, bool> nonCacheQuery) where T : class
+        internal static bool Exists(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, bool> nonCacheQuery)
         {
             if (!cacheProvider.IsEnabledFor(structureSchema))
                 return nonCacheQuery.Invoke(structureId);
 
             var cache = cacheProvider[structureSchema.Type.Type];
 
-            return cache.Exists<T>(structureId);
+            return cache.Exists(structureId);
         }
 
 		internal static T Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, T> nonCacheQuery, CacheConsumeModes consumeMode) where T : class

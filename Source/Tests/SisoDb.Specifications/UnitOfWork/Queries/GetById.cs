@@ -7,19 +7,19 @@ namespace SisoDb.Specifications.UnitOfWork.Queries
 {
 	class GetById
 	{
-		[Subject(typeof(IWriteSession), "Get by Id (guid)")]
+		[Subject(typeof(ISession), "Get by Id (guid)")]
 		public class when_set_with_guid_contains_four_items_that_are_in_uncommitted_mode : SpecificationBase
 		{
 			Establish context = () =>
 			{
 				TestContext = TestContextFactory.Create();
 				_structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
-			    TestContext.Database.WriteOnce().InsertMany(_structures);
+			    TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
 			{
-				using (var session = TestContext.Database.BeginWriteSession())
+				using (var session = TestContext.Database.BeginSession())
 				{
 					session.InsertMany(_structures);
 

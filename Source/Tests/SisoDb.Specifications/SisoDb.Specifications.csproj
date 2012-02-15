@@ -38,11 +38,11 @@
       <HintPath>..\..\packages\Machine.Specifications.0.5.2.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.58.0.108, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=0.61.0.111, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.58.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -65,6 +65,7 @@
     <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="QueryEngine\Exists.cs" />
     <Compile Include="QueryEngine\RawQueries.cs" />
+    <Compile Include="UnitOfWork\InsertAs.cs" />
     <Compile Include="UnitOfWork\InsertsWithCustomStructureId.cs" />
     <Compile Include="UnitOfWork\UpdateMany.cs" />
     <Compile Include="Database\UpsertStructureSet.cs" />
@@ -84,7 +85,6 @@
     <Compile Include="QueryEngine\Count.cs" />
     <Compile Include="QueryEngine\QueryAll.cs" />
     <Compile Include="QueryEngine\GetById.cs" />
-    <Compile Include="QueryEngine\GetByIdInterval.cs" />
     <Compile Include="QueryEngine\GetByIds.cs" />
     <Compile Include="QueryEngine\Includes.cs" />
     <Compile Include="QueryEngine\NamedQueries.cs" />
@@ -112,11 +112,11 @@
     <Compile Include="UnitOfWork\Queries\Count.cs" />
     <Compile Include="UnitOfWork\Queries\QueryAll.cs" />
     <Compile Include="UnitOfWork\Queries\GetById.cs" />
-    <Compile Include="UnitOfWork\Queries\GetByIdInterval.cs" />
     <Compile Include="UnitOfWork\Queries\GetByIds.cs" />
     <Compile Include="UnitOfWork\Queries\Query.cs" />
     <Compile Include="UnitOfWork\TransactionScopes.cs" />
     <Compile Include="UnitOfWork\Updates.cs" />
+    <Compile Include="UnitOfWork\UpdatesHandlingConcurreny.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.UnitOfWork
 {
 	class InsertsWithCustomStructureId
 	{
-		[Subject(typeof(IWriteSession), "Insert (custom structure id)")]
+		[Subject(typeof(ISession), "Insert (custom structure id)")]
 		public class when_structure_has_structure_id_with_name_matching_interface_and_query_targets_first_and_last_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
@@ -20,15 +20,15 @@ namespace SisoDb.Specifications.UnitOfWork
 			        new MyEvent { IntValue = 3 },
 			        new MyEvent { IntValue = 4 }
 			    };
-				TestContext.Database.WriteOnce().InsertMany<IEvent>(_structures);
+				TestContext.Database.UseOnceTo().InsertMany<IEvent>(_structures);
 			};
 
 			Because of = () =>
 			{
-				_fetchedStructures =
-					TestContext.Database.ReadOnce().Query<IEvent>().Where(i =>
-						i.EventId == _structures[0].EventId ||
-						i.EventId == _structures[3].EventId).ToListOf<MyEvent>();
+			    using (var session = TestContext.Database.BeginSession())
+                    _fetchedStructures = session.Query<IEvent>()
+                        .Where(i => i.EventId == _structures[0].EventId || i.EventId == _structures[3].EventId)
+			            .ToListOf<MyEvent>();
 			};
 
 			It should_have_fetched_two_structures =
@@ -44,7 +44,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static IList<MyEvent> _fetchedStructures;
 		}
 
-		[Subject(typeof(IWriteSession), "Insert (custom structure id)")]
+		[Subject(typeof(ISession), "Insert (custom structure id)")]
 		public class when_structure_has_type_named_structure_id_and_query_targets_first_and_last_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
@@ -57,15 +57,17 @@ namespace SisoDb.Specifications.UnitOfWork
 					new CustomAlpha{IntValue = 3},
 					new CustomAlpha{IntValue = 4}
 				};
-                TestContext.Database.WriteOnce().InsertMany(_structures);
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
 			{
-				_fetchedStructures =
-					TestContext.Database.ReadOnce().Query<CustomAlpha>().Where(i => 
-						i.CustomAlphaId == _structures[0].CustomAlphaId ||
-						i.CustomAlphaId == _structures[3].CustomAlphaId).ToList();
+                using (var session = TestContext.Database.BeginSession())
+                    _fetchedStructures = session.Query<CustomAlpha>()
+                        .Where(i =>
+                            i.CustomAlphaId == _structures[0].CustomAlphaId ||
+                            i.CustomAlphaId == _structures[3].CustomAlphaId)
+                        .ToList();
 			};
 
 			It should_have_fetched_two_structures =
@@ -81,7 +83,7 @@ namespace SisoDb.Specifications.UnitOfWork
 			private static IList<CustomAlpha> _fetchedStructures;
 		}
 
-		[Subject(typeof(IWriteSession), "Insert (custom structure id)")]
+		[Subject(typeof(ISession), "Insert (custom structure id)")]
 		public class when_structure_has_id_named_structure_id_and_query_targets_first_and_last_of_four_items : SpecificationBase
 		{
 			Establish context = () =>
@@ -94,15 +96,15 @@ namespace SisoDb.Specifications.UnitOfWork
 					new CustomBeta{IntValue = 3},
 					new CustomBeta{IntValue = 4}
 				};
-			    TestContext.Database.WriteOnce().InsertMany(_structures);
+			    TestContext.Database.UseOnceTo().InsertMany(_structures);
 			};
 
 			Because of = () =>
 			{
-				_fetchedStructures =
-					TestContext.Database.ReadOnce().Query<CustomBeta>().Where(i =>
-						i.Id == _structures[0].Id ||
-						i.Id == _structures[3].Id).ToList();
+                using (var session = TestContext.Database.BeginSession())
+                    _fetchedStructures = session.Query<CustomBeta>()
+                        .Where(i => i.Id == _structures[0].Id || i.Id == _structures[3].Id)
+                        .ToList();
 			};
 
 			It should_have_fetched_two_structures =

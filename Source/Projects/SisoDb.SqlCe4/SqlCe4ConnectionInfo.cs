@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlServerCe;
-using System.Globalization;
 using System.IO;
 using System.Web;
 using NCore;
@@ -11,8 +10,10 @@ namespace SisoDb.SqlCe4
     [Serializable]
     public class SqlCe4ConnectionInfo : SisoConnectionInfo
     {
-        private string _serverPath, _filePath, _dbName;
-        private IConnectionString _serverConnectionString;
+        private readonly string _serverPath;
+        private readonly string _filePath;
+        private readonly string _dbName;
+        private readonly IConnectionString _serverConnectionString;
 
         public string ServerPath
         {
@@ -35,7 +36,7 @@ namespace SisoDb.SqlCe4
         }
 
         public SqlCe4ConnectionInfo(string connectionStringOrName)
-            : this(GetConnectionString(connectionStringOrName))
+            : this(ConnectionString.Get(connectionStringOrName))
         { }
 
         public SqlCe4ConnectionInfo(IConnectionString connectionString)
@@ -44,35 +45,34 @@ namespace SisoDb.SqlCe4
             if (ProviderType != StorageProviders.SqlCe4)
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(ProviderType, StorageProviders.SqlCe4));
 
-            InitializeDbNameAndServerConnectionString();
-        }
+            if(ParallelInserts != ParallelInserts.Off)
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_ParallelInsertsNotSupported.Inject(ProviderType));
 
-        private void InitializeDbNameAndServerConnectionString()
-        {
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(ConnectionString.PlainString);
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(ClientConnectionString.PlainString)
+            {
+                Enlist = false
+            };
 
             _filePath = cnStringBuilder.DataSource;
 
             const string dataDirectorySwitch = "|DataDirectory|";
-            if(_filePath.StartsWith(dataDirectorySwitch, StringComparison.OrdinalIgnoreCase))
+            if (_filePath.StartsWith(dataDirectorySwitch, StringComparison.OrdinalIgnoreCase))
             {
                 _filePath = _filePath.Substring(dataDirectorySwitch.Length);
                 if (HttpContext.Current != null)
                     _filePath = Path.Combine(HttpContext.Current.Server.MapPath("App_Data"), _filePath);
             }
 
-            _dbName = FilePath.Contains(Path.DirectorySeparatorChar.ToString())
-                ? Path.GetFileNameWithoutExtension(FilePath)
-                : FilePath;
+            _dbName = _filePath.Contains(Path.DirectorySeparatorChar.ToString())
+                ? Path.GetFileNameWithoutExtension(_filePath)
+                : _filePath;
 
             if (string.IsNullOrWhiteSpace(_dbName))
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
 
             _serverPath = Path.GetDirectoryName(_filePath);
 
-            cnStringBuilder.DataSource = _serverPath;
-
-            _serverConnectionString = ConnectionString.ReplacePlain(cnStringBuilder.ConnectionString);
+            _serverConnectionString = ClientConnectionString.ReplacePlain(cnStringBuilder.ConnectionString);
         }
     }
 }
