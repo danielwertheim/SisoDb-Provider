@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.Sql2008</id>    
 		<title>SisoDb.Sql2008 - Simple Structure Oriented Db</title>
-		<version>9.1.0</version>
+		<version>10.0.0-prerelease</version>
 		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
@@ -18,9 +18,9 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sql2008,mssql2008,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[9.1.0]" />
+			<dependency id="SisoDb" version="[10.0.0-prerelease]" />
 			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="0.58.0" />
+			<dependency id="PineCone" version="0.61.0" />
 		</dependencies>
 	</metadata>
 	<files>
