@@ -30,6 +30,11 @@ namespace SisoDb.Serialization
             return JsonSerializer.SerializeToString(item, itemType);
         }
 
+        public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class
+        {
+            return items.Select(Serialize);
+        }
+
         public virtual T Deserialize<T>(string json) where T : class
         {
             JsConfig<Text>.DeSerializeFn = t => new Text(t);

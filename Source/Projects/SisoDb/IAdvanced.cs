@@ -16,17 +16,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="expression"></param>
-        /// <remarks>Does not notify the cache provider.</remarks>
         void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
-
-        /// <summary>
-        /// Traverses every structure in the set and lets you apply changes to each yielded structure.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
-        /// <param name="modifier"></param>
-        /// <remarks>Does not notify the cache provider.</remarks>
-        void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class;
 
         /// <summary>
         /// Lets you invoke stored procedures that returns Json,
@@ -101,5 +91,14 @@ namespace SisoDb
 		/// or empty IEnumerable of <see cref="string"/>.</returns>
         /// <remarks>Does not consume the cache provider.</remarks>
 		IEnumerable<string> RawQueryAsJson<T>(IRawQuery query) where T : class;
+
+        /// <summary>
+        /// Traverses every structure in the set and lets you apply changes to each yielded structure.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="modifier"></param>
+        /// <remarks>Does not support Concurrency tokens</remarks>
+        void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class;
     }
 }

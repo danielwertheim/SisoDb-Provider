@@ -8,6 +8,8 @@ namespace SisoDb.Serialization
 
         string Serialize<T>(T item) where T : class;
 
+        IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class;
+        
         T Deserialize<T>(string json) where T : class;
 
         IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class;
