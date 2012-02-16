@@ -16,7 +16,7 @@ namespace SisoDb.Specifications.UnitOfWork
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _json = "{\"String1\":\"1\",\"Int1\":1,\"Decimal1\":0.1,\"DateTime1\":\"\\/Date(946681200000+0000)\\/\",\"Ints\":[1,2]}";
+                _json = "{\"String1\":\"1\",\"Int1\":1,\"Decimal1\":0.1,\"DateTime1\":\"\\/Date(946681200000+0100)\\/\",\"Ints\":[1,2]}";
             };
 
             Because of = () =>
