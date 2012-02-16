@@ -530,8 +530,8 @@ namespace SisoDb
                 Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
 
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(CheckOutAndGetNextIdentity));
-                var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                bulkInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
             });
         }
 
@@ -550,8 +550,8 @@ namespace SisoDb
                 Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
 
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(CheckOutAndGetNextIdentity));
-                var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                bulkInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
         }
 
