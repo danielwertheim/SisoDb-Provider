@@ -31,7 +31,7 @@ namespace SisoDb.Profiling
 			//InsertCustomers(1, 10000, db);
 			//ProfilingQueries(() => GetAllCustomers(db));
 			//ProfilingQueries(() => GetAllCustomersAsJson(db));
-			//ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
+            //ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
 			//ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
 			//ProfilingUpdateMany(db, 500, 550);
@@ -88,14 +88,17 @@ namespace SisoDb.Profiling
 
 		private static void ProfilingQueries(Func<int> queryAction)
         {
-            var stopWatch = new Stopwatch();
-            
-            stopWatch.Start();
-            var customersCount = queryAction();
-            stopWatch.Stop();
-            
-            Console.WriteLine("customers.Count() = {0}", customersCount);
-            Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
+            for (var c = 0; c < 2; c++)
+            {
+                var stopWatch = new Stopwatch();
+
+                stopWatch.Start();
+                var customersCount = queryAction();
+                stopWatch.Stop();
+
+                Console.WriteLine("customers.Count() = {0}", customersCount);
+                Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
+            }
         }
 
         private static void InsertCustomers(int numOfItterations, int numOfCustomers, ISisoDatabase database)
