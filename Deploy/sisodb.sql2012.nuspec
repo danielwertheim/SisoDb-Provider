@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.Sql2012</id>    
 		<title>SisoDb.Sql2012 - Simple Structure Oriented Db</title>
-		<version>10.0.0-prerelease</version>
+		<version>10.0.1-prerelease</version>
 		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
@@ -18,7 +18,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sql2012,mssql2012,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[10.0.0-prerelease]" />
+			<dependency id="SisoDb" version="[10.0.1-prerelease]" />
 			<dependency id="Ensure.That" version="0.5.0" />
 			<dependency id="PineCone" version="0.61.0" />
 		</dependencies>

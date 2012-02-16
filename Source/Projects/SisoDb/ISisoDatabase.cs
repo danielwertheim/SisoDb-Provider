@@ -134,6 +134,6 @@ namespace SisoDb
         /// </summary>
         /// <returns></returns>
         /// <remarks>If you need to do multiple queries, inserts etc, then use <see cref="BeginSession"/> instead.</remarks>
-        ISingleOperationSession UseOnceTo(); //TODO: Turn into Property
+        ISingleOperationSession UseOnceTo();
     }
 }

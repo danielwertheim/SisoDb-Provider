@@ -13,7 +13,7 @@ namespace SisoDb.UnitTests.Dynamic
         [Test]
         public void ToTypedKeyValue_WhenJsonWithDataTypes_DictionaryGetsTypedValues()
         {
-            const string json = "{\"Name\":\"Daniel\",\"Age\":31,\"Item\":{\"Int1\":42,\"DateTime1\":\"\\/Date(-3600000+0000)\\/\"}}";
+            const string json = "{\"Name\":\"Daniel\",\"Age\":31,\"Item\":{\"Int1\":42,\"DateTime1\":\"\\/Date(-3600000+0100)\\/\"}}";
             var typeDescriptor = new TypeDescriptor
                                  {
                                      {"Name", typeof (string)},
