@@ -23,8 +23,7 @@ namespace SisoDb
         protected readonly ISisoDbDatabase Db;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlStatements SqlStatements;
-        protected ISisoTransaction Transaction;
-        protected IDbClient TransactionalDbClient;
+        protected ITransactionalDbClient TransactionalDbClient;
         protected IDbClient NonTransactionalDbClient;
 
         protected virtual IStructureSchemas StructureSchemas
@@ -42,6 +41,11 @@ namespace SisoDb
             get { return this; }
         }
 
+        protected ISisoTransaction Transaction
+        {
+            get { return TransactionalDbClient.Transaction; }
+        }
+
         protected virtual CacheConsumeModes CacheConsumeMode { get; private set; }
 
         protected DbSession(ISisoDbDatabase db)
@@ -52,11 +56,8 @@ namespace SisoDb
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
 
-            using (Db.ProviderFactory.GetSuppressedTransaction())
-                NonTransactionalDbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo);
-
-            Transaction = Db.ProviderFactory.GetRequiredTransaction();
-            TransactionalDbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo);
+            NonTransactionalDbClient = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo);
+            TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
 
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
         }
@@ -65,22 +66,15 @@ namespace SisoDb
         {
             GC.SuppressFinalize(this);
 
-            if (NonTransactionalDbClient != null)
-            {
-                NonTransactionalDbClient.Dispose();
-                NonTransactionalDbClient = null;
-            }
-
             if (TransactionalDbClient != null)
             {
                 TransactionalDbClient.Dispose();
                 TransactionalDbClient = null;
             }
-
-            if (Transaction != null)
+            if (NonTransactionalDbClient != null)
             {
-                Transaction.Dispose();
-                Transaction = null;
+                NonTransactionalDbClient.Dispose();
+                NonTransactionalDbClient = null;
             }
         }
 

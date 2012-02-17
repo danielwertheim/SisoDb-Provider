@@ -172,7 +172,7 @@ namespace SisoDb
             {
                 using(ProviderFactory.GetRequiredTransaction())
                 {
-                    using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
+                    using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                     {
                         foreach (var type in types)
                         {
@@ -205,7 +205,7 @@ namespace SisoDb
 
                 using (ProviderFactory.GetRequiredTransaction())
                 {
-                    using (var dbClient = ProviderFactory.GetDbClient(_connectionInfo))
+                    using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                     {
                         var structureSchema = _structureSchemas.GetSchema(type);
                         SchemaManager.UpsertStructureSet(structureSchema, dbClient);

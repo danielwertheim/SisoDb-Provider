@@ -13,7 +13,7 @@ namespace SisoDb.UnitTests.Providers.Caching
 		protected Mock<IDbProviderFactory> DbProviderFactoryFake;
 		protected Mock<IDbSchemaManager> DbSchemaManagerFake;
 		protected Mock<IServerClient> ServerClientFake;
-		protected Mock<IDbClient> DbClientFake; 
+        protected Mock<ITransactionalDbClient> DbClientFake; 
 		protected Mock<ICacheProvider> CacheProviderFake;
 		protected Mock<ICache> FooCacheFake;
 		protected Mock<ICache> BarCacheFake;
@@ -25,11 +25,11 @@ namespace SisoDb.UnitTests.Providers.Caching
 			ConnectionInfoFake = new Mock<ISisoConnectionInfo>();
 			DbSchemaManagerFake = new Mock<IDbSchemaManager>();
 			ServerClientFake = new Mock<IServerClient>();
-			DbClientFake = new Mock<IDbClient>();
+			DbClientFake = new Mock<ITransactionalDbClient>();
 			DbProviderFactoryFake = new Mock<IDbProviderFactory>();
 			DbProviderFactoryFake.Setup(f => f.GetDbSchemaManager()).Returns(DbSchemaManagerFake.Object);
 			DbProviderFactoryFake.Setup(f => f.GetServerClient(ConnectionInfoFake.Object)).Returns(ServerClientFake.Object);
-			DbProviderFactoryFake.Setup(f => f.GetDbClient(ConnectionInfoFake.Object)).Returns(DbClientFake.Object);
+			DbProviderFactoryFake.Setup(f => f.GetTransactionalDbClient(ConnectionInfoFake.Object)).Returns(DbClientFake.Object);
 			FooCacheFake = new Mock<ICache>();
 			FooCacheFake.Setup(f => f.StructureType).Returns(typeof (Foo));
 			BarCacheFake = new Mock<ICache>();

@@ -50,19 +50,32 @@ namespace SisoDb.Sql2012
             return Sql2012DbTransaction.CreateSuppressed();
         }
 
-	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
+        public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2012DbClient(connectionInfo, _connectionManager, _sqlStatements);
+            return new Sql2012DbClient(
+                connectionInfo,
+                _connectionManager,
+                _sqlStatements,
+                GetRequiredTransaction());
         }
 
-        public virtual IDbSchemaManager GetDbSchemaManager()
+	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+	    {
+            return new Sql2012DbClient(
+                connectionInfo,
+                _connectionManager,
+                _sqlStatements,
+                GetSuppressedTransaction());
+	    }
+
+	    public virtual IDbSchemaManager GetDbSchemaManager()
         {
 			return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
-            return new DbStructureInserter(dbClient, () => GetDbClient(dbClient.ConnectionInfo));
+            return new DbStructureInserter(dbClient, () => GetTransactionalDbClient(dbClient.ConnectionInfo));
         }
 
     	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)

@@ -44,7 +44,7 @@ namespace SisoDb
 
             using (var t = Db.ProviderFactory.GetRequiredTransaction())
             {
-                using (var dbClient = Db.ProviderFactory.GetDbClient(Db.ConnectionInfo))
+                using (var dbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo))
                 {
                     try
                     {
@@ -88,8 +88,8 @@ namespace SisoDb
             var keepQueue = new List<TNew>();
             var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaNew);
             var deleteIdInterval = new StructureIdInterval();
-            
-            using (var dbClient = GetNonTransactionalDbClient())
+
+            using (var dbClient = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
             {
                 foreach (var json in dbClient.GetJsonOrderedByStructureId(structureSchemaOld))
                 {
@@ -128,14 +128,6 @@ namespace SisoDb
             ProcessKeepQueue(keepQueue, structureSchemaNew, dbClientTransactional, structureBuilder);
 
             return true;
-        }
-
-        private IDbClient GetNonTransactionalDbClient()
-        {
-            using (Db.ProviderFactory.GetSuppressedTransaction())
-            {
-                return Db.ProviderFactory.GetDbClient(Db.ConnectionInfo);
-            }
         }
 
         protected IStructureId GetOldStructureId<T>(IStructureSchema structureSchema, T oldStructure) where T : class

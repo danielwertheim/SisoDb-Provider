@@ -50,12 +50,25 @@ namespace SisoDb.SqlCe4
             return SqlCe4DbTransaction.CreateSuppressed();
         }
 
-	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
+        public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-			return new SqlCe4DbClient(connectionInfo, _connectionManager, _sqlStatements);
+			return new SqlCe4DbClient(
+                connectionInfo, 
+                _connectionManager, 
+                _sqlStatements,
+                GetRequiredTransaction());
         }
 
-        public virtual IDbSchemaManager GetDbSchemaManager()
+	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+	    {
+            return new SqlCe4DbClient(
+                connectionInfo, 
+                _connectionManager, 
+                _sqlStatements,
+                GetSuppressedTransaction());
+	    }
+
+	    public virtual IDbSchemaManager GetDbSchemaManager()
         {
 			return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
         }

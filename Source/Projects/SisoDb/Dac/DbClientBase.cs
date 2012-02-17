@@ -7,12 +7,13 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Core;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 
 namespace SisoDb.Dac
 {
-	public abstract class DbClientBase : IDbClient
+	public abstract class DbClientBase : ITransactionalDbClient
 	{
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
 
@@ -20,27 +21,42 @@ namespace SisoDb.Dac
         protected IDbConnection Connection;
 		protected readonly ISqlStatements SqlStatements;
 
-		protected DbClientBase(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+        public ISisoTransaction Transaction { get; protected set; }
+
+		protected DbClientBase(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements, ISisoTransaction transaction)
 		{
 			Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
 			Ensure.That(connectionManager, "connectionManager").IsNotNull();
 			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
+		    Ensure.That(transaction, "transaction").IsNotNull();
 
 			ConnectionInfo = connectionInfo;
 			ConnectionManager = connectionManager;
             Connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
             SqlStatements = sqlStatements;
+		    Transaction = transaction;
 		}
 
         public void Dispose()
         {
             GC.SuppressFinalize(this);
 
-            if (Connection == null)
-                return;
+            Exception ex = null;
 
-            ConnectionManager.ReleaseClientDbConnection(Connection);
-            Connection = null;
+            if (Transaction != null)
+            {
+                ex = Disposer.TryDispose(Transaction);
+                Transaction = null;
+            }
+
+            if (Connection != null)
+            {
+                ConnectionManager.ReleaseClientDbConnection(Connection);
+                Connection = null;
+            }
+
+            if (ex != null)
+                throw ex;
         }
 
 	    public abstract IDbBulkCopy GetBulkCopy();
