@@ -38,11 +38,11 @@
       <HintPath>..\..\packages\Machine.Specifications.0.5.2.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.61.0.111, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\PineCone.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone, Version=0.63.1.115, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.63.1\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -226,6 +226,9 @@
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\QueryAll.cs">
       <Link>UnitOfWork\Queries\QueryAll.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\TimeStamps.cs">
+      <Link>UnitOfWork\TimeStamps.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
       <Link>UnitOfWork\TransactionScopes.cs</Link>
     </Compile>
@@ -261,6 +264,10 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -48,8 +48,8 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore">
+      <HintPath>..\..\packages\PineCone.0.63.1\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
@@ -57,9 +57,8 @@
     <Reference Include="nunit.mocks">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.61.0.111, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.63.1\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="pnunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>

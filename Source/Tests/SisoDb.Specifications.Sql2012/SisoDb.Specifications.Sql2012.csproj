@@ -37,12 +37,11 @@
     <Reference Include="Machine.Specifications, Version=0.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Machine.Specifications.0.5.2.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore">
+      <HintPath>..\..\packages\PineCone.0.63.1\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.61.0.111, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.61.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.63.1\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -225,6 +224,9 @@
     </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\queries\QueryAll.cs">
       <Link>UnitOfWork\Queries\QueryAll.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\UnitOfWork\TimeStamps.cs">
+      <Link>UnitOfWork\TimeStamps.cs</Link>
     </Compile>
     <Compile Include="..\sisodb.specifications\unitofwork\TransactionScopes.cs">
       <Link>UnitOfWork\TransactionScopes.cs</Link>
