@@ -93,7 +93,7 @@
     <Compile Include="IStructureSetMigrator.cs" />
     <Compile Include="IWriteOnce.cs" />
     <Compile Include="IConnectionManager.cs" />
-    <Compile Include="ParallelInserts.cs" />
+    <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />

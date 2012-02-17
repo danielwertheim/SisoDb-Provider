@@ -38,7 +38,7 @@ namespace SisoDb.UnitTests.Providers.Connections
             var cnInfo = new Sql2008ConnectionInfo(cnString);
 
             Assert.AreEqual(StorageProviders.Sql2008, cnInfo.ProviderType);
-            Assert.AreEqual(ParallelInserts.On, cnInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.On, cnInfo.BackgroundIndexing);
             Assert.AreEqual("SisoDbTests.Temp", cnInfo.DbName);
             Assert.AreEqual(@"Data Source=.;Initial Catalog=;Integrated Security=True", cnInfo.ServerConnectionString.PlainString);
             Assert.AreEqual(@"data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;", cnInfo.ClientConnectionString.PlainString);
@@ -51,7 +51,7 @@ namespace SisoDb.UnitTests.Providers.Connections
 
             var cnInfo = new Sql2008ConnectionInfo(cnString);
 
-            Assert.AreEqual(ParallelInserts.Off, cnInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.Off, cnInfo.BackgroundIndexing);
         }
     }
 }

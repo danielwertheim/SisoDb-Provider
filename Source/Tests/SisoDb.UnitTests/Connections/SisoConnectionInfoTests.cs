@@ -22,10 +22,10 @@ namespace SisoDb.UnitTests.Connections
         {
             var connectionStringFake = new Mock<IConnectionString>();
             connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
-            connectionStringFake.Setup(f => f.ParallelInserts).Returns(ParallelInserts.On.ToString());
+            connectionStringFake.Setup(f => f.ParallelInserts).Returns(BackgroundIndexing.On.ToString());
             var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
-            Assert.AreEqual(ParallelInserts.On, connectionInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.On, connectionInfo.BackgroundIndexing);
         }
 
         [Test]
@@ -33,10 +33,10 @@ namespace SisoDb.UnitTests.Connections
         {
             var connectionStringFake = new Mock<IConnectionString>();
             connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
-            connectionStringFake.Setup(f => f.ParallelInserts).Returns(ParallelInserts.Off.ToString());
+            connectionStringFake.Setup(f => f.ParallelInserts).Returns(BackgroundIndexing.Off.ToString());
             var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
-            Assert.AreEqual(ParallelInserts.Off, connectionInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.Off, connectionInfo.BackgroundIndexing);
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace SisoDb.UnitTests.Connections
             connectionStringFake.Setup(f => f.ParallelInserts).Returns(null as string);
             var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
-            Assert.AreEqual(ParallelInserts.Off, connectionInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.Off, connectionInfo.BackgroundIndexing);
         }
 
         [Test]

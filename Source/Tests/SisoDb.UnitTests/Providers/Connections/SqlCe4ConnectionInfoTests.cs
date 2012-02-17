@@ -70,7 +70,7 @@ namespace SisoDb.UnitTests.Providers.Connections
             var cnInfo = new SqlCe4ConnectionInfo(cnString);
 
             Assert.AreEqual(StorageProviders.SqlCe4, cnInfo.ProviderType);
-            Assert.AreEqual(ParallelInserts.Off, cnInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.Off, cnInfo.BackgroundIndexing);
             Assert.AreEqual("SisoDbTestsTemp", cnInfo.DbName);
             Assert.AreEqual(@"d:\#Temp\SisoDb", cnInfo.ServerPath);
             Assert.AreEqual(@"Data Source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=False", cnInfo.ServerConnectionString.PlainString);
@@ -84,7 +84,7 @@ namespace SisoDb.UnitTests.Providers.Connections
 
             var cnInfo = new SqlCe4ConnectionInfo(cnString);
 
-            Assert.AreEqual(ParallelInserts.Off, cnInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.Off, cnInfo.BackgroundIndexing);
         }
 
         [Test]
