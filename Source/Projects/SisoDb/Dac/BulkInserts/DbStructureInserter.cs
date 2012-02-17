@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Core;
 using SisoDb.DbSchema;
 using SisoDb.Structures;
 
@@ -25,29 +24,16 @@ namespace SisoDb.Dac.BulkInserts
 
         protected static readonly Type TextType;
         protected const int MaxNumOfStructuresBeforeParallelEscalation = 10;
-
         protected readonly IDbClient MainDbClient;
-        protected readonly Func<IDbClient> DbClientFnForParallelInserts;
-
-        protected bool SupportsParallelInserts
-        {
-            get
-            {
-                return
-                    MainDbClient.ConnectionInfo.ParallelInserts == ParallelInserts.On
-                    && DbClientFnForParallelInserts != null;
-            }
-        }
 
         static DbStructureInserter()
         {
             TextType = typeof(Text);
         }
 
-        public DbStructureInserter(IDbClient mainDbClient, Func<IDbClient> dbClientFnForParallelInserts = null)
+        public DbStructureInserter(IDbClient mainDbClient)
         {
             MainDbClient = mainDbClient;
-            DbClientFnForParallelInserts = dbClientFnForParallelInserts;
         }
 
         public virtual void Insert(IStructureSchema structureSchema, IStructure[] structures)
@@ -70,45 +56,10 @@ namespace SisoDb.Dac.BulkInserts
                     task.Dispose();
             }
 
-            if (!SupportsParallelInserts || !groupedIndexInsertActions.Any() || structures.Length < MaxNumOfStructuresBeforeParallelEscalation)
-            {
-                InsertIndexes(groupedIndexInsertActions);
-                return;
-            }
-
-            ParallelInsert(structureSchema, structures, groupedIndexInsertActions);
-        }
-
-        protected virtual void ParallelInsert(IStructureSchema structureSchema, IStructure[] structures, IndexInsertAction[] groupedIndexInsertActions)
-        {
-            if (!groupedIndexInsertActions.Any())
+            if(!groupedIndexInsertActions.Any())
                 return;
 
-            var indexesDbClients = new IDbClient[groupedIndexInsertActions.Length];
-            
-            try
-            {
-                for (var c = 0; c < groupedIndexInsertActions.Length; c++)
-                    indexesDbClients[c] = DbClientFnForParallelInserts.Invoke();
-
-                Parallel.For(0, groupedIndexInsertActions.Length, new ParallelOptions { MaxDegreeOfParallelism = indexesDbClients.Length },
-                    i =>
-                    {
-                        using (var indexesDbClient = indexesDbClients[i])
-                        {
-                            groupedIndexInsertActions[i].Action.Invoke(groupedIndexInsertActions[i].Data, indexesDbClient);
-                        }
-                        indexesDbClients[i] = null;
-                    });
-            }
-            finally
-            {
-                for (var c = 0; c < indexesDbClients.Length; c++)
-                {
-                    Disposer.TryDispose(indexesDbClients[c]);
-                    indexesDbClients[c] = null;
-                }
-            }
+            InsertIndexes(groupedIndexInsertActions);
         }
 
         protected virtual void InsertStructures(IStructureSchema structureSchema, IStructure[] structures)

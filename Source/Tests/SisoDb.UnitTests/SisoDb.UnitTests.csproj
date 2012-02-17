@@ -80,7 +80,6 @@
     </Compile>
     <Compile Include="Connections\ConnectionStringTests.cs" />
     <Compile Include="CustomAssert.cs" />
-    <Compile Include="Dac\BulkInserts\DbStructureInserterTests.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="DbSchema\DbSchemaManagerTests.cs" />

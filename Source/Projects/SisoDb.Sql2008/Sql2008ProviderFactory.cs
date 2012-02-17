@@ -77,7 +77,7 @@ namespace SisoDb.Sql2008
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
-            return new DbStructureInserter(dbClient, () => GetTransactionalDbClient(dbClient.ConnectionInfo));
+            return new DbStructureInserter(dbClient);
         }
 
     	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
