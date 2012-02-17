@@ -35,10 +35,10 @@
       <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
-      <HintPath>..\..\packages\PineCone.0.63.1\lib\net40\NCore.dll</HintPath>
+      <HintPath>..\..\packages\NCore.0.27.0\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.63.1\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.64.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
