@@ -15,24 +15,24 @@ namespace SisoDb.Dac
 {
 	public abstract class DbClientBase : ITransactionalDbClient
 	{
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
-
 	    protected readonly IConnectionManager ConnectionManager;
-        protected IDbConnection Connection;
-		protected readonly ISqlStatements SqlStatements;
-
+	    protected IDbConnection Connection;
+	    protected readonly ISqlStatements SqlStatements;
+	    
+        public ISisoConnectionInfo ConnectionInfo { get; private set; }
         public ISisoTransaction Transaction { get; protected set; }
 
-		protected DbClientBase(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements, ISisoTransaction transaction)
+		protected DbClientBase(ISisoConnectionInfo connectionInfo, IDbConnection connection, ISisoTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
 		{
 			Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+            Ensure.That(connection, "connection").IsNotNull();
 			Ensure.That(connectionManager, "connectionManager").IsNotNull();
 			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 		    Ensure.That(transaction, "transaction").IsNotNull();
 
 			ConnectionInfo = connectionInfo;
 			ConnectionManager = connectionManager;
-            Connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+            Connection = connection;
             SqlStatements = sqlStatements;
 		    Transaction = transaction;
 		}

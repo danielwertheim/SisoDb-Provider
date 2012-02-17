@@ -17,8 +17,8 @@ namespace SisoDb.SqlCe4.Dac
     {
     	private const int MaxBatchedIdsSize = 32;
 
-        public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements, ISisoTransaction transaction)
-            : base(connectionInfo, connectionManager, sqlStatements, transaction)
+        public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, IDbConnection connection, ISisoTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
         }
 

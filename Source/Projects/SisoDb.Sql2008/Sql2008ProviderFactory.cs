@@ -54,18 +54,20 @@ namespace SisoDb.Sql2008
         {
             return new Sql2008DbClient(
                 connectionInfo,
+                _connectionManager.OpenClientDbConnection(connectionInfo),
+                GetRequiredTransaction(),
                 _connectionManager,
-                _sqlStatements,
-                GetRequiredTransaction());
+                _sqlStatements);
         }
 
 	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
             return new Sql2008DbClient(
                 connectionInfo,
+                _connectionManager.OpenClientDbConnection(connectionInfo),
+                GetSuppressedTransaction(),
                 _connectionManager,
-                _sqlStatements,
-                GetSuppressedTransaction());
+                _sqlStatements);
 	    }
 
 	    public virtual IDbSchemaManager GetDbSchemaManager()
