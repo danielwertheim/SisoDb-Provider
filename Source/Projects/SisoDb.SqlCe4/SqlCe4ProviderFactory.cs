@@ -52,20 +52,24 @@ namespace SisoDb.SqlCe4
 
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-			return new SqlCe4DbClient(
+            var transaction = GetRequiredTransaction();
+
+            return new SqlCe4DbClient(
                 connectionInfo, 
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                GetRequiredTransaction(),
+                transaction,
                 _connectionManager, 
                 _sqlStatements);
         }
 
 	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
-            return new SqlCe4DbClient(
+	        var transaction = GetSuppressedTransaction();
+
+	        return new SqlCe4DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                GetSuppressedTransaction(),
+                transaction,
                 _connectionManager, 
                 _sqlStatements);
 	    }

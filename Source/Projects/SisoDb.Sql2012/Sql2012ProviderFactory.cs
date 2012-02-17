@@ -52,20 +52,24 @@ namespace SisoDb.Sql2012
 
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
+            var transaction = GetRequiredTransaction();
+
             return new Sql2012DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                GetRequiredTransaction(),
+                transaction,
                 _connectionManager,
                 _sqlStatements);
         }
 
 	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
-            return new Sql2012DbClient(
+	        var transaction = GetSuppressedTransaction();
+
+	        return new Sql2012DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                GetSuppressedTransaction(),
+                transaction,
                 _connectionManager,
                 _sqlStatements);
 	    }

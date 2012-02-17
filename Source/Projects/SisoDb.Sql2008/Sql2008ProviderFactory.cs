@@ -52,20 +52,24 @@ namespace SisoDb.Sql2008
 
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
+            var transaction = GetRequiredTransaction();
+
             return new Sql2008DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                GetRequiredTransaction(),
+                transaction,
                 _connectionManager,
                 _sqlStatements);
         }
 
 	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
-            return new Sql2008DbClient(
+	        var transaction = GetSuppressedTransaction();
+
+	        return new Sql2008DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                GetSuppressedTransaction(),
+                transaction,
                 _connectionManager,
                 _sqlStatements);
 	    }
