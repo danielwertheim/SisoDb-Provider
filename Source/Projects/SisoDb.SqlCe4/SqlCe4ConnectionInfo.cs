@@ -45,9 +45,6 @@ namespace SisoDb.SqlCe4
             if (ProviderType != StorageProviders.SqlCe4)
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(ProviderType, StorageProviders.SqlCe4));
 
-            if(BackgroundIndexing != BackgroundIndexing.Off)
-                throw new SisoDbException(ExceptionMessages.ConnectionInfo_ParallelInsertsNotSupported.Inject(ProviderType));
-
             var cnStringBuilder = new SqlCeConnectionStringBuilder(ClientConnectionString.PlainString)
             {
                 Enlist = false

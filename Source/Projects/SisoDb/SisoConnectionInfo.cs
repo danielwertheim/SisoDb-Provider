@@ -1,5 +1,7 @@
 using System;
 using EnsureThat;
+using NCore;
+using SisoDb.Resources;
 
 namespace SisoDb
 {
@@ -24,8 +26,11 @@ namespace SisoDb
 
             ProviderType = (StorageProviders)Enum.Parse(typeof(StorageProviders), ClientConnectionString.Provider, true);
 
-            if(!string.IsNullOrWhiteSpace(ClientConnectionString.ParallelInserts))
-                BackgroundIndexing = (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.ParallelInserts, true);
+            if (!string.IsNullOrWhiteSpace(ClientConnectionString.BackgroundIndexing))
+                BackgroundIndexing = (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.BackgroundIndexing, true);
+
+            if (BackgroundIndexing != BackgroundIndexing.Off)
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
         }
     }
 }

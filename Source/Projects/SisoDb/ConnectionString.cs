@@ -15,7 +15,7 @@ namespace SisoDb
         private const string PlainMarker = "plain:";
         private const string Example = "sisodb:[SisoDb configvalues];||plain:[Plain configvalues]";
 
-        private Dictionary<string, string> _sisoDbKeyValues;
+        private readonly IDictionary<string, string> _sisoDbKeyValues;
 
         public string SisoDbString { get; private set; }
 
@@ -26,9 +26,9 @@ namespace SisoDb
             get { return _sisoDbKeyValues["provider"]; }
         }
 
-        public string ParallelInserts
+        public string BackgroundIndexing
         {
-            get { return _sisoDbKeyValues["parallelinserts"]; }
+            get { return _sisoDbKeyValues["backgroundindexing"]; }
         }
 
         public ConnectionString(string value)
@@ -47,7 +47,7 @@ namespace SisoDb
                 throw new ArgumentException(ExceptionMessages.ConnectionString_MissingSisoDbPart.Inject(SisoDbMarker, Example));
             SisoDbString = sisoDbString.Substring(SisoDbMarker.Length);
 
-            InitializeSisoDbKeyValues();
+            _sisoDbKeyValues = GetSisoDbKeyValuesFrom(SisoDbString);
         }
 
         public static IConnectionString Get(string connectionStringOrName)
@@ -73,23 +73,25 @@ namespace SisoDb
             return parts;
         }
 
-        private void InitializeSisoDbKeyValues()
+        private static IDictionary<string, string> GetSisoDbKeyValuesFrom(string sisoDbString)
         {
-            _sisoDbKeyValues = new Dictionary<string, string>();
-            _sisoDbKeyValues["provider"] = string.Empty;
-            _sisoDbKeyValues["parallelinserts"] = string.Empty;
+            var container = new Dictionary<string, string>();
+            container["provider"] = string.Empty;
+            container["backgroundindexing"] = string.Empty;
 
-            var keyValues = SisoDbString.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var keyValues = sisoDbString.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (var parts in
                 keyValues.Select(keyValue => keyValue.Split("=".ToCharArray(), StringSplitOptions.None)))
-                _sisoDbKeyValues[parts[0].ToLower()] = parts[1] ?? string.Empty;
+                container[parts[0].ToLower()] = parts[1] ?? string.Empty;
 
-            EnsureRequiredSisoDbKeysExists();
+            EnsureRequiredSisoDbKeysExists(container);
+
+            return container;
         }
 
-        private void EnsureRequiredSisoDbKeysExists()
+        private static void EnsureRequiredSisoDbKeysExists(IDictionary<string, string> container)
         {
-            if (!_sisoDbKeyValues.ContainsKey("provider"))
+            if (!container.ContainsKey("provider"))
                 throw new ArgumentException(ExceptionMessages.ConnectionString_MissingProviderKey);
         }
 
