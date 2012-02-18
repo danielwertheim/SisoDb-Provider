@@ -74,7 +74,7 @@ namespace SisoDb.UnitTests.Providers.Connections
             Assert.AreEqual("SisoDbTestsTemp", cnInfo.DbName);
             Assert.AreEqual(@"d:\#Temp\SisoDb", cnInfo.ServerPath);
             Assert.AreEqual(@"Data Source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=False", cnInfo.ServerConnectionString.PlainString);
-            Assert.AreEqual(@"data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=True", cnInfo.ClientConnectionString.PlainString);
+            Assert.AreEqual(@"Data Source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=False", cnInfo.ClientConnectionString.PlainString);
         }
 
         [Test]

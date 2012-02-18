@@ -66,14 +66,14 @@ namespace SisoDb.UnitTests.Connections
             public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(connectionString)
             {}
 
-            public override string DbName
+            public override StorageProviders ProviderType
             {
-                get { throw new NotImplementedException(); }
+                get { return StorageProviders.Sql2008; }
             }
 
-            public override IConnectionString ServerConnectionString
+            public override string DbName
             {
-                get { throw new NotImplementedException(); }
+                get { return "Foo"; }
             }
         }
     }
