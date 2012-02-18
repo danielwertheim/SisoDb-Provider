@@ -13,7 +13,6 @@ namespace SisoDb.Sql2012.Dac
         public Sql2012DbBulkCopy(SqlConnection connection, SqlTransaction transaction)
         {
             Ensure.That(connection, "connection").IsNotNull();
-            Ensure.That(transaction, "transaction").IsNotNull();
 
 			_innerBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.KeepNulls, transaction)
             {
