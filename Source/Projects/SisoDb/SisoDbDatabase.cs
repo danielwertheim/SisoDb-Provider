@@ -10,18 +10,18 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	public abstract class SisoDbDatabase : ISisoDbDatabase
+    public abstract class SisoDbDatabase : ISisoDbDatabase
     {
-		private readonly ISisoConnectionInfo _connectionInfo;
-		private readonly IDbProviderFactory _providerFactory;
-		private readonly IDbSchemaManager _dbSchemaManager;
-		private IStructureSchemas _structureSchemas;
-		private IStructureBuilders _structureBuilders;
-		private IJsonSerializer _serializer;
+        private readonly ISisoConnectionInfo _connectionInfo;
+        private readonly IDbProviderFactory _providerFactory;
+        private readonly IDbSchemaManager _dbSchemaManager;
+        private IStructureSchemas _structureSchemas;
+        private IStructureBuilders _structureBuilders;
+        private IJsonSerializer _serializer;
 
         protected readonly object DbOperationsLock;
-    	protected readonly IServerClient ServerClient;
-		
+        protected readonly IServerClient ServerClient;
+
         public string Name
         {
             get { return _connectionInfo.DbName; }
@@ -32,22 +32,22 @@ namespace SisoDb
             get { return _connectionInfo; }
         }
 
-		public ICacheProvider CacheProvider { get; set; }
-		public IDbProviderFactory ProviderFactory
-		{
-			get { return _providerFactory; }
-		}
+        public ICacheProvider CacheProvider { get; set; }
+        public IDbProviderFactory ProviderFactory
+        {
+            get { return _providerFactory; }
+        }
 
-		public IDbSchemaManager SchemaManager
-		{
-			get { return _dbSchemaManager; }
-		}
-		public bool CachingIsEnabled
-		{
-			get { return CacheProvider != null; }
-		}
+        public IDbSchemaManager SchemaManager
+        {
+            get { return _dbSchemaManager; }
+        }
+        public bool CachingIsEnabled
+        {
+            get { return CacheProvider != null; }
+        }
 
-    	public IStructureSchemas StructureSchemas
+        public IStructureSchemas StructureSchemas
         {
             get { return _structureSchemas; }
             set
@@ -79,72 +79,72 @@ namespace SisoDb
             }
         }
 
-    	protected SisoDbDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
+        protected SisoDbDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
-			Ensure.That(dbProviderFactory, "dbProviderFactory").IsNotNull();
+            Ensure.That(dbProviderFactory, "dbProviderFactory").IsNotNull();
 
             DbOperationsLock = new object();
 
             _connectionInfo = connectionInfo;
-			_providerFactory = dbProviderFactory;
-			_dbSchemaManager = ProviderFactory.GetDbSchemaManager();
-			ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
-			StructureBuilders = new StructureBuilders();
+            _providerFactory = dbProviderFactory;
+            _dbSchemaManager = ProviderFactory.GetDbSchemaManager();
+            ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
+            StructureBuilders = new StructureBuilders();
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
         }
 
-		public virtual IStructureSetMigrator GetStructureSetMigrator()
-		{
-			return new DbStructureSetMigrator(this);
-		}
+        public virtual IStructureSetMigrator GetStructureSetMigrator()
+        {
+            return new DbStructureSetMigrator(this);
+        }
 
-		public virtual void EnsureNewDatabase()
+        public virtual void EnsureNewDatabase()
         {
             lock (DbOperationsLock)
             {
-				if (CachingIsEnabled)
-					CacheProvider.Clear();
+                if (CachingIsEnabled)
+                    CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.EnsureNewDb();
             }
         }
 
-    	public virtual void CreateIfNotExists()
+        public virtual void CreateIfNotExists()
         {
             lock (DbOperationsLock)
             {
-				if (CachingIsEnabled)
-					CacheProvider.Clear();
+                if (CachingIsEnabled)
+                    CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.CreateDbIfItDoesNotExist();
             }
         }
 
-    	public virtual void InitializeExisting()
+        public virtual void InitializeExisting()
         {
             lock (DbOperationsLock)
             {
-				if (CachingIsEnabled)
-					CacheProvider.Clear();
+                if (CachingIsEnabled)
+                    CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.InitializeExistingDb();
             }
         }
 
-    	public virtual void DeleteIfExists()
+        public virtual void DeleteIfExists()
         {
             lock (DbOperationsLock)
             {
-				if (CachingIsEnabled)
-					CacheProvider.Clear();
+                if (CachingIsEnabled)
+                    CacheProvider.Clear();
                 SchemaManager.ClearCache();
                 ServerClient.DropDbIfItExists();
             }
         }
 
-    	public virtual bool Exists()
+        public virtual bool Exists()
         {
             lock (DbOperationsLock)
             {
@@ -152,76 +152,70 @@ namespace SisoDb
             }
         }
 
-    	public virtual void DropStructureSet<T>() where T : class
+        public virtual void DropStructureSet<T>() where T : class
         {
             DropStructureSet(TypeFor<T>.Type);
         }
 
-    	public virtual void DropStructureSet(Type type)
+        public virtual void DropStructureSet(Type type)
         {
             Ensure.That(type, "type").IsNotNull();
 
             DropStructureSets(new[] { type });
         }
 
-    	public virtual void DropStructureSets(Type[] types)
+        public virtual void DropStructureSets(Type[] types)
         {
             Ensure.That(types, "types").HasItems();
 
             lock (DbOperationsLock)
             {
-                using(ProviderFactory.GetRequiredTransaction())
+                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
-                    using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+                    foreach (var type in types)
                     {
-                        foreach (var type in types)
-                        {
-                            if (CachingIsEnabled && CacheProvider.Handles(type))
-                                CacheProvider[type].Clear();
-                            var structureSchema = _structureSchemas.GetSchema(type);
+                        if (CachingIsEnabled && CacheProvider.Handles(type))
+                            CacheProvider[type].Clear();
+                        var structureSchema = _structureSchemas.GetSchema(type);
 
-                            SchemaManager.DropStructureSet(structureSchema, dbClient);
+                        SchemaManager.DropStructureSet(structureSchema, dbClient);
 
-                            _structureSchemas.RemoveSchema(type);
-                        }
+                        _structureSchemas.RemoveSchema(type);
                     }
                 }
             }
         }
 
-    	public virtual void UpsertStructureSet<T>() where T : class
+        public virtual void UpsertStructureSet<T>() where T : class
         {
             UpsertStructureSet(TypeFor<T>.Type);
         }
 
-    	public virtual void UpsertStructureSet(Type type)
+        public virtual void UpsertStructureSet(Type type)
         {
             Ensure.That(type, "type").IsNotNull();
 
             lock (DbOperationsLock)
             {
-				if (CachingIsEnabled && CacheProvider.Handles(type))
-					CacheProvider[type].Clear();
+                if (CachingIsEnabled && CacheProvider.Handles(type))
+                    CacheProvider[type].Clear();
 
-                using (ProviderFactory.GetRequiredTransaction())
+                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
-                    using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
-                    {
-                        var structureSchema = _structureSchemas.GetSchema(type);
-                        SchemaManager.UpsertStructureSet(structureSchema, dbClient);
-                    }
+                    var structureSchema = _structureSchemas.GetSchema(type);
+                    SchemaManager.UpsertStructureSet(structureSchema, dbClient);
                 }
             }
         }
 
-    	public virtual ISession BeginSession()
-    	{
-    		return CreateSession();
-    	}
+        public virtual ISession BeginSession()
+        {
+            return CreateSession();
+        }
 
-		protected abstract DbSession CreateSession();
+        protected abstract DbSession CreateSession();
 
-    	[DebuggerStepThrough]
+        [DebuggerStepThrough]
         public ISingleOperationSession UseOnceTo()
         {
             return new DbSingleOperationSession(this);

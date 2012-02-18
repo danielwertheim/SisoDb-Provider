@@ -41,11 +41,6 @@ namespace SisoDb
             get { return this; }
         }
 
-        protected ISisoTransaction Transaction
-        {
-            get { return TransactionalDbClient.Transaction; }
-        }
-
         protected virtual CacheConsumeModes CacheConsumeMode { get; private set; }
 
         protected DbSession(ISisoDbDatabase db)
@@ -78,6 +73,32 @@ namespace SisoDb
             }
         }
 
+        protected virtual void Try(Action action)
+        {
+            try
+            {
+                action.Invoke();
+            }
+            catch
+            {
+                TransactionalDbClient.Transaction.MarkAsFailed();
+                throw;
+            }
+        }
+
+        protected virtual T Try<T>(Func<T> action)
+        {
+            try
+            {
+                return action.Invoke();
+            }
+            catch
+            {
+                TransactionalDbClient.Transaction.MarkAsFailed();
+                throw;
+            }
+        }
+
         protected virtual long CheckOutAndGetNextIdentity(IStructureSchema structureSchema, int numOfIds)
         {
             return NonTransactionalDbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
@@ -92,12 +113,12 @@ namespace SisoDb
 
         public virtual IStructureSchema GetStructureSchema<T>() where T : class
         {
-            return Transaction.Try(() => StructureSchemas.GetSchema<T>());
+            return Try(() => StructureSchemas.GetSchema<T>());
         }
 
         void IAdvanced.DeleteByQuery<T>(Expression<Func<T, bool>> expression)
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(expression, "expression").IsNotNull();
 
@@ -114,7 +135,7 @@ namespace SisoDb
 
         IEnumerable<T> IAdvanced.NamedQuery<T>(INamedQuery query)
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -128,7 +149,7 @@ namespace SisoDb
 
         IEnumerable<TOut> IAdvanced.NamedQueryAs<TContract, TOut>(INamedQuery query)
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -142,7 +163,7 @@ namespace SisoDb
 
         IEnumerable<string> IAdvanced.NamedQueryAsJson<T>(INamedQuery query)
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -154,7 +175,7 @@ namespace SisoDb
 
         IEnumerable<T> IAdvanced.RawQuery<T>(IRawQuery query)
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -167,7 +188,7 @@ namespace SisoDb
 
         IEnumerable<TOut> IAdvanced.RawQueryAs<TContract, TOut>(IRawQuery query)
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -180,7 +201,7 @@ namespace SisoDb
 
         IEnumerable<string> IAdvanced.RawQueryAsJson<T>(IRawQuery query)
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -192,7 +213,7 @@ namespace SisoDb
 
         void IAdvanced.UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier)
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(expression, "expression").IsNotNull();
                 Ensure.That(modifier, "modifier").IsNotNull();
@@ -248,7 +269,7 @@ namespace SisoDb
 
         public virtual int Count<T>(IQuery query) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -264,7 +285,7 @@ namespace SisoDb
 
         public virtual bool Exists<T>(object id) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
 
@@ -283,7 +304,7 @@ namespace SisoDb
 
         public virtual T GetById<T>(object id) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
 
@@ -303,7 +324,7 @@ namespace SisoDb
 
         public virtual IEnumerable<T> GetByIds<T>(params object[] ids) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(ids, "ids").HasItems();
 
@@ -325,7 +346,7 @@ namespace SisoDb
             where TContract : class
             where TOut : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
 
@@ -347,7 +368,7 @@ namespace SisoDb
             where TContract : class
             where TOut : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(ids, "ids").HasItems();
 
@@ -367,7 +388,7 @@ namespace SisoDb
 
         public virtual string GetByIdAsJson<T>(object id) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
 
@@ -389,7 +410,7 @@ namespace SisoDb
 
         public virtual IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(ids, "ids").HasItems();
 
@@ -411,12 +432,12 @@ namespace SisoDb
 
         public virtual ISisoQueryable<T> Query<T>() where T : class
         {
-            return Transaction.Try(() => new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas), this));
+            return Try(() => new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas), this));
         }
 
         public virtual IEnumerable<T> Query<T>(IQuery query) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -440,7 +461,7 @@ namespace SisoDb
             where T : class
             where TResult : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -464,7 +485,7 @@ namespace SisoDb
             where T : class
             where TResult : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -486,7 +507,7 @@ namespace SisoDb
 
         public virtual IEnumerable<string> QueryAsJson<T>(IQuery query) where T : class
         {
-            return Transaction.Try(() =>
+            return Try(() =>
             {
                 Ensure.That(query, "query").IsNotNull();
 
@@ -503,7 +524,7 @@ namespace SisoDb
 
         public virtual void Insert<T>(T item) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(item, "item").IsNotNull();
 
@@ -519,7 +540,7 @@ namespace SisoDb
 
         public void InsertAs<T>(object item) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(item, "item").IsNotNull();
 
@@ -538,7 +559,7 @@ namespace SisoDb
 
         public virtual void InsertJson<T>(string json) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(json, "json").IsNotNullOrWhiteSpace();
 
@@ -548,14 +569,14 @@ namespace SisoDb
                 var structureSchema = UpsertStructureSchema<T>();
 
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(CheckOutAndGetNextIdentity));
-                var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                bulkInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
             });
         }
 
         public virtual void InsertMany<T>(IEnumerable<T> items) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(items, "items").IsNotNull();
 
@@ -575,7 +596,7 @@ namespace SisoDb
 
         public virtual void InsertManyJson<T>(IEnumerable<string> json) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(json, "json").IsNotNull();
 
@@ -595,7 +616,7 @@ namespace SisoDb
 
         public virtual void Update<T>(T item) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(item, "item").IsNotNull();
 
@@ -624,7 +645,7 @@ namespace SisoDb
 
         public virtual void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
                 Ensure.That(modifier, "modifier").IsNotNull();
@@ -695,7 +716,7 @@ namespace SisoDb
 
         public virtual void DeleteById<T>(object id) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
 
@@ -709,7 +730,7 @@ namespace SisoDb
 
         public virtual void DeleteByIds<T>(params object[] ids) where T : class
         {
-            Transaction.Try(() =>
+            Try(() =>
             {
                 Ensure.That(ids, "ids").HasItems();
 

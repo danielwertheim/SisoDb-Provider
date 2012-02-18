@@ -1,4 +1,5 @@
-﻿using Machine.Specifications;
+﻿using System.Transactions;
+using Machine.Specifications;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
 
@@ -14,7 +15,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             private Because of = () =>
             {
-                using (var t = TestContext.ProviderFactory.GetRequiredTransaction())
+                using (var t = new TransactionScope(TransactionScopeOption.Required))
                 {
                     using (var session = TestContext.Database.BeginSession())
                     {
@@ -35,7 +36,6 @@ namespace SisoDb.Specifications.UnitOfWork
                             new IdentityItem {Value = 6}
                         });
                     }
-                    t.MarkAsFailed();
                 }
             };
 
@@ -55,7 +55,7 @@ namespace SisoDb.Specifications.UnitOfWork
 
             private Because of = () =>
             {
-                using (var t = TestContext.ProviderFactory.GetRequiredTransaction())
+                using (var t = new TransactionScope(TransactionScopeOption.Required))
                 {
                     using (var session = TestContext.Database.BeginSession())
                     {
@@ -76,6 +76,7 @@ namespace SisoDb.Specifications.UnitOfWork
                             new IdentityItem {Value = 6}
                         });
                     }
+                    t.Complete();
                 }
             };
 

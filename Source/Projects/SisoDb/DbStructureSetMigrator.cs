@@ -42,24 +42,21 @@ namespace SisoDb
                 Db.SchemaManager.RemoveFromCache(structureSchemaOld);
             }
 
-            using (var t = Db.ProviderFactory.GetRequiredTransaction())
+            using (var dbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo))
             {
-                using (var dbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo))
+                try
                 {
-                    try
-                    {
-                        Db.SchemaManager.UpsertStructureSet(structureSchemaNew, dbClient);
+                    Db.SchemaManager.UpsertStructureSet(structureSchemaNew, dbClient);
 
-                        if (!OnUpdate(structureSchemaOld, structureSchemaNew, dbClient, modifier))
-                            t.MarkAsFailed();
-                    }
-                    finally
+                    if (!OnUpdate(structureSchemaOld, structureSchemaNew, dbClient, modifier))
+                        dbClient.Transaction.MarkAsFailed();
+                }
+                finally
+                {
+                    if (!isUpdatingSameSchema)
                     {
-                        if (!isUpdatingSameSchema)
-                        {
-                            Db.StructureSchemas.RemoveSchema(oldType);
-                            Db.SchemaManager.DropStructureSet(structureSchemaOld, dbClient);
-                        }
+                        Db.StructureSchemas.RemoveSchema(oldType);
+                        Db.SchemaManager.DropStructureSet(structureSchemaOld, dbClient);
                     }
                 }
             }

@@ -1,4 +1,5 @@
-﻿using PineCone.Structures.Schemas;
+﻿using System.Data;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -40,23 +41,14 @@ namespace SisoDb.SqlCe4
             return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public ISisoTransaction GetRequiredTransaction()
-        {
-            return SqlCe4DbTransaction.CreateRequired();
-        }
-
-        public ISisoTransaction GetSuppressedTransaction()
-        {
-            return SqlCe4DbTransaction.CreateSuppressed();
-        }
-
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            var transaction = GetRequiredTransaction();
+            var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+            var transaction = new SqlCe4DbTransaction(connection.BeginTransaction(IsolationLevel.ReadCommitted));
 
             return new SqlCe4DbClient(
-                connectionInfo, 
-                _connectionManager.OpenClientDbConnection(connectionInfo),
+                connectionInfo,
+                connection,
                 transaction,
                 _connectionManager, 
                 _sqlStatements);
@@ -64,12 +56,10 @@ namespace SisoDb.SqlCe4
 
 	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
-	        var transaction = GetSuppressedTransaction();
-
 	        return new SqlCe4DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                transaction,
+                null,
                 _connectionManager, 
                 _sqlStatements);
 	    }

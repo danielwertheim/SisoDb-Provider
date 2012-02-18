@@ -187,15 +187,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is no point in calling mark as failed on a Suppressed transaction..
-        /// </summary>
-        public static string DbTransaction_MarkAsFailed_ForSuppressedTransaction {
-            get {
-                return ResourceManager.GetString("DbTransaction_MarkAsFailed_ForSuppressedTransaction", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Direct memberaccess of node: &apos;{0}&apos;; with with membertype: &apos;{1}&apos;; is not supported!.
         /// </summary>
         public static string ExpressionEvaluator_EvaluateMemberExpression_NotSupported {

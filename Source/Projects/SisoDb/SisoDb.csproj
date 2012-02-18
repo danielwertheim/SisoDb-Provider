@@ -79,7 +79,9 @@
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
-    <Compile Include="ISisoTransaction.cs" />
+    <Compile Include="Dac\SisoDbDatabaseTransaction.cs" />
+    <Compile Include="ISisoDbDatabaseTransaction.cs" />
+    <Compile Include="ISisoDbTransaction.cs" />
     <Compile Include="DbSchema\DbNamingPolicy.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />

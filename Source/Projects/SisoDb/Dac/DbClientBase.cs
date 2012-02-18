@@ -20,15 +20,14 @@ namespace SisoDb.Dac
 	    protected readonly ISqlStatements SqlStatements;
 	    
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
-        public ISisoTransaction Transaction { get; protected set; }
+        public ISisoDbDatabaseTransaction Transaction { get; protected set; }
 
-		protected DbClientBase(ISisoConnectionInfo connectionInfo, IDbConnection connection, ISisoTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+		protected DbClientBase(ISisoConnectionInfo connectionInfo, IDbConnection connection, ISisoDbDatabaseTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
 		{
 			Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(connection, "connection").IsNotNull();
 			Ensure.That(connectionManager, "connectionManager").IsNotNull();
 			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
-		    Ensure.That(transaction, "transaction").IsNotNull();
 
 			ConnectionInfo = connectionInfo;
 			ConnectionManager = connectionManager;
@@ -59,11 +58,16 @@ namespace SisoDb.Dac
                 throw ex;
         }
 
+        protected virtual IDbTransaction GetDbTransaction()
+        {
+            return Transaction == null ? null : Transaction.InnerTransaction;
+        }
+
 	    public abstract IDbBulkCopy GetBulkCopy();
 
 	    public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
 		{
-			Connection.ExecuteNonQuery(sql, parameters);
+			Connection.ExecuteNonQuery(sql, GetDbTransaction(), parameters);
 		}
 
         public virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
@@ -306,12 +310,12 @@ namespace SisoDb.Dac
 
         protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
         {
-            return Connection.CreateCommand(sql, parameters);
+            return Connection.CreateCommand(sql, GetDbTransaction(), parameters);
         }
 
         protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
         {
-            return Connection.CreateSpCommand(sp, parameters);
+            return Connection.CreateSpCommand(sp, GetDbTransaction(), parameters);
         }
 	}
 }

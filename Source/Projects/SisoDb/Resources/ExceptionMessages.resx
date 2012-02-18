@@ -265,9 +265,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="InMemoryCacheProvider_Clear_failed" xml:space="preserve">
     <value>Could not clear all structure set cache entries. See contained exceptions for more info.</value>
   </data>
-  <data name="DbTransaction_MarkAsFailed_ForSuppressedTransaction" xml:space="preserve">
-    <value>There is no point in calling mark as failed on a Suppressed transaction.</value>
-  </data>
   <data name="ConcurrencyException" xml:space="preserve">
     <value>Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store.</value>
   </data>

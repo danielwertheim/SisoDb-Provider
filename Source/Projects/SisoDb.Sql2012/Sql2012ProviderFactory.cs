@@ -1,4 +1,5 @@
-﻿using PineCone.Structures.Schemas;
+﻿using System.Data;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -40,23 +41,14 @@ namespace SisoDb.Sql2012
             return new Sql2012ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public ISisoTransaction GetRequiredTransaction()
-        {
-            return Sql2012DbTransaction.CreateRequired();
-        }
-
-        public ISisoTransaction GetSuppressedTransaction()
-        {
-            return Sql2012DbTransaction.CreateSuppressed();
-        }
-
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            var transaction = GetRequiredTransaction();
+            var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+            var transaction = new Sql2012DbTransaction(connection.BeginTransaction(IsolationLevel.ReadCommitted));
 
             return new Sql2012DbClient(
                 connectionInfo,
-                _connectionManager.OpenClientDbConnection(connectionInfo),
+                connection,
                 transaction,
                 _connectionManager,
                 _sqlStatements);
@@ -64,12 +56,10 @@ namespace SisoDb.Sql2012
 
 	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
-	        var transaction = GetSuppressedTransaction();
-
 	        return new Sql2012DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                transaction,
+                null,
                 _connectionManager,
                 _sqlStatements);
 	    }

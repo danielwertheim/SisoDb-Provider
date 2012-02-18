@@ -1,4 +1,5 @@
-﻿using PineCone.Structures.Schemas;
+﻿using System.Data;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -40,39 +41,28 @@ namespace SisoDb.Sql2008
             return new Sql2008ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
-	    public ISisoTransaction GetRequiredTransaction()
-	    {
-	        return Sql2008DbTransaction.CreateRequired();
-	    }
-
-	    public ISisoTransaction GetSuppressedTransaction()
-	    {
-            return Sql2008DbTransaction.CreateSuppressed();
-	    }
-
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            var transaction = GetRequiredTransaction();
+            var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+            var transaction = new Sql2008DbTransaction(connection.BeginTransaction(IsolationLevel.ReadCommitted));
 
             return new Sql2008DbClient(
                 connectionInfo,
-                _connectionManager.OpenClientDbConnection(connectionInfo),
+                connection,
                 transaction,
                 _connectionManager,
                 _sqlStatements);
         }
 
-	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
-	    {
-	        var transaction = GetSuppressedTransaction();
-
-	        return new Sql2008DbClient(
+        public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        {
+            return new Sql2008DbClient(
                 connectionInfo,
                 _connectionManager.OpenClientDbConnection(connectionInfo),
-                transaction,
+                null,
                 _connectionManager,
                 _sqlStatements);
-	    }
+        }
 
 	    public virtual IDbSchemaManager GetDbSchemaManager()
         {
