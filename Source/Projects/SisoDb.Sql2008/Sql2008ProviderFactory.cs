@@ -44,9 +44,7 @@ namespace SisoDb.Sql2008
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
-            var transaction = Transactions.ActiveTransactionExists 
-                ? null 
-                : connection.BeginTransaction(IsolationLevel.ReadCommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new Sql2008DbClient(
                 connectionInfo,
