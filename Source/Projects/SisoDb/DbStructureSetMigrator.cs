@@ -49,7 +49,7 @@ namespace SisoDb
                     Db.SchemaManager.UpsertStructureSet(structureSchemaNew, dbClient);
 
                     if (!OnUpdate(structureSchemaOld, structureSchemaNew, dbClient, modifier))
-                        dbClient.Transaction.MarkAsFailed();
+                        dbClient.MarkAsFailed();
                 }
                 finally
                 {

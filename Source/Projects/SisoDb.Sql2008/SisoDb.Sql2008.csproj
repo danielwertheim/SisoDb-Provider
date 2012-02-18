@@ -55,7 +55,6 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dac\Sql2008DbTransaction.cs" />
     <Compile Include="Dac\Sql2008DbBulkCopy.cs" />
     <Compile Include="Dac\Sql2008IdsTableParam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

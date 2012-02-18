@@ -60,7 +60,6 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dac\SqlCe4DbTransaction.cs" />
     <Compile Include="Dac\SqlCe4DbBulkCopy.cs" />
     <Compile Include="Dac\SqlCe4DbClient.cs" />
     <Compile Include="Dac\SqlCe4ServerClient.cs" />

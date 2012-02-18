@@ -44,7 +44,9 @@ namespace SisoDb.Sql2012
         public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
-            var transaction = new Sql2012DbTransaction(connection.BeginTransaction(IsolationLevel.ReadCommitted));
+            var transaction = Transactions.ActiveTransactionExists
+                ? null
+                : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new Sql2012DbClient(
                 connectionInfo,
@@ -56,9 +58,15 @@ namespace SisoDb.Sql2012
 
 	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
-	        return new Sql2012DbClient(
+            IDbConnection connection = null;
+            if (Transactions.ActiveTransactionExists)
+                Transactions.SuppressOngoingTransactionWhile(() => connection = _connectionManager.OpenClientDbConnection(connectionInfo));
+            else
+                connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+
+            return new Sql2012DbClient(
                 connectionInfo,
-                _connectionManager.OpenClientDbConnection(connectionInfo),
+                connection,
                 null,
                 _connectionManager,
                 _sqlStatements);

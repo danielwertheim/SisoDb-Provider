@@ -2,6 +2,7 @@ namespace SisoDb.Dac
 {
     public interface ITransactionalDbClient : IDbClient
     {
-        ISisoDbDatabaseTransaction Transaction { get; }
+        bool Failed { get; }
+        void MarkAsFailed();
     }
 }

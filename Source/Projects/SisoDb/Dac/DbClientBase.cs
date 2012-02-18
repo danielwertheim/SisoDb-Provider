@@ -17,12 +17,13 @@ namespace SisoDb.Dac
 	{
 	    protected readonly IConnectionManager ConnectionManager;
 	    protected IDbConnection Connection;
-	    protected readonly ISqlStatements SqlStatements;
+        protected IDbTransaction Transaction;
+        protected readonly ISqlStatements SqlStatements;
 	    
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
-        public ISisoDbDatabaseTransaction Transaction { get; protected set; }
-
-		protected DbClientBase(ISisoConnectionInfo connectionInfo, IDbConnection connection, ISisoDbDatabaseTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+        public bool Failed { get; protected set; }
+        
+		protected DbClientBase(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
 		{
 			Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(connection, "connection").IsNotNull();
@@ -44,6 +45,11 @@ namespace SisoDb.Dac
 
             if (Transaction != null)
             {
+                if(Failed)
+                    Transaction.Rollback();
+                else
+                    Transaction.Commit();
+
                 ex = Disposer.TryDispose(Transaction);
                 Transaction = null;
             }
@@ -58,16 +64,16 @@ namespace SisoDb.Dac
                 throw ex;
         }
 
-        protected virtual IDbTransaction GetDbTransaction()
+        public virtual void MarkAsFailed()
         {
-            return Transaction == null ? null : Transaction.InnerTransaction;
+            Failed = true;
         }
 
 	    public abstract IDbBulkCopy GetBulkCopy();
 
 	    public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
 		{
-			Connection.ExecuteNonQuery(sql, GetDbTransaction(), parameters);
+			Connection.ExecuteNonQuery(sql, Transaction, parameters);
 		}
 
         public virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
@@ -310,12 +316,12 @@ namespace SisoDb.Dac
 
         protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
         {
-            return Connection.CreateCommand(sql, GetDbTransaction(), parameters);
+            return Connection.CreateCommand(sql, Transaction, parameters);
         }
 
         protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
         {
-            return Connection.CreateSpCommand(sp, GetDbTransaction(), parameters);
+            return Connection.CreateSpCommand(sp, Transaction, parameters);
         }
 	}
 }

@@ -81,7 +81,7 @@ namespace SisoDb
             }
             catch
             {
-                TransactionalDbClient.Transaction.MarkAsFailed();
+                TransactionalDbClient.MarkAsFailed();
                 throw;
             }
         }
@@ -94,7 +94,7 @@ namespace SisoDb
             }
             catch
             {
-                TransactionalDbClient.Transaction.MarkAsFailed();
+                TransactionalDbClient.MarkAsFailed();
                 throw;
             }
         }
