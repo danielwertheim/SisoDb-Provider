@@ -51,10 +51,8 @@ namespace SisoDb.SqlCe4
         protected override IConnectionString OnFormatConnectionString(IConnectionString connectionString)
         {
             var cnString = base.OnFormatConnectionString(connectionString);
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString)
-            {
-                Enlist = false
-            };
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString);
+            cnStringBuilder.Enlist = false;
 
             return connectionString.ReplacePlain(cnStringBuilder.ConnectionString);
         }
