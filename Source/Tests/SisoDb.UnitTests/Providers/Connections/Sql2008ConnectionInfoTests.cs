@@ -33,25 +33,35 @@ namespace SisoDb.UnitTests.Providers.Connections
         [Test]
         public void Ctor_WhenCorrectConnectionString_PartsExtracted()
         {
-            var cnString = new ConnectionString(@"sisodb:provider=Sql2008;parallelinserts=On||plain:data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;");
+            var cnString = new ConnectionString(@"sisodb:provider=Sql2008;backgroundindexing=Off||plain:data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;");
 
             var cnInfo = new Sql2008ConnectionInfo(cnString);
 
             Assert.AreEqual(StorageProviders.Sql2008, cnInfo.ProviderType);
-            Assert.AreEqual(ParallelInserts.On, cnInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.Off, cnInfo.BackgroundIndexing);
             Assert.AreEqual("SisoDbTests.Temp", cnInfo.DbName);
             Assert.AreEqual(@"Data Source=.;Initial Catalog=;Integrated Security=True", cnInfo.ServerConnectionString.PlainString);
             Assert.AreEqual(@"data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;", cnInfo.ClientConnectionString.PlainString);
         }
 
         [Test]
-        public void Ctor_WhenParallelInsertsIsMissing_DefaultsToOff()
+        public void Ctor_WhenBackgroundIndexingIsMissing_DefaultsToOff()
         {
             var cnString = new ConnectionString(@"sisodb:provider=Sql2008||plain:data source=.;initial catalog=SisoDbTests.Temp;integrated security=SSPI;");
 
             var cnInfo = new Sql2008ConnectionInfo(cnString);
 
-            Assert.AreEqual(ParallelInserts.Off, cnInfo.ParallelInserts);
+            Assert.AreEqual(BackgroundIndexing.Off, cnInfo.BackgroundIndexing);
+        }
+
+        [Test]
+        public void Ctor_WhenBackgroundIndexingIsOn_ThrowsSisoDbException()
+        {
+            var cnString = new ConnectionString(@"sisodb:provider=Sql2008;backgroundindexing=On||plain:data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=True");
+
+            var ex = Assert.Throws<SisoDbException>(() => new Sql2008ConnectionInfo(cnString));
+
+            Assert.AreEqual(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(StorageProviders.Sql2008), ex.Message);
         }
     }
 }

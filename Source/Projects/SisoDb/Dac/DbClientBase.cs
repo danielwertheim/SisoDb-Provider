@@ -7,47 +7,73 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
+using SisoDb.Core;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 
 namespace SisoDb.Dac
 {
-	public abstract class DbClientBase : IDbClient
+	public abstract class DbClientBase : ITransactionalDbClient
 	{
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
-
 	    protected readonly IConnectionManager ConnectionManager;
-        protected IDbConnection Connection;
-		protected readonly ISqlStatements SqlStatements;
-
-		protected DbClientBase(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+	    protected IDbConnection Connection;
+        protected IDbTransaction Transaction;
+        protected readonly ISqlStatements SqlStatements;
+	    
+        public ISisoConnectionInfo ConnectionInfo { get; private set; }
+        public bool Failed { get; protected set; }
+        
+		protected DbClientBase(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
 		{
 			Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
+            Ensure.That(connection, "connection").IsNotNull();
 			Ensure.That(connectionManager, "connectionManager").IsNotNull();
 			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
 			ConnectionInfo = connectionInfo;
 			ConnectionManager = connectionManager;
-            Connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+            Connection = connection;
             SqlStatements = sqlStatements;
+		    Transaction = transaction;
 		}
 
         public void Dispose()
         {
             GC.SuppressFinalize(this);
 
-            if (Connection == null)
-                return;
+            Exception ex = null;
 
-            ConnectionManager.ReleaseClientDbConnection(Connection);
-            Connection = null;
+            if (Transaction != null)
+            {
+                if(Failed)
+                    Transaction.Rollback();
+                else
+                    Transaction.Commit();
+
+                ex = Disposer.TryDispose(Transaction);
+                Transaction = null;
+            }
+
+            if (Connection != null)
+            {
+                ConnectionManager.ReleaseClientDbConnection(Connection);
+                Connection = null;
+            }
+
+            if (ex != null)
+                throw ex;
+        }
+
+        public virtual void MarkAsFailed()
+        {
+            Failed = true;
         }
 
 	    public abstract IDbBulkCopy GetBulkCopy();
 
 	    public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
 		{
-			Connection.ExecuteNonQuery(sql, parameters);
+			Connection.ExecuteNonQuery(sql, Transaction, parameters);
 		}
 
         public virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
@@ -290,12 +316,12 @@ namespace SisoDb.Dac
 
         protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
         {
-            return Connection.CreateCommand(sql, parameters);
+            return Connection.CreateCommand(sql, Transaction, parameters);
         }
 
         protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
         {
-            return Connection.CreateSpCommand(sp, parameters);
+            return Connection.CreateSpCommand(sp, Transaction, parameters);
         }
 	}
 }

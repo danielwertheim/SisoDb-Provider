@@ -10,17 +10,17 @@ namespace SisoDb.Sql2008.Dac
     public class Sql2008ServerClient : IServerClient
     {
         private readonly ISisoConnectionInfo _connectionInfo;
-    	private readonly IConnectionManager _connectionManager;
+        private readonly IConnectionManager _connectionManager;
         private readonly ISqlStatements _sqlStatements;
 
-		public Sql2008ServerClient(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+        public Sql2008ServerClient(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
-			Ensure.That(connectionManager, "connectionManager").IsNotNull();
-			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
+            Ensure.That(connectionManager, "connectionManager").IsNotNull();
+            Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
             _connectionInfo = connectionInfo;
-        	_connectionManager = connectionManager;
+            _connectionManager = connectionManager;
             _sqlStatements = sqlStatements;
         }
 
@@ -30,12 +30,12 @@ namespace SisoDb.Sql2008.Dac
 
             try
             {
-				cn = _connectionManager.OpenServerConnection(_connectionInfo);
+                cn = _connectionManager.OpenServerConnection(_connectionInfo);
                 cnConsumer.Invoke(cn);
             }
             finally
             {
-				_connectionManager.ReleaseServerConnection(cn);
+                _connectionManager.ReleaseServerConnection(cn);
             }
         }
 
@@ -46,12 +46,12 @@ namespace SisoDb.Sql2008.Dac
 
             try
             {
-				cn = _connectionManager.OpenServerConnection(_connectionInfo);
+                cn = _connectionManager.OpenServerConnection(_connectionInfo);
                 result = cnConsumer.Invoke(cn);
             }
             finally
             {
-				_connectionManager.ReleaseServerConnection(cn);
+                _connectionManager.ReleaseServerConnection(cn);
             }
 
             return result;
@@ -59,7 +59,7 @@ namespace SisoDb.Sql2008.Dac
 
         public void EnsureNewDb()
         {
-			_connectionManager.ReleaseAllDbConnections();
+            _connectionManager.ReleaseAllDbConnections();
 
             WithConnection(cn =>
             {
@@ -72,15 +72,15 @@ namespace SisoDb.Sql2008.Dac
 
         public void CreateDbIfItDoesNotExist()
         {
-			_connectionManager.ReleaseAllDbConnections();
+            _connectionManager.ReleaseAllDbConnections();
 
             WithConnection(cn =>
             {
-                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
+                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), null, new DacParameter("dbName", _connectionInfo.DbName)) > 0;
 
-                if(exists)
+                if (exists)
                     return;
-                
+
                 cn.ExecuteNonQuery(_sqlStatements.GetSql("CreateDatabase").Inject(_connectionInfo.DbName));
                 cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(_connectionInfo.DbName));
                 cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(_connectionInfo.DbName));
@@ -89,11 +89,11 @@ namespace SisoDb.Sql2008.Dac
 
         public void InitializeExistingDb()
         {
-			_connectionManager.ReleaseAllDbConnections();
+            _connectionManager.ReleaseAllDbConnections();
 
             WithConnection(cn =>
             {
-                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
+                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), null, new DacParameter("dbName", _connectionInfo.DbName)) > 0;
 
                 if (!exists)
                     throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.DbName));
@@ -105,12 +105,12 @@ namespace SisoDb.Sql2008.Dac
 
         public bool DbExists()
         {
-            return WithConnection(cn => cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0);
+            return WithConnection(cn => cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), null, new DacParameter("dbName", _connectionInfo.DbName)) > 0);
         }
 
         public void DropDbIfItExists()
         {
-			_connectionManager.ReleaseAllDbConnections();
+            _connectionManager.ReleaseAllDbConnections();
 
             WithConnection(cn => cn.ExecuteNonQuery(_sqlStatements.GetSql("DropDatabase").Inject(_connectionInfo.DbName)));
         }

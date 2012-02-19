@@ -17,14 +17,14 @@ namespace SisoDb.SqlCe4.Dac
     {
     	private const int MaxBatchedIdsSize = 32;
 
-		public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(connectionInfo, connectionManager, sqlStatements)
+        public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
         }
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection);
+            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, (SqlCeTransaction)Transaction);
         }
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
@@ -32,7 +32,7 @@ namespace SisoDb.SqlCe4.Dac
             if (!sql.Contains(";"))
                 base.ExecuteNonQuery(sql, parameters);
             else
-                Connection.ExecuteNonQuery(sql.Split(';'), parameters);
+                Connection.ExecuteNonQuery(sql.Split(';'), Transaction, parameters);
         }
 
         public override void Drop(IStructureSchema structureSchema)

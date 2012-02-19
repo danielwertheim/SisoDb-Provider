@@ -8,20 +8,20 @@ namespace SisoDb.Sql2012.Dac
 {
     public class Sql2012DbBulkCopy : IDbBulkCopy
     {
+        private SqlConnection _connection;
+        private SqlTransaction _transaction;
         private SqlBulkCopy _innerBulkCopy;
-        private readonly IDbClient _dbClient;
 
-        public Sql2012DbBulkCopy(SqlConnection connection, IDbClient dbClient)
+        public Sql2012DbBulkCopy(SqlConnection connection, SqlTransaction transaction = null)
         {
             Ensure.That(connection, "connection").IsNotNull();
-            Ensure.That(dbClient, "dbClient").IsNotNull();
+            _connection = connection;
+            _transaction = transaction;
 
-			_innerBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.KeepNulls, null)
+            _innerBulkCopy = new SqlBulkCopy(_connection, SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.KeepNulls, transaction)
             {
                 NotifyAfter = 0
             };
-
-            _dbClient = dbClient;
         }
 
         public void Dispose()
@@ -32,6 +32,9 @@ namespace SisoDb.Sql2012.Dac
                 _innerBulkCopy.Close();
                 _innerBulkCopy = null;
             }
+
+            _connection = null;
+            _transaction = null;
         }
 
         public string DestinationTableName
@@ -51,7 +54,7 @@ namespace SisoDb.Sql2012.Dac
 
         public void Write(IDataReader reader)
         {
-            _dbClient.ExecuteNonQuery("SET XACT_ABORT ON");
+            _connection.ExecuteNonQuery("SET XACT_ABORT ON;", _transaction);
             _innerBulkCopy.WriteToServer(reader);
         }
     }

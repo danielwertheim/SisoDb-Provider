@@ -1,4 +1,5 @@
-﻿using PineCone.Structures.Schemas;
+﻿using System.Data;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -40,22 +41,36 @@ namespace SisoDb.SqlCe4
             return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public ISisoTransaction GetRequiredTransaction()
+        public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return SqlCe4DbTransaction.CreateRequired();
+            var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+            return new SqlCe4DbClient(
+                connectionInfo,
+                connection,
+                transaction,
+                _connectionManager, 
+                _sqlStatements);
         }
 
-        public ISisoTransaction GetSuppressedTransaction()
-        {
-            return SqlCe4DbTransaction.CreateSuppressed();
-        }
+	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+	    {
+            IDbConnection connection = null;
+            if (Transactions.ActiveTransactionExists)
+                Transactions.SuppressOngoingTransactionWhile(() => connection = _connectionManager.OpenClientDbConnection(connectionInfo));
+            else
+                connection = _connectionManager.OpenClientDbConnection(connectionInfo);
 
-	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
-        {
-			return new SqlCe4DbClient(connectionInfo, _connectionManager, _sqlStatements);
-        }
+            return new SqlCe4DbClient(
+                connectionInfo,
+                connection,
+                null,
+                _connectionManager,
+                _sqlStatements);
+	    }
 
-        public virtual IDbSchemaManager GetDbSchemaManager()
+	    public virtual IDbSchemaManager GetDbSchemaManager()
         {
 			return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
         }

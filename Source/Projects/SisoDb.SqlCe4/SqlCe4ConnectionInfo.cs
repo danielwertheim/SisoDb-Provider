@@ -2,7 +2,6 @@
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Web;
-using NCore;
 using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4
@@ -13,7 +12,11 @@ namespace SisoDb.SqlCe4
         private readonly string _serverPath;
         private readonly string _filePath;
         private readonly string _dbName;
-        private readonly IConnectionString _serverConnectionString;
+
+        public override StorageProviders ProviderType
+        {
+            get { return StorageProviders.SqlCe4; }
+        }
 
         public string ServerPath
         {
@@ -30,11 +33,6 @@ namespace SisoDb.SqlCe4
             get { return _dbName; }
         }
 
-        public override IConnectionString ServerConnectionString
-        {
-            get { return _serverConnectionString; }
-        }
-
         public SqlCe4ConnectionInfo(string connectionStringOrName)
             : this(ConnectionString.Get(connectionStringOrName))
         { }
@@ -42,37 +40,59 @@ namespace SisoDb.SqlCe4
         public SqlCe4ConnectionInfo(IConnectionString connectionString)
             : base(connectionString)
         {
-            if (ProviderType != StorageProviders.SqlCe4)
-                throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(ProviderType, StorageProviders.SqlCe4));
-
-            if(ParallelInserts != ParallelInserts.Off)
-                throw new SisoDbException(ExceptionMessages.ConnectionInfo_ParallelInsertsNotSupported.Inject(ProviderType));
-
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(ClientConnectionString.PlainString)
-            {
-                Enlist = false
-            };
-
-            _filePath = cnStringBuilder.DataSource;
-
-            const string dataDirectorySwitch = "|DataDirectory|";
-            if (_filePath.StartsWith(dataDirectorySwitch, StringComparison.OrdinalIgnoreCase))
-            {
-                _filePath = _filePath.Substring(dataDirectorySwitch.Length);
-                if (HttpContext.Current != null)
-                    _filePath = Path.Combine(HttpContext.Current.Server.MapPath("App_Data"), _filePath);
-            }
-
-            _dbName = _filePath.Contains(Path.DirectorySeparatorChar.ToString())
-                ? Path.GetFileNameWithoutExtension(_filePath)
-                : _filePath;
+            _filePath = ExtractFilePath(ClientConnectionString);
+            _serverPath = ExtractServerPath(FilePath);
+            _dbName = ExtractDbName(FilePath);
 
             if (string.IsNullOrWhiteSpace(_dbName))
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
+        }
 
-            _serverPath = Path.GetDirectoryName(_filePath);
+        protected override IConnectionString OnFormatConnectionString(IConnectionString connectionString)
+        {
+            var cnString = base.OnFormatConnectionString(connectionString);
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString);
+            cnStringBuilder.Enlist = false;
 
-            _serverConnectionString = ClientConnectionString.ReplacePlain(cnStringBuilder.ConnectionString);
+            return connectionString.ReplacePlain(cnStringBuilder.ConnectionString);
+        }
+
+        protected override IConnectionString OnFormatServerConnectionString(IConnectionString connectionString)
+        {
+            var cnString = base.OnFormatServerConnectionString(connectionString);
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString);
+            cnStringBuilder.Enlist = false;
+
+            return cnString.ReplacePlain(cnStringBuilder.ConnectionString);
+        }
+
+        private string ExtractFilePath(IConnectionString connectionString)
+        {
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString.PlainString);
+
+            var filePath = cnStringBuilder.DataSource;
+
+            const string dataDirectorySwitch = "|DataDirectory|";
+            if (filePath.StartsWith(dataDirectorySwitch, StringComparison.OrdinalIgnoreCase))
+            {
+                filePath = filePath.Substring(dataDirectorySwitch.Length);
+                if (HttpContext.Current != null)
+                    filePath = Path.Combine(HttpContext.Current.Server.MapPath("App_Data"), filePath);
+            }
+
+            return filePath;
+        }
+
+        private string ExtractDbName(string filePath)
+        {
+            return filePath.Contains(Path.DirectorySeparatorChar.ToString())
+                ? Path.GetFileNameWithoutExtension(filePath)
+                : filePath;
+        }
+
+        private string ExtractServerPath(string filePath)
+        {
+            return Path.GetDirectoryName(filePath);
         }
     }
 }

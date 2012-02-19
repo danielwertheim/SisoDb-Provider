@@ -76,7 +76,7 @@ namespace SisoDb.Sql2012.Dac
 
             WithConnection(cn =>
             {
-                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
+                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), null, new DacParameter("dbName", _connectionInfo.DbName)) > 0;
 
                 if(exists)
                     return;
@@ -93,7 +93,7 @@ namespace SisoDb.Sql2012.Dac
 
             WithConnection(cn =>
             {
-                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0;
+                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), null, new DacParameter("dbName", _connectionInfo.DbName)) > 0;
 
                 if (!exists)
                     throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.DbName));
@@ -105,7 +105,7 @@ namespace SisoDb.Sql2012.Dac
 
         public bool DbExists()
         {
-            return WithConnection(cn => cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), new DacParameter("dbName", _connectionInfo.DbName)) > 0);
+            return WithConnection(cn => cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("DatabaseExists"), null, new DacParameter("dbName", _connectionInfo.DbName)) > 0);
         }
 
         public void DropDbIfItExists()

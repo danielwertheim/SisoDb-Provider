@@ -1,4 +1,5 @@
-﻿using PineCone.Structures.Schemas;
+﻿using System.Data;
+using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
@@ -40,29 +41,43 @@ namespace SisoDb.Sql2012
             return new Sql2012ServerClient(connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public ISisoTransaction GetRequiredTransaction()
+        public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return Sql2012DbTransaction.CreateRequired();
+            var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+            var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+            return new Sql2012DbClient(
+                connectionInfo,
+                connection,
+                transaction,
+                _connectionManager,
+                _sqlStatements);
         }
 
-        public ISisoTransaction GetSuppressedTransaction()
-        {
-            return Sql2012DbTransaction.CreateSuppressed();
-        }
+	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+	    {
+            IDbConnection connection = null;
+            if (Transactions.ActiveTransactionExists)
+                Transactions.SuppressOngoingTransactionWhile(() => connection = _connectionManager.OpenClientDbConnection(connectionInfo));
+            else
+                connection = _connectionManager.OpenClientDbConnection(connectionInfo);
 
-	    public IDbClient GetDbClient(ISisoConnectionInfo connectionInfo)
-        {
-            return new Sql2012DbClient(connectionInfo, _connectionManager, _sqlStatements);
-        }
+            return new Sql2012DbClient(
+                connectionInfo,
+                connection,
+                null,
+                _connectionManager,
+                _sqlStatements);
+	    }
 
-        public virtual IDbSchemaManager GetDbSchemaManager()
+	    public virtual IDbSchemaManager GetDbSchemaManager()
         {
 			return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
         {
-            return new DbStructureInserter(dbClient, () => GetDbClient(dbClient.ConnectionInfo));
+            return new DbStructureInserter(dbClient);
         }
 
     	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)

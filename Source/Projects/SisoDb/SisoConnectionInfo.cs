@@ -1,5 +1,7 @@
 using System;
 using EnsureThat;
+using NCore;
+using SisoDb.Resources;
 
 namespace SisoDb
 {
@@ -8,24 +10,75 @@ namespace SisoDb
     {
         public abstract string DbName { get; }
 
-        public StorageProviders ProviderType { get; private set; }
+        public abstract StorageProviders ProviderType { get; }
 
-        public ParallelInserts ParallelInserts { get; private set; }
+        public BackgroundIndexing BackgroundIndexing { get; private set; }
 
         public IConnectionString ClientConnectionString { get; private set; }
 
-        public abstract IConnectionString ServerConnectionString { get; }
+        public IConnectionString ServerConnectionString { get; private set; }
 
         protected SisoConnectionInfo(IConnectionString connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
+            EnsureCorrectProvider(connectionString);
+            
+            ClientConnectionString = FormatConnectionString(connectionString);
+            ServerConnectionString = FormatServerConnectionString(connectionString);
+            BackgroundIndexing = ExtractBackgroundIndexing(ClientConnectionString);
+            
+            if (BackgroundIndexing != BackgroundIndexing.Off)
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
+        }
 
-            ClientConnectionString = connectionString;
+        private void EnsureCorrectProvider(IConnectionString connectionString)
+        {
+            var providerType = ExtractProviderType(connectionString);
 
-            ProviderType = (StorageProviders)Enum.Parse(typeof(StorageProviders), ClientConnectionString.Provider, true);
+            if (providerType != ProviderType)
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(providerType, ProviderType));
+        }
 
-            if(!string.IsNullOrWhiteSpace(ClientConnectionString.ParallelInserts))
-                ParallelInserts = (ParallelInserts)Enum.Parse(typeof(ParallelInserts), ClientConnectionString.ParallelInserts, true);
+        private IConnectionString FormatConnectionString(IConnectionString connectionString)
+        {
+            return OnFormatConnectionString(connectionString);
+        }
+
+        private IConnectionString FormatServerConnectionString(IConnectionString connectionString)
+        {
+            return OnFormatServerConnectionString(connectionString);
+        }
+
+        private StorageProviders ExtractProviderType(IConnectionString connectionString)
+        {
+            return OnExtractProviderType(connectionString);
+        }
+
+        private BackgroundIndexing ExtractBackgroundIndexing(IConnectionString connectionString)
+        {
+            return OnExtractBackgroundIndexing(connectionString);
+        }
+
+        protected virtual IConnectionString OnFormatConnectionString(IConnectionString connectionString)
+        {
+            return connectionString;
+        }
+
+        protected virtual IConnectionString OnFormatServerConnectionString(IConnectionString connectionString)
+        {
+            return connectionString;
+        }
+
+        protected virtual StorageProviders OnExtractProviderType(IConnectionString connectionString)
+        {
+            return (StorageProviders)Enum.Parse(typeof(StorageProviders), connectionString.Provider, true);
+        }
+
+        protected virtual BackgroundIndexing OnExtractBackgroundIndexing(IConnectionString connectionString)
+        {
+            return (string.IsNullOrWhiteSpace(ClientConnectionString.BackgroundIndexing))
+                ? BackgroundIndexing.Off 
+                : (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.BackgroundIndexing, true);
         }
     }
 }

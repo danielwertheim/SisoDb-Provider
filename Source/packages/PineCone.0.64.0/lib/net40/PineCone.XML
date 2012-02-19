@@ -116,6 +116,16 @@
               Looks up a localized string similar to Property &apos;{0}&apos; is read-only..
             </summary>
         </member>
+        <member name="P:PineCone.Resources.ExceptionMessages.TimeStampAccessor_Invalid_Type">
+            <summary>
+              Looks up a localized string similar to The type of the Time stamp member &apos;{0}&apos; should be a Date..
+            </summary>
+        </member>
+        <member name="P:PineCone.Resources.ExceptionMessages.TimeStampAccessor_InvalidLevel">
+            <summary>
+              Looks up a localized string similar to Time stamp member &apos;{0}&apos; must lie on the root object..
+            </summary>
+        </member>
         <member name="P:PineCone.Resources.ExceptionMessages.UniqueModesCantBeMapped">
             <summary>
               Looks up a localized string similar to The UniqueModes &apos;{0}&apos; is unknow and cant be mapped..

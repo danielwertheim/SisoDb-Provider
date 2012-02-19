@@ -6,24 +6,27 @@ namespace SisoDb.Dac
 {
 	public static class AdoNetExtensions
     {
-		public static IDbCommand CreateCommand(this IDbConnection connection)
+		public static IDbCommand CreateCommand(this IDbConnection connection, IDbTransaction transaction = null)
 		{
-			return CreateCommand(connection, CommandType.Text, null);
+			return CreateCommand(connection, CommandType.Text, null, transaction);
 		}
 
-		public static IDbCommand CreateCommand(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+        public static IDbCommand CreateCommand(this IDbConnection connection, string sql, IDbTransaction transaction = null, params IDacParameter[] parameters)
         {
-            return CreateCommand(connection, CommandType.Text, sql, parameters);
+            return CreateCommand(connection, CommandType.Text, sql, transaction, parameters);
         }
 
-		public static IDbCommand CreateSpCommand(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+        public static IDbCommand CreateSpCommand(this IDbConnection connection, string sql, IDbTransaction transaction = null, params IDacParameter[] parameters)
 		{
-			return CreateCommand(connection, CommandType.StoredProcedure, sql, parameters);
+			return CreateCommand(connection, CommandType.StoredProcedure, sql, transaction, parameters);
 		}
 
-        private static IDbCommand CreateCommand(IDbConnection connection, CommandType commandType, string sql, params IDacParameter[] parameters)
+        private static IDbCommand CreateCommand(IDbConnection connection, CommandType commandType, string sql, IDbTransaction transaction = null, params IDacParameter[] parameters)
         {
             var cmd = connection.CreateCommand();
+            if(transaction != null)
+                cmd.Transaction = transaction;
+
             cmd.CommandType = commandType;
             cmd.UpdatedRowSource = UpdateRowSource.None;
 
@@ -47,17 +50,17 @@ namespace SisoDb.Dac
             }
         }
 
-		public static void ExecuteNonQuery(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+        public static void ExecuteNonQuery(this IDbConnection connection, string sql, IDbTransaction transaction = null, params IDacParameter[] parameters)
         {
-            using(var cmd = connection.CreateCommand(sql, parameters))
+            using(var cmd = connection.CreateCommand(sql, transaction, parameters))
             {
                 cmd.ExecuteNonQuery();
             }
         }
 
-		public static void ExecuteNonQuery(this IDbConnection connection, string[] sqls, params IDacParameter[] parameters)
+        public static void ExecuteNonQuery(this IDbConnection connection, string[] sqls, IDbTransaction transaction = null, params IDacParameter[] parameters)
         {
-            using (var cmd = connection.CreateCommand(string.Empty, parameters))
+            using (var cmd = connection.CreateCommand(string.Empty, transaction, parameters))
             {
                 foreach (var sqlStatement in sqls.Where(statement => !string.IsNullOrWhiteSpace(statement))) 
                 {
@@ -67,9 +70,9 @@ namespace SisoDb.Dac
             }
         }
 
-		public static T ExecuteScalarResult<T>(this IDbConnection connection, string sql, params IDacParameter[] parameters)
+        public static T ExecuteScalarResult<T>(this IDbConnection connection, string sql, IDbTransaction transaction = null, params IDacParameter[] parameters)
         {
-            using (var cmd = connection.CreateCommand(sql, parameters))
+            using (var cmd = connection.CreateCommand(sql, transaction, parameters))
             {
                 return cmd.GetScalarResult<T>();
             }

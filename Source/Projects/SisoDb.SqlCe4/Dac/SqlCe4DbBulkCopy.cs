@@ -10,14 +10,17 @@ namespace SisoDb.SqlCe4.Dac
     public class SqlCe4DbBulkCopy : IDbBulkCopy
     {
     	private readonly SqlCeConnection _connection;
-    	private readonly Dictionary<string, string> _columnMappings; 
+        private readonly SqlCeTransaction _transaction;
+        private readonly Dictionary<string, string> _columnMappings; 
 
-        public SqlCe4DbBulkCopy(SqlCeConnection connection)
+        public SqlCe4DbBulkCopy(SqlCeConnection connection, SqlCeTransaction transaction)
         {
         	Ensure.That(connection, "connection").IsNotNull();
+            Ensure.That(transaction, "transaction").IsNotNull();
 
         	_connection = connection;
-        	_columnMappings = new Dictionary<string, string>();
+            _transaction = transaction;
+            _columnMappings = new Dictionary<string, string>();
         }
 
     	public void Dispose()
@@ -40,6 +43,7 @@ namespace SisoDb.SqlCe4.Dac
 
 			using(var cmd = _connection.CreateCommand())
 			{
+			    cmd.Transaction = _transaction;
 				cmd.CommandText = DestinationTableName;
 				cmd.CommandType = CommandType.TableDirect;
 				using (var rsIn = cmd.ExecuteResultSet(ResultSetOptions.Updatable))

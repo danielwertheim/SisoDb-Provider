@@ -20,11 +20,9 @@ namespace SisoDb
 
         IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
 
-	    ISisoTransaction GetRequiredTransaction();
+        ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo);
 
-        ISisoTransaction GetSuppressedTransaction();
-
-        IDbClient GetDbClient(ISisoConnectionInfo connectionInfo);
+        IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
 
         IDbSchemaManager GetDbSchemaManager();
 

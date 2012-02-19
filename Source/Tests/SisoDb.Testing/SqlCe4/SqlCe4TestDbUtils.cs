@@ -168,7 +168,7 @@ namespace SisoDb.Testing.SqlCe4
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(sql, parameters))
+                using (var cmd = cn.CreateCommand(sql, null, parameters))
                 {
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {

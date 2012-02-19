@@ -3,12 +3,9 @@
     public interface IConnectionString
     {
         string SisoDbString { get; }
-        
         string PlainString { get; }
-
         string Provider { get; }
-
-        string ParallelInserts { get; }
+        string BackgroundIndexing { get; }
 
         IConnectionString ReplacePlain(string plainString);
     }
