@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.SqlCe4</id>    
 		<title>SisoDb.SqlCe4 - Simple Structure Oriented Db</title>
-		<version>10.0.1-prerelease</version>
+		<version>10.0.0</version>
 		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
@@ -18,15 +18,15 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sqlce,sqlce4,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[10.0.1-prerelease]" />
+			<dependency id="SisoDb" version="[10.0.0]" />
 			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="0.61.0" />
+			<dependency id="NCore" version="[0.27.0]" />
+			<dependency id="PineCone" version="[0.64.0]" />
 			<dependency id="SqlServerCompact" version="4.0.8482.1" />
 		</dependencies>
 	</metadata>
 	<files>
 	  <file src="..\Source\Projects\SisoDb.SqlCe4\bin\Release\SisoDb.SqlCe4.dll" target="lib\net40\" />
 	  <file src="..\Source\Projects\SisoDb.SqlCe4\bin\Release\SisoDb.SqlCe4.xml" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.SqlCe4\bin\Release\NCore*.dll" target="lib\net40\" />
 	</files>
 </package>
