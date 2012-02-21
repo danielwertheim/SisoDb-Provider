@@ -116,17 +116,17 @@ namespace SisoDb
             return Try(() => StructureSchemas.GetSchema<T>());
         }
 
-        void IAdvanced.DeleteByQuery<T>(Expression<Func<T, bool>> expression)
+        void IAdvanced.DeleteByQuery<T>(Expression<Func<T, bool>> predicate)
         {
             Try(() =>
             {
-                Ensure.That(expression, "expression").IsNotNull();
+                Ensure.That(predicate, "predicate").IsNotNull();
 
                 var structureSchema = UpsertStructureSchema<T>();
                 Db.CacheProvider.NotifyOfPurge(structureSchema);
 
                 var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
-                queryBuilder.Where(expression);
+                queryBuilder.Where(predicate);
 
                 var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
                 TransactionalDbClient.DeleteByQuery(sql, structureSchema);
@@ -211,11 +211,11 @@ namespace SisoDb
             });
         }
 
-        void IAdvanced.UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier)
+        void IAdvanced.UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier)
         {
             Try(() =>
             {
-                Ensure.That(expression, "expression").IsNotNull();
+                Ensure.That(predicate, "predicate").IsNotNull();
                 Ensure.That(modifier, "modifier").IsNotNull();
 
                 var structureSchema = UpsertStructureSchema<T>();
@@ -225,7 +225,7 @@ namespace SisoDb
                 var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
-                var query = queryBuilder.Where(expression).Build();
+                var query = queryBuilder.Where(predicate).Build();
                 var sqlQuery = QueryGenerator.GenerateQuery(query);
 
                 foreach (var structure in Db.Serializer.DeserializeMany<T>(
