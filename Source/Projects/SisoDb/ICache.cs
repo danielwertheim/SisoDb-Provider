@@ -51,11 +51,11 @@ namespace SisoDb
 		/// Should be used to update the cache.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
-		/// <param name="structureId"></param>
+		/// <param name="id"></param>
 		/// <param name="structure"></param>
 		/// <returns></returns>
 		/// <remarks>Note! The structure being sent in should be returned by the cache.</remarks>
-		T Put<T>(IStructureId structureId, T structure) where T : class;
+		T Put<T>(IStructureId id, T structure) where T : class;
 		
 		/// <summary>
 		/// Called when an insert or update is performed against the <see cref="ISisoDatabase"/>.
@@ -71,14 +71,14 @@ namespace SisoDb
 		/// Called when a structure is being deleted from the <see cref="ISisoDatabase"/>.
 		/// Should be used to update the cache.
 		/// </summary>
-		/// <param name="structureId"></param>
-		void Remove(IStructureId structureId);
+		/// <param name="id"></param>
+		void Remove(IStructureId id);
 
 		/// <summary>
 		/// Called when multiple structures are being deleted from the <see cref="ISisoDatabase"/>.
 		/// Should be used to update the cache.
 		/// </summary>
-		/// <param name="structureIds"></param>
-		void Remove(IEnumerable<IStructureId> structureIds);
+		/// <param name="ids"></param>
+		void Remove(IEnumerable<IStructureId> ids);
 	}
 }
