@@ -262,7 +262,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="WriteSession_UpdateMany_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
   </data>
-  <data name="InMemoryCacheProvider_Clear_failed" xml:space="preserve">
+  <data name="CacheProvider_Clear_failed" xml:space="preserve">
     <value>Could not clear all structure set cache entries. See contained exceptions for more info.</value>
   </data>
   <data name="ConcurrencyException" xml:space="preserve">

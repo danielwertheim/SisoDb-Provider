@@ -70,6 +70,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Caching\CacheConsumeModes.cs" />
+    <Compile Include="Caching\CacheProviderBase.cs" />
     <Compile Include="Caching\CacheProviderExtensions.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\EnumerableExtensions.cs" />

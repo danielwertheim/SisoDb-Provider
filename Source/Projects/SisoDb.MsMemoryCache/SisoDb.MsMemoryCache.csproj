@@ -8,8 +8,8 @@
     <ProjectGuid>{52453C59-B957-46F0-8E44-F1203215758A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SisoDb.InProcCache</RootNamespace>
-    <AssemblyName>SisoDb.InProcCache</AssemblyName>
+    <RootNamespace>SisoDb.MsMemoryCache</RootNamespace>
+    <AssemblyName>SisoDb.MsMemoryCache</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,14 +43,16 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="InProcMemoryCache.cs" />
-    <Compile Include="InProcMemoryCacheProvider.cs" />
+    <Compile Include="MsMemCache.cs" />
+    <Compile Include="MsMemCacheProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MsMemCacheConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SisoDb\SisoDb.csproj">

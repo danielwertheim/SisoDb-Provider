@@ -126,6 +126,10 @@
       <Project>{A6AEE197-668A-4A08-98A7-F0CB76D359C0}</Project>
       <Name>SisoDb.Dynamic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
+      <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
+      <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
