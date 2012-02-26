@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using SisoDb.Core;
 using SisoDb.Resources;
 
-namespace SisoDb.Caching
+namespace SisoDb.InProcCache
 {
 	public class InProcMemoryCacheProvider : ICacheProvider
 	{

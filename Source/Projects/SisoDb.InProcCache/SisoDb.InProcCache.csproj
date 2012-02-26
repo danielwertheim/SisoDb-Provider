@@ -8,8 +8,8 @@
     <ProjectGuid>{52453C59-B957-46F0-8E44-F1203215758A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SisoDb.Caching</RootNamespace>
-    <AssemblyName>SisoDb.Caching</AssemblyName>
+    <RootNamespace>SisoDb.InProcCache</RootNamespace>
+    <AssemblyName>SisoDb.InProcCache</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

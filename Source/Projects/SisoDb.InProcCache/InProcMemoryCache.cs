@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using EnsureThat;
 using PineCone.Structures;
 
-namespace SisoDb.Caching
+namespace SisoDb.InProcCache
 {
 	[Serializable]
 	public class InProcMemoryCache : ICache
