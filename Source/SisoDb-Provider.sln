@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications.Sql20
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.MsMemoryCache", "Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj", "{52453C59-B957-46F0-8E44-F1203215758A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.WebCache", "Projects\SisoDb.WebCache\SisoDb.WebCache.csproj", "{07A22CB7-158A-4587-A40F-ADE3D72CC567}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.AspWebCache", "Projects\SisoDb.AspWebCache\SisoDb.AspWebCache.csproj", "{07A22CB7-158A-4587-A40F-ADE3D72CC567}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caching", "Caching", "{C3A9298E-FFF7-4245-8378-AEF255B8E9FA}"
 EndProject

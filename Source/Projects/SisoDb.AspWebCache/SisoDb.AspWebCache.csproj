@@ -8,8 +8,8 @@
     <ProjectGuid>{07A22CB7-158A-4587-A40F-ADE3D72CC567}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SisoDb.WebCache</RootNamespace>
-    <AssemblyName>SisoDb.WebCache</AssemblyName>
+    <RootNamespace>SisoDb.AspWebCache</RootNamespace>
+    <AssemblyName>SisoDb.AspWebCache</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,11 +43,15 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="WebCache.cs" />
+    <Compile Include="WebCacheConfig.cs" />
+    <Compile Include="WebCacheProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
