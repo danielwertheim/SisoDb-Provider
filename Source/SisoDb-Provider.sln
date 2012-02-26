@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications.Sql20
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Caching", "Projects\SisoDb.Caching\SisoDb.Caching.csproj", "{52453C59-B957-46F0-8E44-F1203215758A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.WebCache", "Projects\SisoDb.WebCache\SisoDb.WebCache.csproj", "{07A22CB7-158A-4587-A40F-ADE3D72CC567}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,10 @@ Global
 		{52453C59-B957-46F0-8E44-F1203215758A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52453C59-B957-46F0-8E44-F1203215758A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52453C59-B957-46F0-8E44-F1203215758A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
