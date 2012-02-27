@@ -29,6 +29,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SisoDb.AspWebCache.XML</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat, Version=0.5.0.32, Culture=neutral, processorArchitecture=MSIL">
@@ -46,8 +49,8 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    <Compile Include="..\..\SharedAssemblyInfo.Caching.cs">
+      <Link>Properties\SharedAssemblyInfo.Caching.cs</Link>
     </Compile>
     <Compile Include="WebCache.cs" />
     <Compile Include="WebCacheConfig.cs" />
