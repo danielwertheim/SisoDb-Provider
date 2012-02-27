@@ -274,4 +274,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConnectionInfo_BackgroundIndexingNotSupported" xml:space="preserve">
     <value>Background indexing is not yet supported by provider '{0}'.</value>
   </data>
+  <data name="ConnectionString_ShouldBePureIfNoPartsDividerExists" xml:space="preserve">
+    <value>The connection string has no parts divider '{0}' and if that is missing, the SisoDb-marker '{1}' and Plain-marker '{2} is not supported.</value>
+  </data>
 </root>

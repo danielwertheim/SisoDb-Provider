@@ -178,6 +178,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The connection string has no parts divider &apos;{0}&apos; and if that is missing, the SisoDb-marker &apos;{1}&apos; and Plain-marker &apos;{2} is not supported..
+        /// </summary>
+        public static string ConnectionString_ShouldBePureIfNoPartsDividerExists {
+            get {
+                return ResourceManager.GetString("ConnectionString_ShouldBePureIfNoPartsDividerExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can not commit/flush a non transational DbClient..
         /// </summary>
         public static string DbClient_Commit_NonTransactional {
