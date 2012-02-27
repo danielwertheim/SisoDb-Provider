@@ -55,7 +55,7 @@ namespace SisoDb.Caching
         }
 
         /// <summary>
-        /// This is called in conjunction with <see cref="http://msdn.microsoft.com/en-us/library/ee378677.aspx"/>,
+        /// This is called in conjunction with <![CDATA[http://msdn.microsoft.com/en-us/library/ee378677.aspx]]>,
         /// hence, do not make it expensive. If, then implement <see cref="ICacheProvider"/> and make one from
         /// scratch, or override <see cref="EnableFor"/> and <see cref="this[Type]"/>.
         /// </summary>

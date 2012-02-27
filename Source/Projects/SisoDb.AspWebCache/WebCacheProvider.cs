@@ -6,7 +6,7 @@ using SisoDb.Caching;
 namespace SisoDb.AspWebCache
 {
     /// <summary>
-    /// Cache provider implemented over <see cref="http://msdn.microsoft.com/en-us/library/system.web.caching.cache.aspx"/>
+    /// Cache provider implemented over <![CDATA[http://msdn.microsoft.com/en-us/library/system.web.caching.cache.aspx]]>
     /// </summary>
     public class WebCacheProvider : CacheProviderBase
     {

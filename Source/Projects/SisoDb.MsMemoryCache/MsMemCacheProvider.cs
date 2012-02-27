@@ -5,7 +5,7 @@ using SisoDb.Caching;
 namespace SisoDb.MsMemoryCache
 {
     /// <summary>
-    /// Cache provider implemented over <see cref="http://msdn.microsoft.com/en-us/library/dd780634.aspx"/>
+    /// Cache provider implemented over <![CDATA[http://msdn.microsoft.com/en-us/library/dd780634.aspx]]>
     /// </summary>
     public class MsMemCacheProvider : CacheProviderBase
     {
