@@ -1,5 +1,6 @@
 ﻿using System;
 using Machine.Specifications;
+using NCore;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -13,7 +14,7 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _beforeExecution = DateTime.Now;
+                _beforeExecution = SysDateTime.Now;
                 _orgItem = new Model { StringValue = "Org string" };
             };
 

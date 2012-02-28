@@ -1,6 +1,7 @@
 using System;
 using System.Web.Caching;
 using EnsureThat;
+using NCore;
 using PineCone.Structures;
 
 namespace SisoDb.AspWebCache
@@ -29,7 +30,7 @@ namespace SisoDb.AspWebCache
 
         public static WebCacheConfig CreateAbsolute(Type structureType, TimeSpan expiresIn)
         {
-            return new WebCacheConfig(structureType, DateTime.Now.Add(expiresIn), Cache.NoSlidingExpiration);
+            return new WebCacheConfig(structureType, SysDateTime.Now.Add(expiresIn), Cache.NoSlidingExpiration);
         }
 
         public static WebCacheConfig CreateSliding(Type structureType)
