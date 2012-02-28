@@ -117,128 +117,113 @@
     <Compile Include="..\SisoDb.Specifications\Model\QueryXItem.cs">
       <Link>Model\QueryXItem.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Count.cs">
-      <Link>QueryEngine\Count.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Deletes.cs">
+      <Link>Session\Deletes.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\EnumerableFunctions\QxAny.cs">
-      <Link>QueryEngine\EnumerableFunctions\QxAny.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertAs.cs">
+      <Link>Session\InsertAs.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Exists.cs">
-      <Link>QueryEngine\Exists.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsComplete.cs">
+      <Link>Session\InsertsComplete.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetById.cs">
-      <Link>QueryEngine\GetById.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsIdBehavior.cs">
+      <Link>Session\InsertsIdBehavior.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\GetByIds.cs">
-      <Link>QueryEngine\GetByIds.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsOfJson.cs">
+      <Link>Session\InsertsOfJson.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Includes.cs">
-      <Link>QueryEngine\Includes.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsOfUniques.cs">
+      <Link>Session\InsertsOfUniques.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\NamedQueries.cs">
-      <Link>QueryEngine\NamedQueries.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsUsingBaseClasses.cs">
+      <Link>Session\InsertsUsingBaseClasses.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\Query.cs">
-      <Link>QueryEngine\Query.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsUsingInterfaces.cs">
+      <Link>Session\InsertsUsingInterfaces.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\QueryAll.cs">
-      <Link>QueryEngine\QueryAll.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsWithCustomStructureId.cs">
+      <Link>Session\InsertsWithCustomStructureId.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\RawQueries.cs">
-      <Link>QueryEngine\RawQueries.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Count.cs">
+      <Link>Session\Querying\Count.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\EndsWith.cs">
-      <Link>QueryEngine\StringFunctions\EndsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\EnumerableFunctions\QxAny.cs">
+      <Link>Session\Querying\EnumerableFunctions\QxAny.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxContains.cs">
-      <Link>QueryEngine\StringFunctions\QxContains.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Exists.cs">
+      <Link>Session\Querying\Exists.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxEndsWith.cs">
-      <Link>QueryEngine\StringFunctions\QxEndsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\GetById.cs">
+      <Link>Session\Querying\GetById.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxLike.cs">
-      <Link>QueryEngine\StringFunctions\QxLike.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\GetByIds.cs">
+      <Link>Session\Querying\GetByIds.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxStartsWith.cs">
-      <Link>QueryEngine\StringFunctions\QxStartsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Includes.cs">
+      <Link>Session\Querying\Includes.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxToLower.cs">
-      <Link>QueryEngine\StringFunctions\QxToLower.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\NamedQueries.cs">
+      <Link>Session\Querying\NamedQueries.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\QxToUpper.cs">
-      <Link>QueryEngine\StringFunctions\QxToUpper.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Query.cs">
+      <Link>Session\Querying\Query.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\StartsWith.cs">
-      <Link>QueryEngine\StringFunctions\StartsWith.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\QueryAll.cs">
+      <Link>Session\Querying\QueryAll.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\StringFunctionsItem.cs">
-      <Link>QueryEngine\StringFunctions\StringFunctionsItem.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\RawQueries.cs">
+      <Link>Session\Querying\RawQueries.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\ToLower.cs">
-      <Link>QueryEngine\StringFunctions\ToLower.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\EndsWith.cs">
+      <Link>Session\Querying\StringFunctions\EndsWith.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\QueryEngine\StringFunctions\ToUpper.cs">
-      <Link>QueryEngine\StringFunctions\ToUpper.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxContains.cs">
+      <Link>Session\Querying\StringFunctions\QxContains.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxEndsWith.cs">
+      <Link>Session\Querying\StringFunctions\QxEndsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxLike.cs">
+      <Link>Session\Querying\StringFunctions\QxLike.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxStartsWith.cs">
+      <Link>Session\Querying\StringFunctions\QxStartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxToLower.cs">
+      <Link>Session\Querying\StringFunctions\QxToLower.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxToUpper.cs">
+      <Link>Session\Querying\StringFunctions\QxToUpper.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\StartsWith.cs">
+      <Link>Session\Querying\StringFunctions\StartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\StringFunctionsItem.cs">
+      <Link>Session\Querying\StringFunctions\StringFunctionsItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\ToLower.cs">
+      <Link>Session\Querying\StringFunctions\ToLower.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\ToUpper.cs">
+      <Link>Session\Querying\StringFunctions\ToUpper.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\TimeStamps.cs">
+      <Link>Session\TimeStamps.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\TransactionScopes.cs">
+      <Link>Session\TransactionScopes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\UpdateMany.cs">
+      <Link>Session\UpdateMany.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Updates.cs">
+      <Link>Session\Updates.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\UpdatesHandlingConcurreny.cs">
+      <Link>Session\UpdatesHandlingConcurreny.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Deletes.cs">
-      <Link>UnitOfWork\Deletes.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertAs.cs">
-      <Link>UnitOfWork\InsertAs.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsComplete.cs">
-      <Link>UnitOfWork\InsertsComplete.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsIdBehavior.cs">
-      <Link>UnitOfWork\InsertsIdBehavior.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsOfJson.cs">
-      <Link>UnitOfWork\InsertsOfJson.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsOfUniques.cs">
-      <Link>UnitOfWork\InsertsOfUniques.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingBaseClasses.cs">
-      <Link>UnitOfWork\InsertsUsingBaseClasses.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsUsingInterfaces.cs">
-      <Link>UnitOfWork\InsertsUsingInterfaces.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\InsertsWithCustomStructureId.cs">
-      <Link>UnitOfWork\InsertsWithCustomStructureId.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Count.cs">
-      <Link>UnitOfWork\Queries\Count.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetById.cs">
-      <Link>UnitOfWork\Queries\GetById.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\GetByIds.cs">
-      <Link>UnitOfWork\Queries\GetByIds.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\Query.cs">
-      <Link>UnitOfWork\Queries\Query.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Queries\QueryAll.cs">
-      <Link>UnitOfWork\Queries\QueryAll.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\TimeStamps.cs">
-      <Link>UnitOfWork\TimeStamps.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\TransactionScopes.cs">
-      <Link>UnitOfWork\TransactionScopes.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\UpdateMany.cs">
-      <Link>UnitOfWork\UpdateMany.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\Updates.cs">
-      <Link>UnitOfWork\Updates.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\UnitOfWork\UpdatesHandlingConcurreny.cs">
-      <Link>UnitOfWork\UpdatesHandlingConcurreny.cs</Link>
     </Compile>
     <Compile Include="AssemblyContext.cs" />
     <Compile Include="ContextCleanup.cs" />
@@ -262,6 +247,7 @@
       <Name>SisoDb.Testing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
