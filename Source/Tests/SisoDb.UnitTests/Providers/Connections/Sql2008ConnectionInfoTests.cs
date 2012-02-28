@@ -9,6 +9,17 @@ namespace SisoDb.UnitTests.Providers.Connections
     public class Sql2008ConnectionInfoTests : UnitTestBase
     {
         [Test]
+        public void Ctor_WhenCnStringWithOnlyPlainPart_InstanceWithDefaultsIsCreated()
+        {
+            var cnString = new ConnectionString(@"data source=.;initial catalog=foo;integrated security=SSPI;");
+
+            var cnInfo = new Sql2008ConnectionInfo(cnString);
+
+            Assert.AreEqual(StorageProviders.Sql2008, cnInfo.ProviderType);
+            Assert.AreEqual(BackgroundIndexing.Off, cnInfo.BackgroundIndexing);
+        }
+
+        [Test]
         public void Ctor_WhenWrongProviderType_ThrowsSisoDbException()
         {
             var connectionInfoStub = Stub.This<IConnectionString>(

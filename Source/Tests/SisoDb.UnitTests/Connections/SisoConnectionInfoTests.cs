@@ -32,7 +32,7 @@ namespace SisoDb.UnitTests.Connections
         }
 
         [Test]
-        public void BackgroundIndexing_WhenValueIsOff_ValueIsReflectedInProperty()
+        public void BackgroundIndexing_WhenValueIsOff_ValueBecomesOff()
         {
             var connectionStringFake = new Mock<IConnectionString>();
             connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
@@ -43,7 +43,7 @@ namespace SisoDb.UnitTests.Connections
         }
 
         [Test]
-        public void BackgroundIndexing_WhenNoValueIsSpecified_ValueIsNone()
+        public void BackgroundIndexing_WhenNoValueIsSpecified_ValueBecomesOff()
         {
             var connectionStringFake = new Mock<IConnectionString>();
             connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());

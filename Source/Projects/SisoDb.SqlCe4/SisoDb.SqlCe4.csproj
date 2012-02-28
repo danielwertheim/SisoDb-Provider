@@ -37,13 +37,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat">
-      <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\Ensure.That.0.6.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.27.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.64.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.65.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.65.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,7 +56,6 @@
       <HintPath>..\..\packages\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">

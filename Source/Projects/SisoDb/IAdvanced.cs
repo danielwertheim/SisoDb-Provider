@@ -11,12 +11,12 @@ namespace SisoDb
     {
         /// <summary>
         /// Deletes one or more structures matchings the sent
-        /// expression.
+        /// predicate.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="expression"></param>
-        void DeleteByQuery<T>(Expression<Func<T, bool>> expression) where T : class;
+        /// <param name="predicate"></param>
+        void DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class;
 
         /// <summary>
         /// Lets you invoke stored procedures that returns Json,
@@ -96,9 +96,9 @@ namespace SisoDb
         /// Traverses every structure in the set and lets you apply changes to each yielded structure.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
+        /// <param name="predicate"></param>
         /// <param name="modifier"></param>
         /// <remarks>Does not support Concurrency tokens</remarks>
-        void UpdateMany<T>(Expression<Func<T, bool>> expression, Action<T> modifier) where T : class;
+        void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class;
     }
 }

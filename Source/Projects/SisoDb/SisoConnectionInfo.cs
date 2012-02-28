@@ -21,7 +21,7 @@ namespace SisoDb
         protected SisoConnectionInfo(IConnectionString connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
-            EnsureCorrectProvider(connectionString);
+            EnsureCorrectProviderIfItExists(connectionString);
             
             ClientConnectionString = FormatConnectionString(connectionString);
             ServerConnectionString = FormatServerConnectionString(connectionString);
@@ -31,9 +31,11 @@ namespace SisoDb
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
         }
 
-        private void EnsureCorrectProvider(IConnectionString connectionString)
+        private void EnsureCorrectProviderIfItExists(IConnectionString connectionString)
         {
             var providerType = ExtractProviderType(connectionString);
+            if(providerType == null)
+                return;
 
             if (providerType != ProviderType)
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(providerType, ProviderType));
@@ -49,7 +51,7 @@ namespace SisoDb
             return OnFormatServerConnectionString(connectionString);
         }
 
-        private StorageProviders ExtractProviderType(IConnectionString connectionString)
+        private StorageProviders? ExtractProviderType(IConnectionString connectionString)
         {
             return OnExtractProviderType(connectionString);
         }
@@ -69,8 +71,11 @@ namespace SisoDb
             return connectionString;
         }
 
-        protected virtual StorageProviders OnExtractProviderType(IConnectionString connectionString)
+        protected virtual StorageProviders? OnExtractProviderType(IConnectionString connectionString)
         {
+            if (string.IsNullOrWhiteSpace(connectionString.Provider))
+                return null;
+
             return (StorageProviders)Enum.Parse(typeof(StorageProviders), connectionString.Provider, true);
         }
 

@@ -88,6 +88,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not clear all structure set cache entries. See contained exceptions for more info..
+        /// </summary>
+        public static string CacheProvider_Clear_failed {
+            get {
+                return ResourceManager.GetString("CacheProvider_Clear_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store..
         /// </summary>
         public static string ConcurrencyException {
@@ -169,6 +178,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The connection string has no parts divider &apos;{0}&apos; and if that is missing, the SisoDb-marker &apos;{1}&apos; and Plain-marker &apos;{2} is not supported..
+        /// </summary>
+        public static string ConnectionString_ShouldBePureIfNoPartsDividerExists {
+            get {
+                return ResourceManager.GetString("ConnectionString_ShouldBePureIfNoPartsDividerExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can not commit/flush a non transational DbClient..
         /// </summary>
         public static string DbClient_Commit_NonTransactional {
@@ -228,15 +246,6 @@ namespace SisoDb.Resources {
         public static string Index_IsMissingName {
             get {
                 return ResourceManager.GetString("Index_IsMissingName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not clear all structure set cache entries. See contained exceptions for more info..
-        /// </summary>
-        public static string InMemoryCacheProvider_Clear_failed {
-            get {
-                return ResourceManager.GetString("InMemoryCacheProvider_Clear_failed", resourceCulture);
             }
         }
         

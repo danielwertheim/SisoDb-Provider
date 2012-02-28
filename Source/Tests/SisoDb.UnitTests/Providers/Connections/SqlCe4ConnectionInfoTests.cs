@@ -9,15 +9,26 @@ namespace SisoDb.UnitTests.Providers.Connections
     public class SqlCe4ConnectionInfoTests : UnitTestBase
     {
         [Test]
+        public void Ctor_WhenCnStringWithOnlyPlainPart_InstanceWithDefaultsIsCreated()
+        {
+            var cnString = new ConnectionString(@"data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;");
+
+            var cnInfo = new SqlCe4ConnectionInfo(cnString);
+
+            Assert.AreEqual(StorageProviders.SqlCe4, cnInfo.ProviderType);
+            Assert.AreEqual(BackgroundIndexing.Off, cnInfo.BackgroundIndexing);
+        }
+
+        [Test]
         public void Ctor_WhenWrongProviderType_ThrowsSisoDbException()
         {
-            var connectionInfoStub = Stub.This<IConnectionString>(
+            var cnStringFake = Stub.This<IConnectionString>(
                 o => o.Setup(s => s.Provider).Returns(StorageProviders.Sql2008.ToString));
 
-            var ex = Assert.Throws<SisoDbException>(() => new SqlCe4ConnectionInfo(connectionInfoStub));
+            var ex = Assert.Throws<SisoDbException>(() => new SqlCe4ConnectionInfo(cnStringFake));
 
             Assert.AreEqual(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified
-                    .Inject(connectionInfoStub.Provider, StorageProviders.SqlCe4), ex.Message);
+                    .Inject(cnStringFake.Provider, StorageProviders.SqlCe4), ex.Message);
         }
 
         [Test]

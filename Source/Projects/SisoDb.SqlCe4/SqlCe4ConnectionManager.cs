@@ -13,11 +13,7 @@ namespace SisoDb.SqlCe4
         public SqlCe4ConnectionManager()
         {
             _warmupConnections = new ConcurrentDictionary<string, IDbConnection>();
-        }
-
-        ~SqlCe4ConnectionManager()
-        {
-            ReleaseAllDbConnections();
+            AppDomain.CurrentDomain.DomainUnload += (sender, args) => ReleaseAllDbConnections();
         }
 
         public IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
@@ -42,6 +38,9 @@ namespace SisoDb.SqlCe4
 
         public void ReleaseAllDbConnections()
         {
+            if(_warmupConnections.Count < 1)
+                return;
+
             var exceptions = new List<Exception>();
 
             foreach (var key in _warmupConnections.Keys)
@@ -100,12 +99,12 @@ namespace SisoDb.SqlCe4
             if(_warmupConnections.ContainsKey(connectionInfo.FilePath))
                 return;
 
-            _warmupConnections.GetOrAdd(connectionInfo.FilePath, cnString =>
+            var cn = new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString);
+            if(!_warmupConnections.TryAdd(connectionInfo.FilePath, cn))
             {
-                var cn = new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString);
-                cn.Open();
-                return cn;
-            });
+                cn.Close();
+                cn.Dispose();
+            }
         }
     }
 }

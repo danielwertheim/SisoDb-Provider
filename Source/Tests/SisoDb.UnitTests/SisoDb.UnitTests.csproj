@@ -42,26 +42,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat">
-      <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\Ensure.That.0.6.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.27.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.mocks">
-      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.64.0\lib\net40\PineCone.dll</HintPath>
-    </Reference>
-    <Reference Include="pnunit.framework">
-      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    <Reference Include="PineCone, Version=0.65.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.65.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -122,9 +119,17 @@
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.AspWebCache\SisoDb.AspWebCache.csproj">
+      <Project>{07A22CB7-158A-4587-A40F-ADE3D72CC567}</Project>
+      <Name>SisoDb.AspWebCache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
       <Project>{A6AEE197-668A-4A08-98A7-F0CB76D359C0}</Project>
       <Name>SisoDb.Dynamic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
+      <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
+      <Name>SisoDb.MsMemoryCache</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>

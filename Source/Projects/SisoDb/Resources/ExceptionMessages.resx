@@ -262,7 +262,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="WriteSession_UpdateMany_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
   </data>
-  <data name="InMemoryCacheProvider_Clear_failed" xml:space="preserve">
+  <data name="CacheProvider_Clear_failed" xml:space="preserve">
     <value>Could not clear all structure set cache entries. See contained exceptions for more info.</value>
   </data>
   <data name="ConcurrencyException" xml:space="preserve">
@@ -273,5 +273,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="ConnectionInfo_BackgroundIndexingNotSupported" xml:space="preserve">
     <value>Background indexing is not yet supported by provider '{0}'.</value>
+  </data>
+  <data name="ConnectionString_ShouldBePureIfNoPartsDividerExists" xml:space="preserve">
+    <value>The connection string has no parts divider '{0}' and if that is missing, the SisoDb-marker '{1}' and Plain-marker '{2} is not supported.</value>
   </data>
 </root>

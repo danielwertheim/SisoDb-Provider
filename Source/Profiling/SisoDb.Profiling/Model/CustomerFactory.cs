@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NCore;
 
 namespace SisoDb.Profiling.Model
 {
@@ -21,7 +22,7 @@ namespace SisoDb.Profiling.Model
                     Firstname = "Daniel",
                     Lastname = "Wertheim",
                     ShoppingIndex = ShoppingIndexes.Level1,
-                    CustomerSince = DateTime.Now,
+                    CustomerSince = SysDateTime.Now,
                     BillingAddress =
                         {
                             Street = "The billing street " + n,

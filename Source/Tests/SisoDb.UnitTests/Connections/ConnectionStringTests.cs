@@ -49,19 +49,22 @@ namespace SisoDb.UnitTests.Connections
         }
 
         [Test]
-        public void CnString_HasNoDelim_ThrowsArgumentException()
+        public void CnString_HasNoDelimAndNoParts_UsesSentValueAsPlainString()
         {
-            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("arbitrary string"));
+            const string sentPlainString = "arbitrary string";
 
-            Assert.AreEqual(
-                "The connectionstring should have exactly two parts ('sisodb:' and 'plain:'). " + 
-                "Example: 'sisodb:[SisoDb configvalues];||plain:[Plain configvalues]'.", ex.Message);
+            var cnString = new ConnectionString(sentPlainString);
+
+            Assert.AreEqual(sentPlainString, cnString.PlainString);
+            Assert.AreEqual(string.Empty, cnString.SisoDbString);
+            Assert.AreEqual(string.Empty, cnString.Provider);
+            Assert.AreEqual(string.Empty, cnString.BackgroundIndexing);
         }
 
         [Test]
         public void CnString_HasDelim_ThrowsArgumentException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("||"));
+            var ex = Assert.Throws<SisoDbException>(() => new ConnectionString("||"));
 
             Assert.AreEqual(
                 "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
@@ -71,7 +74,7 @@ namespace SisoDb.UnitTests.Connections
         [Test]
         public void CnString_HasDelimWithLeftValue_ThrowsArgumentException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("A||"));
+            var ex = Assert.Throws<SisoDbException>(() => new ConnectionString("A||"));
 
             Assert.AreEqual(
                 "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
@@ -81,7 +84,7 @@ namespace SisoDb.UnitTests.Connections
         [Test]
         public void CnString_HasDelimWithRightValue_ThrowsArgumentException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => new ConnectionString("||A"));
+            var ex = Assert.Throws<SisoDbException>(() => new ConnectionString("||A"));
 
             Assert.AreEqual(
                 "The connectionstring should have exactly two parts ('sisodb:' and 'plain:')." +
