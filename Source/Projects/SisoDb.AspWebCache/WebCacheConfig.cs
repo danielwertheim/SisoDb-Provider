@@ -21,7 +21,7 @@ namespace SisoDb.AspWebCache
             Ensure.That(structureType, "structureType").IsNotNull();
 
             StructureType = structureType;
-            CacheEntryKeyPrefix = string.Concat(structureType.GetHashCode().ToString(), ":");
+            CacheEntryKeyPrefix = string.Concat(structureType.Name, ":");
             CacheEntryKeyGenerator = id => string.Concat(CacheEntryKeyPrefix, id.Value.ToString());
 
             AbsoluteExpiration = absoluteExpiration;

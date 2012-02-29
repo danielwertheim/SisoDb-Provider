@@ -50,6 +50,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -119,6 +120,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Model\QueryXItem.cs">
       <Link>Model\QueryXItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Caching.cs">
+      <Link>Session\Caching.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Deletes.cs">
       <Link>Session\Deletes.cs</Link>
@@ -237,6 +241,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
+      <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
+      <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.SqlCe4\SisoDb.SqlCe4.csproj">
       <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
       <Name>SisoDb.SqlCe4</Name>

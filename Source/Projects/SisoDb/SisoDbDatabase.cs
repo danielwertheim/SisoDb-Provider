@@ -104,9 +104,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                if (CachingIsEnabled)
-                    CacheProvider.Clear();
-                SchemaManager.ClearCache();
+                OnClearCache();
                 ServerClient.EnsureNewDb();
             }
         }
@@ -115,9 +113,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                if (CachingIsEnabled)
-                    CacheProvider.Clear();
-                SchemaManager.ClearCache();
+                OnClearCache();
                 ServerClient.CreateDbIfItDoesNotExist();
             }
         }
@@ -126,9 +122,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                if (CachingIsEnabled)
-                    CacheProvider.Clear();
-                SchemaManager.ClearCache();
+                OnClearCache();
                 ServerClient.InitializeExistingDb();
             }
         }
@@ -137,9 +131,7 @@ namespace SisoDb
         {
             lock (DbOperationsLock)
             {
-                if (CachingIsEnabled)
-                    CacheProvider.Clear();
-                SchemaManager.ClearCache();
+                OnClearCache();
                 ServerClient.DropDbIfItExists();
             }
         }
@@ -219,6 +211,14 @@ namespace SisoDb
         public ISingleOperationSession UseOnceTo()
         {
             return new DbSingleOperationSession(this);
+        }
+
+        protected virtual void OnClearCache()
+        {
+            if(CachingIsEnabled)
+                CacheProvider.Clear();
+
+            SchemaManager.ClearCache();
         }
     }
 }

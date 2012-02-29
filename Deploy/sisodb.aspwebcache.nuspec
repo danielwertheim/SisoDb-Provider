@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb.AspWebCache</id>    
 		<title>SisoDb.AspWebCache - Simple Structure Oriented Db</title>
-		<version>0.1.0</version>
+		<version>$version$</version>
 		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
@@ -18,11 +18,14 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,cache,asp-cache,document-database,db,document,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[10.2.0]" />
+			<dependency id="SisoDb" version="[10.3.0]" />
 			<dependency id="Ensure.That" version="0.6.0" />
 			<dependency id="NCore" version="[0.28.0]" />
 			<dependency id="PineCone" version="[0.65.0]" />
 		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
+		</frameworkAssemblies>
 	</metadata>
 	<files>
 	  <file src="..\Source\Projects\SisoDb.AspWebCache\bin\Release\SisoDb.AspWebCache.dll" target="lib\net40\" />

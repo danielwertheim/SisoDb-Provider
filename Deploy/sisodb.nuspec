@@ -3,7 +3,7 @@
 	<metadata>
 		<id>SisoDb</id>    
 		<title>SisoDb - Simple Structure Oriented Db (core)</title>
-		<version>10.2.0</version>
+		<version>$version$</version>
 		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
