@@ -22,6 +22,18 @@ namespace SisoDb
 		void Clear();
 
         /// <summary>
+        /// Returns bool indicating if the Cache is empty or not.
+        /// </summary>
+        /// <returns></returns>
+	    bool Any();
+
+        /// <summary>
+        /// Returns number indicationg how many items the cache holds.
+        /// </summary>
+        /// <returns></returns>
+	    long Count();
+
+        /// <summary>
         /// Returns bool indicating if there is a structure for
         /// the passed structure id in the cache.
         /// </summary>
@@ -29,7 +41,14 @@ namespace SisoDb
         /// <returns></returns>
 	    bool Exists(IStructureId id);
 
-		/// <summary>
+        /// <summary>
+        /// Returns all items contained in the cache.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+	    IEnumerable<T> GetAll<T>() where T : class;
+
+        /// <summary>
 		/// Returns either null or the structure matching the
 		/// sent id.
 		/// </summary>
