@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Caching;
 using EnsureThat;
 using PineCone.Structures;
@@ -35,12 +36,31 @@ namespace SisoDb.AspWebCache
 		    }
 		}
 
-	    public virtual bool Exists(IStructureId id)
+        public bool Any()
+        {
+            return Count() > 0;
+        }
+
+        public long Count()
+        {
+            return InternalCache.Count;
+        }
+
+        public virtual bool Exists(IStructureId id)
 	    {
-            return InternalCache.Get(GenerateCacheKey(id)) != null;
+            return Any() && InternalCache.Get(GenerateCacheKey(id)) != null;
 	    }
 
-	    public virtual T GetById<T>(IStructureId id) where T : class
+        public IEnumerable<T> GetAll<T>() where T : class
+        {
+            var enu = InternalCache.GetEnumerator();
+            while(enu.MoveNext())
+            {
+                yield return enu.Value as T;
+            }
+        }
+
+        public virtual T GetById<T>(IStructureId id) where T : class
 	    {
             return InternalCache.Get(GenerateCacheKey(id)) as T;
 		}
@@ -73,14 +93,10 @@ namespace SisoDb.AspWebCache
 
 		public virtual IEnumerable<T> Put<T>(IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
 		{
-			foreach (var kv in items)
-			{
-				Put(kv.Key, kv.Value);
-				yield return kv.Value;
-			}
+		    return items.Select(kv => Put(kv.Key, kv.Value));
 		}
 
-		public virtual void Remove(IStructureId id)
+        public virtual void Remove(IStructureId id)
 		{
             InternalCache.Remove(GenerateCacheKey(id));
 		}
