@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Transactions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -65,6 +66,7 @@
     <Compile Include="Database\EnsureNewDatabase.cs" />
     <Compile Include="Database\InitializeExisting.cs" />
     <Compile Include="Model\QueryNullableItem.cs" />
+    <Compile Include="Session\Caching.cs" />
     <Compile Include="Session\InsertAs.cs" />
     <Compile Include="Session\InsertsWithCustomStructureId.cs" />
     <Compile Include="Session\Querying\Count.cs" />
@@ -120,6 +122,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
+      <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
+      <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>
