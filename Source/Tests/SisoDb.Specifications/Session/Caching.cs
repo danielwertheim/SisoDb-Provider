@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Caching;
 using Machine.Specifications;
+using SisoDb.Core;
 using SisoDb.MsMemoryCache;
 using SisoDb.Testing;
 
@@ -10,20 +11,82 @@ namespace SisoDb.Specifications.Session
     class Caching
     {
         [Subject(typeof(ISession), "MsMemoryCache")]
+        public class when_caching_is_enabled_and_item_exists_in_cache : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _cacheContainer = new MemoryCache(typeof(IAmCached).Name);
+                TestContext.Database.CacheProvider = new MsMemCacheProvider(t => _cacheContainer);
+                TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
+                TestContext.Database.UseOnceTo().Insert(_originalStructure = new IAmCached { Value = 1 });
+                TestContext.Database.UseOnceTo().GetById<IAmCached>(_originalStructure.Id); //Touch in other session to get it in cache
+            };
+
+            Because of = () =>
+            {
+                _itemExists = TestContext.Database.UseOnceTo().Exists<IAmCached>(_originalStructure.Id);
+            };
+
+            It should_have_one_item_in_cache =
+                () => _cacheContainer.GetCount().ShouldEqual(1);
+
+            It should_have_one_the_item_in_cache =
+                () => _cacheContainer.First().Value.CastAs<IAmCached>().ShouldBeValueEqualTo(_originalStructure);
+
+            It should_exist =
+                () => _itemExists.ShouldBeTrue();
+            
+            private static MemoryCache _cacheContainer;
+            private static IAmCached _originalStructure;
+            private static bool _itemExists;
+        }
+
+        [Subject(typeof(ISession), "MsMemoryCache")]
+        public class when_caching_is_enabled_and_item_does_not_exists_in_cache : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _cacheContainer = new MemoryCache(typeof(IAmCached).Name);
+                TestContext.Database.CacheProvider = new MsMemCacheProvider(t => _cacheContainer);
+                TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
+                TestContext.Database.UseOnceTo().Insert(_originalStructure = new IAmCached { Value = 1 });
+            };
+
+            Because of = () =>
+            {
+                _itemExists = TestContext.Database.UseOnceTo().Exists<IAmCached>(_originalStructure.Id);
+            };
+
+            It should_not_have_anything_in_cache =
+                () => _cacheContainer.GetCount().ShouldEqual(0);
+
+            It should_exist =
+                () => _itemExists.ShouldBeTrue();
+
+            private static MemoryCache _cacheContainer;
+            private static IAmCached _originalStructure;
+            private static bool _itemExists;
+        }
+
+        [Subject(typeof(ISession), "MsMemoryCache")]
         public class when_caching_is_enabled_and_nothing_is_stored_and_getbyid_is_called : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
 
-                _cacheContainer = new MemoryCache(typeof(IAmNotCached).Name);
+                _cacheContainer = new MemoryCache(typeof(IAmCached).Name);
                 TestContext.Database.CacheProvider = new MsMemCacheProvider(t => _cacheContainer);
-                TestContext.Database.CacheProvider.EnableFor(typeof(IAmNotCached));
+                TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
             };
 
             Because of = () =>
             {
-                _resultingStructure = TestContext.Database.UseOnceTo().GetById<IAmNotCached>(Guid.Parse("0D091F0B-63C1-4DFD-841C-36495DD76424"));
+                _resultingStructure = TestContext.Database.UseOnceTo().GetById<IAmCached>(Guid.Parse("0D091F0B-63C1-4DFD-841C-36495DD76424"));
             };
 
             It should_have_returned_null =
@@ -33,7 +96,7 @@ namespace SisoDb.Specifications.Session
                 () => _cacheContainer.GetCount().ShouldEqual(0);
 
             private static MemoryCache _cacheContainer;
-            private static IAmNotCached _resultingStructure;
+            private static IAmCached _resultingStructure;
         }
 
         [Subject(typeof(ISession), "MsMemoryCache")]
@@ -43,14 +106,14 @@ namespace SisoDb.Specifications.Session
             {
                 TestContext = TestContextFactory.Create();
 
-                _cacheContainer = new MemoryCache(typeof(IAmNotCached).Name);
+                _cacheContainer = new MemoryCache(typeof(IAmCached).Name);
                 TestContext.Database.CacheProvider = new MsMemCacheProvider(t => _cacheContainer);
-                TestContext.Database.CacheProvider.EnableFor(typeof(IAmNotCached));
+                TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
             };
 
             Because of = () =>
             {
-                _resultingStructures = TestContext.Database.UseOnceTo().GetByIds<IAmNotCached>(new[] { Guid.Parse("0D091F0B-63C1-4DFD-841C-36495DD76424") });
+                _resultingStructures = TestContext.Database.UseOnceTo().GetByIds<IAmCached>(new[] { Guid.Parse("0D091F0B-63C1-4DFD-841C-36495DD76424") });
             };
 
             It should_have_returned_empty_array =
@@ -60,7 +123,7 @@ namespace SisoDb.Specifications.Session
                 () => _cacheContainer.GetCount().ShouldEqual(0);
 
             private static MemoryCache _cacheContainer;
-            private static IAmNotCached[] _resultingStructures;
+            private static IAmCached[] _resultingStructures;
         }
 
         [Subject(typeof(ISession), "MsMemoryCache")]
@@ -414,13 +477,6 @@ namespace SisoDb.Specifications.Session
         }
 
         private class IAmCached
-        {
-            public Guid Id { get; set; }
-
-            public int Value { get; set; }
-        }
-
-        private class IAmNotCached
         {
             public Guid Id { get; set; }
 
