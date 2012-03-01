@@ -42,8 +42,7 @@ namespace SisoDb.Caching
                 return nonCacheQuery.Invoke(structureId);
 
             var cache = cacheProvider[structureSchema.Type.Type];
-
-            return cache.Exists(structureId);
+            return cache.Exists(structureId) || nonCacheQuery.Invoke(structureId);
         }
 
         internal static T Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, T> nonCacheQuery, CacheConsumeModes consumeMode) where T : class
