@@ -41,8 +41,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EnsureThat">
-      <HintPath>..\..\packages\Ensure.That.0.6.0\lib\net40\EnsureThat.dll</HintPath>
+    <Reference Include="EnsureThat, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
