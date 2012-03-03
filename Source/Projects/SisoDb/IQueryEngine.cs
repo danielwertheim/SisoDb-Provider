@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SisoDb
@@ -61,5 +62,13 @@ namespace SisoDb
 		/// <param name="query"></param>
 		/// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
 		IEnumerable<string> QueryAsJson<T>(IQuery query) where T : class;
+
+	    /// <summary>
+	    /// Lets you perform a Query by passing an <see cref="IQuery"/>.
+	    /// </summary>
+        /// <param name="structuretype"></param>
+	    /// <param name="query"></param>
+        /// <returns>IEnumerable Json representation of <param name="structuretype"></param>.</returns>
+	    IEnumerable<string> QueryAsJson(Type structuretype, IQuery query);
 	}
 }

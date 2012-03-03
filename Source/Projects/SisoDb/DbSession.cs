@@ -111,6 +111,13 @@ namespace SisoDb
             return structureSchema;
         }
 
+        protected virtual IStructureSchema UpsertStructureSchema(Type structuretype)
+        {
+            var structureSchema = Db.StructureSchemas.GetSchema(structuretype);
+            Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
+            return structureSchema;
+        }
+
         public virtual IStructureSchema GetStructureSchema<T>() where T : class
         {
             return Try(() => StructureSchemas.GetSchema<T>());
@@ -516,6 +523,23 @@ namespace SisoDb
                 Ensure.That(query, "query").IsNotNull();
 
                 var structureSchema = UpsertStructureSchema<T>();
+
+                if (query.IsEmpty)
+                    return TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema).ToArray();
+
+                var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+                return TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray()).ToArray();
+            });
+        }
+
+        public virtual IEnumerable<string> QueryAsJson(Type structuretype, IQuery query)
+        {
+            return Try(() =>
+            {
+                Ensure.That(query, "query").IsNotNull();
+
+                var structureSchema = UpsertStructureSchema(structuretype);
 
                 if (query.IsEmpty)
                     return TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema).ToArray();
