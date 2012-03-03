@@ -561,9 +561,9 @@ namespace SisoDb
             });
         }
 
-        public virtual void InsertJson<T>(string json) where T : class
+        public virtual string InsertJson<T>(string json) where T : class
         {
-            Try(() =>
+            return Try(() =>
             {
                 Ensure.That(json, "json").IsNotNullOrWhiteSpace();
 
@@ -574,7 +574,10 @@ namespace SisoDb
 
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(CheckOutAndGetNextIdentity));
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
+                var structure = structureBuilder.CreateStructure(item, structureSchema);
+                structureInserter.Insert(structureSchema, new[] { structure });
+
+                return structure.Data;
             });
         }
 
@@ -598,7 +601,7 @@ namespace SisoDb
             });
         }
 
-        public virtual void InsertManyJson<T>(IEnumerable<string> json) where T : class
+        public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
         {
             Try(() =>
             {
@@ -613,8 +616,13 @@ namespace SisoDb
                     Db.ProviderFactory.GetIdentityStructureIdGenerator(CheckOutAndGetNextIdentity));
 
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                foreach (var structuresBatch in Db.Serializer.DeserializeMany<T>(json).Batch(MaxInsertManyBatchSize))
-                    structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
+                foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany<T>(json).Batch(MaxInsertManyBatchSize))
+                {
+                    var structures = structureBuilder.CreateStructures(structuresJsonBatch, structureSchema);
+                    structureInserter.Insert(structureSchema, structures);
+                    if(onBatchInserted != null)
+                        onBatchInserted.Invoke(structures.Select(s => s.Data));
+                }
             });
         }
 

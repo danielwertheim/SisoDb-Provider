@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb
@@ -139,7 +138,8 @@ namespace SisoDb
         /// so If you do have the instace pass that instead using other overload!</remarks>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
-        void InsertJson<T>(string json) where T : class;
+        /// <returns>The Json for the item being inserted, but after insert so that the Id is included.</returns>
+        string InsertJson<T>(string json) where T : class;
 
         /// <summary>
         /// Inserts multiple structures using the <typeparamref name="T"/> as
@@ -150,15 +150,16 @@ namespace SisoDb
         /// <param name="items"></param>
         void InsertMany<T>(IEnumerable<T> items) where T : class;
 
-        /// <summary>
-        /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
-        /// the contract for the structures being inserted.
-        /// </summary>
-        /// <remarks>Deserialization of the Json structures will take place, 
-        /// so If you do have the instace pass that instead using other overload!</remarks>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="json"></param>
-        void InsertManyJson<T>(IEnumerable<string> json) where T : class;
+	    /// <summary>
+	    /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
+	    /// the contract for the structures being inserted.
+	    /// </summary>
+	    /// <remarks>Deserialization of the Json structures will take place, 
+	    /// so If you do have the instace pass that instead using other overload!</remarks>
+	    /// <typeparam name="T"></typeparam>
+	    /// <param name="json"></param>
+	    /// <param name="onBatchInserted"></param>
+	    void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class;
 
         /// <summary>
         /// Updates the sent structure. If it
