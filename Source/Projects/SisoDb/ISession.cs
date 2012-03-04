@@ -222,6 +222,14 @@ namespace SisoDb
         void DeleteById<T>(object id) where T : class;
 
         /// <summary>
+        /// Deletes structure by id.
+        /// </summary>
+        /// <param name="structureType">
+        /// Structure type, used as a contract defining the scheme.</param>
+        /// <param name="id"></param>
+        void DeleteById(Type structureType, object id);
+
+        /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>
         /// matching passed ids.
         /// </summary>
