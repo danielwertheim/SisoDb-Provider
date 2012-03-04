@@ -161,6 +161,17 @@ namespace SisoDb
         /// <returns>The Json for the item being inserted, but after insert so that the Id is included.</returns>
         string InsertJson<T>(string json) where T : class;
 
+	    /// <summary>
+	    /// Inserts Json strcutures using the <paramref name="structureType"/> as
+	    /// the contract for the structure being inserted.
+	    /// </summary>
+	    /// <remarks>Deserialization of the Json structure will take place, 
+	    /// so If you do have the instace pass that instead using other overload!</remarks>
+	    /// <param name="structureType"></param>
+	    /// <param name="json"></param>
+	    /// <returns>The Json for the item being inserted, but after insert so that the Id is included.</returns>
+	    string InsertJson(Type structureType, string json);
+
         /// <summary>
         /// Inserts multiple structures using the <typeparamref name="T"/> as
         /// the contract for the structures being inserted. 
