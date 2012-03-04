@@ -27,6 +27,13 @@ namespace SisoDb
 		IStructureSchema GetStructureSchema<T>() where T : class;
 
         /// <summary>
+        /// Lets you get a hold of the schema associated with a certain structure.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <returns></returns>
+        IStructureSchema GetStructureSchema(Type structureType);
+
+        /// <summary>
         /// Returns value indicating of structure exists or not.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -68,6 +75,19 @@ namespace SisoDb
 		/// <param name="id"></param>
 		/// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
 		string GetByIdAsJson<T>(object id) where T : class;
+
+        /// <summary>
+        /// Returns one single structure identified
+        /// by an id, as Json. This is the most
+        /// effective return type, since the Json
+        /// is stored in the database, no deserialization
+        /// will take place.  
+        /// </summary>
+        /// <param name="structureType">
+        /// Structure type, used as a contract defining the scheme.</param>
+        /// <param name="id"></param>
+        /// <returns>Json representation of (<paramref name="structureType"/>) or Null</returns>
+        string GetByIdAsJson(Type structureType, object id);
 
 		/// <summary>
 		/// Returns all structures for the defined structure <typeparamref name="T"/>

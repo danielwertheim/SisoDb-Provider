@@ -42,6 +42,13 @@ namespace SisoDb.Serialization
             return OnDeserialize<T>(json);
         }
 
+        public virtual object Deserialize(Type structureType, string json)
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+
+            return OnDeserialize(structureType, json);
+        }
+
         public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
@@ -68,6 +75,14 @@ namespace SisoDb.Serialization
                 return null;
 
             return JsonSerializer.DeserializeFromString<T>(json);
+        }
+
+        protected virtual object OnDeserialize(Type structureType, string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            return JsonSerializer.DeserializeFromString(json, structureType);
         }
 
         protected virtual T OnDeserializeAnonymous<T>(string json, Type templateType) where T : class

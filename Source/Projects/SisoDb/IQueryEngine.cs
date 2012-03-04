@@ -35,9 +35,7 @@ namespace SisoDb
 		/// Determines the type you want your structure deserialized to and returned as.</typeparam>
 		/// <param name="query"></param>
 		/// <returns>IEnumerable of <typeparamref name="TResult"/>.</returns>
-		IEnumerable<TResult> QueryAs<T, TResult>(IQuery query)
-			where T : class
-			where TResult : class;
+		IEnumerable<TResult> QueryAs<T, TResult>(IQuery query) where T : class where TResult : class;
 
 	    /// <summary>
 	    /// Lets you perform a Query by passing an <see cref="IQuery"/>.
@@ -51,9 +49,7 @@ namespace SisoDb
 	    /// <param name="query"></param>
 	    /// <param name="template"> </param>
 	    /// <returns>IEnumerable of <typeparamref name="TResult"/>.</returns>
-	    IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, TResult template)
-            where T : class
-            where TResult : class;
+	    IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, TResult template) where T : class where TResult : class;
 
 		/// <summary>
 		/// Lets you perform a Query by passing an <see cref="IQuery"/>.
@@ -68,7 +64,7 @@ namespace SisoDb
 	    /// </summary>
         /// <param name="structuretype"></param>
 	    /// <param name="query"></param>
-        /// <returns>IEnumerable Json representation of <param name="structuretype"></param>.</returns>
+        /// <returns>IEnumerable Json representation of <paramref name="structuretype"/>.</returns>
 	    IEnumerable<string> QueryAsJson(Type structuretype, IQuery query);
 	}
 }
