@@ -666,33 +666,40 @@ namespace SisoDb
 
         public virtual void Update<T>(T item) where T : class
         {
-            Try(() =>
+            Try(() => OnUpdate(TypeFor<T>.Type, item));
+        }
+
+        public virtual void Update(Type structureType, object item)
+        {
+            Try(() => OnUpdate(structureType, item));
+        }
+
+        protected virtual void OnUpdate(Type structureType, object item)
+        {
+            Ensure.That(item, "item").IsNotNull();
+
+            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+            var structureSchema = OnUpsertStructureSchema(structureType);
+            var structureId = structureSchema.IdAccessor.GetValue(item);
+
+            if (!structureSchema.HasConcurrencyToken)
             {
-                Ensure.That(item, "item").IsNotNull();
+                var exists = TransactionalDbClient.Exists(structureId, structureSchema);
+                if (!exists)
+                    throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
+            }
+            else
+                EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
 
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+            Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
+            TransactionalDbClient.DeleteById(structureId, structureSchema);
 
-                var structureSchema = OnUpsertStructureSchema<T>();
-                var structureId = structureSchema.IdAccessor.GetValue(item);
+            var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
+            var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
-                if (!structureSchema.HasConcurrencyToken)
-                {
-                    var exists = TransactionalDbClient.Exists(structureId, structureSchema);
-                    if (!exists)
-                        throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
-                }
-                else
-                    EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
-
-                Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
-                TransactionalDbClient.DeleteById(structureId, structureSchema);
-
-                var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
-                var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
-
-                var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                bulkInserter.Insert(structureSchema, new[] { updatedStructure });
-            });
+            var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+            bulkInserter.Insert(structureSchema, new[] { updatedStructure });
         }
 
         public virtual void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class

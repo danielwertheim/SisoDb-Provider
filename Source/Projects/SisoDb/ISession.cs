@@ -202,6 +202,16 @@ namespace SisoDb
         /// <param name="item"></param>
         void Update<T>(T item) where T : class;
 
+        /// <summary>
+        /// Updates the sent structure. If it
+        /// does not exist, an <see cref="SisoDbException"/> will be
+        /// thrown.
+        /// </summary>
+        /// <param name="structureType">
+        /// Structure type, used as a contract defining the scheme.</param>
+        /// <param name="item"></param>
+        void Update(Type structureType, object item);
+
 	    /// <summary>
 	    /// Uses sent id to locate a structure and then calls sent <paramref name="modifier"/>
 	    /// to apply the changes. Will also place an rowlock, which makes it highly
