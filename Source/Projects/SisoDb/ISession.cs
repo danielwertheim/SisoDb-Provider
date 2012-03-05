@@ -119,6 +119,15 @@ namespace SisoDb
 		/// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
 		IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class;
 
+        /// <summary>
+        /// Returns Json representation for all structures for the defined structure <paramref name="structureType"/>
+        /// matching passed ids.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
+        /// <returns>IEnumerable Json representation of <paramref name="structureType"/>.</returns>
+        IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids);
+
 		/// <summary>
 		/// Lets you perform a Query defining things like
 		/// <see cref="ISisoQueryable{T}.Take"/>
@@ -191,6 +200,17 @@ namespace SisoDb
 	    /// <param name="json"></param>
 	    /// <param name="onBatchInserted"></param>
 	    void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class;
+
+        /// <summary>
+        /// Inserts multiple Json strcutures using the <paramref name="structureType"/> as
+        /// the contract for the structures being inserted.
+        /// </summary>
+        /// <remarks>Deserialization of the Json structures will take place, 
+        /// so If you do have the instace pass that instead using other overload!</remarks>
+        /// <param name="structureType"></param>
+        /// <param name="json"></param>
+        /// <param name="onBatchInserted"></param>
+	    void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null);
 
         /// <summary>
         /// Updates the sent structure. If it
