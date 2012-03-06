@@ -704,7 +704,7 @@ namespace SisoDb
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
             }
             else
-                EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
+                OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
 
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
             TransactionalDbClient.DeleteById(structureId, structureSchema);
@@ -739,7 +739,7 @@ namespace SisoDb
                     return;
 
                 if (structureSchema.HasConcurrencyToken)
-                    EnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
+                    OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
 
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
                 TransactionalDbClient.DeleteById(structureId, structureSchema);
@@ -752,7 +752,7 @@ namespace SisoDb
             });
         }
 
-        protected virtual void EnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
+        protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
         {
             var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
 
