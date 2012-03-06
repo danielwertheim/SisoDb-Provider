@@ -53,13 +53,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=0.65.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.65.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.66.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.5.7.9337, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Text, Version=3.6.0.3283, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.5.7\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.6.0\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -97,7 +96,6 @@
     <Compile Include="IRawQuery.cs" />
     <Compile Include="ISingleOperationSession.cs" />
     <Compile Include="IStructureSetMigrator.cs" />
-    <Compile Include="IWriteOnce.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />

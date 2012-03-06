@@ -42,7 +42,14 @@ namespace SisoDb.Serialization
             return OnDeserialize<T>(json);
         }
 
-        public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
+        public virtual object Deserialize(Type structureType, string json)
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+
+            return OnDeserialize(structureType, json);
+        }
+
+        public virtual IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
@@ -51,7 +58,16 @@ namespace SisoDb.Serialization
                     : OnDeserializeManyInSequential(sourceData, OnDeserialize<T>);
         }
 
-        public IEnumerable<T> DeserializeManyAnonymous<T>(IEnumerable<string> sourceData, T template) where T : class
+        public virtual IEnumerable<object> DeserializeMany(Type structureType, IEnumerable<string> sourceData)
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+
+            return DeserializeManyInParallel
+                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(structureType, json))
+                    : OnDeserializeManyInSequential(sourceData, json => OnDeserialize(structureType, json));
+        }
+
+        public virtual IEnumerable<T> DeserializeManyAnonymous<T>(IEnumerable<string> sourceData, T template) where T : class
         {
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
             TypeConfig<T>.EnableAnonymousFieldSetters = true;
@@ -68,6 +84,14 @@ namespace SisoDb.Serialization
                 return null;
 
             return JsonSerializer.DeserializeFromString<T>(json);
+        }
+
+        protected virtual object OnDeserialize(Type structureType, string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            return JsonSerializer.DeserializeFromString(json, structureType);
         }
 
         protected virtual T OnDeserializeAnonymous<T>(string json, Type templateType) where T : class
