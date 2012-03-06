@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SisoDb.Serialization
 {
@@ -12,7 +13,11 @@ namespace SisoDb.Serialization
         
         T Deserialize<T>(string json) where T : class;
 
+        object Deserialize(Type structureType, string json);
+
         IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class;
+
+        IEnumerable<object> DeserializeMany(Type structureType, IEnumerable<string> sourceData);
 
         IEnumerable<T> DeserializeManyAnonymous<T>(IEnumerable<string> sourceData, T template) where T : class;
     }

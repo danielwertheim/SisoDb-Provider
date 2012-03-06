@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb
@@ -26,6 +25,13 @@ namespace SisoDb
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
 		IStructureSchema GetStructureSchema<T>() where T : class;
+
+        /// <summary>
+        /// Lets you get a hold of the schema associated with a certain structure.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <returns></returns>
+        IStructureSchema GetStructureSchema(Type structureType);
 
         /// <summary>
         /// Returns value indicating of structure exists or not.
@@ -70,6 +76,19 @@ namespace SisoDb
 		/// <returns>Json representation of (<typeparamref name="T"/>) or Null</returns>
 		string GetByIdAsJson<T>(object id) where T : class;
 
+        /// <summary>
+        /// Returns one single structure identified
+        /// by an id, as Json. This is the most
+        /// effective return type, since the Json
+        /// is stored in the database, no deserialization
+        /// will take place.  
+        /// </summary>
+        /// <param name="structureType">
+        /// Structure type, used as a contract defining the scheme.</param>
+        /// <param name="id"></param>
+        /// <returns>Json representation of (<paramref name="structureType"/>) or Null</returns>
+        string GetByIdAsJson(Type structureType, object id);
+
 		/// <summary>
 		/// Returns all structures for the defined structure <typeparamref name="T"/>
 		/// matching passed ids.
@@ -99,6 +118,15 @@ namespace SisoDb
 		/// <param name="ids">Ids used for matching the structures to return.</param>
 		/// <returns>IEnumerable Json representation of <typeparamref name="T"/>.</returns>
 		IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class;
+
+        /// <summary>
+        /// Returns Json representation for all structures for the defined structure <paramref name="structureType"/>
+        /// matching passed ids.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
+        /// <returns>IEnumerable Json representation of <paramref name="structureType"/>.</returns>
+        IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids);
 
 		/// <summary>
 		/// Lets you perform a Query defining things like
@@ -139,7 +167,19 @@ namespace SisoDb
         /// so If you do have the instace pass that instead using other overload!</remarks>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
-        void InsertJson<T>(string json) where T : class;
+        /// <returns>The Json for the item being inserted, but after insert so that the Id is included.</returns>
+        string InsertJson<T>(string json) where T : class;
+
+	    /// <summary>
+	    /// Inserts Json strcutures using the <paramref name="structureType"/> as
+	    /// the contract for the structure being inserted.
+	    /// </summary>
+	    /// <remarks>Deserialization of the Json structure will take place, 
+	    /// so If you do have the instace pass that instead using other overload!</remarks>
+	    /// <param name="structureType"></param>
+	    /// <param name="json"></param>
+	    /// <returns>The Json for the item being inserted, but after insert so that the Id is included.</returns>
+	    string InsertJson(Type structureType, string json);
 
         /// <summary>
         /// Inserts multiple structures using the <typeparamref name="T"/> as
@@ -150,15 +190,27 @@ namespace SisoDb
         /// <param name="items"></param>
         void InsertMany<T>(IEnumerable<T> items) where T : class;
 
+	    /// <summary>
+	    /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
+	    /// the contract for the structures being inserted.
+	    /// </summary>
+	    /// <remarks>Deserialization of the Json structures will take place, 
+	    /// so If you do have the instace pass that instead using other overload!</remarks>
+	    /// <typeparam name="T"></typeparam>
+	    /// <param name="json"></param>
+	    /// <param name="onBatchInserted"></param>
+	    void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class;
+
         /// <summary>
-        /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
+        /// Inserts multiple Json strcutures using the <paramref name="structureType"/> as
         /// the contract for the structures being inserted.
         /// </summary>
         /// <remarks>Deserialization of the Json structures will take place, 
         /// so If you do have the instace pass that instead using other overload!</remarks>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="structureType"></param>
         /// <param name="json"></param>
-        void InsertManyJson<T>(IEnumerable<string> json) where T : class;
+        /// <param name="onBatchInserted"></param>
+	    void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null);
 
         /// <summary>
         /// Updates the sent structure. If it
@@ -169,6 +221,16 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="item"></param>
         void Update<T>(T item) where T : class;
+
+        /// <summary>
+        /// Updates the sent structure. If it
+        /// does not exist, an <see cref="SisoDbException"/> will be
+        /// thrown.
+        /// </summary>
+        /// <param name="structureType">
+        /// Structure type, used as a contract defining the scheme.</param>
+        /// <param name="item"></param>
+        void Update(Type structureType, object item);
 
 	    /// <summary>
 	    /// Uses sent id to locate a structure and then calls sent <paramref name="modifier"/>
@@ -188,6 +250,14 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
         void DeleteById<T>(object id) where T : class;
+
+        /// <summary>
+        /// Deletes structure by id.
+        /// </summary>
+        /// <param name="structureType">
+        /// Structure type, used as a contract defining the scheme.</param>
+        /// <param name="id"></param>
+        void DeleteById(Type structureType, object id);
 
         /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>

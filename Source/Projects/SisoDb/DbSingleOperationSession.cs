@@ -128,13 +128,13 @@ namespace SisoDb
             }
         }
 
-        public void InsertJson<T>(string json) where T : class
+        public string InsertJson<T>(string json) where T : class
         {
             Ensure.That(json, "json").IsNotNullOrWhiteSpace();
 
             using (var session = _db.BeginSession())
             {
-                session.InsertJson<T>(json);
+                return session.InsertJson<T>(json);
             }
         }
 
@@ -148,13 +148,13 @@ namespace SisoDb
             }
         }
 
-        public void InsertManyJson<T>(IEnumerable<string> json) where T : class
+        public void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
         {
             Ensure.That(json, "json").IsNotNull();
 
             using (var session = _db.BeginSession())
             {
-                session.InsertManyJson<T>(json);
+                session.InsertManyJson<T>(json, onBatchInserted);
             }
         }
 

@@ -22,9 +22,9 @@ namespace SisoDb
 
 	    void Insert<T>(T item) where T : class;
         void InsertAs<T>(object item) where T : class;
-	    void InsertJson<T>(string json) where T : class;
+	    string InsertJson<T>(string json) where T : class;
 	    void InsertMany<T>(IEnumerable<T> items) where T : class;
-	    void InsertManyJson<T>(IEnumerable<string> json) where T : class;
+        void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class;
 
 	    void Update<T>(T item) where T : class;
         void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
