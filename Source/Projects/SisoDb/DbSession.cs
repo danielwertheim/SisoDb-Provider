@@ -429,7 +429,7 @@ namespace SisoDb
                 structureSchema,
                 structureId,
                 sid => Db.Serializer.Deserialize(
-                    structureType,
+                    structureSchema.Type.Type,
                     TransactionalDbClient.GetJsonById(sid, structureSchema)),
                 CacheConsumeMode);
 
@@ -459,7 +459,7 @@ namespace SisoDb
             var items = Db.CacheProvider.Consume(
                 structureSchema,
                 structureIds,
-                sids => Db.Serializer.DeserializeMany(structureType, TransactionalDbClient.GetJsonByIds(sids, structureSchema)).Where(s => s != null).ToArray(),
+                sids => Db.Serializer.DeserializeMany(structureSchema.Type.Type, TransactionalDbClient.GetJsonByIds(sids, structureSchema)).Where(s => s != null).ToArray(),
                 CacheConsumeMode);
 
             return Db.Serializer.SerializeMany(items).ToArray();
@@ -669,7 +669,7 @@ namespace SisoDb
                 Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(structureType, json).Batch(MaxInsertManyBatchSize))
+            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(structureSchema.Type.Type, json).Batch(MaxInsertManyBatchSize))
             {
                 var structures = structureBuilder.CreateStructures(structuresJsonBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
@@ -752,14 +752,14 @@ namespace SisoDb
             });
         }
 
-        protected virtual void EnsureConcurrencyTokenIsValid<T>(IStructureSchema structureSchema, IStructureId structureId, T newItem) where T : class
+        protected virtual void EnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
         {
             var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
 
             if (string.IsNullOrWhiteSpace(existingJson))
                 throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
 
-            var existingItem = Db.Serializer.Deserialize<T>(existingJson);
+            var existingItem = Db.Serializer.Deserialize(structureSchema.Type.Type, existingJson);
             var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
             var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
 
