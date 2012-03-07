@@ -20,6 +20,10 @@ namespace SisoDb.Profiling
             //var cnInfo = new Sql2008ConnectionInfo("SisoDb.Sql2008");
             //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
 
+            //********* SQL2012 ***********
+            var cnInfo = new Sql2008ConnectionInfo("SisoDb.Sql2012");
+            var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
+
             //********* SQLCE4 ***********
 			//var cnInfo = new SqlCe4ConnectionInfo("SisoDb.SqlCe4");
 			//var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
