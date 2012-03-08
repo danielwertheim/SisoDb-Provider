@@ -335,19 +335,19 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key ([StructureId]),
+[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[StructureId] [bigint] not null constraint [PK_{0}] primary key ([StructureId]),
+[StructureId] [bigint] not null constraint [PK_{0}] primary key clustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
 insert into [dbo].[SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key ([StructureId]),
+[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateTextsIndexesGuid" xml:space="preserve">
