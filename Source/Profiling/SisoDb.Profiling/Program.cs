@@ -30,6 +30,9 @@ namespace SisoDb.Profiling
 
             //db.EnsureNewDatabase();
 
+            //To get rid of warm up in tests as it first syncs schemas etc
+            //db.UpsertStructureSet<Customer>();
+
             //ProfilingInserts(db, 1000, 5);
 
 			//InsertCustomers(1, 10000, db);
