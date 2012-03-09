@@ -61,6 +61,32 @@ namespace SisoDb.UnitTests.Connections
             Assert.AreEqual("connectionString", ex.ParamName);
         }
 
+        [Test]
+        public void OnConnectionCreated_NotSet_ReturnsSameConnection()
+        {
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            var cnInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
+
+            var con = new System.Data.SqlClient.SqlConnection();
+            var con2 = cnInfo.OnConnectionCreated(con);
+
+            Assert.AreEqual(con, con2);
+        }
+
+        [Test]
+        public void OnConnectionCreated_SetToReturnNew_NewConnectionIsReturned()
+        {
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            var cnInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
+            cnInfo.OnConnectionCreated = c => new System.Data.SqlClient.SqlConnection();
+            var con = new System.Data.SqlClient.SqlConnection();
+            var con2 = cnInfo.OnConnectionCreated(con);
+
+            Assert.AreNotEqual(con, con2);
+        }
+
         private class SisoConnectionInfoImplementation : SisoConnectionInfo
         {
             public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(connectionString)
