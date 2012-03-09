@@ -1,5 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ServiceStack.Text;
 
@@ -7,76 +9,133 @@ namespace SisoDb.Serialization
 {
     public class ServiceStackJsonSerializer : IJsonSerializer
     {
-		public string Serialize<T>(T item) where T : class
+        public bool DeserializeManyInParallel { get; set; }
+
+        public ServiceStackJsonSerializer()
+        {
+            DeserializeManyInParallel = true;
+        }
+
+        public virtual string Serialize<T>(T item) where T : class
         {
             if (item == null)
                 return string.Empty;
 
-			var itemType = item.GetType();
+            var itemType = item.GetType();
 
-			ServiceStackTypeConfig<T>.Config(itemType);
-			JsConfig<Text>.SerializeFn = t => t.ToString();
+            ServiceStackTypeConfig<T>.Config(itemType);
+            JsConfig<T>.ExcludeTypeInfo = true;
+            JsConfig<Text>.SerializeFn = t => t.ToString();
 
-			return JsonSerializer.SerializeToString(item, itemType);
+            return JsonSerializer.SerializeToString(item, itemType);
         }
 
-        public T Deserialize<T>(string json) where T : class
-		{
-			JsConfig<Text>.DeSerializeFn = t => new Text(t);
-
-            return string.IsNullOrWhiteSpace(json)
-                ? null
-                : JsonSerializer.DeserializeFromString<T>(json);
-        }
-
-        public IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
+        public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class
         {
-			return DeserializeManyInParallel<T>(sourceData);
+            return items.Select(Serialize);
         }
 
-		//private IEnumerable<T> DeserializeManyInSequential<T>(IEnumerable<string> sourceData) where T : class
-		//{
-		//    return sourceData.Select(Deserialize<T>);
-		//}
+        public virtual T Deserialize<T>(string json) where T : class
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
-		private IEnumerable<T> DeserializeManyInParallel<T>(IEnumerable<string> sourceData) where T : class
-		{
-			using (var q = new BlockingCollection<string>())
-			{
-				Task task = null;
+            return OnDeserialize<T>(json);
+        }
 
-				try
-				{
-					task = new Task(() =>
-					{
-						foreach (var json in sourceData)
-							q.Add(json);
-					});
+        public virtual object Deserialize(Type structureType, string json)
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
-					task.Start();
+            return OnDeserialize(structureType, json);
+        }
 
-					while (!task.IsCompleted)
-					{
-						string json;
-						if (q.TryTake(out json))
-							yield return Deserialize<T>(json);
-					}
+        public virtual IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
-					Task.WaitAll(task);
-				}
-				finally
-				{
-					if (task != null)
-					{
-						task.Dispose();
-					}
+            return DeserializeManyInParallel
+                    ? OnDeserializeManyInParallel(sourceData, OnDeserialize<T>)
+                    : OnDeserializeManyInSequential(sourceData, OnDeserialize<T>);
+        }
 
-					q.CompleteAdding();
-				}
+        public virtual IEnumerable<object> DeserializeMany(Type structureType, IEnumerable<string> sourceData)
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
-				foreach (var e in q.GetConsumingEnumerable())
-					yield return Deserialize<T>(e);
-			}
-		}
+            return DeserializeManyInParallel
+                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(structureType, json))
+                    : OnDeserializeManyInSequential(sourceData, json => OnDeserialize(structureType, json));
+        }
+
+        public virtual IEnumerable<T> DeserializeManyAnonymous<T>(IEnumerable<string> sourceData, T template) where T : class
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            TypeConfig<T>.EnableAnonymousFieldSetters = true;
+            var templateType = template.GetType();
+
+            return DeserializeManyInParallel
+                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserializeAnonymous<T>(json, templateType))
+                    : OnDeserializeManyInSequential(sourceData, json => OnDeserializeAnonymous<T>(json, templateType));
+        }
+
+        protected virtual T OnDeserialize<T>(string json) where T : class
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            return JsonSerializer.DeserializeFromString<T>(json);
+        }
+
+        protected virtual object OnDeserialize(Type structureType, string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            return JsonSerializer.DeserializeFromString(json, structureType);
+        }
+
+        protected virtual T OnDeserializeAnonymous<T>(string json, Type templateType) where T : class
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            return JsonSerializer.DeserializeFromString(json, templateType) as T;
+        }
+
+        protected virtual IEnumerable<T> OnDeserializeManyInSequential<T>(IEnumerable<string> sourceData, Func<string, T> deserializer) where T : class
+        {
+            return sourceData.Select(deserializer);
+        }
+
+        protected virtual IEnumerable<T> OnDeserializeManyInParallel<T>(IEnumerable<string> sourceData, Func<string, T> deserializer) where T : class
+        {
+            using (var q = new BlockingCollection<string>())
+            {
+                Task task = null;
+
+                try
+                {
+                    task = Task.Factory.StartNew(() =>
+                    {
+                        foreach (var json in sourceData)
+                            q.Add(json);
+
+                        q.CompleteAdding();
+                    });
+
+                    foreach (var e in q.GetConsumingEnumerable())
+                        yield return deserializer.Invoke(e);
+
+                    Task.WaitAll(task);
+                }
+                finally
+                {
+                    if (task != null && task.Status == TaskStatus.RanToCompletion)
+                        task.Dispose();
+
+                    q.CompleteAdding();
+                }
+            }
+        }
     }
 }

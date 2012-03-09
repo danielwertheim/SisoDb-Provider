@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlServerCe;
-using System.IO;
 using System.Linq.Expressions;
 using EnsureThat;
 using NCore;
 using NCore.Expressions;
 using PineCone.Structures.Schemas;
-using SisoDb.Core.Io;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 
@@ -17,38 +15,16 @@ namespace SisoDb.Testing.SqlCe4
 {
     public class SqlCe4TestDbUtils : ITestDbUtils
     {
-        private readonly string _connectionString;
+        private readonly IConnectionString _connectionString;
         private readonly DbProviderFactory _factory;
 
-        public SqlCe4TestDbUtils(string connectionString)
+        public SqlCe4TestDbUtils(IConnectionString connectionString)
         {
-            _connectionString = connectionString;
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString.PlainString);
+            cnStringBuilder.Enlist = false;
+
+            _connectionString = connectionString.ReplacePlain(cnStringBuilder.ConnectionString);
             _factory = DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0");
-        }
-
-        private string GetDbFilePath(string name)
-        {
-            return Path.Combine(_connectionString.ToLower().Replace("data source=", string.Empty), name + ".sdf");
-        }
-
-        public void DropDatabaseIfExists(string name)
-        {
-            var dbFilePath = GetDbFilePath(name);
-
-            IoHelper.DeleteIfFileExists(dbFilePath);
-        }
-
-        public void EnsureDbExists(string name)
-        {
-            var dbFilePath = GetDbFilePath(name);
-
-            if(IoHelper.FileExists(dbFilePath))
-                return;
-
-            using (var engine = new SqlCeEngine(Path.Combine(_connectionString, name + ".sdf")))
-            {
-                engine.CreateDatabase();
-            }
         }
 
         public bool TableExists(string name)
@@ -176,7 +152,7 @@ namespace SisoDb.Testing.SqlCe4
             var cn = _factory.CreateConnection();
 
             if (cn != null)
-                cn.ConnectionString = _connectionString;
+                cn.ConnectionString = _connectionString.PlainString;
 
             return cn;
         }
@@ -192,7 +168,7 @@ namespace SisoDb.Testing.SqlCe4
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(sql, parameters))
+                using (var cmd = cn.CreateCommand(sql, null, parameters))
                 {
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {

@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{49F54583-E724-46AE-86C3-7EF1247816BC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SisoDb.Specifications.Sql2012</RootNamespace>
+    <AssemblyName>SisoDb.Specifications.Sql2012</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Sql2012Provider</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;Sql2012Provider</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnsureThat, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Specifications, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Machine.Specifications.0.5.5.0\lib\net40\Machine.Specifications.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Specifications.Clr4">
+      <HintPath>..\..\packages\Machine.Specifications.0.5.5.0\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
+    </Reference>
+    <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.66.0\lib\net40\PineCone.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\CreateIfNotExists.cs">
+      <Link>Database\CreateIfNotExists.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\DeleteIfExists.cs">
+      <Link>Database\DeleteIfExists.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\DropStructureSet.cs">
+      <Link>Database\DropStructureSet.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\DropStructureSets.cs">
+      <Link>Database\DropStructureSets.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\EnsureNewDatabase.cs">
+      <Link>Database\EnsureNewDatabase.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\InitializeExisting.cs">
+      <Link>Database\InitializeExisting.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\MigrateStructureSet.cs">
+      <Link>Database\MigrateStructureSet.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\database\UpsertStructureSet.cs">
+      <Link>Database\UpsertStructureSet.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\ChildItem.cs">
+      <Link>Model\ChildItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\Container.cs">
+      <Link>Model\Container.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\GrandChildItem.cs">
+      <Link>Model\GrandChildItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryBigIdentityItem.cs">
+      <Link>Model\QueryBigIdentityItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryGuidItem.cs">
+      <Link>Model\QueryGuidItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryIdentityItem.cs">
+      <Link>Model\QueryIdentityItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryItemForQxAnyQueries.cs">
+      <Link>Model\QueryItemForQxAnyQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryItemInfo.cs">
+      <Link>Model\QueryItemInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryNestedGuidItem.cs">
+      <Link>Model\QueryNestedGuidItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryNestedItemInfo.cs">
+      <Link>Model\QueryNestedItemInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryNullableItem.cs">
+      <Link>Model\QueryNullableItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryStringItem.cs">
+      <Link>Model\QueryStringItem.cs</Link>
+    </Compile>
+    <Compile Include="..\sisodb.specifications\model\QueryXItem.cs">
+      <Link>Model\QueryXItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Caching.cs">
+      <Link>Session\Caching.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Deletes.cs">
+      <Link>Session\Deletes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertAs.cs">
+      <Link>Session\InsertAs.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsComplete.cs">
+      <Link>Session\InsertsComplete.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsIdBehavior.cs">
+      <Link>Session\InsertsIdBehavior.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsOfJson.cs">
+      <Link>Session\InsertsOfJson.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsOfUniques.cs">
+      <Link>Session\InsertsOfUniques.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsUsingBaseClasses.cs">
+      <Link>Session\InsertsUsingBaseClasses.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsUsingInterfaces.cs">
+      <Link>Session\InsertsUsingInterfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsWithCustomStructureId.cs">
+      <Link>Session\InsertsWithCustomStructureId.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Count.cs">
+      <Link>Session\Querying\Count.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\EnumerableFunctions\QxAny.cs">
+      <Link>Session\Querying\EnumerableFunctions\QxAny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Exists.cs">
+      <Link>Session\Querying\Exists.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\GetById.cs">
+      <Link>Session\Querying\GetById.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\GetByIds.cs">
+      <Link>Session\Querying\GetByIds.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Includes.cs">
+      <Link>Session\Querying\Includes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\NamedQueries.cs">
+      <Link>Session\Querying\NamedQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Query.cs">
+      <Link>Session\Querying\Query.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\QueryAll.cs">
+      <Link>Session\Querying\QueryAll.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\RawQueries.cs">
+      <Link>Session\Querying\RawQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\EndsWith.cs">
+      <Link>Session\Querying\StringFunctions\EndsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxContains.cs">
+      <Link>Session\Querying\StringFunctions\QxContains.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxEndsWith.cs">
+      <Link>Session\Querying\StringFunctions\QxEndsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxLike.cs">
+      <Link>Session\Querying\StringFunctions\QxLike.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxStartsWith.cs">
+      <Link>Session\Querying\StringFunctions\QxStartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxToLower.cs">
+      <Link>Session\Querying\StringFunctions\QxToLower.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxToUpper.cs">
+      <Link>Session\Querying\StringFunctions\QxToUpper.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\StartsWith.cs">
+      <Link>Session\Querying\StringFunctions\StartsWith.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\StringFunctionsItem.cs">
+      <Link>Session\Querying\StringFunctions\StringFunctionsItem.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\ToLower.cs">
+      <Link>Session\Querying\StringFunctions\ToLower.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\ToUpper.cs">
+      <Link>Session\Querying\StringFunctions\ToUpper.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\TimeStamps.cs">
+      <Link>Session\TimeStamps.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\TransactionScopes.cs">
+      <Link>Session\TransactionScopes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\UpdateMany.cs">
+      <Link>Session\UpdateMany.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Updates.cs">
+      <Link>Session\Updates.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\UpdatesHandlingConcurreny.cs">
+      <Link>Session\UpdatesHandlingConcurreny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
+      <Link>TestContextFactory.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyContext.cs" />
+    <Compile Include="ContextCleanup.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
+      <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
+      <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2012\SisoDb.Sql2012.csproj">
+      <Project>{8F79E2CB-91D6-4359-833A-A236BB0F814D}</Project>
+      <Name>SisoDb.Sql2012</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
+      <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
+      <Name>SisoDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SisoDb.Testing\SisoDb.Testing.csproj">
+      <Project>{2C9376C7-514B-4D15-AA63-15AFE8149D40}</Project>
+      <Name>SisoDb.Testing</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

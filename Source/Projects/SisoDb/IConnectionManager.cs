@@ -4,14 +4,11 @@ namespace SisoDb
 {
 	public interface IConnectionManager
 	{
-		IDbConnection OpenServerConnection(IConnectionString connectionString);
+		IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo);
+        IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo);
 
-		void ReleaseServerConnection(IDbConnection dbConnection);
-
-		IDbConnection OpenDbConnection(IConnectionString connectionString);
-
-		void ReleaseAllDbConnections();
-
-		void ReleaseDbConnection(IDbConnection dbConnection);
+	    void ReleaseAllDbConnections();
+	    void ReleaseServerConnection(IDbConnection dbConnection);
+        void ReleaseClientDbConnection(IDbConnection dbConnection);
 	}
 }

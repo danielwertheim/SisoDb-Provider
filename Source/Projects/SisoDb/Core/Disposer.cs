@@ -1,0 +1,24 @@
+using System;
+
+namespace SisoDb.Core
+{
+    public static class Disposer
+    {
+        public static Exception TryDispose(IDisposable disposable)
+        {
+            if (disposable == null)
+                return null;
+
+            try
+            {
+                disposable.Dispose();
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
+
+            return null;
+        }
+    }
+}

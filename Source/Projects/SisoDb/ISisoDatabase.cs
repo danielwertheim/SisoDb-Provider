@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using PineCone.Structures.Schemas;
 using SisoDb.Serialization;
 using SisoDb.Structures;
@@ -23,7 +22,20 @@ namespace SisoDb
         /// </summary>
         ISisoConnectionInfo ConnectionInfo { get; }
 
-    	/// <summary>
+		/// <summary>
+		/// By assigning a <see cref="ICacheProvider"/> you get
+		/// the possibility of preventing the query from
+		/// hitting the database for certain queries.
+		/// </summary>
+		ICacheProvider CacheProvider { get; set; }
+
+		/// <summary>
+		/// Get a value indicating if the Database has a <see cref="CacheProvider"/>
+		/// assigned.
+		/// </summary>
+		bool CachingIsEnabled { get; }
+
+        /// <summary>
 		/// Cached Structure schemas, which holds information
 		/// about members to index etc.
         /// </summary>
@@ -110,59 +122,18 @@ namespace SisoDb
         void UpsertStructureSet(Type type);
 
         /// <summary>
-		/// Creates a NON Transactional <see cref="IReadSession"/>, used for searching.
+		/// Creates a NON Transactional <see cref="ISession"/>, used for searching.
         /// The Session is designed for being short lived. Create, consume and dispose.
         /// </summary>
         /// <returns></returns>
-        IReadSession BeginReadSession();
-
-        /// <summary>
-        /// Creates a Transactional <see cref="IWriteSession"/>, used for writing or searching.
-		/// The Session is designed for being short lived. Create, consume and dispose.
-        /// </summary>
-        /// <returns></returns>
-        IWriteSession BeginWriteSession();
+        ISession BeginSession();
 
         /// <summary>
         /// Use when you want to execute a single search operation against the <see cref="ISisoDatabase"/>
-		/// via an <see cref="IReadSession"/>.
+		/// via an <see cref="ISession"/>.
         /// </summary>
         /// <returns></returns>
-        /// <remarks>If you need to do multiple queries, use <see cref="BeginReadSession"/> instead.</remarks>
-        [DebuggerStepThrough]
-        IReadOnce ReadOnce();
-
-        /// <summary>
-        /// Use when you want to execute a single Insert, Update or Delete against 
-        /// the <see cref="ISisoDatabase"/> via an <see cref="IWriteSession"/>.
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>If you need to do multiple operations in the <see cref="IWriteSession"/>,
-        /// use <see cref="BeginWriteSession"/> instead.</remarks>
-        [DebuggerStepThrough]
-        IWriteOnce WriteOnce();
-
-        /// <summary>
-        /// Simplifies usage of <see cref="IWriteSession"/>.
-        /// </summary>
-        /// <param name="consumer"></param>
-        [DebuggerStepThrough]
-        void WithWriteSession(Action<IWriteSession> consumer);
-
-        /// <summary>
-		/// Simplifies usage of <see cref="IReadSession"/>.
-        /// </summary>
-        /// <param name="consumer"></param>
-        [DebuggerStepThrough]
-		void WithReadSession(Action<IReadSession> consumer);
-
-		/// <summary>
-		/// Simplifies usage of <see cref="IReadSession"/>.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="consumer"></param>
-		/// <returns></returns>
-		[DebuggerStepThrough]
-		T WithReadSession<T>(Func<IReadSession, T> consumer);
+        /// <remarks>If you need to do multiple queries, inserts etc, then use <see cref="BeginSession"/> instead.</remarks>
+        ISingleOperationSession UseOnceTo();
     }
 }

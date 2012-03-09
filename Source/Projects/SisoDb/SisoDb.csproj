@@ -44,20 +44,21 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EnsureThat">
-      <HintPath>..\..\packages\Ensure.That.0.5.0\lib\EnsureThat.dll</HintPath>
+    <Reference Include="EnsureThat, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NCore, Version=0.26.1.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=0.56.0.104, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.0.56.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.2.2.5660, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.0.66.0\lib\net40\PineCone.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.6.0.3283, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.2.2\lib\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.6.0\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -70,24 +71,33 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Caching\CacheConsumeModes.cs" />
+    <Compile Include="Caching\CacheProviderBase.cs" />
+    <Compile Include="Caching\CacheProviderExtensions.cs" />
     <Compile Include="ConnectionString.cs" />
+    <Compile Include="Core\CastExtensions.cs" />
+    <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
+    <Compile Include="Core\Disposer.cs" />
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="Dac\ITransactionalDbClient.cs" />
+    <Compile Include="Dac\Transactions.cs" />
     <Compile Include="DbSchema\DbNamingPolicy.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
-    <Compile Include="DbWriteSessionProxy.cs" />
+    <Compile Include="ICache.cs" />
+    <Compile Include="ICacheProvider.cs" />
     <Compile Include="ISisoDbDatabase.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
-    <Compile Include="IReadOnce.cs" />
+    <Compile Include="ISingleOperationSession.cs" />
     <Compile Include="IStructureSetMigrator.cs" />
-    <Compile Include="IWriteOnce.cs" />
     <Compile Include="IConnectionManager.cs" />
+    <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />
@@ -98,24 +108,30 @@
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="DbStructureSetMigrator.cs" />
+    <Compile Include="Resources\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="StructureSetMigratorStatuses.cs" />
+    <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
     <Compile Include="Dac\DbClientBase.cs" />
-    <Compile Include="DbReadOnce.cs" />
+    <Compile Include="DbSingleOperationSession.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
     <Compile Include="DbSchema\SqlDbStructuresSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbUniquesSchemaSynchronizer.cs" />
-    <Compile Include="DbWriteOnce.cs" />
-    <Compile Include="IAdvancedQueries.cs" />
+    <Compile Include="IAdvanced.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="Querying\DbQueryGenerator.cs" />
-    <Compile Include="IReadSession.cs" />
+    <Compile Include="ISession.cs" />
     <Compile Include="ISisoQueryable.cs" />
     <Compile Include="Querying\IQueryBuilder.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ToLowerMemberNode.cs" />
@@ -129,7 +145,7 @@
     <Compile Include="Querying\Lambdas\Parsers\OrderByParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereExpressionChainer.cs" />
     <Compile Include="Querying\Query.cs" />
-    <Compile Include="DbReadSession.cs" />
+    <Compile Include="DbSession.cs" />
     <Compile Include="Querying\QueryBuilder.cs" />
     <Compile Include="Querying\SisoReadOnceQueryable.cs" />
     <Compile Include="Querying\SisoQueryable.cs" />
@@ -153,7 +169,6 @@
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
     <Compile Include="SisoDbDatabase.cs" />
-    <Compile Include="DbWriteSession.cs" />
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
@@ -216,14 +231,8 @@
     <Compile Include="Querying\Sql\SqlWhereMember.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
-    <Compile Include="IWriteSession.cs" />
     <Compile Include="TypeFor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\ExceptionMessages.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ExceptionMessages.resx</DependentUpon>
-    </Compile>
     <Compile Include="Serialization\ServiceStackJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
     <Compile Include="SisoDbException.cs" />

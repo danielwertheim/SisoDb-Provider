@@ -23,25 +23,6 @@ namespace SisoDb.Testing.Sql2008
             _factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
         }
 
-        public void DropDatabaseIfExists(string name)
-        {
-            var sql = @"if (select DB_ID('{0}')) is not null begin
-                 alter database [{0}] set offline with rollback immediate;
-                 alter database [{0}] set online;
-                 drop database [{0}]; end".Inject(name);
-
-            ExecuteSql(CommandType.Text, sql);
-        }
-
-        public void EnsureDbExists(string name)
-        {
-            var sql = @"if (select DB_ID('{0}')) is null begin 
-                create database [{0}]; 
-                alter database [{0}] set recovery simple; end".Inject(name);
-
-            ExecuteSql(CommandType.Text, sql);
-        }
-
         public bool TableExists(string name)
         {
 			var sql = "select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}';".Inject(name);
@@ -101,7 +82,7 @@ namespace SisoDb.Testing.Sql2008
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(sql, parameters))
+                using (var cmd = cn.CreateCommand(sql, null, parameters))
                 {
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {

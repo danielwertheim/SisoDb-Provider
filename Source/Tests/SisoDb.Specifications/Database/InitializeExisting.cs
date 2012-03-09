@@ -11,8 +11,7 @@ namespace SisoDb.Specifications.Database
             Establish context = () =>
             {
                 _testContext = TestContextFactory.CreateTemp();
-                _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
-                _testContext.DbHelperForServer.EnsureDbExists(_testContext.Database.Name);
+                _testContext.Database.EnsureNewDatabase();
             };
 
             Because of = 
@@ -24,8 +23,8 @@ namespace SisoDb.Specifications.Database
             It should_have_created_identities_table =
                 () => _testContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
 
-#if Sql2008Provider
-            It should_have_created_custom_ids_data_types = () =>
+#if Sql2008Provider || Sql2012Provider
+			It should_have_created_custom_ids_data_types = () =>
             {
                 _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
                 _testContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
@@ -47,7 +46,7 @@ namespace SisoDb.Specifications.Database
             Establish context = () =>
             {
                 _testContext = TestContextFactory.CreateTemp();
-                _testContext.DbHelperForServer.DropDatabaseIfExists(_testContext.Database.Name);
+                _testContext.Database.DeleteIfExists();
             };
 
             Because of =

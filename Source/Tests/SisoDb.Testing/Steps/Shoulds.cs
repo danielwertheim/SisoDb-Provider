@@ -23,7 +23,7 @@ namespace SisoDb.Testing.Steps
 			db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(1);
 		}
 
-		public static void should_have_been_deleted_from_indexes_tables(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
+        public static void should_have_been_deleted_from_indexes_tables(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
 		{
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
 			foreach (var indexesTableName in indexesTableNames.AllTableNames)
@@ -52,14 +52,14 @@ namespace SisoDb.Testing.Steps
 
 		public static void should_have_X_num_of_items<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
 		{
-			db.ReadOnce().Count<T>().ShouldEqual(numOfItemsLeft);
+			db.UseOnceTo().Count<T>().ShouldEqual(numOfItemsLeft);
 		}
 
 		public static void should_have_first_and_last_item_left<T>(this ISisoDatabase db, IList<T> structures) where T : class
 		{
 			var structureScema = db.StructureSchemas.GetSchema<T>();
 
-			using (var rs = db.BeginReadSession())
+			using (var rs = db.BeginSession())
 			{
 				var items = rs.Query<T>().ToList();
 
@@ -75,7 +75,7 @@ namespace SisoDb.Testing.Steps
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var session =db.BeginReadSession())
+			using (var session =db.BeginSession())
 			{
 				foreach (var id in ids)
 					session.GetById<T>(id).ShouldNotBeNull();
@@ -86,7 +86,7 @@ namespace SisoDb.Testing.Steps
 		{
 			Ensure.That(ids, "ids").HasItems();
 
-			using (var session =db.BeginReadSession())
+			using (var session =db.BeginSession())
 			{
 				foreach (var id in ids)
 					session.GetById<T>(id).ShouldBeNull();
@@ -99,7 +99,7 @@ namespace SisoDb.Testing.Steps
 
 			var structureSchema = db.StructureSchemas.GetSchema(typeof(T));
 
-			using (var session =db.BeginReadSession())
+			using (var session =db.BeginSession())
 			{
 				foreach (var structure in structures)
 				{
@@ -112,7 +112,7 @@ namespace SisoDb.Testing.Steps
 
 		public static void should_have_valid_structures<T>(this ISisoDatabase db, Action<T> validationRule) where T : class
 		{
-			using (var rs = db.BeginReadSession())
+			using (var rs = db.BeginSession())
 			{
 				foreach (var structure in rs.Query<T>().ToEnumerable())
 					validationRule(structure);
@@ -121,7 +121,7 @@ namespace SisoDb.Testing.Steps
 
 		public static void should_have_one_structure_with_json_containing<T>(this ISisoDatabase db, params Expression<Func<T, object>>[] parts) where T : class
 		{
-			var structureJson = db.ReadOnce().Query<T>().ToListOfJson().SingleOrDefault();
+			var structureJson = db.UseOnceTo().Query<T>().ToListOfJson().SingleOrDefault();
 
 			structureJson.ShouldNotBeEmpty();
 
@@ -133,7 +133,7 @@ namespace SisoDb.Testing.Steps
 			where T1 : class
 			where T2 : class
 		{
-			var structureJson = db.ReadOnce().Query<T1>().ToListOfJson().SingleOrDefault();
+			var structureJson = db.UseOnceTo().Query<T1>().ToListOfJson().SingleOrDefault();
 
 			structureJson.ShouldNotBeEmpty();
 
@@ -145,13 +145,24 @@ namespace SisoDb.Testing.Steps
 			where T1 : class
 			where T2 : class
 		{
-			var structureJson = db.ReadOnce().Query<T1>().ToListOfJson().SingleOrDefault();
+			var structureJson = db.UseOnceTo().Query<T1>().ToListOfJson().SingleOrDefault();
 
 			structureJson.ShouldNotBeEmpty();
 
 			foreach (var part in parts.Select(GetMemberPath))
 				structureJson.Contains("\"{0}\"".Inject(part)).ShouldBeFalse();
 		}
+
+        public static void should_not_have_stored_member_in_indexes_table<T>(this ITestDbUtils db, IStructureSchema structureSchema, object structureId, Expression<Func<T, object>> memberExpression, Type memberType)
+        {
+            var memberPath = GetMemberPath(memberExpression);
+            structureSchema.IndexAccessors.Count(iac => iac.Path == memberPath).ShouldEqual(0);
+            
+            var tablename = structureSchema.GetIndexesTableNames().GetNameByType(memberType);
+            db.RowCount(tablename, "{0} = '{1}' and {2} = '{3}'".Inject(
+                IndexStorageSchema.Fields.StructureId.Name, structureId,
+                IndexStorageSchema.Fields.MemberPath.Name, memberPath)).ShouldEqual(0);
+        }
 
 		private static string GetMemberPath<T>(Expression<Func<T, object>> e)
 		{

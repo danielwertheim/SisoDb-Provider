@@ -88,6 +88,42 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not clear all structure set cache entries. See contained exceptions for more info..
+        /// </summary>
+        public static string CacheProvider_Clear_failed {
+            get {
+                return ResourceManager.GetString("CacheProvider_Clear_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can not update structure, since it has a Concurrency token member, with a value not equal to the one in store..
+        /// </summary>
+        public static string ConcurrencyException {
+            get {
+                return ResourceManager.GetString("ConcurrencyException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ConcurrencyToken member should be either: Guid, Int or Long..
+        /// </summary>
+        public static string ConcurrencyTokenIsOfWrongType {
+            get {
+                return ResourceManager.GetString("ConcurrencyTokenIsOfWrongType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background indexing is not yet supported by provider &apos;{0}&apos;..
+        /// </summary>
+        public static string ConnectionInfo_BackgroundIndexingNotSupported {
+            get {
+                return ResourceManager.GetString("ConnectionInfo_BackgroundIndexingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The name of the database could not be extracted from the connection-info..
         /// </summary>
         public static string ConnectionInfo_MissingName {
@@ -138,6 +174,15 @@ namespace SisoDb.Resources {
         public static string ConnectionString_MissingSisoDbPart {
             get {
                 return ResourceManager.GetString("ConnectionString_MissingSisoDbPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The connection string has no parts divider &apos;{0}&apos; and if that is missing, the SisoDb-marker &apos;{1}&apos; and Plain-marker &apos;{2} is not supported..
+        /// </summary>
+        public static string ConnectionString_ShouldBePureIfNoPartsDividerExists {
+            get {
+                return ResourceManager.GetString("ConnectionString_ShouldBePureIfNoPartsDividerExists", resourceCulture);
             }
         }
         
@@ -274,24 +319,6 @@ namespace SisoDb.Resources {
         public static string ReadOnceQueryable_YieldingNotSupported {
             get {
                 return ResourceManager.GetString("ReadOnceQueryable_YieldingNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Read session has allready been disposed..
-        /// </summary>
-        public static string ReadSession_AllreadyDisposed {
-            get {
-                return ResourceManager.GetString("ReadSession_AllreadyDisposed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to GetByIdInterval is not supported when using other ID-types than identities..
-        /// </summary>
-        public static string ReadSession_GetByIdInterval_WrongIdType {
-            get {
-                return ResourceManager.GetString("ReadSession_GetByIdInterval_WrongIdType", resourceCulture);
             }
         }
         
@@ -490,33 +517,6 @@ namespace SisoDb.Resources {
         public static string WhereParser_QxEnumerables_OperatorNotSupported {
             get {
                 return ResourceManager.GetString("WhereParser_QxEnumerables_OperatorNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Write session has allready been disposed..
-        /// </summary>
-        public static string WriteSession_AllreadyDisposed {
-            get {
-                return ResourceManager.GetString("WriteSession_AllreadyDisposed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DeleteByIdInterval is not supported when using other ID-types than identities..
-        /// </summary>
-        public static string WriteSession_DeleteByIdInterval_WrongIdType {
-            get {
-                return ResourceManager.GetString("WriteSession_DeleteByIdInterval_WrongIdType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The number of passed root items is not equal to the number of inserted root items!.
-        /// </summary>
-        public static string WriteSession_DoIdentityInsert_RootItemsMissmatch {
-            get {
-                return ResourceManager.GetString("WriteSession_DoIdentityInsert_RootItemsMissmatch", resourceCulture);
             }
         }
         

@@ -8,8 +8,6 @@ namespace SisoDb.Testing
 {
     public interface ITestDbUtils
     {
-        void DropDatabaseIfExists(string name);
-        void EnsureDbExists(string name);
         bool TableExists(string name);
         bool TypeExists(string name);
         IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip);

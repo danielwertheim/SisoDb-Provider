@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		License-SisoDb.txt = License-SisoDb.txt
 		Releasenotes.txt = Releasenotes.txt
 		Samples.txt = Samples.txt
+		SharedAssemblyInfo.Caching.cs = SharedAssemblyInfo.Caching.cs
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
@@ -20,11 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Profiling", "Profiling", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Profiling", "Profiling\SisoDb.Profiling\SisoDb.Profiling.csproj", "{A3FDFDC3-EE16-4BE8-A01A-ADF5198D9240}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.SqlCe4", "Projects\SisoDb.Providers.SqlCe4\SisoDb.SqlCe4.csproj", "{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.SqlCe4", "Projects\SisoDb.SqlCe4\SisoDb.SqlCe4.csproj", "{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.SqlAzure", "Projects\SisoDb.Providers.SqlAzure\SisoDb.SqlAzure.csproj", "{BE01AA89-F64C-4CDF-B936-EC973868E0F8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Sql2008", "Projects\SisoDb.Providers.Sql2008\SisoDb.Sql2008.csproj", "{661D181A-AAE8-45AE-ABE8-379947DDF686}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Sql2008", "Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj", "{661D181A-AAE8-45AE-ABE8-379947DDF686}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Dynamic", "Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj", "{A6AEE197-668A-4A08-98A7-F0CB76D359C0}"
 EndProject
@@ -35,6 +34,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications.SqlCe4", "Tests\SisoDb.Specifications.SqlCe4\SisoDb.Specifications.SqlCe4.csproj", "{4D325705-3FC4-44AA-B571-BA3788609341}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications", "Tests\SisoDb.Specifications\SisoDb.Specifications.csproj", "{600055EF-5878-4A48-B503-EBA55A3FECAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Sql2012", "Projects\SisoDb.Sql2012\SisoDb.Sql2012.csproj", "{8F79E2CB-91D6-4359-833A-A236BB0F814D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications.Sql2012", "Tests\SisoDb.Specifications.Sql2012\SisoDb.Specifications.Sql2012.csproj", "{49F54583-E724-46AE-86C3-7EF1247816BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.MsMemoryCache", "Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj", "{52453C59-B957-46F0-8E44-F1203215758A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.AspWebCache", "Projects\SisoDb.AspWebCache\SisoDb.AspWebCache.csproj", "{07A22CB7-158A-4587-A40F-ADE3D72CC567}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caching", "Caching", "{C3A9298E-FFF7-4245-8378-AEF255B8E9FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,10 +67,6 @@ Global
 		{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE01AA89-F64C-4CDF-B936-EC973868E0F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE01AA89-F64C-4CDF-B936-EC973868E0F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE01AA89-F64C-4CDF-B936-EC973868E0F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE01AA89-F64C-4CDF-B936-EC973868E0F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{661D181A-AAE8-45AE-ABE8-379947DDF686}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -86,6 +91,22 @@ Global
 		{600055EF-5878-4A48-B503-EBA55A3FECAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600055EF-5878-4A48-B503-EBA55A3FECAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{600055EF-5878-4A48-B503-EBA55A3FECAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F79E2CB-91D6-4359-833A-A236BB0F814D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F79E2CB-91D6-4359-833A-A236BB0F814D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F79E2CB-91D6-4359-833A-A236BB0F814D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F79E2CB-91D6-4359-833A-A236BB0F814D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49F54583-E724-46AE-86C3-7EF1247816BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49F54583-E724-46AE-86C3-7EF1247816BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49F54583-E724-46AE-86C3-7EF1247816BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49F54583-E724-46AE-86C3-7EF1247816BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52453C59-B957-46F0-8E44-F1203215758A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52453C59-B957-46F0-8E44-F1203215758A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52453C59-B957-46F0-8E44-F1203215758A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52453C59-B957-46F0-8E44-F1203215758A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +117,9 @@ Global
 		{2C9376C7-514B-4D15-AA63-15AFE8149D40} = {DE508E74-C9A8-4617-A293-AF1FA476CAEE}
 		{4D325705-3FC4-44AA-B571-BA3788609341} = {DE508E74-C9A8-4617-A293-AF1FA476CAEE}
 		{600055EF-5878-4A48-B503-EBA55A3FECAE} = {DE508E74-C9A8-4617-A293-AF1FA476CAEE}
+		{49F54583-E724-46AE-86C3-7EF1247816BC} = {DE508E74-C9A8-4617-A293-AF1FA476CAEE}
 		{A3FDFDC3-EE16-4BE8-A01A-ADF5198D9240} = {4E11F94F-000C-4D8F-9578-DB6D4BD9B540}
+		{07A22CB7-158A-4587-A40F-ADE3D72CC567} = {C3A9298E-FFF7-4245-8378-AEF255B8E9FA}
+		{52453C59-B957-46F0-8E44-F1203215758A} = {C3A9298E-FFF7-4245-8378-AEF255B8E9FA}
 	EndGlobalSection
 EndGlobal

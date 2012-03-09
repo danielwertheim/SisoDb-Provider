@@ -9,58 +9,56 @@ using ServiceStack.Text;
 namespace SisoDb.Serialization
 {
     internal static class ServiceStackTypeConfig<T>
-	{
-		private static readonly IStructureTypeReflecter StructureTypeReflecter;
+    {
+        private static readonly IStructureTypeReflecter StructureTypeReflecter;
 
-		private static readonly Type ItemType;
+        private static readonly Type ItemType;
 
-		private static readonly Type TypeConfigType;
+        private static readonly Type TypeConfigType;
 
-		private static readonly ConcurrentDictionary<Type, Action> ConfigActions;
+        private static readonly ConcurrentDictionary<Type, object> ConfigChildSync;
 
-		internal static void Config(Type type)
-		{
-			if (type == ItemType)
-				return;
+        static ServiceStackTypeConfig()
+        {
+            ConfigChildSync = new ConcurrentDictionary<Type, object>();
 
-			lock (ConfigActions)
-			{
-				ConfigActions.GetOrAdd(type, t =>
-				{
-					Action a = () => { };
+            StructureTypeReflecter = new StructureTypeReflecter();
+            ItemType = typeof(T);
+            TypeConfigType = typeof(TypeConfig<>);
 
-					ConfigureTypeConfigToExcludeReferencedStructures(t);
+            TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
+        }
 
-					return a;
-				}).Invoke();
-			}
-		}
+        internal static void Config(Type type)
+        {
+            var propertiesAllreadyExcludedInStaticCtor = type == ItemType;
+            if (propertiesAllreadyExcludedInStaticCtor)
+                return;
 
-		static ServiceStackTypeConfig()
-		{
-			ConfigActions = new ConcurrentDictionary<Type, Action>();
+            if (ConfigChildSync.ContainsKey(type))
+                return;
 
-			StructureTypeReflecter = new StructureTypeReflecter();
-			ItemType = typeof(T);
-			TypeConfigType = typeof(TypeConfig<>);
+            if (ConfigChildSync.TryAdd(type, new object()))
+                ConfigureTypeConfigToExcludeReferencedStructures(type);
+        }
 
-			TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
-			JsConfig<T>.ExcludeTypeInfo = true;	
-		}
+        private static void ConfigureTypeConfigToExcludeReferencedStructures(Type type)
+        {
+            var propertiesAllreadyExcludedInStaticCtor = type == ItemType;
+            if (propertiesAllreadyExcludedInStaticCtor)
+                return;
 
-		private static void ConfigureTypeConfigToExcludeReferencedStructures(Type type)
-		{
-			if(type == ItemType)
-				return;
+            var cfg = TypeConfigType.MakeGenericType(type);
+            var propertiesProperty = cfg.GetProperty("Properties", BindingFlags.Static | BindingFlags.Public);
+            propertiesProperty.SetValue(
+                null,
+                ExcludePropertiesThatHoldStructures((PropertyInfo[])propertiesProperty.GetValue(null, new object[] { })),
+                new object[] { });
+        }
 
-			var cfg = TypeConfigType.MakeGenericType(type);
-			var propertiesField = cfg.GetField("Properties", BindingFlags.Static | BindingFlags.Public);
-			propertiesField.SetValue(null, ExcludePropertiesThatHoldStructures((PropertyInfo[])propertiesField.GetValue(null)));
-		}
-
-		private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
-		{
-			return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
-		}
-	}
+        private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
+        {
+            return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+        }
+    }
 }

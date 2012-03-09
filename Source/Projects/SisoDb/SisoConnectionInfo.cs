@@ -1,6 +1,7 @@
 using System;
-using System.Configuration;
 using EnsureThat;
+using NCore;
+using SisoDb.Resources;
 
 namespace SisoDb
 {
@@ -9,33 +10,80 @@ namespace SisoDb
     {
         public abstract string DbName { get; }
 
-        public StorageProviders ProviderType { get; private set; }
+        public abstract StorageProviders ProviderType { get; }
 
-        public IConnectionString ConnectionString { get; private set; }
+        public BackgroundIndexing BackgroundIndexing { get; private set; }
 
-        public abstract IConnectionString ServerConnectionString { get; }
+        public IConnectionString ClientConnectionString { get; private set; }
 
-        protected SisoConnectionInfo(string connectionStringOrName) 
-            : this(GetConnectionString(connectionStringOrName))
-        { }
+        public IConnectionString ServerConnectionString { get; private set; }
 
         protected SisoConnectionInfo(IConnectionString connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
-
-            ConnectionString = connectionString;
-
-            ProviderType = (StorageProviders)Enum.Parse(typeof(StorageProviders), ConnectionString.Provider, true);
+            EnsureCorrectProviderIfItExists(connectionString);
+            
+            ClientConnectionString = FormatConnectionString(connectionString);
+            ServerConnectionString = FormatServerConnectionString(connectionString);
+            BackgroundIndexing = ExtractBackgroundIndexing(ClientConnectionString);
+            
+            if (BackgroundIndexing != BackgroundIndexing.Off)
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
         }
 
-        protected static IConnectionString GetConnectionString(string connectionStringOrName)
+        private void EnsureCorrectProviderIfItExists(IConnectionString connectionString)
         {
-            Ensure.That(connectionStringOrName, "connectionStringOrName").IsNotNullOrWhiteSpace();
+            var providerType = ExtractProviderType(connectionString);
+            if(providerType == null)
+                return;
 
-			var config = ConfigurationManager.ConnectionStrings[string.Concat(Environment.MachineName, "_", connectionStringOrName)];
-        	config = config ?? ConfigurationManager.ConnectionStrings[connectionStringOrName];
+            if (providerType != ProviderType)
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(providerType, ProviderType));
+        }
 
-            return config == null ? new ConnectionString(connectionStringOrName) : new ConnectionString(config.ConnectionString);
+        private IConnectionString FormatConnectionString(IConnectionString connectionString)
+        {
+            return OnFormatConnectionString(connectionString);
+        }
+
+        private IConnectionString FormatServerConnectionString(IConnectionString connectionString)
+        {
+            return OnFormatServerConnectionString(connectionString);
+        }
+
+        private StorageProviders? ExtractProviderType(IConnectionString connectionString)
+        {
+            return OnExtractProviderType(connectionString);
+        }
+
+        private BackgroundIndexing ExtractBackgroundIndexing(IConnectionString connectionString)
+        {
+            return OnExtractBackgroundIndexing(connectionString);
+        }
+
+        protected virtual IConnectionString OnFormatConnectionString(IConnectionString connectionString)
+        {
+            return connectionString;
+        }
+
+        protected virtual IConnectionString OnFormatServerConnectionString(IConnectionString connectionString)
+        {
+            return connectionString;
+        }
+
+        protected virtual StorageProviders? OnExtractProviderType(IConnectionString connectionString)
+        {
+            if (string.IsNullOrWhiteSpace(connectionString.Provider))
+                return null;
+
+            return (StorageProviders)Enum.Parse(typeof(StorageProviders), connectionString.Provider, true);
+        }
+
+        protected virtual BackgroundIndexing OnExtractBackgroundIndexing(IConnectionString connectionString)
+        {
+            return (string.IsNullOrWhiteSpace(ClientConnectionString.BackgroundIndexing))
+                ? BackgroundIndexing.Off 
+                : (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.BackgroundIndexing, true);
         }
     }
 }

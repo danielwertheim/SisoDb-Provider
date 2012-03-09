@@ -9,24 +9,34 @@ By using SisoDb you get to store and retrieve complete POCO-graphs without havin
 _there's also no proxies_ etc. **It's just storage of your entities made simple**.
 
 ## NuGet
-SisoDb is available via [NuGet](http://nuget.org/List/Search?packageType=Packages&searchCategory=All+Categories&searchTerm=sisodb).
+SisoDb is available via [NuGet](http://nuget.org/packages?q=sisodb).
 
-### PM> Install-Package SisoDb.Sql2008
+### [PM> Install-Package SisoDb.Sql2008](http://nuget.org/packages/SisoDb.Sql2008)
 
-### PM> Install-Package SisoDb.SqlCe4
+### [PM> Install-Package SisoDb.Sql2012](http://nuget.org/packages/SisoDb.Sql2012)
+
+### [PM> Install-Package SisoDb.SqlCe4](http://nuget.org/packages/SisoDb.SqlCe4)
+
+## NuGet - Cache providers
+
+### [PM> Install-Package SisoDb.AspWebCache](http://nuget.org/packages/SisoDb.AspWebCache)
+
+### [PM> Install-Package SisoDb.MsMemoryCache](http://nuget.org/packages/SisoDb.MsMemoryCache)
 
 ## More information
 Follow [@danielwertheim](http://twitter.com/danielwertheim) and [@sisodb](http://twitter.com/sisodb)
 
-For documentation, news etc, look under the wiki or goto: http://www.sisodb.com
+For documentation, news etc, look under the wiki or goto: http://sisodb.com
 
 ## License
-The MIT License (MIT)
+License: [The MIT License (MIT)](http://www.opensource.org/licenses/mit-license.php)
 
-Copyright (c) 2011 Daniel Wertheim
+## SemVer for versioning
+SisoDb uses [SemVer](http://semver.org) for versioning.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+## Contribute
+Line feeds setting should be `core.autocrlf=false`.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+Unit-tests are written using `NUnit` and integration tests are written using [Machine Specifications](https://github.com/machine/machine.specifications). To get the integration tests to work you need to change the connection strings in respective projects `App.config`
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Pull request should be against the **Develop branch**

@@ -1,6 +1,5 @@
 using System;
 using NCore.Reflections;
-using PineCone;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema

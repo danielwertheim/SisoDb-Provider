@@ -1,6 +1,8 @@
 ﻿using System;
 using Moq;
+using NCore;
 using NUnit.Framework;
+using SisoDb.Resources;
 
 namespace SisoDb.UnitTests.Connections
 {
@@ -8,21 +10,47 @@ namespace SisoDb.UnitTests.Connections
     public class SisoConnectionInfoTests : UnitTestBase
     {
         [Test]
-        public void ProviderType_WhenProviderNameIsSql2008_ValueIsReflectedInProperty()
+        public void Provider_WhenProviderNameIsSql2008_ValueIsReflectedInProperty()
         {
             var connectionStringFake = new Mock<IConnectionString>();
-            connectionStringFake.Setup(f => f.Provider).Returns("Sql2008");
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
             var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
 
             Assert.AreEqual(StorageProviders.Sql2008, connectionInfo.ProviderType);
         }
 
         [Test]
-        public void Constructor_WhenNoConnectionStringOrNameIsPassed_ThrowsArgumentException()
+        public void BackgroundIndexing_WhenValueIsOn_ThrowsSisoDbException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => new SisoConnectionInfoImplementation(null as string));
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            connectionStringFake.Setup(f => f.BackgroundIndexing).Returns(BackgroundIndexing.On.ToString());
 
-            Assert.AreEqual("connectionStringOrName", ex.ParamName);
+            var ex = Assert.Throws<SisoDbException>(() => new SisoConnectionInfoImplementation(connectionStringFake.Object));
+
+            Assert.AreEqual(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(StorageProviders.Sql2008), ex.Message);
+        }
+
+        [Test]
+        public void BackgroundIndexing_WhenValueIsOff_ValueBecomesOff()
+        {
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            connectionStringFake.Setup(f => f.BackgroundIndexing).Returns(BackgroundIndexing.Off.ToString());
+            var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
+
+            Assert.AreEqual(BackgroundIndexing.Off, connectionInfo.BackgroundIndexing);
+        }
+
+        [Test]
+        public void BackgroundIndexing_WhenNoValueIsSpecified_ValueBecomesOff()
+        {
+            var connectionStringFake = new Mock<IConnectionString>();
+            connectionStringFake.Setup(f => f.Provider).Returns(StorageProviders.Sql2008.ToString());
+            connectionStringFake.Setup(f => f.BackgroundIndexing).Returns(null as string);
+            var connectionInfo = new SisoConnectionInfoImplementation(connectionStringFake.Object);
+
+            Assert.AreEqual(BackgroundIndexing.Off, connectionInfo.BackgroundIndexing);
         }
 
         [Test]
@@ -38,17 +66,14 @@ namespace SisoDb.UnitTests.Connections
             public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(connectionString)
             {}
 
-            public SisoConnectionInfoImplementation(string connectionStringOrName) : base(connectionStringOrName)
-            {}
+            public override StorageProviders ProviderType
+            {
+                get { return StorageProviders.Sql2008; }
+            }
 
             public override string DbName
             {
-                get { throw new NotImplementedException(); }
-            }
-
-            public override IConnectionString ServerConnectionString
-            {
-                get { throw new NotImplementedException(); }
+                get { return "Foo"; }
             }
         }
     }

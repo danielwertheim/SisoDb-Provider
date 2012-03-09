@@ -9,7 +9,6 @@ namespace SisoDb
 	public interface ISisoDbDatabase : ISisoDatabase
 	{
 		IDbProviderFactory ProviderFactory { get; }
-
-		IDbSchemaManager SchemaManager { get; }
+        IDbSchemaManager SchemaManager { get; }
 	}
 }

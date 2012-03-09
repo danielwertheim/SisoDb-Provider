@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NCore;
+using System.Threading.Tasks;
 using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
@@ -10,205 +10,234 @@ using SisoDb.Structures;
 
 namespace SisoDb.Dac.BulkInserts
 {
-	public class DbStructureInserter : IStructureInserter
-	{
-		private static readonly Type TextType;
+    public class DbStructureInserter : IStructureInserter
+    {
+        protected class IndexInsertAction
+        {
+            public IStructureIndex[] Data;
+            public Action<IStructureIndex[], IDbClient> Action;
+            public bool HasData
+            {
+                get { return Data != null && Data.Length > 0; }
+            }
+        }
 
-		private const int MaxStructureBatchSize = 1000;
-		private const int MaxIndexesBatchSize = 6000;
-		private const int MaxUniquesBatchSize = 6000;
+        protected static readonly Type TextType;
+        protected const int MaxNumOfStructuresBeforeParallelEscalation = 10;
+        protected readonly IDbClient MainDbClient;
 
-		private readonly IDbClient _dbClient;
+        static DbStructureInserter()
+        {
+            TextType = typeof(Text);
+        }
 
-		static DbStructureInserter()
-		{
-			TextType = typeof(Text);
-		}
+        public DbStructureInserter(IDbClient mainDbClient)
+        {
+            MainDbClient = mainDbClient;
+        }
 
-		public DbStructureInserter(IDbClient dbClient)
-		{
-			_dbClient = dbClient;
-		}
+        public virtual void Insert(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            var groupedIndexInsertActions = new IndexInsertAction[0];
 
-		public virtual void Insert(IStructureSchema structureSchema, IStructure[] structures)
-		{
-			if (structures.Length == 1)
-				SingleInsertStructure(structureSchema, structures[0]);
-			else
-				BulkInsertStructures(structureSchema, structures);
+            Task task = null;
+            try
+            {
+                task = Task.Factory.StartNew(() => groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures));
 
-			InsertIndexes(structureSchema, structures);
+                InsertStructures(structureSchema, structures);
+                InsertUniques(structureSchema, structures);
 
-			BulkInsertUniques(structureSchema, structures);
-		}
+                Task.WaitAll(task);
+            }
+            finally
+            {
+                if (task != null && task.Status == TaskStatus.RanToCompletion)
+                    task.Dispose();
+            }
 
-		protected virtual void SingleInsertStructure(IStructureSchema structureSchema, IStructure structure)
-		{
-			var sql = "insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});".Inject(
-				structureSchema.GetStructureTableName(),
-				StructureStorageSchema.Fields.Id.Name,
-				StructureStorageSchema.Fields.Json.Name);
+            if(!groupedIndexInsertActions.Any())
+                return;
 
-			_dbClient.ExecuteNonQuery(sql,
-				new DacParameter(StructureStorageSchema.Fields.Id.Name, structure.Id.Value),
-				new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data));
-		}
+            InsertIndexes(groupedIndexInsertActions);
+        }
 
-		protected virtual void SingleInsertIntoValueTypeIndexesOfX(string valueTypeIndexesTableName, IStructureIndex structureIndex)
-		{
-			var sql = "insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4})".Inject(
-				valueTypeIndexesTableName,
-				IndexStorageSchema.Fields.StructureId.Name,
-				IndexStorageSchema.Fields.MemberPath.Name,
-				IndexStorageSchema.Fields.Value.Name,
-				IndexStorageSchema.Fields.StringValue.Name);
+        protected virtual void InsertStructures(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            if (!structures.Any())
+                return;
 
-			_dbClient.ExecuteNonQuery(sql,
-				new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
-				new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
-				new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value),
-				new DacParameter(IndexStorageSchema.Fields.StringValue.Name, SisoEnvironment.StringConverter.AsString(structureIndex.Value)));
-		}
+            if (structures.Length == 1)
+                MainDbClient.SingleInsertStructure(structures[0], structureSchema);
+            else
+                BulkInsertStructures(structureSchema, structures);
+        }
 
-		protected virtual void SingleInsertIntoStringishIndexesOfX(string stringishIndexesTableName, IStructureIndex structureIndex)
-		{
-			var sql = "insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3})".Inject(
-				stringishIndexesTableName,
-				IndexStorageSchema.Fields.StructureId.Name,
-				IndexStorageSchema.Fields.MemberPath.Name,
-				IndexStorageSchema.Fields.Value.Name);
+        protected virtual void BulkInsertStructures(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            if (!structures.Any())
+                return;
 
-			_dbClient.ExecuteNonQuery(sql,
-				new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
-				new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
-				new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value.ToString()));
-		}
+            var structureStorageSchema = new StructureStorageSchema(structureSchema, structureSchema.GetStructureTableName());
 
-		protected virtual void BulkInsertStructures(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
-		{
-			var structureStorageSchema = new StructureStorageSchema(structureSchema, structureSchema.GetStructureTableName());
+            using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
+            {
+                using (var bulkInserter = MainDbClient.GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = structuresReader.StorageSchema.Name;
+                    bulkInserter.BatchSize = structures.Length;
 
-			using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
-			{
-				using (var bulkInserter = _dbClient.GetBulkCopy())
-				{
-					bulkInserter.BatchSize = structuresReader.RecordsAffected > MaxStructureBatchSize ? MaxStructureBatchSize : structuresReader.RecordsAffected;
-					bulkInserter.DestinationTableName = structuresReader.StorageSchema.Name;
+                    foreach (var field in structuresReader.StorageSchema.GetFieldsOrderedByIndex())
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
 
-					foreach (var field in structuresReader.StorageSchema.GetFieldsOrderedByIndex())
-						bulkInserter.AddColumnMapping(field.Name, field.Name);
+                    bulkInserter.Write(structuresReader);
+                }
+            }
+        }
 
-					bulkInserter.Write(structuresReader);
-				}
-			}
-		}
+        protected virtual void InsertIndexes(IndexInsertAction[] groupedIndexInsertActions)
+        {
+            foreach (var groupedIndexInsertAction in groupedIndexInsertActions)
+                groupedIndexInsertAction.Action.Invoke(groupedIndexInsertAction.Data, MainDbClient);
+        }
 
-		protected virtual void InsertIndexes(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
-		{
-			var indexesTableNames = structureSchema.GetIndexesTableNames();
-			var structureIndexes = new Dictionary<DataTypeCode, IStructureIndex[]>(8)
-			{
-				{DataTypeCode.IntegerNumber, new IStructureIndex[] {}},
-				{DataTypeCode.FractalNumber, new IStructureIndex[] {}},
-        	    {DataTypeCode.Bool, new IStructureIndex[] {}},
-        	    {DataTypeCode.DateTime, new IStructureIndex[] {}},
-        	    {DataTypeCode.Guid, new IStructureIndex[] {}},
-        	    {DataTypeCode.String, new IStructureIndex[] {}},
-        	    {DataTypeCode.Enum, new IStructureIndex[] {}},
-        	    {DataTypeCode.Unknown, new IStructureIndex[] {}}
-			};
+        protected virtual void BulkInsertIndexes(IndexesReader indexesReader)
+        {
+            using (indexesReader)
+            {
+                if (indexesReader.RecordsAffected < 1)
+                    return;
 
-			foreach (var group in structures.SelectMany(s => s.Indexes).GroupBy(i => i.DataTypeCode))
-				structureIndexes[group.Key] = group.ToArray();
+                using (var bulkInserter = MainDbClient.GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
+                    bulkInserter.BatchSize = indexesReader.RecordsAffected;
 
-			var integerIndexes = structureIndexes[DataTypeCode.IntegerNumber];
-			if (integerIndexes.Length > 1)
-				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.IntegersTableName), integerIndexes));
-			else if (integerIndexes.Length == 1)
-				SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.IntegersTableName, integerIndexes[0]);
+                    var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex();
+                    foreach (var field in fields)
+                    {
+                        if (field.Name == IndexStorageSchema.Fields.StringValue.Name && !(indexesReader is ValueTypeIndexesReader))
+                            continue;
 
-			var fractalIndexes = structureIndexes[DataTypeCode.FractalNumber];
-			if (fractalIndexes.Length > 1)
-				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.FractalsTableName), fractalIndexes));
-			else if (fractalIndexes.Length == 1)
-				SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.FractalsTableName, fractalIndexes[0]);
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+                    }
+                    bulkInserter.Write(indexesReader);
+                }
+            }
+        }
 
-			var boolIndexes = structureIndexes[DataTypeCode.Bool];
-			if (boolIndexes.Length > 1)
-				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.BooleansTableName), boolIndexes));
-			else if (boolIndexes.Length == 1)
-				SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.BooleansTableName, boolIndexes[0]);
+        protected virtual void InsertUniques(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            if (!structures.Any())
+                return;
 
-			var dateIndexes = structureIndexes[DataTypeCode.DateTime];
-			if (dateIndexes.Length > 1)
-				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.DatesTableName), dateIndexes));
-			else if (dateIndexes.Length == 1)
-				SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.DatesTableName, dateIndexes[0]);
+            var uniques = structures.SelectMany(s => s.Uniques).ToArray();
+            if (!uniques.Any())
+                return;
 
-			var guidIndexes = structureIndexes[DataTypeCode.Guid];
-			if (guidIndexes.Length > 1)
-				BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.GuidsTableName), guidIndexes));
-			else if (guidIndexes.Length == 1)
-				SingleInsertIntoValueTypeIndexesOfX(indexesTableNames.GuidsTableName, guidIndexes[0]);
+            if (uniques.Length == 1)
+                MainDbClient.SingleInsertOfUniqueIndex(uniques[0], structureSchema);
+            else
+                BulkInsertUniques(structureSchema, uniques);
+        }
 
-			var stringIndexes = structureIndexes[DataTypeCode.String].MergeWith(structureIndexes[DataTypeCode.Enum]).ToArray();
-			if (stringIndexes.Length > 1)
-				BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), stringIndexes));
-			else if (stringIndexes.Length == 1)
-				SingleInsertIntoStringishIndexesOfX(indexesTableNames.StringsTableName, stringIndexes[0]);
+        protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructureIndex[] uniques)
+        {
+            if (!uniques.Any())
+                return;
 
-			var textIndexes = structureIndexes[DataTypeCode.Unknown].Where(i => i.DataType == TextType).ToArray();
-			if (textIndexes.Length > 1)
-				BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), textIndexes));
-			else if (textIndexes.Length == 1)
-				SingleInsertIntoStringishIndexesOfX(indexesTableNames.TextsTableName, textIndexes[0]);
-		}
+            var uniquesStorageSchema = new UniqueStorageSchema(structureSchema, structureSchema.GetUniquesTableName());
 
-		protected virtual void BulkInsertIndexes(IndexesReader indexesReader)
-		{
-			using (indexesReader)
-			{
-				using (var bulkInserter = _dbClient.GetBulkCopy())
-				{
-					bulkInserter.BatchSize = indexesReader.RecordsAffected > MaxIndexesBatchSize
-						? MaxIndexesBatchSize
-						: indexesReader.RecordsAffected;
-					bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
+            using (var uniquesReader = new UniquesReader(uniquesStorageSchema, uniques))
+            {
+                using (var bulkInserter = MainDbClient.GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = uniquesReader.StorageSchema.Name;
+                    bulkInserter.BatchSize = uniques.Length;
 
-					var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex();
-					foreach (var field in fields)
-					{
-						if (field.Name == IndexStorageSchema.Fields.StringValue.Name && !(indexesReader is ValueTypeIndexesReader))
-							continue;
+                    foreach (var field in uniquesReader.StorageSchema.GetFieldsOrderedByIndex())
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
 
-						bulkInserter.AddColumnMapping(field.Name, field.Name);
-					}
-					bulkInserter.Write(indexesReader);
-				}
-			}
-		}
+                    bulkInserter.Write(uniquesReader);
+                }
+            }
+        }
 
-		protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IEnumerable<IStructure> structures)
-		{
-			var uniques = structures.SelectMany(s => s.Uniques).ToArray();
-			if (uniques.Length <= 0)
-				return;
+        protected virtual IndexInsertAction[] CreateGroupedIndexInsertActions(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
+            var insertActions = new Dictionary<DataTypeCode, IndexInsertAction>(indexesTableNames.AllTableNames.Length);
+            foreach (var group in structures.SelectMany(s => s.Indexes).GroupBy(i => i.DataTypeCode))
+            {
+                var insertAction = CreateIndexInsertActionGroup(structureSchema, indexesTableNames, group.Key, group.ToArray());
+                if (insertAction.HasData)
+                    insertActions.Add(group.Key, insertAction);
+            }
 
-			var uniquesStorageSchema = new UniqueStorageSchema(structureSchema, structureSchema.GetUniquesTableName());
+            var mergeStringsAndEnums = insertActions.ContainsKey(DataTypeCode.String) && insertActions.ContainsKey(DataTypeCode.Enum);
+            if (mergeStringsAndEnums)
+            {
+                var strings = insertActions[DataTypeCode.String];
+                strings.Data = insertActions[DataTypeCode.Enum].Data.MergeWith(strings.Data).ToArray();
+                insertActions.Remove(DataTypeCode.Enum);
+            }
 
-			using (var uniquesReader = new UniquesReader(uniquesStorageSchema, uniques))
-			{
-				using (var bulkInserter = _dbClient.GetBulkCopy())
-				{
-					bulkInserter.BatchSize = uniquesReader.RecordsAffected > MaxUniquesBatchSize ? MaxUniquesBatchSize : uniquesReader.RecordsAffected;
-					bulkInserter.DestinationTableName = uniquesReader.StorageSchema.Name;
+            return insertActions.Values.ToArray();
+        }
 
-					foreach (var field in uniquesReader.StorageSchema.GetFieldsOrderedByIndex())
-						bulkInserter.AddColumnMapping(field.Name, field.Name);
+        protected virtual IndexInsertAction CreateIndexInsertActionGroup(IStructureSchema structureSchema, IndexesTableNames indexesTableNames, DataTypeCode dataTypeCode, IStructureIndex[] indexes)
+        {
+            var container = new IndexInsertAction { Data = indexes };
 
-					bulkInserter.Write(uniquesReader);
-				}
-			}
-		}
-	}
+            switch (dataTypeCode)
+            {
+                case DataTypeCode.IntegerNumber:
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.IntegersTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.IntegersTableName);
+                    break;
+                case DataTypeCode.FractalNumber:
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.FractalsTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.FractalsTableName);
+                    break;
+                case DataTypeCode.Bool:
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.BooleansTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.BooleansTableName);
+                    break;
+                case DataTypeCode.DateTime:
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.DatesTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.DatesTableName);
+                    break;
+                case DataTypeCode.Guid:
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.GuidsTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.GuidsTableName);
+                    break;
+                case DataTypeCode.String:
+                case DataTypeCode.Enum:
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.StringsTableName);
+                    break;
+                case DataTypeCode.Unknown:
+                    container.Data = container.Data.Where(i => i.DataType == TextType).ToArray();
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.TextsTableName);
+                    break;
+            }
+
+            return container;
+        }
+    }
 }

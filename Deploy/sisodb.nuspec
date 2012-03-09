@@ -3,29 +3,29 @@
 	<metadata>
 		<id>SisoDb</id>    
 		<title>SisoDb - Simple Structure Oriented Db (core)</title>
-		<version>9.0.0</version>
-		<authors>Daniel Wertheim</authors>
+		<version>$version$</version>
+		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
 		<summary>SisoDb is a document-oriented provider for SQL-Server.</summary>
 		<description>
-			SisoDb is a schemaless document-oriented provider for SQL-Server. It lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
+			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
 			This package is a Core package. Use specific package instead. E.g SisoDb.Sql2008, SisoDb.SqlCe4.
 		</description>
 		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb,document-database,json,sql,sql-server,sqlce,sqlce4,nosql</tags>
+		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
 		<dependencies>
-			<dependency id="Ensure.That" version="0.5.0" />
-			<dependency id="PineCone" version="0.56.0" />
-			<dependency id="ServiceStack.Text" version="3.2.2" />
+			<dependency id="Ensure.That" version="0.7.0" />
+			<dependency id="NCore" version="[0.28.0]" />
+			<dependency id="PineCone" version="[0.66.0]" />
+			<dependency id="ServiceStack.Text" version="[3.6.0]" />
 		</dependencies>
 	</metadata>
 	<files>
 	  <file src="..\Source\Projects\SisoDb\bin\Release\SisoDb.dll" target="lib\net40\" />
 	  <file src="..\Source\Projects\SisoDb\bin\Release\SisoDb.xml" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb\bin\Release\NCore*.dll" target="lib\net40\" />
 	</files>
 </package>
