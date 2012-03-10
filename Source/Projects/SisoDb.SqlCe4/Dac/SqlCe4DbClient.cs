@@ -9,7 +9,6 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Querying.Sql;
 
 namespace SisoDb.SqlCe4.Dac
 {
@@ -114,15 +113,6 @@ namespace SisoDb.SqlCe4.Dac
 			}
 		}
 
-        public override void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("DeleteById").Inject(structureSchema.GetStructureTableName());
-
-            ExecuteNonQuery(sql, new DacParameter("id", structureId.Value));
-        }
-
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
@@ -142,26 +132,6 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        public override void DeleteByQuery(DbQuery query, IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
-                structureSchema.GetStructureTableName(),
-                query.Sql);
-
-            ExecuteNonQuery(sql, query.Parameters.ToArray());
-        }
-
-        public override void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
-
-            ExecuteNonQuery(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value));
-        }
-
         public override bool TableExists(string name)
         {
             Ensure.That(name, "name").IsNotNullOrWhiteSpace();
@@ -170,24 +140,6 @@ namespace SisoDb.SqlCe4.Dac
             var value = ExecuteScalar<int>(sql, new DacParameter("tableName", name));
 
             return value > 0;
-        }
-
-        public override int RowCount(IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("RowCount").Inject(structureSchema.GetStructureTableName());
-
-            return ExecuteScalar<int>(sql);
-        }
-
-        public override int RowCountByQuery(IStructureSchema structureSchema, DbQuery query)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(structureSchema.GetStructureTableName(), query.Sql);
-
-            return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
 
         public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)

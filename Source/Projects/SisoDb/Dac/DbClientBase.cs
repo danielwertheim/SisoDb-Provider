@@ -84,19 +84,91 @@ namespace SisoDb.Dac
             }
         }
 
-	    public abstract void Drop(IStructureSchema structureSchema);
+        public virtual void Drop(IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-		public abstract void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
 
-		public abstract void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
+            var sql = SqlStatements.GetSql("DropStructureTables").Inject(
+                indexesTableNames.IntegersTableName,
+                indexesTableNames.FractalsTableName,
+                indexesTableNames.BooleansTableName,
+                indexesTableNames.DatesTableName,
+                indexesTableNames.GuidsTableName,
+                indexesTableNames.StringsTableName,
+                indexesTableNames.TextsTableName,
+                structureSchema.GetUniquesTableName(),
+                structureSchema.GetStructureTableName());
 
-		public abstract void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
+            using (var cmd = CreateCommand(sql, new DacParameter("entityName", structureSchema.Name)))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
 
-		public abstract void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
+        public virtual void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-		public abstract bool TableExists(string name);
+            var sql = SqlStatements.GetSql("DeleteById").Inject(structureSchema.GetStructureTableName());
+            
+            ExecuteNonQuery(sql, new DacParameter("id", structureId.Value));
+        }
 
-		public virtual IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
+	    public abstract void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
+
+        public virtual void DeleteByQuery(DbQuery query, IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("DeleteByQuery").Inject(
+                structureSchema.GetStructureTableName(),
+                query.Sql);
+
+            ExecuteNonQuery(sql, query.Parameters.ToArray());
+        }
+
+        public virtual void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
+
+            ExecuteNonQuery(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value));
+        }
+
+	    public virtual void DeleteIndexesAndUniquesById(IStructureId structureId, IStructureSchema structureSchema)
+	    {
+	        Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+	        var indexesTableNames = structureSchema.GetIndexesTableNames();
+	        var uniquesTableName = structureSchema.GetUniquesTableName();
+
+            var sql = SqlStatements.GetSql("DeleteIndexesAndUniquesById").Inject(
+                uniquesTableName,
+                indexesTableNames.BooleansTableName,
+                indexesTableNames.DatesTableName,
+                indexesTableNames.FractalsTableName,
+                indexesTableNames.GuidsTableName,
+                indexesTableNames.IntegersTableName,
+                indexesTableNames.StringsTableName,
+                indexesTableNames.TextsTableName);
+
+            ExecuteNonQuery(sql, new DacParameter("id", structureId.Value));
+	    }
+
+        public virtual bool TableExists(string name)
+        {
+            Ensure.That(name, "name").IsNotNullOrWhiteSpace();
+
+            var sql = SqlStatements.GetSql("TableExists");
+            var value = ExecuteScalar<string>(sql, new DacParameter("tableName", name));
+
+            return !string.IsNullOrWhiteSpace(value);
+        }
+
+        public virtual IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
 		{
 			return new IndexesTableStatuses(names)
 			{
@@ -110,9 +182,23 @@ namespace SisoDb.Dac
 			};
 		}
 
-		public abstract int RowCount(IStructureSchema structureSchema);
+        public virtual int RowCount(IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-		public abstract int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
+            var sql = SqlStatements.GetSql("RowCount").Inject(structureSchema.GetStructureTableName());
+
+            return ExecuteScalar<int>(sql);
+        }
+
+        public virtual int RowCountByQuery(IStructureSchema structureSchema, DbQuery query)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(structureSchema.GetStructureTableName(), query.Sql);
+
+            return ExecuteScalar<int>(sql, query.Parameters.ToArray());
+        }
 
 		public abstract long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
 
@@ -247,6 +333,18 @@ namespace SisoDb.Dac
             parameters[3] = new DacParameter(UniqueStorageSchema.Fields.UqValue.Name, SisoEnvironment.HashService.GenerateHash(SisoEnvironment.StringConverter.AsString(uniqueStructureIndex.Value)));
 
             ExecuteNonQuery(sql, parameters);
+        }
+
+        public virtual void SingleUpdateOfStructure(IStructure structure, IStructureSchema structureSchema)
+        {
+            var sql = SqlStatements.GetSql("SingleUpdateOfStructure").Inject(
+                structureSchema.GetStructureTableName(),
+                StructureStorageSchema.Fields.Json.Name,
+                StructureStorageSchema.Fields.Id.Name);
+
+            ExecuteNonQuery(sql,
+                new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data),
+                new DacParameter(StructureStorageSchema.Fields.Id.Name, structure.Id.Value));
         }
 
 	    private IEnumerable<string> YieldJson(IDbCommand cmd)
