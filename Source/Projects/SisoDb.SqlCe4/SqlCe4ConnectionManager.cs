@@ -6,7 +6,7 @@ using System.Data.SqlServerCe;
 
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4ConnectionManager : IConnectionManager
+    public class SqlCe4ConnectionManager : ConnectionManagerBase, IConnectionManager
     {
         private readonly ConcurrentDictionary<string, IDbConnection> _warmupConnections;
 
@@ -16,27 +16,21 @@ namespace SisoDb.SqlCe4
             AppDomain.CurrentDomain.DomainUnload += (sender, args) => ReleaseAllDbConnections();
         }
 
-        public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
-        {
-            EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
-            
-            var cn = new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString);
-            cn.Open();
-
-            return cn;
-        }
-
-        public virtual IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        public override IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
             EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
 
-            var cn = new SqlCeConnection(connectionInfo.ClientConnectionString.PlainString);
-            cn.Open();
-
-            return cn;
+            return base.OpenServerConnection(connectionInfo);
         }
 
-        public virtual void ReleaseAllDbConnections()
+        public override IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        {
+            EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
+
+            return base.OpenClientDbConnection(connectionInfo);
+        }
+
+        public override void ReleaseAllDbConnections()
         {
             if(_warmupConnections.Count < 1)
                 return;
@@ -76,24 +70,6 @@ namespace SisoDb.SqlCe4
                 throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
         }
 
-        public virtual void ReleaseServerConnection(IDbConnection dbConnection)
-        {
-            if (dbConnection == null)
-                return;
-
-            dbConnection.Close();
-            dbConnection.Dispose();
-        }
-
-        public virtual void ReleaseClientDbConnection(IDbConnection dbConnection)
-        {
-            if (dbConnection == null)
-                return;
-
-            dbConnection.Close();
-            dbConnection.Dispose();
-        }
-
         private void EnsureWarmedUp(SqlCe4ConnectionInfo connectionInfo)
         {
             if(_warmupConnections.ContainsKey(connectionInfo.FilePath))
@@ -105,6 +81,11 @@ namespace SisoDb.SqlCe4
                 cn.Close();
                 cn.Dispose();
             }
+        }
+
+        protected override IDbConnection GetConnection(string connectionString)
+        {
+            return new SqlCeConnection(connectionString);
         }
     }
 }
