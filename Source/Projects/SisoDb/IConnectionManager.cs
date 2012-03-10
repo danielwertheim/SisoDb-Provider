@@ -10,5 +10,6 @@ namespace SisoDb
 	    void ReleaseAllDbConnections();
 	    void ReleaseServerConnection(IDbConnection dbConnection);
         void ReleaseClientDbConnection(IDbConnection dbConnection);
+
 	}
 }
