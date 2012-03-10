@@ -564,4 +564,19 @@ delete from [dbo].[{0}] where [{1}] in({2});</value>
     <value>set nocount on;
 select distinct [{0}] from [dbo].[{1}];</value>
   </data>
+  <data name="DeleteIndexesAndUniquesById" xml:space="preserve">
+    <value>set nocount on;
+delete from [dbo].[{0}] where StructureId = @id;
+delete from [dbo].[{1}] where StructureId = @id;
+delete from [dbo].[{2}] where StructureId = @id;
+delete from [dbo].[{3}] where StructureId = @id;
+delete from [dbo].[{4}] where StructureId = @id;
+delete from [dbo].[{5}] where StructureId = @id;
+delete from [dbo].[{6}] where StructureId = @id;
+delete from [dbo].[{7}] where StructureId = @id;</value>
+  </data>
+  <data name="SingleUpdateOfStructure" xml:space="preserve">
+    <value>set nocount on;
+update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
+  </data>
 </root>

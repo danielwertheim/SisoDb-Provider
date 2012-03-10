@@ -506,4 +506,17 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
   <data name="UniquesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
     <value>select distinct [{0}] from [{1}];</value>
   </data>
+  <data name="DeleteIndexesAndUniquesById" xml:space="preserve">
+    <value>delete from [{0}] where StructureId = @id;
+delete from [{1}] where StructureId = @id;
+delete from [{2}] where StructureId = @id;
+delete from [{3}] where StructureId = @id;
+delete from [{4}] where StructureId = @id;
+delete from [{5}] where StructureId = @id;
+delete from [{6}] where StructureId = @id;
+delete from [{7}] where StructureId = @id;</value>
+  </data>
+  <data name="SingleUpdateOfStructure" xml:space="preserve">
+    <value>update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
+  </data>
 </root>
