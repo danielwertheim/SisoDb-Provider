@@ -506,16 +506,20 @@ select count(*) from [dbo].[{0}];</value>
 select count(*) from [dbo].[{0}] s where s.StructureId in({1});</value>
   </data>
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
   </data>
   <data name="SingleInsertOfUniqueIndex" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
   </data>
   <data name="SingleInsertOfValueTypeIndex" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
   </data>
   <data name="SingleInsertStructure" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});</value>
   </data>
   <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
     <value>set nocount on;
