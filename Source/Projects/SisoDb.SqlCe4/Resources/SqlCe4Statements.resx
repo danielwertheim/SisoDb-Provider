@@ -332,7 +332,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
-[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key,
+[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered,
 [Json] [ntext] not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
@@ -344,7 +344,7 @@ insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [{0}] (
-[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key,
+[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered,
 [Json] [ntext] not null);</value>
   </data>
   <data name="CreateTextsIndexesGuid" xml:space="preserve">
@@ -505,5 +505,18 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
   </data>
   <data name="UniquesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
     <value>select distinct [{0}] from [{1}];</value>
+  </data>
+  <data name="DeleteIndexesAndUniquesById" xml:space="preserve">
+    <value>delete from [{0}] where StructureId = @id;
+delete from [{1}] where StructureId = @id;
+delete from [{2}] where StructureId = @id;
+delete from [{3}] where StructureId = @id;
+delete from [{4}] where StructureId = @id;
+delete from [{5}] where StructureId = @id;
+delete from [{6}] where StructureId = @id;
+delete from [{7}] where StructureId = @id;</value>
+  </data>
+  <data name="SingleUpdateOfStructure" xml:space="preserve">
+    <value>update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
   </data>
 </root>

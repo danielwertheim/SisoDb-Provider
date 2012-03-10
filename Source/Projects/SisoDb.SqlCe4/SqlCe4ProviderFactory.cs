@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
@@ -12,7 +13,7 @@ namespace SisoDb.SqlCe4
 {
 	public class SqlCe4ProviderFactory : IDbProviderFactory
     {
-		private readonly IConnectionManager _connectionManager;
+		private IConnectionManager _connectionManager;
         private readonly ISqlStatements _sqlStatements;
 
         public SqlCe4ProviderFactory()
@@ -26,10 +27,15 @@ namespace SisoDb.SqlCe4
             get { return StorageProviders.SqlCe4; }
         }
 
-	    public IConnectionManager ConnectionManager
-	    {
+        public IConnectionManager ConnectionManager
+        {
             get { return _connectionManager; }
-	    }
+            set
+            {
+                Ensure.That(value, "ConnectionManager").IsNotNull();
+                _connectionManager = value;
+            }
+        }
 
 	    public ISqlStatements GetSqlStatements()
 		{

@@ -335,19 +335,19 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key ([StructureId]),
+[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[StructureId] [bigint] not null constraint [PK_{0}] primary key ([StructureId]),
+[StructureId] [bigint] not null constraint [PK_{0}] primary key clustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
 insert into [dbo].[SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key ([StructureId]),
+[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateTextsIndexesGuid" xml:space="preserve">
@@ -506,16 +506,20 @@ select count(*) from [dbo].[{0}];</value>
 select count(*) from [dbo].[{0}] s where s.StructureId in({1});</value>
   </data>
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
   </data>
   <data name="SingleInsertOfUniqueIndex" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
   </data>
   <data name="SingleInsertOfValueTypeIndex" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
   </data>
   <data name="SingleInsertStructure" xml:space="preserve">
-    <value>insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});</value>
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});</value>
   </data>
   <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
     <value>set nocount on;
@@ -563,5 +567,20 @@ delete from [dbo].[{0}] where [{1}] in({2});</value>
   <data name="UniquesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
     <value>set nocount on;
 select distinct [{0}] from [dbo].[{1}];</value>
+  </data>
+  <data name="DeleteIndexesAndUniquesById" xml:space="preserve">
+    <value>set nocount on;
+delete from [dbo].[{0}] where StructureId = @id;
+delete from [dbo].[{1}] where StructureId = @id;
+delete from [dbo].[{2}] where StructureId = @id;
+delete from [dbo].[{3}] where StructureId = @id;
+delete from [dbo].[{4}] where StructureId = @id;
+delete from [dbo].[{5}] where StructureId = @id;
+delete from [dbo].[{6}] where StructureId = @id;
+delete from [dbo].[{7}] where StructureId = @id;</value>
+  </data>
+  <data name="SingleUpdateOfStructure" xml:space="preserve">
+    <value>set nocount on;
+update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
   </data>
 </root>

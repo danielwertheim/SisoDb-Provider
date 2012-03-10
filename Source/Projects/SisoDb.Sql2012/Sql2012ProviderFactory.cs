@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
@@ -12,7 +13,7 @@ namespace SisoDb.Sql2012
 {
 	public class Sql2012ProviderFactory : IDbProviderFactory
     {
-		private readonly IConnectionManager _connectionManager;
+		private IConnectionManager _connectionManager;
         private readonly ISqlStatements _sqlStatements;
 		
         public Sql2012ProviderFactory()
@@ -29,6 +30,11 @@ namespace SisoDb.Sql2012
         public IConnectionManager ConnectionManager
         {
             get { return _connectionManager; }
+            set
+            {
+                Ensure.That(value, "ConnectionManager").IsNotNull();
+                _connectionManager = value;
+            }
         }
 
 		public ISqlStatements GetSqlStatements()

@@ -27,7 +27,8 @@ namespace SisoDb.Dac
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
         void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
-        
+        void DeleteIndexesAndUniquesById(IStructureId structureId, IStructureSchema structureSchema);
+
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
 
@@ -46,5 +47,6 @@ namespace SisoDb.Dac
         void SingleInsertOfValueTypeIndex(IStructureIndex structureIndex, string valueTypeIndexesTableName);
         void SingleInsertOfStringTypeIndex(IStructureIndex structureIndex, string stringishIndexesTableName);
         void SingleInsertOfUniqueIndex(IStructureIndex uniqueStructureIndex, IStructureSchema structureSchema);
+        void SingleUpdateOfStructure(IStructure structure, IStructureSchema structureSchema);
     }
 }

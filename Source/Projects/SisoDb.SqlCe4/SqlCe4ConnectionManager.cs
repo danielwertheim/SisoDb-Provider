@@ -16,7 +16,7 @@ namespace SisoDb.SqlCe4
             AppDomain.CurrentDomain.DomainUnload += (sender, args) => ReleaseAllDbConnections();
         }
 
-        public IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
+        public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
             EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
             
@@ -26,7 +26,7 @@ namespace SisoDb.SqlCe4
             return cn;
         }
 
-        public IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        public virtual IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
         {
             EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
 
@@ -36,7 +36,7 @@ namespace SisoDb.SqlCe4
             return cn;
         }
 
-        public void ReleaseAllDbConnections()
+        public virtual void ReleaseAllDbConnections()
         {
             if(_warmupConnections.Count < 1)
                 return;
@@ -76,7 +76,7 @@ namespace SisoDb.SqlCe4
                 throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
         }
 
-        public void ReleaseServerConnection(IDbConnection dbConnection)
+        public virtual void ReleaseServerConnection(IDbConnection dbConnection)
         {
             if (dbConnection == null)
                 return;
@@ -85,7 +85,7 @@ namespace SisoDb.SqlCe4
             dbConnection.Dispose();
         }
 
-        public void ReleaseClientDbConnection(IDbConnection dbConnection)
+        public virtual void ReleaseClientDbConnection(IDbConnection dbConnection)
         {
             if (dbConnection == null)
                 return;
