@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using SisoDb.Profiling.Model;
 using SisoDb.Sql2008;
+using SisoDb.Sql2012;
 using SisoDb.SqlCe4;
 
 namespace SisoDb.Profiling
@@ -21,8 +22,8 @@ namespace SisoDb.Profiling
             //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
 
             //********* SQL2012 ***********
-            var cnInfo = new Sql2008ConnectionInfo("SisoDb.Sql2012");
-            var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
+            //var cnInfo = new Sql2012ConnectionInfo("SisoDb.Sql2012");
+            //var db = new Sql2012DbFactory().CreateDatabase(cnInfo);
 
             //********* SQLCE4 ***********
 			//var cnInfo = new SqlCe4ConnectionInfo("SisoDb.SqlCe4");
