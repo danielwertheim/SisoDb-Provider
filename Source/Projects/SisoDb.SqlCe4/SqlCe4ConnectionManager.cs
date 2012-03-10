@@ -20,7 +20,7 @@ namespace SisoDb.SqlCe4
         {
             EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
             
-            var cn = new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString);
+            var cn = connectionInfo.OnConnectionCreated(new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString));
             cn.Open();
 
             return cn;
@@ -30,7 +30,7 @@ namespace SisoDb.SqlCe4
         {
             EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
 
-            var cn = new SqlCeConnection(connectionInfo.ClientConnectionString.PlainString);
+            var cn = connectionInfo.OnConnectionCreated(new SqlCeConnection(connectionInfo.ClientConnectionString.PlainString));
             cn.Open();
 
             return cn;

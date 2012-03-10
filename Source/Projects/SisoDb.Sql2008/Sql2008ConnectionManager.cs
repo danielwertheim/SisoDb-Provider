@@ -7,7 +7,7 @@ namespace SisoDb.Sql2008
 	{
         public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = new SqlConnection(connectionInfo.ServerConnectionString.PlainString);
+            var cn = connectionInfo.OnConnectionCreated(new SqlConnection(connectionInfo.ServerConnectionString.PlainString));
             cn.Open();
 
             return cn;
@@ -15,7 +15,7 @@ namespace SisoDb.Sql2008
 
         public virtual IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = new SqlConnection(connectionInfo.ClientConnectionString.PlainString);
+            var cn = connectionInfo.OnConnectionCreated(new SqlConnection(connectionInfo.ServerConnectionString.PlainString));
             cn.Open();
 
             return cn;
@@ -40,5 +40,6 @@ namespace SisoDb.Sql2008
             dbConnection.Close();
             dbConnection.Dispose();
         }
+
 	}
 }

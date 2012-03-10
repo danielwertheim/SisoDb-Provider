@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using EnsureThat;
 using NCore;
 using SisoDb.Resources;
@@ -18,15 +19,27 @@ namespace SisoDb
 
         public IConnectionString ServerConnectionString { get; private set; }
 
+        /// <summary>
+        /// Provides a hook to modify/wrap the connection created. For example to add profiling. 
+        /// Defaults to returning the same connection unmoddified
+        /// </summary>
+        public Func<IDbConnection, IDbConnection> OnConnectionCreated
+        {
+            get { return onConnectionCreated ?? (con => con); }
+            set { onConnectionCreated = value; }
+        }
+        private Func<IDbConnection, IDbConnection> onConnectionCreated;
+
+
         protected SisoConnectionInfo(IConnectionString connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
             EnsureCorrectProviderIfItExists(connectionString);
-            
+
             ClientConnectionString = FormatConnectionString(connectionString);
             ServerConnectionString = FormatServerConnectionString(connectionString);
             BackgroundIndexing = ExtractBackgroundIndexing(ClientConnectionString);
-            
+
             if (BackgroundIndexing != BackgroundIndexing.Off)
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
         }
@@ -34,7 +47,7 @@ namespace SisoDb
         private void EnsureCorrectProviderIfItExists(IConnectionString connectionString)
         {
             var providerType = ExtractProviderType(connectionString);
-            if(providerType == null)
+            if (providerType == null)
                 return;
 
             if (providerType != ProviderType)
@@ -82,7 +95,7 @@ namespace SisoDb
         protected virtual BackgroundIndexing OnExtractBackgroundIndexing(IConnectionString connectionString)
         {
             return (string.IsNullOrWhiteSpace(ClientConnectionString.BackgroundIndexing))
-                ? BackgroundIndexing.Off 
+                ? BackgroundIndexing.Off
                 : (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.BackgroundIndexing, true);
         }
     }

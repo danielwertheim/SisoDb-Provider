@@ -1,3 +1,5 @@
+using System;
+using System.Data;
 namespace SisoDb
 {
     public interface ISisoConnectionInfo
@@ -11,5 +13,7 @@ namespace SisoDb
         IConnectionString ClientConnectionString { get; }
 
         IConnectionString ServerConnectionString { get; }
+
+        Func<IDbConnection, IDbConnection> OnConnectionCreated { get; set; }
     }
 }
