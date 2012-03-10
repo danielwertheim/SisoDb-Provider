@@ -707,13 +707,13 @@ namespace SisoDb
                 OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
 
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
-            TransactionalDbClient.DeleteById(structureId, structureSchema);
+            TransactionalDbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
             var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
             var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
             var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-            bulkInserter.Insert(structureSchema, new[] { updatedStructure });
+            bulkInserter.Replace(structureSchema, updatedStructure);
         }
 
         public virtual void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
@@ -742,13 +742,13 @@ namespace SisoDb
                     OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
 
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
-                TransactionalDbClient.DeleteById(structureId, structureSchema);
+                TransactionalDbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
                 var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
                 var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                bulkInserter.Insert(structureSchema, new[] { updatedStructure });
+                bulkInserter.Replace(structureSchema, updatedStructure);
             });
         }
 

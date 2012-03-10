@@ -43,7 +43,8 @@ namespace SisoDb.Dac.BulkInserts
             Task task = null;
             try
             {
-                task = Task.Factory.StartNew(() => groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures));
+                task = Task.Factory.StartNew(
+                    () => groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures));
 
                 InsertStructures(structureSchema, structures);
                 InsertUniques(structureSchema, structures);
@@ -56,7 +57,20 @@ namespace SisoDb.Dac.BulkInserts
                     task.Dispose();
             }
 
-            if(!groupedIndexInsertActions.Any())
+            if (!groupedIndexInsertActions.Any())
+                return;
+
+            InsertIndexes(groupedIndexInsertActions);
+        }
+
+        public virtual void Replace(IStructureSchema structureSchema, IStructure structure)
+        {
+            var structures = new[] { structure };
+            MainDbClient.SingleUpdateOfStructure(structure, structureSchema);
+            InsertUniques(structureSchema, structures);
+
+            var groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, new[] { structure });
+            if (!groupedIndexInsertActions.Any())
                 return;
 
             InsertIndexes(groupedIndexInsertActions);

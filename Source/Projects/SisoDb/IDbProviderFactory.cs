@@ -14,7 +14,7 @@ namespace SisoDb
     {
         StorageProviders ProviderType { get; }
 
-	    IConnectionManager ConnectionManager { get; }
+        IConnectionManager ConnectionManager { get; set; }
 
 	    ISqlStatements GetSqlStatements();
 
