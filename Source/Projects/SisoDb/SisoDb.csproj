@@ -114,6 +114,7 @@
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
+    <Compile Include="ConnectionManagerBase.cs" />
     <Compile Include="StructureSetMigratorStatuses.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
