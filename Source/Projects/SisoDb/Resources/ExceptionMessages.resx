@@ -277,4 +277,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConnectionString_ShouldBePureIfNoPartsDividerExists" xml:space="preserve">
     <value>The connection string has no parts divider '{0}' and if that is missing, the SisoDb-marker '{1}' and Plain-marker '{2} is not supported.</value>
   </data>
+  <data name="SqlCe4ConnectionManager_ReleaseAllDbConnections" xml:space="preserve">
+    <value>Exceptions occured while releasing SqlCe4Connections from the pool.</value>
+  </data>
 </root>

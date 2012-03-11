@@ -1,34 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using System.Data;
 
 namespace SisoDb
 {
     public abstract class ConnectionManagerBase : IConnectionManager
     {
-    
-        public virtual System.Data.IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
+        public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = GetConnection(connectionInfo.ServerConnectionString.PlainString);
-            OpenConnection(cn);
+            var cn = CreateConnection(connectionInfo.ServerConnectionString.PlainString);
+            OnOpenConnection(cn);
 
             return cn;
         }
 
-
-        public virtual System.Data.IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        public virtual IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = GetConnection(connectionInfo.ClientConnectionString.PlainString);
-            OpenConnection(cn);
+            var cn = CreateConnection(connectionInfo.ClientConnectionString.PlainString);
+            OnOpenConnection(cn);
 
             return cn;
         }
 
         public virtual void ReleaseAllDbConnections() { }
 
-        public virtual void ReleaseServerConnection(System.Data.IDbConnection dbConnection)
+        public virtual void ReleaseServerConnection(IDbConnection dbConnection)
         {
             if (dbConnection == null)
                 return;
@@ -37,7 +31,7 @@ namespace SisoDb
             dbConnection.Dispose();
         }
 
-        public virtual void ReleaseClientDbConnection(System.Data.IDbConnection dbConnection)
+        public virtual void ReleaseClientDbConnection(IDbConnection dbConnection)
         {
             if (dbConnection == null)
                 return;
@@ -46,11 +40,11 @@ namespace SisoDb
             dbConnection.Dispose();
         }
 
-        protected abstract IDbConnection GetConnection(string connectionString);
-        protected virtual void OpenConnection(IDbConnection connection)
+        protected abstract IDbConnection CreateConnection(string connectionString);
+
+        protected virtual void OnOpenConnection(IDbConnection connection)
         {
             connection.Open();
         }
-
     }
 }

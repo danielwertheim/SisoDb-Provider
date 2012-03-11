@@ -3,16 +3,18 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
+using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4ConnectionManager : ConnectionManagerBase, IConnectionManager
+    public class SqlCe4ConnectionManager : ConnectionManagerBase
     {
         private readonly ConcurrentDictionary<string, IDbConnection> _warmupConnections;
 
         public SqlCe4ConnectionManager()
         {
             _warmupConnections = new ConcurrentDictionary<string, IDbConnection>();
+
             AppDomain.CurrentDomain.DomainUnload += (sender, args) => ReleaseAllDbConnections();
         }
 
@@ -67,7 +69,7 @@ namespace SisoDb.SqlCe4
             _warmupConnections.Clear();
 
             if (exceptions.Count > 0)
-                throw new SisoDbException("Exceptions occured while releasing SqlCe4Connections from the pool.", exceptions);
+                throw new SisoDbException(ExceptionMessages.SqlCe4ConnectionManager_ReleaseAllDbConnections, exceptions);
         }
 
         private void EnsureWarmedUp(SqlCe4ConnectionInfo connectionInfo)
@@ -83,7 +85,7 @@ namespace SisoDb.SqlCe4
             }
         }
 
-        protected override IDbConnection GetConnection(string connectionString)
+        protected override IDbConnection CreateConnection(string connectionString)
         {
             return new SqlCeConnection(connectionString);
         }

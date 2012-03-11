@@ -341,6 +341,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exceptions occured while releasing SqlCe4Connections from the pool..
+        /// </summary>
+        public static string SqlCe4ConnectionManager_ReleaseAllDbConnections {
+            get {
+                return ResourceManager.GetString("SqlCe4ConnectionManager_ReleaseAllDbConnections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The database &apos;{0}&apos; doesn&apos;t exist..
         /// </summary>
         public static string SqlDatabase_InitializeExisting_DbDoesNotExist {
