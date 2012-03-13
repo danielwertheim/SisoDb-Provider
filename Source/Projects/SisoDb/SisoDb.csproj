@@ -85,7 +85,7 @@
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="Dac\Transactions.cs" />
-    <Compile Include="DbSchema\DbNamingPolicy.cs" />
+    <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
