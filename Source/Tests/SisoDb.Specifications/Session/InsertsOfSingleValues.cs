@@ -25,7 +25,7 @@ namespace SisoDb.Specifications.Session
             {
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleStringMember>().FirstOrDefault();
                 refetched.ShouldNotBeNull();
-                refetched.Value.ShouldEqual(default(string));
+                refetched.Value.ShouldBeNull();
             };
         }
 
@@ -47,7 +47,7 @@ namespace SisoDb.Specifications.Session
             {
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleDateTimeMember>().FirstOrDefault();
                 refetched.ShouldNotBeNull();
-                refetched.Value.ShouldEqual(default(DateTime?));
+                refetched.Value.ShouldBeNull();
             };
         }
 
