@@ -53,8 +53,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.66.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.67.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.67.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.6.0.3283, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -85,7 +86,7 @@
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="Dac\Transactions.cs" />
-    <Compile Include="DbSchema\DbNamingPolicy.cs" />
+    <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
@@ -114,6 +115,7 @@
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
+    <Compile Include="ConnectionManagerBase.cs" />
     <Compile Include="StructureSetMigratorStatuses.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />

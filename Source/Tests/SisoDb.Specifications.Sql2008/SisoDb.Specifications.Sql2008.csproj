@@ -46,8 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.66.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.67.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.67.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -142,6 +143,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\InsertsOfJson.cs">
       <Link>Session\InsertsOfJson.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsOfSingleValues.cs">
+      <Link>Session\InsertsOfSingleValues.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\InsertsOfUniques.cs">
       <Link>Session\InsertsOfUniques.cs</Link>
     </Compile>
@@ -231,6 +235,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\UpdatesHandlingConcurreny.cs">
       <Link>Session\UpdatesHandlingConcurreny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\UpdatesOfSingleValues.cs">
+      <Link>Session\UpdatesOfSingleValues.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>

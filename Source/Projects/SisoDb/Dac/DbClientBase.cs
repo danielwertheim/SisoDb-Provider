@@ -312,7 +312,7 @@ namespace SisoDb.Dac
             ExecuteNonQuery(sql,
                 new DacParameter(IndexStorageSchema.Fields.StructureId.Name, structureIndex.StructureId.Value),
                 new DacParameter(IndexStorageSchema.Fields.MemberPath.Name, structureIndex.Path),
-                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value.ToString()));
+                new DacParameter(IndexStorageSchema.Fields.Value.Name, structureIndex.Value == null ? null : structureIndex.Value.ToString()));
 	    }
 
         public virtual void SingleInsertOfUniqueIndex(IStructureIndex uniqueStructureIndex, IStructureSchema structureSchema)

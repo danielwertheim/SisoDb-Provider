@@ -17,7 +17,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
-                var item = new { IntValue = 42};
+                var item = new { IntValue = 42 };
                 TestContext.Database.UseOnceTo().InsertAs<Model>(item);
             };
 
