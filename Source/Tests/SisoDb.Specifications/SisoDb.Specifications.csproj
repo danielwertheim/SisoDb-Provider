@@ -69,7 +69,9 @@
     <Compile Include="Database\InitializeExisting.cs" />
     <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="Session\Caching.cs" />
+    <Compile Include="Session\UpdatesOfSingleValues.cs" />
     <Compile Include="Session\InsertAs.cs" />
+    <Compile Include="Session\InsertsOfSingleValues.cs" />
     <Compile Include="Session\InsertsWithCustomStructureId.cs" />
     <Compile Include="Session\Querying\Count.cs" />
     <Compile Include="Session\Querying\EnumerableFunctions\QxAny.cs" />

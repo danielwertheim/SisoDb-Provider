@@ -142,6 +142,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\InsertsOfJson.cs">
       <Link>Session\InsertsOfJson.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertsOfSingleValues.cs">
+      <Link>Session\InsertsOfSingleValues.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\InsertsOfUniques.cs">
       <Link>Session\InsertsOfUniques.cs</Link>
     </Compile>
@@ -231,6 +234,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\UpdatesHandlingConcurreny.cs">
       <Link>Session\UpdatesHandlingConcurreny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\UpdatesOfSingleValues.cs">
+      <Link>Session\UpdatesOfSingleValues.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
