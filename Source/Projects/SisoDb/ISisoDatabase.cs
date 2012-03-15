@@ -51,7 +51,12 @@ namespace SisoDb
         /// </summary>
         IJsonSerializer Serializer { get; set; }
 
-		/// <summary>
+        /// <summary>
+        /// Used for maintenance tasks of the database.
+        /// </summary>
+        ISisoDatabaseMaintenance Maintenance { get; }
+
+        /// <summary>
 		/// Returns an <see cref="IStructureSetMigrator"/> used for
 		/// assisting you with model migrations.
 		/// </summary>
@@ -99,7 +104,7 @@ namespace SisoDb
         void DropStructureSet(Type type);
 
         /// <summary>
-        /// Drops ALL structure sets.
+        /// Drops ALL structure sets for sent <paramref name="types"/>.
         /// </summary>
         /// <param name="types"></param>
         void DropStructureSets(Type[] types);

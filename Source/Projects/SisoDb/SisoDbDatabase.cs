@@ -5,6 +5,7 @@ using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.Builders;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.Maintenance;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 
@@ -12,6 +13,7 @@ namespace SisoDb
 {
     public abstract class SisoDbDatabase : ISisoDbDatabase
     {
+        private readonly object _dbOperationsLock;
         private readonly ISisoConnectionInfo _connectionInfo;
         private readonly IDbProviderFactory _providerFactory;
         private readonly IDbSchemaManager _dbSchemaManager;
@@ -19,8 +21,12 @@ namespace SisoDb
         private IStructureBuilders _structureBuilders;
         private IJsonSerializer _serializer;
 
-        protected readonly object DbOperationsLock;
         protected readonly IServerClient ServerClient;
+
+        public object DbOperationsLock
+        {
+            get { return _dbOperationsLock; }
+        }
 
         public string Name
         {
@@ -79,13 +85,14 @@ namespace SisoDb
             }
         }
 
+        public ISisoDatabaseMaintenance Maintenance { get; private set; }
+
         protected SisoDbDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(dbProviderFactory, "dbProviderFactory").IsNotNull();
 
-            DbOperationsLock = new object();
-
+            _dbOperationsLock = new object();
             _connectionInfo = connectionInfo;
             _providerFactory = dbProviderFactory;
             _dbSchemaManager = ProviderFactory.GetDbSchemaManager();
@@ -93,6 +100,7 @@ namespace SisoDb
             StructureBuilders = new StructureBuilders();
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+            Maintenance = new SisoDbDatabaseMaintenance(this);
         }
 
         public virtual IStructureSetMigrator GetStructureSetMigrator()

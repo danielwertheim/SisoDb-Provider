@@ -79,6 +79,9 @@
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Clear.cs">
+      <Link>Database\Maintenance\Clear.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\MigrateStructureSet.cs">
       <Link>Database\MigrateStructureSet.cs</Link>
     </Compile>

@@ -34,6 +34,18 @@ namespace SisoDb.Testing.SqlCe4
             return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
 
+        public bool TablesExists(string[] names)
+        {
+            foreach (var name in names)
+            {
+                var exists = TableExists(name);
+                if (!exists)
+                    return false;
+            }
+
+            return true;
+        }
+
         public bool TypeExists(string name)
         {
             var sql = "select 1 from INFORMATION_SCHEMA.PROVIDER_TYPES where TYPE_NAME = '{0}';".Inject(name);
@@ -145,6 +157,13 @@ namespace SisoDb.Testing.SqlCe4
         {
             var memberPath = GetMemberPath(member);
             return RowCount(structureSchema.GetUniquesTableName(), "[{0}] = '{1}'".Inject(UniqueStorageSchema.Fields.UqMemberPath.Name, memberPath)) > 0;
+        }
+
+        public bool IdentityRowExistsForSchema(IStructureSchema structureSchema)
+        {
+            var sql = "select 1 from SisoDbIdentities where EntityName = '{0}';".Inject(structureSchema.Name);
+
+            return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
 
         private IDbConnection CreateConnection()

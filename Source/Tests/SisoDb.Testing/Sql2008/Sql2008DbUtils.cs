@@ -30,6 +30,18 @@ namespace SisoDb.Testing.Sql2008
             return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
 
+        public bool TablesExists(string[] names)
+        {
+            foreach (var name in names)
+            {
+                var exists = TableExists(name);
+                if (!exists)
+                    return false;
+            }
+
+            return true;
+        }
+
         public bool TypeExists(string name)
         {
             var sql = "select 1 from sys.table_types where name = '{0}';".Inject(name);
@@ -74,44 +86,6 @@ namespace SisoDb.Testing.Sql2008
         public void DropProcedure(string spName)
         {
             ExecuteSql(CommandType.Text, "if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end".Inject(spName));
-        }
-
-        private void ExecuteSingleResultSequentialReader(string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
-        {
-            using (var cn = CreateConnection())
-            {
-                cn.Open();
-
-                using (var cmd = cn.CreateCommand(sql, null, parameters))
-                {
-                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                    {
-                        while (reader.Read())
-                        {
-                            recordCallback(reader);
-                        }
-                        reader.Close();
-                    }
-                }
-
-                cn.Close();
-            }
-        }
-
-        private void ExecuteSql(CommandType commandType, string sql)
-        {
-            using (var cn = CreateConnection())
-            {
-                cn.Open();
-                using (var cmd = cn.CreateCommand())
-                {
-                    cmd.CommandType = commandType;
-                    cmd.CommandText = sql;
-
-                    cmd.ExecuteNonQuery();
-                }
-                cn.Close();
-            }
         }
 
         public T ExecuteScalar<T>(CommandType commandType, string sql)
@@ -164,16 +138,6 @@ namespace SisoDb.Testing.Sql2008
             return retVal;
         }
 
-        private IDbConnection CreateConnection()
-        {
-            var cn = _factory.CreateConnection();
-
-            if(cn != null)
-                cn.ConnectionString = _connectionString;
-
-            return cn;
-        }
-
         public int RowCount(string tableName, string where = null)
         {
             where = where ?? "1 = 1";
@@ -199,9 +163,64 @@ namespace SisoDb.Testing.Sql2008
             return RowCount(structureSchema.GetUniquesTableName(), "[{0}] = '{1}'".Inject(UniqueStorageSchema.Fields.UqMemberPath.Name, memberPath)) > 0;
         }
 
+        public bool IdentityRowExistsForSchema(IStructureSchema structureSchema)
+        {
+            var sql = "select 1 from SisoDbIdentities where EntityName = '{0}';".Inject(structureSchema.Name);
+
+            return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
+        }
+
         private static string GetMemberPath<T>(Expression<Func<T, object>> e)
         {
             return e.GetRightMostMember().ToPath();
+        }
+
+        private void ExecuteSingleResultSequentialReader(string sql, Action<IDataRecord> recordCallback, params IDacParameter[] parameters)
+        {
+            using (var cn = CreateConnection())
+            {
+                cn.Open();
+
+                using (var cmd = cn.CreateCommand(sql, null, parameters))
+                {
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                    {
+                        while (reader.Read())
+                        {
+                            recordCallback(reader);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                cn.Close();
+            }
+        }
+
+        private void ExecuteSql(CommandType commandType, string sql)
+        {
+            using (var cn = CreateConnection())
+            {
+                cn.Open();
+                using (var cmd = cn.CreateCommand())
+                {
+                    cmd.CommandType = commandType;
+                    cmd.CommandText = sql;
+
+                    cmd.ExecuteNonQuery();
+                }
+                cn.Close();
+            }
+        }
+
+        private IDbConnection CreateConnection()
+        {
+            var cn = _factory.CreateConnection();
+
+            if (cn != null)
+                cn.ConnectionString = _connectionString;
+
+            return cn;
         }
     }
 }

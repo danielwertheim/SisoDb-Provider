@@ -154,7 +154,8 @@ on [dbo].[{0}] ([MemberPath],[Value], [StructureId]);
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatabase" xml:space="preserve">
-    <value>create database [{0}];</value>
+    <value>create database [{0}];
+ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 100;</value>
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
@@ -582,5 +583,35 @@ delete from [dbo].[{7}] where StructureId = @id;</value>
   <data name="SingleUpdateOfStructure" xml:space="preserve">
     <value>set nocount on;
 update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
+  </data>
+  <data name="DropTable" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null drop table [dbo].[{0}];</value>
+  </data>
+  <data name="GetTableNamesToDrop" xml:space="preserve">
+    <value>set nocount on;
+select TABLE_NAME from 
+(
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Booleans'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Dates'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Fractals'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Guids'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Integers'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Strings'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Texts'
+	union
+	select 1, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
+	union
+	select 2, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
+	union
+	select 3, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like 'SisoDb%'
+) tables
+order by groupId;</value>
   </data>
 </root>
