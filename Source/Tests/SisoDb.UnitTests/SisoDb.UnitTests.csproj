@@ -77,6 +77,7 @@
     </Compile>
     <Compile Include="Connections\ConnectionStringTests.cs" />
     <Compile Include="CustomAssert.cs" />
+    <Compile Include="DbSchema\DbObjectNameValidatorTests.cs" />
     <Compile Include="DbSchema\DbSchemasTests.cs" />
     <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
     <Compile Include="Dynamic\DynamicStructureTests.cs" />

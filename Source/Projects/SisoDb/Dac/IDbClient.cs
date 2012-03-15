@@ -16,14 +16,15 @@ namespace SisoDb.Dac
 
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
         T ExecuteScalar<T>(string sql, params IDacParameter[] parameters);
-
-		void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
+        void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
+        
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
+        void RenameStructureSet(string @from, string to);
         void Drop(IStructureSchema structureSchema);
         void DropAllStructureSets();
-		bool TableExists(string name);
+        bool TableExists(string name);
 		IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names);
-
+        
 		void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);

@@ -559,7 +559,7 @@ end</value>
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>set nocount on;
-select OBJECT_ID(@tableName, 'U');</value>
+select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@tableName;</value>
   </data>
   <data name="UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
     <value>set nocount on;

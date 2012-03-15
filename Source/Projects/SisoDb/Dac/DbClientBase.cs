@@ -19,7 +19,7 @@ namespace SisoDb.Dac
         protected IDbConnection Connection;
         protected IDbTransaction Transaction;
         protected readonly ISqlStatements SqlStatements;
-
+        
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
         public bool Failed { get; protected set; }
 
@@ -81,6 +81,48 @@ namespace SisoDb.Dac
             using (var cmd = CreateCommand(sql, parameters))
             {
                 return cmd.GetScalarResult<T>();
+            }
+        }
+
+        public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
+        {
+            using (var cmd = CreateCommand(sql, parameters))
+            {
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                {
+                    while (reader.Read())
+                    {
+                        callback(reader);
+                    }
+                    reader.Close();
+                }
+            }
+        }
+
+        public virtual long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
+        {
+            Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
+
+            var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
+
+            return ExecuteScalar<long>(
+                sql,
+                new DacParameter("entityName", entityName),
+                new DacParameter("numOfIds", numOfIds));
+        }
+
+        public virtual void RenameStructureSet(string @from, string to)
+        {
+            EnsureValidDbObjectName(@from);
+            EnsureValidDbObjectName(to);
+
+            var objOldNameParam = new DacParameter("objname", @from);
+            var objNewNameParam = new DacParameter("newname", to);
+            var objTypeParam = new DacParameter("objtype", "object");
+
+            using (var cmd = CreateSpCommand("sp_rename", objOldNameParam, objNewNameParam, objTypeParam))
+            {
+                
             }
         }
 
@@ -183,12 +225,12 @@ namespace SisoDb.Dac
 
         public virtual bool TableExists(string name)
         {
-            Ensure.That(name, "name").IsNotNullOrWhiteSpace();
+            EnsureValidDbObjectName(name);
 
             var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<string>(sql, new DacParameter("tableName", name));
+            var value = ExecuteScalar<int>(sql, new DacParameter("tableName", name));
 
-            return !string.IsNullOrWhiteSpace(value);
+            return value > 0;
         }
 
         public virtual IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
@@ -222,8 +264,6 @@ namespace SisoDb.Dac
 
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
-
-        public abstract long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
 
         public virtual bool Exists(IStructureId structureId, IStructureSchema structureSchema)
         {
@@ -263,21 +303,6 @@ namespace SisoDb.Dac
 
         public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
-        {
-            using (var cmd = CreateCommand(sql, parameters))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                    {
-                        callback(reader);
-                    }
-                    reader.Close();
-                }
-            }
-        }
-
         public virtual IEnumerable<string> YieldJson(string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
@@ -310,6 +335,8 @@ namespace SisoDb.Dac
 
         public virtual void SingleInsertOfValueTypeIndex(IStructureIndex structureIndex, string valueTypeIndexesTableName)
         {
+            EnsureValidDbObjectName(valueTypeIndexesTableName);
+
             var sql = SqlStatements.GetSql("SingleInsertOfValueTypeIndex").Inject(
                 valueTypeIndexesTableName,
                 IndexStorageSchema.Fields.StructureId.Name,
@@ -326,6 +353,8 @@ namespace SisoDb.Dac
 
         public virtual void SingleInsertOfStringTypeIndex(IStructureIndex structureIndex, string stringishIndexesTableName)
         {
+            EnsureValidDbObjectName(stringishIndexesTableName);
+
             var sql = SqlStatements.GetSql("SingleInsertOfStringTypeIndex").Inject(
                 stringishIndexesTableName,
                 IndexStorageSchema.Fields.StructureId.Name,
@@ -443,6 +472,11 @@ namespace SisoDb.Dac
         protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
         {
             return Connection.CreateSpCommand(sp, Transaction, parameters);
+        }
+
+        protected virtual void EnsureValidDbObjectName(string dbObjectName)
+        {
+            DbObjectNameValidator.EnsureValid(dbObjectName);
         }
     }
 }

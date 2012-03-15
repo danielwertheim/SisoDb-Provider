@@ -42,17 +42,6 @@ namespace SisoDb.Sql2008.Dac
             }
         }
 
-        public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
-        {
-			Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
-
-            var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
-
-            return ExecuteScalar<long>(sql,
-				new DacParameter("entityName", entityName),
-                new DacParameter("numOfIds", numOfIds));
-        }
-
         public override IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

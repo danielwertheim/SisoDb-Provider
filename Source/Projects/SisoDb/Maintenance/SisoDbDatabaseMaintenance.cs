@@ -1,4 +1,6 @@
-﻿namespace SisoDb.Maintenance
+﻿using EnsureThat;
+
+namespace SisoDb.Maintenance
 {
     public class SisoDbDatabaseMaintenance : ISisoDatabaseMaintenance
     {
@@ -18,6 +20,22 @@
                 using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
                 {
                    dbClient.DropAllStructureSets();
+                }
+            }
+        }
+
+        public void RenameStructure(string @from, string to)
+        {
+            Ensure.That(@from).IsNotNullOrWhiteSpace();
+            Ensure.That(to).IsNotNullOrWhiteSpace();
+
+            lock (_db.DbOperationsLock)
+            {
+                _db.SchemaManager.RemoveFromCache(@from);
+
+                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
+                {
+                    dbClient.RenameStructureSet(@from, to);
                 }
             }
         }
