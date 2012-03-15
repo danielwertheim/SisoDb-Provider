@@ -34,6 +34,19 @@ namespace SisoDb.SqlCe4.Dac
                 Connection.ExecuteNonQuery(sql.Split(';'), Transaction, parameters);
         }
 
+        public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
+        {
+            Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
+
+            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityName", entityName));
+
+            ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
+                new DacParameter("entityName", entityName),
+                new DacParameter("numOfIds", numOfIds));
+
+            return nextId;
+        }
+
         public override void Drop(IStructureSchema structureSchema)
         {
 			Ensure.That(structureSchema, "structureSchema").IsNotNull();
@@ -130,29 +143,6 @@ namespace SisoDb.SqlCe4.Dac
                     cmd.ExecuteNonQuery();
                 }
             }
-        }
-
-        public override bool TableExists(string name)
-        {
-            Ensure.That(name, "name").IsNotNullOrWhiteSpace();
-
-            var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<int>(sql, new DacParameter("tableName", name));
-
-            return value > 0;
-        }
-
-        public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
-        {
-			Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
-
-			var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityName", entityName));
-
-            ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
-				new DacParameter("entityName", entityName),
-                new DacParameter("numOfIds", numOfIds));
-
-            return nextId;
         }
 
         public override IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)

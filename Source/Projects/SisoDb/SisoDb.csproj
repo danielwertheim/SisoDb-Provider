@@ -84,6 +84,7 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="DbSchema\DbObjectNameValidator.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="Dac\Transactions.cs" />
     <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
