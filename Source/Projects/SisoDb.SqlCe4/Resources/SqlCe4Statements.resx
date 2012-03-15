@@ -519,4 +519,29 @@ delete from [{7}] where StructureId = @id;</value>
   <data name="SingleUpdateOfStructure" xml:space="preserve">
     <value>update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
   </data>
+  <data name="GetTableNamesToDrop" xml:space="preserve">
+    <value>select TABLE_NAME from 
+(
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Booleans'
+	union
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Dates'
+	union
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Fractals'
+	union
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Guids'
+	union
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Integers'
+	union
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Strings'
+	union
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Texts'
+	union
+	select 1 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
+	union
+	select 2 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
+	union
+	select 3 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like 'SisoDb%'
+) tables
+order by groupId</value>
+  </data>
 </root>

@@ -9,6 +9,7 @@ namespace SisoDb.Testing
     public interface ITestDbUtils
     {
         bool TableExists(string name);
+        bool TablesExists(string[] names);
         bool TypeExists(string name);
         IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip);
         void CreateProcedure(string spSql);
@@ -18,5 +19,6 @@ namespace SisoDb.Testing
         int RowCount(string tableName, string where = null);
         bool AnyIndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class;
         bool UniquesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class;
+        bool IdentityRowExistsForSchema(IStructureSchema structureSchemaForSetTwo);
     }
 }

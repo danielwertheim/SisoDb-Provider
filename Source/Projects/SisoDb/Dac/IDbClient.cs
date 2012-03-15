@@ -20,6 +20,7 @@ namespace SisoDb.Dac
 		void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
         void Drop(IStructureSchema structureSchema);
+        void DropAllStructureSets();
 		bool TableExists(string name);
 		IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names);
 

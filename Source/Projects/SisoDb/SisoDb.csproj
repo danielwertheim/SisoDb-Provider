@@ -87,11 +87,13 @@
     <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="Dac\Transactions.cs" />
     <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
+    <Compile Include="DbSchema\DbSchemas.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
+    <Compile Include="ISisoDatabaseMaintenance.cs" />
     <Compile Include="ISisoDbDatabase.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="IStructureSetMigrator.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="BackgroundIndexing.cs" />
+    <Compile Include="Maintenance\SisoDbDatabaseMaintenance.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />

@@ -60,6 +60,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Database\Maintenance\Clear.cs" />
     <Compile Include="Database\MigrateStructureSet.cs" />
     <Compile Include="Database\CreateIfNotExists.cs" />
     <Compile Include="Database\DeleteIfExists.cs" />
@@ -139,6 +140,7 @@
       <Name>SisoDb.Testing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
