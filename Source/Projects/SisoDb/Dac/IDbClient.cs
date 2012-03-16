@@ -21,7 +21,7 @@ namespace SisoDb.Dac
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
         void RenameStructureSet(string oldStructureName, string newStructureName);
         void Drop(IStructureSchema structureSchema);
-        void DropAllStructureSets();
+        void Reset();
         bool TableExists(string name);
 		IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names);
         

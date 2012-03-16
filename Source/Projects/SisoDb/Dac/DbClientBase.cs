@@ -232,7 +232,7 @@ namespace SisoDb.Dac
             }
         }
 
-        public virtual void DropAllStructureSets()
+        public virtual void Reset()
         {
             var tableNamesToDrop = new List<string>();
             var sql = SqlStatements.GetSql("GetTableNamesToDrop");

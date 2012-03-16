@@ -19,7 +19,7 @@ namespace SisoDb.Maintenance
 
                 using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
                 {
-                   dbClient.DropAllStructureSets();
+                   dbClient.Reset();
                 }
             }
         }
