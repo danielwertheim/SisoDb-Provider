@@ -18,7 +18,7 @@ namespace SisoDb.Testing
         {
 			if (Database != null)
 			{
-				Database.DropStructureSets(Database.StructureSchemas.GetRegistrations().Select(r => r.Key).ToArray());
+				Database.Maintenance.Clear();
 				Database = null;
 			}
 

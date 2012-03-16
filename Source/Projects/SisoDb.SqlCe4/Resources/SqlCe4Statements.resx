@@ -544,4 +544,7 @@ delete from [{7}] where StructureId = @id;</value>
 ) tables
 order by groupId</value>
   </data>
+  <data name="TruncateSisoDbIdentities" xml:space="preserve">
+    <value>if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null truncate table [dbo].[SisoDbIdentities];</value>
+  </data>
 </root>

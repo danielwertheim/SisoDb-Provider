@@ -6,9 +6,9 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database.Maintenance
 {
-    class Clear
+    class Reset
     {
-        [Subject(typeof (ISisoDatabaseMaintenance), "Clear")]
+        [Subject(typeof (ISisoDatabaseMaintenance), "Reset")]
         public class when_two_structuresets_exists : SpecificationBase
         {
             Establish context = () =>
@@ -23,8 +23,8 @@ namespace SisoDb.Specifications.Database.Maintenance
             Because of =
                 () => TestContext.Database.Maintenance.Clear();
 
-            It should_have_dropped_identities_table =
-                () => TestContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeFalse();
+            It should_have_cleared_identities_table =
+                () => TestContext.DbHelper.RowCount("SisoDbIdentities").ShouldEqual(0);
 
             It should_have_dropped_structure_table_forSetOne =
                 () => TestContext.DbHelper.TableExists(_structureSchemaForSetOne.GetStructureTableName()).ShouldBeFalse();
