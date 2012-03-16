@@ -128,10 +128,20 @@ namespace SisoDb.Dac
             if (TableExists(newStructureTableName))
                 throw new SisoDbException("There allready seems to exist tables for '{0}' in the database.".Inject(newStructureTableName));
 
+            OnBeforeRenameOfStructureSet(oldStructureTableName, oldUniquesTableName, oldIndexesTableNames);
+
             OnRenameStructureTable(oldStructureTableName, newStructureTableName);
             OnRenameUniquesTable(oldUniquesTableName, newUniquesTableName, oldStructureTableName, newStructureTableName);
             OnRenameIndexesTables(oldIndexesTableNames, newIndexesTableNames, oldStructureTableName, newStructureTableName);
+
+            OnAfterRenameOfStructureSet(newStructureTableName, newUniquesTableName, newIndexesTableNames);
         }
+
+        protected virtual void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames)
+        {}
+
+        protected virtual void OnAfterRenameOfStructureSet(string newStructureTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames)
+        { }
 
         protected virtual void OnRenameStructureTable(string oldTableName, string newTableName)
         {

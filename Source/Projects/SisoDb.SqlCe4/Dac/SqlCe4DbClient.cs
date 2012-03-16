@@ -47,12 +47,37 @@ namespace SisoDb.SqlCe4.Dac
             return nextId;
         }
 
+        protected override void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames)
+        {
+            var dropFkContraintSqlFormat = SqlStatements.GetSql("DropFkContraint");
+
+            ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldUniquesTableName, oldStructureTableName));
+            
+            foreach (var oldIndexTableName in oldIndexesTableNames.AllTableNames)
+                ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldIndexTableName, oldStructureTableName));
+        }
+
+        protected override void OnAfterRenameOfStructureSet(string newStructureTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames)
+        {
+            var addFkContraintSqlFormat = SqlStatements.GetSql("AddFkContraintAgainstStructureId");
+
+            ExecuteNonQuery(addFkContraintSqlFormat.Inject(newUniquesTableName, newStructureTableName));
+
+            foreach (var newIndexTableName in newIndexesTableNames.AllTableNames)
+                ExecuteNonQuery(addFkContraintSqlFormat.Inject(newIndexTableName, newStructureTableName));
+        }
+
         protected override void OnRenameStructureTable(string oldTableName, string newTableName)
         {
+            var dropPkContraintSqlFormat = SqlStatements.GetSql("DropPkConstraint");
+            var addPkConstraintSqlFormat = SqlStatements.GetSql("AddPkConstraintAgainstStructureId");
+
+            ExecuteNonQuery(dropPkContraintSqlFormat.Inject(oldTableName));
             ExecuteNonQuery("sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype",
                 new DacParameter("objname", oldTableName),
                 new DacParameter("newname", newTableName),
                 new DacParameter("objtype", "OBJECT"));
+            ExecuteNonQuery(addPkConstraintSqlFormat.Inject(newTableName));
         }
 
         protected override void OnRenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
