@@ -1,15 +1,14 @@
 using System;
-using PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {
     public static class DbSchemaNamingPolicy
     {
-        public static Func<IStructureSchema, string> StructureNameGenerator;
+        public static Func<string, string> StructureNameGenerator;
 
         static DbSchemaNamingPolicy()
         {
-            StructureNameGenerator = schema => schema.Name;
+            StructureNameGenerator = name => name;
         }
     }
 }

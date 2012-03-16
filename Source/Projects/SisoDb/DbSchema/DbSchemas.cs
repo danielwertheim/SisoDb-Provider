@@ -28,7 +28,12 @@ namespace SisoDb.DbSchema
 
         public static string GetStructureTableName(this IStructureSchema structureSchema)
         {
-            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureSchema), Suffixes.StructureTableNameSuffix);
+            return GenerateStructureTableName(structureSchema.Name);
+        }
+
+        public static string GenerateStructureTableName(string structureName)
+        {
+            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureName), Suffixes.StructureTableNameSuffix);
         }
 
         public static IndexesTableNames GetIndexesTableNames(this IStructureSchema structureSchema)
@@ -36,14 +41,24 @@ namespace SisoDb.DbSchema
             return new IndexesTableNames(structureSchema);
         }
 
+        public static string GenerateIndexesTableNameFor(string structureName, IndexesTypes type)
+        {
+            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureName), type.ToString());
+        }
+
         public static string GetIndexesTableNameFor(this IStructureSchema structureSchema, IndexesTypes type)
         {
-            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureSchema), type.ToString());
+            return GenerateIndexesTableNameFor(structureSchema.Name, type);
         }
 
         public static string GetUniquesTableName(this IStructureSchema structureSchema)
         {
-            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureSchema), Suffixes.UniquesTableNameSuffix);
+            return GenerateUniquesTableName(structureSchema.Name);
+        }
+
+        public static string GenerateUniquesTableName(string structureName)
+        {
+            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureName), Suffixes.UniquesTableNameSuffix);
         }
     }
 }

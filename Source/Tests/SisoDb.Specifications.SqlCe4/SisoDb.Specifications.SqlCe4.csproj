@@ -79,6 +79,9 @@
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\RenameStructure.cs">
+      <Link>Database\Maintenance\RenameStructure.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Reset.cs">
       <Link>Database\Maintenance\Reset.cs</Link>
     </Compile>

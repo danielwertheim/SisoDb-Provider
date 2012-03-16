@@ -19,7 +19,7 @@ namespace SisoDb.Dac
         protected IDbConnection Connection;
         protected IDbTransaction Transaction;
         protected readonly ISqlStatements SqlStatements;
-        
+
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
         public bool Failed { get; protected set; }
 
@@ -111,18 +111,101 @@ namespace SisoDb.Dac
                 new DacParameter("numOfIds", numOfIds));
         }
 
-        public virtual void RenameStructureSet(string @from, string to)
+        public virtual void RenameStructureSet(string oldStructureName, string newStructureName)
         {
-            EnsureValidDbObjectName(@from);
-            EnsureValidDbObjectName(to);
+            EnsureValidDbObjectName(oldStructureName);
+            EnsureValidDbObjectName(newStructureName);
 
-            var objOldNameParam = new DacParameter("objname", @from);
-            var objNewNameParam = new DacParameter("newname", to);
-            var objTypeParam = new DacParameter("objtype", "object");
+            var oldStructureTableName = DbSchemas.GenerateStructureTableName(oldStructureName);
+            var newStructureTableName = DbSchemas.GenerateStructureTableName(newStructureName);
 
-            using (var cmd = CreateSpCommand("sp_rename", objOldNameParam, objNewNameParam, objTypeParam))
+            var oldUniquesTableName = DbSchemas.GenerateUniquesTableName(oldStructureName);
+            var newUniquesTableName = DbSchemas.GenerateUniquesTableName(newStructureName);
+
+            var oldIndexesTableNames = new IndexesTableNames(oldStructureName);
+            var newIndexesTableNames = new IndexesTableNames(newStructureName);
+
+            if (TableExists(newStructureTableName))
+                throw new SisoDbException("There allready seems to exist tables for '{0}' in the database.".Inject(newStructureTableName));
+
+            RenameStructureTable(oldStructureTableName, newStructureTableName);
+            RenameUniquesTable(oldUniquesTableName, newUniquesTableName, oldStructureTableName, newStructureTableName);
+            RenameIndexesTables(oldIndexesTableNames, newIndexesTableNames, oldStructureTableName, newStructureTableName);
+        }
+
+        protected virtual void RenameStructureTable(string oldTableName, string newTableName)
+        {
+            using (var cmd = CreateSpCommand("sp_rename", 
+                new DacParameter("objname", oldTableName), 
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT")))
             {
-                
+                cmd.ExecuteNonQuery();
+
+                cmd.Parameters.Clear();
+                cmd.AddParameters(
+                    new DacParameter("objname", string.Concat("PK_", oldTableName)), 
+                    new DacParameter("newname", string.Concat("PK_", newTableName)), 
+                    new DacParameter("objtype", "OBJECT"));
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        protected virtual void RenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
+        {
+            using (var cmd = CreateSpCommand("sp_rename", 
+                new DacParameter("objname", oldTableName), 
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT")))
+            {
+                cmd.ExecuteNonQuery();
+
+                cmd.Parameters.Clear();
+                cmd.AddParameters(
+                    new DacParameter("objname", string.Format("FK_{0}_{1}", oldTableName, oldStructureTableName)), 
+                    new DacParameter("newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)), 
+                    new DacParameter("objtype", "OBJECT"));
+                cmd.ExecuteNonQuery();
+
+                cmd.Parameters.Clear();
+                cmd.AddParameters(
+                    new DacParameter("objname", string.Format("{0}.UQ_{1}", newTableName, oldTableName)),
+                    new DacParameter("newname", string.Concat("UQ_", newTableName)),
+                    new DacParameter("objtype", "INDEX"));
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        protected virtual void RenameIndexesTables(IndexesTableNames oldIndexesTableNames, IndexesTableNames newIndexesTableNames, string oldStructureTableName, string newStructureTableName)
+        {
+            using (var cmd = CreateSpCommand("sp_rename"))
+            {
+                for(var i = 0; i < oldIndexesTableNames.AllTableNames.Length; i++)
+                {
+                    var oldTableName = oldIndexesTableNames[i];
+                    var newTableName = newIndexesTableNames[i];
+
+                    cmd.Parameters.Clear();
+                    cmd.AddParameters(
+                        new DacParameter("objname", oldTableName),
+                        new DacParameter("newname", newTableName),
+                        new DacParameter("objtype", "OBJECT"));
+                    cmd.ExecuteNonQuery();
+
+                    cmd.Parameters.Clear();
+                    cmd.AddParameters(
+                        new DacParameter("objname", string.Format("FK_{0}_{1}", oldTableName, oldStructureTableName)),
+                        new DacParameter("newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)),
+                        new DacParameter("objtype", "OBJECT"));
+                    cmd.ExecuteNonQuery();
+
+                    cmd.Parameters.Clear();
+                    cmd.AddParameters(
+                        new DacParameter("objname", string.Format("{0}.IX_{1}_Q", newTableName, oldTableName)),
+                        new DacParameter("newname", string.Format("IX_{0}_Q", newTableName)),
+                        new DacParameter("objtype", "INDEX"));
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -169,6 +252,9 @@ namespace SisoDb.Dac
                     cmd.CommandText = dropTableTemplate.Inject(tableName);
                     cmd.ExecuteNonQuery();
                 }
+
+                cmd.CommandText = SqlStatements.GetSql("TruncateSisoDbIdentities");
+                cmd.ExecuteNonQuery();
             }
         }
 

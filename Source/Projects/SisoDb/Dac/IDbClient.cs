@@ -19,7 +19,7 @@ namespace SisoDb.Dac
         void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
         
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
-        void RenameStructureSet(string @from, string to);
+        void RenameStructureSet(string oldStructureName, string newStructureName);
         void Drop(IStructureSchema structureSchema);
         void DropAllStructureSets();
         bool TableExists(string name);
