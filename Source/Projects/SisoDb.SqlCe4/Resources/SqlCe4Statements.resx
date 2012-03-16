@@ -539,12 +539,10 @@ delete from [{7}] where StructureId = @id;</value>
 	select 1 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
 	union
 	select 2 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
-	union
-	select 3 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like 'SisoDb%'
 ) tables
 order by groupId</value>
   </data>
   <data name="TruncateSisoDbIdentities" xml:space="preserve">
-    <value>if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null truncate table [dbo].[SisoDbIdentities];</value>
+    <value>delete from [SisoDbIdentities];</value>
   </data>
 </root>

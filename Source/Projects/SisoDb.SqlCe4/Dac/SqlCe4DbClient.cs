@@ -14,7 +14,7 @@ namespace SisoDb.SqlCe4.Dac
 {
     public class SqlCe4DbClient : DbClientBase
     {
-    	private const int MaxBatchedIdsSize = 32;
+        private const int MaxBatchedIdsSize = 32;
 
         public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
             : base(connectionInfo, connection, transaction, connectionManager, sqlStatements)
@@ -47,12 +47,48 @@ namespace SisoDb.SqlCe4.Dac
             return nextId;
         }
 
+        protected override void OnRenameStructureTable(string oldTableName, string newTableName)
+        {
+            ExecuteNonQuery("sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype",
+                new DacParameter("objname", oldTableName),
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT"));
+        }
+
+        protected override void OnRenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
+        {
+            ExecuteNonQuery("sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype",
+                new DacParameter("objname", oldTableName),
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT"));
+        }
+
+        protected override void OnRenameIndexesTables(IndexesTableNames oldIndexesTableNames, IndexesTableNames newIndexesTableNames, string oldStructureTableName, string newStructureTableName)
+        {
+            using (var cmd = CreateCommand(null))
+            {
+                for (var i = 0; i < oldIndexesTableNames.AllTableNames.Length; i++)
+                {
+                    var oldTableName = oldIndexesTableNames[i];
+                    var newTableName = newIndexesTableNames[i];
+
+                    cmd.Parameters.Clear();
+                    cmd.AddParameters(
+                        new DacParameter("objname", oldTableName),
+                        new DacParameter("newname", newTableName),
+                        new DacParameter("objtype", "OBJECT"));
+                    cmd.CommandText = "sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public override void Drop(IStructureSchema structureSchema)
         {
-			Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-        	var indexesTableNames = structureSchema.GetIndexesTableNames();
-        	var indexesTableStatuses = GetIndexesTableStatuses(indexesTableNames);
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
+            var indexesTableStatuses = GetIndexesTableStatuses(indexesTableNames);
             var uniquesTableExists = TableExists(structureSchema.GetUniquesTableName());
             var structureTableExists = TableExists(structureSchema.GetStructureTableName());
 
@@ -60,7 +96,7 @@ namespace SisoDb.SqlCe4.Dac
 
             using (var cmd = CreateCommand(string.Empty, new DacParameter("entityName", structureSchema.Name)))
             {
-				DropIndexesTables(cmd, indexesTableStatuses);
+                DropIndexesTables(cmd, indexesTableStatuses);
 
                 if (uniquesTableExists)
                 {
@@ -79,52 +115,52 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-		private void DropIndexesTables(IDbCommand cmd, IndexesTableStatuses indexesTableStatuses)
-		{
-			var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
+        private void DropIndexesTables(IDbCommand cmd, IndexesTableStatuses indexesTableStatuses)
+        {
+            var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-			if (indexesTableStatuses.IntegersTableExists)
-			{
-				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.IntegersTableName);
-				cmd.ExecuteNonQuery();
-			}
+            if (indexesTableStatuses.IntegersTableExists)
+            {
+                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.IntegersTableName);
+                cmd.ExecuteNonQuery();
+            }
 
-			if (indexesTableStatuses.FractalsTableExists)
-			{
-				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.FractalsTableName);
-				cmd.ExecuteNonQuery();
-			}
+            if (indexesTableStatuses.FractalsTableExists)
+            {
+                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.FractalsTableName);
+                cmd.ExecuteNonQuery();
+            }
 
-			if (indexesTableStatuses.BooleansTableExists)
-			{
-				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.BooleansTableName);
-				cmd.ExecuteNonQuery();
-			}
+            if (indexesTableStatuses.BooleansTableExists)
+            {
+                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.BooleansTableName);
+                cmd.ExecuteNonQuery();
+            }
 
-			if (indexesTableStatuses.DatesTableExists)
-			{
-				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.DatesTableName);
-				cmd.ExecuteNonQuery();
-			}
+            if (indexesTableStatuses.DatesTableExists)
+            {
+                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.DatesTableName);
+                cmd.ExecuteNonQuery();
+            }
 
-			if (indexesTableStatuses.GuidsTableExists)
-			{
-				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.GuidsTableName);
-				cmd.ExecuteNonQuery();
-			}
+            if (indexesTableStatuses.GuidsTableExists)
+            {
+                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.GuidsTableName);
+                cmd.ExecuteNonQuery();
+            }
 
-			if (indexesTableStatuses.StringsTableExists)
-			{
-				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.StringsTableName);
-				cmd.ExecuteNonQuery();
-			}
+            if (indexesTableStatuses.StringsTableExists)
+            {
+                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.StringsTableName);
+                cmd.ExecuteNonQuery();
+            }
 
-			if (indexesTableStatuses.TextsTableExists)
-			{
-				cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.TextsTableName);
-				cmd.ExecuteNonQuery();
-			}
-		}
+            if (indexesTableStatuses.TextsTableExists)
+            {
+                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.TextsTableName);
+                cmd.ExecuteNonQuery();
+            }
+        }
 
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
@@ -135,8 +171,8 @@ namespace SisoDb.SqlCe4.Dac
             {
                 foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
-					cmd.Parameters.Clear();
-					cmd.AddParameters(batchedIds);
+                    cmd.Parameters.Clear();
+                    cmd.AddParameters(batchedIds);
 
                     var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
@@ -152,12 +188,12 @@ namespace SisoDb.SqlCe4.Dac
 
             using (var cmd = CreateCommand(string.Empty))
             {
-				foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
+                foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
                     cmd.Parameters.Clear();
                     cmd.AddParameters(batchedIds);
 
-					var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
+                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
 
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))

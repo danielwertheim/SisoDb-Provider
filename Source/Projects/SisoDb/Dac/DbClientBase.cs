@@ -128,12 +128,12 @@ namespace SisoDb.Dac
             if (TableExists(newStructureTableName))
                 throw new SisoDbException("There allready seems to exist tables for '{0}' in the database.".Inject(newStructureTableName));
 
-            RenameStructureTable(oldStructureTableName, newStructureTableName);
-            RenameUniquesTable(oldUniquesTableName, newUniquesTableName, oldStructureTableName, newStructureTableName);
-            RenameIndexesTables(oldIndexesTableNames, newIndexesTableNames, oldStructureTableName, newStructureTableName);
+            OnRenameStructureTable(oldStructureTableName, newStructureTableName);
+            OnRenameUniquesTable(oldUniquesTableName, newUniquesTableName, oldStructureTableName, newStructureTableName);
+            OnRenameIndexesTables(oldIndexesTableNames, newIndexesTableNames, oldStructureTableName, newStructureTableName);
         }
 
-        protected virtual void RenameStructureTable(string oldTableName, string newTableName)
+        protected virtual void OnRenameStructureTable(string oldTableName, string newTableName)
         {
             using (var cmd = CreateSpCommand("sp_rename", 
                 new DacParameter("objname", oldTableName), 
@@ -151,7 +151,7 @@ namespace SisoDb.Dac
             }
         }
 
-        protected virtual void RenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
+        protected virtual void OnRenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
         {
             using (var cmd = CreateSpCommand("sp_rename", 
                 new DacParameter("objname", oldTableName), 
@@ -176,7 +176,7 @@ namespace SisoDb.Dac
             }
         }
 
-        protected virtual void RenameIndexesTables(IndexesTableNames oldIndexesTableNames, IndexesTableNames newIndexesTableNames, string oldStructureTableName, string newStructureTableName)
+        protected virtual void OnRenameIndexesTables(IndexesTableNames oldIndexesTableNames, IndexesTableNames newIndexesTableNames, string oldStructureTableName, string newStructureTableName)
         {
             using (var cmd = CreateSpCommand("sp_rename"))
             {

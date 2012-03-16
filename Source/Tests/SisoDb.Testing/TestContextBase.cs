@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace SisoDb.Testing
 {
     public abstract class TestContextBase : ITestContext
