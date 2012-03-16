@@ -127,7 +127,7 @@
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateBooleansIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -139,7 +139,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateBooleansIndexesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -151,7 +151,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
@@ -163,7 +163,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatesIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -175,7 +175,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatesIndexesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -187,7 +187,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateFractalsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
@@ -199,7 +199,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateFractalsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -211,7 +211,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateFractalsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -223,7 +223,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateGuidsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
@@ -235,7 +235,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateGuidsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -247,7 +247,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateGuidsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -259,7 +259,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateIntegersIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
@@ -271,7 +271,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateIntegersIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -283,7 +283,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateIntegersIndexesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -295,7 +295,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStringsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
@@ -306,7 +306,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStringsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -317,7 +317,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStringsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -328,7 +328,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath],[Value], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
@@ -356,7 +356,7 @@ insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateTextsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -367,7 +367,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateTextsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -378,7 +378,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 create nonclustered index [IX_{0}_Q]
 on [{0}] ([MemberPath], [StructureId]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table [{0}] (
@@ -389,7 +389,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 
 create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table [{0}] (
@@ -400,7 +400,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 
 create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateUniquesString" xml:space="preserve">
     <value>create table [{0}] (
@@ -411,7 +411,7 @@ alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references
 
 create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
 
-alter table [{0}] add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="DeleteById" xml:space="preserve">
     <value>delete from [{0}] where StructureId = @id;</value>
@@ -539,9 +539,22 @@ delete from [{7}] where StructureId = @id;</value>
 	select 1 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
 	union
 	select 2 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
-	union
-	select 3 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like 'SisoDb%'
 ) tables
 order by groupId</value>
+  </data>
+  <data name="TruncateSisoDbIdentities" xml:space="preserve">
+    <value>delete from [SisoDbIdentities];</value>
+  </data>
+  <data name="AddFkContraintAgainstStructureId" xml:space="preserve">
+    <value>alter table [{0}] add constraint [FK_{0}_{1}] foreign key ([StructureId]) references [{1}]([StructureId]) on delete cascade on update no action;</value>
+  </data>
+  <data name="AddPkConstraintAgainstStructureId" xml:space="preserve">
+    <value>alter table [{0}] add constraint [PK_{0}] primary key([StructureId]);</value>
+  </data>
+  <data name="DropFkContraint" xml:space="preserve">
+    <value>alter table [{0}] drop constraint [FK_{0}_{1}];</value>
+  </data>
+  <data name="DropPkConstraint" xml:space="preserve">
+    <value>alter table [{0}] drop constraint [PK_{0}];</value>
   </data>
 </root>

@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace SisoDb.Testing
 {
     public abstract class TestContextBase : ITestContext
@@ -18,7 +16,7 @@ namespace SisoDb.Testing
         {
 			if (Database != null)
 			{
-				Database.DropStructureSets(Database.StructureSchemas.GetRegistrations().Select(r => r.Key).ToArray());
+				Database.Maintenance.Clear();
 				Database = null;
 			}
 

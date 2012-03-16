@@ -609,9 +609,11 @@ select TABLE_NAME from
 	select 1, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
 	union
 	select 2, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
-	union
-	select 3, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like 'SisoDb%'
 ) tables
 order by groupId;</value>
+  </data>
+  <data name="TruncateSisoDbIdentities" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null truncate table [dbo].[SisoDbIdentities];</value>
   </data>
 </root>

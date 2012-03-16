@@ -60,7 +60,8 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Database\Maintenance\Clear.cs" />
+    <Compile Include="Database\Maintenance\Reset.cs" />
+    <Compile Include="Database\Maintenance\RenameStructure.cs" />
     <Compile Include="Database\MigrateStructureSet.cs" />
     <Compile Include="Database\CreateIfNotExists.cs" />
     <Compile Include="Database\DeleteIfExists.cs" />
