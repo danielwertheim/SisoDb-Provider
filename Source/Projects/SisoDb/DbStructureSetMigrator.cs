@@ -12,10 +12,10 @@ namespace SisoDb
 {
     public class DbStructureSetMigrator : IStructureSetMigrator
     {
-        protected readonly ISisoDbDatabase Db;
+        protected readonly ISisoDatabase Db;
         protected int MaxKeepQueueSize;
 
-        public DbStructureSetMigrator(ISisoDbDatabase db)
+        public DbStructureSetMigrator(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
 

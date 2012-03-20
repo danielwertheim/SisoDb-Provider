@@ -24,6 +24,7 @@ namespace SisoDb.Serialization
             var itemType = item.GetType();
 
             ServiceStackTypeConfig<T>.Config(itemType);
+            JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
             JsConfig<Text>.SerializeFn = t => t.ToString();
 

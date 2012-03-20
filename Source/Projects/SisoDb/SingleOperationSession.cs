@@ -9,11 +9,11 @@ using SisoDb.Querying;
 namespace SisoDb
 {
     [DebuggerStepThrough]
-    public class DbSingleOperationSession : ISingleOperationSession
+    public class SingleOperationSession : ISingleOperationSession
     {
-    	private readonly ISisoDbDatabase _db;
+    	private readonly ISisoDatabase _db;
 
-        public DbSingleOperationSession(ISisoDbDatabase db)
+        public SingleOperationSession(ISisoDatabase db)
         {
             _db = db;
         }

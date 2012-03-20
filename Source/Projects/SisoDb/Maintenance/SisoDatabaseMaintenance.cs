@@ -2,18 +2,18 @@
 
 namespace SisoDb.Maintenance
 {
-    public class SisoDbDatabaseMaintenance : ISisoDatabaseMaintenance
+    public class SisoDatabaseMaintenance : ISisoDatabaseMaintenance
     {
-        private readonly ISisoDbDatabase _db;
+        private readonly ISisoDatabase _db;
 
-        public SisoDbDatabaseMaintenance(ISisoDbDatabase db)
+        public SisoDatabaseMaintenance(ISisoDatabase db)
         {
             _db = db;
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
-            lock (_db.DbOperationsLock)
+            lock (_db.LockObject)
             {
                 _db.SchemaManager.ClearCache();
 
@@ -24,12 +24,12 @@ namespace SisoDb.Maintenance
             }
         }
 
-        public void RenameStructure(string @from, string to)
+        public virtual void RenameStructure(string @from, string to)
         {
             Ensure.That(@from).IsNotNullOrWhiteSpace();
             Ensure.That(to).IsNotNullOrWhiteSpace();
 
-            lock (_db.DbOperationsLock)
+            lock (_db.LockObject)
             {
                 _db.SchemaManager.RemoveFromCache(@from);
 
@@ -38,6 +38,11 @@ namespace SisoDb.Maintenance
                     dbClient.RenameStructureSet(@from, to);
                 }
             }
+        }
+
+        public virtual void RegenerateQueryIndexes<T>() where T : class
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
