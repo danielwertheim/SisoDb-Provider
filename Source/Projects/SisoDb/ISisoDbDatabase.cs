@@ -8,7 +8,7 @@ namespace SisoDb
 	/// </summary>
 	public interface ISisoDbDatabase : ISisoDatabase
 	{
-	    object DbOperationsLock { get; }
+	    object Lock { get; }
 	    IDbProviderFactory ProviderFactory { get; }
         IDbSchemaManager SchemaManager { get; }
 	}

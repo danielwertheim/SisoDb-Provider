@@ -13,7 +13,7 @@ namespace SisoDb.Maintenance
 
         public void Clear()
         {
-            lock (_db.DbOperationsLock)
+            lock (_db.Lock)
             {
                 _db.SchemaManager.ClearCache();
 
@@ -29,7 +29,7 @@ namespace SisoDb.Maintenance
             Ensure.That(@from).IsNotNullOrWhiteSpace();
             Ensure.That(to).IsNotNullOrWhiteSpace();
 
-            lock (_db.DbOperationsLock)
+            lock (_db.Lock)
             {
                 _db.SchemaManager.RemoveFromCache(@from);
 

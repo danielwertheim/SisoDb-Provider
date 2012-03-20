@@ -13,7 +13,7 @@ namespace SisoDb
 {
     public abstract class SisoDbDatabase : ISisoDbDatabase
     {
-        private readonly object _dbOperationsLock;
+        private readonly object _lock;
         private readonly ISisoConnectionInfo _connectionInfo;
         private readonly IDbProviderFactory _providerFactory;
         private readonly IDbSchemaManager _dbSchemaManager;
@@ -23,9 +23,9 @@ namespace SisoDb
 
         protected readonly IServerClient ServerClient;
 
-        public object DbOperationsLock
+        public object Lock
         {
-            get { return _dbOperationsLock; }
+            get { return _lock; }
         }
 
         public string Name
@@ -92,7 +92,7 @@ namespace SisoDb
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(dbProviderFactory, "dbProviderFactory").IsNotNull();
 
-            _dbOperationsLock = new object();
+            _lock = new object();
             _connectionInfo = connectionInfo;
             _providerFactory = dbProviderFactory;
             _dbSchemaManager = ProviderFactory.GetDbSchemaManager();
@@ -110,7 +110,7 @@ namespace SisoDb
 
         public virtual void EnsureNewDatabase()
         {
-            lock (DbOperationsLock)
+            lock (Lock)
             {
                 OnClearCache();
                 ServerClient.EnsureNewDb();
@@ -119,7 +119,7 @@ namespace SisoDb
 
         public virtual void CreateIfNotExists()
         {
-            lock (DbOperationsLock)
+            lock (Lock)
             {
                 OnClearCache();
                 ServerClient.CreateDbIfItDoesNotExist();
@@ -128,7 +128,7 @@ namespace SisoDb
 
         public virtual void InitializeExisting()
         {
-            lock (DbOperationsLock)
+            lock (Lock)
             {
                 OnClearCache();
                 ServerClient.InitializeExistingDb();
@@ -137,7 +137,7 @@ namespace SisoDb
 
         public virtual void DeleteIfExists()
         {
-            lock (DbOperationsLock)
+            lock (Lock)
             {
                 OnClearCache();
                 ServerClient.DropDbIfItExists();
@@ -146,7 +146,7 @@ namespace SisoDb
 
         public virtual bool Exists()
         {
-            lock (DbOperationsLock)
+            lock (Lock)
             {
                 return ServerClient.DbExists();
             }
@@ -168,7 +168,7 @@ namespace SisoDb
         {
             Ensure.That(types, "types").HasItems();
 
-            lock (DbOperationsLock)
+            lock (Lock)
             {
                 using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
@@ -195,7 +195,7 @@ namespace SisoDb
         {
             Ensure.That(type, "type").IsNotNull();
 
-            lock (DbOperationsLock)
+            lock (Lock)
             {
                 if (CachingIsEnabled && CacheProvider.Handles(type))
                     CacheProvider[type].Clear();
