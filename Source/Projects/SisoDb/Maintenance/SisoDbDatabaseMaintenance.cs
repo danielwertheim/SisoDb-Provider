@@ -11,7 +11,7 @@ namespace SisoDb.Maintenance
             _db = db;
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             lock (_db.Lock)
             {
@@ -24,7 +24,7 @@ namespace SisoDb.Maintenance
             }
         }
 
-        public void RenameStructure(string @from, string to)
+        public virtual void RenameStructure(string @from, string to)
         {
             Ensure.That(@from).IsNotNullOrWhiteSpace();
             Ensure.That(to).IsNotNullOrWhiteSpace();
@@ -38,6 +38,11 @@ namespace SisoDb.Maintenance
                     dbClient.RenameStructureSet(@from, to);
                 }
             }
+        }
+
+        public virtual void RegenerateQueryIndexes<T>() where T : class
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
