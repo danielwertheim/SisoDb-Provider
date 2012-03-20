@@ -58,8 +58,7 @@
       <HintPath>..\..\packages\PineCone.0.67.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.6.0.3283, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.6.0\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.6.3\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
