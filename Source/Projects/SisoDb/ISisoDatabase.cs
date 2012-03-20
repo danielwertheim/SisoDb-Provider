@@ -1,5 +1,6 @@
 using System;
 using PineCone.Structures.Schemas;
+using SisoDb.DbSchema;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 
@@ -12,6 +13,16 @@ namespace SisoDb
     /// </summary>
     public interface ISisoDatabase
     {
+        /// <summary>
+        /// Lock object used to synchronize work against Db-operations.
+        /// </summary>
+        object LockObject { get; }
+
+        /// <summary>
+        /// Provider factory.
+        /// </summary>
+        IDbProviderFactory ProviderFactory { get; }
+
         /// <summary>
         /// The name of the database.
         /// </summary>
@@ -40,6 +51,11 @@ namespace SisoDb
 		/// about members to index etc.
         /// </summary>
         IStructureSchemas StructureSchemas { get; set; }
+
+        /// <summary>
+        /// Manager used to control Db-Schemas.
+        /// </summary>
+        IDbSchemaManager SchemaManager { get; }
 
         /// <summary>
         /// Structure builders collection used to resolve a Structure builder to use when building structures for insert and updates.

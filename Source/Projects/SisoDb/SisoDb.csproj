@@ -94,14 +94,13 @@
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="ISisoDatabaseMaintenance.cs" />
-    <Compile Include="ISisoDbDatabase.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
     <Compile Include="ISingleOperationSession.cs" />
     <Compile Include="IStructureSetMigrator.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="BackgroundIndexing.cs" />
-    <Compile Include="Maintenance\SisoDbDatabaseMaintenance.cs" />
+    <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />
@@ -126,7 +125,7 @@
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
     <Compile Include="Dac\DbClientBase.cs" />
-    <Compile Include="DbSingleOperationSession.cs" />
+    <Compile Include="SingleOperationSession.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
@@ -173,7 +172,7 @@
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
-    <Compile Include="SisoDbDatabase.cs" />
+    <Compile Include="SisoDatabase.cs" />
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />

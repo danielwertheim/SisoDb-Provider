@@ -11,9 +11,9 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-    public abstract class SisoDbDatabase : ISisoDbDatabase
+    public abstract class SisoDatabase : ISisoDatabase
     {
-        private readonly object _lock;
+        private readonly object _lockObject;
         private readonly ISisoConnectionInfo _connectionInfo;
         private readonly IDbProviderFactory _providerFactory;
         private readonly IDbSchemaManager _dbSchemaManager;
@@ -23,9 +23,9 @@ namespace SisoDb
 
         protected readonly IServerClient ServerClient;
 
-        public object Lock
+        public object LockObject
         {
-            get { return _lock; }
+            get { return _lockObject; }
         }
 
         public string Name
@@ -87,12 +87,12 @@ namespace SisoDb
 
         public ISisoDatabaseMaintenance Maintenance { get; private set; }
 
-        protected SisoDbDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
+        protected SisoDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
         {
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(dbProviderFactory, "dbProviderFactory").IsNotNull();
 
-            _lock = new object();
+            _lockObject = new object();
             _connectionInfo = connectionInfo;
             _providerFactory = dbProviderFactory;
             _dbSchemaManager = ProviderFactory.GetDbSchemaManager();
@@ -100,7 +100,7 @@ namespace SisoDb
             StructureBuilders = new StructureBuilders();
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
-            Maintenance = new SisoDbDatabaseMaintenance(this);
+            Maintenance = new SisoDatabaseMaintenance(this);
         }
 
         public virtual IStructureSetMigrator GetStructureSetMigrator()
@@ -110,7 +110,7 @@ namespace SisoDb
 
         public virtual void EnsureNewDatabase()
         {
-            lock (Lock)
+            lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.EnsureNewDb();
@@ -119,7 +119,7 @@ namespace SisoDb
 
         public virtual void CreateIfNotExists()
         {
-            lock (Lock)
+            lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.CreateDbIfItDoesNotExist();
@@ -128,7 +128,7 @@ namespace SisoDb
 
         public virtual void InitializeExisting()
         {
-            lock (Lock)
+            lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.InitializeExistingDb();
@@ -137,7 +137,7 @@ namespace SisoDb
 
         public virtual void DeleteIfExists()
         {
-            lock (Lock)
+            lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.DropDbIfItExists();
@@ -146,7 +146,7 @@ namespace SisoDb
 
         public virtual bool Exists()
         {
-            lock (Lock)
+            lock (LockObject)
             {
                 return ServerClient.DbExists();
             }
@@ -168,7 +168,7 @@ namespace SisoDb
         {
             Ensure.That(types, "types").HasItems();
 
-            lock (Lock)
+            lock (LockObject)
             {
                 using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
@@ -195,7 +195,7 @@ namespace SisoDb
         {
             Ensure.That(type, "type").IsNotNull();
 
-            lock (Lock)
+            lock (LockObject)
             {
                 if (CachingIsEnabled && CacheProvider.Handles(type))
                     CacheProvider[type].Clear();
@@ -218,7 +218,7 @@ namespace SisoDb
         [DebuggerStepThrough]
         public ISingleOperationSession UseOnceTo()
         {
-            return new DbSingleOperationSession(this);
+            return new SingleOperationSession(this);
         }
 
         protected virtual void OnClearCache()

@@ -20,7 +20,7 @@ namespace SisoDb
         protected const int MaxInsertManyBatchSize = 500;
         protected const int MaxUpdateManyBatchSize = 500;
 
-        protected readonly ISisoDbDatabase Db;
+        protected readonly ISisoDatabase Db;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlStatements SqlStatements;
         protected ITransactionalDbClient TransactionalDbClient;
@@ -43,7 +43,7 @@ namespace SisoDb
 
         protected virtual CacheConsumeModes CacheConsumeMode { get; private set; }
 
-        protected DbSession(ISisoDbDatabase db)
+        protected DbSession(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
 

@@ -2,18 +2,18 @@
 
 namespace SisoDb.Maintenance
 {
-    public class SisoDbDatabaseMaintenance : ISisoDatabaseMaintenance
+    public class SisoDatabaseMaintenance : ISisoDatabaseMaintenance
     {
-        private readonly ISisoDbDatabase _db;
+        private readonly ISisoDatabase _db;
 
-        public SisoDbDatabaseMaintenance(ISisoDbDatabase db)
+        public SisoDatabaseMaintenance(ISisoDatabase db)
         {
             _db = db;
         }
 
         public virtual void Clear()
         {
-            lock (_db.Lock)
+            lock (_db.LockObject)
             {
                 _db.SchemaManager.ClearCache();
 
@@ -29,7 +29,7 @@ namespace SisoDb.Maintenance
             Ensure.That(@from).IsNotNullOrWhiteSpace();
             Ensure.That(to).IsNotNullOrWhiteSpace();
 
-            lock (_db.Lock)
+            lock (_db.LockObject)
             {
                 _db.SchemaManager.RemoveFromCache(@from);
 

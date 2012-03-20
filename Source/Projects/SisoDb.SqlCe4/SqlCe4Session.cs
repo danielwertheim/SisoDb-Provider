@@ -2,7 +2,7 @@
 {
     public class SqlCe4Session : DbSession
     {
-        internal SqlCe4Session(ISisoDbDatabase db) : base(db)
+        internal SqlCe4Session(ISisoDatabase db) : base(db)
         {}
     }
 }
