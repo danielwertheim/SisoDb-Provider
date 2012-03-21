@@ -17,9 +17,6 @@ namespace SisoDb
 {
     public abstract class DbSession : ISession, IQueryEngine, IAdvanced
     {
-        protected const int MaxInsertManyBatchSize = 500;
-        protected const int MaxUpdateManyBatchSize = 500;
-
         protected readonly ISisoDatabase Db;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlStatements SqlStatements;
@@ -239,8 +236,8 @@ namespace SisoDb
 
                 var structureSchema = OnUpsertStructureSchema<T>();
 
-                var deleteIds = new List<IStructureId>(MaxUpdateManyBatchSize);
-                var keepQueue = new List<T>(MaxUpdateManyBatchSize);
+                var deleteIds = new List<IStructureId>(Db.Settings.MaxUpdateManyBatchSize);
+                var keepQueue = new List<T>(Db.Settings.MaxUpdateManyBatchSize);
                 var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas);
@@ -261,7 +258,7 @@ namespace SisoDb
                     deleteIds.Add(structureIdBefore);
 
                     keepQueue.Add(structure);
-                    if (keepQueue.Count < MaxUpdateManyBatchSize)
+                    if (keepQueue.Count < Db.Settings.MaxUpdateManyBatchSize)
                         continue;
 
                     Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
@@ -641,7 +638,7 @@ namespace SisoDb
                     Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                foreach (var structuresBatch in items.Batch(MaxInsertManyBatchSize))
+                foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
             });
         }
@@ -669,7 +666,7 @@ namespace SisoDb
                 Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(structureSchema.Type.Type, json).Batch(MaxInsertManyBatchSize))
+            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(structureSchema.Type.Type, json).Batch(Db.Settings.MaxInsertManyBatchSize))
             {
                 var structures = structureBuilder.CreateStructures(structuresJsonBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);

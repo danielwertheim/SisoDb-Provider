@@ -15,7 +15,7 @@ namespace SisoDb
         void RenameStructure(string from, string to);
 
         /// <summary>
-        /// Regenerates values used for querying.
+        /// Regenerates key-values used for querying.
         /// </summary>
         void RegenerateQueryIndexes<T>() where T : class;
     }
