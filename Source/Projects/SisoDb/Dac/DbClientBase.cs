@@ -268,6 +268,27 @@ namespace SisoDb.Dac
             }
         }
 
+        public virtual void ClearQueryIndexes(IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
+
+            var sql = SqlStatements.GetSql("ClearIndexesTables").Inject(
+                indexesTableNames.IntegersTableName,
+                indexesTableNames.FractalsTableName,
+                indexesTableNames.BooleansTableName,
+                indexesTableNames.DatesTableName,
+                indexesTableNames.GuidsTableName,
+                indexesTableNames.StringsTableName,
+                indexesTableNames.TextsTableName);
+
+            using (var cmd = CreateCommand(sql))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public virtual void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

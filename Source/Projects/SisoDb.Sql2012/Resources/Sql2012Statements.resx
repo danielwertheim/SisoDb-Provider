@@ -616,4 +616,15 @@ order by groupId;</value>
     <value>set nocount on;
 if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null truncate table [dbo].[SisoDbIdentities];</value>
   </data>
+  <data name="ClearIndexesTables" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null delete from table [dbo].[{0}];
+if object_id(N'{1}', N'U') is not null delete from table [dbo].[{1}];
+if object_id(N'{2}', N'U') is not null delete from table [dbo].[{2}];
+if object_id(N'{3}', N'U') is not null delete from table [dbo].[{3}];
+if object_id(N'{4}', N'U') is not null delete from table [dbo].[{4}];
+if object_id(N'{5}', N'U') is not null delete from table [dbo].[{5}];
+if object_id(N'{6}', N'U') is not null delete from table [dbo].[{6}];
+if object_id(N'{7}', N'U') is not null delete from table [dbo].[{7}];</value>
+  </data>
 </root>
