@@ -558,6 +558,6 @@ order by groupId</value>
     <value>alter table [{0}] drop constraint [PK_{0}];</value>
   </data>
   <data name="EmptyTable" xml:space="preserve">
-    <value>delete from table [{0}];</value>
+    <value>delete from [{0}];</value>
   </data>
 </root>

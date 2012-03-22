@@ -16,7 +16,7 @@ namespace SisoDb.Testing
         {
 			if (Database != null)
 			{
-				Database.Maintenance.Clear();
+				Database.Maintenance.Reset();
 				Database = null;
 			}
 

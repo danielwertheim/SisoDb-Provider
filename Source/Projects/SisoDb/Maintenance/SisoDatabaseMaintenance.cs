@@ -14,7 +14,7 @@ namespace SisoDb.Maintenance
             _db = db;
         }
 
-        public virtual void Clear()
+        public virtual void Reset()
         {
             lock (_db.LockObject)
             {
@@ -43,7 +43,7 @@ namespace SisoDb.Maintenance
             }
         }
 
-        public virtual void RegenerateQueryIndexes<T>() where T : class
+        public virtual void RegenerateQueryIndexesFor<T>() where T : class
         {
             lock (_db.LockObject)
             {

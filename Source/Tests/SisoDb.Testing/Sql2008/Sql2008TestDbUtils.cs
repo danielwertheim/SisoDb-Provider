@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
 using NCore;
@@ -25,7 +26,7 @@ namespace SisoDb.Testing.Sql2008
 
         public bool TableExists(string name)
         {
-			var sql = "select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}';".Inject(name);
+            var sql = "select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}';".Inject(name);
 
             return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
@@ -146,15 +147,38 @@ namespace SisoDb.Testing.Sql2008
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
+        public void DeleteQueryIndexesFor(IStructureSchema structureSchema, IEnumerable<Guid> structureIds)
+        {
+            var guidIds = string.Join(",", structureIds.Select(id => string.Format("'{0}'", id)));
+            var sqlFormat = "delete from [{0}] where StructureId in({1});".Inject("{0}", guidIds);
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
+
+            using (var cn = CreateConnection())
+            {
+                using (var cmd = cn.CreateCommand(null))
+                {
+                    cn.Open();
+                    cmd.CommandType = CommandType.Text;
+
+                    foreach (var tableName in indexesTableNames.AllTableNames)
+                    {
+                        cmd.CommandText = sqlFormat.Inject(tableName);
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+            }
+        }
+
         public bool AnyIndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
         {
-			var memberPath = GetMemberPath(member);
-			var indexesTableNames = structureSchema.GetIndexesTableNames();
-			foreach (var indexesTableName in indexesTableNames.AllTableNames)
-				if (RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0)
-					return true;
+            var memberPath = GetMemberPath(member);
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
+            foreach (var indexesTableName in indexesTableNames.AllTableNames)
+                if (RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0)
+                    return true;
 
-			return false;
+            return false;
         }
 
         public bool UniquesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
@@ -197,7 +221,7 @@ namespace SisoDb.Testing.Sql2008
             }
         }
 
-        private void ExecuteSql(CommandType commandType, string sql)
+        protected void ExecuteSql(CommandType commandType, string sql)
         {
             using (var cn = CreateConnection())
             {

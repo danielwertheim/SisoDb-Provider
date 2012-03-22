@@ -21,7 +21,7 @@ namespace SisoDb.Specifications.Database.Maintenance
             };
 
             Because of =
-                () => TestContext.Database.Maintenance.Clear();
+                () => TestContext.Database.Maintenance.Reset();
 
             It should_have_cleared_identities_table =
                 () => TestContext.DbHelper.RowCount("SisoDbIdentities").ShouldEqual(0);

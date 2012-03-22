@@ -3,9 +3,9 @@ namespace SisoDb
     public interface ISisoDatabaseMaintenance
     {
         /// <summary>
-        /// Drops all structure sets.
+        /// Drops all structure sets and removes entries from SisoDb system tables.
         /// </summary>
-        void Clear();
+        void Reset();
 
         /// <summary>
         /// Renames a structure.
@@ -17,6 +17,6 @@ namespace SisoDb
         /// <summary>
         /// Regenerates key-values used for querying.
         /// </summary>
-        void RegenerateQueryIndexes<T>() where T : class;
+        void RegenerateQueryIndexesFor<T>() where T : class;
     }
 }

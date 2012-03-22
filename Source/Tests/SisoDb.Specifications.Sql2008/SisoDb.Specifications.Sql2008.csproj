@@ -80,6 +80,9 @@
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\RegenerateQueryIndexes.cs">
+      <Link>Database\Maintenance\RegenerateQueryIndexes.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\Maintenance\RenameStructure.cs">
       <Link>Database\Maintenance\RenameStructure.cs</Link>
     </Compile>
