@@ -187,6 +187,23 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
+        public override void ClearQueryIndexes(IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sqlFormat = SqlStatements.GetSql("EmptyTable");
+            var indexesTables = structureSchema.GetIndexesTableNames();
+
+            using(var cmd = CreateCommand(null))
+            {
+                foreach (var tableName in indexesTables.AllTableNames)
+                {
+                    cmd.CommandText = sqlFormat.Inject(tableName);
+                    cmd.ExecuteNonQuery();
+                }   
+            }
+        }
+
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

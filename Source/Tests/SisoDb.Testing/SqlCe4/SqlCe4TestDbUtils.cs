@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlServerCe;
+using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
 using NCore;
@@ -140,6 +141,29 @@ namespace SisoDb.Testing.SqlCe4
             var sql = "select count(*) from [{0}] where {1};".Inject(tableName, where);
 
             return ExecuteScalar<int>(CommandType.Text, sql);
+        }
+
+        public void DeleteQueryIndexesFor(IStructureSchema structureSchema, IEnumerable<Guid> structureIds)
+        {
+            var guidIds = string.Join(",", structureIds.Select(id => string.Format("'{0}'", id)));
+            var sqlFormat = "delete from [{0}] where StructureId in({1});".Inject("{0}", guidIds);
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
+
+            using (var cn = CreateConnection())
+            {
+                using (var cmd = cn.CreateCommand(null))
+                {
+                    cn.Open();
+                    cmd.CommandType = CommandType.Text;
+
+                    foreach (var tableName in indexesTableNames.AllTableNames)
+                    {
+                        cmd.CommandText = sqlFormat.Inject(tableName);
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+            }
         }
 
         public bool AnyIndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class

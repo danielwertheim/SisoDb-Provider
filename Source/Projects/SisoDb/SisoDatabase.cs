@@ -8,6 +8,7 @@ using SisoDb.DbSchema;
 using SisoDb.Maintenance;
 using SisoDb.Serialization;
 using SisoDb.Structures;
+using SisoDb.Caching;
 
 namespace SisoDb
 {
@@ -15,6 +16,7 @@ namespace SisoDb
     {
         private readonly object _lockObject;
         private readonly ISisoConnectionInfo _connectionInfo;
+        private readonly IDbSettings _settings;
         private readonly IDbProviderFactory _providerFactory;
         private readonly IDbSchemaManager _dbSchemaManager;
         private IStructureSchemas _structureSchemas;
@@ -22,7 +24,7 @@ namespace SisoDb
         private IJsonSerializer _serializer;
 
         protected readonly IServerClient ServerClient;
-
+        
         public object LockObject
         {
             get { return _lockObject; }
@@ -36,6 +38,11 @@ namespace SisoDb
         public ISisoConnectionInfo ConnectionInfo
         {
             get { return _connectionInfo; }
+        }
+
+        public IDbSettings Settings
+        {
+            get { return _settings; }
         }
 
         public ICacheProvider CacheProvider { get; set; }
@@ -94,6 +101,7 @@ namespace SisoDb
 
             _lockObject = new object();
             _connectionInfo = connectionInfo;
+            _settings = new DbSettings(500, 500);
             _providerFactory = dbProviderFactory;
             _dbSchemaManager = ProviderFactory.GetDbSchemaManager();
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
@@ -174,8 +182,8 @@ namespace SisoDb
                 {
                     foreach (var type in types)
                     {
-                        if (CachingIsEnabled && CacheProvider.Handles(type))
-                            CacheProvider[type].Clear();
+                        CacheProvider.NotifyOfPurge(type);
+
                         var structureSchema = _structureSchemas.GetSchema(type);
 
                         SchemaManager.DropStructureSet(structureSchema, dbClient);
@@ -197,12 +205,12 @@ namespace SisoDb
 
             lock (LockObject)
             {
-                if (CachingIsEnabled && CacheProvider.Handles(type))
-                    CacheProvider[type].Clear();
+                CacheProvider.NotifyOfPurge(type);
+
+                var structureSchema = _structureSchemas.GetSchema(type);
 
                 using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
                 {
-                    var structureSchema = _structureSchemas.GetSchema(type);
                     SchemaManager.UpsertStructureSet(structureSchema, dbClient);
                 }
             }
@@ -223,9 +231,7 @@ namespace SisoDb
 
         protected virtual void OnClearCache()
         {
-            if(CachingIsEnabled)
-                CacheProvider.Clear();
-
+            CacheProvider.NotifyOfPurgeAll();
             SchemaManager.ClearCache();
         }
     }

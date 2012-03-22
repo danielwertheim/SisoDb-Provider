@@ -22,6 +22,7 @@ namespace SisoDb.Dac
         void RenameStructureSet(string oldStructureName, string newStructureName);
         void Drop(IStructureSchema structureSchema);
         void Reset();
+        void ClearQueryIndexes(IStructureSchema structureSchema);
         bool TableExists(string name);
 		IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names);
         

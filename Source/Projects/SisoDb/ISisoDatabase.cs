@@ -19,11 +19,6 @@ namespace SisoDb
         object LockObject { get; }
 
         /// <summary>
-        /// Provider factory.
-        /// </summary>
-        IDbProviderFactory ProviderFactory { get; }
-
-        /// <summary>
         /// The name of the database.
         /// </summary>
         string Name { get; }
@@ -33,7 +28,17 @@ namespace SisoDb
         /// </summary>
         ISisoConnectionInfo ConnectionInfo { get; }
 
-		/// <summary>
+        /// <summary>
+        /// Provider factory.
+        /// </summary>
+        IDbProviderFactory ProviderFactory { get; }
+
+        /// <summary>
+        /// Runtime settings associated with the db.
+        /// </summary>
+        IDbSettings Settings { get; }
+
+        /// <summary>
 		/// By assigning a <see cref="ICacheProvider"/> you get
 		/// the possibility of preventing the query from
 		/// hitting the database for certain queries.

@@ -83,6 +83,7 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="DbSettings.cs" />
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="Dac\Transactions.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="DbSchema\IndexesTypes.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
+    <Compile Include="IDbSettings.cs" />
     <Compile Include="ISisoDatabaseMaintenance.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />

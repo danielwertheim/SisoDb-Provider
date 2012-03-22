@@ -1,4 +1,7 @@
 ﻿using EnsureThat;
+using NCore.Collections;
+using PineCone.Structures.Schemas;
+using SisoDb.Caching;
 
 namespace SisoDb.Maintenance
 {
@@ -11,15 +14,15 @@ namespace SisoDb.Maintenance
             _db = db;
         }
 
-        public virtual void Clear()
+        public virtual void Reset()
         {
             lock (_db.LockObject)
             {
-                _db.SchemaManager.ClearCache();
+                OnClearCache();
 
                 using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
                 {
-                   dbClient.Reset();
+                    dbClient.Reset();
                 }
             }
         }
@@ -40,9 +43,39 @@ namespace SisoDb.Maintenance
             }
         }
 
-        public virtual void RegenerateQueryIndexes<T>() where T : class
+        public virtual void RegenerateQueryIndexesFor<T>() where T : class
         {
-            throw new System.NotImplementedException();
+            lock (_db.LockObject)
+            {
+                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
+                {
+                    var structureSchema = _db.StructureSchemas.GetSchema<T>();
+                    _db.SchemaManager.UpsertStructureSet(structureSchema, dbClient);
+
+                    dbClient.ClearQueryIndexes(structureSchema);
+
+                    var structureBuilder = _db.StructureBuilders.ForUpdates(structureSchema);
+                    var structureInserter = _db.ProviderFactory.GetStructureInserter(dbClient);
+
+                    foreach (var structuresBatch in _db.Serializer.DeserializeMany<T>(
+                        dbClient.GetJsonOrderedByStructureId(structureSchema)).Batch(_db.Settings.MaxUpdateManyBatchSize))
+                    {
+                        structureInserter.InsertIndexesOnly(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
+                    }
+                }
+            }
+        }
+
+        protected virtual void OnClearCache()
+        {
+            _db.CacheProvider.NotifyOfPurgeAll();
+            _db.SchemaManager.ClearCache();
+        }
+
+        protected virtual void OnClearCache(IStructureSchema structureSchema)
+        {
+            _db.CacheProvider.NotifyOfPurge(structureSchema);
+            _db.SchemaManager.RemoveFromCache(structureSchema);
         }
     }
 }
