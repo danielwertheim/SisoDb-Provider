@@ -3,13 +3,15 @@ namespace SisoDb
     public interface IDbSettings 
     {
         /// <summary>
-        /// Controls the maximum size of each batch use for inserts.
+        /// Controls the maximum size of each batch used for inserting many structures.
         /// </summary>
         int MaxInsertManyBatchSize { get; set; }
+        
         /// <summary>
-        /// Controls the maximum size of each batch use for updates.
+        /// Controls the maximum size of each batch used for updating many structures.
         /// </summary>
         int MaxUpdateManyBatchSize { get; set; }
+
         /// <summary>
         /// Controls if a synchronization between your code model and query-index tables
         /// should be performed (true) or not (false).

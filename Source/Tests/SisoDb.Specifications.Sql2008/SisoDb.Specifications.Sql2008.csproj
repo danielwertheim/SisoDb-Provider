@@ -80,6 +80,9 @@
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Migrate.cs">
+      <Link>Database\Maintenance\Migrate.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\Maintenance\RegenerateQueryIndexes.cs">
       <Link>Database\Maintenance\RegenerateQueryIndexes.cs</Link>
     </Compile>
@@ -88,9 +91,6 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Reset.cs">
       <Link>Database\Maintenance\Reset.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\Database\MigrateStructureSet.cs">
-      <Link>Database\MigrateStructureSet.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
       <Link>Database\UpsertStructureSet.cs</Link>

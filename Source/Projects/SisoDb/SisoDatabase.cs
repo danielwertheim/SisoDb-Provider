@@ -116,11 +116,6 @@ namespace SisoDb
             Maintenance = new SisoDatabaseMaintenance(this);
         }
 
-        public virtual IStructureSetMigrator GetStructureSetMigrator()
-        {
-            return new DbStructureSetMigrator(this);
-        }
-
         public virtual void EnsureNewDatabase()
         {
             lock (LockObject)

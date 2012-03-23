@@ -63,7 +63,7 @@
     <Compile Include="Database\Maintenance\RegenerateQueryIndexes.cs" />
     <Compile Include="Database\Maintenance\Reset.cs" />
     <Compile Include="Database\Maintenance\RenameStructure.cs" />
-    <Compile Include="Database\MigrateStructureSet.cs" />
+    <Compile Include="Database\Maintenance\Migrate.cs" />
     <Compile Include="Database\CreateIfNotExists.cs" />
     <Compile Include="Database\DeleteIfExists.cs" />
     <Compile Include="Database\DropStructureSet.cs" />

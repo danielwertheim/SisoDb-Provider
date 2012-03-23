@@ -29,7 +29,6 @@ namespace SisoDb.Dac
 		void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
-        void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
         void DeleteIndexesAndUniquesById(IStructureId structureId, IStructureSchema structureSchema);
 
         int RowCount(IStructureSchema structureSchema);

@@ -74,15 +74,9 @@ namespace SisoDb
 
         /// <summary>
         /// Used for maintenance tasks of the database.
+        /// E.g Regeneration of query indexes and Migrations.
         /// </summary>
         ISisoDatabaseMaintenance Maintenance { get; }
-
-        /// <summary>
-		/// Returns an <see cref="IStructureSetMigrator"/> used for
-		/// assisting you with model migrations.
-		/// </summary>
-		/// <returns></returns>
-    	IStructureSetMigrator GetStructureSetMigrator();
 
         /// <summary>
         /// Ensures that a new fresh database will exists. Drops any existing database.
