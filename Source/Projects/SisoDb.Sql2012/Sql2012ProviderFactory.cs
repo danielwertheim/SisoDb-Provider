@@ -27,7 +27,12 @@ namespace SisoDb.Sql2012
             get { return StorageProviders.Sql2012; }
         }
 
-        public IConnectionManager ConnectionManager
+        public IDbSettings GetSettings()
+        {
+            return DbSettings.CreateDefault();
+        }
+
+	    public IConnectionManager ConnectionManager
         {
             get { return _connectionManager; }
             set
@@ -76,9 +81,9 @@ namespace SisoDb.Sql2012
                 _sqlStatements);
 	    }
 
-	    public virtual IDbSchemaManager GetDbSchemaManager()
+        public virtual IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db)
         {
-			return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
+            return new DbSchemaManager(new SqlDbSchemaUpserter(db, _sqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)

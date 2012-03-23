@@ -4,11 +4,10 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
 {
-    public class SqlDbUniquesSchemaSynchronizer : IDbSchemaSynchronizer
+    public class SqlDbUniquesSchemaSynchronizer
     {
         private readonly ISqlStatements _sqlStatements;
 
@@ -21,9 +20,9 @@ namespace SisoDb.DbSchema
 
 		public void Synchronize(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            var keyNamesToDrop = GetKeyNamesToDrop(structureSchema, dbClient);
+            var keyNamesToDrop = GetDbKeyNamesToDrop(structureSchema, dbClient);
 
-            if (keyNamesToDrop.Count > 0)
+            if (keyNamesToDrop.Any())
                 DeleteRecordsMatchingKeyNames(structureSchema, keyNamesToDrop, dbClient);
         }
 
@@ -36,15 +35,15 @@ namespace SisoDb.DbSchema
             dbClient.ExecuteNonQuery(sql);
         }
 
-		private IList<string> GetKeyNamesToDrop(IStructureSchema structureSchema, IDbClient dbClient)
+		private string[] GetDbKeyNamesToDrop(IStructureSchema structureSchema, IDbClient dbClient)
         {
             var structureFields = new HashSet<string>(structureSchema.IndexAccessors.Select(iac => iac.Path));
-            var keyNames = GetKeyNames(structureSchema, dbClient);
+            var keyNames = GetExistingDbKeyNames(structureSchema, dbClient);
 
-            return keyNames.Where(kn => !structureFields.Contains(kn)).ToList();
+            return keyNames.Where(kn => !structureFields.Contains(kn)).ToArray();
         }
 
-		private IEnumerable<string> GetKeyNames(IStructureSchema structureSchema, IDbClient dbClient)
+		private IEnumerable<string> GetExistingDbKeyNames(IStructureSchema structureSchema, IDbClient dbClient)
         {
             var dbColumns = new List<string>();
 

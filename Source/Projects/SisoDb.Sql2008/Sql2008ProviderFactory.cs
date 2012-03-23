@@ -27,6 +27,11 @@ namespace SisoDb.Sql2008
             get { return StorageProviders.Sql2008; }
         }
 
+        public IDbSettings GetSettings()
+        {
+            return DbSettings.CreateDefault();
+        }
+
         public IConnectionManager ConnectionManager
         {
             get { return _connectionManager; }
@@ -76,9 +81,9 @@ namespace SisoDb.Sql2008
                 _sqlStatements);
         }
 
-        public virtual IDbSchemaManager GetDbSchemaManager()
+        public virtual IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db)
         {
-            return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
+            return new DbSchemaManager(new SqlDbSchemaUpserter(db, _sqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)

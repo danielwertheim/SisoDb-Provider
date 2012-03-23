@@ -7,17 +7,20 @@ namespace SisoDb.DbSchema
 {
 	public class SqlDbSchemaUpserter : IDbSchemaUpserter
 	{
-		private readonly SqlDbStructuresSchemaBuilder _structuresDbSchemaBuilder;
+	    private readonly ISisoDatabase _db;
+	    private readonly SqlDbStructuresSchemaBuilder _structuresDbSchemaBuilder;
 		private readonly SqlDbIndexesSchemaBuilder _indexesDbSchemaBuilder;
 		private readonly SqlDbUniquesSchemaBuilder _uniquesDbSchemaBuilder;
 
 		private readonly SqlDbIndexesSchemaSynchronizer _indexesDbSchemaSynchronizer;
 		private readonly SqlDbUniquesSchemaSynchronizer _uniquesDbSchemaSynchronizer;
 
-		public SqlDbSchemaUpserter(ISqlStatements sqlStatements)
+		public SqlDbSchemaUpserter(ISisoDatabase db, ISqlStatements sqlStatements)
 		{
-			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
+		    Ensure.That(db, "db").IsNotNull();
+		    Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
+            _db = db;
 			_structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(sqlStatements);
 			_indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(sqlStatements);
 			_uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(sqlStatements);
@@ -36,11 +39,13 @@ namespace SisoDb.DbSchema
 			var indexesTableStatuses = dbClient.GetIndexesTableStatuses(indexesTableNames);
 			var uniquesTableExists = dbClient.TableExists(uniquesTableName);
 
-			if (indexesTableStatuses.AllExists)
-				_indexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
+            if(_db.Settings.SynchronizeSchemaChanges)
+            {
+                _indexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, indexesTableStatuses.GetTableNamesForExisting());
 
-			if (uniquesTableExists)
-				_uniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
+                if (uniquesTableExists)
+                    _uniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
+            }
 
 			if (structuresTableExists && indexesTableStatuses.AllExists && uniquesTableExists)
 				return;

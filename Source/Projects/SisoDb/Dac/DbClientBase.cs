@@ -37,7 +37,7 @@ namespace SisoDb.Dac
             Transaction = transaction;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             GC.SuppressFinalize(this);
 
@@ -137,11 +137,9 @@ namespace SisoDb.Dac
             OnAfterRenameOfStructureSet(newStructureTableName, newUniquesTableName, newIndexesTableNames);
         }
 
-        protected virtual void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames)
-        {}
+        protected virtual void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames) { }
 
-        protected virtual void OnAfterRenameOfStructureSet(string newStructureTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames)
-        { }
+        protected virtual void OnAfterRenameOfStructureSet(string newStructureTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames) { }
 
         protected virtual void OnRenameStructureTable(string oldTableName, string newTableName)
         {

@@ -7,12 +7,14 @@ using SisoDb.Structures;
 namespace SisoDb
 {
 	/// <summary>
-	/// When targeting a Database oriented provider, e.g all providers extending <see cref="SisoDbDatabase"/>, the infrastructure
-	/// could make use of this factory to ease the interaction with <see cref="SisoDbDatabase"/>.
+	/// When targeting a Database oriented provider, e.g all providers extending <see cref="SisoDatabase"/>, the infrastructure
+	/// could make use of this factory to ease the interaction with <see cref="SisoDatabase"/>.
 	/// </summary>
 	public interface IDbProviderFactory
     {
         StorageProviders ProviderType { get; }
+
+	    IDbSettings GetSettings();
 
         IConnectionManager ConnectionManager { get; set; }
 
@@ -24,7 +26,7 @@ namespace SisoDb
 
         IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
 
-        IDbSchemaManager GetDbSchemaManager();
+        IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db);
 
 		IStructureInserter GetStructureInserter(IDbClient dbClient);
 

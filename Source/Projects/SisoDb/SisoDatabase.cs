@@ -16,7 +16,7 @@ namespace SisoDb
     {
         private readonly object _lockObject;
         private readonly ISisoConnectionInfo _connectionInfo;
-        private readonly IDbSettings _settings;
+        private IDbSettings _settings;
         private readonly IDbProviderFactory _providerFactory;
         private readonly IDbSchemaManager _dbSchemaManager;
         private IStructureSchemas _structureSchemas;
@@ -43,6 +43,11 @@ namespace SisoDb
         public IDbSettings Settings
         {
             get { return _settings; }
+            set 
+            {
+                Ensure.That(value, "Settings").IsNotNull();
+                _settings = value;
+            }
         }
 
         public ICacheProvider CacheProvider { get; set; }
@@ -101,9 +106,9 @@ namespace SisoDb
 
             _lockObject = new object();
             _connectionInfo = connectionInfo;
-            _settings = new DbSettings(500, 500);
             _providerFactory = dbProviderFactory;
-            _dbSchemaManager = ProviderFactory.GetDbSchemaManager();
+            _dbSchemaManager = ProviderFactory.GetDbSchemaManagerFor(this);
+            Settings = ProviderFactory.GetSettings();
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
             StructureBuilders = new StructureBuilders();
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());

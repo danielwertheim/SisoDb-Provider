@@ -1,5 +1,6 @@
 ﻿using EnsureThat;
 using NCore.Collections;
+using PineCone.Serializers;
 using PineCone.Structures.Schemas;
 using SisoDb.Caching;
 
@@ -55,6 +56,8 @@ namespace SisoDb.Maintenance
                     dbClient.ClearQueryIndexes(structureSchema);
 
                     var structureBuilder = _db.StructureBuilders.ForUpdates(structureSchema);
+                    structureBuilder.StructureSerializer = new EmptyStructureSerializer(); //We don't need Json to regenerate Query indexes.
+
                     var structureInserter = _db.ProviderFactory.GetStructureInserter(dbClient);
 
                     foreach (var structuresBatch in _db.Serializer.DeserializeMany<T>(

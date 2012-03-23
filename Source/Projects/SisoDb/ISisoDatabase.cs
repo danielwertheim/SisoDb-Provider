@@ -36,7 +36,7 @@ namespace SisoDb
         /// <summary>
         /// Runtime settings associated with the db.
         /// </summary>
-        IDbSettings Settings { get; }
+        IDbSettings Settings { get; set; }
 
         /// <summary>
 		/// By assigning a <see cref="ICacheProvider"/> you get
