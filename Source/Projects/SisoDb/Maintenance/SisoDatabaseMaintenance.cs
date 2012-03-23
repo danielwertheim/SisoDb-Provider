@@ -1,4 +1,5 @@
-﻿using EnsureThat;
+﻿using System;
+using EnsureThat;
 using NCore.Collections;
 using PineCone.Serializers;
 using PineCone.Structures.Schemas;
@@ -66,6 +67,17 @@ namespace SisoDb.Maintenance
                         structureInserter.InsertIndexesOnly(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
                     }
                 }
+            }
+        }
+
+        public virtual void Migrate<TOld, TNew>(Func<TOld, TNew, MigrationStatuses> modifier) where TOld : class where TNew : class
+        {
+            Ensure.That(modifier, "modifier").IsNotNull();
+
+            lock (_db.LockObject)
+            {
+                var migrator = new DbStructureSetMigrator(_db);
+                migrator.Migrate(modifier);
             }
         }
 

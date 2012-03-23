@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using Machine.Specifications;
 using NCore;
+using SisoDb.Maintenance;
 using SisoDb.Resources;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.Database
+namespace SisoDb.Specifications.Database.Maintenance
 {
-	class MigrateStructureSet
+	class Migrate
 	{
 		[Subject(typeof(DbStructureSetMigrator), "Update TOld, TNew")]
 		public class when_stored_as_person_and_transformed_to_sales_person_with_more_fine_grained_properties : SpecificationBase
@@ -26,9 +27,7 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
+			    TestContext.Database.Maintenance.Migrate<ModelComplexUpdates.Person, ModelComplexUpdates.SalesPerson>((p, sp) =>
 				{
 					var names = p.Name.Split(' ');
 					sp.Firstname = names[0];
@@ -39,15 +38,14 @@ namespace SisoDb.Specifications.Database
 					sp.Office.Zip = address[1];
 					sp.Office.City = address[2];
 
-					return StructureSetMigratorStatuses.Keep;
+					return MigrationStatuses.Keep;
 				});
-			};
 
-			It should_have_removed_the_person = () =>
+			It should_not_have_removed_the_person = () =>
 			{
 				using (var q = TestContext.Database.BeginSession())
 				{
-					q.Query<ModelComplexUpdates.Person>().Count().ShouldEqual(0);
+					q.Query<ModelComplexUpdates.Person>().Count().ShouldEqual(1);
 				}
 			};
 
@@ -72,9 +70,9 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.ItemForPropChange { String1 = "A" };
-				var orgItem2 = new ModelOld.ItemForPropChange { String1 = "B" };
-				var orgItem3 = new ModelOld.ItemForPropChange { String1 = "C" };
+				var orgItem1 = new ModelOld.IdentityItemOld { String1 = "A" };
+				var orgItem2 = new ModelOld.IdentityItemOld { String1 = "B" };
+				var orgItem3 = new ModelOld.IdentityItemOld { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -90,24 +88,21 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.IdentityItemOld, ModelNew.IdentityItemNew>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = oldItem.String1;
 
 					if (oldItem.StructureId == _orgItem2Id)
-						return StructureSetMigratorStatuses.Trash;
+						return MigrationStatuses.Trash;
 
-					return StructureSetMigratorStatuses.Keep;
+					return MigrationStatuses.Keep;
 				});
-			};
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
 				using (var q = TestContext.Database.BeginSession())
 				{
-					var newItem1 = q.GetById<ModelNew.ItemForPropChange>(_orgItem1Id);
+					var newItem1 = q.GetById<ModelNew.IdentityItemNew>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
 					newItem1.NewString1 = "A";
 				}
@@ -117,7 +112,7 @@ namespace SisoDb.Specifications.Database
 			{
 				using (var q = TestContext.Database.BeginSession())
 				{
-					var newItem2 = q.GetById<ModelNew.ItemForPropChange>(_orgItem2Id);
+					var newItem2 = q.GetById<ModelNew.IdentityItemNew>(_orgItem2Id);
 					newItem2.ShouldBeNull();
 				}
 			};
@@ -126,7 +121,7 @@ namespace SisoDb.Specifications.Database
 			{
 				using (var q = TestContext.Database.BeginSession())
 				{
-					var newItem3 = q.GetById<ModelNew.ItemForPropChange>(_orgItem3Id);
+					var newItem3 = q.GetById<ModelNew.IdentityItemNew>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
 					newItem3.NewString1 = "C";
 				}
@@ -140,9 +135,9 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.GuidItemForPropChange { String1 = "A" };
-				var orgItem2 = new ModelOld.GuidItemForPropChange { String1 = "B" };
-				var orgItem3 = new ModelOld.GuidItemForPropChange { String1 = "C" };
+				var orgItem1 = new ModelOld.GuidItemOld { String1 = "A" };
+				var orgItem2 = new ModelOld.GuidItemOld { String1 = "B" };
+				var orgItem3 = new ModelOld.GuidItemOld { String1 = "C" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -158,24 +153,21 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.GuidItemOld, ModelNew.GuidItemNew>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = oldItem.String1;
 
 					if (oldItem.StructureId == _orgItem2Id)
-						return StructureSetMigratorStatuses.Trash;
+						return MigrationStatuses.Trash;
 
-					return StructureSetMigratorStatuses.Keep;
+					return MigrationStatuses.Keep;
 				});
-			};
 
 			It should_have_kept_and_updated_all_members_except_id_of_the_first_item = () =>
 			{
 				using (var q = TestContext.Database.BeginSession())
 				{
-					var newItem1 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem1Id);
+					var newItem1 = q.GetById<ModelNew.GuidItemNew>(_orgItem1Id);
 					newItem1.ShouldNotBeNull();
 					newItem1.NewString1 = "A";
 				}
@@ -185,7 +177,7 @@ namespace SisoDb.Specifications.Database
 			{
 				using (var q = TestContext.Database.BeginSession())
 				{
-					var newItem2 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem2Id);
+					var newItem2 = q.GetById<ModelNew.GuidItemNew>(_orgItem2Id);
 					newItem2.ShouldBeNull();
 				}
 			};
@@ -194,7 +186,7 @@ namespace SisoDb.Specifications.Database
 			{
 				using (var q = TestContext.Database.BeginSession())
 				{
-					var newItem3 = q.GetById<ModelNew.GuidItemForPropChange>(_orgItem3Id);
+					var newItem3 = q.GetById<ModelNew.GuidItemNew>(_orgItem3Id);
 					newItem3.ShouldNotBeNull();
 					newItem3.NewString1 = "C";
 				}
@@ -208,8 +200,8 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.GuidItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
+				var orgItem1 = new ModelOld.GuidItemOld { Int1 = 142, String1 = "A" };
+				var orgItem2 = new ModelOld.GuidItemOld { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -222,27 +214,24 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.GuidItemOld, ModelNew.GuidItemNew>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = "New" + oldItem.String1;
 
 					if (oldItem.StructureId == _orgItem2Id)
-						return StructureSetMigratorStatuses.Abort;
+						return MigrationStatuses.Abort;
 
-					return StructureSetMigratorStatuses.Keep;
+					return MigrationStatuses.Keep;
 				});
-			};
 
 			It should_have_kept_old_items_untouched = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.GuidItemForPropChange> items;
+				IList<ModelOld.GuidItemOld> items;
 
 				using (var q = TestContext.Database.BeginSession())
-					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
+					items = q.Query<ModelOld.GuidItemOld>().ToList();
 
 				items[0].StructureId.ShouldEqual(_orgItem1Id);
 				items[0].Int1.ShouldEqual(142);
@@ -261,8 +250,8 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.ItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
+				var orgItem1 = new ModelOld.IdentityItemOld { Int1 = 142, String1 = "A" };
+				var orgItem2 = new ModelOld.IdentityItemOld { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -277,33 +266,31 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () => CaughtException = Catch.Exception(() =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.IdentityItemOld, ModelNew.IdentityItemNew>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
 						newItem.StructureId = 0;
 
 					newItem.NewString1 = "New" + oldItem.String1;
 
-					return StructureSetMigratorStatuses.Keep;
-				});
-			});
+					return MigrationStatuses.Keep;
+				})
+			);
 
 			It should_have_failed = () => CaughtException.ShouldNotBeNull();
 
 			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(0, _orgItem2Id));
+				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetMigrator_NewIdDoesNotMatchOldId.Inject(0, _orgItem2Id));
 
 			It should_have_kept_old_items_untouched = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.ItemForPropChange> items;
+				IList<ModelOld.IdentityItemOld> items;
 
 				using (var q = TestContext.Database.BeginSession())
 				{
-					items = q.Query<ModelOld.ItemForPropChange>().ToList();
+					items = q.Query<ModelOld.IdentityItemOld>().ToList();
 				}
 
 				items.Count.ShouldEqual(2);
@@ -325,8 +312,8 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.GuidItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
+				var orgItem1 = new ModelOld.GuidItemOld { Int1 = 142, String1 = "A" };
+				var orgItem2 = new ModelOld.GuidItemOld { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -341,33 +328,31 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () => CaughtException = Catch.Exception(() =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.GuidItemOld, ModelNew.GuidItemNew>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
 						newItem.StructureId = Guid.Empty;
 
 					newItem.NewString1 = "New" + oldItem.String1;
 
-					return StructureSetMigratorStatuses.Keep;
-				});
-			});
+					return MigrationStatuses.Keep;
+				})
+			);
 
 			It should_have_failed = () => CaughtException.ShouldNotBeNull();
 
 			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(Guid.Empty, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetMigrator_NewIdDoesNotMatchOldId.Inject(Guid.Empty, _orgItem2Id));
 
 			It should_have_kept_old_items_untouched = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.GuidItemForPropChange> items;
+				IList<ModelOld.GuidItemOld> items;
 
 				using (var q = TestContext.Database.BeginSession())
 				{
-					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
+					items = q.Query<ModelOld.GuidItemOld>().ToList();
 				}
 
 				items.Count.ShouldEqual(2);
@@ -389,8 +374,8 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.ItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
+				var orgItem1 = new ModelOld.IdentityItemOld { Int1 = 142, String1 = "A" };
+				var orgItem2 = new ModelOld.IdentityItemOld { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -406,33 +391,30 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () => CaughtException = Catch.Exception(() =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.IdentityItemOld, ModelNew.IdentityItemNew>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
 						newItem.StructureId = _newItem2Id;
 
 					newItem.NewString1 = "New" + oldItem.String1;
 
-					return StructureSetMigratorStatuses.Keep;
-				});
-			});
+					return MigrationStatuses.Keep;
+				}));
 
 			It should_have_failed = () => CaughtException.ShouldNotBeNull();
 
 			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetMigrator_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
 
 			It should_have_kept_old_items_untouched = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.ItemForPropChange> items;
+				IList<ModelOld.IdentityItemOld> items;
 
 				using (var q = TestContext.Database.BeginSession())
 				{
-					items = q.Query<ModelOld.ItemForPropChange>().ToList();
+					items = q.Query<ModelOld.IdentityItemOld>().ToList();
 				}
 
 				items.Count.ShouldEqual(2);
@@ -455,8 +437,8 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.GuidItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
+				var orgItem1 = new ModelOld.GuidItemOld { Int1 = 142, String1 = "A" };
+				var orgItem2 = new ModelOld.GuidItemOld { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -472,33 +454,30 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () => CaughtException = Catch.Exception(() =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.GuidItemOld, ModelNew.GuidItemNew>((oldItem, newItem) =>
 				{
 					if (oldItem.StructureId == _orgItem2Id)
 						newItem.StructureId = _newItem2Id;
 
 					newItem.NewString1 = "New" + oldItem.String1;
 
-					return StructureSetMigratorStatuses.Keep;
-				});
-			});
+					return MigrationStatuses.Keep;
+				}));
 
 			It should_have_failed = () => CaughtException.ShouldNotBeNull();
 
 			It should_have_descriptive_message = () =>
-				CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetUpdater_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.StructureSetMigrator_NewIdDoesNotMatchOldId.Inject(_newItem2Id, _orgItem2Id));
 
 			It should_have_kept_old_items_untouched = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelOld.GuidItemForPropChange> items;
+				IList<ModelOld.GuidItemOld> items;
 
 				using (var q = TestContext.Database.BeginSession())
 				{
-					items = q.Query<ModelOld.GuidItemForPropChange>().ToList();
+					items = q.Query<ModelOld.GuidItemOld>().ToList();
 				}
 
 				items.Count.ShouldEqual(2);
@@ -521,8 +500,8 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.ItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.ItemForPropChange { Int1 = 242, String1 = "B" };
+				var orgItem1 = new ModelOld.IdentityItemOld { Int1 = 142, String1 = "A" };
+				var orgItem2 = new ModelOld.IdentityItemOld { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -537,25 +516,22 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.ItemForPropChange, ModelNew.ItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.IdentityItemOld, ModelNew.IdentityItemNew>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = "New" + oldItem.String1;
 
-					return StructureSetMigratorStatuses.Keep;
+					return MigrationStatuses.Keep;
 				});
-			};
 
 			It should_have_updated_all_items_and_allowed_new_id = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelNew.ItemForPropChange> items;
+				IList<ModelNew.IdentityItemNew> items;
 
 				using (var q = TestContext.Database.BeginSession())
 				{
-					items = q.Query<ModelNew.ItemForPropChange>().ToList();
+					items = q.Query<ModelNew.IdentityItemNew>().ToList();
 				}
 
 				items.Count.ShouldEqual(2);
@@ -575,8 +551,8 @@ namespace SisoDb.Specifications.Database
 		{
 			Establish context = () =>
 			{
-				var orgItem1 = new ModelOld.GuidItemForPropChange { Int1 = 142, String1 = "A" };
-				var orgItem2 = new ModelOld.GuidItemForPropChange { Int1 = 242, String1 = "B" };
+				var orgItem1 = new ModelOld.GuidItemOld { Int1 = 142, String1 = "A" };
+				var orgItem2 = new ModelOld.GuidItemOld { Int1 = 242, String1 = "B" };
 
 				var testContext = TestContextFactory.Create();
 				using (var session = testContext.Database.BeginSession())
@@ -591,25 +567,22 @@ namespace SisoDb.Specifications.Database
 			};
 
 			Because of = () =>
-			{
-				var migrator = TestContext.Database.GetStructureSetMigrator();
-				migrator.Migrate<ModelOld.GuidItemForPropChange, ModelNew.GuidItemForPropChange>((oldItem, newItem) =>
+                TestContext.Database.Maintenance.Migrate<ModelOld.GuidItemOld, ModelNew.GuidItemNew>((oldItem, newItem) =>
 				{
 					newItem.NewString1 = "New" + oldItem.String1;
 
-					return StructureSetMigratorStatuses.Keep;
+					return MigrationStatuses.Keep;
 				});
-			};
 
 			It should_have_updated_all_items_and_allowed_new_id = () =>
 			{
 				TestContext.Database.StructureSchemas.Clear();
 
-				IList<ModelNew.GuidItemForPropChange> items;
+				IList<ModelNew.GuidItemNew> items;
 
 				using (var q = TestContext.Database.BeginSession())
 				{
-					items = q.Query<ModelNew.GuidItemForPropChange>().ToList();
+					items = q.Query<ModelNew.GuidItemNew>().ToList();
 				}
 
 				items.Count.ShouldEqual(2);
@@ -661,7 +634,7 @@ namespace SisoDb.Specifications.Database
 
 		class ModelOld
 		{
-			public class ItemForPropChange
+			public class IdentityItemOld
 			{
 				public int StructureId { get; set; }
 
@@ -670,7 +643,7 @@ namespace SisoDb.Specifications.Database
 				public int Int1 { get; set; }
 			}
 
-			public class GuidItemForPropChange
+			public class GuidItemOld
 			{
 				public Guid StructureId { get; set; }
 
@@ -682,14 +655,14 @@ namespace SisoDb.Specifications.Database
 
 		class ModelNew
 		{
-			public class ItemForPropChange
+			public class IdentityItemNew
 			{
 				public int StructureId { get; set; }
 
 				public string NewString1 { get; set; }
 			}
 
-			public class GuidItemForPropChange
+			public class GuidItemNew
 			{
 				public Guid StructureId { get; set; }
 

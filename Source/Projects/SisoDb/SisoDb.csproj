@@ -99,7 +99,6 @@
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
     <Compile Include="ISingleOperationSession.cs" />
-    <Compile Include="IStructureSetMigrator.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
@@ -112,7 +111,7 @@
     <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
-    <Compile Include="DbStructureSetMigrator.cs" />
+    <Compile Include="Maintenance\DbStructureSetMigrator.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -120,7 +119,7 @@
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="ConnectionManagerBase.cs" />
-    <Compile Include="StructureSetMigratorStatuses.cs" />
+    <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />

@@ -1,9 +1,9 @@
 using System;
 
-namespace SisoDb
+namespace SisoDb.Maintenance
 {
 	[Serializable]
-	public enum StructureSetMigratorStatuses
+	public enum MigrationStatuses
 	{
 		/// <summary>
 		/// Indicates that you want to keep the structure

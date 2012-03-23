@@ -309,15 +309,6 @@ namespace SisoDb.Dac
             ExecuteNonQuery(sql, query.Parameters.ToArray());
         }
 
-        public virtual void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("DeleteWhereIdIsBetween").Inject(structureSchema.GetStructureTableName());
-
-            ExecuteNonQuery(sql, new DacParameter("idFrom", structureIdFrom.Value), new DacParameter("idTo", structureIdTo.Value));
-        }
-
         public virtual void DeleteIndexesAndUniquesById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
