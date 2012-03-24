@@ -70,14 +70,39 @@ namespace SisoDb.Maintenance
             }
         }
 
-        public virtual void Migrate<TOld, TNew>(Func<TOld, TNew, MigrationStatuses> modifier) where TOld : class where TNew : class
+        public virtual void Migrate<TFrom, TTo>(Func<TFrom, TTo, MigrationStatuses> modifier) 
+            where TFrom : class 
+            where TTo : class
         {
             Ensure.That(modifier, "modifier").IsNotNull();
+
+            Migrate(new Migration<TFrom, TTo>(modifier));
+        }
+
+        public virtual void Migrate<TFrom, TTo>(Migration<TFrom, TTo> migration)
+            where TFrom : class
+            where TTo : class
+        {
+            Ensure.That(migration, "migration").IsNotNull();
 
             lock (_db.LockObject)
             {
                 var migrator = new DbStructureSetMigrator(_db);
-                migrator.Migrate(modifier);
+                migrator.Migrate(migration);
+            }
+        }
+
+        public void Migrate<TFrom, TFromTemplate, TTo>(Migration<TFrom, TFromTemplate, TTo> migration)
+            where TFrom : class
+            where TFromTemplate : class
+            where TTo : class
+        {
+            Ensure.That(migration, "migration").IsNotNull();
+
+            lock (_db.LockObject)
+            {
+                var migrator = new DbStructureSetMigrator(_db);
+                migrator.Migrate(migration);
             }
         }
 

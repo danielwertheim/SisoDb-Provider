@@ -12,6 +12,10 @@ namespace SisoDb.Serialization
         IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class;
         
         T Deserialize<T>(string json) where T : class;
+        
+        T DeserializeAnonymous<T>(string json) where T : class;
+
+        T DeserializeAnonymous<T>(string json, T template) where T : class;
 
         object Deserialize(Type structureType, string json);
 
