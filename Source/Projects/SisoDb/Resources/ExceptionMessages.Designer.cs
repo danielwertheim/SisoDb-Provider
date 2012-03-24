@@ -485,24 +485,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Migrate&lt;TOld, TNew&gt; can not be used for structures with the same name..
-        /// </summary>
-        public static string StructureSetMigrator_SchemasHasSameName {
-            get {
-                return ResourceManager.GetString("StructureSetMigrator_SchemasHasSameName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Migrate&lt;TOld, TNew&gt; should not be used for same types..
-        /// </summary>
-        public static string StructureSetMigrator_TOld_TNew_SameType {
-            get {
-                return ResourceManager.GetString("StructureSetMigrator_TOld_TNew_SameType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Supported generic collections on model are: implementations of either IEnumerable&lt;T&gt; or IList&lt;T&gt;..
         /// </summary>
         public static string TypeExtensions_ExtractGenericType {

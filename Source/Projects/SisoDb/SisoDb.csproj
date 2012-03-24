@@ -95,6 +95,7 @@
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="IDbSettings.cs" />
+    <Compile Include="IMigrationInfo.cs" />
     <Compile Include="ISisoDatabaseMaintenance.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
@@ -102,6 +103,8 @@
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
+    <Compile Include="Migrate.cs" />
+    <Compile Include="Migration.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />

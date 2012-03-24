@@ -43,6 +43,24 @@ namespace SisoDb.Serialization
             return OnDeserialize<T>(json);
         }
 
+        public virtual T DeserializeAnonymous<T>(string json) where T : class
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            TypeConfig<T>.EnableAnonymousFieldSetters = true;
+            var templateType = typeof(T);
+
+            return OnDeserializeAnonymous<T>(json, templateType);
+        }
+
+        public virtual T DeserializeAnonymous<T>(string json, T template) where T : class
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            TypeConfig<T>.EnableAnonymousFieldSetters = true;
+            var templateType = typeof (T);
+
+            return OnDeserializeAnonymous<T>(json, templateType);
+        }
+
         public virtual object Deserialize(Type structureType, string json)
         {
             JsConfig<Text>.DeSerializeFn = t => new Text(t);

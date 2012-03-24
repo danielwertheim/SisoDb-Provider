@@ -79,8 +79,8 @@
     <Compile Include="..\sisodb.specifications\database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Migrate.cs">
-      <Link>Database\Maintenance\Migrate.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Migrations.cs">
+      <Link>Database\Maintenance\Migrations.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\Maintenance\RegenerateQueryIndexes.cs">
       <Link>Database\Maintenance\RegenerateQueryIndexes.cs</Link>

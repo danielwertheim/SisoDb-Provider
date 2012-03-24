@@ -256,9 +256,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ReadOnceQueryable_YieldingNotSupported" xml:space="preserve">
     <value>ReadOnceQueryable doesn't support yielding result. Use matching ToList method instead.</value>
   </data>
-  <data name="StructureSetMigrator_TOld_TNew_SameType" xml:space="preserve">
-    <value>Migrate&lt;TOld, TNew&gt; should not be used for same types.</value>
-  </data>
   <data name="WriteSession_UpdateMany_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
   </data>
@@ -279,8 +276,5 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="SqlCe4ConnectionManager_ReleaseAllDbConnections" xml:space="preserve">
     <value>Exceptions occured while releasing SqlCe4Connections from the pool.</value>
-  </data>
-  <data name="StructureSetMigrator_SchemasHasSameName" xml:space="preserve">
-    <value>Migrate&lt;TOld, TNew&gt; can not be used for structures with the same name.</value>
   </data>
 </root>
