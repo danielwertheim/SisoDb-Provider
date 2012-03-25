@@ -157,9 +157,10 @@ namespace SisoDb.Querying
 
 		public virtual int Count(Expression<Func<T, bool>> expression)
 		{
-			QueryBuilder.Clear();
+            QueryBuilder.Clear();
+            QueryBuilder.Where(expression);
 
-			return Session.QueryEngine.Count<T>(QueryBuilder.Where(expression).Build());
+			return Session.QueryEngine.Count<T>(QueryBuilder.Build());
 		}
 
 		public virtual ISisoQueryable<T> Take(int numOfStructures)
