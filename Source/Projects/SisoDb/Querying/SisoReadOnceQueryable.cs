@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using EnsureThat;
 using SisoDb.Resources;
 
@@ -30,8 +31,10 @@ namespace SisoDb.Querying
 			}
 		}
 
-		public override int Count(System.Linq.Expressions.Expression<Func<T, bool>> expression)
+		public override int Count(Expression<Func<T, bool>> expression)
 		{
+		    Ensure.That(expression, "expression").IsNotNull();
+
 			using (var session = Session)
 			{
 				return session.QueryEngine.Count<T>(QueryBuilder.Build());
