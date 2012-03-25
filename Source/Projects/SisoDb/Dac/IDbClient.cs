@@ -34,7 +34,9 @@ namespace SisoDb.Dac
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
 
-        bool Exists(IStructureId structureId, IStructureSchema structureSchema);
+        bool Any(IStructureSchema structureSchema);
+        bool Any(IStructureSchema structureSchema, DbQuery query);
+        bool Exists(IStructureSchema structureSchema, IStructureId structureId);
 
 		string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
         string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema);

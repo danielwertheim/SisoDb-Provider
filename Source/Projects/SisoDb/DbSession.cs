@@ -15,6 +15,7 @@ using SisoDb.Resources;
 
 namespace SisoDb
 {
+    //TODO: Use composition instead for e.g IQueryEngine and IAdvanced
     public abstract class DbSession : ISession, IQueryEngine, IAdvanced
     {
         protected readonly ISisoDatabase Db;
@@ -283,7 +284,38 @@ namespace SisoDb
             });
         }
 
-        public virtual int Count<T>() where T : class
+        public virtual ISisoQueryable<T> Query<T>() where T : class
+        {
+            return Try(() => new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas), this));
+        }
+
+        bool IQueryEngine.Any<T>()
+        {
+            return Try(() =>
+            {
+                var structureSchema = OnUpsertStructureSchema<T>();
+
+                return TransactionalDbClient.Any(structureSchema);
+            });
+        }
+
+        bool IQueryEngine.Any<T>(IQuery query)
+        {
+            return Try(() =>
+            {
+                Ensure.That(query, "query").IsNotNull();
+
+                var structureSchema = OnUpsertStructureSchema<T>();
+
+                if (!query.HasWhere)
+                    return TransactionalDbClient.Any(structureSchema);
+
+                var whereSql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
+                return TransactionalDbClient.Any(structureSchema, whereSql);
+            });
+        }
+
+        int IQueryEngine.Count<T>()
         {
             return Try(() =>
             {
@@ -293,7 +325,7 @@ namespace SisoDb
             });
         }
 
-        public virtual int Count<T>(IQuery query) where T : class
+        int IQueryEngine.Count<T>(IQuery query)
         {
             return Try(() =>
             {
@@ -309,7 +341,7 @@ namespace SisoDb
             });
         }
 
-        public virtual bool Exists<T>(object id) where T : class
+        bool IQueryEngine.Exists<T>(object id)
         {
             return Try(() =>
             {
@@ -319,12 +351,12 @@ namespace SisoDb
                 var structureSchema = OnUpsertStructureSchema<T>();
 
                 if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                    return TransactionalDbClient.Exists(structureId, structureSchema);
+                    return TransactionalDbClient.Exists(structureSchema, structureId);
 
                 return Db.CacheProvider.Exists(
                     structureSchema,
                     structureId,
-                    sid => TransactionalDbClient.Exists(sid, structureSchema));
+                    sid => TransactionalDbClient.Exists(structureSchema, sid));
             });
         }
 
@@ -470,11 +502,6 @@ namespace SisoDb
                 CacheConsumeMode);
 
             return Db.Serializer.SerializeMany(items).ToArray();
-        }
-
-        public virtual ISisoQueryable<T> Query<T>() where T : class
-        {
-            return Try(() => new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(StructureSchemas), this));
         }
 
         public virtual IEnumerable<T> Query<T>(IQuery query) where T : class
@@ -706,7 +733,7 @@ namespace SisoDb
 
             if (!structureSchema.HasConcurrencyToken)
             {
-                var exists = TransactionalDbClient.Exists(structureId, structureSchema);
+                var exists = TransactionalDbClient.Exists(structureSchema, structureId);
                 if (!exists)
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
             }

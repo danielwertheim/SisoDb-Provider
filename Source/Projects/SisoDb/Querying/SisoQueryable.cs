@@ -24,73 +24,48 @@ namespace SisoDb.Querying
 			QueryBuilder = queryBuilder;
 		}
 
-		public virtual T[] ToArray()
-		{
-			return ToEnumerable().ToArray();
-		}
-
-		public virtual TResult[] ToArrayOf<TResult>() where TResult : class
-		{
-			return ToEnumerableOf<TResult>().ToArray();
-		}
-
-        public virtual TResult[] ToArrayOf<TResult>(TResult template) where TResult : class
+        public virtual bool Any()
         {
-            Ensure.That(template, "template").IsNotNull();
-
-            return ToEnumerableOf(template).ToArray();
+            return QueryBuilder.IsEmpty 
+                ? Session.QueryEngine.Any<T>()
+                : Session.QueryEngine.Any<T>(QueryBuilder.Build());
         }
 
-		public virtual string[] ToArrayOfJson()
-		{
-			return ToEnumerableOfJson().ToArray();
-		}
-
-		public virtual IEnumerable<T> ToEnumerable()
-		{
-			return Session.QueryEngine.Query<T>(QueryBuilder.Build());
-		}
-
-		public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
-		{
-			return Session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
-		}
-
-        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template) where TResult : class
+        public virtual bool Any(Expression<Func<T, bool>> expression)
         {
-            Ensure.That(template, "template").IsNotNull();
+            Ensure.That(expression, "expression").IsNotNull();
 
-            return Session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
+            QueryBuilder.Clear();
+            QueryBuilder.Where(expression);
+
+            return Session.QueryEngine.Any<T>(QueryBuilder.Build());
         }
 
-		public virtual IEnumerable<string> ToEnumerableOfJson()
-		{
-			return Session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
-		}
+        public virtual int Count()
+        {
+            return QueryBuilder.IsEmpty
+                ? Session.QueryEngine.Count<T>()
+                : Session.QueryEngine.Count<T>(QueryBuilder.Build());
+        }
 
-		public virtual IList<T> ToList()
-		{
-			return ToEnumerable().ToList();
-		}
+        public virtual int Count(Expression<Func<T, bool>> expression)
+        {
+            Ensure.That(expression, "expression").IsNotNull();
 
-		public virtual IList<TResult> ToListOf<TResult>() where TResult : class
-		{
-			return ToEnumerableOf<TResult>().ToList();
-		}
-        
-	    public virtual IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
+            QueryBuilder.Clear();
+            QueryBuilder.Where(expression);
+
+            return Session.QueryEngine.Count<T>(QueryBuilder.Build());
+        }
+
+	    public virtual bool Exists(object id)
 	    {
-	        Ensure.That(template, "template").IsNotNull();
+	        Ensure.That(id, "id").IsNotNull();
 
-	        return ToEnumerableOf(template).ToList();
+	        return Session.QueryEngine.Exists<T>(id);
 	    }
 
-	    public virtual IList<string> ToListOfJson()
-		{
-			return ToEnumerableOfJson().ToList();
-		}
-
-		public virtual T First()
+	    public virtual T First()
 		{
 			return ToEnumerable().First();
 		}
@@ -150,20 +125,73 @@ namespace SisoDb.Querying
 			return ToEnumerableOfJson().SingleOrDefault();
 		}
 
-		public virtual int Count()
-		{
-			return Session.QueryEngine.Count<T>(QueryBuilder.Build());
-		}
+        public virtual T[] ToArray()
+        {
+            return ToEnumerable().ToArray();
+        }
 
-		public virtual int Count(Expression<Func<T, bool>> expression)
-		{
-            QueryBuilder.Clear();
-            QueryBuilder.Where(expression);
+        public virtual TResult[] ToArrayOf<TResult>() where TResult : class
+        {
+            return ToEnumerableOf<TResult>().ToArray();
+        }
 
-			return Session.QueryEngine.Count<T>(QueryBuilder.Build());
-		}
+        public virtual TResult[] ToArrayOf<TResult>(TResult template) where TResult : class
+        {
+            Ensure.That(template, "template").IsNotNull();
 
-		public virtual ISisoQueryable<T> Take(int numOfStructures)
+            return ToEnumerableOf(template).ToArray();
+        }
+
+        public virtual string[] ToArrayOfJson()
+        {
+            return ToEnumerableOfJson().ToArray();
+        }
+
+        public virtual IEnumerable<T> ToEnumerable()
+        {
+            return Session.QueryEngine.Query<T>(QueryBuilder.Build());
+        }
+
+        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
+        {
+            return Session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
+        }
+
+        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template) where TResult : class
+        {
+            Ensure.That(template, "template").IsNotNull();
+
+            return Session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
+        }
+
+        public virtual IEnumerable<string> ToEnumerableOfJson()
+        {
+            return Session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
+        }
+
+        public virtual IList<T> ToList()
+        {
+            return ToEnumerable().ToList();
+        }
+
+        public virtual IList<TResult> ToListOf<TResult>() where TResult : class
+        {
+            return ToEnumerableOf<TResult>().ToList();
+        }
+
+        public virtual IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
+        {
+            Ensure.That(template, "template").IsNotNull();
+
+            return ToEnumerableOf(template).ToList();
+        }
+
+        public virtual IList<string> ToListOfJson()
+        {
+            return ToEnumerableOfJson().ToList();
+        }
+
+        public virtual ISisoQueryable<T> Take(int numOfStructures)
 		{
 			QueryBuilder.Take(numOfStructures);
 			

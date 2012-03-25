@@ -166,6 +166,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\InsertsWithCustomStructureId.cs">
       <Link>Session\InsertsWithCustomStructureId.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Any.cs">
+      <Link>Session\Querying\Any.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Count.cs">
       <Link>Session\Querying\Count.cs</Link>
     </Compile>

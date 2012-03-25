@@ -4,40 +4,40 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Session.Querying
 {
-    class Count
+    class Any
     {
-        [Subject(typeof(ISession), "Count")]
+        [Subject(typeof(ISession), "Any")]
         public class when_no_expression_is_specified_and_no_items_exists : SpecificationBase
         {
             Establish context = () =>
                 TestContext = TestContextFactory.Create();
 
             Because of = () =>
-                _itemsCount = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Count();
+                _result = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Any();
 
 
-            It should_be_0 = () =>
-                _itemsCount.ShouldEqual(0);
+            It should_be_false= () =>
+                _result.ShouldBeFalse();
 
-            private static int _itemsCount;
+            private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Count")]
+        [Subject(typeof(ISession), "Any")]
         public class when_expression_is_specified_and_no_items_exists : SpecificationBase
         {
             Establish context = () =>
                 TestContext = TestContextFactory.Create();
 
             Because of = () =>
-                _itemsCount = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Count(x => x.StringValue == "Goofy");
+                _result = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Any(x => x.StringValue == "Goofy");
 
-            It should_be_0 = () =>
-                _itemsCount.ShouldEqual(0);
+            It should_be_false = () =>
+                _result.ShouldBeFalse();
 
-            private static int _itemsCount;
+            private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Count")]
+        [Subject(typeof(ISession), "Any")]
         public class when_no_expression_is_specified_and_two_items_exists : SpecificationBase
         {
             Establish context = () =>
@@ -51,15 +51,15 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () =>
-                _itemsCount = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Count();
+                _result = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Any();
             
-            It should_be_2 = () => 
-                _itemsCount.ShouldEqual(2);
+            It should_be_true = () =>
+                _result.ShouldBeTrue();
 
-            private static int _itemsCount;
+            private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Count")]
+        [Subject(typeof(ISession), "Any")]
         public class when_expression_is_specified_and_it_matches_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -70,16 +70,17 @@ namespace SisoDb.Specifications.Session.Querying
                 {
                     session.InsertMany(QueryGuidItem.CreateFourItems<QueryGuidItem>());
 
-                    _count = session.Query<QueryGuidItem>().Count(x => x.SortOrder >= 3);
+                    _result = session.Query<QueryGuidItem>().Any(x => x.SortOrder >= 3);
                 }
             };
 
-            It should_be_2 = () => _count.ShouldEqual(2);
+            It should_be_true = () =>
+                _result.ShouldBeTrue();
 
-            private static int _count;
+            private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Count")]
+        [Subject(typeof(ISession), "Any")]
         public class when_expression_is_specified_and_it_matches_two_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>
@@ -94,15 +95,15 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () =>
-                _itemsCount = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Count(x => x.SortOrder > 1);
+                _result = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Any(x => x.SortOrder > 1);
 
-            It should_be_2 = () => 
-                _itemsCount.ShouldEqual(2);
+            It should_be_true = () =>
+                _result.ShouldBeTrue();
 
-            private static int _itemsCount;
+            private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Count")]
+        [Subject(typeof(ISession), "Any")]
         public class when_expression_is_specified_and_it_matches_none_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>
@@ -117,12 +118,12 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () =>
-                _itemsCount = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Count(x => x.SortOrder < 1);
+                _result = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Any(x => x.SortOrder < 1);
 
-            It should_be_0 = () => 
-                _itemsCount.ShouldEqual(0);
+            It should_be_false = () =>
+                _result.ShouldBeFalse();
 
-            private static int _itemsCount;
+            private static bool _result;
         }
     }
 }

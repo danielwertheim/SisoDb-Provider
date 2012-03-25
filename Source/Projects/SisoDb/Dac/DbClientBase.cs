@@ -365,15 +365,36 @@ namespace SisoDb.Dac
         public virtual int RowCountByQuery(IStructureSchema structureSchema, DbQuery query)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(query, "query").IsNotNull();
 
             var sql = SqlStatements.GetSql("RowCountByQuery").Inject(structureSchema.GetStructureTableName(), query.Sql);
 
             return ExecuteScalar<int>(sql, query.Parameters.ToArray());
         }
 
-        public virtual bool Exists(IStructureId structureId, IStructureSchema structureSchema)
+        public virtual bool Any(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("RowCount").Inject(structureSchema.GetStructureTableName());
+
+            return ExecuteScalar<int>(sql) > 0;
+        }
+
+        public virtual bool Any(IStructureSchema structureSchema, DbQuery query)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(query, "query").IsNotNull();
+
+            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(structureSchema.GetStructureTableName(), query.Sql);
+
+            return ExecuteScalar<int>(sql, query.Parameters.ToArray()) > 0;
+        }
+
+        public virtual bool Exists(IStructureSchema structureSchema, IStructureId structureId)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(structureId, "structureId").IsNotNull();
 
             var sql = SqlStatements.GetSql("ExistsById").Inject(structureSchema.GetStructureTableName());
 

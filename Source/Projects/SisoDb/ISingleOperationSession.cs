@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace SisoDb
 {
 	public interface ISingleOperationSession 
 	{
-	    int Count<T>() where T : class;
-	    int Count<T>(Expression<Func<T, bool>> expression) where T : class;
-
-	    bool Exists<T>(object id) where T : class;
+        ISisoQueryable<T> Query<T>() where T : class;
 
 	    T GetById<T>(object id) where T : class;
 	    TOut GetByIdAs<TContract, TOut>(object id) where TContract : class where TOut : class;
@@ -17,8 +13,6 @@ namespace SisoDb
 	    T[] GetByIds<T>(params object[] ids) where T : class;
 	    TOut[] GetByIdsAs<TContract, TOut>(params object[] ids) where TContract : class where TOut : class;
 	    string[] GetByIdsAsJson<T>(params object[] ids) where T : class;
-
-	    ISisoQueryable<T> Query<T>() where T : class;
 
 	    void Insert<T>(T item) where T : class;
         void InsertAs<T>(object item) where T : class;

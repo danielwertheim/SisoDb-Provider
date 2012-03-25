@@ -19,7 +19,7 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () => 
-                         _exists = TestContext.Database.UseOnceTo().Exists<QueryGuidItem>(_structures[1].StructureId);
+                         _exists = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Exists(_structures[1].StructureId);
 
             It should_return_true = () => _exists.ShouldBeTrue();
 
@@ -40,7 +40,7 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () =>
-                         _exists = TestContext.Database.UseOnceTo().Exists<QueryGuidItem>(_fooId);
+                         _exists = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Exists(_fooId);
 
             It should_return_false = () => _exists.ShouldBeFalse();
 

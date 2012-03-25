@@ -3,8 +3,9 @@ using System.Linq.Expressions;
 
 namespace SisoDb.Querying
 {
-	public interface IQueryBuilder<T> where T : class 
+	public interface IQueryBuilder<T> where T : class
 	{
+	    bool IsEmpty { get; }
 		void Clear();
 		IQuery Build();
 		IQueryBuilder<T> Take(int numOfStructures);
