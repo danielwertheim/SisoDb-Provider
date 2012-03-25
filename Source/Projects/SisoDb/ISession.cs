@@ -259,5 +259,14 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
         void DeleteByIds<T>(params object[] ids) where T : class;
+
+	    /// <summary>
+	    /// Deletes all structures for the defined structure <paramref name="structureType"/>
+	    /// matching passed ids.
+	    /// </summary>
+	    /// <param name="structureType">
+	    /// Structure type, used as a contract defining the scheme.</param>
+	    /// <param name="ids">Ids used for matching the structures to delete.</param>
+	    void DeleteByIds(Type structureType, params object[] ids);
 	}
 }
