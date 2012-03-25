@@ -152,8 +152,6 @@ namespace SisoDb.Querying
 
 		public virtual int Count()
 		{
-			QueryBuilder.Clear();
-
 			return Session.QueryEngine.Count<T>(QueryBuilder.Build());
 		}
 
