@@ -283,6 +283,16 @@ namespace SisoDb
             });
         }
 
+        public virtual int Count<T>() where T : class
+        {
+            return Try(() =>
+            {
+                var structureSchema = OnUpsertStructureSchema<T>();
+
+                return TransactionalDbClient.RowCount(structureSchema);
+            });
+        }
+
         public virtual int Count<T>(IQuery query) where T : class
         {
             return Try(() =>

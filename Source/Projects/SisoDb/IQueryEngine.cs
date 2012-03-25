@@ -5,9 +5,17 @@ namespace SisoDb
 {
 	public interface IQueryEngine
 	{
+        /// <summary>
+        /// Issues a simple count for how many structures there
+        /// are in the specified structure <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+	    int Count<T>() where T : class;
+
 		/// <summary>
 		/// Issues a simple count for how many structures there are
-		/// in the specified structure type <typeparamref name="T"/>,
+		/// in the specified structure <typeparamref name="T"/>,
 		/// matching the where expression in <see cref="IQuery.Where"/>.
 		/// </summary>
 		/// <typeparam name="T">
