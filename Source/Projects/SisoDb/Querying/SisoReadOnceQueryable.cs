@@ -37,7 +37,10 @@ namespace SisoDb.Querying
 
 			using (var session = Session)
 			{
-				return session.QueryEngine.Count<T>(QueryBuilder.Build());
+                QueryBuilder.Clear();
+			    QueryBuilder.Where(expression);
+
+                return session.QueryEngine.Count<T>(QueryBuilder.Build());
 			}
 		}
 		
@@ -104,7 +107,7 @@ namespace SisoDb.Querying
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToArray();
 			}
 		}
-
+        
         public override TResult[] ToArrayOf<TResult>(TResult template)
         {
             using (var session = Session)
