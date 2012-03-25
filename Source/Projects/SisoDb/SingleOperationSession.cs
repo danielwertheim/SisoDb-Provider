@@ -57,6 +57,17 @@ namespace SisoDb
     		}
     	}
 
+        public virtual string GetByIdAsJson(Type structureType, object id)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(id, "id").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetByIdAsJson(structureType, id);
+            }
+        }
+
         public virtual T[] GetByIds<T>(params object[] ids) where T : class
 		{
 			Ensure.That(ids, "ids").HasItems();
@@ -89,6 +100,17 @@ namespace SisoDb
     		}
     	}
 
+        public virtual IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(ids, "ids").HasItems();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetByIdsAsJson(structureType, ids);
+            }
+        }
+
         public virtual void Insert<T>(T item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
@@ -119,6 +141,17 @@ namespace SisoDb
             }
         }
 
+        public virtual string InsertJson(Type structureType, string json)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(json, "json").IsNotNullOrWhiteSpace();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.InsertJson(structureType, json);
+            }
+        }
+
         public virtual void InsertMany<T>(IEnumerable<T> items) where T : class
         {
             Ensure.That(items, "items").IsNotNull();
@@ -139,6 +172,17 @@ namespace SisoDb
             }
         }
 
+        public virtual void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(json, "json").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.InsertManyJson(structureType, json, onBatchInserted);
+            }
+        }
+
         public virtual void Update<T>(T item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
@@ -146,6 +190,17 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.Update(item);
+            }
+        }
+
+        public virtual void Update(Type structureType, object item)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(item, "item").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.Update(structureType, item);
             }
         }
 
@@ -170,6 +225,17 @@ namespace SisoDb
             }
         }
 
+        public virtual void DeleteById(Type structureType, object id)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(id, "id").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.DeleteById(structureType, id);
+            }
+        }
+
         public virtual void DeleteByIds<T>(params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
@@ -177,6 +243,17 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.DeleteByIds<T>(ids);
+            }
+        }
+
+        public virtual void DeleteByIds(Type structureType, params object[] ids)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(ids, "ids").HasItems();
+
+            using (var session = Db.BeginSession())
+            {
+                session.DeleteByIds(structureType, ids);
             }
         }
     }

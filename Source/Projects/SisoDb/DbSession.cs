@@ -848,18 +848,25 @@ namespace SisoDb
 
         public virtual void DeleteByIds<T>(params object[] ids) where T : class
         {
-            Try(() =>
-            {
-                Ensure.That(ids, "ids").HasItems();
+            Try(() => OnDeleteByIds(TypeFor<T>.Type, ids));
+        }
 
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+        public virtual void DeleteByIds(Type structureType, params object[] ids)
+        {
+            Try(() => OnDeleteByIds(structureType, ids));
+        }
 
-                var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
-                var structureSchema = OnUpsertStructureSchema<T>();
+        protected virtual void OnDeleteByIds(Type structureType, params object[] ids)
+        {
+            Ensure.That(ids, "ids").HasItems();
 
-                Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
-                TransactionalDbClient.DeleteByIds(structureIds, structureSchema);
-            });
+            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+            var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
+            var structureSchema = OnUpsertStructureSchema(structureType);
+
+            Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
+            TransactionalDbClient.DeleteByIds(structureIds, structureSchema);
         }
     }
 }
