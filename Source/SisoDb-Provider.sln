@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.AspWebCache", "Proje
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caching", "Caching", "{C3A9298E-FFF7-4245-8378-AEF255B8E9FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Serialization", "Projects\SisoDb.Serialization\SisoDb.Serialization.csproj", "{5DF24B31-1222-467D-AD80-FD3B97A2671A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07A22CB7-158A-4587-A40F-ADE3D72CC567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DF24B31-1222-467D-AD80-FD3B97A2671A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DF24B31-1222-467D-AD80-FD3B97A2671A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DF24B31-1222-467D-AD80-FD3B97A2671A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DF24B31-1222-467D-AD80-FD3B97A2671A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

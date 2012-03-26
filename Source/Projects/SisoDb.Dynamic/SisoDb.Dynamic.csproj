@@ -48,9 +48,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\PineCone.0.67.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.6.0.3283, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ServiceStack.Text.3.6.3\lib\net35\ServiceStack.Text.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,6 +64,10 @@
     <Compile Include="TypeMember.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SisoDb.Serialization\SisoDb.Serialization.csproj">
+      <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
+      <Name>SisoDb.Serialization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>
