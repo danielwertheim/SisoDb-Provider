@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("SisoDb")]
+[assembly: AssemblyTitle("SisoDb.Serialization (based on ServiceStack.Text)")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -10,4 +10,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f4a3a647-0355-4a16-9f21-6b041e8aa186")]
+[assembly: Guid("f3c3aed4-abe5-4352-a5fb-50c061e2a7e2")]
