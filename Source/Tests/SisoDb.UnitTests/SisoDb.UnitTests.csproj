@@ -81,8 +81,6 @@
     <Compile Include="DbSchema\DbSchemasTests.cs" />
     <Compile Include="DbSchema\IndexTableNamesTests.cs" />
     <Compile Include="DbSchema\IndexTableStatuses.cs" />
-    <Compile Include="Dynamic\DynamicServiceStackJsonSerializerTests.cs" />
-    <Compile Include="Dynamic\DynamicStructureTests.cs" />
     <Compile Include="DbSchema\DbSchemaManagerTests.cs" />
     <Compile Include="DbSchema\IndexStorageSchemaTests.cs" />
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
@@ -126,10 +124,6 @@
     <ProjectReference Include="..\..\Projects\SisoDb.AspWebCache\SisoDb.AspWebCache.csproj">
       <Project>{07A22CB7-158A-4587-A40F-ADE3D72CC567}</Project>
       <Name>SisoDb.AspWebCache</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
-      <Project>{A6AEE197-668A-4A08-98A7-F0CB76D359C0}</Project>
-      <Name>SisoDb.Dynamic</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
