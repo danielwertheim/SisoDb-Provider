@@ -199,6 +199,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\RawQueries.cs">
       <Link>Session\Querying\RawQueries.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\Contains.cs">
+      <Link>Session\Querying\StringFunctions\Contains.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\EndsWith.cs">
       <Link>Session\Querying\StringFunctions\EndsWith.cs</Link>
     </Compile>
