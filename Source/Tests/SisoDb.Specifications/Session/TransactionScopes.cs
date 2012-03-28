@@ -5,8 +5,8 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.UnitOfWork
 {
-#if Sql2008Provider || Sql2012Provider
-	class TransactionScopes
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+    class TransactionScopes
     {
         [Subject(typeof(ISession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_commiting_ts : SpecificationBase

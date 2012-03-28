@@ -1,6 +1,6 @@
 ﻿using Machine.Specifications;
 
-namespace SisoDb.Specifications.Sql2012
+namespace SisoDb.Specifications.SqlProfiler
 {
 	public class AssemblyContext : IAssemblyContext
 	{
@@ -20,10 +20,10 @@ namespace SisoDb.Specifications.Sql2012
 		{
 		}
 
-        private static void EnsureDbExists()
-        {
-            var ctx = TestContextFactory.Create();
+		private static void EnsureDbExists()
+		{
+		    var ctx = TestContextFactory.Create();
             ctx.Database.EnsureNewDatabase();
-        }
+		}
 	}
 }

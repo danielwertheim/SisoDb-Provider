@@ -64,6 +64,8 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="SqlProfiler\SqlProfilerTestContext.cs" />
+    <Compile Include="SqlProfiler\SqlProfilerTestDbUtils.cs" />
     <Compile Include="Sql2012\Sql2012TestDbUtils.cs" />
     <Compile Include="Sql2012\Sql2008TestContext.cs" />
     <Compile Include="DbColumn.cs" />

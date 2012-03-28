@@ -1,6 +1,4 @@
 ﻿using Machine.Specifications;
-using SisoDb.Sql2008;
-using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Sql2008
 {
@@ -22,11 +20,10 @@ namespace SisoDb.Specifications.Sql2008
 		{
 		}
 
-		private static void EnsureDbExists()
-		{
-			var connectionInfo = new Sql2008ConnectionInfo(TestConstants.ConnectionStringNameForSql2008);
-			var database = new Sql2008DbFactory().CreateDatabase(connectionInfo);
-			database.EnsureNewDatabase();
-		}
+        private static void EnsureDbExists()
+        {
+            var ctx = TestContextFactory.Create();
+            ctx.Database.EnsureNewDatabase();
+        }
 	}
 }

@@ -1,6 +1,4 @@
 ﻿using Machine.Specifications;
-using SisoDb.SqlCe4;
-using SisoDb.Testing;
 
 namespace SisoDb.Specifications.SqlCe4
 {
@@ -24,9 +22,8 @@ namespace SisoDb.Specifications.SqlCe4
 
         private static void EnsureDbExists()
         {
-            var connectionInfo = new SqlCe4ConnectionInfo(TestConstants.ConnectionStringNameForSqlCe4);
-        	var database = new SqlCe4DbFactory().CreateDatabase(connectionInfo);
-			database.EnsureNewDatabase();
+            var ctx = TestContextFactory.Create();
+            ctx.Database.EnsureNewDatabase();
         }
     }
 }
