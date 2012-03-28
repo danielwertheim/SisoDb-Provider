@@ -21,7 +21,7 @@
 			<dependency id="SisoDb" version="[11.0.0]" />
 			<dependency id="Ensure.That" version="0.7.0" />
 			<dependency id="NCore" version="[0.28.0]" />
-			<dependency id="PineCone" version="[0.67.0]" />
+			<dependency id="PineCone" version="[0.68.0]" />
 		</dependencies>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
