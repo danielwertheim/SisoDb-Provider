@@ -104,7 +104,7 @@
     <Compile Include="Migration.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\NodesExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StartsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\BoolNodesTransformer.cs" />

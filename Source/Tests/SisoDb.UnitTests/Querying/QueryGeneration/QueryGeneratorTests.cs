@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;
@@ -227,6 +228,16 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
 			return generator.GenerateQuery(queryCommand);
 		}
+
+        public abstract void GenerateQuery_With_StringQxStartsWith_or_IntEquals_or_ListOfStringsQxAny_GeneratesCorrectQuery();
+
+        protected DbQuery On_GenerateQuery_With_StringQxStartsWith_or_IntEquals_or_ListOfStringsQxAny_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.String1.QxStartsWith("Foo") || i.Int1 == 42 || i.ListOfStrings.QxAny(si => si == "Bar")));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
 		
 		protected virtual IQuery BuildQuery<T>(Action<IQueryBuilder<T>> commandInitializer) where T : class
 		{
@@ -250,6 +261,8 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 			public string String1 { get; set; }
 
 			public int? NullableInt1 { get; set; }
+
+            public List<string> ListOfStrings { get; set; }
 		}
 
 		private enum MyEnum

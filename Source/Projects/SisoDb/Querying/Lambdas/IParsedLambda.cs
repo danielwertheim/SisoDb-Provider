@@ -7,5 +7,7 @@ namespace SisoDb.Querying.Lambdas
         INode[] Nodes { get; }
 
         IParsedLambda MergeAsNew(IParsedLambda other);
+
+        string AsString();
     }
 }
