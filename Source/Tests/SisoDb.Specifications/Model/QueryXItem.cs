@@ -5,7 +5,7 @@ namespace SisoDb.Specifications.Model
 {
     public abstract class QueryXItem<T>
     {
-        public const string JsonFormat = "{{\"StructureId\":{0},\"SortOrder\":{1},\"IntegerValue\":{2},\"StringValue\":\"{3}\"}}";
+        public const string JsonFormat = "{{\"StructureId\":{0},\"SortOrder\":{1},\"IntegerValue\":{2},\"NullableIntegerValue\":{3},\"StringValue\":\"{4}\"}}";
 
         public static IList<TItem> CreateItems<TItem>(int numOfItems, Action<int, TItem> initializer) where TItem : new()
         {

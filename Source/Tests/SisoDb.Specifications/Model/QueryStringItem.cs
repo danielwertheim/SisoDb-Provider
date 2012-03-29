@@ -6,7 +6,7 @@ namespace SisoDb.Specifications.Model
     {
         public override string AsJson()
         {
-            return JsonFormat.Inject("\"" + StructureId + "\"", SortOrder, IntegerValue, StringValue);
+            return JsonFormat.Inject("\"" + StructureId + "\"", SortOrder, IntegerValue, NullableIntegerValue, StringValue);
         }
     }
 }
