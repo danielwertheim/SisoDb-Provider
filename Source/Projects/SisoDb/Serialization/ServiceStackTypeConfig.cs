@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using PineCone.Structures.Schemas;
-using ServiceStack.Text;
 
 namespace SisoDb.Serialization
 {

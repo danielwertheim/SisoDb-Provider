@@ -16,23 +16,27 @@ namespace SisoDb.Dac
 
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
         T ExecuteScalar<T>(string sql, params IDacParameter[] parameters);
-
-		void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
+        void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
+        
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
+        void RenameStructureSet(string oldStructureName, string newStructureName);
         void Drop(IStructureSchema structureSchema);
-		bool TableExists(string name);
+        void Reset();
+        void ClearQueryIndexes(IStructureSchema structureSchema);
+        bool TableExists(string name);
 		IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names);
-
+        
 		void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
-        void DeleteWhereIdIsBetween(IStructureId structureIdFrom, IStructureId structureIdTo, IStructureSchema structureSchema);
         void DeleteIndexesAndUniquesById(IStructureId structureId, IStructureSchema structureSchema);
 
         int RowCount(IStructureSchema structureSchema);
         int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
 
-        bool Exists(IStructureId structureId, IStructureSchema structureSchema);
+        bool Any(IStructureSchema structureSchema);
+        bool Any(IStructureSchema structureSchema, DbQuery query);
+        bool Exists(IStructureSchema structureSchema, IStructureId structureId);
 
 		string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);
         string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema);

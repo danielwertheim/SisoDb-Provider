@@ -8,8 +8,8 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.QueryEngine
 {
-#if Sql2008Provider || Sql2012Provider
-	class NamedQueries
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+    class NamedQueries
     {
         [Subject(typeof(ISession), "Named Query")]
         public class when_named_query_returns_no_result : SpecificationBase, ICleanupAfterEveryContextInAssembly

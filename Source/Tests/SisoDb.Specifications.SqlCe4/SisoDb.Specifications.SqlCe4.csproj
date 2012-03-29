@@ -35,19 +35,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="Machine.Specifications, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Machine.Specifications.0.5.5.0\lib\net40\Machine.Specifications.dll</HintPath>
+    <Reference Include="Machine.Specifications">
+      <HintPath>..\..\packages\Machine.Specifications.0.5.6.0\lib\net40\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Specifications.Clr4">
-      <HintPath>..\..\packages\Machine.Specifications.0.5.5.0\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
+      <HintPath>..\..\packages\Machine.Specifications.0.5.6.0\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.67.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=0.68.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.0.68.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -79,8 +79,17 @@
     <Compile Include="..\SisoDb.Specifications\Database\InitializeExisting.cs">
       <Link>Database\InitializeExisting.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\Database\MigrateStructureSet.cs">
-      <Link>Database\MigrateStructureSet.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Migrations.cs">
+      <Link>Database\Maintenance\Migrations.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\RegenerateQueryIndexes.cs">
+      <Link>Database\Maintenance\RegenerateQueryIndexes.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\RenameStructure.cs">
+      <Link>Database\Maintenance\RenameStructure.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Reset.cs">
+      <Link>Database\Maintenance\Reset.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
       <Link>Database\UpsertStructureSet.cs</Link>
@@ -157,6 +166,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\InsertsWithCustomStructureId.cs">
       <Link>Session\InsertsWithCustomStructureId.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Any.cs">
+      <Link>Session\Querying\Any.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Count.cs">
       <Link>Session\Querying\Count.cs</Link>
     </Compile>
@@ -186,6 +198,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\RawQueries.cs">
       <Link>Session\Querying\RawQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\Contains.cs">
+      <Link>Session\Querying\StringFunctions\Contains.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\EndsWith.cs">
       <Link>Session\Querying\StringFunctions\EndsWith.cs</Link>

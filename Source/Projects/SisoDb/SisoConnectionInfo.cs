@@ -22,11 +22,11 @@ namespace SisoDb
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
             EnsureCorrectProviderIfItExists(connectionString);
-            
+
             ClientConnectionString = FormatConnectionString(connectionString);
             ServerConnectionString = FormatServerConnectionString(connectionString);
             BackgroundIndexing = ExtractBackgroundIndexing(ClientConnectionString);
-            
+
             if (BackgroundIndexing != BackgroundIndexing.Off)
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
         }
@@ -34,7 +34,7 @@ namespace SisoDb
         private void EnsureCorrectProviderIfItExists(IConnectionString connectionString)
         {
             var providerType = ExtractProviderType(connectionString);
-            if(providerType == null)
+            if (providerType == null)
                 return;
 
             if (providerType != ProviderType)
@@ -43,12 +43,26 @@ namespace SisoDb
 
         private IConnectionString FormatConnectionString(IConnectionString connectionString)
         {
-            return OnFormatConnectionString(connectionString);
+            try
+            {
+                return OnFormatConnectionString(connectionString);
+            }
+            catch (Exception ex)
+            {
+                throw new SisoDbException("Could not parse sent connection string. If connection string name is passed. Ensure it has match in config-file. Inspect inner exception for more details.", new[] { ex });
+            }
         }
 
         private IConnectionString FormatServerConnectionString(IConnectionString connectionString)
         {
-            return OnFormatServerConnectionString(connectionString);
+            try
+            {
+                return OnFormatServerConnectionString(connectionString);
+            }
+            catch (Exception ex)
+            {
+                throw new SisoDbException("Could not parse sent server connection string. If connection string name is passed. Ensure it has match in config-file. Inspect inner exception for more details.", new[] { ex });
+            }
         }
 
         private StorageProviders? ExtractProviderType(IConnectionString connectionString)
@@ -82,7 +96,7 @@ namespace SisoDb
         protected virtual BackgroundIndexing OnExtractBackgroundIndexing(IConnectionString connectionString)
         {
             return (string.IsNullOrWhiteSpace(ClientConnectionString.BackgroundIndexing))
-                ? BackgroundIndexing.Off 
+                ? BackgroundIndexing.Off
                 : (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.BackgroundIndexing, true);
         }
     }

@@ -2,7 +2,7 @@
 {
     public class Sql2012Session : DbSession
     {
-        internal Sql2012Session(ISisoDbDatabase db) : base(db)
+        internal Sql2012Session(ISisoDatabase db) : base(db)
         {}
     }
 }

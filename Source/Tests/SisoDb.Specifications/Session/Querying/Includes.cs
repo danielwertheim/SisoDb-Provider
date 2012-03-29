@@ -120,8 +120,8 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<Album> _fetchedStructures;
         }
 
-#if Sql2008Provider || Sql2012Provider
-		[Subject(typeof(IQueryEngine), "Includes using Named Query")]
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+        [Subject(typeof(IQueryEngine), "Includes using Named Query")]
         public class when_named_query_including_different_firstlevel_members : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
             Establish context = () =>

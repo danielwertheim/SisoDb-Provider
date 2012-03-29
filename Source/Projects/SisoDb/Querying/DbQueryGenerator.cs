@@ -96,7 +96,7 @@ namespace SisoDb.Querying
 
             var joins = new List<string>(wheres.Count + sortings.Count);
 
-            const string joinFormat = "inner join [{0}] mem{1} on mem{1}.[StructureId] = s.[StructureId] and mem{1}.[MemberPath] = '{2}'";
+            const string joinFormat = "left join [{0}] mem{1} on mem{1}.[StructureId] = s.[StructureId] and mem{1}.[MemberPath] = '{2}'";
 
             if (wheres.Count > 0)
             {

@@ -1,6 +1,4 @@
 ﻿using Machine.Specifications;
-using SisoDb.Sql2012;
-using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Sql2012
 {
@@ -22,11 +20,10 @@ namespace SisoDb.Specifications.Sql2012
 		{
 		}
 
-		private static void EnsureDbExists()
-		{
-			var connectionInfo = new Sql2012ConnectionInfo(TestConstants.ConnectionStringNameForSql2012);
-			var database = new Sql2012DbFactory().CreateDatabase(connectionInfo);
-			database.EnsureNewDatabase();
-		}
+        private static void EnsureDbExists()
+        {
+            var ctx = TestContextFactory.Create();
+            ctx.Database.EnsureNewDatabase();
+        }
 	}
 }

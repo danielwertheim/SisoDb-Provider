@@ -34,12 +34,17 @@ namespace SisoDb
         IStructureSchema GetStructureSchema(Type structureType);
 
         /// <summary>
-        /// Returns value indicating of structure exists or not.
+        /// Lets you perform a Query defining things like
+        /// <see cref="ISisoQueryable{T}.Take"/>
+        /// <see cref="ISisoQueryable{T}.Where"/>
+        /// <see cref="ISisoQueryable{T}.Include{TInclude}"/>
+        /// <see cref="ISisoQueryable{T}.OrderBy"/>
+        /// <see cref="ISisoQueryable{T}.Page"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="id"></param>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <returns></returns>
-        bool Exists<T>(object id) where T : class;
+        /// <remarks>The query is defered and is executed when you start yield the result.</remarks>
+        ISisoQueryable<T> Query<T>() where T : class;
 
 		/// <summary>
 		/// Returns one single structure identified
@@ -129,18 +134,6 @@ namespace SisoDb
         IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids);
 
 		/// <summary>
-		/// Lets you perform a Query defining things like
-		/// <see cref="ISisoQueryable{T}.Take"/>
-		/// <see cref="ISisoQueryable{T}.Where"/>
-		/// <see cref="ISisoQueryable{T}.Include{TInclude}"/>
-		/// <see cref="ISisoQueryable{T}.OrderBy"/>
-		/// </summary>
-		/// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
-		/// <returns></returns>
-		/// <remarks>The query is defered and is executed when you start yield the result.</remarks>
-		ISisoQueryable<T> Query<T>() where T : class;
-
-        /// <summary>
         /// Inserts a single structure using the <typeparamref name="T"/> as
         /// the contract for the structure being inserted.
         /// </summary>
@@ -266,5 +259,14 @@ namespace SisoDb
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
         void DeleteByIds<T>(params object[] ids) where T : class;
+
+	    /// <summary>
+	    /// Deletes all structures for the defined structure <paramref name="structureType"/>
+	    /// matching passed ids.
+	    /// </summary>
+	    /// <param name="structureType">
+	    /// Structure type, used as a contract defining the scheme.</param>
+	    /// <param name="ids">Ids used for matching the structures to delete.</param>
+	    void DeleteByIds(Type structureType, params object[] ids);
 	}
 }

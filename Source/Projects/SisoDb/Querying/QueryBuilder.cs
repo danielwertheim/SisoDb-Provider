@@ -21,6 +21,17 @@ namespace SisoDb.Querying
 		protected readonly List<LambdaExpression> BufferedWheres;
 		protected readonly List<OrderByExpression> BufferedSortings;
 
+	    public bool IsEmpty
+	    {
+	        get
+	        {
+	            return Query.IsEmpty
+	                   && BufferedIncludes.Count == 0
+	                   && BufferedSortings.Count == 0
+	                   && BufferedWheres.Count == 0;
+	        }
+	    }
+
 		public QueryBuilder(IStructureSchemas structureSchemas, IExpressionParsers expressionParsers)
 		{
 			Ensure.That(structureSchemas, "structureSchemas").IsNotNull();

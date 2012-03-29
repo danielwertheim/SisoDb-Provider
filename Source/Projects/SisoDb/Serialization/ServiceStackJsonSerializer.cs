@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ServiceStack.Text;
 
 namespace SisoDb.Serialization
 {
@@ -24,6 +23,7 @@ namespace SisoDb.Serialization
             var itemType = item.GetType();
 
             ServiceStackTypeConfig<T>.Config(itemType);
+            JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
             JsConfig<Text>.SerializeFn = t => t.ToString();
 
@@ -40,6 +40,24 @@ namespace SisoDb.Serialization
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
             return OnDeserialize<T>(json);
+        }
+
+        public virtual T DeserializeAnonymous<T>(string json) where T : class
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            TypeConfig<T>.EnableAnonymousFieldSetters = true;
+            var templateType = typeof(T);
+
+            return OnDeserializeAnonymous<T>(json, templateType);
+        }
+
+        public virtual T DeserializeAnonymous<T>(string json, T template) where T : class
+        {
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            TypeConfig<T>.EnableAnonymousFieldSetters = true;
+            var templateType = typeof (T);
+
+            return OnDeserializeAnonymous<T>(json, templateType);
         }
 
         public virtual object Deserialize(Type structureType, string json)

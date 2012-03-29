@@ -36,17 +36,17 @@
       <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Specifications">
-      <HintPath>..\..\packages\Machine.Specifications.0.5.5.0\lib\net40\Machine.Specifications.dll</HintPath>
+      <HintPath>..\..\packages\Machine.Specifications.0.5.6.0\lib\net40\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Specifications.Clr4">
-      <HintPath>..\..\packages\Machine.Specifications.0.5.5.0\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
+      <HintPath>..\..\packages\Machine.Specifications.0.5.6.0\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.0.67.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.0.68.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,7 +60,10 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Database\MigrateStructureSet.cs" />
+    <Compile Include="Database\Maintenance\RegenerateQueryIndexes.cs" />
+    <Compile Include="Database\Maintenance\Reset.cs" />
+    <Compile Include="Database\Maintenance\RenameStructure.cs" />
+    <Compile Include="Database\Maintenance\Migrations.cs" />
     <Compile Include="Database\CreateIfNotExists.cs" />
     <Compile Include="Database\DeleteIfExists.cs" />
     <Compile Include="Database\DropStructureSet.cs" />
@@ -69,6 +72,8 @@
     <Compile Include="Database\InitializeExisting.cs" />
     <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="Session\Caching.cs" />
+    <Compile Include="Session\Querying\Any.cs" />
+    <Compile Include="Session\Querying\StringFunctions\Contains.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />
     <Compile Include="Session\InsertAs.cs" />
     <Compile Include="Session\InsertsOfSingleValues.cs" />
@@ -139,6 +144,7 @@
       <Name>SisoDb.Testing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

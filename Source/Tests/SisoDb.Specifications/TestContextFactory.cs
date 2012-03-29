@@ -3,6 +3,7 @@ using SisoDb.Testing;
 using SisoDb.Testing.Sql2008;
 using SisoDb.Testing.Sql2012;
 using SisoDb.Testing.SqlCe4;
+using SisoDb.Testing.SqlProfiler;
 
 namespace SisoDb.Specifications
 {
@@ -19,6 +20,9 @@ namespace SisoDb.Specifications
 #if SqlCe4Provider
             return new SqlCe4TestContext(TestConstants.ConnectionStringNameForSqlCe4);
 #endif
+#if SqlProfilerProvider
+            return new SqlProfilerTestContext(TestConstants.ConnectionStringNameForSqlProfiler);
+#endif
 			throw new NotSupportedException("No provider has been specified for the test context.");
         }
 
@@ -32,6 +36,9 @@ namespace SisoDb.Specifications
 #endif
 #if SqlCe4Provider
             return new SqlCe4TestContext(TestConstants.ConnectionStringNameForSqlCe4Temp);
+#endif
+#if SqlProfilerProvider
+            return new SqlProfilerTestContext(TestConstants.ConnectionStringNameForSqlProfilerTemp);
 #endif
 			throw new NotSupportedException("No provider has been specified for the test context.");
         }

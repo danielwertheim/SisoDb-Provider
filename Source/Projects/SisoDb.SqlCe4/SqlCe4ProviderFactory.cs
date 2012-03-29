@@ -27,7 +27,12 @@ namespace SisoDb.SqlCe4
             get { return StorageProviders.SqlCe4; }
         }
 
-        public IConnectionManager ConnectionManager
+        public IDbSettings GetSettings()
+        {
+            return DbSettings.CreateDefault();
+        }
+
+	    public IConnectionManager ConnectionManager
         {
             get { return _connectionManager; }
             set
@@ -76,9 +81,9 @@ namespace SisoDb.SqlCe4
                 _sqlStatements);
 	    }
 
-	    public virtual IDbSchemaManager GetDbSchemaManager()
+	    public virtual IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db)
         {
-			return new DbSchemaManager(new SqlDbSchemaUpserter(_sqlStatements));
+			return new DbSchemaManager(new SqlDbSchemaUpserter(db, _sqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)

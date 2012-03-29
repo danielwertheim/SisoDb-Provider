@@ -243,14 +243,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
             {
                 case "StartsWith":
 					var startsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
-					//Visit(member);
 					_nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
                     _nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(Expression.Constant(string.Concat(startsWithValue, "%")));
 					break;
                 case "EndsWith":
 					var endsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
-					//Visit(member);
 					_nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
                     _nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(Expression.Constant(string.Concat("%", endsWithValue)));
@@ -260,6 +258,14 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     break;
                 case "ToUpper":
                     _nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
+                    break;
+                case "Contains":
+                    Visit(member);
+                    _nodes.AddNode(new OperatorNode(Operator.Like()));
+
+                    var containsValue = e.Arguments[0].Evaluate().ToStringOrNull();
+                    var constant = Expression.Constant("%{0}%".Inject(containsValue).Replace("%%", "%"));
+                    Visit(constant);
                     break;
             }
 

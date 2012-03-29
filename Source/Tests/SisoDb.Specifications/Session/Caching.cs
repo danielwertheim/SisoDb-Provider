@@ -26,7 +26,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
-                _itemExists = TestContext.Database.UseOnceTo().Exists<IAmCached>(_originalStructure.Id);
+                _itemExists = TestContext.Database.UseOnceTo().Query<IAmCached>().Exists(_originalStructure.Id);
             };
 
             It should_have_one_item_in_cache =
@@ -58,7 +58,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
-                _itemExists = TestContext.Database.UseOnceTo().Exists<IAmCached>(_originalStructure.Id);
+                _itemExists = TestContext.Database.UseOnceTo().Query<IAmCached>().Exists(_originalStructure.Id);
             };
 
             It should_not_have_anything_in_cache =

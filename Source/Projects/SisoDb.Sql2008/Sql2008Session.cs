@@ -2,7 +2,7 @@
 {
     public class Sql2008Session : DbSession
     {
-        internal Sql2008Session(ISisoDbDatabase db)
+        internal Sql2008Session(ISisoDatabase db)
 			: base(db)
         {}
     }

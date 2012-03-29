@@ -18,10 +18,10 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>sisodb,cache,memcache,memorycache,msmemorycache,document-database,db,document,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
 		<dependencies>
-			<dependency id="SisoDb" version="[10.4.3]" />
+			<dependency id="SisoDb" version="[$version$]" />
 			<dependency id="Ensure.That" version="0.7.0" />
 			<dependency id="NCore" version="[0.28.0]" />
-			<dependency id="PineCone" version="[0.67.0]" />
+			<dependency id="PineCone" version="[0.68.0]" />
 		</dependencies>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Runtime.Caching" targetFramework="net40" />

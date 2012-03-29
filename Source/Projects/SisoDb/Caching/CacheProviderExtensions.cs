@@ -11,13 +11,29 @@ namespace SisoDb.Caching
     {
         internal static bool IsEnabledFor(this ICacheProvider cacheProvider, IStructureSchema structureSchema)
         {
-            return (cacheProvider != null && cacheProvider.Handles(structureSchema.Type.Type));
+            return IsEnabledFor(cacheProvider, structureSchema.Type.Type);
+        }
+
+        internal static bool IsEnabledFor(this ICacheProvider cacheProvider, Type structureType)
+        {
+            return (cacheProvider != null && cacheProvider.Handles(structureType));
         }
 
         internal static void NotifyOfPurge(this ICacheProvider cacheProvider, IStructureSchema structureSchema)
         {
-            if (cacheProvider.IsEnabledFor(structureSchema))
-                cacheProvider[structureSchema.Type.Type].Clear();
+            NotifyOfPurge(cacheProvider, structureSchema.Type.Type);
+        }
+
+        internal static void NotifyOfPurge(this ICacheProvider cacheProvider, Type structureType)
+        {
+            if (cacheProvider.IsEnabledFor(structureType))
+                cacheProvider[structureType].Clear();
+        }
+
+        internal static void NotifyOfPurgeAll(this ICacheProvider cacheProvider)
+        {
+            if(cacheProvider != null)
+                cacheProvider.Clear();
         }
 
         internal static void NotifyDeleting(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId)

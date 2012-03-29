@@ -196,13 +196,13 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DbClient_Commit_NonTransactional" xml:space="preserve">
     <value>You can not commit/flush a non transational DbClient.</value>
   </data>
-  <data name="StructureSetUpdater_NewIdDoesNotExist" xml:space="preserve">
+  <data name="StructureSetMigrator_NewIdDoesNotExist" xml:space="preserve">
     <value>Can not migrate structure set. No Id could be extracted from the new structure.</value>
   </data>
-  <data name="SqlStructureSetUpdater_OldIdDoesNotExist" xml:space="preserve">
+  <data name="StructureSetMigrator_OldIdDoesNotExist" xml:space="preserve">
     <value>No Id could be extracted from the old structure.</value>
   </data>
-  <data name="StructureSetUpdater_NewIdDoesNotMatchOldId" xml:space="preserve">
+  <data name="StructureSetMigrator_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
   </data>
   <data name="IdAccessor_GetIdValue_InvalidLevel" xml:space="preserve">
@@ -229,7 +229,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConnectionString_MissingSisoDbPart" xml:space="preserve">
     <value>The connectionstring is missing the SisoDb-part, indicated by '{0}'. Example: '{1}'.</value>
   </data>
-  <data name="StructureSetUpdater_MissmatchInIdTypes" xml:space="preserve">
+  <data name="StructureSetMigrator_MissmatchInIdTypes" xml:space="preserve">
     <value>Can not migrate structure set when Id type has changed.</value>
   </data>
   <data name="ConnectionInfo_UnsupportedProviderSpecified" xml:space="preserve">
@@ -255,9 +255,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="ReadOnceQueryable_YieldingNotSupported" xml:space="preserve">
     <value>ReadOnceQueryable doesn't support yielding result. Use matching ToList method instead.</value>
-  </data>
-  <data name="StructureSetUpdater_TOld_TNew_SameType" xml:space="preserve">
-    <value>Migrate&lt;TOld, TNew&gt; should not be used for same types. Use Migrate&lt;T&gt; instead.</value>
   </data>
   <data name="WriteSession_UpdateMany_NewIdDoesNotMatchOldId" xml:space="preserve">
     <value>The Id '{0}' of the new structure does not match the Id of the old structure '{1}'.</value>
