@@ -51,8 +51,8 @@
     <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedAssemblyInfo.Caching.cs">
-      <Link>Properties\SharedAssemblyInfo.Caching.cs</Link>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="MsMemCache.cs" />
     <Compile Include="MsMemCacheProvider.cs" />
