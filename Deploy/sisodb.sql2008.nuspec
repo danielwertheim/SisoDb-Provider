@@ -7,7 +7,7 @@
 		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
-		<summary>SisoDb is a document-oriented provider over SQL-Server.</summary>
+		<summary>SisoDb is the document-oriented provider over SQL-Server. This package is for SQL-Server 2008.</summary>
 		<description>
 			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
 			This package is for SQL-Server 2008.
@@ -16,7 +16,7 @@
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb,document-database,db,document,json,sql,sqlserver,sql-server,sql2008,mssql2008,nosql</tags>
+		<tags>sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,nosql</tags>
 		<dependencies>
 			<dependency id="SisoDb" version="[$version$]" />
 			<dependency id="Ensure.That" version="0.7.0" />
