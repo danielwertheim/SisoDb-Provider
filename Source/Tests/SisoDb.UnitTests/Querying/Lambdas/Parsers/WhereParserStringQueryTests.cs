@@ -43,16 +43,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             Assert.AreEqual("foo", operandNode.Value);
         }
 
-		private class StartsWithQueryObject
-		{
-			public string Value { get; set; }
-
-			public LambdaExpression CreateExpression()
-			{
-				return Reflect<MyClass>.LambdaFrom(m => m.String1.StartsWith(Value));	
-			}
-		}
-
 		[Test]
 		public void Parse_WhenStartsWith_AgainstValueOfProperty_ReturnsCorrectNodes()
 		{
@@ -205,6 +195,40 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             Assert.AreEqual("String1", memberNode.Path);
             Assert.AreEqual("like", operatorNode.Operator.ToString());
             Assert.AreEqual("%Foo%", operandNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenContains_ReturnsCorrectNodes()
+        {
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.Contains("Foo"));
+
+            var parser = new WhereParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("like", operatorNode.Operator.ToString());
+            Assert.AreEqual("%Foo%", operandNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenContainsWithNull_ReturnsCorrectNodes()
+        {
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.Contains(null));
+
+            var parser = new WhereParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("like", operatorNode.Operator.ToString());
+            Assert.AreEqual("%", operandNode.Value);
         }
 
 		[Test]
@@ -446,6 +470,16 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}
+
+        private class StartsWithQueryObject
+        {
+            public string Value { get; set; }
+
+            public LambdaExpression CreateExpression()
+            {
+                return Reflect<MyClass>.LambdaFrom(m => m.String1.StartsWith(Value));
+            }
+        }
 
         private class MyClass
         {

@@ -13,5 +13,9 @@
         public const string ConnectionStringNameForSqlCe4 = "SisoDb.SqlCe4";
 
         public const string ConnectionStringNameForSqlCe4Temp = "SisoDb.SqlCe4.Temp";
+
+        public const string ConnectionStringNameForSqlProfiler = "SisoDb.SqlProfiler";
+
+        public const string ConnectionStringNameForSqlProfilerTemp = "SisoDb.SqlProfiler.Temp";
     }
 }

@@ -100,6 +100,16 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             return generator.GenerateQuery(queryCommand);
         }
 
+        public abstract void GenerateQuery_for_Where_with_String_Contains_GeneratesCorrectQuery();
+
+        protected DbQuery On_GenerateQuery_for_Where_with_String_Contains_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.String1.Contains("bar")));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
         public abstract void GenerateQuery_for_Where_with_String_QxLike_GeneratesCorrectQuery();
 
         protected DbQuery On_GenerateQuery_for_Where_with_String_QxLike_GeneratesCorrectQuery()

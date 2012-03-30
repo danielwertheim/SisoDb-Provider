@@ -925,5 +925,33 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryGuidItem> _structures;
             private static IList<QueryGuidItem> _fetchedStructures;
         }
+
+        [Subject(typeof(ISession), "Query with Sort")]
+        public class when_sorting_on_nullable_int_that_has_value: SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryGuidItem>().OrderBy(i => i.NullableIntegerValue).ToList();
+
+            It should_have_fetched_all_four_structures =
+                () => _fetchedStructures.Count.ShouldEqual(4);
+
+            It should_have_fetched_all_structures_but_sorted_in_reverse = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[3]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+                _fetchedStructures[2].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[3].ShouldBeValueEqualTo(_structures[0]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
     }
 }

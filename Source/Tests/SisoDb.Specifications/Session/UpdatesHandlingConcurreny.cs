@@ -415,7 +415,7 @@ namespace SisoDb.Specifications.Session
                 }
             };
 
-#if Sql2008Provider || Sql2012Provider
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
             It should_have_thrown_a_timeout_exception = () =>
             {
                 CaughtException.ShouldNotBeNull();
@@ -433,7 +433,7 @@ namespace SisoDb.Specifications.Session
             It should_not_have_changed_ids_of_the_structure_in_database =
                 () => TestContext.Database.should_have_ids<ModelWithGuidToken>(_orgItem.Id);
 
-#if Sql2008Provider || Sql2012Provider
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
             It should_not_have_returned_item_for_concurrent_get_by_id = () => _getByIdResult.ShouldBeNull();
 #endif
 
@@ -506,7 +506,7 @@ namespace SisoDb.Specifications.Session
                 }
             };
 
-#if Sql2008Provider || Sql2012Provider
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
             It should_have_thrown_a_timeout_exception = () =>
             {
                 CaughtException.ShouldNotBeNull();

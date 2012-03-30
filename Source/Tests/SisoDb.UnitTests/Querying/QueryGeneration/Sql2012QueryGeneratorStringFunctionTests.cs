@@ -136,6 +136,19 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         }
 
         [Test]
+        public override void GenerateQuery_for_Where_with_String_Contains_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_for_Where_with_String_Contains_GeneratesCorrectQuery();
+
+            Assert.AreEqual(
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (mem0.[Value] like @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+                sqlQuery.Sql);
+
+            Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual("%bar%", sqlQuery.Parameters[0].Value);
+        }
+
+        [Test]
         public override void GenerateQuery_for_Where_with_String_QxLike_GeneratesCorrectQuery()
         {
             var sqlQuery = On_GenerateQuery_for_Where_with_String_QxLike_GeneratesCorrectQuery();
