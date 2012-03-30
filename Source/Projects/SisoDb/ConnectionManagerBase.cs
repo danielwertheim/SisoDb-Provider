@@ -1,22 +1,30 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace SisoDb
 {
     public abstract class ConnectionManagerBase : IConnectionManager
     {
+
+        public ConnectionManagerBase()
+        {
+            OnConnectionCreated = con => con;
+        }
+
+        public virtual Func<IDbConnection, IDbConnection> OnConnectionCreated { get; set; }
+
         public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = CreateConnection(connectionInfo.ServerConnectionString.PlainString);
-            OnOpenConnection(cn);
+            var cn = OnConnectionCreated(CreateConnection(connectionInfo.ServerConnectionString.PlainString));
+            cn.Open();
 
             return cn;
         }
 
         public virtual IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = CreateConnection(connectionInfo.ClientConnectionString.PlainString);
-            OnOpenConnection(cn);
-
+            var cn = OnConnectionCreated(CreateConnection(connectionInfo.ClientConnectionString.PlainString));
+            cn.Open();
             return cn;
         }
 
@@ -42,9 +50,5 @@ namespace SisoDb
 
         protected abstract IDbConnection CreateConnection(string connectionString);
 
-        protected virtual void OnOpenConnection(IDbConnection connection)
-        {
-            connection.Open();
-        }
     }
 }
