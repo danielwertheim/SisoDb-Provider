@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlServerCe;
 using System.Linq;
 using EnsureThat;
 using NCore;
@@ -9,6 +8,7 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.SqlCe4.Dac.Profiling;
 
 namespace SisoDb.SqlCe4.Dac
 {
@@ -23,7 +23,7 @@ namespace SisoDb.SqlCe4.Dac
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new SqlCe4DbBulkCopy((SqlCeConnection)Connection, (SqlCeTransaction)Transaction);
+            return new SqlCe4DbBulkCopy(Connection.ToSqlCeConnection(), Transaction.ToSqlCeTransaction());
         }
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)

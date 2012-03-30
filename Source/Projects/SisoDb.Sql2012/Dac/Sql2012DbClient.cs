@@ -7,6 +7,7 @@ using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
+using SisoDb.Dac.Profiling;
 using SisoDb.DbSchema;
 
 namespace SisoDb.Sql2012.Dac
@@ -22,7 +23,7 @@ namespace SisoDb.Sql2012.Dac
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new Sql2012DbBulkCopy((SqlConnection)Connection, (SqlTransaction)Transaction);
+            return new Sql2012DbBulkCopy(Connection.ToSqlConnection(), Transaction.ToSqlTransaction());
         }
 
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)

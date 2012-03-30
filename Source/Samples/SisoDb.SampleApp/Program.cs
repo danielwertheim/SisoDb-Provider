@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SisoDb.Profiling.Model;
+using SisoDb.SampleApp.Model;
 using SisoDb.Sql2008;
 using SisoDb.Sql2012;
 using SisoDb.SqlCe4;
 
-namespace SisoDb.Profiling
+namespace SisoDb.SampleApp
 {
     public class Program
     {
@@ -26,8 +26,8 @@ namespace SisoDb.Profiling
             //var db = new Sql2012DbFactory().CreateDatabase(cnInfo);
 
             //********* SQLCE4 ***********
-			//var cnInfo = new SqlCe4ConnectionInfo("SisoDb.SqlCe4");
-			//var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
+            //var cnInfo = new SqlCe4ConnectionInfo("SisoDb.SqlCe4");
+            //var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
 
             //db.EnsureNewDatabase();
 

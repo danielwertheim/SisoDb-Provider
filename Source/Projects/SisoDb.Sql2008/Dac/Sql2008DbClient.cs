@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
 using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
+using SisoDb.Dac.Profiling;
 using SisoDb.DbSchema;
 
 namespace SisoDb.Sql2008.Dac
@@ -22,7 +22,7 @@ namespace SisoDb.Sql2008.Dac
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new Sql2008DbBulkCopy((SqlConnection)Connection, (SqlTransaction)Transaction);
+            return new Sql2008DbBulkCopy(Connection.ToSqlConnection(), Transaction.ToSqlTransaction());
         }
 
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
