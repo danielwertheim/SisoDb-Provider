@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace SisoDb
+namespace SisoDb.Dac.Profiling
 {
     /// <summary>
     /// This exists because SqlBulkCopy depends on SqlTransaction and that class is sealed

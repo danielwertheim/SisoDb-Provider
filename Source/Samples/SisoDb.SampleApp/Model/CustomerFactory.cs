@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NCore;
 
-namespace SisoDb.Profiling.Model
+namespace SisoDb.SampleApp.Model
 {
     internal static class CustomerFactory
     {

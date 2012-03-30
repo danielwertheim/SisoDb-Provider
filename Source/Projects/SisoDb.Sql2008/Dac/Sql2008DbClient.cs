@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
 using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Core;
 using SisoDb.Dac;
+using SisoDb.Dac.Profiling;
 using SisoDb.DbSchema;
 
 namespace SisoDb.Sql2008.Dac

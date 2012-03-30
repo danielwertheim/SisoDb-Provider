@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Data;
+using EnsureThat;
 
 namespace SisoDb
 {
     public abstract class ConnectionManagerBase : IConnectionManager
     {
-
-        public ConnectionManagerBase()
+        protected ConnectionManagerBase()
         {
             OnConnectionCreated = con => con;
         }
 
-        public virtual Func<IDbConnection, IDbConnection> OnConnectionCreated { get; set; }
+        private Func<IDbConnection, IDbConnection> _onConnectionCreated;
+
+        public Func<IDbConnection, IDbConnection> OnConnectionCreated
+        {
+            get { return _onConnectionCreated; }
+            set
+            {
+                Ensure.That(value, "OnConnectionCreated").IsNotNull();
+                _onConnectionCreated = value;
+            }
+        }
 
         public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
             var cn = OnConnectionCreated(CreateConnection(connectionInfo.ServerConnectionString.PlainString));
             cn.Open();
-
             return cn;
         }
 
@@ -49,6 +58,5 @@ namespace SisoDb
         }
 
         protected abstract IDbConnection CreateConnection(string connectionString);
-
     }
 }

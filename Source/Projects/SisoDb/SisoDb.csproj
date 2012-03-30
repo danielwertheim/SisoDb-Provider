@@ -73,7 +73,7 @@
     <Compile Include="Caching\CacheProviderExtensions.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
-    <Compile Include="Core\ConnectionExtensions.cs" />
+    <Compile Include="Dac\Profiling\AdoExtensions.cs" />
     <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
@@ -100,8 +100,8 @@
     <Compile Include="ISingleOperationSession.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="BackgroundIndexing.cs" />
-    <Compile Include="IWrappedConnection.cs" />
-    <Compile Include="IWrappedTransaction.cs" />
+    <Compile Include="Dac\Profiling\IWrappedConnection.cs" />
+    <Compile Include="Dac\Profiling\IWrappedTransaction.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SisoDb.Profiling.Model
+namespace SisoDb.SampleApp.Model
 {
     [Serializable]
     public enum ShoppingIndexes

@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SisoDb.Profiling.Model;
-using SisoDb.Sql2008;
-using SisoDb.Sql2012;
-using SisoDb.SqlCe4;
+using SisoDb.SampleApp.Model;
 
-namespace SisoDb.Profiling
+namespace SisoDb.SampleApp
 {
     public class Program
     {
