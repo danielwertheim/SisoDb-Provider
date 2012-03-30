@@ -1,4 +1,5 @@
-﻿using SisoDb.Sql2012;
+﻿using SisoDb.Profiling;
+using SisoDb.Sql2012;
 
 namespace SisoDb.Testing.SqlProfiler
 {
@@ -8,6 +9,7 @@ namespace SisoDb.Testing.SqlProfiler
             : base(new Sql2012DbFactory(), new Sql2012ConnectionInfo(connectionStringName), new Sql2012ProviderFactory())
         {
             DbHelper = new SqlProfilerTestDbUtils(Database.ConnectionInfo.ClientConnectionString.PlainString);
+            Database.ActivateProfiler();
         }
     }
 }

@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SqlProfilerProvider</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -261,6 +261,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Profiling\SisoDb.Profiling.csproj">
+      <Project>{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}</Project>
+      <Name>SisoDb.Profiling</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2012\SisoDb.Sql2012.csproj">
       <Project>{8F79E2CB-91D6-4359-833A-A236BB0F814D}</Project>

@@ -106,6 +106,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.Profiling\SisoDb.Profiling.csproj">
+      <Project>{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}</Project>
+      <Name>SisoDb.Profiling</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
