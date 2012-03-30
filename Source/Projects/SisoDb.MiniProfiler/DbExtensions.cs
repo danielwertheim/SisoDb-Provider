@@ -6,12 +6,8 @@ namespace SisoDb.MiniProfiler
     {
         public static void ActivateProfiler(this ISisoDatabase source)
         {
-            var db = source as ISisoDbDatabase;
-            if (db == null)
-            {
-                return;
-            }
-            var manager = db.ProviderFactory.ConnectionManager;
+
+            var manager = source.ProviderFactory.ConnectionManager;
             manager.OnConnectionCreated = con => con is DbConnection
                 ? new ProfiledConnectionWrapper((DbConnection)con, MvcMiniProfiler.MiniProfiler.Current)
                 : con;
