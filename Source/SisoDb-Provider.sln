@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Serialization", "Pro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Specifications.SqlProfiler", "Tests\SisoDb.Specifications.SqlProfiler\SisoDb.Specifications.SqlProfiler.csproj", "{23C3C07E-09B9-4F17-A2D5-9ACE22631851}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Profiling", "Projects\SisoDb.Profiling\SisoDb.Profiling.csproj", "{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.MiniProfiler", "Projects\SisoDb.MiniProfiler\SisoDb.MiniProfiler.csproj", "{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

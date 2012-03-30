@@ -8,8 +8,8 @@
     <ProjectGuid>{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SisoDb.Profiling</RootNamespace>
-    <AssemblyName>SisoDb.Profiling</AssemblyName>
+    <RootNamespace>SisoDb.MiniProfiler</RootNamespace>
+    <AssemblyName>SisoDb.MiniProfiler</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,7 +30,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\SisoDb.Profiling.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\SisoDb.MiniProfiler.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MvcMiniProfiler">

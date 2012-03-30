@@ -7,6 +7,8 @@ namespace SisoDb
     {
         Func<IDbConnection, IDbConnection> OnConnectionCreated { get; set; }
 
+        void ResetOnConnectionCreated();
+
         IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo);
         IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo);
 

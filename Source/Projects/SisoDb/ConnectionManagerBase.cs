@@ -8,7 +8,7 @@ namespace SisoDb
     {
         protected ConnectionManagerBase()
         {
-            OnConnectionCreated = con => con;
+            OnConnectionCreated = cn => cn;
         }
 
         private Func<IDbConnection, IDbConnection> _onConnectionCreated;
@@ -21,6 +21,11 @@ namespace SisoDb
                 Ensure.That(value, "OnConnectionCreated").IsNotNull();
                 _onConnectionCreated = value;
             }
+        }
+
+        public virtual void ResetOnConnectionCreated()
+        {
+            OnConnectionCreated = cn => cn;
         }
 
         public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)

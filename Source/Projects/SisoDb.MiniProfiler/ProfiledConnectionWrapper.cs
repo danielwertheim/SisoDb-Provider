@@ -3,7 +3,7 @@ using System.Data.Common;
 using MvcMiniProfiler.Data;
 using SisoDb.Dac.Profiling;
 
-namespace SisoDb.Profiling
+namespace SisoDb.MiniProfiler
 {
     public class ProfiledConnectionWrapper : ProfiledDbConnection, IWrappedConnection
     {

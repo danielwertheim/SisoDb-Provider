@@ -1,4 +1,4 @@
-﻿using SisoDb.Profiling;
+﻿using SisoDb.MiniProfiler;
 using SisoDb.Sql2012;
 
 namespace SisoDb.Testing.SqlProfiler
