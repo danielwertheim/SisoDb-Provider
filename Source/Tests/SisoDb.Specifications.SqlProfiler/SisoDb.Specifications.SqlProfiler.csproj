@@ -262,10 +262,6 @@
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.MiniProfiler\SisoDb.MiniProfiler.csproj">
-      <Project>{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}</Project>
-      <Name>SisoDb.MiniProfiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2012\SisoDb.Sql2012.csproj">
       <Project>{8F79E2CB-91D6-4359-833A-A236BB0F814D}</Project>
       <Name>SisoDb.Sql2012</Name>
