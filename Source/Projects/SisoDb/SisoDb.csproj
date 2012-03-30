@@ -57,10 +57,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\PineCone.0.67.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.6.0.3283, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.6.0\lib\net35\ServiceStack.Text.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -85,33 +81,40 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="DbSettings.cs" />
+    <Compile Include="DbSchema\DbObjectNameValidator.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="Dac\Transactions.cs" />
     <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
+    <Compile Include="DbSchema\DbSchemas.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
-    <Compile Include="ISisoDbDatabase.cs" />
+    <Compile Include="IDbSettings.cs" />
+    <Compile Include="IMigrationInfo.cs" />
+    <Compile Include="ISisoDatabaseMaintenance.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
     <Compile Include="ISingleOperationSession.cs" />
-    <Compile Include="IStructureSetMigrator.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="IWrappedConnection.cs" />
     <Compile Include="IWrappedTransaction.cs" />
+    <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
+    <Compile Include="Migrate.cs" />
+    <Compile Include="Migration.cs" />
     <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\MemberNodeExtensions.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\NodesExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StartsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\BoolNodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
-    <Compile Include="DbStructureSetMigrator.cs" />
+    <Compile Include="Maintenance\DbStructureSetMigrator.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -119,14 +122,14 @@
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="ConnectionManagerBase.cs" />
-    <Compile Include="StructureSetMigratorStatuses.cs" />
+    <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
     <Compile Include="Dac\IServerClient.cs" />
     <Compile Include="Dac\DbClientBase.cs" />
-    <Compile Include="DbSingleOperationSession.cs" />
+    <Compile Include="SingleOperationSession.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaBuilder.cs" />
     <Compile Include="DbSchema\SqlDbIndexesSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\SqlDbSchemaUpserter.cs" />
@@ -173,7 +176,7 @@
     <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
-    <Compile Include="SisoDbDatabase.cs" />
+    <Compile Include="SisoDatabase.cs" />
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
@@ -222,7 +225,6 @@
     <Compile Include="INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
-    <Compile Include="DbSchema\IDbSchemaSynchronizer.cs" />
     <Compile Include="DbSchema\IDbSchemaManager.cs" />
     <Compile Include="Core\Expressions\ExpressionUtils.cs" />
     <Compile Include="Querying\IDbQueryGenerator.cs" />
@@ -263,6 +265,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SisoDb.Serialization\SisoDb.Serialization.csproj">
+      <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
+      <Name>SisoDb.Serialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

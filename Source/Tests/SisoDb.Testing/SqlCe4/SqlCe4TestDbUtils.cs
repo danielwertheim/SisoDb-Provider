@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlServerCe;
+using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
 using NCore;
@@ -32,6 +33,18 @@ namespace SisoDb.Testing.SqlCe4
             var sql = "select 1 from information_schema.tables where table_name = '{0}';".Inject(name);
 
             return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
+        }
+
+        public bool TablesExists(string[] names)
+        {
+            foreach (var name in names)
+            {
+                var exists = TableExists(name);
+                if (!exists)
+                    return false;
+            }
+
+            return true;
         }
 
         public bool TypeExists(string name)
@@ -130,6 +143,29 @@ namespace SisoDb.Testing.SqlCe4
             return ExecuteScalar<int>(CommandType.Text, sql);
         }
 
+        public void DeleteQueryIndexesFor(IStructureSchema structureSchema, IEnumerable<Guid> structureIds)
+        {
+            var guidIds = string.Join(",", structureIds.Select(id => string.Format("'{0}'", id)));
+            var sqlFormat = "delete from [{0}] where StructureId in({1});".Inject("{0}", guidIds);
+            var indexesTableNames = structureSchema.GetIndexesTableNames();
+
+            using (var cn = CreateConnection())
+            {
+                using (var cmd = cn.CreateCommand(null))
+                {
+                    cn.Open();
+                    cmd.CommandType = CommandType.Text;
+
+                    foreach (var tableName in indexesTableNames.AllTableNames)
+                    {
+                        cmd.CommandText = sqlFormat.Inject(tableName);
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+            }
+        }
+
         public bool AnyIndexesTableHasMember<T>(IStructureSchema structureSchema, ValueType id, Expression<Func<T, object>> member) where T : class
         {
 			var memberPath = GetMemberPath(member);
@@ -145,6 +181,13 @@ namespace SisoDb.Testing.SqlCe4
         {
             var memberPath = GetMemberPath(member);
             return RowCount(structureSchema.GetUniquesTableName(), "[{0}] = '{1}'".Inject(UniqueStorageSchema.Fields.UqMemberPath.Name, memberPath)) > 0;
+        }
+
+        public bool IdentityRowExistsForSchema(IStructureSchema structureSchema)
+        {
+            var sql = "select 1 from SisoDbIdentities where EntityName = '{0}';".Inject(structureSchema.Name);
+
+            return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
 
         private IDbConnection CreateConnection()

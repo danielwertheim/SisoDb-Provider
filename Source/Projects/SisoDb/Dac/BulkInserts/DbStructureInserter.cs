@@ -63,6 +63,15 @@ namespace SisoDb.Dac.BulkInserts
             InsertIndexes(groupedIndexInsertActions);
         }
 
+        public virtual void InsertIndexesOnly(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            var groupedIndexInsertActions = CreateGroupedIndexInsertActions(structureSchema, structures);
+            if (!groupedIndexInsertActions.Any())
+                return;
+
+            InsertIndexes(groupedIndexInsertActions);
+        }
+
         public virtual void Replace(IStructureSchema structureSchema, IStructure structure)
         {
             var structures = new[] { structure };

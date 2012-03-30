@@ -5,18 +5,53 @@ namespace SisoDb
 {
 	public interface IQueryEngine
 	{
-		/// <summary>
-		/// Issues a simple count for how many structures there are
-		/// in the specified structure type <typeparamref name="T"/>,
-		/// matching the where expression in <see cref="IQuery.Where"/>.
-		/// </summary>
-		/// <typeparam name="T">
-		/// Structure type, used as a contract defining the scheme.</typeparam>
-		/// <param name="query"></param>
-		/// <returns>Number of structures.</returns>
-		int Count<T>(IQuery query) where T : class;
+        /// <summary>
+        /// Returns bool indicating if the specified structure <typeparamref name="T"/>,
+        /// has any items at all.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <returns>Number of structures.</returns>
+        bool Any<T>() where T : class;
 
-		/// <summary>
+        /// <summary>
+        /// Returns bool indicating if the specified structure <typeparamref name="T"/>,
+        /// has any items matching the where expression in <see cref="IQuery.Where"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="query"></param>
+        /// <returns>Number of structures.</returns>
+        bool Any<T>(IQuery query) where T : class;
+
+        /// <summary>
+        /// Issues a simple count for how many structures there
+        /// are in the specified structure <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        int Count<T>() where T : class;
+
+        /// <summary>
+        /// Issues a simple count for how many structures there are
+        /// in the specified structure <typeparamref name="T"/>,
+        /// matching the where expression in <see cref="IQuery.Where"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="query"></param>
+        /// <returns>Number of structures.</returns>
+        int Count<T>(IQuery query) where T : class;
+
+        /// <summary>
+        /// Returns value indicating of structure exists or not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool Exists<T>(object id) where T : class;
+
+        /// <summary>
 		/// Lets you perform a Query by passing an <see cref="IQuery"/>.
 		/// </summary>
 		/// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>

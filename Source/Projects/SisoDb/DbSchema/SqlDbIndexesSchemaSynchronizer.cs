@@ -7,7 +7,7 @@ using SisoDb.Dac;
 
 namespace SisoDb.DbSchema
 {
-    public class SqlDbIndexesSchemaSynchronizer : IDbSchemaSynchronizer
+    public class SqlDbIndexesSchemaSynchronizer
     {
         private readonly ISqlStatements _sqlStatements;
 
@@ -18,11 +18,13 @@ namespace SisoDb.DbSchema
 			_sqlStatements = sqlStatements;
         }
 
-        public void Synchronize(IStructureSchema structureSchema, IDbClient dbClient)
+        public void Synchronize(IStructureSchema structureSchema, IDbClient dbClient, string[] indexesTableNames)
         {
+            if(!indexesTableNames.Any())
+                return;
+
 			var structureFields = new HashSet<string>(structureSchema.IndexAccessors.Select(iac => iac.Path));
-			var indexesTableNames = structureSchema.GetIndexesTableNames();
-			foreach (var indexesTableName in indexesTableNames.AllTableNames)
+			foreach (var indexesTableName in indexesTableNames)
         	{
 				var keyNamesToDrop = GetMemberPathsToDrop(indexesTableName, structureFields, dbClient);
 

@@ -154,7 +154,8 @@ on [dbo].[{0}] ([MemberPath],[Value], [StructureId]);
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
   <data name="CreateDatabase" xml:space="preserve">
-    <value>create database [{0}];</value>
+    <value>create database [{0}];
+ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 110;</value>
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
@@ -558,7 +559,7 @@ end</value>
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>set nocount on;
-select OBJECT_ID(@tableName, 'U');</value>
+select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@tableName;</value>
   </data>
   <data name="UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
     <value>set nocount on;
@@ -582,5 +583,47 @@ delete from [dbo].[{7}] where StructureId = @id;</value>
   <data name="SingleUpdateOfStructure" xml:space="preserve">
     <value>set nocount on;
 update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
+  </data>
+  <data name="DropTable" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null drop table [dbo].[{0}];</value>
+  </data>
+  <data name="GetTableNamesToDrop" xml:space="preserve">
+    <value>set nocount on;
+select TABLE_NAME from 
+(
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Booleans'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Dates'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Fractals'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Guids'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Integers'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Strings'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Texts'
+	union
+	select 1, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
+	union
+	select 2, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
+) tables
+order by groupId;</value>
+  </data>
+  <data name="TruncateSisoDbIdentities" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'[dbo].[SisoDbIdentities]', N'U') is not null truncate table [dbo].[SisoDbIdentities];</value>
+  </data>
+  <data name="ClearIndexesTables" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null delete from [dbo].[{0}];
+if object_id(N'{1}', N'U') is not null delete from [dbo].[{1}];
+if object_id(N'{2}', N'U') is not null delete from [dbo].[{2}];
+if object_id(N'{3}', N'U') is not null delete from [dbo].[{3}];
+if object_id(N'{4}', N'U') is not null delete from [dbo].[{4}];
+if object_id(N'{5}', N'U') is not null delete from [dbo].[{5}];
+if object_id(N'{6}', N'U') is not null delete from [dbo].[{6}];</value>
   </data>
 </root>

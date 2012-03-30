@@ -1,6 +1,6 @@
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4Database : SisoDbDatabase
+    public class SqlCe4Database : SisoDatabase
     {
     	public SqlCe4Database(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory)
             : base(connectionInfo, dbProviderFactory)

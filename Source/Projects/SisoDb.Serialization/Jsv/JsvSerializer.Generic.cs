@@ -1,0 +1,73 @@
+//
+// http://code.google.com/p/servicestack/wiki/TypeSerializer
+// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+//
+// Authors:
+//   Demis Bellot (demis.bellot@gmail.com)
+//
+// Copyright 2011 Liquidbit Ltd.
+//
+// Licensed under the same terms of ServiceStack: new BSD license.
+//
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading;
+using SisoDb.Serialization.Common;
+
+namespace SisoDb.Serialization.Jsv
+{
+	public class JsvSerializer<T>
+	{
+		Dictionary<Type, ParseStringDelegate> DeserializerCache = new Dictionary<Type, ParseStringDelegate>();
+
+		public T DeserializeFromString(string value, Type type)
+		{
+			ParseStringDelegate parseFn;
+            if (DeserializerCache.TryGetValue(type, out parseFn)) return (T)parseFn(value);
+
+            var genericType = typeof(T).MakeGenericType(type);
+            var mi = genericType.GetMethod("DeserializeFromString", new[] { typeof(string) });
+            parseFn = (ParseStringDelegate)Delegate.CreateDelegate(typeof(ParseStringDelegate), mi);
+
+            Dictionary<Type, ParseStringDelegate> snapshot, newCache;
+            do
+            {
+                snapshot = DeserializerCache;
+                newCache = new Dictionary<Type, ParseStringDelegate>(DeserializerCache);
+                newCache[type] = parseFn;
+
+            } while (!ReferenceEquals(
+                Interlocked.CompareExchange(ref DeserializerCache, newCache, snapshot), snapshot));
+            
+            return (T)parseFn(value);
+		}
+
+		public T DeserializeFromString(string value)
+		{
+			if (typeof(T) == typeof(string)) return (T)(object)value;
+
+			return (T)JsvReader<T>.Parse(value);
+		}
+
+		public void SerializeToWriter(T value, TextWriter writer)
+		{
+			JsvWriter<T>.WriteObject(writer, value);
+		}
+
+		public string SerializeToString(T value)
+		{
+			if (value == null) return null;
+			if (value is string) return value as string;
+
+			var sb = new StringBuilder();
+			using (var writer = new StringWriter(sb))
+			{
+				JsvWriter<T>.WriteObject(writer, value);
+			}
+			return sb.ToString();
+		}
+	}
+}

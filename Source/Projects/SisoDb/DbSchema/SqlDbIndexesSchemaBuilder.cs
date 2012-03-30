@@ -20,7 +20,7 @@ namespace SisoDb.DbSchema
 		public string[] GenerateSql(IStructureSchema structureSchema, IndexesTableStatuses indexesTableStatuses)
 		{
 			if(indexesTableStatuses.AllExists)
-				return new string[]{};
+				return new string[0];
 
 			var structureTableName = structureSchema.GetStructureTableName();
 			var sqlTemplateNameSuffix = GetSqlTemplateNameSuffix(structureSchema.IdAccessor.IdType);

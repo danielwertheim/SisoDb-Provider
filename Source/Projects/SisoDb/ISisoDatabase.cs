@@ -1,5 +1,6 @@
 using System;
 using PineCone.Structures.Schemas;
+using SisoDb.DbSchema;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 
@@ -13,6 +14,11 @@ namespace SisoDb
     public interface ISisoDatabase
     {
         /// <summary>
+        /// Lock object used to synchronize work against Db-operations.
+        /// </summary>
+        object LockObject { get; }
+
+        /// <summary>
         /// The name of the database.
         /// </summary>
         string Name { get; }
@@ -22,7 +28,17 @@ namespace SisoDb
         /// </summary>
         ISisoConnectionInfo ConnectionInfo { get; }
 
-		/// <summary>
+        /// <summary>
+        /// Provider factory.
+        /// </summary>
+        IDbProviderFactory ProviderFactory { get; }
+
+        /// <summary>
+        /// Runtime settings associated with the db.
+        /// </summary>
+        IDbSettings Settings { get; set; }
+
+        /// <summary>
 		/// By assigning a <see cref="ICacheProvider"/> you get
 		/// the possibility of preventing the query from
 		/// hitting the database for certain queries.
@@ -42,6 +58,11 @@ namespace SisoDb
         IStructureSchemas StructureSchemas { get; set; }
 
         /// <summary>
+        /// Manager used to control Db-Schemas.
+        /// </summary>
+        IDbSchemaManager SchemaManager { get; }
+
+        /// <summary>
         /// Structure builders collection used to resolve a Structure builder to use when building structures for insert and updates.
         /// </summary>
         IStructureBuilders StructureBuilders { get; set; }
@@ -51,12 +72,11 @@ namespace SisoDb
         /// </summary>
         IJsonSerializer Serializer { get; set; }
 
-		/// <summary>
-		/// Returns an <see cref="IStructureSetMigrator"/> used for
-		/// assisting you with model migrations.
-		/// </summary>
-		/// <returns></returns>
-    	IStructureSetMigrator GetStructureSetMigrator();
+        /// <summary>
+        /// Used for maintenance tasks of the database.
+        /// E.g Regeneration of query indexes and Migrations.
+        /// </summary>
+        ISisoDatabaseMaintenance Maintenance { get; }
 
         /// <summary>
         /// Ensures that a new fresh database will exists. Drops any existing database.
@@ -99,7 +119,7 @@ namespace SisoDb
         void DropStructureSet(Type type);
 
         /// <summary>
-        /// Drops ALL structure sets.
+        /// Drops ALL structure sets for sent <paramref name="types"/>.
         /// </summary>
         /// <param name="types"></param>
         void DropStructureSets(Type[] types);

@@ -1,35 +1,22 @@
 using System;
-using PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {
-	public static class DbSchemaNamingPolicy
-	{
-		public static Func<IStructureSchema, string> StructureNameGenerator;
+    public static class DbSchemaNamingPolicy
+    {
+        private static readonly Func<string, string> DefaultStructureNameGenerator;
+ 
+        public static Func<string, string> StructureNameGenerator;
 
-		static DbSchemaNamingPolicy()
-		{
-			StructureNameGenerator = schema => schema.Name;
-		}
+        static DbSchemaNamingPolicy()
+        {
+            DefaultStructureNameGenerator = name => name;
+            StructureNameGenerator = DefaultStructureNameGenerator;
+        }
 
-		public static string GetStructureTableName(this IStructureSchema structureSchema)
-		{
-			return string.Concat(StructureNameGenerator.Invoke(structureSchema), "Structure");
-		}
-
-		public static IndexesTableNames GetIndexesTableNames(this IStructureSchema structureSchema)
-		{
-			return new IndexesTableNames(structureSchema);
-		}
-
-		public static string GetIndexesTableNameFor(this IStructureSchema structureSchema, IndexesTypes type)
-		{
-			return string.Concat(StructureNameGenerator.Invoke(structureSchema), type.ToString());
-		}
-
-		public static string GetUniquesTableName(this IStructureSchema structureSchema)
-		{
-			return string.Concat(StructureNameGenerator.Invoke(structureSchema), "Uniques");
-		}
-	}
+        public static void Reset()
+        {
+            StructureNameGenerator = DefaultStructureNameGenerator;
+        }
+    }
 }

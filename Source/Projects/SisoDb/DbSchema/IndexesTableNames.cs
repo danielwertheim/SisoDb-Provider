@@ -1,4 +1,5 @@
 using System;
+using EnsureThat;
 using NCore.Reflections;
 using PineCone.Structures.Schemas;
 
@@ -8,7 +9,12 @@ namespace SisoDb.DbSchema
 	{
 		private static readonly Type TextType;
 
-		public string[] AllTableNames { get; private set; }
+	    public string this[int i]
+	    {
+            get { return AllTableNames[i]; }
+	    }
+
+	    public string[] AllTableNames { get; private set; }
 		public string IntegersTableName { get; private set; }
 		public string FractalsTableName { get; private set; }
 		public string DatesTableName { get; private set; }
@@ -22,29 +28,43 @@ namespace SisoDb.DbSchema
 			TextType = typeof (Text);
 		}
 
-		public IndexesTableNames(IStructureSchema structureSchema)
-		{
-			IntegersTableName = structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers);
-			FractalsTableName = structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals);
-			BooleansTableName = structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans);
-			DatesTableName = structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates);
-			GuidsTableName = structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids);
-			StringsTableName = structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings);
-			TextsTableName = structureSchema.GetIndexesTableNameFor(IndexesTypes.Texts);
+        public IndexesTableNames(string structureName)
+        {
+            Ensure.That(structureName, "structureName").IsNotNullOrWhiteSpace();
 
-			AllTableNames = new[]
-			{
-				IntegersTableName, 
-				FractalsTableName,
-				BooleansTableName,
-				DatesTableName, 
-				GuidsTableName, 
-				StringsTableName,
-				TextsTableName
-			};
-		}
+            OnInitialize(structureName);
+        }
 
-		public string GetNameByType(Type dataType)
+	    public IndexesTableNames(IStructureSchema structureSchema)
+	    {
+	        Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            OnInitialize(structureSchema.Name);
+	    }
+
+	    private void OnInitialize(string structureName)
+	    {
+	        IntegersTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Integers);
+	        FractalsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Fractals);
+	        BooleansTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Booleans);
+	        DatesTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Dates);
+	        GuidsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Guids);
+	        StringsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Strings);
+	        TextsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Texts);
+
+	        AllTableNames = new[]
+	        {
+	            IntegersTableName,
+	            FractalsTableName,
+	            BooleansTableName,
+	            DatesTableName,
+	            GuidsTableName,
+	            StringsTableName,
+	            TextsTableName
+	        };
+	    }
+
+	    public string GetNameByType(Type dataType)
 		{
 			if (dataType == TextType)
 				return TextsTableName;

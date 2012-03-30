@@ -60,7 +60,10 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Database\MigrateStructureSet.cs" />
+    <Compile Include="Database\Maintenance\RegenerateQueryIndexes.cs" />
+    <Compile Include="Database\Maintenance\Reset.cs" />
+    <Compile Include="Database\Maintenance\RenameStructure.cs" />
+    <Compile Include="Database\Maintenance\Migrations.cs" />
     <Compile Include="Database\CreateIfNotExists.cs" />
     <Compile Include="Database\DeleteIfExists.cs" />
     <Compile Include="Database\DropStructureSet.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Database\InitializeExisting.cs" />
     <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="Session\Caching.cs" />
+    <Compile Include="Session\Querying\Any.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />
     <Compile Include="Session\InsertAs.cs" />
     <Compile Include="Session\InsertsOfSingleValues.cs" />
@@ -139,6 +143,7 @@
       <Name>SisoDb.Testing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -52,7 +52,7 @@ namespace SisoDb.Testing.Steps
 
 		public static void should_have_X_num_of_items<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
 		{
-			db.UseOnceTo().Count<T>().ShouldEqual(numOfItemsLeft);
+			db.UseOnceTo().Query<T>().Count().ShouldEqual(numOfItemsLeft);
 		}
 
 		public static void should_have_first_and_last_item_left<T>(this ISisoDatabase db, IList<T> structures) where T : class

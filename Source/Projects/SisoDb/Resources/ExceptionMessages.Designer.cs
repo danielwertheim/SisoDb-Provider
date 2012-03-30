@@ -386,15 +386,6 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Id could be extracted from the old structure..
-        /// </summary>
-        public static string SqlStructureSetUpdater_OldIdDoesNotExist {
-            get {
-                return ResourceManager.GetString("SqlStructureSetUpdater_OldIdDoesNotExist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Duplicate Unique-index found for &apos;{0}&apos;.\r\nStructureId: &apos;{1}&apos;;Name: &apos;{2}&apos;;Value: &apos;{3}&apos;;.
         /// </summary>
         public static string Structure_DuplicateUniques {
@@ -460,36 +451,36 @@ namespace SisoDb.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Can not migrate structure set when Id type has changed..
         /// </summary>
-        public static string StructureSetUpdater_MissmatchInIdTypes {
+        public static string StructureSetMigrator_MissmatchInIdTypes {
             get {
-                return ResourceManager.GetString("StructureSetUpdater_MissmatchInIdTypes", resourceCulture);
+                return ResourceManager.GetString("StructureSetMigrator_MissmatchInIdTypes", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Can not migrate structure set. No Id could be extracted from the new structure..
         /// </summary>
-        public static string StructureSetUpdater_NewIdDoesNotExist {
+        public static string StructureSetMigrator_NewIdDoesNotExist {
             get {
-                return ResourceManager.GetString("StructureSetUpdater_NewIdDoesNotExist", resourceCulture);
+                return ResourceManager.GetString("StructureSetMigrator_NewIdDoesNotExist", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The Id &apos;{0}&apos; of the new structure does not match the Id of the old structure &apos;{1}&apos;..
         /// </summary>
-        public static string StructureSetUpdater_NewIdDoesNotMatchOldId {
+        public static string StructureSetMigrator_NewIdDoesNotMatchOldId {
             get {
-                return ResourceManager.GetString("StructureSetUpdater_NewIdDoesNotMatchOldId", resourceCulture);
+                return ResourceManager.GetString("StructureSetMigrator_NewIdDoesNotMatchOldId", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Migrate&lt;TOld, TNew&gt; should not be used for same types. Use Migrate&lt;T&gt; instead..
+        ///   Looks up a localized string similar to No Id could be extracted from the old structure..
         /// </summary>
-        public static string StructureSetUpdater_TOld_TNew_SameType {
+        public static string StructureSetMigrator_OldIdDoesNotExist {
             get {
-                return ResourceManager.GetString("StructureSetUpdater_TOld_TNew_SameType", resourceCulture);
+                return ResourceManager.GetString("StructureSetMigrator_OldIdDoesNotExist", resourceCulture);
             }
         }
         

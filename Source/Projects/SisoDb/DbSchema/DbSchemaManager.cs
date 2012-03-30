@@ -26,7 +26,15 @@ namespace SisoDb.DbSchema
             }
         }
 
-		public void RemoveFromCache(IStructureSchema structureSchema)
+        public void RemoveFromCache(string structureSchemaName)
+        {
+            lock (_upsertedSchemas)
+            {
+                _upsertedSchemas.Remove(structureSchemaName);
+            }
+        }
+
+        public void RemoveFromCache(IStructureSchema structureSchema)
 		{
 			lock (_upsertedSchemas)
 			{
