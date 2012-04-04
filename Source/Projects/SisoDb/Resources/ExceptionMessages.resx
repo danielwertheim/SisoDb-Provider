@@ -277,4 +277,10 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SqlCe4ConnectionManager_ReleaseAllDbConnections" xml:space="preserve">
     <value>Exceptions occured while releasing SqlCe4Connections from the pool.</value>
   </data>
+  <data name="DynamicLambdaBuilder_Build_TypeFullNameMissing" xml:space="preserve">
+    <value>The type '{0}' can not be used when building LambdaExpression from string, since no FullName could be extracted.</value>
+  </data>
+  <data name="DynamicLambdaBuilder_Build_Error" xml:space="preserve">
+    <value>Could not generate lambda expression from sent string.\r\nCompiler info: {0}.</value>
+  </data>
 </root>

@@ -205,6 +205,24 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not generate lambda expression from sent string.\r\nCompiler info: {0}..
+        /// </summary>
+        public static string DynamicLambdaBuilder_Build_Error {
+            get {
+                return ResourceManager.GetString("DynamicLambdaBuilder_Build_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type &apos;{0}&apos; can not be used when building LambdaExpression from string, since no FullName could be extracted..
+        /// </summary>
+        public static string DynamicLambdaBuilder_Build_TypeFullNameMissing {
+            get {
+                return ResourceManager.GetString("DynamicLambdaBuilder_Build_TypeFullNameMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Direct memberaccess of node: &apos;{0}&apos;; with with membertype: &apos;{1}&apos;; is not supported!.
         /// </summary>
         public static string ExpressionEvaluator_EvaluateMemberExpression_NotSupported {
