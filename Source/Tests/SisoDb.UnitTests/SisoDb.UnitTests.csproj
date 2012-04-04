@@ -87,6 +87,7 @@
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Dynamic\DynamicLambdaBuilderTests.cs" />
     <Compile Include="Providers\Caching\CacheTestsBase.cs" />
     <Compile Include="Providers\Caching\Sql2008CacheTests.cs" />
     <Compile Include="Providers\Caching\Sql2012CacheTests.cs" />
@@ -126,6 +127,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.AspWebCache\SisoDb.AspWebCache.csproj">
       <Project>{07A22CB7-158A-4587-A40F-ADE3D72CC567}</Project>
       <Name>SisoDb.AspWebCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
+      <Project>{9202564D-92FD-448F-851D-3DD3D1AA3137}</Project>
+      <Name>SisoDb.Dynamic</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>

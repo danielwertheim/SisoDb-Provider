@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
 	<metadata>
-		<id>SisoDb.MiniProfiler</id>    
-		<title>SisoDb.MiniProfiler - Simple Structure Oriented Db</title>
+		<id>SisoDb.Dynamic</id>    
+		<title>SisoDb.Dynamic - Simple Structure Oriented Db</title>
 		<version>$version$</version>
-		<authors>danielwertheim, Mikael Eliasson</authors>
+		<authors>danielwertheim</authors>
 		<copyright>Daniel Wertheim</copyright>
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
-		<summary>MiniProfiler package for SisoDb, the document-oriented provider for SQL-Server.</summary>
+		<summary>Dynamic utils package for SisoDb, the document-oriented provider for SQL-Server.</summary>
 		<description>
 			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
-			This package lets you activate the MiniProfiler for SisoDb.
+			This package provides you with some dynamic utils e.g Dynamic generation of lambda expressions from strings.
 		</description>
 		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>miniprofiler, sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
+		<tags>sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
 		<dependencies>
-		    <dependency id="SisoDb" version="[$version$]" />
 			<dependency id="Ensure.That" version="0.7.0" />
 			<dependency id="NCore" version="[0.28.0]" />
 			<dependency id="PineCone" version="[0.68.0]" />
-			<dependency id="MiniProfiler" version="1.9" />
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.MiniProfiler\bin\Release\SisoDb.MiniProfiler.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.MiniProfiler\bin\Release\SisoDb.MiniProfiler.xml" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Dynamic\bin\Release\SisoDb.Dynamic.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Dynamic\bin\Release\SisoDb.Dynamic.xml" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Dynamic\bin\Release\Mono.CSharp.dll" target="lib\net40\" />
 	</files>
 </package>
