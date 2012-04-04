@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Machine.Specifications;
+using SisoDb.Dynamic;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
@@ -948,6 +950,40 @@ namespace SisoDb.Specifications.Session.Querying
                 _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
                 _fetchedStructures[2].ShouldBeValueEqualTo(_structures[1]);
                 _fetchedStructures[3].ShouldBeValueEqualTo(_structures[0]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof (ISession), "Query using string lambda")]
+        public class when_string_expression_matches_two_middle_structures : SpecificationBase
+        {
+            private Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            private Because of = () =>
+            {
+                var from = _structures[1].SortOrder;
+                var to = _structures[2].SortOrder;
+
+                var builder = new DynamicLambdaBuilder();
+                var expression = builder.Build<QueryGuidItem>("i => i.SortOrder >= {0} && i.SortOrder <= {1}", from, to);
+                _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(expression).ToList();
+            };
+        
+
+        It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_middle_structures = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
             };
 
             private static IList<QueryGuidItem> _structures;

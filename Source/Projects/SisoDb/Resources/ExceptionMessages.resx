@@ -283,4 +283,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DynamicLambdaBuilder_Build_Error" xml:space="preserve">
     <value>Could not generate lambda expression from sent string.\r\nCompiler info: {0}.</value>
   </data>
+  <data name="DynamicLambdaBuilder_InvalidExpressionFormat" xml:space="preserve">
+    <value>Expression does not seem to be a lambda expression. It should start with e.g 'i =&gt; '.</value>
+  </data>
 </root>

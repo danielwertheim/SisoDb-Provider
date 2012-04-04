@@ -4,12 +4,40 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.Dynamic;
+using SisoDb.Resources;
 
 namespace SisoDb.UnitTests.Dynamic
 {
     [TestFixture]
     public class DynamicLambdaBuilderTests : UnitTestBase
     {
+        [Test]
+        public void Build_WhenNoSpaceBeforeLambdaOperator_ThrowsArgumentException()
+        {
+            var builder = new DynamicLambdaBuilder();
+
+            var ex = Assert.Throws<ArgumentException>(() => builder.Build(typeof(Item), "i=> i.Value == \"Foo\""));
+            Assert.AreEqual(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat, ex.Message);
+        }
+
+        [Test]
+        public void Build_WhenStartingWithLambdaOperator_ThrowsArgumentException()
+        {
+            var builder = new DynamicLambdaBuilder();
+
+            var ex = Assert.Throws<ArgumentException>(() => builder.Build(typeof(Item), "=> i.Value == \"Foo\""));
+            Assert.AreEqual(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat, ex.Message);
+        }
+
+        [Test]
+        public void Build_WhenNoLambdaOperator_ThrowsArgumentException()
+        {
+            var builder = new DynamicLambdaBuilder();
+
+            var ex = Assert.Throws<ArgumentException>(() => builder.Build(typeof(Item), "i.Value == \"Foo\""));
+            Assert.AreEqual(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat, ex.Message);
+        }
+
         [Test]
         public void Build_WhenPassingValidExpressionForNonNestedItem_GeneratesValidLambda()
         {

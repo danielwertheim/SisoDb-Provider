@@ -2,6 +2,8 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using EnsureThat;
@@ -54,7 +56,12 @@ namespace SisoDb.Dynamic
             }
         }
 
-        public virtual System.Linq.Expressions.LambdaExpression Build(Type type, string expression)
+        public virtual Expression<Func<T, bool>>  Build<T>(string expression, params object[] formattingArgs) where T : class
+        {
+            return (Expression<Func<T, bool>>) Build(typeof (T), expression, formattingArgs);
+        }
+
+        public virtual System.Linq.Expressions.LambdaExpression Build(Type type, string expression, params object[] formattingArgs)
         {
             Ensure.That(type, "type").IsNotNull();
             Ensure.That(expression, "expression").IsNotNullOrWhiteSpace();
@@ -65,11 +72,16 @@ namespace SisoDb.Dynamic
 
             ReferenceAssembly(type.Assembly);
 
+            if (formattingArgs.Any())
+                expression = string.Format(expression, formattingArgs);
+
             return OnBuild(typeFullName, expression);
         }
 
         protected virtual System.Linq.Expressions.LambdaExpression OnBuild(string typeFullName, string expression)
         {
+            EnsureValidLambdaExpression(expression);
+
             var query = string.Format(QueryFormat, typeFullName.Replace('+', '.'), expression);
 
             try
@@ -80,6 +92,17 @@ namespace SisoDb.Dynamic
             {
                 throw new SisoDbException(ExceptionMessages.DynamicLambdaBuilder_Build_Error.Inject(EvaluatorResult), new[] { ex });
             }
+        }
+
+        protected virtual void EnsureValidLambdaExpression(string expression)
+        {
+            var firstSpaceIndex = expression.IndexOf(' ');
+            if (firstSpaceIndex < 1)
+                throw new ArgumentException(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat);
+
+            var lambdaOperatorIndex = expression.IndexOf("=> ", firstSpaceIndex, StringComparison.OrdinalIgnoreCase);
+            if (lambdaOperatorIndex < 0)
+                throw new ArgumentException(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat);
         }
 
         protected void ReferenceAssembly(Assembly assembly)
