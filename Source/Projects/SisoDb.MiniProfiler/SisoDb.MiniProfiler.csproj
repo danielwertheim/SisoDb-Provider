@@ -37,8 +37,8 @@
     <Reference Include="EnsureThat, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="MvcMiniProfiler">
-      <HintPath>..\..\packages\MiniProfiler.1.9\lib\net40\MvcMiniProfiler.dll</HintPath>
+    <Reference Include="MiniProfiler">
+      <HintPath>..\..\packages\MiniProfiler.2.0.1\lib\net40\MiniProfiler.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
@@ -56,9 +56,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DbExtensions.cs" />
-    <Compile Include="ProfiledConnectionWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ProfiledConnectionWrapper.cs" />
     <Compile Include="ProfiledTransactionWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

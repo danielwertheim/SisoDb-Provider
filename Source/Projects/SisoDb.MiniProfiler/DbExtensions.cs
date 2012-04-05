@@ -8,7 +8,7 @@ namespace SisoDb.MiniProfiler
         {
             db.ProviderFactory.ConnectionManager.OnConnectionCreated = 
                 con => con is DbConnection
-                    ? new ProfiledConnectionWrapper((DbConnection)con, MvcMiniProfiler.MiniProfiler.Current)
+                    ? new ProfiledConnectionWrapper((DbConnection)con, StackExchange.Profiling.MiniProfiler.Current)
                     : con;
         }
 

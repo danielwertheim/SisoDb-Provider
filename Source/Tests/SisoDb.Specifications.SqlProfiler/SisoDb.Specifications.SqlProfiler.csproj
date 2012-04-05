@@ -258,6 +258,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
+      <Project>{9202564D-92FD-448F-851D-3DD3D1AA3137}</Project>
+      <Name>SisoDb.Dynamic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
