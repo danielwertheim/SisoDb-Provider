@@ -13,14 +13,14 @@ using SisoDb.Resources;
 
 namespace SisoDb.Dynamic
 {
-    public class DynamicLambdaBuilder : IDisposable, IDynamicLambdaBuilder
+    public class DynamicLambdaBuilder : IDynamicLambdaBuilder
     {
         protected const string QueryFormat = "ExpressionFactory.Create<{0}>({1});";
 
+        protected CompilerContext CompilerContext;
         protected readonly Evaluator Evaluator;
         protected readonly StringBuilder EvaluatorResult;
         private readonly ISet<int> _referencedAssemblyHashCodes; 
-        private TextWriter _writer;
         private IDynamicLambdaBuilderCache _cache;
         
         public IDynamicLambdaBuilderCache Cache
@@ -39,21 +39,14 @@ namespace SisoDb.Dynamic
             Cache = new DynamicLambdaBuilderCache();
             _referencedAssemblyHashCodes = new HashSet<int>();
 
-            _writer = new IndentedTextWriter(new StringWriter(EvaluatorResult));
-            Evaluator = new Evaluator(new CompilerSettings { Target = Target.Module }, new Report(new StreamReportPrinter(_writer)));
+            CompilerContext = new CompilerContext(
+                new CompilerSettings { Target = Target.Module },
+                new StreamReportPrinter(new IndentedTextWriter(new StringWriter(EvaluatorResult))));
+            Evaluator = new Evaluator(CompilerContext);
 
             var expressionFactoryType = typeof(ExpressionFactory);
             ReferenceAssembly(expressionFactoryType.Assembly);
             Evaluator.Run(string.Format("using {0};", expressionFactoryType.Namespace));
-        }
-
-        public virtual void Dispose()
-        {
-            if (_writer != null)
-            {
-                _writer.Dispose();
-                _writer = null;
-            }
         }
 
         public virtual Expression<Func<T, bool>>  Build<T>(string expression, params object[] formattingArgs) where T : class

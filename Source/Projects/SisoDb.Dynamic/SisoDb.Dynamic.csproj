@@ -38,7 +38,7 @@
       <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="Mono.CSharp">
-      <HintPath>..\..\packages\Mono.CSharp.4.0\Lib\net40\Mono.CSharp.dll</HintPath>
+      <HintPath>..\..\packages\Mono.CSharp.2.11.0-alpha\Lib\net40\Mono.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
