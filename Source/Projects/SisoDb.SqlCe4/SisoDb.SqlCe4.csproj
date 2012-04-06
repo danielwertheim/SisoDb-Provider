@@ -67,6 +67,7 @@
     <Compile Include="Dac\SqlCe4DbClient.cs" />
     <Compile Include="Dac\SqlCe4ServerClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SisoDbCe4Extensions.cs" />
     <Compile Include="SqlCe4ConnectionManager.cs" />
     <Compile Include="SqlCe4QueryGenerator.cs" />
     <Compile Include="SqlCe4Session.cs" />
