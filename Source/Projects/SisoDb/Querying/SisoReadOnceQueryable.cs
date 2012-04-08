@@ -7,25 +7,23 @@ using SisoDb.Resources;
 
 namespace SisoDb.Querying
 {
-	public class SisoReadOnceQueryable<T> : SisoQueryable<T> where T : class 
+    public class SisoReadOnceQueryable<T> : ISisoQueryable<T> where T : class 
 	{
-		private readonly Func<ISession> _queryEngineFactory;
+        protected readonly Func<ISession> SessionFactory;
+        protected readonly IQueryBuilder<T> QueryBuilder;
 
-		protected override ISession Session
+		public SisoReadOnceQueryable(IQueryBuilder<T> queryBuilder, Func<ISession> sessionFactory)
 		{
-			get { return _queryEngineFactory.Invoke(); }
+		    Ensure.That(queryBuilder, "queryBuilder").IsNotNull();
+            Ensure.That(sessionFactory, "sessionFactory").IsNotNull();
+
+		    QueryBuilder = queryBuilder;
+            SessionFactory = sessionFactory;
 		}
 
-		public SisoReadOnceQueryable(IQueryBuilder<T> queryBuilder, Func<ISession> queryEngineFactory) : base(queryBuilder)
-		{
-			Ensure.That(queryEngineFactory, "queryEngineFactory").IsNotNull();
-
-			_queryEngineFactory = queryEngineFactory;
-		}
-
-        public override bool Any()
+        public virtual bool Any()
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return QueryBuilder.IsEmpty
                     ? session.QueryEngine.Any<T>()
@@ -33,11 +31,11 @@ namespace SisoDb.Querying
             }
         }
 
-        public override bool Any(Expression<Func<T, bool>> expression)
+        public virtual bool Any(Expression<Func<T, bool>> expression)
         {
             Ensure.That(expression, "expression").IsNotNull();
 
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 QueryBuilder.Clear();
                 QueryBuilder.Where(expression);
@@ -46,9 +44,9 @@ namespace SisoDb.Querying
             }
         }
 
-		public override int Count()
+		public virtual int Count()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
                 return QueryBuilder.IsEmpty
                     ? session.QueryEngine.Count<T>()
@@ -56,11 +54,11 @@ namespace SisoDb.Querying
 			}
 		}
 
-		public override int Count(Expression<Func<T, bool>> expression)
+		public virtual int Count(Expression<Func<T, bool>> expression)
 		{
 		    Ensure.That(expression, "expression").IsNotNull();
 
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
                 QueryBuilder.Clear();
 			    QueryBuilder.Where(expression);
@@ -69,194 +67,236 @@ namespace SisoDb.Querying
 			}
 		}
 
-        public override bool Exists(object id)
+        public virtual bool Exists(object id)
         {
             Ensure.That(id, "id").IsNotNull();
 
-            using(var session = Session)
+            using(var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.Exists<T>(id);
             }
         }
 		
-		public override T First()
+		public virtual T First()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).First();
 			}
 		}
 
-		public override TResult FirstAs<TResult>()
+        public virtual TResult FirstAs<TResult>() where TResult : class
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).First();
 			}
 		}
 
-		public override string FirstAsJson()
+		public virtual string FirstAsJson()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).First();
 			}
 		}
 
-		public override T FirstOrDefault()
+		public virtual T FirstOrDefault()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).FirstOrDefault();
 			}
 		}
 
-		public override TResult FirstOrDefaultAs<TResult>()
+        public virtual TResult FirstOrDefaultAs<TResult>() where TResult : class
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).FirstOrDefault();
 			}
 		}
 
-		public override string FirstOrDefaultAsJson()
+		public virtual string FirstOrDefaultAsJson()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).FirstOrDefault();
 			}
 		}
 
-        public override T Single()
+        public virtual T Single()
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.Query<T>(QueryBuilder.Build()).Single();
             }
         }
 
-        public override TResult SingleAs<TResult>()
+        public virtual TResult SingleAs<TResult>() where TResult : class
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).Single();
             }
         }
 
-        public override string SingleAsJson()
+        public virtual string SingleAsJson()
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).Single();
             }
         }
 
-        public override T SingleOrDefault()
+        public virtual T SingleOrDefault()
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.Query<T>(QueryBuilder.Build()).SingleOrDefault();
             }
         }
 
-        public override TResult SingleOrDefaultAs<TResult>()
+        public virtual TResult SingleOrDefaultAs<TResult>() where TResult : class
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).SingleOrDefault();
             }
         }
 
-        public override string SingleOrDefaultAsJson()
+        public virtual string SingleOrDefaultAsJson()
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).SingleOrDefault();
             }
         }
 
-		public override T[] ToArray()
+		public virtual T[] ToArray()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).ToArray();
 			}
 		}
 
-		public override TResult[] ToArrayOf<TResult>()
+        public virtual TResult[] ToArrayOf<TResult>() where TResult : class
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToArray();
 			}
 		}
-        
-        public override TResult[] ToArrayOf<TResult>(TResult template)
+
+        public virtual TResult[] ToArrayOf<TResult>(TResult template) where TResult : class
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template).ToArray();
             }
         }
 
-		public override string[] ToArrayOfJson()
+		public virtual string[] ToArrayOfJson()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).ToArray();
 			}
 		}
 
-		public override IEnumerable<T> ToEnumerable()
+		public virtual IEnumerable<T> ToEnumerable()
 		{
 			throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 		}
 
-		public override IEnumerable<TResult> ToEnumerableOf<TResult>()
+        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
 		{
 			throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 		}
 
-	    public override IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template)
+        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template) where TResult : class
 	    {
 	        throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 	    }
 
-	    public override IEnumerable<string> ToEnumerableOfJson()
+	    public virtual IEnumerable<string> ToEnumerableOfJson()
 		{
 			throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 		}
 
-	    public override IList<T> ToList()
+	    public virtual IList<T> ToList()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).ToList();
 			}
 		}
 
-	    public override IList<TResult> ToListOf<TResult>()
+        public virtual IList<TResult> ToListOf<TResult>() where TResult : class
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
 			}
 		}
 
-        public override IList<TResult> ToListOf<TResult>(TResult template)
+        public virtual IList<TResult> ToListOf<TResult>(TResult template) where TResult : class
         {
-            using (var session = Session)
+            using (var session = SessionFactory.Invoke())
             {
                 return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template).ToList();
             }
         }
 
-	    public override IList<string> ToListOfJson()
+	    public virtual IList<string> ToListOfJson()
 		{
-			using (var session = Session)
+			using (var session = SessionFactory.Invoke())
 			{
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).ToList();
 			}
 		}
+
+        public virtual ISisoQueryable<T> Take(int numOfStructures)
+        {
+            QueryBuilder.Take(numOfStructures);
+
+            return this;
+        }
+
+        public virtual ISisoQueryable<T> Page(int pageIndex, int pageSize)
+        {
+            QueryBuilder.Page(pageIndex, pageSize);
+
+            return this;
+        }
+
+        public virtual ISisoQueryable<T> Include<TInclude>(params Expression<Func<T, object>>[] expressions) where TInclude : class
+        {
+            QueryBuilder.Include<TInclude>(expressions);
+
+            return this;
+        }
+
+        public virtual ISisoQueryable<T> Where(params Expression<Func<T, bool>>[] expressions)
+        {
+            QueryBuilder.Where(expressions);
+
+            return this;
+        }
+
+        public virtual ISisoQueryable<T> OrderBy(params Expression<Func<T, object>>[] expressions)
+        {
+            QueryBuilder.OrderBy(expressions);
+
+            return this;
+        }
+
+        public virtual ISisoQueryable<T> OrderByDescending(params Expression<Func<T, object>>[] expressions)
+        {
+            QueryBuilder.OrderByDescending(expressions);
+
+            return this;
+        }
 	}
 }
