@@ -3,6 +3,19 @@ using System.Linq.Expressions;
 
 namespace SisoDb.Querying
 {
+    public interface IQueryBuilder
+    {
+        bool IsEmpty { get; }
+        void Clear();
+        IQuery Build();
+        IQueryBuilder Take(int numOfStructures);
+        IQueryBuilder Page(int pageIndex, int pageSize);
+        IQueryBuilder Include(Type includeType, params LambdaExpression[] expressions);
+        IQueryBuilder Where(params LambdaExpression[] expressions);
+        IQueryBuilder OrderBy(params LambdaExpression[] expressions);
+        IQueryBuilder OrderByDescending(params LambdaExpression[] expressions);
+    }
+
 	public interface IQueryBuilder<T> where T : class
 	{
 	    bool IsEmpty { get; }
