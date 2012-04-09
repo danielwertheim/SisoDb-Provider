@@ -73,6 +73,10 @@
     <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="Session\Caching.cs" />
     <Compile Include="Session\Querying\Any.cs" />
+    <Compile Include="Session\Querying\Dynamic\Any.cs" />
+    <Compile Include="Session\Querying\Dynamic\Count.cs" />
+    <Compile Include="Session\Querying\Dynamic\Exists.cs" />
+    <Compile Include="Session\Querying\Dynamic\Query.cs" />
     <Compile Include="Session\Querying\StringFunctions\Contains.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />
     <Compile Include="Session\InsertAs.cs" />

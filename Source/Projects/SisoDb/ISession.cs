@@ -9,7 +9,12 @@ namespace SisoDb
 	/// </summary>
 	public interface ISession : IDisposable
 	{
-		/// <summary>
+        /// <summary>
+        /// The database that this session is executed against.
+        /// </summary>
+	    ISisoDatabase Db { get; }
+
+	    /// <summary>
 		/// Low level API that executes queries as <see cref="IQuery"/>.
 		/// </summary>
 		IQueryEngine QueryEngine { get; }

@@ -1,3 +1,4 @@
+using System;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
@@ -32,8 +33,10 @@ namespace SisoDb
 
     	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action);
 
-		IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
-		
 		IDbQueryGenerator GetDbQueryGenerator();
+
+	    IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas);
+
+        IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
     }
 }

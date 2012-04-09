@@ -1,7 +1,13 @@
+using EnsureThat;
+
 namespace SisoDb.Querying.Lambdas.Parsers
 {
 	public class ExpressionParsers : IExpressionParsers
 	{
+        private IIncludeParser _includeParser;
+        private IWhereParser _whereParser;
+        private IOrderByParser _orderByParser;
+
 		public ExpressionParsers()
 		{
 			IncludeParser = new IncludeParser();
@@ -9,10 +15,45 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			OrderByParser = new OrderByParser();
 		}
 
-		public IIncludeParser IncludeParser { get; private set; }
+	    public IIncludeParser IncludeParser
+	    {
+	        get
+	        {
+	            return _includeParser;
+	        }
+            set
+            {
+                Ensure.That(value, "IncludeParser").IsNotNull();
+                _includeParser = value;
+            }
+	    }
 
-		public IWhereParser WhereParser { get; private set; }
+	    
+	    public IWhereParser WhereParser
+	    {
+	        get
+	        {
+	            return _whereParser;
+	        }
+	        set
+	        {
+	            Ensure.That(value, "WhereParser").IsNotNull();
+	            _whereParser = value;
+	        }
+	    }
 
-		public IOrderByParser OrderByParser { get; private set; }
+	    
+	    public IOrderByParser OrderByParser
+	    {
+	        get
+	        {
+	            return _orderByParser;
+	        }
+	        set
+	        {
+	            Ensure.That(value, "OrderByParser").IsNotNull();
+	            _orderByParser = value;
+	        }
+	    }
 	}
 }

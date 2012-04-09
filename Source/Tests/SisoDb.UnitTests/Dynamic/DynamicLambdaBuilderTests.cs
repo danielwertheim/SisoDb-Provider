@@ -12,38 +12,38 @@ namespace SisoDb.UnitTests.Dynamic
     public class DynamicLambdaBuilderTests : UnitTestBase
     {
         [Test]
-        public void Build_WhenNoSpaceBeforeLambdaOperator_ThrowsArgumentException()
+        public void BuildPredicate_WhenNoSpaceBeforeLambdaOperator_ThrowsArgumentException()
         {
             var builder = new DynamicLambdaBuilder();
 
-            var ex = Assert.Throws<ArgumentException>(() => builder.Build(typeof(Item), "i=> i.Value == \"Foo\""));
+            var ex = Assert.Throws<ArgumentException>(() => builder.BuildPredicate(typeof(Item), "i=> i.Value == \"Foo\""));
             Assert.AreEqual(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat, ex.Message);
         }
 
         [Test]
-        public void Build_WhenStartingWithLambdaOperator_ThrowsArgumentException()
+        public void BuildPredicate_WhenStartingWithLambdaOperator_ThrowsArgumentException()
         {
             var builder = new DynamicLambdaBuilder();
 
-            var ex = Assert.Throws<ArgumentException>(() => builder.Build(typeof(Item), "=> i.Value == \"Foo\""));
+            var ex = Assert.Throws<ArgumentException>(() => builder.BuildPredicate(typeof(Item), "=> i.Value == \"Foo\""));
             Assert.AreEqual(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat, ex.Message);
         }
 
         [Test]
-        public void Build_WhenNoLambdaOperator_ThrowsArgumentException()
+        public void BuildPredicate_WhenNoLambdaOperator_ThrowsArgumentException()
         {
             var builder = new DynamicLambdaBuilder();
 
-            var ex = Assert.Throws<ArgumentException>(() => builder.Build(typeof(Item), "i.Value == \"Foo\""));
+            var ex = Assert.Throws<ArgumentException>(() => builder.BuildPredicate(typeof(Item), "i.Value == \"Foo\""));
             Assert.AreEqual(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat, ex.Message);
         }
 
         [Test]
-        public void Build_WhenPassingValidExpressionForNonNestedItem_GeneratesValidLambda()
+        public void BuildPredicate_WhenPassingValidExpressionForNonNestedItem_GeneratesValidLambda()
         {
             var builder = new DynamicLambdaBuilder();
 
-            var expression = builder.Build(typeof(Item), "i => i.Value == \"Alpha\" || i.Value == \"Bravo\"");
+            var expression = builder.BuildPredicate(typeof(Item), "i => i.Value == \"Alpha\" || i.Value == \"Bravo\"");
 
             var result = Store.QueryItems(expression);
             Assert.AreEqual(4, result.Length);
@@ -54,11 +54,11 @@ namespace SisoDb.UnitTests.Dynamic
         }
 
         [Test]
-        public void Build_WhenPassingValidExpressionForNestedItem_GeneratesValidLambda()
+        public void BuildPredicate_WhenPassingValidExpressionForNestedItem_GeneratesValidLambda()
         {
             var builder = new DynamicLambdaBuilder();
 
-            var expression = builder.Build(typeof(Store.NestedItem), "i => i.Value == \"Alpha\" || i.Value == \"Bravo\"");
+            var expression = builder.BuildPredicate(typeof(Store.NestedItem), "i => i.Value == \"Alpha\" || i.Value == \"Bravo\"");
 
             var result = Store.QueryNestedItems(expression);
             Assert.AreEqual(4, result.Length);
@@ -66,6 +66,24 @@ namespace SisoDb.UnitTests.Dynamic
             Assert.AreEqual("Alpha", result[1].Value);
             Assert.AreEqual("Bravo", result[2].Value);
             Assert.AreEqual("Bravo", result[3].Value);
+        }
+
+        [Test]
+        public void BuildMember_WhenPassingMemberExpression_GeneratesValidLambda()
+        {
+            var builder = new DynamicLambdaBuilder();
+
+            var expression = builder.BuildMember(typeof(Item), "i => i.Value");
+            Assert.IsNotNull(expression);
+        }
+
+        [Test]
+        public void BuildMember_WhenPassingMemberExpressionOnNestedItem_GeneratesValidLambda()
+        {
+            var builder = new DynamicLambdaBuilder();
+
+            var expression = builder.BuildMember(typeof(Store.NestedItem), "i => i.Value");
+            Assert.IsNotNull(expression);
         }
 
         public class Store

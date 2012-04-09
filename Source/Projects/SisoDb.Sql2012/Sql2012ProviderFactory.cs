@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
@@ -101,9 +102,14 @@ namespace SisoDb.Sql2012
             return new Sql2012QueryGenerator(_sqlStatements);
         }
 
-    	public IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
-    	{
-    		return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
-    	}
+        public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
+        {
+            return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers());
+        }
+
+        public virtual IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
+        {
+            return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
+        }
     }
 }

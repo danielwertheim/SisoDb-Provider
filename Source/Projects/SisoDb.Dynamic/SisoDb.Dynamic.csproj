@@ -56,10 +56,14 @@
     </Compile>
     <Compile Include="DynamicLambdaBuilder.cs" />
     <Compile Include="DynamicLambdaBuilderCache.cs" />
+    <Compile Include="DynamicSessionExtensions.cs" />
     <Compile Include="ExpressionFactory.cs" />
     <Compile Include="IDynamicLambdaBuilder.cs" />
     <Compile Include="IDynamicLambdaBuilderCache.cs" />
+    <Compile Include="ISisoDynamicQueryable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SisoDynamicQueryable.cs" />
+    <Compile Include="SisoDynamicRuntime.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

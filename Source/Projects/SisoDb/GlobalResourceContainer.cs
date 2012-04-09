@@ -7,7 +7,7 @@ namespace SisoDb
     {
         private readonly IJsonSerializer _defaultJsonSerializer;
         
-        public Func<IJsonSerializer> ResolveJsonSerializer;
+        public Func<IJsonSerializer> ResolveJsonSerializer; //TODO: Rename JsonSerializerResolver
 
         public GlobalResourceContainer()
         {

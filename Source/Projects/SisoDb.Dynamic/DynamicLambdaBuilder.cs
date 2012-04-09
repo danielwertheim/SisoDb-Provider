@@ -15,7 +15,8 @@ namespace SisoDb.Dynamic
 {
     public class DynamicLambdaBuilder : IDynamicLambdaBuilder
     {
-        protected const string QueryFormat = "ExpressionFactory.Create<{0}>({1});";
+        protected const string CreatePredicateFormat = "ExpressionFactory.CreatePredicate<{0}>({1});";
+        protected const string CreateMemberFormat = "ExpressionFactory.CreateMember<{0}>({1});";
 
         protected CompilerContext CompilerContext;
         protected readonly Evaluator Evaluator;
@@ -49,12 +50,12 @@ namespace SisoDb.Dynamic
             Evaluator.Run(string.Format("using {0};", expressionFactoryType.Namespace));
         }
 
-        public virtual Expression<Func<T, bool>>  Build<T>(string expression, params object[] formattingArgs) where T : class
+        public virtual Expression<Func<T, bool>>  BuildPredicate<T>(string expression, params object[] formattingArgs) where T : class
         {
-            return (Expression<Func<T, bool>>) Build(typeof (T), expression, formattingArgs);
+            return (Expression<Func<T, bool>>) BuildPredicate(TypeFor<T>.Type, expression, formattingArgs);
         }
 
-        public virtual System.Linq.Expressions.LambdaExpression Build(Type type, string expression, params object[] formattingArgs)
+        public virtual System.Linq.Expressions.LambdaExpression BuildPredicate(Type type, string expression, params object[] formattingArgs)
         {
             Ensure.That(type, "type").IsNotNull();
             Ensure.That(expression, "expression").IsNotNullOrWhiteSpace();
@@ -68,14 +69,36 @@ namespace SisoDb.Dynamic
             if (formattingArgs.Any())
                 expression = string.Format(expression, formattingArgs);
 
-            return OnBuild(typeFullName, expression);
+            return OnBuild(typeFullName, expression, CreatePredicateFormat);
         }
 
-        protected virtual System.Linq.Expressions.LambdaExpression OnBuild(string typeFullName, string expression)
+        public virtual Expression<Func<T, bool>> BuildMember<T>(string expression, params object[] formattingArgs) where T : class
+        {
+            return (Expression<Func<T, bool>>)BuildMember(TypeFor<T>.Type, expression, formattingArgs);
+        }
+
+        public System.Linq.Expressions.LambdaExpression BuildMember(Type type, string expression, params object[] formattingArgs)
+        {
+            Ensure.That(type, "type").IsNotNull();
+            Ensure.That(expression, "expression").IsNotNullOrWhiteSpace();
+
+            var typeFullName = type.FullName;
+            if (string.IsNullOrWhiteSpace(typeFullName))
+                throw new SisoDbException(ExceptionMessages.DynamicLambdaBuilder_Build_TypeFullNameMissing.Inject(type.Name));
+
+            ReferenceAssembly(type.Assembly);
+
+            if (formattingArgs.Any())
+                expression = string.Format(expression, formattingArgs);
+
+            return OnBuild(typeFullName, expression, CreateMemberFormat);
+        }
+
+        protected virtual System.Linq.Expressions.LambdaExpression OnBuild(string typeFullName, string expression, string createExpressionFormat)
         {
             EnsureValidLambdaExpression(expression);
 
-            var query = string.Format(QueryFormat, typeFullName.Replace('+', '.'), expression);
+            var query = string.Format(createExpressionFormat, typeFullName.Replace('+', '.'), expression);
 
             try
             {
