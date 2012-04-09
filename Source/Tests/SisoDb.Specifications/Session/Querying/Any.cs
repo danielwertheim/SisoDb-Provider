@@ -6,7 +6,7 @@ namespace SisoDb.Specifications.Session.Querying
 {
     class Any
     {
-        [Subject(typeof(ISession), "Any")]
+        [Subject(typeof(ISisoQueryable<>), "Any")]
         public class when_no_expression_is_specified_and_no_items_exists : SpecificationBase
         {
             Establish context = () =>
@@ -21,7 +21,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Any")]
+        [Subject(typeof(ISisoQueryable<>), "Any")]
         public class when_expression_is_specified_and_no_items_exists : SpecificationBase
         {
             Establish context = () =>
@@ -36,7 +36,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Any")]
+        [Subject(typeof(ISisoQueryable<>), "Any")]
         public class when_no_expression_is_specified_and_two_items_exists : SpecificationBase
         {
             Establish context = () =>
@@ -58,7 +58,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Any")]
+        [Subject(typeof(ISisoQueryable<>), "Any")]
         public class when_expression_is_specified_and_it_matches_two_of_four_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -79,7 +79,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Any")]
+        [Subject(typeof(ISisoQueryable<>), "Any")]
         public class when_expression_is_specified_and_it_matches_two_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>
@@ -102,7 +102,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static bool _result;
         }
 
-        [Subject(typeof(ISession), "Any")]
+        [Subject(typeof(ISisoQueryable<>), "Any")]
         public class when_expression_is_specified_and_it_matches_none_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>

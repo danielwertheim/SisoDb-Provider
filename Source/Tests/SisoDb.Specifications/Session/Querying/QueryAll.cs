@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.Session.Querying
 {
 	class QueryAll
     {
-        [Subject(typeof(ISession), "Query all")]
+        [Subject(typeof(ISisoQueryable<>), "Query all")]
         public class when_set_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -22,7 +22,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Query all as Json")]
+        [Subject(typeof(ISisoQueryable<>), "Query all as Json")]
         public class when_set_of_json_is_empty : SpecificationBase
         {
             Establish context = () => TestContext = TestContextFactory.Create();
@@ -36,7 +36,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Query all")]
+        [Subject(typeof(ISisoQueryable<>), "Query all")]
         public class when_set_contains_four_items : SpecificationBase
         {
             Establish context = () =>
@@ -64,7 +64,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Query all as Json")]
+        [Subject(typeof(ISisoQueryable<>), "Query all as Json")]
         public class when_set_contains_four_json_items : SpecificationBase
         {
             Establish context = () =>
@@ -92,7 +92,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Query all, with sorting")]
+        [Subject(typeof(ISisoQueryable<>), "Query all, with sorting")]
         public class when_set_contains_four_items_inserted_unordered : SpecificationBase
         {
             Establish context = () =>
@@ -120,7 +120,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Query all as Json, with sorting")]
+        [Subject(typeof(ISisoQueryable<>), "Query all as Json, with sorting")]
         public class when_set_contains_four_json_items_inserted_unordered : SpecificationBase
         {
             Establish context = () =>
@@ -148,7 +148,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<string> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Query all, with multiple sorting")]
+        [Subject(typeof(ISisoQueryable<>), "Query all, with multiple sorting")]
         public class when_set_contains_four_items_inserted_unordered_and_sorted_by_two_criterias : SpecificationBase
         {
             Establish context = () =>
@@ -176,7 +176,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Query all, with sorting")]
+        [Subject(typeof(ISisoQueryable<>), "Query all, with sorting")]
         public class when_set_contains_four_items_inserted_unordered_and_sorting_on_different_members_but_same_datatype : SpecificationBase
         {
             Establish context = () =>
@@ -204,7 +204,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Get all")]
+        [Subject(typeof(ISisoQueryable<>), "Get all")]
         public class when_set_with_guid_contains_four_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () =>
@@ -238,7 +238,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        [Subject(typeof(ISession), "Get all as Json")]
+        [Subject(typeof(ISisoQueryable<>), "Get all as Json")]
         public class when_set_with_guid_contains_four_json_items_that_are_in_uncommitted_mode : SpecificationBase
         {
             Establish context = () =>
