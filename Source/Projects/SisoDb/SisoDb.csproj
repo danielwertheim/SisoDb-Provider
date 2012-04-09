@@ -111,6 +111,7 @@
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StartsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\BoolNodesTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\IExpressionParsers.cs" />
     <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
@@ -145,7 +146,6 @@
     <Compile Include="Querying\Lambdas\Nodes\ToLowerMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ToUpperMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\ExpressionParsers.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\IExpressionParsers.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IOrderByParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\OrderByAscExpression.cs" />
     <Compile Include="Querying\Lambdas\Parsers\OrderByDescExpression.cs" />

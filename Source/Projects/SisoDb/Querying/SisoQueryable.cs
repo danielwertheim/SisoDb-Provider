@@ -8,27 +8,23 @@ namespace SisoDb.Querying
 {
 	public class SisoQueryable<T> : ISisoQueryable<T> where T : class
 	{
-		protected virtual ISession Session { get; private set; }
+	    protected readonly IQueryEngine QueryEngine;
 		protected readonly IQueryBuilder<T> QueryBuilder;
 
-		public SisoQueryable(IQueryBuilder<T> queryBuilder, ISession session)
-			: this(queryBuilder)
+        public SisoQueryable(IQueryBuilder<T> queryBuilder, IQueryEngine queryEngine)
 		{
-			Ensure.That(session, "Session").IsNotNull();
-			Session = session;
-		}
+            Ensure.That(queryBuilder, "queryBuilder").IsNotNull();
+            Ensure.That(queryEngine, "queryEngine").IsNotNull();
 
-		protected SisoQueryable(IQueryBuilder<T> queryBuilder)
-		{
-			Ensure.That(queryBuilder, "queryBuilder").IsNotNull();
-			QueryBuilder = queryBuilder;
+            QueryBuilder = queryBuilder;
+            QueryEngine = queryEngine;
 		}
 
         public virtual bool Any()
         {
             return QueryBuilder.IsEmpty 
-                ? Session.QueryEngine.Any<T>()
-                : Session.QueryEngine.Any<T>(QueryBuilder.Build());
+                ? QueryEngine.Any<T>()
+                : QueryEngine.Any<T>(QueryBuilder.Build());
         }
 
         public virtual bool Any(Expression<Func<T, bool>> expression)
@@ -38,14 +34,14 @@ namespace SisoDb.Querying
             QueryBuilder.Clear();
             QueryBuilder.Where(expression);
 
-            return Session.QueryEngine.Any<T>(QueryBuilder.Build());
+            return QueryEngine.Any<T>(QueryBuilder.Build());
         }
 
         public virtual int Count()
         {
             return QueryBuilder.IsEmpty
-                ? Session.QueryEngine.Count<T>()
-                : Session.QueryEngine.Count<T>(QueryBuilder.Build());
+                ? QueryEngine.Count<T>()
+                : QueryEngine.Count<T>(QueryBuilder.Build());
         }
 
         public virtual int Count(Expression<Func<T, bool>> expression)
@@ -55,14 +51,14 @@ namespace SisoDb.Querying
             QueryBuilder.Clear();
             QueryBuilder.Where(expression);
 
-            return Session.QueryEngine.Count<T>(QueryBuilder.Build());
+            return QueryEngine.Count<T>(QueryBuilder.Build());
         }
 
 	    public virtual bool Exists(object id)
 	    {
 	        Ensure.That(id, "id").IsNotNull();
 
-	        return Session.QueryEngine.Exists<T>(id);
+	        return QueryEngine.Exists<T>(id);
 	    }
 
 	    public virtual T First()
@@ -149,24 +145,24 @@ namespace SisoDb.Querying
 
         public virtual IEnumerable<T> ToEnumerable()
         {
-            return Session.QueryEngine.Query<T>(QueryBuilder.Build());
+            return QueryEngine.Query<T>(QueryBuilder.Build());
         }
 
         public virtual IEnumerable<TResult> ToEnumerableOf<TResult>() where TResult : class
         {
-            return Session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
+            return QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
         }
 
         public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(TResult template) where TResult : class
         {
             Ensure.That(template, "template").IsNotNull();
 
-            return Session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
+            return QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
         }
 
         public virtual IEnumerable<string> ToEnumerableOfJson()
         {
-            return Session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
+            return QueryEngine.QueryAsJson<T>(QueryBuilder.Build());
         }
 
         public virtual IList<T> ToList()
@@ -207,6 +203,8 @@ namespace SisoDb.Querying
 
 		public virtual ISisoQueryable<T> Include<TInclude>(params Expression<Func<T, object>>[] expressions) where TInclude : class
 		{
+            Ensure.That(expressions, "expressions").HasItems();
+
 			QueryBuilder.Include<TInclude>(expressions);
 			
 			return this;
@@ -214,6 +212,8 @@ namespace SisoDb.Querying
 
 		public virtual ISisoQueryable<T> Where(params Expression<Func<T, bool>>[] expressions)
 		{
+		    Ensure.That(expressions, "expressions").HasItems();
+
 			QueryBuilder.Where(expressions);
 			
 			return this;
@@ -221,6 +221,8 @@ namespace SisoDb.Querying
 
 		public virtual ISisoQueryable<T> OrderBy(params Expression<Func<T, object>>[] expressions)
 		{
+            Ensure.That(expressions, "expressions").HasItems();
+
 			QueryBuilder.OrderBy(expressions);
 
 			return this;
@@ -228,6 +230,8 @@ namespace SisoDb.Querying
 
 		public virtual ISisoQueryable<T> OrderByDescending(params Expression<Func<T, object>>[] expressions)
 		{
+            Ensure.That(expressions, "expressions").HasItems();
+
 			QueryBuilder.OrderByDescending(expressions);
 
 			return this;

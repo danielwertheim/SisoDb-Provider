@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using PineCone.Structures.Schemas;
 
 namespace SisoDb.UnitTests.TestFactories
@@ -12,19 +13,14 @@ namespace SisoDb.UnitTests.TestFactories
     		Reflecter = new StructureTypeReflecter();
     	}
 
-        internal static IStructureProperty GetIdProperty<T>()
+        internal static IStructureProperty GetIdProperty(Type structureType)
         {
-            return Reflecter.GetIdProperty(typeof(T));
+            return Reflecter.GetIdProperty(structureType);
         }
 
-        internal static IStructureProperty GetPropertyByPath<T>(string path)
+        internal static IStructureProperty GetPropertyByPath(Type structureType, string path)
         {
-            return Reflecter.GetIndexableProperties(typeof(T)).Single(i => i.Path == path);
-        }
-
-        internal static IStructureProperty GetPropertyByName<T>(string name)
-        {
-            return Reflecter.GetIndexableProperties(typeof(T)).Single(i => i.Name == name);
+            return Reflecter.GetIndexableProperties(structureType).Single(i => i.Path == path);
         }
     }
 }

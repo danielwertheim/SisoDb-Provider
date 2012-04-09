@@ -142,7 +142,7 @@ namespace SisoDb
         void UpsertStructureSet(Type type);
 
         /// <summary>
-		/// Creates a NON Transactional <see cref="ISession"/>, used for searching.
+		/// Creates an <see cref="ISession"/>, used for inserts, updates, deletes and searching.
         /// The Session is designed for being short lived. Create, consume and dispose.
         /// </summary>
         /// <returns></returns>

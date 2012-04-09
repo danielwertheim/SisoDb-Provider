@@ -14,8 +14,7 @@ namespace SisoDb.Specifications.Session.Querying
 
             Because of = () =>
                 _result = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Any();
-
-
+            
             It should_be_false= () =>
                 _result.ShouldBeFalse();
 

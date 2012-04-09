@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Machine.Specifications;
 using SisoDb.Dynamic;
 using SisoDb.Specifications.Model;
@@ -972,7 +971,7 @@ namespace SisoDb.Specifications.Session.Querying
                 var to = _structures[2].SortOrder;
 
                 var builder = new DynamicLambdaBuilder();
-                var expression = builder.Build<QueryGuidItem>("i => i.SortOrder >= {0} && i.SortOrder <= {1}", from, to);
+                var expression = builder.BuildPredicate<QueryGuidItem>("i => i.SortOrder >= {0} && i.SortOrder <= {1}", from, to);
                 _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Where(expression).ToList();
             };
         
