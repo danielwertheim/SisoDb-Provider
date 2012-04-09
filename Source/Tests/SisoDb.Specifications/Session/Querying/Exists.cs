@@ -8,7 +8,7 @@ namespace SisoDb.Specifications.Session.Querying
 {
     class Exists
     {
-        [Subject(typeof(ISession), "Exists by Id (guid)")]
+        [Subject(typeof(ISisoQueryable<>), "Exists by Id (guid)")]
         public class when_set_with_guid_id_contains_match : SpecificationBase
         {
             Establish context = () =>
@@ -27,7 +27,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static bool _exists;
         }
 
-        [Subject(typeof(ISession), "Exists by Id (guid)")]
+        [Subject(typeof(ISisoQueryable<>), "Exists by Id (guid)")]
         public class when_set_with_guid_id_contains_no_match : SpecificationBase
         {
             Establish context = () =>
