@@ -3,13 +3,11 @@ namespace SisoDb.Testing
     public abstract class TestContextBase : ITestContext
     {
         public ISisoDatabase Database { get; private set; }
-        public IDbProviderFactory ProviderFactory { get; private set; }
         public ITestDbUtils DbHelper { get; protected set; }
 
-        protected TestContextBase(ISisoDatabaseFactory dbFactory, ISisoConnectionInfo connectionInfo, IDbProviderFactory providerFactory)
+        protected TestContextBase(ISisoDatabase db)
         {
-            Database = dbFactory.CreateDatabase(connectionInfo);
-            ProviderFactory = providerFactory;
+            Database = db;
         }
 
         public void Cleanup()
@@ -17,13 +15,9 @@ namespace SisoDb.Testing
 			if (Database != null)
 			{
 				Database.Maintenance.Reset();
+                Database.ProviderFactory.ConnectionManager.ReleaseAllDbConnections();
 				Database = null;
 			}
-
-            if(ProviderFactory != null)
-            {
-                ProviderFactory.ConnectionManager.ReleaseAllDbConnections();
-            }
         }
     }
 }

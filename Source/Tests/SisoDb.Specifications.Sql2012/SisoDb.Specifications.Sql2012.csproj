@@ -171,6 +171,18 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Count.cs">
       <Link>Session\Querying\Count.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Dynamic\Any.cs">
+      <Link>Session\Querying\Dynamic\Any.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Dynamic\Count.cs">
+      <Link>Session\Querying\Dynamic\Count.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Dynamic\Exists.cs">
+      <Link>Session\Querying\Dynamic\Exists.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Dynamic\Query.cs">
+      <Link>Session\Querying\Dynamic\Query.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\EnumerableFunctions\QxAny.cs">
       <Link>Session\Querying\EnumerableFunctions\QxAny.cs</Link>
     </Compile>

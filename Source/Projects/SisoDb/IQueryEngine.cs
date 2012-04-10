@@ -9,39 +9,71 @@ namespace SisoDb
         /// Returns bool indicating if the specified structure <typeparamref name="T"/>,
         /// has any items at all.
         /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <returns>Number of structures.</returns>
         bool Any<T>() where T : class;
+
+        /// <summary>
+        /// Returns bool indicating if the specified structure <paramref name="structureType"/>,
+        /// has any items at all.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <returns>Number of structures.</returns>
+        bool Any(Type structureType);
 
         /// <summary>
         /// Returns bool indicating if the specified structure <typeparamref name="T"/>,
         /// has any items matching the where expression in <see cref="IQuery.Where"/>.
         /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="query"></param>
         /// <returns>Number of structures.</returns>
         bool Any<T>(IQuery query) where T : class;
 
         /// <summary>
+        /// Returns bool indicating if the specified structure <paramref name="structureType"/>,
+        /// has any items matching the where expression in <see cref="IQuery.Where"/>.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <param name="query"></param>
+        /// <returns>Number of structures.</returns>
+        bool Any(Type structureType, IQuery query);
+
+        /// <summary>
         /// Issues a simple count for how many structures there
         /// are in the specified structure <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <returns></returns>
         int Count<T>() where T : class;
+
+        /// <summary>
+        /// Issues a simple count for how many structures there
+        /// are in the specified structure <paramref name="structureType"/>.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <returns></returns>
+        int Count(Type structureType);
 
         /// <summary>
         /// Issues a simple count for how many structures there are
         /// in the specified structure <typeparamref name="T"/>,
         /// matching the where expression in <see cref="IQuery.Where"/>.
         /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="query"></param>
         /// <returns>Number of structures.</returns>
         int Count<T>(IQuery query) where T : class;
+
+	    /// <summary>
+	    /// Issues a simple count for how many structures there are
+        /// in the specified structure <paramref name="structureType"/>,
+	    /// matching the where expression in <see cref="IQuery.Where"/>.
+	    /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+	    /// <param name="query"></param>
+	    /// <returns>Number of structures.</returns>
+	    int Count(Type structureType, IQuery query);
 
         /// <summary>
         /// Returns value indicating of structure exists or not.
@@ -52,12 +84,30 @@ namespace SisoDb
         bool Exists<T>(object id) where T : class;
 
         /// <summary>
+        /// Returns value indicating of structure exists or not.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool Exists(Type structureType, object id);
+
+        /// <summary>
 		/// Lets you perform a Query by passing an <see cref="IQuery"/>.
 		/// </summary>
 		/// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="query"></param>
 		/// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
 		/// <remarks>The query is defered and is executed when you start yield the result.</remarks>
 		IEnumerable<T> Query<T>(IQuery query) where T : class;
+
+        /// <summary>
+        /// Lets you perform a Query by passing an <see cref="IQuery"/>.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <param name="query"></param>
+        /// <returns>IEnumerable of object, representing <paramref name="structureType"/>.</returns>
+        /// <remarks>The query is defered and is executed when you start yield the result.</remarks>
+        IEnumerable<object> Query(Type structureType, IQuery query);
 
 		/// <summary>
 		/// Lets you perform a Query by passing an <see cref="IQuery"/>.
@@ -97,9 +147,9 @@ namespace SisoDb
 	    /// <summary>
 	    /// Lets you perform a Query by passing an <see cref="IQuery"/>.
 	    /// </summary>
-        /// <param name="structuretype"></param>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
 	    /// <param name="query"></param>
-        /// <returns>IEnumerable Json representation of <paramref name="structuretype"/>.</returns>
-	    IEnumerable<string> QueryAsJson(Type structuretype, IQuery query);
+        /// <returns>IEnumerable Json representation of <paramref name="structureType"/>.</returns>
+        IEnumerable<string> QueryAsJson(Type structureType, IQuery query);
 	}
 }

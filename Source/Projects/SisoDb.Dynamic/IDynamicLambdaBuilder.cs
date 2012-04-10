@@ -11,24 +11,45 @@ namespace SisoDb.Dynamic
         IDynamicLambdaBuilderCache Cache { get; set; }
 
         /// <summary>
-        /// Lets you generate a <see cref="LambdaExpression"/> predicate from sent type
-        /// and string. Example: <example>Build&lt;Person&gt;("p => p.Name == \"Daniel\"")</example>
+        /// Lets you build a <see cref="LambdaExpression"/> predicate from sent type
+        /// and string. Example: <example>BuildPredicate&lt;Person&gt;("p => p.Name == \"Daniel\"")</example>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="expression"></param>
         /// <param name="formattingArgs"></param>
         /// <returns></returns>
-        Expression<Func<T, bool>> Build<T>(string expression, params object[] formattingArgs) where T : class;
+        Expression<Func<T, bool>> BuildPredicate<T>(string expression, params object[] formattingArgs) where T : class;
 
         /// <summary>
-        /// Lets you generate a <see cref="LambdaExpression"/> predicate from sent Type
+        /// Lets you build a <see cref="LambdaExpression"/> predicate from sent Type
         /// and string. The type will be used as the generic type in the
-        /// predicate. Example: <example>Build(typeof(Person), "p => p.Name == \"Daniel\"")</example>
+        /// predicate. Example: <example>BuildPredicate(typeof(Person), "p => p.Name == \"Daniel\"")</example>
         /// </summary>
         /// <param name="type"></param>
         /// <param name="expression"></param>
         /// <param name="formattingArgs"></param>
         /// <returns></returns>
-        LambdaExpression Build(Type type, string expression, params object[] formattingArgs);
+        LambdaExpression BuildPredicate(Type type, string expression, params object[] formattingArgs);
+
+        /// <summary>
+        /// Lets you build a <see cref="LambdaExpression"/> predicate from sent type
+        /// and string. Example: <example>BuildMember&lt;Person&gt;("p => p.Name")</example>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="formattingArgs"></param>
+        /// <returns></returns>
+        Expression<Func<T, bool>> BuildMember<T>(string expression, params object[] formattingArgs) where T : class;
+
+        /// <summary>
+        /// Lets you build a <see cref="LambdaExpression"/> predicate from sent Type
+        /// and string. The type will be used as the generic type in the
+        /// predicate. Example: <example>BuildMember(typeof(Person), "p => p.Name")</example>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="expression"></param>
+        /// <param name="formattingArgs"></param>
+        /// <returns></returns>
+        LambdaExpression BuildMember(Type type, string expression, params object[] formattingArgs);
     }
 }

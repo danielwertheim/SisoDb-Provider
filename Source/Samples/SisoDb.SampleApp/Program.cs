@@ -18,16 +18,12 @@ namespace SisoDb.SampleApp
             return;
 
             //********* SQL2008 ***********
-            //var cnInfo = new Sql2008ConnectionInfo("SisoDb.Sql2008");
-            //var db = new Sql2008DbFactory().CreateDatabase(cnInfo);
-
+            //var db = "SisoDb.Sql2008".CreateSql2008Db();
             //********* SQL2012 ***********
-            //var cnInfo = new Sql2012ConnectionInfo("SisoDb.Sql2012");
-            //var db = new Sql2012DbFactory().CreateDatabase(cnInfo);
-
+            //var db = "SisoDb.Sql2012".CreateSql2012Db();
             //********* SQLCE4 ***********
-            //var cnInfo = new SqlCe4ConnectionInfo("SisoDb.SqlCe4");
-            //var db = new SqlCe4DbFactory().CreateDatabase(cnInfo);
+            //var db = "SisoDb.SqlCe4".CreateSqlCe4Db();
+            //********************************************
 
             //db.EnsureNewDatabase();
 
@@ -36,13 +32,13 @@ namespace SisoDb.SampleApp
 
             //ProfilingInserts(db, 1000, 5);
 
-			//InsertCustomers(1, 10000, db);
-			//ProfilingQueries(() => GetAllCustomers(db));
-			//ProfilingQueries(() => GetAllCustomersAsJson(db));
+            //InsertCustomers(1, 10000, db);
+            //ProfilingQueries(() => GetAllCustomers(db));
+            //ProfilingQueries(() => GetAllCustomersAsJson(db));
             //ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
-			//ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
+            //ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
-			//ProfilingUpdateMany(db, 500, 550);
+            //ProfilingUpdateMany(db, 500, 550);
 
             //Console.WriteLine("---- Done ----");
             //Console.ReadKey();
