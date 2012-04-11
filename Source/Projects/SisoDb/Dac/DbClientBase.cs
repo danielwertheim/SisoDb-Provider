@@ -101,7 +101,7 @@ namespace SisoDb.Dac
 
         public virtual long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
         {
-            Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
+            EnsureValidDbObjectName(entityName);
 
             var sql = SqlStatements.GetSql("Sys_Identities_CheckOutAndGetNextIdentity");
 
@@ -221,18 +221,19 @@ namespace SisoDb.Dac
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var indexesTableNames = structureSchema.GetIndexesTableNames();
+            var names = new ModelTableNames(structureSchema);
+            EnsureValidNames(names);
 
             var sql = SqlStatements.GetSql("DropStructureTables").Inject(
-                indexesTableNames.IntegersTableName,
-                indexesTableNames.FractalsTableName,
-                indexesTableNames.BooleansTableName,
-                indexesTableNames.DatesTableName,
-                indexesTableNames.GuidsTableName,
-                indexesTableNames.StringsTableName,
-                indexesTableNames.TextsTableName,
-                structureSchema.GetUniquesTableName(),
-                structureSchema.GetStructureTableName());
+                names.IndexesTableNames.IntegersTableName,
+                names.IndexesTableNames.FractalsTableName,
+                names.IndexesTableNames.BooleansTableName,
+                names.IndexesTableNames.DatesTableName,
+                names.IndexesTableNames.GuidsTableName,
+                names.IndexesTableNames.StringsTableName,
+                names.IndexesTableNames.TextsTableName,
+                names.UniquesTableName,
+                names.StructureTableName);
 
             using (var cmd = CreateCommand(sql, new DacParameter("entityName", structureSchema.Name)))
             {
@@ -270,16 +271,17 @@ namespace SisoDb.Dac
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var indexesTableNames = structureSchema.GetIndexesTableNames();
+            var names = new ModelTableNames(structureSchema);
+            EnsureValidNames(names);
 
             var sql = SqlStatements.GetSql("ClearIndexesTables").Inject(
-                indexesTableNames.IntegersTableName,
-                indexesTableNames.FractalsTableName,
-                indexesTableNames.BooleansTableName,
-                indexesTableNames.DatesTableName,
-                indexesTableNames.GuidsTableName,
-                indexesTableNames.StringsTableName,
-                indexesTableNames.TextsTableName);
+                names.IndexesTableNames.IntegersTableName,
+                names.IndexesTableNames.FractalsTableName,
+                names.IndexesTableNames.BooleansTableName,
+                names.IndexesTableNames.DatesTableName,
+                names.IndexesTableNames.GuidsTableName,
+                names.IndexesTableNames.StringsTableName,
+                names.IndexesTableNames.TextsTableName);
 
             using (var cmd = CreateCommand(sql))
             {
@@ -339,18 +341,35 @@ namespace SisoDb.Dac
             return value > 0;
         }
 
-        public virtual IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names)
+        public virtual ModelTablesInfo GetModelTablesInfo(IStructureSchema structureSchema)
         {
-            return new IndexesTableStatuses(names)
-            {
-                IntegersTableExists = TableExists(names.IntegersTableName),
-                FractalsTableExists = TableExists(names.FractalsTableName),
-                DatesTableExists = TableExists(names.DatesTableName),
-                BooleansTableExists = TableExists(names.BooleansTableName),
-                GuidsTableExists = TableExists(names.GuidsTableName),
-                StringsTableExists = TableExists(names.StringsTableName),
-                TextsTableExists = TableExists(names.TextsTableName)
-            };
+            var names = new ModelTableNames(structureSchema);
+            EnsureValidNames(names);
+
+            return new ModelTablesInfo(names, GetModelTableStatuses(names));
+        }
+
+        public virtual ModelTableStatuses GetModelTableStatuses(ModelTableNames names)
+        {
+            var sql = SqlStatements.GetSql("GetModelTableStatuses");
+            var parameters = names.AllTableNames.Select((n, i) => new DacParameter("tableName" + i, n)).ToArray();
+            var matchingNames = new HashSet<string>();
+            SingleResultSequentialReader(
+                sql,
+                dr => matchingNames.Add(dr.GetString(0)),
+                parameters);
+
+            return new ModelTableStatuses(
+                matchingNames.Contains(names.StructureTableName),
+                matchingNames.Contains(names.UniquesTableName),
+                new IndexesTableStatuses(
+                    matchingNames.Contains(names.IndexesTableNames.IntegersTableName),
+                    matchingNames.Contains(names.IndexesTableNames.FractalsTableName),
+                    matchingNames.Contains(names.IndexesTableNames.DatesTableName),
+                    matchingNames.Contains(names.IndexesTableNames.BooleansTableName),
+                    matchingNames.Contains(names.IndexesTableNames.GuidsTableName),
+                    matchingNames.Contains(names.IndexesTableNames.StringsTableName),
+                    matchingNames.Contains(names.IndexesTableNames.TextsTableName)));
         }
 
         public virtual int RowCount(IStructureSchema structureSchema)
@@ -599,6 +618,12 @@ namespace SisoDb.Dac
         protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
         {
             return Connection.CreateSpCommand(sp, Transaction, parameters);
+        }
+
+        protected virtual void EnsureValidNames(ModelTableNames names)
+        {
+            foreach (var tableName in names.AllTableNames)
+                EnsureValidDbObjectName(tableName);
         }
 
         protected virtual void EnsureValidDbObjectName(string dbObjectName)

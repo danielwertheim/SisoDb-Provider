@@ -23,8 +23,10 @@ namespace SisoDb.Dac
         void Drop(IStructureSchema structureSchema);
         void Reset();
         void ClearQueryIndexes(IStructureSchema structureSchema);
+        
         bool TableExists(string name);
-		IndexesTableStatuses GetIndexesTableStatuses(IndexesTableNames names);
+        ModelTablesInfo GetModelTablesInfo(IStructureSchema structureSchema);
+        ModelTableStatuses GetModelTableStatuses(ModelTableNames names);
         
 		void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);

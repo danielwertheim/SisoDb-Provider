@@ -560,4 +560,7 @@ order by groupId</value>
   <data name="EmptyTable" xml:space="preserve">
     <value>delete from [{0}];</value>
   </data>
+  <data name="GetModelTableStatuses" xml:space="preserve">
+    <value>select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
+  </data>
 </root>
