@@ -31,39 +31,33 @@ namespace SisoDb.DbSchema
 
 		public void Upsert(IStructureSchema structureSchema, IDbClient dbClient)
 		{
-			var structuresTableName = structureSchema.GetStructureTableName();
-			var indexesTableNames = structureSchema.GetIndexesTableNames();
-			var uniquesTableName = structureSchema.GetUniquesTableName();
-
-			var structuresTableExists = dbClient.TableExists(structuresTableName);
-			var indexesTableStatuses = dbClient.GetIndexesTableStatuses(indexesTableNames);
-			var uniquesTableExists = dbClient.TableExists(uniquesTableName);
+		    var modelInfo = dbClient.GetModelTablesInfo(structureSchema);
 
             if(_db.Settings.SynchronizeSchemaChanges)
             {
-                _indexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, indexesTableStatuses.GetTableNamesForExisting());
+                _indexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
 
-                if (uniquesTableExists)
+                if (modelInfo.Statuses.UniquesTableExists)
                     _uniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
             }
 
-			if (structuresTableExists && indexesTableStatuses.AllExists && uniquesTableExists)
+			if (modelInfo.Statuses.AllExists)
 				return;
 
-			foreach (var sql in GenerateSql(structureSchema, structuresTableExists, indexesTableStatuses, uniquesTableExists))
+			foreach (var sql in GenerateSql(structureSchema, modelInfo))
 				dbClient.ExecuteNonQuery(sql, new DacParameter("entityName", structureSchema.Name));
 		}
 
-		private IEnumerable<string> GenerateSql(IStructureSchema structureSchema, bool structuresTableExists, IndexesTableStatuses indexesTableStatuses, bool uniquesTableExists)
+        private IEnumerable<string> GenerateSql(IStructureSchema structureSchema, ModelTablesInfo modelInfo)
 		{
-			if (!structuresTableExists)
+			if (!modelInfo.Statuses.StructureTableExists)
 				yield return _structuresDbSchemaBuilder.GenerateSql(structureSchema);
 
-			if(!uniquesTableExists)
+            if (!modelInfo.Statuses.UniquesTableExists)
 				yield return _uniquesDbSchemaBuilder.GenerateSql(structureSchema);
-			
-			if(!indexesTableStatuses.AllExists)
-				foreach (var sql in _indexesDbSchemaBuilder.GenerateSql(structureSchema, indexesTableStatuses))
+
+            if (!modelInfo.Statuses.IndexesTableStatuses.AllExists)
+				foreach (var sql in _indexesDbSchemaBuilder.GenerateSql(structureSchema, modelInfo.Names.IndexesTableNames, modelInfo.Statuses.IndexesTableStatuses))
 					yield return sql;
 		}
 	}

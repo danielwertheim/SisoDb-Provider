@@ -112,24 +112,21 @@ namespace SisoDb.SqlCe4.Dac
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
-            var indexesTableNames = structureSchema.GetIndexesTableNames();
-            var indexesTableStatuses = GetIndexesTableStatuses(indexesTableNames);
-            var uniquesTableExists = TableExists(structureSchema.GetUniquesTableName());
-            var structureTableExists = TableExists(structureSchema.GetStructureTableName());
+            var modelInfo = GetModelTablesInfo(structureSchema);
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
             using (var cmd = CreateCommand(string.Empty, new DacParameter("entityName", structureSchema.Name)))
             {
-                DropIndexesTables(cmd, indexesTableStatuses);
+                DropIndexesTables(cmd, modelInfo.Statuses.IndexesTableStatuses, modelInfo.Names.IndexesTableNames);
 
-                if (uniquesTableExists)
+                if (modelInfo.Statuses.UniquesTableExists)
                 {
                     cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetUniquesTableName());
                     cmd.ExecuteNonQuery();
                 }
 
-                if (structureTableExists)
+                if (modelInfo.Statuses.StructureTableExists)
                 {
                     cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetStructureTableName());
                     cmd.ExecuteNonQuery();
@@ -140,49 +137,49 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        private void DropIndexesTables(IDbCommand cmd, IndexesTableStatuses indexesTableStatuses)
+        private void DropIndexesTables(IDbCommand cmd, IndexesTableStatuses statuses, IndexesTableNames names)
         {
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-            if (indexesTableStatuses.IntegersTableExists)
+            if (statuses.IntegersTableExists)
             {
-                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.IntegersTableName);
+                cmd.CommandText = sqlDropTableFormat.Inject(names.IntegersTableName);
                 cmd.ExecuteNonQuery();
             }
 
-            if (indexesTableStatuses.FractalsTableExists)
+            if (statuses.FractalsTableExists)
             {
-                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.FractalsTableName);
+                cmd.CommandText = sqlDropTableFormat.Inject(names.FractalsTableName);
                 cmd.ExecuteNonQuery();
             }
 
-            if (indexesTableStatuses.BooleansTableExists)
+            if (statuses.BooleansTableExists)
             {
-                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.BooleansTableName);
+                cmd.CommandText = sqlDropTableFormat.Inject(names.BooleansTableName);
                 cmd.ExecuteNonQuery();
             }
 
-            if (indexesTableStatuses.DatesTableExists)
+            if (statuses.DatesTableExists)
             {
-                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.DatesTableName);
+                cmd.CommandText = sqlDropTableFormat.Inject(names.DatesTableName);
                 cmd.ExecuteNonQuery();
             }
 
-            if (indexesTableStatuses.GuidsTableExists)
+            if (statuses.GuidsTableExists)
             {
-                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.GuidsTableName);
+                cmd.CommandText = sqlDropTableFormat.Inject(names.GuidsTableName);
                 cmd.ExecuteNonQuery();
             }
 
-            if (indexesTableStatuses.StringsTableExists)
+            if (statuses.StringsTableExists)
             {
-                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.StringsTableName);
+                cmd.CommandText = sqlDropTableFormat.Inject(names.StringsTableName);
                 cmd.ExecuteNonQuery();
             }
 
-            if (indexesTableStatuses.TextsTableExists)
+            if (statuses.TextsTableExists)
             {
-                cmd.CommandText = sqlDropTableFormat.Inject(indexesTableStatuses.Names.TextsTableName);
+                cmd.CommandText = sqlDropTableFormat.Inject(names.TextsTableName);
                 cmd.ExecuteNonQuery();
             }
         }

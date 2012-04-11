@@ -22,6 +22,9 @@
 			<dependency id="NCore" version="[0.28.0]" />
 			<dependency id="PineCone" version="[1.0.0]" />
 		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Data" targetFramework="net40" />
+		</frameworkAssemblies>
 	</metadata>
 	<files>
 	  <file src="..\Source\Projects\SisoDb\bin\Release\SisoDb.dll" target="lib\net40\" />
