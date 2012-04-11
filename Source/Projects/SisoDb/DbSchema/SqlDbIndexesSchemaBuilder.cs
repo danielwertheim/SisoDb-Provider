@@ -17,35 +17,35 @@ namespace SisoDb.DbSchema
 			_sqlStatements = sqlStatements;
 		}
 
-		public string[] GenerateSql(IStructureSchema structureSchema, IndexesTableStatuses indexesTableStatuses)
+		public string[] GenerateSql(IStructureSchema structureSchema, IndexesTableNames names, IndexesTableStatuses statuses)
 		{
-			if(indexesTableStatuses.AllExists)
+			if(statuses.AllExists)
 				return new string[0];
 
 			var structureTableName = structureSchema.GetStructureTableName();
 			var sqlTemplateNameSuffix = GetSqlTemplateNameSuffix(structureSchema.IdAccessor.IdType);
 			var generators = new Func<string>[]
 			{
-				() => !indexesTableStatuses.IntegersTableExists 
-					? GenerateSqlFor("CreateIntegersIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.IntegersTableName) 
+				() => !statuses.IntegersTableExists 
+					? GenerateSqlFor("CreateIntegersIndexes", sqlTemplateNameSuffix, structureTableName, names.IntegersTableName) 
 					: string.Empty,
-				() => !indexesTableStatuses.FractalsTableExists 
-					? GenerateSqlFor("CreateFractalsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.FractalsTableName) 
+				() => !statuses.FractalsTableExists 
+					? GenerateSqlFor("CreateFractalsIndexes", sqlTemplateNameSuffix, structureTableName, names.FractalsTableName) 
 					: string.Empty,
-				() => !indexesTableStatuses.BooleansTableExists 
-					? GenerateSqlFor("CreateBooleansIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.BooleansTableName) 
+				() => !statuses.BooleansTableExists 
+					? GenerateSqlFor("CreateBooleansIndexes", sqlTemplateNameSuffix, structureTableName, names.BooleansTableName) 
 					: string.Empty,
-				() => !indexesTableStatuses.DatesTableExists 
-					? GenerateSqlFor("CreateDatesIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.DatesTableName) 
+				() => !statuses.DatesTableExists 
+					? GenerateSqlFor("CreateDatesIndexes", sqlTemplateNameSuffix, structureTableName, names.DatesTableName) 
 					: string.Empty,
-				() => !indexesTableStatuses.GuidsTableExists 
-					? GenerateSqlFor("CreateGuidsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.GuidsTableName) 
+				() => !statuses.GuidsTableExists 
+					? GenerateSqlFor("CreateGuidsIndexes", sqlTemplateNameSuffix, structureTableName, names.GuidsTableName) 
 					: string.Empty,
-				() => !indexesTableStatuses.StringsTableExists 
-					? GenerateSqlFor("CreateStringsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.StringsTableName) 
+				() => !statuses.StringsTableExists 
+					? GenerateSqlFor("CreateStringsIndexes", sqlTemplateNameSuffix, structureTableName, names.StringsTableName) 
 					: string.Empty,
-				() => !indexesTableStatuses.TextsTableExists 
-					? GenerateSqlFor("CreateTextsIndexes", sqlTemplateNameSuffix, structureTableName, indexesTableStatuses.Names.TextsTableName) 
+				() => !statuses.TextsTableExists 
+					? GenerateSqlFor("CreateTextsIndexes", sqlTemplateNameSuffix, structureTableName, names.TextsTableName) 
 					: string.Empty
 			};
 

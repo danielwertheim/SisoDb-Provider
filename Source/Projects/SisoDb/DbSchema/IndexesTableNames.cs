@@ -5,7 +5,8 @@ using PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {
-	public class IndexesTableNames
+    [Serializable]
+    public class IndexesTableNames
 	{
 		private static readonly Type TextType;
 
