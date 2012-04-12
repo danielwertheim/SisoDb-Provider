@@ -7,6 +7,13 @@ namespace SisoDb.Core
 {
 	public static class EnumerableExtensions
 	{
+        public static IEnumerable<TElement> DistinctBy<TElement, TKey>(this IEnumerable<TElement> source, Func<TElement, TKey> selector) //TODO: Move to NCore
+        {
+            var keys = new HashSet<TKey>();
+
+            return source.Where(element => keys.Add(selector.Invoke(element)));
+        }
+
 		public static IEnumerable<object> Yield(this IEnumerable items) //TODO: Move to NCore
 		{
 			if (items == null)

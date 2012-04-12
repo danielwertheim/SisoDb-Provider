@@ -8,6 +8,7 @@ namespace SisoDb.Querying.Sql
     {
         private readonly int _index;
         private readonly string _memberPath;
+        private readonly string _alias;
         private readonly string _indexStorageColumnName;
         private readonly string _direction;
         private readonly bool _isEmpty;
@@ -21,6 +22,11 @@ namespace SisoDb.Querying.Sql
         public virtual string MemberPath
         {
             get { return _memberPath; }
+        }
+
+        public virtual string Alias
+        {
+            get { return _alias; }
         }
 
         public virtual string IndexStorageColumnName
@@ -43,10 +49,11 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlSortingMember(int index, string memberPath, string indexStorageColumnName, string direction, Type dataType)
+        public SqlSortingMember(int index, string memberPath, string alias, string indexStorageColumnName, string direction, Type dataType)
         {
             Ensure.That(index, "index").IsGte(0);
             Ensure.That(memberPath, "memberPath").IsNotNullOrWhiteSpace();
+            Ensure.That(alias, "alias").IsNotNullOrWhiteSpace();
             Ensure.That(indexStorageColumnName, "indexStorageColumnName").IsNotNullOrWhiteSpace();
             Ensure.That(direction, "direction").IsNotNullOrWhiteSpace();
         	Ensure.That(dataType, "dataType").IsNotNull();
@@ -54,6 +61,7 @@ namespace SisoDb.Querying.Sql
             _isEmpty = false;
             _index = index;
             _memberPath = memberPath;
+            _alias = alias;
             _indexStorageColumnName = indexStorageColumnName;
             _direction = direction;
         	_dataType = dataType;

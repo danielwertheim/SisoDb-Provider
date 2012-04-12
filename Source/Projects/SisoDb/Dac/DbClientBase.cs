@@ -604,10 +604,13 @@ namespace SisoDb.Dac
 
         private static IEnumerable<string> ReadChildJson(IDataRecord dataRecord, IEnumerable<KeyValuePair<int, string>> additionalJsonFields)
         {
-            return additionalJsonFields.Select(additionalJsonField =>
-                string.Format("\"{0}\":{1}",
-                additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
-                dataRecord.GetString(additionalJsonField.Key)));
+            const string jsonMemberFormat = "\"{0}\":{1}";
+
+            return additionalJsonFields
+                .Where(additionalJsonField => !dataRecord.IsDBNull(additionalJsonField.Key))
+                .Select(additionalJsonField => string.Format(jsonMemberFormat,
+                    additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
+                    dataRecord.GetString(additionalJsonField.Key)));
         }
 
         protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)

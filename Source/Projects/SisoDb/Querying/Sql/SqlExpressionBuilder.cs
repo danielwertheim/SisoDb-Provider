@@ -10,6 +10,10 @@ using SisoDb.Querying.Lambdas.Operators;
 
 namespace SisoDb.Querying.Sql
 {
+    /// <summary>
+    /// Converts <see cref="IParsedLambda"/> representing 
+    /// Wheres, Sortings (OrderBy) and Includes, to an <see cref="ISqlExpression"/>.
+    /// </summary>
     public class SqlExpressionBuilder
     {
         public ISqlExpression Process(IQuery query)
@@ -61,7 +65,11 @@ namespace SisoDb.Querying.Sql
         			var memNode = (MemberNode) node;
 					var memberIndex = expression.GetExistingOrNewMemberIndexFor(memNode.Path);
 					if (!expression.ContainsWhereMemberFor(memNode.Path))
-						expression.AddWhereMember(new SqlWhereMember(memberIndex, memNode.Path, "mem" + memberIndex, memNode.MemberType));
+						expression.AddWhereMember(new SqlWhereMember(
+                            memberIndex,
+                            memNode.Path, 
+                            string.Concat("mem", memberIndex), 
+                            memNode.MemberType));
 
         			if (memNode.MemberType.IsAnyBoolType())
         			{
@@ -115,6 +123,7 @@ namespace SisoDb.Querying.Sql
                 expression.AddSortingMember(new SqlSortingMember(
                     memberIndex,
                     sortingNode.MemberPath,
+                    string.Concat("mem", memberIndex),
                     valueField.Name,
                     sortingNode.Direction.ToString(), 
 					sortingNode.MemberType));
@@ -128,9 +137,12 @@ namespace SisoDb.Querying.Sql
 
             foreach (var includeNode in includesLambda.Nodes.OfType<IncludeNode>())
             {
+                var nextNewIncludeIndex = expression.GetNextNewIncludeIndex();
+
                 expression.AddInclude(new SqlInclude(
-                    expression.GetNextNewIncludeIndex(),
+                    nextNewIncludeIndex,
                     includeNode.ReferencedStructureName,
+                    string.Concat("inc", nextNewIncludeIndex),
                     IndexStorageSchema.Fields.Value.Name,
                     includeNode.IdReferencePath,
                     includeNode.ObjectReferencePath,
