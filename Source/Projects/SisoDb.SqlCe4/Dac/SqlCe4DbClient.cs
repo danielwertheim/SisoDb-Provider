@@ -38,11 +38,11 @@ namespace SisoDb.SqlCe4.Dac
         {
             Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
-            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityName", entityName));
+            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("@entityName", entityName));
 
             ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
-                new DacParameter("entityName", entityName),
-                new DacParameter("numOfIds", numOfIds));
+                new DacParameter("@entityName", entityName),
+                new DacParameter("@numOfIds", numOfIds));
 
             return nextId;
         }
@@ -74,18 +74,18 @@ namespace SisoDb.SqlCe4.Dac
 
             ExecuteNonQuery(dropPkContraintSqlFormat.Inject(oldTableName));
             ExecuteNonQuery("sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype",
-                new DacParameter("objname", oldTableName),
-                new DacParameter("newname", newTableName),
-                new DacParameter("objtype", "OBJECT"));
+                new DacParameter("@objname", oldTableName),
+                new DacParameter("@newname", newTableName),
+                new DacParameter("@objtype", "OBJECT"));
             ExecuteNonQuery(addPkConstraintSqlFormat.Inject(newTableName));
         }
 
         protected override void OnRenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
         {
             ExecuteNonQuery("sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype",
-                new DacParameter("objname", oldTableName),
-                new DacParameter("newname", newTableName),
-                new DacParameter("objtype", "OBJECT"));
+                new DacParameter("@objname", oldTableName),
+                new DacParameter("@newname", newTableName),
+                new DacParameter("@objtype", "OBJECT"));
         }
 
         protected override void OnRenameIndexesTables(IndexesTableNames oldIndexesTableNames, IndexesTableNames newIndexesTableNames, string oldStructureTableName, string newStructureTableName)
@@ -99,9 +99,9 @@ namespace SisoDb.SqlCe4.Dac
 
                     cmd.Parameters.Clear();
                     cmd.AddParameters(
-                        new DacParameter("objname", oldTableName),
-                        new DacParameter("newname", newTableName),
-                        new DacParameter("objtype", "OBJECT"));
+                        new DacParameter("@objname", oldTableName),
+                        new DacParameter("@newname", newTableName),
+                        new DacParameter("@objtype", "OBJECT"));
                     cmd.CommandText = "sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype";
                     cmd.ExecuteNonQuery();
                 }
@@ -116,7 +116,7 @@ namespace SisoDb.SqlCe4.Dac
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-            using (var cmd = CreateCommand(string.Empty, new DacParameter("entityName", structureSchema.Name)))
+            using (var cmd = CreateCommand(string.Empty, new DacParameter("@entityName", structureSchema.Name)))
             {
                 DropIndexesTables(cmd, modelInfo.Statuses.IndexesTableStatuses, modelInfo.Names.IndexesTableNames);
 

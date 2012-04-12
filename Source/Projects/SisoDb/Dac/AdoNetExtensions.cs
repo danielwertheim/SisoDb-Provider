@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using NCore;
 
 namespace SisoDb.Dac
 {
@@ -46,11 +47,28 @@ namespace SisoDb.Dac
                 parameter.ParameterName = dacParam.Name;
                 parameter.Value = dacParam.Value;
 
+                if (ParamIsAnsiString(dacParam))
+                {
+                    parameter.DbType = DbType.AnsiString;
+                    parameter.Size = parameter.Value.ToString().Length;
+                }
+
                 cmd.Parameters.Add(parameter);
             }
         }
 
-        public static void ExecuteNonQuery(this IDbConnection connection, string sql, IDbTransaction transaction = null, params IDacParameter[] parameters)
+        private static bool ParamIsAnsiString(IDacParameter dacParam)
+        {
+            const StringComparison c = StringComparison.OrdinalIgnoreCase;
+
+            return dacParam.Name.StartsWith("@mem", c) 
+                || dacParam.Name.StartsWith("@inc", c) 
+                || dacParam.Name.StartsWith("@tableName", c)
+                || dacParam.Name.StartsWith("@entityName", c)
+                || dacParam.Name.StartsWith("@dbName", c);
+        }
+
+	    public static void ExecuteNonQuery(this IDbConnection connection, string sql, IDbTransaction transaction = null, params IDacParameter[] parameters)
         {
             using(var cmd = connection.CreateCommand(sql, transaction, parameters))
             {
