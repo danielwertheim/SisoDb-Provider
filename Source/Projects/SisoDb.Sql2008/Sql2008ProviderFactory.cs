@@ -19,18 +19,13 @@ namespace SisoDb.Sql2008
 
         public Sql2008ProviderFactory()
         {
-            _connectionManager = new Sql2008ConnectionManager();
+            _connectionManager = new ConnectionManager(GetAdoDriver());
             _sqlStatements = new Sql2008Statements();
         }
 
         public StorageProviders ProviderType
         {
             get { return StorageProviders.Sql2008; }
-        }
-
-        public IDbSettings GetSettings()
-        {
-            return DbSettings.CreateDefault();
         }
 
         public IConnectionManager ConnectionManager
@@ -43,22 +38,33 @@ namespace SisoDb.Sql2008
             }
         }
 
-        public ISqlStatements GetSqlStatements()
+        public virtual IAdoDriver GetAdoDriver()
+        {
+            return new AdoDriver();
+        }
+
+        public virtual IDbSettings GetSettings()
+        {
+            return DbSettings.CreateDefault();
+        }
+
+        public virtual ISqlStatements GetSqlStatements()
         {
             return _sqlStatements;
         }
 
         public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2008ServerClient(connectionInfo, _connectionManager, _sqlStatements);
+            return new DbServerClient(GetAdoDriver(), connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new Sql2008DbClient(
+                GetAdoDriver(),
                 connectionInfo,
                 connection,
                 transaction,
@@ -66,7 +72,7 @@ namespace SisoDb.Sql2008
                 _sqlStatements);
         }
 
-        public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
@@ -75,6 +81,7 @@ namespace SisoDb.Sql2008
                 connection = _connectionManager.OpenClientDbConnection(connectionInfo);
 
             return new Sql2008DbClient(
+                GetAdoDriver(), 
                 connectionInfo,
                 connection,
                 null,

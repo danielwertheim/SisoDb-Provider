@@ -19,7 +19,7 @@ namespace SisoDb.Sql2012
 		
         public Sql2012ProviderFactory()
         {
-			_connectionManager = new Sql2012ConnectionManager();
+            _connectionManager = new ConnectionManager(GetAdoDriver());
             _sqlStatements = new Sql2012Statements();
         }
 
@@ -28,12 +28,7 @@ namespace SisoDb.Sql2012
             get { return StorageProviders.Sql2012; }
         }
 
-        public IDbSettings GetSettings()
-        {
-            return DbSettings.CreateDefault();
-        }
-
-	    public IConnectionManager ConnectionManager
+        public IConnectionManager ConnectionManager
         {
             get { return _connectionManager; }
             set
@@ -43,22 +38,33 @@ namespace SisoDb.Sql2012
             }
         }
 
-		public ISqlStatements GetSqlStatements()
+	    public virtual IAdoDriver GetAdoDriver()
+	    {
+	        return new AdoDriver();
+	    }
+
+	    public virtual IDbSettings GetSettings()
+        {
+            return DbSettings.CreateDefault();
+        }
+
+        public virtual ISqlStatements GetSqlStatements()
 		{
 			return _sqlStatements;
 		}
 
 		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            return new Sql2012ServerClient(connectionInfo, _connectionManager, _sqlStatements);
+            return new DbServerClient(GetAdoDriver(), connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new Sql2012DbClient(
+                GetAdoDriver(),
                 connectionInfo,
                 connection,
                 transaction,
@@ -66,7 +72,7 @@ namespace SisoDb.Sql2012
                 _sqlStatements);
         }
 
-	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
@@ -75,6 +81,7 @@ namespace SisoDb.Sql2012
                 connection = _connectionManager.OpenClientDbConnection(connectionInfo);
 
             return new Sql2012DbClient(
+                GetAdoDriver(),
                 connectionInfo,
                 connection,
                 null,
@@ -92,7 +99,7 @@ namespace SisoDb.Sql2012
             return new DbStructureInserter(dbClient);
         }
 
-    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
+        public virtual IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
     	{
     		return new DbIdentityStructureIdGenerator(action);
     	}

@@ -39,8 +39,8 @@ namespace SisoDb.Sql2008
 
             return new[]
             {
-                new DacParameter("@pagingFrom", takeFromRowNum),
-                new DacParameter("@pagingTo", takeToRowNum)
+                new DacParameter("pagingFrom", takeFromRowNum),
+                new DacParameter("pagingTo", takeToRowNum)
             };
         }
 

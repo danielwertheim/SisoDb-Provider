@@ -95,8 +95,8 @@ namespace SisoDb.Specifications.Session.Querying
             {
                 var query = new NamedQuery(ProcedureName);
                 query.Add(
-                    new DacParameter("@p0", _structures[1].SortOrder), 
-                    new DacParameter("@p1", _structures[2].SortOrder));
+                    new DacParameter("p0", _structures[1].SortOrder), 
+                    new DacParameter("p1", _structures[2].SortOrder));
                 using (var session = TestContext.Database.BeginSession())
                 {
                     _fetchedStructures = session.Advanced.NamedQuery<QueryGuidItem>(query).ToList();

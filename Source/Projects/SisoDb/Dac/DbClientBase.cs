@@ -16,20 +16,24 @@ namespace SisoDb.Dac
     public abstract class DbClientBase : ITransactionalDbClient
     {
         protected readonly IConnectionManager ConnectionManager;
-        protected IDbConnection Connection;
-        protected IDbTransaction Transaction;
         protected readonly ISqlStatements SqlStatements;
 
+        public IAdoDriver Driver { get; private set; }
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
+        public IDbConnection Connection { get; private set; }
+
+        public IDbTransaction Transaction { get; private set; }
         public bool Failed { get; protected set; }
 
-        protected DbClientBase(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+        protected DbClientBase(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
         {
+            Ensure.That(driver, "driver").IsNotNull();
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(connection, "connection").IsNotNull();
             Ensure.That(connectionManager, "connectionManager").IsNotNull();
             Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
+            Driver = driver;
             ConnectionInfo = connectionInfo;
             ConnectionManager = connectionManager;
             Connection = connection;
@@ -69,18 +73,41 @@ namespace SisoDb.Dac
             Failed = true;
         }
 
-        public abstract IDbBulkCopy GetBulkCopy();
+        public virtual IDbBulkCopy GetBulkCopy()
+        {
+            return new DbBulkCopy(this);
+        }
 
         public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
-            Connection.ExecuteNonQuery(sql, Transaction, parameters);
+            using (var cmd = CreateCommand(sql, parameters))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public virtual void ExecuteNonQuery(string[] sqls, params IDacParameter[] parameters)
+        {
+            using (var cmd = CreateCommand(string.Empty, parameters))
+            {
+                foreach (var sqlStatement in sqls.Where(statement => !string.IsNullOrWhiteSpace(statement)))
+                {
+                    cmd.CommandText = sqlStatement.Trim();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public virtual T ExecuteScalar<T>(string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
             {
-                return cmd.GetScalarResult<T>();
+                var value = cmd.ExecuteScalar();
+
+                if (value == null || value == DBNull.Value)
+                    return default(T);
+
+                return (T)Convert.ChangeType(value, typeof(T));
             }
         }
 
@@ -107,8 +134,8 @@ namespace SisoDb.Dac
 
             return ExecuteScalar<long>(
                 sql,
-                new DacParameter("@entityName", entityName),
-                new DacParameter("@numOfIds", numOfIds));
+                new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName),
+                new DacParameter("numOfIds", numOfIds));
         }
 
         public virtual void RenameStructureSet(string oldStructureName, string newStructureName)
@@ -144,17 +171,17 @@ namespace SisoDb.Dac
         protected virtual void OnRenameStructureTable(string oldTableName, string newTableName)
         {
             using (var cmd = CreateSpCommand("sp_rename", 
-                new DacParameter("@objname", oldTableName), 
-                new DacParameter("@newname", newTableName),
-                new DacParameter("@objtype", "OBJECT")))
+                new DacParameter("objname", oldTableName), 
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT")))
             {
                 cmd.ExecuteNonQuery();
 
                 cmd.Parameters.Clear();
-                cmd.AddParameters(
-                    new DacParameter("@objname", string.Concat("PK_", oldTableName)), 
-                    new DacParameter("@newname", string.Concat("PK_", newTableName)), 
-                    new DacParameter("@objtype", "OBJECT"));
+                Driver.AddCommandParametersTo(cmd,
+                    new DacParameter("objname", string.Concat("PK_", oldTableName)), 
+                    new DacParameter("newname", string.Concat("PK_", newTableName)), 
+                    new DacParameter("objtype", "OBJECT"));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -162,24 +189,24 @@ namespace SisoDb.Dac
         protected virtual void OnRenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
         {
             using (var cmd = CreateSpCommand("sp_rename", 
-                new DacParameter("@objname", oldTableName), 
-                new DacParameter("@newname", newTableName),
-                new DacParameter("@objtype", "OBJECT")))
+                new DacParameter("objname", oldTableName), 
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT")))
             {
                 cmd.ExecuteNonQuery();
 
                 cmd.Parameters.Clear();
-                cmd.AddParameters(
-                    new DacParameter("@objname", string.Format("FK_{0}_{1}", oldTableName, oldStructureTableName)), 
-                    new DacParameter("@newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)), 
-                    new DacParameter("@objtype", "OBJECT"));
+                Driver.AddCommandParametersTo(cmd,
+                    new DacParameter("objname", string.Format("FK_{0}_{1}", oldTableName, oldStructureTableName)), 
+                    new DacParameter("newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)), 
+                    new DacParameter("objtype", "OBJECT"));
                 cmd.ExecuteNonQuery();
 
                 cmd.Parameters.Clear();
-                cmd.AddParameters(
-                    new DacParameter("@objname", string.Format("{0}.UQ_{1}", newTableName, oldTableName)),
-                    new DacParameter("@newname", string.Concat("UQ_", newTableName)),
-                    new DacParameter("@objtype", "INDEX"));
+                Driver.AddCommandParametersTo(cmd,
+                    new DacParameter("objname", string.Format("{0}.UQ_{1}", newTableName, oldTableName)),
+                    new DacParameter("newname", string.Concat("UQ_", newTableName)),
+                    new DacParameter("objtype", "INDEX"));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -194,24 +221,24 @@ namespace SisoDb.Dac
                     var newTableName = newIndexesTableNames[i];
 
                     cmd.Parameters.Clear();
-                    cmd.AddParameters(
-                        new DacParameter("@objname", oldTableName),
-                        new DacParameter("@newname", newTableName),
-                        new DacParameter("@objtype", "OBJECT"));
+                    Driver.AddCommandParametersTo(cmd,
+                        new DacParameter("objname", oldTableName),
+                        new DacParameter("newname", newTableName),
+                        new DacParameter("objtype", "OBJECT"));
                     cmd.ExecuteNonQuery();
 
                     cmd.Parameters.Clear();
-                    cmd.AddParameters(
-                        new DacParameter("@objname", string.Format("FK_{0}_{1}", oldTableName, oldStructureTableName)),
-                        new DacParameter("@newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)),
-                        new DacParameter("@objtype", "OBJECT"));
+                    Driver.AddCommandParametersTo(cmd,
+                        new DacParameter("objname", string.Format("FK_{0}_{1}", oldTableName, oldStructureTableName)),
+                        new DacParameter("newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)),
+                        new DacParameter("objtype", "OBJECT"));
                     cmd.ExecuteNonQuery();
 
                     cmd.Parameters.Clear();
-                    cmd.AddParameters(
-                        new DacParameter("@objname", string.Format("{0}.IX_{1}_Q", newTableName, oldTableName)),
-                        new DacParameter("@newname", string.Format("IX_{0}_Q", newTableName)),
-                        new DacParameter("@objtype", "INDEX"));
+                    Driver.AddCommandParametersTo(cmd,
+                        new DacParameter("objname", string.Format("{0}.IX_{1}_Q", newTableName, oldTableName)),
+                        new DacParameter("newname", string.Format("IX_{0}_Q", newTableName)),
+                        new DacParameter("objtype", "INDEX"));
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -235,7 +262,7 @@ namespace SisoDb.Dac
                 names.UniquesTableName,
                 names.StructureTableName);
 
-            using (var cmd = CreateCommand(sql, new DacParameter("@entityName", structureSchema.Name)))
+            using (var cmd = CreateCommand(sql, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -306,7 +333,7 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("DeleteById").Inject(structureSchema.GetStructureTableName());
 
-            ExecuteNonQuery(sql, new DacParameter("@id", structureId.Value));
+            ExecuteNonQuery(sql, new DacParameter("id", structureId.Value));
         }
 
         public abstract void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
@@ -339,7 +366,7 @@ namespace SisoDb.Dac
                 indexesTableNames.StringsTableName,
                 indexesTableNames.TextsTableName);
 
-            ExecuteNonQuery(sql, new DacParameter("@id", structureId.Value));
+            ExecuteNonQuery(sql, new DacParameter("id", structureId.Value));
         }
 
         public virtual bool TableExists(string name)
@@ -347,7 +374,7 @@ namespace SisoDb.Dac
             EnsureValidDbObjectName(name);
 
             var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<int>(sql, new DacParameter("@tableName", name));
+            var value = ExecuteScalar<int>(sql, new DacParameter(DbSchemas.Parameters.TableNameParamPrefix, name));
 
             return value > 0;
         }
@@ -363,7 +390,7 @@ namespace SisoDb.Dac
         public virtual ModelTableStatuses GetModelTableStatuses(ModelTableNames names)
         {
             var sql = SqlStatements.GetSql("GetModelTableStatuses");
-            var parameters = names.AllTableNames.Select((n, i) => new DacParameter("@tableName" + i, n)).ToArray();
+            var parameters = names.AllTableNames.Select((n, i) => new DacParameter(DbSchemas.Parameters.TableNameParamPrefix + i, n)).ToArray();
             var matchingNames = new HashSet<string>();
             SingleResultSequentialReader(
                 sql,
@@ -428,7 +455,7 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("ExistsById").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<int>(sql, new DacParameter("@id", structureId.Value)) > 0;
+            return ExecuteScalar<int>(sql, new DacParameter("id", structureId.Value)) > 0;
         }
 
         public virtual string GetJsonById(IStructureId structureId, IStructureSchema structureSchema)
@@ -437,7 +464,7 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(sql, new DacParameter("@id", structureId.Value));
+            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
 
         public virtual string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema)
@@ -446,7 +473,7 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetJsonByIdWithLock").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(sql, new DacParameter("@id", structureId.Value));
+            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
 
         public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
@@ -624,16 +651,6 @@ namespace SisoDb.Dac
                     dataRecord.GetString(additionalJsonField.Key)));
         }
 
-        protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
-        {
-            return Connection.CreateCommand(sql, Transaction, parameters);
-        }
-
-        protected virtual IDbCommand CreateSpCommand(string sp, params IDacParameter[] parameters)
-        {
-            return Connection.CreateSpCommand(sp, Transaction, parameters);
-        }
-
         protected virtual void EnsureValidNames(ModelTableNames names)
         {
             foreach (var tableName in names.AllTableNames)
@@ -643,6 +660,16 @@ namespace SisoDb.Dac
         protected virtual void EnsureValidDbObjectName(string dbObjectName)
         {
             DbObjectNameValidator.EnsureValid(dbObjectName);
+        }
+
+        protected virtual IDbCommand CreateCommand(string sql, params IDacParameter[] parameters)
+        {
+            return Driver.CreateCommand(Connection, sql, Transaction, parameters);
+        }
+
+        protected virtual IDbCommand CreateSpCommand(string spName, params IDacParameter[] parameters)
+        {
+            return Driver.CreateSpCommand(Connection, spName, Transaction, parameters);
         }
     }
 }

@@ -10,11 +10,14 @@ namespace SisoDb.Dac
 {
     public interface IDbClient : IDisposable
     {
+        IAdoDriver Driver { get; }
         ISisoConnectionInfo ConnectionInfo { get; }
+        IDbConnection Connection { get; }
 
         IDbBulkCopy GetBulkCopy();
 
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
+        void ExecuteNonQuery(string[] sqls, params IDacParameter[] parameters);
         T ExecuteScalar<T>(string sql, params IDacParameter[] parameters);
         void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
         

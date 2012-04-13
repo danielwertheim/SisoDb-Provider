@@ -19,7 +19,7 @@ namespace SisoDb.SqlCe4
 
         public SqlCe4ProviderFactory()
         {
-			_connectionManager = new SqlCe4ConnectionManager();
+            _connectionManager = new SqlCe4ConnectionManager(GetAdoDriver());
             _sqlStatements = new SqlCe4Statements();
         }
 
@@ -28,12 +28,7 @@ namespace SisoDb.SqlCe4
             get { return StorageProviders.SqlCe4; }
         }
 
-        public IDbSettings GetSettings()
-        {
-            return DbSettings.CreateDefault();
-        }
-
-	    public IConnectionManager ConnectionManager
+        public IConnectionManager ConnectionManager
         {
             get { return _connectionManager; }
             set
@@ -43,22 +38,33 @@ namespace SisoDb.SqlCe4
             }
         }
 
-	    public ISqlStatements GetSqlStatements()
+	    public virtual IAdoDriver GetAdoDriver()
+	    {
+            return new SqlCe4AdoDriver();
+	    }
+
+	    public virtual IDbSettings GetSettings()
+        {
+            return DbSettings.CreateDefault();
+        }
+
+	    public virtual ISqlStatements GetSqlStatements()
 		{
 			return _sqlStatements;
 		}
 
 		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            return new SqlCe4ServerClient((SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
+            return new SqlCe4ServerClient(GetAdoDriver(),(SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
         }
 
-        public ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
             var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlCe4DbClient(
+                GetAdoDriver(),
                 connectionInfo,
                 connection,
                 transaction,
@@ -66,7 +72,7 @@ namespace SisoDb.SqlCe4
                 _sqlStatements);
         }
 
-	    public IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
@@ -75,6 +81,7 @@ namespace SisoDb.SqlCe4
                 connection = _connectionManager.OpenClientDbConnection(connectionInfo);
 
             return new SqlCe4DbClient(
+                GetAdoDriver(), 
                 connectionInfo,
                 connection,
                 null,
@@ -92,7 +99,7 @@ namespace SisoDb.SqlCe4
             return new DbStructureInserter(dbClient);
         }
 
-    	public IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
+        public virtual IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
     	{
     		return new DbIdentityStructureIdGenerator(action);
     	}

@@ -168,9 +168,10 @@ namespace SisoDb.SampleApp
             using (var session = database.BeginSession())
             {
                 var q = new NamedQuery("CustomersViaSP");
-                q.Add(new DacParameter("@p0", customerNoFrom));
-                q.Add(new DacParameter("@p1", customerNoTo));
-                q.Add(new DacParameter("@p2", "The delivery street #544"));
+                q.Add(new DacParameter("p0", customerNoFrom));
+                q.Add(new DacParameter("p1", customerNoTo));
+                q.Add(new DacParameter("p2", "The delivery street #544"));
+
                 return session.Advanced.NamedQuery<Customer>(q).ToArray().Length;
             }
         }

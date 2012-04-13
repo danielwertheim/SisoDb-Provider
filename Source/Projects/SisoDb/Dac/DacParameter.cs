@@ -13,7 +13,10 @@ namespace SisoDb.Dac
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException("name");
 
-            Name = name;
+            Name = name[0] != '@' 
+                ? string.Concat("@", name) 
+                : name;
+
             Value = value ?? DBNull.Value;
         }
 

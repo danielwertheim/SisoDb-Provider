@@ -15,9 +15,11 @@ namespace SisoDb
     {
         StorageProviders ProviderType { get; }
 
-	    IDbSettings GetSettings();
-
         IConnectionManager ConnectionManager { get; set; }
+
+	    IAdoDriver GetAdoDriver();
+
+	    IDbSettings GetSettings();
 
 	    ISqlStatements GetSqlStatements();
 

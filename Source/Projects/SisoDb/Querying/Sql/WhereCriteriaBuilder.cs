@@ -96,7 +96,7 @@ namespace SisoDb.Querying.Sql
 
         internal void AddValue(ValueNode valueNode)
         {
-            var param = new DacParameter(string.Concat("@p", Params.Count), valueNode.Value);
+            var param = new DacParameter(string.Concat("p", Params.Count), valueNode.Value);
             Params.Add(param);
 
             if (SqlContains(ValueMarker))

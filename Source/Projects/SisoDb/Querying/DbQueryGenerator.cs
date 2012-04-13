@@ -83,9 +83,9 @@ namespace SisoDb.Querying
 
         protected virtual IDacParameter[] GenerateParameters(IQuery query, ISqlExpression sqlExpression)
         {
-            var whereJoinParams = sqlExpression.WhereMembers.Select(wm => new DacParameter(string.Concat("@", wm.Alias), wm.MemberPath)).ToArray();
-            var sortingJoinParams = sqlExpression.SortingMembers.Select(sm => new DacParameter(string.Concat("@", sm.Alias), sm.MemberPath)).ToArray();
-            var includeJoinParams = sqlExpression.Includes.Select(im => new DacParameter(string.Concat("@", im.Alias), im.MemberPathReference)).ToArray();
+            var whereJoinParams = sqlExpression.WhereMembers.Select(wm => new DacParameter(wm.Alias, wm.MemberPath)).ToArray();
+            var sortingJoinParams = sqlExpression.SortingMembers.Select(sm => new DacParameter(sm.Alias, sm.MemberPath)).ToArray();
+            var includeJoinParams = sqlExpression.Includes.Select(im => new DacParameter(im.Alias, im.MemberPathReference)).ToArray();
             var whereParams = sqlExpression.WhereCriteria.Parameters;
             var pagingParams = GeneratePagingParameters(query, sqlExpression);
 
@@ -118,8 +118,8 @@ namespace SisoDb.Querying
 
             return new[]
             {
-                new DacParameter("@offsetRows", offsetRows),
-                new DacParameter("@takeRows", takeRows)
+                new DacParameter("offsetRows", offsetRows),
+                new DacParameter("takeRows", takeRows)
             };
         }
 
