@@ -8,6 +8,7 @@ namespace SisoDb.Querying.Sql
     {
         private readonly int _index;
         private readonly string _tableName;
+        private readonly string _alias;
         private readonly string _indexValueColumnName;
         private readonly string _memberPathReference;
         private readonly string _objectReferencePath;
@@ -22,6 +23,11 @@ namespace SisoDb.Querying.Sql
         public virtual string TableName
         {
             get { return _tableName; }
+        }
+
+        public virtual string Alias
+        {
+            get { return _alias; }
         }
 
         public virtual string IndexValueColumnName
@@ -49,10 +55,11 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlInclude(int index, string tableName, string indexValueColumnName, string memberPathReference, string objectReferencePath, Type dataType)
+        public SqlInclude(int index, string tableName, string alias, string indexValueColumnName, string memberPathReference, string objectReferencePath, Type dataType)
         {
             Ensure.That(index, "index").IsGte(0);
             Ensure.That(tableName, "tableName").IsNotNullOrWhiteSpace();
+            Ensure.That(alias, "alias").IsNotNullOrWhiteSpace();
             Ensure.That(indexValueColumnName, "indexValueColumnName").IsNotNullOrWhiteSpace();
             Ensure.That(memberPathReference, "memberPathReference").IsNotNullOrWhiteSpace();
             Ensure.That(objectReferencePath, "objectReferencePath").IsNotNullOrWhiteSpace();
@@ -61,6 +68,7 @@ namespace SisoDb.Querying.Sql
             _isEmpty = false;
             _index = index;
             _tableName = tableName;
+            _alias = alias;
             _indexValueColumnName = indexValueColumnName;
             _memberPathReference = memberPathReference;
             _objectReferencePath = objectReferencePath;

@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
 using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Dac.Profiling;
 using SisoDb.DbSchema;
 
 namespace SisoDb.Sql2012.Dac
@@ -16,14 +14,9 @@ namespace SisoDb.Sql2012.Dac
     {
 		private const int MaxBatchedIdsSize = 100;
 
-        public Sql2012DbClient(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(connectionInfo, connection, transaction, connectionManager, sqlStatements)
+        public Sql2012DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
-        }
-
-        public override IDbBulkCopy GetBulkCopy()
-        {
-            return new Sql2012DbBulkCopy(Connection.ToSqlConnection(), Transaction.ToSqlTransaction());
         }
 
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)

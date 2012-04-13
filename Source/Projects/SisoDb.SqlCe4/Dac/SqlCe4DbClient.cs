@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using EnsureThat;
@@ -8,7 +9,6 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.SqlCe4.Dac.Profiling;
 
 namespace SisoDb.SqlCe4.Dac
 {
@@ -16,14 +16,14 @@ namespace SisoDb.SqlCe4.Dac
     {
         private const int MaxBatchedIdsSize = 32;
 
-        public SqlCe4DbClient(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(connectionInfo, connection, transaction, connectionManager, sqlStatements)
+        public SqlCe4DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
         }
 
         public override IDbBulkCopy GetBulkCopy()
         {
-            return new SqlCe4DbBulkCopy(Connection.ToSqlCeConnection(), Transaction.ToSqlCeTransaction());
+            return new SqlCe4DbBulkCopy(this);
         }
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
@@ -31,17 +31,17 @@ namespace SisoDb.SqlCe4.Dac
             if (!sql.Contains(";"))
                 base.ExecuteNonQuery(sql, parameters);
             else
-                Connection.ExecuteNonQuery(sql.Split(';'), Transaction, parameters);
+                base.ExecuteNonQuery(sql.Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries), parameters);
         }
 
         public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
         {
             Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
-            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter("entityName", entityName));
+            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName));
 
             ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
-                new DacParameter("entityName", entityName),
+                new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName),
                 new DacParameter("numOfIds", numOfIds));
 
             return nextId;
@@ -98,7 +98,7 @@ namespace SisoDb.SqlCe4.Dac
                     var newTableName = newIndexesTableNames[i];
 
                     cmd.Parameters.Clear();
-                    cmd.AddParameters(
+                    Driver.AddCommandParametersTo(cmd,
                         new DacParameter("objname", oldTableName),
                         new DacParameter("newname", newTableName),
                         new DacParameter("objtype", "OBJECT"));
@@ -116,7 +116,7 @@ namespace SisoDb.SqlCe4.Dac
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-            using (var cmd = CreateCommand(string.Empty, new DacParameter("entityName", structureSchema.Name)))
+            using (var cmd = CreateCommand(string.Empty, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name)))
             {
                 DropIndexesTables(cmd, modelInfo.Statuses.IndexesTableStatuses, modelInfo.Names.IndexesTableNames);
 
@@ -184,6 +184,11 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
+        public override void UpsertSp(string name, string createSpSql)
+        {
+            throw new SisoDbException("SQL CE 4 does not support stored procedures.");
+        }
+
         public override void ClearQueryIndexes(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
@@ -211,9 +216,9 @@ namespace SisoDb.SqlCe4.Dac
                 foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
                     cmd.Parameters.Clear();
-                    cmd.AddParameters(batchedIds);
+                    Driver.AddCommandParametersTo(cmd, batchedIds);
 
-                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
+                    var paramsString = string.Join(",", batchedIds.Select(p => p.Name));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
                     cmd.ExecuteNonQuery();
                 }
@@ -230,9 +235,9 @@ namespace SisoDb.SqlCe4.Dac
                 foreach (var batchedIds in ids.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
                 {
                     cmd.Parameters.Clear();
-                    cmd.AddParameters(batchedIds);
+                    Driver.AddCommandParametersTo(cmd, batchedIds);
 
-                    var paramsString = string.Join(",", batchedIds.Select(p => string.Concat("@", p.Name)));
+                    var paramsString = string.Join(",", batchedIds.Select(p => p.Name));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
 
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))

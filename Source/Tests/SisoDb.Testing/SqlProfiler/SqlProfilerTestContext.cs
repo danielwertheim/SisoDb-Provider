@@ -8,7 +8,7 @@ namespace SisoDb.Testing.SqlProfiler
         public SqlProfilerTestContext(string connectionStringName)
             : base(connectionStringName.CreateSql2012Db())
         {
-            DbHelper = new SqlProfilerTestDbUtils(Database.ConnectionInfo.ClientConnectionString.PlainString);
+            DbHelper = new SqlProfilerTestDbUtils(Database.ProviderFactory.GetAdoDriver(), Database.ConnectionInfo.ClientConnectionString.PlainString);
             Database.ActivateProfiler();
         }
     }

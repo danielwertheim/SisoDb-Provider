@@ -7,7 +7,7 @@ namespace SisoDb.Testing.Sql2012
         public Sql2012TestContext(string connectionStringName)
             : base(connectionStringName.CreateSql2012Db())
         {
-            DbHelper = new Sql2012TestDbUtils(Database.ConnectionInfo.ClientConnectionString.PlainString);
+            DbHelper = new Sql2012TestDbUtils(Database.ProviderFactory.GetAdoDriver(), Database.ConnectionInfo.ClientConnectionString.PlainString);
         }
     }
 }

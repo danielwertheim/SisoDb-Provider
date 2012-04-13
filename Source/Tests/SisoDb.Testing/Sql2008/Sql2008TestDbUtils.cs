@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
@@ -15,13 +14,13 @@ namespace SisoDb.Testing.Sql2008
 {
     public class Sql2008TestDbUtils : ITestDbUtils
     {
+        private readonly IAdoDriver _driver;
         private readonly string _connectionString;
-        private readonly DbProviderFactory _factory;
 
-        public Sql2008TestDbUtils(string connectionString)
+        public Sql2008TestDbUtils(IAdoDriver driver, string connectionString)
         {
+            _driver = driver;
             _connectionString = connectionString;
-            _factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
         }
 
         public bool TableExists(string name)
@@ -74,7 +73,7 @@ namespace SisoDb.Testing.Sql2008
                     if (!tmpNamesToSkip.Contains(name))
                         dbColumns.Add(new DbColumn(name, dr.GetString(1)));
                 },
-                new DacParameter("tableName", tableName));
+                new DacParameter(DbSchemas.Parameters.TableNameParamPrefix, tableName));
 
             return dbColumns;
         }
@@ -155,9 +154,9 @@ namespace SisoDb.Testing.Sql2008
 
             using (var cn = CreateConnection())
             {
-                using (var cmd = cn.CreateCommand(null))
+                cn.Open();
+                using (var cmd = cn.CreateCommand())
                 {
-                    cn.Open();
                     cmd.CommandType = CommandType.Text;
 
                     foreach (var tableName in indexesTableNames.AllTableNames)
@@ -205,8 +204,11 @@ namespace SisoDb.Testing.Sql2008
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(sql, null, parameters))
+                using (var cmd = _driver.CreateCommand(cn, sql, null, parameters))
                 {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql;
+
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {
                         while (reader.Read())
@@ -239,12 +241,7 @@ namespace SisoDb.Testing.Sql2008
 
         private IDbConnection CreateConnection()
         {
-            var cn = _factory.CreateConnection();
-
-            if (cn != null)
-                cn.ConnectionString = _connectionString;
-
-            return cn;
+            return _driver.CreateConnection(_connectionString);
         }
     }
 }

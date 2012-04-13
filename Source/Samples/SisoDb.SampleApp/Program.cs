@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using PineCone.Structures.Schemas.MemberAccessors;
+using SisoDb.Dac;
+using SisoDb.DbSchema;
+using SisoDb.Querying;
 using SisoDb.SampleApp.Model;
 using SisoDb.Sql2008;
 using SisoDb.Sql2012;
@@ -27,6 +31,8 @@ namespace SisoDb.SampleApp
 
             //db.EnsureNewDatabase();
 
+            //db.Settings.SynchronizeSchemaChanges = false;
+
             //To get rid of warm up in tests as it first syncs schemas etc
             //db.UpsertStructureSet<Customer>();
 
@@ -38,29 +44,32 @@ namespace SisoDb.SampleApp
             //ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
             //ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
+            //UpsertSp(db, 500, 550);
+            //ProfilingQueries(() => GetCustomersViaSp(db, 500, 550));
+
             //ProfilingUpdateMany(db, 500, 550);
 
             //Console.WriteLine("---- Done ----");
             //Console.ReadKey();
         }
 
-		private static void ProfilingUpdateMany(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        private static void ProfilingUpdateMany(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-        	using (var session = database.BeginSession())
-        	{
-				session.Advanced.UpdateMany<Customer>(
+            using (var session = database.BeginSession())
+            {
+                session.Advanced.UpdateMany<Customer>(
                     c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo,
-					customer => { customer.Firstname += "Udated"; });
-        	}
+                    customer => { customer.Firstname += "Udated"; });
+            }
 
             stopWatch.Stop();
             Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
 
             using (var rs = database.BeginSession())
             {
-				var rowCount = rs.Query<Customer>().Count();
+                var rowCount = rs.Query<Customer>().Count();
 
                 Console.WriteLine("Total rows = {0}", rowCount);
             }
@@ -76,7 +85,7 @@ namespace SisoDb.SampleApp
                 stopWatch.Start();
                 InsertCustomers(customers, database);
                 stopWatch.Stop();
-                
+
                 Console.WriteLine("TotalSeconds = {0}", stopWatch.Elapsed.TotalSeconds);
 
                 stopWatch.Reset();
@@ -90,7 +99,7 @@ namespace SisoDb.SampleApp
             }
         }
 
-		private static void ProfilingQueries(Func<int> queryAction)
+        private static void ProfilingQueries(Func<int> queryAction)
         {
             for (var c = 0; c < 2; c++)
             {
@@ -124,31 +133,55 @@ namespace SisoDb.SampleApp
 
         private static int GetAllCustomers(ISisoDatabase database)
         {
-			using(var session = database.BeginSession())
-			{
-				return session.Query<Customer>().ToEnumerable().Count();
-			}
+            using (var session = database.BeginSession())
+            {
+                return session.Query<Customer>().ToEnumerable().Count();
+            }
         }
 
-    	private static int GetAllCustomersAsJson(ISisoDatabase database)
-    	{
-    		return database.UseOnceTo().Query<Customer>().ToEnumerableOfJson().Count();
-    	}
-
-		private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        private static int GetAllCustomersAsJson(ISisoDatabase database)
         {
-			using (var session = database.BeginSession())
-			{
-				return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
-			}
+            return database.UseOnceTo().Query<Customer>().ToEnumerableOfJson().Count();
         }
 
-		private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
-			using (var session = database.BeginSession())
-			{
-				return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
-			}
+            using (var session = database.BeginSession())
+            {
+                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
+            }
+        }
+
+        private static void UpsertSp(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        {
+            using (var session = database.BeginSession())
+            {
+                session.Advanced.UpsertNamedQuery<Customer>("CustomersViaSP", qb => qb.Where(c =>
+                    c.CustomerNo >= customerNoFrom
+                    && c.CustomerNo <= customerNoTo
+                    && c.DeliveryAddress.Street == "The delivery street #544"));
+            }
+        }
+
+        private static int GetCustomersViaSp(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        {
+            using (var session = database.BeginSession())
+            {
+                var q = new NamedQuery("CustomersViaSP");
+                q.Add(new DacParameter("p0", customerNoFrom));
+                q.Add(new DacParameter("p1", customerNoTo));
+                q.Add(new DacParameter("p2", "The delivery street #544"));
+
+                return session.Advanced.NamedQuery<Customer>(q).ToArray().Length;
+            }
+        }
+
+        private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        {
+            using (var session = database.BeginSession())
+            {
+                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
+            }
         }
     }
 }

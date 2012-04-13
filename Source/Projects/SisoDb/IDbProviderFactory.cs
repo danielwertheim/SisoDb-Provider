@@ -15,9 +15,11 @@ namespace SisoDb
     {
         StorageProviders ProviderType { get; }
 
-	    IDbSettings GetSettings();
-
         IConnectionManager ConnectionManager { get; set; }
+
+	    IAdoDriver GetAdoDriver();
+
+	    IDbSettings GetSettings();
 
 	    ISqlStatements GetSqlStatements();
 
@@ -38,5 +40,7 @@ namespace SisoDb
 	    IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas);
 
         IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
+
+        INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class;
     }
 }

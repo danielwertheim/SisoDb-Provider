@@ -39,7 +39,7 @@ namespace SisoDb
         {
             get { return this; }
         }
-        
+
         protected DbSession(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
@@ -144,6 +144,27 @@ namespace SisoDb
 
                 var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
                 TransactionalDbClient.DeleteByQuery(sql, structureSchema);
+            });
+        }
+
+        void IAdvanced.NonQuery(string sql, params IDacParameter[] parameters)
+        {
+            Try(() =>
+            {
+                Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
+                TransactionalDbClient.ExecuteNonQuery(sql, parameters);
+            });
+        }
+
+        void IAdvanced.UpsertNamedQuery<T>(string name, Action<IQueryBuilder<T>> spec)
+        {
+            Try(() =>
+            {
+                Ensure.That(name, "name").IsNotNullOrWhiteSpace();
+                Ensure.That(spec, "spec").IsNotNull();
+
+                var generator = Db.ProviderFactory.GetNamedQueryGenerator<T>(Db.StructureSchemas);
+                TransactionalDbClient.UpsertSp(name, generator.Generate(name, spec));
             });
         }
 

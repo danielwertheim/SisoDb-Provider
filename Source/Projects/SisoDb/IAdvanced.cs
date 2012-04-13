@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using SisoDb.Dac;
+using SisoDb.Querying;
 
 namespace SisoDb
 {
@@ -9,6 +11,22 @@ namespace SisoDb
     /// </summary>
     public interface IAdvanced
     {
+        /// <summary>
+        /// Lets you run Non Query SQL against the Db.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        void NonQuery(string sql, params IDacParameter[] parameters);
+
+        /// <summary>
+        /// Lets you upsert a named query (stored procedure).
+        /// If one allready exists, it will be dropped first.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="spec"></param>
+        void UpsertNamedQuery<T>(string name, Action<IQueryBuilder<T>> spec) where T : class;
+
         /// <summary>
         /// Deletes one or more structures matchings the sent
         /// predicate.

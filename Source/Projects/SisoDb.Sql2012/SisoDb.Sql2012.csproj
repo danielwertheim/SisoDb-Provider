@@ -56,14 +56,11 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dac\Sql2012DbBulkCopy.cs" />
     <Compile Include="Dac\Sql2012DbClient.cs" />
     <Compile Include="Dac\Sql2012IdsTableParam.cs" />
-    <Compile Include="Dac\Sql2012ServerClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SisoDb2012Extensions.cs" />
     <Compile Include="Sql2012ConnectionInfo.cs" />
-    <Compile Include="Sql2012ConnectionManager.cs" />
     <Compile Include="Sql2012Database.cs" />
     <Compile Include="Sql2012DbFactory.cs" />
     <Compile Include="Sql2012ProviderFactory.cs" />

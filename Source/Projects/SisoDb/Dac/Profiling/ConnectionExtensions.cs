@@ -15,6 +15,9 @@ namespace SisoDb.Dac.Profiling
 
         public static SqlTransaction ToSqlTransaction(this IDbTransaction transaction)
         {
+            if (transaction == null)
+                return null;
+
             if (!(transaction is IWrappedTransaction))
                 return (SqlTransaction)transaction;
 

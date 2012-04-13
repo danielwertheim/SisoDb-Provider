@@ -4,8 +4,8 @@ namespace SisoDb.Querying
 {
     public interface IDbQueryGenerator
     {
-        DbQuery GenerateQuery(IQuery query);
+        IDbQuery GenerateQuery(IQuery query);
 
-        DbQuery GenerateQueryReturningStrutureIds(IQuery query);
+        IDbQuery GenerateQueryReturningStrutureIds(IQuery query);
     }
 }

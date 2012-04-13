@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlServerCe;
-using EnsureThat;
+﻿using System.Data.SqlServerCe;
 using NCore;
 using SisoDb.Core.Io;
 using SisoDb.Dac;
@@ -9,50 +6,28 @@ using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4.Dac
 {
-    public class SqlCe4ServerClient : IServerClient
+    public class SqlCe4ServerClient : DbServerClient
     {
         private readonly SqlCe4ConnectionInfo _connectionInfo;
-    	private readonly IConnectionManager _connectionManager;
-        private readonly ISqlStatements _sqlStatements;
-
-		public SqlCe4ServerClient(SqlCe4ConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+        
+        public SqlCe4ServerClient(IAdoDriver driver, SqlCe4ConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements) 
+            : base(driver, connectionInfo, connectionManager, sqlStatements)
         {
-            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
-			Ensure.That(connectionManager, "connectionManager").IsNotNull();
-			Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
-
             _connectionInfo = connectionInfo;
-        	_connectionManager = connectionManager;
-            _sqlStatements = sqlStatements;
         }
 
-        private void WithConnection(Action<IDbConnection> cnConsumer)
-        {
-            IDbConnection cn = null;
-
-            try
-            {
-                cn = _connectionManager.OpenServerConnection(_connectionInfo);
-                cnConsumer.Invoke(cn);
-            }
-            finally
-            {
-                _connectionManager.ReleaseServerConnection(cn);
-            }
-        }
-
-        public void EnsureNewDb()
+        public override void EnsureNewDb()
         {
             DropDbIfItExists();
             CreateDbIfItDoesNotExist();
         }
 
-        public void CreateDbIfItDoesNotExist()
+        public override void CreateDbIfItDoesNotExist()
         {
             if(DbExists())
                 return;
 
-            _connectionManager.ReleaseAllDbConnections();
+            ConnectionManager.ReleaseAllDbConnections();
 
             using (var engine = new SqlCeEngine(_connectionInfo.ClientConnectionString.PlainString))
             {
@@ -62,32 +37,32 @@ namespace SisoDb.SqlCe4.Dac
             InitializeExistingDb();
         }
 
-        public void InitializeExistingDb()
+        public override void InitializeExistingDb()
         {
             if (!DbExists())
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.FilePath));
 
-			_connectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllDbConnections();
 
             WithConnection(cn =>
             {
-                var exists = cn.ExecuteScalarResult<int>(_sqlStatements.GetSql("Sys_Identities_Exists")) > 0;
+                var exists = OnExecuteScalar<int>(cn, SqlStatements.GetSql("Sys_Identities_Exists")) > 0;
 
                 if (exists)
                     return;
 
-                cn.ExecuteNonQuery(_sqlStatements.GetSql("Sys_Identities_Create").Inject(_connectionInfo.DbName));
+                OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Identities_Create").Inject(_connectionInfo.DbName));
             });
         }
 
-        public bool DbExists()
+        public override bool DbExists()
         {
             return IoHelper.FileExists(_connectionInfo.FilePath);
         }
 
-        public void DropDbIfItExists()
+        public override void DropDbIfItExists()
         {
-			_connectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllDbConnections();
 
             IoHelper.DeleteIfFileExists(_connectionInfo.FilePath);
         }

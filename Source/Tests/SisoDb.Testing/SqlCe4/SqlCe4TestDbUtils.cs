@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,16 +15,16 @@ namespace SisoDb.Testing.SqlCe4
 {
     public class SqlCe4TestDbUtils : ITestDbUtils
     {
-        private readonly IConnectionString _connectionString;
-        private readonly DbProviderFactory _factory;
-
-        public SqlCe4TestDbUtils(IConnectionString connectionString)
+        private readonly IAdoDriver _driver;
+        private readonly string _connectionString;
+        
+        public SqlCe4TestDbUtils(IAdoDriver driver, IConnectionString connectionString)
         {
             var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString.PlainString);
             cnStringBuilder.Enlist = false;
 
-            _connectionString = connectionString.ReplacePlain(cnStringBuilder.ConnectionString);
-            _factory = DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0");
+            _driver = driver;
+            _connectionString = connectionString.ReplacePlain(cnStringBuilder.ConnectionString).PlainString;
         }
 
         public bool TableExists(string name)
@@ -70,7 +69,7 @@ namespace SisoDb.Testing.SqlCe4
                     if (!tmpNamesToSkip.Contains(name))
                         dbColumns.Add(new DbColumn(name, dr.GetString(1)));
                 },
-                new DacParameter("tableName", tableName));
+                new DacParameter(DbSchemas.Parameters.TableNameParamPrefix, tableName));
 
             return dbColumns;
         }
@@ -151,9 +150,9 @@ namespace SisoDb.Testing.SqlCe4
 
             using (var cn = CreateConnection())
             {
-                using (var cmd = cn.CreateCommand(null))
+                cn.Open();
+                using (var cmd = cn.CreateCommand())
                 {
-                    cn.Open();
                     cmd.CommandType = CommandType.Text;
 
                     foreach (var tableName in indexesTableNames.AllTableNames)
@@ -190,16 +189,6 @@ namespace SisoDb.Testing.SqlCe4
             return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
         }
 
-        private IDbConnection CreateConnection()
-        {
-            var cn = _factory.CreateConnection();
-
-            if (cn != null)
-                cn.ConnectionString = _connectionString.PlainString;
-
-            return cn;
-        }
-
         private static string GetMemberPath<T>(Expression<Func<T, object>> e)
         {
             return e.GetRightMostMember().ToPath();
@@ -211,8 +200,11 @@ namespace SisoDb.Testing.SqlCe4
             {
                 cn.Open();
 
-                using (var cmd = cn.CreateCommand(sql, null, parameters))
+                using (var cmd = _driver.CreateCommand(cn, sql, null, parameters))
                 {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql;
+
                     using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
                     {
                         while (reader.Read())
@@ -225,6 +217,11 @@ namespace SisoDb.Testing.SqlCe4
 
                 cn.Close();
             }
+        }
+
+        private IDbConnection CreateConnection()
+        {
+            return _driver.CreateConnection(_connectionString);
         }
     }
 }

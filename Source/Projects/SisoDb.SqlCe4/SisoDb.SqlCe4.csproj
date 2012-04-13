@@ -63,6 +63,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Dac\Profiling\ConnectionExtensions.cs" />
+    <Compile Include="Dac\SqlCe4AdoDriver.cs" />
     <Compile Include="Dac\SqlCe4DbBulkCopy.cs" />
     <Compile Include="Dac\SqlCe4DbClient.cs" />
     <Compile Include="Dac\SqlCe4ServerClient.cs" />
