@@ -46,31 +46,31 @@ namespace SisoDb.UnitTests.DbSchema
         [Test]
         public void Parameters_value_of_MemberParamPrefix()
         {
-            Assert.AreEqual("mem", DbSchemas.Parameters.MemberParamPrefix);
+            Assert.AreEqual("@mem", DbSchemas.Parameters.MemberParamPrefix);
         }
 
         [Test]
         public void Parameters_value_of_IncludeParamPrefix()
         {
-            Assert.AreEqual("inc", DbSchemas.Parameters.IncludeParamPrefix);
+            Assert.AreEqual("@inc", DbSchemas.Parameters.IncludeParamPrefix);
         }
 
         [Test]
         public void Parameters_value_of_DbNameParamPrefix()
         {
-            Assert.AreEqual("dbName", DbSchemas.Parameters.DbNameParamPrefix);
+            Assert.AreEqual("@dbName", DbSchemas.Parameters.DbNameParamPrefix);
         }
 
         [Test]
         public void Parameters_value_of_TableNameParamPrefix()
         {
-            Assert.AreEqual("tableName", DbSchemas.Parameters.TableNameParamPrefix);
+            Assert.AreEqual("@tableName", DbSchemas.Parameters.TableNameParamPrefix);
         }
 
         [Test]
         public void Parameters_value_of_EntityNameParamPrefix()
         {
-            Assert.AreEqual("entityName", DbSchemas.Parameters.EntityNameParamPrefix);
+            Assert.AreEqual("@entityName", DbSchemas.Parameters.EntityNameParamPrefix);
         }
     }
 }

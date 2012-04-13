@@ -29,13 +29,13 @@ namespace SisoDb.DbSchema
 
         public static class Parameters
         {
-            public const string MemberParamPrefix = "mem";
-            public const string IncludeParamPrefix = "inc";
-            public const string DbNameParamPrefix = "dbName";
-            public const string TableNameParamPrefix = "tableName";
-            public const string EntityNameParamPrefix = "entityName";
+            public const string MemberParamPrefix = "@mem";
+            public const string IncludeParamPrefix = "@inc";
+            public const string DbNameParamPrefix = "@dbName";
+            public const string TableNameParamPrefix = "@tableName";
+            public const string EntityNameParamPrefix = "@entityName";
 
-            public static bool TreatAsAnsiString(IDacParameter param)
+            public static bool IsSysParam(IDacParameter param)
             {
                 const StringComparison c = StringComparison.OrdinalIgnoreCase;
 

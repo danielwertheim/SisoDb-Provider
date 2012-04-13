@@ -16,6 +16,11 @@ namespace SisoDb.SqlCe4.Dac
 
         protected override IDbDataParameter OnBeforeAddParameter(IDbDataParameter parameter, IDacParameter dacParameter)
         {
+            parameter = base.OnBeforeAddParameter(parameter, dacParameter);
+
+            if(parameter.DbType == DbType.AnsiString)
+                parameter.DbType = DbType.String;
+
             return parameter;
         }
     }
