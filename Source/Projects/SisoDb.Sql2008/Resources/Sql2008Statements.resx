@@ -308,7 +308,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [Value] [nvarchar](300) null);
 
 create nonclustered index [IX_{0}_Q]
-on [dbo].[{0}] ([StructureId], [MemberPath],[Value]);
+on [dbo].[{0}] ([MemberPath],[Value],[StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -319,7 +319,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [Value] [nvarchar](300) null);
 
 create nonclustered index [IX_{0}_Q]
-on [dbo].[{0}] ([StructureId], [MemberPath],[Value]);
+on [dbo].[{0}] ([MemberPath],[Value],[StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -330,7 +330,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
 [Value] [nvarchar](300) null);
 
 create nonclustered index [IX_{0}_Q]
-on [dbo].[{0}] ([StructureId], [MemberPath],[Value]);
+on [dbo].[{0}] ([MemberPath],[Value],[StructureId]);
 
 alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [dbo].[{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
