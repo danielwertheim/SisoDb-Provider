@@ -184,6 +184,11 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
+        public override void UpsertSp(string name, string createSpSql)
+        {
+            throw new SisoDbException("SQL CE 4 does not support stored procedures.");
+        }
+
         public override void ClearQueryIndexes(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

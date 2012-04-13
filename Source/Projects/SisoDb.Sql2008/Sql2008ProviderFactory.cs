@@ -111,5 +111,10 @@ namespace SisoDb.Sql2008
         {
             return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
         }
+
+        public virtual INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class
+        {
+            return new NamedQueryGenerator<T>(GetQueryBuilder<T>(structureSchemas), GetDbQueryGenerator(), new DbDataTypeTranslator());
+        }
     }
 }

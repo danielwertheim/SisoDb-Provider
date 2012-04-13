@@ -21,6 +21,7 @@ namespace SisoDb.Dac
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
         void RenameStructureSet(string oldStructureName, string newStructureName);
         void Drop(IStructureSchema structureSchema);
+        void UpsertSp(string name, string createSpSql);
         void Reset();
         void ClearQueryIndexes(IStructureSchema structureSchema);
         
@@ -30,14 +31,14 @@ namespace SisoDb.Dac
         
 		void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
-        void DeleteByQuery(DbQuery query, IStructureSchema structureSchema);
+        void DeleteByQuery(IDbQuery query, IStructureSchema structureSchema);
         void DeleteIndexesAndUniquesById(IStructureId structureId, IStructureSchema structureSchema);
 
         int RowCount(IStructureSchema structureSchema);
-        int RowCountByQuery(IStructureSchema structureSchema, DbQuery query);
+        int RowCountByQuery(IStructureSchema structureSchema, IDbQuery query);
 
         bool Any(IStructureSchema structureSchema);
-        bool Any(IStructureSchema structureSchema, DbQuery query);
+        bool Any(IStructureSchema structureSchema, IDbQuery query);
         bool Exists(IStructureSchema structureSchema, IStructureId structureId);
 
 		string GetJsonById(IStructureId structureId, IStructureSchema structureSchema);

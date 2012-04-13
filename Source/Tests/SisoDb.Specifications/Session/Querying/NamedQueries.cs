@@ -6,7 +6,7 @@ using SisoDb.Querying;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.QueryEngine
+namespace SisoDb.Specifications.Session.Querying
 {
 #if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
     class NamedQueries
@@ -79,7 +79,11 @@ namespace SisoDb.Specifications.QueryEngine
                 TestContext = TestContextFactory.Create();
                 _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
-                TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] @minSortOrder int, @maxSortOrder int as begin select s.Json from [QueryGuidItemStructure] as s inner join [QueryGuidItemIntegers] as si on si.[StructureId] = s.[StructureId] where (si.[MemberPath]='SortOrder' and si.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
+                using(var session = TestContext.Database.BeginSession())
+                {
+                    session.Advanced.UpsertNamedQuery<QueryGuidItem>(ProcedureName, qb => qb.Where(x => x.SortOrder >= 0 && x.SortOrder <= 0));
+                }
+                //TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] @minSortOrder int, @maxSortOrder int as begin select s.Json from [QueryGuidItemStructure] as s inner join [QueryGuidItemIntegers] as si on si.[StructureId] = s.[StructureId] where (si.[MemberPath]='SortOrder' and si.[Value] between @minSortOrder and @maxSortOrder) group by s.[StructureId], s.[Json] order by s.[StructureId]; end");
             };
 
             public void AfterContextCleanup()
@@ -91,8 +95,8 @@ namespace SisoDb.Specifications.QueryEngine
             {
                 var query = new NamedQuery(ProcedureName);
                 query.Add(
-                    new DacParameter("minSortOrder", _structures[1].SortOrder), 
-                    new DacParameter("maxSortOrder", _structures[2].SortOrder));
+                    new DacParameter("@p0", _structures[1].SortOrder), 
+                    new DacParameter("@p1", _structures[2].SortOrder));
                 using (var session = TestContext.Database.BeginSession())
                 {
                     _fetchedStructures = session.Advanced.NamedQuery<QueryGuidItem>(query).ToList();

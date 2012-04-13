@@ -23,14 +23,14 @@ namespace SisoDb.Querying
             SqlExpressionBuilder = new SqlExpressionBuilder();
         }
 
-        public virtual DbQuery GenerateQuery(IQuery query)
+        public virtual IDbQuery GenerateQuery(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
 
             return CreateSqlQuery(query);
         }
 
-        protected virtual DbQuery CreateSqlQuery(IQuery query)
+        protected virtual IDbQuery CreateSqlQuery(IQuery query)
         {
             var sqlExpression = SqlExpressionBuilder.Process(query);
             var formatter = CreateSqlQueryFormatter(query, sqlExpression);
@@ -39,7 +39,7 @@ namespace SisoDb.Querying
             return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
         }
 
-        public virtual DbQuery GenerateQueryReturningStrutureIds(IQuery query)
+        public virtual IDbQuery GenerateQueryReturningStrutureIds(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
 
@@ -49,7 +49,7 @@ namespace SisoDb.Querying
             return CreateSqlQueryReturningStructureIds(query);
         }
 
-        protected virtual DbQuery CreateSqlQueryReturningStructureIds(IQuery query)
+        protected virtual IDbQuery CreateSqlQueryReturningStructureIds(IQuery query)
         {
             var sqlExpression = SqlExpressionBuilder.Process(query);
             var formatter = new SqlQueryFormatter

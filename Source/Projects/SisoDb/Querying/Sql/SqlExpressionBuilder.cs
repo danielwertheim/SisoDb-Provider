@@ -12,7 +12,7 @@ namespace SisoDb.Querying.Sql
 {
     /// <summary>
     /// Converts <see cref="IParsedLambda"/> representing 
-    /// Wheres, Sortings (OrderBy) and Includes, to an <see cref="ISqlExpression"/>.
+    /// Wheres, Sortings and Includes, to an <see cref="ISqlExpression"/>.
     /// </summary>
     public class SqlExpressionBuilder
     {

@@ -241,6 +241,17 @@ namespace SisoDb.Dac
             }
         }
 
+        public virtual void UpsertSp(string name, string createSpSql)
+        {
+            EnsureValidDbObjectName(name);
+            Ensure.That(createSpSql, "createSpSql").IsNotNullOrWhiteSpace();
+
+            var sql = SqlStatements.GetSql("DropSp").Inject(name);
+
+            ExecuteNonQuery(sql);
+            ExecuteNonQuery(createSpSql);
+        }
+
         public virtual void Reset()
         {
             var tableNamesToDrop = new List<string>();
@@ -300,7 +311,7 @@ namespace SisoDb.Dac
 
         public abstract void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public virtual void DeleteByQuery(DbQuery query, IStructureSchema structureSchema)
+        public virtual void DeleteByQuery(IDbQuery query, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
@@ -381,7 +392,7 @@ namespace SisoDb.Dac
             return ExecuteScalar<int>(sql);
         }
 
-        public virtual int RowCountByQuery(IStructureSchema structureSchema, DbQuery query)
+        public virtual int RowCountByQuery(IStructureSchema structureSchema, IDbQuery query)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
             Ensure.That(query, "query").IsNotNull();
@@ -400,7 +411,7 @@ namespace SisoDb.Dac
             return ExecuteScalar<int>(sql) > 0;
         }
 
-        public virtual bool Any(IStructureSchema structureSchema, DbQuery query)
+        public virtual bool Any(IStructureSchema structureSchema, IDbQuery query)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
             Ensure.That(query, "query").IsNotNull();

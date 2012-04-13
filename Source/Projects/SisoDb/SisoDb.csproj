@@ -81,9 +81,13 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="DbSchema\DbDataTypeTranslator.cs" />
+    <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />
+    <Compile Include="DbSchema\INamedQueryGenerator.cs" />
     <Compile Include="DbSchema\ModelTableNames.cs" />
     <Compile Include="DbSchema\ModelTablesInfo.cs" />
     <Compile Include="DbSchema\ModelTableStatuses.cs" />
+    <Compile Include="DbSchema\NamedQueryGenerator.cs" />
     <Compile Include="DbSettings.cs" />
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />

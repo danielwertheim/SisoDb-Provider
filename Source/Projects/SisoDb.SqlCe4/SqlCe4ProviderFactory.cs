@@ -111,5 +111,10 @@ namespace SisoDb.SqlCe4
         {
             return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
         }
+
+	    public INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class
+	    {
+	        throw new NotSupportedException("SQL CE4 does not support Stored procedures.");
+	    }
     }
 }

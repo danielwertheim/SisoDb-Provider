@@ -286,4 +286,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DynamicLambdaBuilder_InvalidExpressionFormat" xml:space="preserve">
     <value>Expression does not seem to be a lambda expression. It should start with e.g 'i =&gt; '.</value>
   </data>
+  <data name="DbDataTypeTranslator_UnsupportedType" xml:space="preserve">
+    <value>Don't know how to translate the type '{0}' to a DbType. Send us a pull request.</value>
+  </data>
 </root>
