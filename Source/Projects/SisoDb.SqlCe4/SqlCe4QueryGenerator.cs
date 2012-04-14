@@ -6,6 +6,7 @@ namespace SisoDb.SqlCe4
 {
     public class SqlCe4QueryGenerator : DbQueryGenerator
     {
-        public SqlCe4QueryGenerator(ISqlStatements sqlStatements) : base(sqlStatements) {}
+        public SqlCe4QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder)
+            : base(sqlStatements, sqlExpressionBuilder) { }
     }
 }

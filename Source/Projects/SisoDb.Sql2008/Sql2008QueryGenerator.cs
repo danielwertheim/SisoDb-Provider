@@ -9,7 +9,8 @@ namespace SisoDb.Sql2008
 {
     public class Sql2008QueryGenerator : DbQueryGenerator
     {
-        public Sql2008QueryGenerator(ISqlStatements sqlStatements) : base(sqlStatements) {}
+        public Sql2008QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder) 
+            : base(sqlStatements, sqlExpressionBuilder) {}
 
         protected override SqlQueryFormatter CreateSqlQueryFormatter(IQuery query, ISqlExpression sqlExpression)
         {

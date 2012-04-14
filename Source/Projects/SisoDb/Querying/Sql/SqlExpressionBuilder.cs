@@ -10,13 +10,9 @@ using SisoDb.Querying.Lambdas.Operators;
 
 namespace SisoDb.Querying.Sql
 {
-    /// <summary>
-    /// Converts <see cref="IParsedLambda"/> representing 
-    /// Wheres, Sortings and Includes, to an <see cref="ISqlExpression"/>.
-    /// </summary>
-    public class SqlExpressionBuilder
+    public class SqlExpressionBuilder : ISqlExpressionBuilder
     {
-        public ISqlExpression Process(IQuery query)
+        public virtual ISqlExpression Process(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
 

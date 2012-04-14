@@ -13,14 +13,15 @@ namespace SisoDb.Querying
     public abstract class DbQueryGenerator : IDbQueryGenerator
     {
         protected readonly ISqlStatements SqlStatements;
-        protected readonly SqlExpressionBuilder SqlExpressionBuilder;
+        protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
 
-        protected DbQueryGenerator(ISqlStatements sqlStatements)
+        protected DbQueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder)
         {
             Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
+            Ensure.That(sqlExpressionBuilder, "sqlExpressionBuilder").IsNotNull();
 
             SqlStatements = sqlStatements;
-            SqlExpressionBuilder = new SqlExpressionBuilder();
+            SqlExpressionBuilder = sqlExpressionBuilder;
         }
 
         public virtual IDbQuery GenerateQuery(IQuery query)
