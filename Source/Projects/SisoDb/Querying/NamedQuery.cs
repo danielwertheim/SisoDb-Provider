@@ -28,7 +28,7 @@ namespace SisoDb.Querying
             _parameters = new Dictionary<string, IDacParameter>();
         }
 
-        public void Add(params IDacParameter[] parameters)
+        public virtual void Add(params IDacParameter[] parameters)
         {
             foreach (var queryParameter in parameters)
                 _parameters.Add(queryParameter.Name, queryParameter);

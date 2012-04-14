@@ -7,6 +7,7 @@ using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Querying.Sql;
 using SisoDb.SqlCe4.Dac;
 using SisoDb.Structures;
 
@@ -104,12 +105,7 @@ namespace SisoDb.SqlCe4
     		return new DbIdentityStructureIdGenerator(action);
     	}
 
-    	public virtual IDbQueryGenerator GetDbQueryGenerator()
-        {
-			return new SqlCe4QueryGenerator(_sqlStatements);
-        }
-
-        public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
+    	public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
         {
             return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers());
         }
@@ -117,6 +113,16 @@ namespace SisoDb.SqlCe4
         public virtual IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
         {
             return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
+        }
+
+        public virtual ISqlExpressionBuilder GetSqlExpressionBuilder()
+        {
+            return new SqlExpressionBuilder();
+        }
+
+        public virtual IDbQueryGenerator GetDbQueryGenerator()
+        {
+            return new SqlCe4QueryGenerator(_sqlStatements, GetSqlExpressionBuilder());
         }
 
 	    public INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class

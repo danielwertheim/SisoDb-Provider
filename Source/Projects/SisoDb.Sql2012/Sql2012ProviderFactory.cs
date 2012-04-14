@@ -7,6 +7,7 @@ using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Querying.Sql;
 using SisoDb.Sql2012.Dac;
 using SisoDb.Structures;
 
@@ -104,22 +105,27 @@ namespace SisoDb.Sql2012
     		return new DbIdentityStructureIdGenerator(action);
     	}
 
-    	public virtual IDbQueryGenerator GetDbQueryGenerator()
-        {
-            return new Sql2012QueryGenerator(_sqlStatements);
-        }
-
-        public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
+	    public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
         {
             return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers());
         }
 
-        public virtual IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
+	    public virtual IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
         {
             return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
         }
 
-        public virtual INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class
+	    public virtual ISqlExpressionBuilder GetSqlExpressionBuilder()
+        {
+            return new SqlExpressionBuilder();
+        }
+
+	    public virtual IDbQueryGenerator GetDbQueryGenerator()
+	    {
+	        return new Sql2012QueryGenerator(_sqlStatements, GetSqlExpressionBuilder());
+	    }
+
+	    public virtual INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class
         {
             return new NamedQueryGenerator<T>(GetQueryBuilder<T>(structureSchemas), GetDbQueryGenerator(), new DbDataTypeTranslator());
         }
