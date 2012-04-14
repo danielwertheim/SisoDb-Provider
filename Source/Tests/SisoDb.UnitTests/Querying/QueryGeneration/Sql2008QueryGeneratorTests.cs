@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using SisoDb.Querying.Sql;
 using SisoDb.Sql2008;
 using SisoDb.Querying;
 
@@ -9,7 +10,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new Sql2008QueryGenerator(new Sql2008Statements());
+            return new Sql2008QueryGenerator(new Sql2008Statements(), new SqlExpressionBuilder());
         }
 
         [Test]

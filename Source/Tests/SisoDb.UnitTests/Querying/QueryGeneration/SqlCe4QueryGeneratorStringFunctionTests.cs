@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SisoDb.Querying;
+using SisoDb.Querying.Sql;
 using SisoDb.SqlCe4;
 
 namespace SisoDb.UnitTests.Querying.QueryGeneration
@@ -9,7 +10,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new SqlCe4QueryGenerator(new SqlCe4Statements());
+            return new SqlCe4QueryGenerator(new SqlCe4Statements(), new SqlExpressionBuilder());
         }
 
 		[Test]
