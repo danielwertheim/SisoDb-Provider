@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Data;
 using EnsureThat;
+using SisoDb.Dac;
 
 namespace SisoDb
 {
-    public abstract class ConnectionManagerBase : IConnectionManager
+    public class ConnectionManager : IConnectionManager
     {
-        protected ConnectionManagerBase()
+        protected readonly IAdoDriver Driver;
+
+        public ConnectionManager(IAdoDriver driver)
         {
+            Ensure.That(driver, "driver").IsNotNull();
+
+            Driver = driver;
             OnConnectionCreated = cn => cn;
         }
 
@@ -30,14 +36,14 @@ namespace SisoDb
 
         public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = OnConnectionCreated(CreateConnection(connectionInfo.ServerConnectionString.PlainString));
+            var cn = OnConnectionCreated(Driver.CreateConnection(connectionInfo.ServerConnectionString.PlainString));
             cn.Open();
             return cn;
         }
 
         public virtual IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = OnConnectionCreated(CreateConnection(connectionInfo.ClientConnectionString.PlainString));
+            var cn = OnConnectionCreated(Driver.CreateConnection(connectionInfo.ClientConnectionString.PlainString));
             cn.Open();
             return cn;
         }
@@ -61,7 +67,5 @@ namespace SisoDb
             dbConnection.Close();
             dbConnection.Dispose();
         }
-
-        protected abstract IDbConnection CreateConnection(string connectionString);
     }
 }

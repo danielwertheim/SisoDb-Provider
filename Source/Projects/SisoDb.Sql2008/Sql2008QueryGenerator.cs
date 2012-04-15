@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using NCore;
 using SisoDb.Dac;
@@ -10,58 +9,40 @@ namespace SisoDb.Sql2008
 {
     public class Sql2008QueryGenerator : DbQueryGenerator
     {
-        public Sql2008QueryGenerator(ISqlStatements sqlStatements) : base(sqlStatements) {}
+        public Sql2008QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder) 
+            : base(sqlStatements, sqlExpressionBuilder) {}
 
-		protected override DbQuery CreateSqlQuery(IQuery query)
+        protected override SqlQueryFormatter CreateSqlQueryFormatter(IQuery query, ISqlExpression sqlExpression)
         {
-			var sqlExpression = SqlExpressionBuilder.Process(query);
-
-            var formatter = new SqlQueryFormatter
+            return new SqlQueryFormatter
             {
-				Start = GenerateStartString(query, sqlExpression),
-				End = GenerateEndString(query, sqlExpression),
-				Take = GenerateTakeString(query),
+                Start = GenerateStartString(query, sqlExpression),
+                End = GenerateEndString(query, sqlExpression),
+                Take = GenerateTakeString(query),
                 IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
-				OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
-				MainStructureTable = query.StructureSchema.GetStructureTableName(),
-				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
+                OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
+                MainStructureTable = query.StructureSchema.GetStructureTableName(),
+                WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
                 IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
-				OrderBy = GenerateOrderByString(query, sqlExpression),
-				Paging = GeneratePagingString(query, sqlExpression).PrependWith(", "),
+                OrderBy = GenerateOrderByString(query, sqlExpression),
+                Paging = GeneratePagingString(query, sqlExpression).PrependWith(", "),
             };
-
-            IDacParameter[] parameters;
-
-			if (query.HasPaging)
-            {
-				var takeFromRowNum = (query.Paging.PageIndex * query.Paging.PageSize) + 1;
-				var takeToRowNum = (takeFromRowNum + query.Paging.PageSize) - 1;
-
-                parameters = new List<IDacParameter>(sqlExpression.WhereCriteria.Parameters)
-                {
-                    new DacParameter("@pagingFrom", takeFromRowNum),
-                    new DacParameter("@pagingTo", takeToRowNum)
-                }.ToArray();
-            }
-            else
-                parameters = sqlExpression.WhereCriteria.Parameters;
-
-            return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
         }
 
-		protected override DbQuery CreateSqlQueryReturningStructureIds(IQuery query)
+        protected override IDacParameter[] GeneratePagingParameters(IQuery query, ISqlExpression sqlExpression)
         {
-			var sqlExpression = SqlExpressionBuilder.Process(query);
+            if (!query.HasPaging)
+                return new IDacParameter[0];
 
-            var formatter = new SqlQueryFormatter
+            var takeFromRowNum = (query.Paging.PageIndex * query.Paging.PageSize) + 1;
+            var takeToRowNum = (takeFromRowNum + query.Paging.PageSize) - 1;
+
+            return new[]
             {
-				MainStructureTable = query.StructureSchema.GetStructureTableName(),
-				WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
-                WhereCriteria = GenerateWhereCriteriaString(sqlExpression)
+                new DacParameter("pagingFrom", takeFromRowNum),
+                new DacParameter("pagingTo", takeToRowNum)
             };
-
-            return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), sqlExpression.WhereCriteria.Parameters);
         }
 
 		protected override string GenerateOrderByMembersString(IQuery query, ISqlExpression sqlExpression)

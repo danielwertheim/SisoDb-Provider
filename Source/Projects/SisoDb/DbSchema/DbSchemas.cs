@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using NCore.Collections;
 using PineCone.Structures.Schemas;
+using SisoDb.Dac;
 
 namespace SisoDb.DbSchema
 {
@@ -24,6 +25,22 @@ namespace SisoDb.DbSchema
         public static class SysTables
         {
             public const string IdentitiesTable = "SisoDbIdentities";
+        }
+
+        public static class Parameters
+        {
+            public const string DbNameParamPrefix = "@dbName";
+            public const string TableNameParamPrefix = "@tableName";
+            public const string EntityNameParamPrefix = "@entityName";
+
+            public static bool IsSysParam(IDacParameter param)
+            {
+                const StringComparison c = StringComparison.OrdinalIgnoreCase;
+
+                return param.Name.StartsWith(DbNameParamPrefix, c)
+                    || param.Name.StartsWith(TableNameParamPrefix, c)
+                    || param.Name.StartsWith(EntityNameParamPrefix, c);
+            }
         }
 
         public static string GetStructureTableName(this IStructureSchema structureSchema)

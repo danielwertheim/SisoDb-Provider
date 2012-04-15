@@ -6,7 +6,6 @@ using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Dac.Profiling;
 using SisoDb.DbSchema;
 
 namespace SisoDb.Sql2008.Dac
@@ -15,14 +14,9 @@ namespace SisoDb.Sql2008.Dac
     {
 		private const int MaxBatchedIdsSize = 100;
 
-        public Sql2008DbClient(ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(connectionInfo, connection, transaction, connectionManager, sqlStatements)
+        public Sql2008DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
-        }
-
-        public override IDbBulkCopy GetBulkCopy()
-        {
-            return new Sql2008DbBulkCopy(Connection.ToSqlConnection(), Transaction.ToSqlTransaction());
         }
 
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)

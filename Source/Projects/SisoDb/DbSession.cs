@@ -11,6 +11,7 @@ using SisoDb.Caching;
 using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Querying;
+using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 
 namespace SisoDb
@@ -20,6 +21,7 @@ namespace SisoDb
     {
         private readonly ISisoDatabase _db;
         protected readonly IDbQueryGenerator QueryGenerator;
+        protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
         protected ITransactionalDbClient TransactionalDbClient;
         protected IDbClient NonTransactionalDbClient;
@@ -39,7 +41,7 @@ namespace SisoDb
         {
             get { return this; }
         }
-        
+
         protected DbSession(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
@@ -47,6 +49,7 @@ namespace SisoDb
             _db = db;
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
+            SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
 
             NonTransactionalDbClient = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo);
             TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
@@ -147,35 +150,113 @@ namespace SisoDb
             });
         }
 
+        void IAdvanced.NonQuery(string sql, params IDacParameter[] parameters)
+        {
+            Try(() =>
+            {
+                Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
+                TransactionalDbClient.ExecuteNonQuery(sql, parameters);
+            });
+        }
+
+        void IAdvanced.UpsertNamedQuery<T>(string name, Action<IQueryBuilder<T>> spec)
+        {
+            Try(() =>
+            {
+                Ensure.That(name, "name").IsNotNullOrWhiteSpace();
+                Ensure.That(spec, "spec").IsNotNull();
+
+                var generator = Db.ProviderFactory.GetNamedQueryGenerator<T>(Db.StructureSchemas);
+                TransactionalDbClient.UpsertSp(name, generator.Generate(name, spec));
+            });
+        }
+
         IEnumerable<T> IAdvanced.NamedQuery<T>(INamedQuery query)
+        {
+            return Try(() => OnNamedQuery<T>(query));
+        }
+
+        IEnumerable<T> IAdvanced.NamedQuery<T>(string name, Expression<Func<T, bool>> predicate)
         {
             return Try(() =>
             {
-                Ensure.That(query, "query").IsNotNull();
+                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
+                queryBuilder.Where(predicate);
+                var query = queryBuilder.Build();
+                var sqlExpression = SqlExpressionBuilder.Process(query);
+                
+                var namedQuery = new NamedQuery(name);
+                namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
 
-                OnUpsertStructureSchema<T>();
-
-                var sourceData = TransactionalDbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray());
-
-                return Db.Serializer.DeserializeMany<T>(sourceData.ToArray());
+                return OnNamedQuery<T>(namedQuery);
             });
+        }
+
+        protected virtual IEnumerable<T> OnNamedQuery<T>(INamedQuery query) where T : class
+        {
+            Ensure.That(query, "query").IsNotNull();
+
+            OnUpsertStructureSchema<T>();
+
+            var sourceData = TransactionalDbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray());
+
+            return Db.Serializer.DeserializeMany<T>(sourceData.ToArray());
         }
 
         IEnumerable<TOut> IAdvanced.NamedQueryAs<TContract, TOut>(INamedQuery query)
         {
+            return Try(() => OnNamedQueryAs<TContract, TOut>(query));
+        }
+
+        IEnumerable<TOut> IAdvanced.NamedQueryAs<TContract, TOut>(string name, Expression<Func<TContract, bool>> predicate)
+        {
             return Try(() =>
             {
-                Ensure.That(query, "query").IsNotNull();
+                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<TContract>(Db.StructureSchemas);
+                queryBuilder.Where(predicate);
+                var query = queryBuilder.Build();
+                var sqlExpression = SqlExpressionBuilder.Process(query);
 
-                OnUpsertStructureSchema<TContract>();
+                var namedQuery = new NamedQuery(name);
+                namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
 
-                var sourceData = TransactionalDbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray());
-
-                return Db.Serializer.DeserializeMany<TOut>(sourceData.ToArray());
+                return OnNamedQueryAs<TContract, TOut>(namedQuery);
             });
         }
 
+        protected virtual IEnumerable<TOut> OnNamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class 
+        {
+            Ensure.That(query, "query").IsNotNull();
+
+            OnUpsertStructureSchema<TContract>();
+
+            var sourceData = TransactionalDbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray());
+
+            return Db.Serializer.DeserializeMany<TOut>(sourceData.ToArray());
+        }
+
         IEnumerable<string> IAdvanced.NamedQueryAsJson<T>(INamedQuery query)
+        {
+            return Try(() => OnNamedQueryAsJson<T>(query));
+        }
+
+        IEnumerable<string> IAdvanced.NamedQueryAsJson<T>(string name, Expression<Func<T, bool>> predicate)
+        {
+            return Try(() =>
+            {
+                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
+                queryBuilder.Where(predicate);
+                var query = queryBuilder.Build();
+                var sqlExpression = SqlExpressionBuilder.Process(query);
+
+                var namedQuery = new NamedQuery(name);
+                namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
+
+                return OnNamedQueryAsJson<T>(namedQuery);
+            });
+        }
+
+        protected virtual IEnumerable<string> OnNamedQueryAsJson<T>(INamedQuery query) where T : class
         {
             return Try(() =>
             {

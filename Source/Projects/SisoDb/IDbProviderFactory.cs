@@ -3,6 +3,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
+using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 
 namespace SisoDb
@@ -15,9 +16,11 @@ namespace SisoDb
     {
         StorageProviders ProviderType { get; }
 
-	    IDbSettings GetSettings();
-
         IConnectionManager ConnectionManager { get; set; }
+
+	    IAdoDriver GetAdoDriver();
+
+	    IDbSettings GetSettings();
 
 	    ISqlStatements GetSqlStatements();
 
@@ -33,10 +36,14 @@ namespace SisoDb
 
     	IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action);
 
-		IDbQueryGenerator GetDbQueryGenerator();
-
-	    IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas);
+		IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas);
 
         IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class;
+
+	    ISqlExpressionBuilder GetSqlExpressionBuilder();
+
+        IDbQueryGenerator GetDbQueryGenerator();
+
+        INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class;
     }
 }

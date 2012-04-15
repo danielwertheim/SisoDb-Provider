@@ -3,15 +3,16 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
+using SisoDb.Dac;
 using SisoDb.Resources;
 
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4ConnectionManager : ConnectionManagerBase
+    public class SqlCe4ConnectionManager : ConnectionManager
     {
         private readonly ConcurrentDictionary<string, IDbConnection> _warmupConnections;
 
-        public SqlCe4ConnectionManager()
+        public SqlCe4ConnectionManager(IAdoDriver driver) : base(driver)
         {
             _warmupConnections = new ConcurrentDictionary<string, IDbConnection>();
 
@@ -83,11 +84,6 @@ namespace SisoDb.SqlCe4
                 cn.Close();
                 cn.Dispose();
             }
-        }
-
-        protected override IDbConnection CreateConnection(string connectionString)
-        {
-            return new SqlCeConnection(connectionString);
         }
     }
 }

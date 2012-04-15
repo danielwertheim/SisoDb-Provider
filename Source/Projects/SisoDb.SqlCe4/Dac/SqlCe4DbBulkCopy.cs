@@ -4,23 +4,35 @@ using System.Data;
 using System.Data.SqlServerCe;
 using EnsureThat;
 using SisoDb.Dac;
+using SisoDb.SqlCe4.Dac.Profiling;
 
 namespace SisoDb.SqlCe4.Dac
 {
     public class SqlCe4DbBulkCopy : IDbBulkCopy
     {
-    	private readonly SqlCeConnection _connection;
-        private readonly SqlCeTransaction _transaction;
-        private readonly Dictionary<string, string> _columnMappings; 
+    	private SqlCeConnection _connection;
+        private SqlCeTransaction _transaction;
+        private Dictionary<string, string> _columnMappings; 
 
-        public SqlCe4DbBulkCopy(SqlCeConnection connection, SqlCeTransaction transaction)
+        public SqlCe4DbBulkCopy(IDbClient dbClient)
         {
-        	Ensure.That(connection, "connection").IsNotNull();
-            Ensure.That(transaction, "transaction").IsNotNull();
+            Ensure.That(dbClient, "dbClient").IsNotNull();
 
-        	_connection = connection;
-            _transaction = transaction;
+            Initialize(dbClient.Connection);
+        }
+
+        public SqlCe4DbBulkCopy(ITransactionalDbClient dbClient)
+        {
+            Ensure.That(dbClient, "dbClient").IsNotNull();
+
+            Initialize(dbClient.Connection, dbClient.Transaction);
+        }
+
+        private void Initialize(IDbConnection connection, IDbTransaction transaction = null)
+        {
             _columnMappings = new Dictionary<string, string>();
+            _connection = connection.ToSqlCeConnection();
+            _transaction = transaction.ToSqlCeTransaction();
         }
 
     	public void Dispose()
@@ -43,8 +55,10 @@ namespace SisoDb.SqlCe4.Dac
 
 			using(var cmd = _connection.CreateCommand())
 			{
-			    cmd.Transaction = _transaction;
-				cmd.CommandText = DestinationTableName;
+                if(_transaction != null)
+			        cmd.Transaction = _transaction;
+				
+                cmd.CommandText = DestinationTableName;
 				cmd.CommandType = CommandType.TableDirect;
 				using (var rsIn = cmd.ExecuteResultSet(ResultSetOptions.Updatable))
 				{

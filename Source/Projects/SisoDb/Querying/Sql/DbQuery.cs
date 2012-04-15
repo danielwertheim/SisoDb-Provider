@@ -7,8 +7,15 @@ using SisoDb.Dac;
 
 namespace SisoDb.Querying.Sql
 {
+    public interface IDbQuery 
+    {
+        string Sql { get; }
+        IList<IDacParameter> Parameters { get; }
+        bool IsEmpty { get; }
+    }
+
     [Serializable]
-    public class DbQuery
+    public class DbQuery : IDbQuery
     {
         private readonly string _sql;
         private readonly ReadOnlyCollection<IDacParameter> _parameters;
@@ -46,7 +53,7 @@ namespace SisoDb.Querying.Sql
             _parameters = new ReadOnlyCollection<IDacParameter>(new List<IDacParameter>());
         }
 
-        public static DbQuery Empty()
+        public static IDbQuery Empty()
         {
             return new DbQuery();
         }

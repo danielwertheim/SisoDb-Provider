@@ -73,6 +73,10 @@
     <Compile Include="Caching\CacheProviderExtensions.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
+    <Compile Include="Dac\AdoDriver.cs" />
+    <Compile Include="Dac\DbBulkCopy.cs" />
+    <Compile Include="Dac\DbServerClient.cs" />
+    <Compile Include="Dac\IAdoDriver.cs" />
     <Compile Include="Dac\Profiling\ConnectionExtensions.cs" />
     <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
@@ -81,9 +85,13 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="DbSchema\DbDataTypeTranslator.cs" />
+    <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />
+    <Compile Include="DbSchema\INamedQueryGenerator.cs" />
     <Compile Include="DbSchema\ModelTableNames.cs" />
     <Compile Include="DbSchema\ModelTablesInfo.cs" />
     <Compile Include="DbSchema\ModelTableStatuses.cs" />
+    <Compile Include="DbSchema\NamedQueryGenerator.cs" />
     <Compile Include="DbSettings.cs" />
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
@@ -119,13 +127,14 @@
     <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="Maintenance\DbStructureSetMigrator.cs" />
+    <Compile Include="Querying\Sql\ISqlExpressionBuilder.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
-    <Compile Include="ConnectionManagerBase.cs" />
+    <Compile Include="ConnectionManager.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
@@ -176,7 +185,6 @@
     <Compile Include="DbSchema\StorageSchemaBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
-    <Compile Include="Dac\AdoNetExtensions.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
     <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
     <Compile Include="SisoDatabase.cs" />
