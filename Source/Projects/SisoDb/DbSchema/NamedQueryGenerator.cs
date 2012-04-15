@@ -57,23 +57,9 @@ namespace SisoDb.DbSchema
         {
             var body = new StringBuilder();
             body.AppendLine("set nocount on;");
-            body.AppendLine(GenerateBodyParametersString(dbQuery));
             body.Append(dbQuery.Sql);
 
             return body.ToString();
-        }
-
-        protected virtual string GenerateBodyParametersString(IDbQuery dbQuery)
-        {
-            const string paramFormat = "declare {0} as varchar({1}); set {0} = '{2}';";
-
-            return dbQuery.Parameters
-                .Where(p => p.Name.StartsWith("@mem") || p.Name.StartsWith("@inc"))
-                .Select(p => string.Format(paramFormat,
-                    p.Name,
-                    p.Value.ToString().Length,
-                    p.Value))
-                .Aggregate((current, next) => string.Concat(current, Environment.NewLine, next));
         }
     }
 }

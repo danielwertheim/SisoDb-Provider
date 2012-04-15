@@ -84,29 +84,21 @@ namespace SisoDb.Querying
 
         protected virtual IDacParameter[] GenerateParameters(IQuery query, ISqlExpression sqlExpression)
         {
-            var whereJoinParams = sqlExpression.WhereMembers.Select(wm => new DacParameter(wm.Alias, wm.MemberPath)).ToArray();
-            var sortingJoinParams = sqlExpression.SortingMembers.Select(sm => new DacParameter(sm.Alias, sm.MemberPath)).ToArray();
-            var includeJoinParams = sqlExpression.Includes.Select(im => new DacParameter(im.Alias, im.MemberPathReference)).ToArray();
+            if(!query.HasWhere && !query.HasPaging)
+                return new IDacParameter[0];
+
             var whereParams = sqlExpression.WhereCriteria.Parameters;
             var pagingParams = GeneratePagingParameters(query, sqlExpression);
 
-            var allParams = new List<IDacParameter>(whereJoinParams.Length + sortingJoinParams.Length + whereParams.Length + pagingParams.Length);
-            if(whereJoinParams.Any())
-                allParams.AddRange(whereJoinParams);
-            
-            if(sortingJoinParams.Any())
-                allParams.AddRange(sortingJoinParams);
-            
-            if(includeJoinParams.Any())
-                allParams.AddRange(includeJoinParams);
+            var allParams = new List<IDacParameter>(whereParams.Length + pagingParams.Length);
             
             if(whereParams.Any())
                 allParams.AddRange(whereParams);
             
             if(pagingParams.Any())
                 allParams.AddRange(pagingParams);
-
-            return allParams.DistinctBy(p => p.Name).ToArray();
+            
+            return allParams.ToArray();
         }
 
         protected virtual IDacParameter[] GeneratePagingParameters(IQuery query, ISqlExpression sqlExpression)
@@ -182,7 +174,7 @@ namespace SisoDb.Querying
 
             var joins = new List<string>(wheres.Count + sortings.Count);
 
-            const string joinFormat = "left join [{0}] mem{1} on mem{1}.[StructureId] = s.[StructureId] and mem{1}.[MemberPath] = @{2}";
+            const string joinFormat = "left join [{0}] mem{1} on mem{1}.[StructureId] = s.[StructureId] and mem{1}.[MemberPath] = '{2}'";
 
             if (wheres.Count > 0)
             {
@@ -190,7 +182,7 @@ namespace SisoDb.Querying
                     string.Format(joinFormat,
                     indexesTableNames.GetNameByType(where.DataType),
                     where.Index,
-                    where.Alias)));
+                    where.MemberPath)));
             }
 
             if (sortings.Count > 0)
@@ -199,7 +191,7 @@ namespace SisoDb.Querying
                     string.Format(joinFormat,
                     indexesTableNames.GetNameByType(sorting.DataType),
                     sorting.Index,
-                    sorting.Alias)));
+                    sorting.MemberPath)));
             }
 
             return string.Join(" ", joins.Distinct());
@@ -219,7 +211,7 @@ namespace SisoDb.Querying
             var structureTableName = query.StructureSchema.GetStructureTableName();
             var indexesTableNames = query.StructureSchema.GetIndexesTableNames();
 
-            const string joinFormat = "left join (select si.[StructureId], cs.[Json] [{1}Json] from [{2}] s inner join [{3}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] = @{4} left join [{5}] cs on cs.[StructureId] = si.[Value]) inc{0} on inc{0}.[StructureId] = s.[StructureId]";
+            const string joinFormat = "left join (select si.[StructureId], cs.[Json] [{1}Json] from [{2}] s inner join [{3}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] = '{4}' left join [{5}] cs on cs.[StructureId] = si.[Value]) inc{0} on inc{0}.[StructureId] = s.[StructureId]";
 
             return string.Join(" ", includes.Select(include =>
                 string.Format(joinFormat,
@@ -227,7 +219,7 @@ namespace SisoDb.Querying
                     include.ObjectReferencePath,
                     structureTableName,
                     indexesTableNames.GetNameByType(include.DataType),
-                    include.Alias,
+                    include.MemberPathReference,
                     include.TableName)));
         }
 

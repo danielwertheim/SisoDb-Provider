@@ -29,8 +29,6 @@ namespace SisoDb.DbSchema
 
         public static class Parameters
         {
-            public const string MemberParamPrefix = "@mem";
-            public const string IncludeParamPrefix = "@inc";
             public const string DbNameParamPrefix = "@dbName";
             public const string TableNameParamPrefix = "@tableName";
             public const string EntityNameParamPrefix = "@entityName";
@@ -39,9 +37,7 @@ namespace SisoDb.DbSchema
             {
                 const StringComparison c = StringComparison.OrdinalIgnoreCase;
 
-                return param.Name.StartsWith(MemberParamPrefix, c)
-                    || param.Name.StartsWith(IncludeParamPrefix, c)
-                    || param.Name.StartsWith(DbNameParamPrefix, c)
+                return param.Name.StartsWith(DbNameParamPrefix, c)
                     || param.Name.StartsWith(TableNameParamPrefix, c)
                     || param.Name.StartsWith(EntityNameParamPrefix, c);
             }

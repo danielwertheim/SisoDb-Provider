@@ -44,18 +44,6 @@ namespace SisoDb.UnitTests.DbSchema
         }
 
         [Test]
-        public void Parameters_value_of_MemberParamPrefix()
-        {
-            Assert.AreEqual("@mem", DbSchemas.Parameters.MemberParamPrefix);
-        }
-
-        [Test]
-        public void Parameters_value_of_IncludeParamPrefix()
-        {
-            Assert.AreEqual("@inc", DbSchemas.Parameters.IncludeParamPrefix);
-        }
-
-        [Test]
         public void Parameters_value_of_DbNameParamPrefix()
         {
             Assert.AreEqual("@dbName", DbSchemas.Parameters.DbNameParamPrefix);
