@@ -49,18 +49,21 @@ namespace SisoDb.Dac
             {
                 var parameter = cmd.CreateParameter();
                 parameter.ParameterName = dacParameter.Name;
+
+                OnParameterCreated(parameter, dacParameter);
+
                 parameter.Value = dacParameter.Value;
 
-                cmd.Parameters.Add(OnBeforeAddParameter(parameter, dacParameter));
+                cmd.Parameters.Add(parameter);
             }
         }
 
-        protected virtual IDbDataParameter OnBeforeAddParameter(IDbDataParameter parameter, IDacParameter dacParameter)
+        protected virtual IDbDataParameter OnParameterCreated(IDbDataParameter parameter, IDacParameter dacParameter)
         {
             if (DbSchemas.Parameters.IsSysParam(dacParameter))
             {
                 parameter.DbType = DbType.AnsiString;
-                parameter.Size = parameter.Value.ToString().Length;
+                parameter.Size = dacParameter.Value.ToString().Length;
 
                 return parameter;
             }
@@ -68,12 +71,12 @@ namespace SisoDb.Dac
             if(dacParameter.Value is string)
             {
                 parameter.DbType = DbType.String;
-                parameter.Size = (parameter.Value.ToStringOrNull() ?? " ").Length;
+                parameter.Size = (dacParameter.Value.ToStringOrNull() ?? " ").Length;
 
                 return parameter;
             }
 
-            if(dacParameter.Value is int)
+            if (dacParameter.Value is int)
             {
                 parameter.DbType = DbType.Int32;
                 return parameter;
@@ -97,7 +100,7 @@ namespace SisoDb.Dac
                 return parameter;
             }
 
-            if (dacParameter.Value is double || dacParameter.Value is decimal)
+            if (dacParameter.Value is decimal)
             {
                 parameter.DbType = DbType.Decimal;
                 return parameter;
