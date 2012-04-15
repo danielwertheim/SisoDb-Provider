@@ -2,6 +2,7 @@
 using System.Data.SqlServerCe;
 using EnsureThat;
 using SisoDb.Dac;
+using SisoDb.DbSchema;
 
 namespace SisoDb.SqlCe4.Dac
 {
@@ -16,12 +17,15 @@ namespace SisoDb.SqlCe4.Dac
 
         protected override IDbDataParameter OnParameterCreated(IDbDataParameter parameter, IDacParameter dacParameter)
         {
-            parameter = base.OnParameterCreated(parameter, dacParameter);
-
-            if(parameter.DbType == DbType.AnsiString)
+            if (DbSchemas.Parameters.IsSysParam(dacParameter))
+            {
                 parameter.DbType = DbType.String;
+                parameter.Size = dacParameter.Value.ToString().Length;
 
-            return parameter;
+                return parameter;
+            }
+
+            return base.OnParameterCreated(parameter, dacParameter);
         }
     }
 }

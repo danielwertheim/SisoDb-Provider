@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
@@ -73,42 +72,6 @@ namespace SisoDb.Dac
                 parameter.DbType = DbType.String;
                 parameter.Size = (dacParameter.Value.ToStringOrNull() ?? " ").Length;
 
-                return parameter;
-            }
-
-            if (dacParameter.Value is int)
-            {
-                parameter.DbType = DbType.Int32;
-                return parameter;
-            }
-
-            if (dacParameter.Value is long)
-            {
-                parameter.DbType = DbType.Int64;
-                return parameter;
-            }
-
-            if (dacParameter.Value is Guid)
-            {
-                parameter.DbType = DbType.Guid;
-                return parameter;
-            }
-
-            if (dacParameter.Value is DateTime)
-            {
-                parameter.DbType = DbType.DateTime;
-                return parameter;
-            }
-
-            if (dacParameter.Value is decimal)
-            {
-                parameter.DbType = DbType.Decimal;
-                return parameter;
-            }
-
-            if (dacParameter.Value is bool)
-            {
-                parameter.DbType = DbType.Boolean;
                 return parameter;
             }
 
