@@ -16,9 +16,9 @@ namespace SisoDb
     {
         private readonly object _lockObject;
         private readonly ISisoConnectionInfo _connectionInfo;
-        private IDbSettings _settings;
         private readonly IDbProviderFactory _providerFactory;
         private readonly IDbSchemaManager _dbSchemaManager;
+        private IDbSettings _settings;
         private IStructureSchemas _structureSchemas;
         private IStructureBuilders _structureBuilders;
         private IJsonSerializer _serializer;
@@ -107,13 +107,13 @@ namespace SisoDb
             _lockObject = new object();
             _connectionInfo = connectionInfo;
             _providerFactory = dbProviderFactory;
-            _dbSchemaManager = ProviderFactory.GetDbSchemaManagerFor(this);
             Settings = ProviderFactory.GetSettings();
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
             StructureBuilders = new StructureBuilders();
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
             Serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
             Maintenance = new SisoDatabaseMaintenance(this);
+            _dbSchemaManager = ProviderFactory.GetDbSchemaManagerFor(this);
         }
 
         public virtual void EnsureNewDatabase()
