@@ -116,40 +116,48 @@ namespace SisoDb
             _dbSchemaManager = ProviderFactory.GetDbSchemaManagerFor(this);
         }
 
-        public virtual void EnsureNewDatabase()
+        public virtual ISisoDatabase EnsureNewDatabase()
         {
             lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.EnsureNewDb();
             }
+
+            return this;
         }
 
-        public virtual void CreateIfNotExists()
+        public virtual ISisoDatabase CreateIfNotExists()
         {
             lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.CreateDbIfItDoesNotExist();
             }
+
+            return this;
         }
 
-        public virtual void InitializeExisting()
+        public virtual ISisoDatabase InitializeExisting()
         {
             lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.InitializeExistingDb();
             }
+
+            return this;
         }
 
-        public virtual void DeleteIfExists()
+        public virtual ISisoDatabase DeleteIfExists()
         {
             lock (LockObject)
             {
                 OnClearCache();
                 ServerClient.DropDbIfItExists();
             }
+
+            return this;
         }
 
         public virtual bool Exists()
@@ -160,19 +168,23 @@ namespace SisoDb
             }
         }
 
-        public virtual void DropStructureSet<T>() where T : class
+        public virtual ISisoDatabase DropStructureSet<T>() where T : class
         {
             DropStructureSet(TypeFor<T>.Type);
+
+            return this;
         }
 
-        public virtual void DropStructureSet(Type type)
+        public virtual ISisoDatabase DropStructureSet(Type type)
         {
             Ensure.That(type, "type").IsNotNull();
 
             DropStructureSets(new[] { type });
+
+            return this;
         }
 
-        public virtual void DropStructureSets(Type[] types)
+        public virtual ISisoDatabase DropStructureSets(Type[] types)
         {
             Ensure.That(types, "types").HasItems();
 
@@ -192,14 +204,18 @@ namespace SisoDb
                     }
                 }
             }
+
+            return this;
         }
 
-        public virtual void UpsertStructureSet<T>() where T : class
+        public virtual ISisoDatabase UpsertStructureSet<T>() where T : class
         {
             UpsertStructureSet(TypeFor<T>.Type);
+
+            return this;
         }
 
-        public virtual void UpsertStructureSet(Type type)
+        public virtual ISisoDatabase UpsertStructureSet(Type type)
         {
             Ensure.That(type, "type").IsNotNull();
 
@@ -214,6 +230,8 @@ namespace SisoDb
                     SchemaManager.UpsertStructureSet(structureSchema, dbClient);
                 }
             }
+
+            return this;
         }
 
         public virtual ISession BeginSession()

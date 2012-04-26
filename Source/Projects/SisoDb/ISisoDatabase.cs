@@ -81,22 +81,22 @@ namespace SisoDb
         /// <summary>
         /// Ensures that a new fresh database will exists. Drops any existing database.
         /// </summary>
-        void EnsureNewDatabase();
+        ISisoDatabase EnsureNewDatabase();
 
         /// <summary>
         /// Creates and initializes a new database if one does not exist.
         /// </summary>
-        void CreateIfNotExists();
+        ISisoDatabase CreateIfNotExists();
 
         /// <summary>
         /// Initializes an existing database by creating Siso-system tables. 
         /// </summary>
-        void InitializeExisting();
+        ISisoDatabase InitializeExisting();
 
         /// <summary>
         /// Deletes the databse if it exists.
         /// </summary>
-        void DeleteIfExists();
+        ISisoDatabase DeleteIfExists();
 
         /// <summary>
         /// Checks if the database exists.
@@ -109,20 +109,20 @@ namespace SisoDb
         /// the structure type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        void DropStructureSet<T>() where T : class;
+        ISisoDatabase DropStructureSet<T>() where T : class;
 
         /// <summary>
         /// Drops the structure set, meaning all tables associated with
         /// the structure type.
         /// </summary>
         /// <param name="type"></param>
-        void DropStructureSet(Type type);
+        ISisoDatabase DropStructureSet(Type type);
 
         /// <summary>
         /// Drops ALL structure sets for sent <paramref name="types"/>.
         /// </summary>
         /// <param name="types"></param>
-        void DropStructureSets(Type[] types);
+        ISisoDatabase DropStructureSets(Type[] types);
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
@@ -132,14 +132,14 @@ namespace SisoDb
         /// This is normally something you do not need to do.
         /// This is done automatically.</remarks>
         /// <typeparam name="T"></typeparam>
-        void UpsertStructureSet<T>() where T : class;
+        ISisoDatabase UpsertStructureSet<T>() where T : class;
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
         /// the structure type will be created.
         /// </summary>
         /// <param name="type"></param>
-        void UpsertStructureSet(Type type);
+        ISisoDatabase UpsertStructureSet(Type type);
 
         /// <summary>
 		/// Creates an <see cref="ISession"/>, used for inserts, updates, deletes and searching.
