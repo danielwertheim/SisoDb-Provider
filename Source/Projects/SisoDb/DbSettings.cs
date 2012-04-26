@@ -29,17 +29,19 @@ namespace SisoDb
         }
 
         public bool SynchronizeSchemaChanges { get; set; }
+        public bool AllowUpsertsOfSchemas { get; set; }
 
-        protected DbSettings(int maxInsertManyBatchSize, int maxUpdateManyBatchSize, bool synchronizeSchemaChanges)
+        protected DbSettings()
         {
-            MaxInsertManyBatchSize = maxInsertManyBatchSize;
-            MaxUpdateManyBatchSize = maxUpdateManyBatchSize;
-            SynchronizeSchemaChanges = synchronizeSchemaChanges;
+            MaxInsertManyBatchSize = 500;
+            MaxUpdateManyBatchSize = 500;
+            SynchronizeSchemaChanges = true;
+            AllowUpsertsOfSchemas = true;
         }
 
         public static IDbSettings CreateDefault()
         {
-            return new DbSettings(500, 500, true);
+            return new DbSettings();
         }
 
         public static IDbSettings Create(Action<IDbSettings> initializer)

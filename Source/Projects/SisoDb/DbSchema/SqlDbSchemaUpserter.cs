@@ -31,17 +31,20 @@ namespace SisoDb.DbSchema
 
 		public virtual void Upsert(IStructureSchema structureSchema, IDbClient dbClient)
 		{
-            if(!Db.Settings.SynchronizeSchemaChanges)
+            if(!Db.Settings.AllowUpsertsOfSchemas)
                 return;
 
 		    var modelInfo = dbClient.GetModelTablesInfo(structureSchema);
 
-            IndexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
+            if (Db.Settings.SynchronizeSchemaChanges)
+            {
+                IndexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
 
-            if (modelInfo.Statuses.UniquesTableExists)
-                UniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
+                if (modelInfo.Statuses.UniquesTableExists)
+                    UniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
+            }
 
-			if (modelInfo.Statuses.AllExists)
+		    if (modelInfo.Statuses.AllExists)
 				return;
 
 			foreach (var sql in GenerateSql(structureSchema, modelInfo))
