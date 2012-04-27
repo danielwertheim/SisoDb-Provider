@@ -457,12 +457,12 @@ namespace SisoDb
             return TransactionalDbClient.RowCountByQuery(structureSchema, whereSql);
         }
 
-        bool IQueryEngine.Exists<T>(object id)
+        public virtual bool Exists<T>(object id) where T : class 
         {
             return Try(() => OnExists(TypeFor<T>.Type, id));
         }
 
-        bool IQueryEngine.Exists(Type structureType, object id)
+        public virtual bool Exists(Type structureType, object id)
         {
             return Try(() => OnExists(structureType, id));
         }

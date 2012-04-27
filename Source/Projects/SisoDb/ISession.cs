@@ -51,6 +51,22 @@ namespace SisoDb
         /// <remarks>The query is defered and is executed when you start yield the result.</remarks>
         ISisoQueryable<T> Query<T>() where T : class;
 
+        /// <summary>
+        /// Returns (true) if there is a structure matching the sent <paramref name="id"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+	    bool Exists<T>(object id) where T : class;
+
+        /// <summary>
+        /// Returns (true) if there is a structure matching the sent <paramref name="id"/>.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+	    bool Exists(Type structureType, object id);
+
 		/// <summary>
 		/// Returns one single structure identified
 		/// by an id.
