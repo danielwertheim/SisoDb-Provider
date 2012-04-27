@@ -145,7 +145,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="item"></param>
-        void Insert<T>(T item) where T : class;
+        ISession Insert<T>(T item) where T : class;
 
         /// <summary>
         /// Inserts a single structure using the <typeparamref name="T"/> as
@@ -155,7 +155,7 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
-	    void InsertAs<T>(object item) where T : class;
+        ISession InsertAs<T>(object item) where T : class;
 
         /// <summary>
         /// Inserts Json strcutures using the <typeparamref name="T"/> as
@@ -186,7 +186,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="items"></param>
-        void InsertMany<T>(IEnumerable<T> items) where T : class;
+        ISession InsertMany<T>(IEnumerable<T> items) where T : class;
 
 	    /// <summary>
 	    /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
@@ -218,7 +218,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="item"></param>
-        void Update<T>(T item) where T : class;
+        ISession Update<T>(T item) where T : class;
 
         /// <summary>
         /// Updates the sent structure. If it
@@ -228,7 +228,7 @@ namespace SisoDb
         /// <param name="structureType">
         /// Structure type, used as a contract defining the scheme.</param>
         /// <param name="item"></param>
-        void Update(Type structureType, object item);
+        ISession Update(Type structureType, object item);
 
 	    /// <summary>
 	    /// Uses sent id to locate a structure and then calls sent <paramref name="modifier"/>
@@ -239,7 +239,7 @@ namespace SisoDb
 	    /// <param name="id"></param>
 	    /// <param name="modifier"></param>
         /// <param name="proceed">True to continue with update;False to abort</param>
-        void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
+        ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
 
         /// <summary>
         /// Deletes structure by id.
@@ -247,7 +247,7 @@ namespace SisoDb
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
-        void DeleteById<T>(object id) where T : class;
+        ISession DeleteById<T>(object id) where T : class;
 
         /// <summary>
         /// Deletes structure by id.
@@ -255,7 +255,7 @@ namespace SisoDb
         /// <param name="structureType">
         /// Structure type, used as a contract defining the scheme.</param>
         /// <param name="id"></param>
-        void DeleteById(Type structureType, object id);
+        ISession DeleteById(Type structureType, object id);
 
         /// <summary>
         /// Deletes all structures for the defined structure <typeparamref name="T"/>
@@ -263,7 +263,7 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
-        void DeleteByIds<T>(params object[] ids) where T : class;
+        ISession DeleteByIds<T>(params object[] ids) where T : class;
 
 	    /// <summary>
 	    /// Deletes all structures for the defined structure <paramref name="structureType"/>
@@ -272,6 +272,6 @@ namespace SisoDb
 	    /// <param name="structureType">
 	    /// Structure type, used as a contract defining the scheme.</param>
 	    /// <param name="ids">Ids used for matching the structures to delete.</param>
-	    void DeleteByIds(Type structureType, params object[] ids);
+        ISession DeleteByIds(Type structureType, params object[] ids);
 	}
 }

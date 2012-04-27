@@ -753,7 +753,7 @@ namespace SisoDb
             return Db.Serializer.SerializeMany(items).ToArray();
         }
 
-        public virtual void Insert<T>(T item) where T : class
+        public virtual ISession Insert<T>(T item) where T : class
         {
             Try(() =>
             {
@@ -767,9 +767,11 @@ namespace SisoDb
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
             });
+
+            return this;
         }
 
-        public virtual void InsertAs<T>(object item) where T : class
+        public virtual ISession InsertAs<T>(object item) where T : class
         {
             Try(() =>
             {
@@ -786,6 +788,8 @@ namespace SisoDb
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
+
+            return this;
         }
 
         public virtual string InsertJson<T>(string json) where T : class
@@ -815,7 +819,7 @@ namespace SisoDb
             return structure.Data;
         }
 
-        public virtual void InsertMany<T>(IEnumerable<T> items) where T : class
+        public virtual ISession InsertMany<T>(IEnumerable<T> items) where T : class
         {
             Try(() =>
             {
@@ -833,6 +837,8 @@ namespace SisoDb
                 foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
             });
+
+            return this;
         }
 
         public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
@@ -867,14 +873,18 @@ namespace SisoDb
             }
         }
 
-        public virtual void Update<T>(T item) where T : class
+        public virtual ISession Update<T>(T item) where T : class
         {
             Try(() => OnUpdate(TypeFor<T>.Type, item));
+
+            return this;
         }
 
-        public virtual void Update(Type structureType, object item)
+        public virtual ISession Update(Type structureType, object item)
         {
             Try(() => OnUpdate(structureType, item));
+
+            return this;
         }
 
         protected virtual void OnUpdate(Type structureType, object item)
@@ -905,7 +915,7 @@ namespace SisoDb
             bulkInserter.Replace(structureSchema, updatedStructure);
         }
 
-        public virtual void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
+        public virtual ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
         {
             Try(() =>
             {
@@ -939,6 +949,8 @@ namespace SisoDb
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 bulkInserter.Replace(structureSchema, updatedStructure);
             });
+
+            return this;
         }
 
         protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
@@ -978,14 +990,18 @@ namespace SisoDb
             throw new SisoDbException(ExceptionMessages.ConcurrencyTokenIsOfWrongType);
         }
 
-        public virtual void DeleteById<T>(object id) where T : class
+        public virtual ISession DeleteById<T>(object id) where T : class
         {
             Try(() => OnDeleteById(TypeFor<T>.Type, id));
+
+            return this;
         }
 
-        public virtual void DeleteById(Type structureType, object id)
+        public virtual ISession DeleteById(Type structureType, object id)
         {
             Try(() => OnDeleteById(structureType, id));
+
+            return this;
         }
 
         protected virtual void OnDeleteById(Type structureType, object id)
@@ -1001,14 +1017,18 @@ namespace SisoDb
             TransactionalDbClient.DeleteById(structureId, structureSchema);
         }
 
-        public virtual void DeleteByIds<T>(params object[] ids) where T : class
+        public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
         {
             Try(() => OnDeleteByIds(TypeFor<T>.Type, ids));
+
+            return this;
         }
 
-        public virtual void DeleteByIds(Type structureType, params object[] ids)
+        public virtual ISession DeleteByIds(Type structureType, params object[] ids)
         {
             Try(() => OnDeleteByIds(structureType, ids));
+
+            return this;
         }
 
         protected virtual void OnDeleteByIds(Type structureType, params object[] ids)
