@@ -68,7 +68,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         protected override Expression VisitNew(NewExpression node)
         {
             var args = node.Arguments.Cast<ConstantExpression>().Select(c => c.Value).ToArray();
-            var value = node.Constructor.Invoke(args);
+            var value = node.Constructor.Invoke(args); //TODO: Fix
             var cex = Expression.Constant(value);
 
             return Visit(cex);
@@ -159,7 +159,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
             try
             {
                 var value = e.Evaluate();
-
                 var constantExpression = Expression.Constant(value);
 
                 return Visit(constantExpression);
