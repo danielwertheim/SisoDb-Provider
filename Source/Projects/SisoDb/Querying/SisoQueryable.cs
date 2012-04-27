@@ -138,7 +138,12 @@ namespace SisoDb.Querying
             return ToEnumerableOf(template).ToArray();
         }
 
-        public virtual string[] ToArrayOfJson()
+        public virtual TResult[] ToArrayOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class
+	    {
+	        return ToEnumerableOf(projection).ToArray();
+	    }
+
+	    public virtual string[] ToArrayOfJson()
         {
             return ToEnumerableOfJson().ToArray();
         }
@@ -158,6 +163,13 @@ namespace SisoDb.Querying
             Ensure.That(template, "template").IsNotNull();
 
             return QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
+        }
+
+        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class
+        {
+            Ensure.That(projection, "projection").IsNotNull();
+
+            return QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), projection.ReturnType);
         }
 
         public virtual IEnumerable<string> ToEnumerableOfJson()
@@ -180,6 +192,13 @@ namespace SisoDb.Querying
             Ensure.That(template, "template").IsNotNull();
 
             return ToEnumerableOf(template).ToList();
+        }
+
+        public virtual IList<TResult> ToListOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class
+        {
+            Ensure.That(projection, "projection").IsNotNull();
+
+            return ToEnumerableOf(projection).ToList();
         }
 
         public virtual IList<string> ToListOfJson()

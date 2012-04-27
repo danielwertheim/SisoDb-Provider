@@ -184,7 +184,7 @@ namespace SisoDb
                 queryBuilder.Where(predicate);
                 var query = queryBuilder.Build();
                 var sqlExpression = SqlExpressionBuilder.Process(query);
-                
+
                 var namedQuery = new NamedQuery(name);
                 namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
 
@@ -224,7 +224,9 @@ namespace SisoDb
             });
         }
 
-        protected virtual IEnumerable<TOut> OnNamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class 
+        protected virtual IEnumerable<TOut> OnNamedQueryAs<TContract, TOut>(INamedQuery query)
+            where TContract : class
+            where TOut : class
         {
             Ensure.That(query, "query").IsNotNull();
 
@@ -507,7 +509,7 @@ namespace SisoDb
             });
         }
 
-        IEnumerable<object> IQueryEngine.Query(Type structureType, IQuery query)
+        IEnumerable<object> IQueryEngine.Query(IQuery query, Type structureType)
         {
             return Try(() =>
             {
@@ -526,7 +528,7 @@ namespace SisoDb
                     sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
                 }
 
-                return Db.Serializer.DeserializeMany(structureType, sourceData.ToArray());
+                return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
             });
         }
 
@@ -554,24 +556,31 @@ namespace SisoDb
 
         IEnumerable<TResult> IQueryEngine.QueryAsAnonymous<T, TResult>(IQuery query, TResult template)
         {
-            return Try(() =>
+            return Try(() => OnQueryAsAnonymous<T, TResult>(query, typeof(TResult)));
+        }
+
+        IEnumerable<TResult> IQueryEngine.QueryAsAnonymous<T, TResult>(IQuery query, Type templateType)
+        {
+            return Try(() => OnQueryAsAnonymous<T, TResult>(query, templateType));
+        }
+
+        protected virtual IEnumerable<TResult> OnQueryAsAnonymous<T, TResult>(IQuery query, Type templateType) where T :class where TResult : class 
+        {
+            Ensure.That(query, "query").IsNotNull();
+
+            var structureSchema = OnUpsertStructureSchema<T>();
+
+            IEnumerable<string> sourceData;
+
+            if (query.IsEmpty)
+                sourceData = TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema);
+            else
             {
-                Ensure.That(query, "query").IsNotNull();
+                var sqlQuery = QueryGenerator.GenerateQuery(query);
+                sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
+            }
 
-                var structureSchema = OnUpsertStructureSchema<T>();
-
-                IEnumerable<string> sourceData;
-
-                if (query.IsEmpty)
-                    sourceData = TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema);
-                else
-                {
-                    var sqlQuery = QueryGenerator.GenerateQuery(query);
-                    sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-                }
-
-                return Db.Serializer.DeserializeManyAnonymous(sourceData.ToArray(), template);
-            });
+            return Db.Serializer.DeserializeManyUsingTemplate<TResult>(sourceData.ToArray(), templateType);
         }
 
         IEnumerable<string> IQueryEngine.QueryAsJson<T>(IQuery query)
@@ -579,7 +588,7 @@ namespace SisoDb
             return Try(() => OnQueryAsJson(TypeFor<T>.Type, query));
         }
 
-        IEnumerable<string> IQueryEngine.QueryAsJson(Type structuretype, IQuery query)
+        IEnumerable<string> IQueryEngine.QueryAsJson(IQuery query, Type structuretype)
         {
             return Try(() => OnQueryAsJson(structuretype, query));
         }
@@ -706,8 +715,8 @@ namespace SisoDb
                 structureSchema,
                 structureId,
                 sid => Db.Serializer.Deserialize(
-                    structureSchema.Type.Type,
-                    TransactionalDbClient.GetJsonById(sid, structureSchema)),
+                    TransactionalDbClient.GetJsonById(sid, structureSchema),
+                    structureSchema.Type.Type),
                 CacheConsumeMode);
 
             return Db.Serializer.Serialize(item);
@@ -736,7 +745,9 @@ namespace SisoDb
             var items = Db.CacheProvider.Consume(
                 structureSchema,
                 structureIds,
-                sids => Db.Serializer.DeserializeMany(structureSchema.Type.Type, TransactionalDbClient.GetJsonByIds(sids, structureSchema)).Where(s => s != null).ToArray(),
+                sids => Db.Serializer.DeserializeMany(
+                    TransactionalDbClient.GetJsonByIds(sids, structureSchema),
+                    structureSchema.Type.Type).Where(s => s != null).ToArray(),
                 CacheConsumeMode);
 
             return Db.Serializer.SerializeMany(items).ToArray();
@@ -793,7 +804,7 @@ namespace SisoDb
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
-            var item = Db.Serializer.Deserialize(structureType, json);
+            var item = Db.Serializer.Deserialize(json, structureType);
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
@@ -847,7 +858,7 @@ namespace SisoDb
                 Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(structureSchema.Type.Type, json).Batch(Db.Settings.MaxInsertManyBatchSize))
+            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(json, structureSchema.Type.Type).Batch(Db.Settings.MaxInsertManyBatchSize))
             {
                 var structures = structureBuilder.CreateStructures(structuresJsonBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
@@ -937,7 +948,7 @@ namespace SisoDb
             if (string.IsNullOrWhiteSpace(existingJson))
                 throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
 
-            var existingItem = Db.Serializer.Deserialize(structureSchema.Type.Type, existingJson);
+            var existingItem = Db.Serializer.Deserialize(existingJson, structureSchema.Type.Type);
             var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
             var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
 

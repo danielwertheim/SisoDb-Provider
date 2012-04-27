@@ -119,12 +119,12 @@ namespace SisoDb.Dynamic
 
         public virtual IEnumerable<object> ToEnumerable()
         {
-            return QueryEngine.Query(StructureType, QueryBuilder.Build());
+            return QueryEngine.Query(QueryBuilder.Build(), StructureType);
         }
 
         public virtual IEnumerable<string> ToEnumerableOfJson()
         {
-            return QueryEngine.QueryAsJson(StructureType, QueryBuilder.Build());
+            return QueryEngine.QueryAsJson(QueryBuilder.Build(), StructureType);
         }
 
         public virtual IList<object> ToList()

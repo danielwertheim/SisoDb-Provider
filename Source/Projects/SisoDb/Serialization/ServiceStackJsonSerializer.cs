@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EnsureThat;
 
 namespace SisoDb.Serialization
 {
@@ -42,29 +43,28 @@ namespace SisoDb.Serialization
             return OnDeserialize<T>(json);
         }
 
-        public virtual T DeserializeAnonymous<T>(string json) where T : class
+        public virtual object Deserialize(string json, Type structureType)
         {
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
-            TypeConfig<T>.EnableAnonymousFieldSetters = true;
-            var templateType = typeof(T);
+            Ensure.That(structureType, "structureType").IsNotNull();
 
-            return OnDeserializeAnonymous<T>(json, templateType);
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+
+            return OnDeserialize(json, structureType);
         }
 
-        public virtual T DeserializeAnonymous<T>(string json, T template) where T : class
+        public virtual TTemplate DeserializeUsingTemplate<TTemplate>(string json) where TTemplate : class
         {
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
-            TypeConfig<T>.EnableAnonymousFieldSetters = true;
-            var templateType = typeof (T);
-
-            return OnDeserializeAnonymous<T>(json, templateType);
+            return DeserializeUsingTemplate<TTemplate>(json, typeof(TTemplate));
         }
 
-        public virtual object Deserialize(Type structureType, string json)
+        public virtual TTemplate DeserializeUsingTemplate<TTemplate>(string json, Type templateType) where TTemplate : class
         {
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            Ensure.That(templateType, "templateType").IsNotNull();
 
-            return OnDeserialize(structureType, json);
+            JsConfig<Text>.DeSerializeFn = t => new Text(t);
+            TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
+
+            return OnDeserialize<TTemplate>(json, templateType);
         }
 
         public virtual IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
@@ -76,48 +76,55 @@ namespace SisoDb.Serialization
                     : OnDeserializeManyInSequential(sourceData, OnDeserialize<T>);
         }
 
-        public virtual IEnumerable<object> DeserializeMany(Type structureType, IEnumerable<string> sourceData)
+        public virtual IEnumerable<object> DeserializeMany(IEnumerable<string> sourceData, Type structureType)
         {
+            Ensure.That(structureType, "structureType").IsNotNull();
+
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
             return DeserializeManyInParallel
-                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(structureType, json))
-                    : OnDeserializeManyInSequential(sourceData, json => OnDeserialize(structureType, json));
+                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(json, structureType))
+                    : OnDeserializeManyInSequential(sourceData, json => OnDeserialize(json, structureType));
         }
 
-        public virtual IEnumerable<T> DeserializeManyAnonymous<T>(IEnumerable<string> sourceData, T template) where T : class
+        public virtual IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, TTemplate template) where TTemplate : class
         {
+            Ensure.That(template, "template").IsNotNull();
+
+            return DeserializeManyUsingTemplate<TTemplate>(sourceData, template.GetType());
+        }
+
+        public virtual IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, Type templateType) where TTemplate : class
+        {
+            Ensure.That(templateType, "templateType").IsNotNull();
+
             JsConfig<Text>.DeSerializeFn = t => new Text(t);
-            TypeConfig<T>.EnableAnonymousFieldSetters = true;
-            var templateType = template.GetType();
+            TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
 
             return DeserializeManyInParallel
-                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserializeAnonymous<T>(json, templateType))
-                    : OnDeserializeManyInSequential(sourceData, json => OnDeserializeAnonymous<T>(json, templateType));
+                    ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize<TTemplate>(json, templateType))
+                    : OnDeserializeManyInSequential(sourceData, json => OnDeserialize<TTemplate>(json, templateType));
         }
 
         protected virtual T OnDeserialize<T>(string json) where T : class
         {
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-
-            return JsonSerializer.DeserializeFromString<T>(json);
+            return string.IsNullOrWhiteSpace(json) 
+                ? null 
+                : JsonSerializer.DeserializeFromString<T>(json);
         }
 
-        protected virtual object OnDeserialize(Type structureType, string json)
+        protected virtual object OnDeserialize(string json, Type structureType)
         {
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-
-            return JsonSerializer.DeserializeFromString(json, structureType);
+            return string.IsNullOrWhiteSpace(json) 
+                ? null 
+                : JsonSerializer.DeserializeFromString(json, structureType);
         }
 
-        protected virtual T OnDeserializeAnonymous<T>(string json, Type templateType) where T : class
+        protected virtual T OnDeserialize<T>(string json, Type templateType) where T : class
         {
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-
-            return JsonSerializer.DeserializeFromString(json, templateType) as T;
+            return string.IsNullOrWhiteSpace(json)
+                ? null
+                : JsonSerializer.DeserializeFromString(json, templateType) as T;
         }
 
         protected virtual IEnumerable<T> OnDeserializeManyInSequential<T>(IEnumerable<string> sourceData, Func<string, T> deserializer) where T : class

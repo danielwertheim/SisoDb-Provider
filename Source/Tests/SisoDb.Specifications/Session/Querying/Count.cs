@@ -15,7 +15,6 @@ namespace SisoDb.Specifications.Session.Querying
             Because of = () =>
                 _itemsCount = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Count();
 
-
             It should_be_0 = () =>
                 _itemsCount.ShouldEqual(0);
 
