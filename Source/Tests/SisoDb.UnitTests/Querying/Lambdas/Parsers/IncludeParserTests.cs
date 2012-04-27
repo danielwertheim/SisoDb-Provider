@@ -36,15 +36,6 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
-        public void Parse_WhenNullExpression_DoesNotThrowNullReferenceException()
-        {
-            var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
-
-            Assert.DoesNotThrow(
-                () => new SortingParser().Parse(new[] { lambda, null }));
-        }
-
-        [Test]
         public void Parse_WhenMemberExpressionIsPassed_GeneratesExactlyOneIncludeNode()
         {
             var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
