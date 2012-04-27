@@ -17,7 +17,7 @@ namespace SisoDb.SampleApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hi. Goto the Profiling-app and open Program.cs and App.config and ensure that you are satisfied with the connection string.");
+            Console.WriteLine("Hi. Goto the Sample-app and open Program.cs and App.config and ensure that you are satisfied with the connection string.");
             Console.ReadKey();
             return;
 
@@ -30,22 +30,24 @@ namespace SisoDb.SampleApp
             //********************************************
 
             //db.EnsureNewDatabase();
+            //InsertCustomers(1, 10000, db);
 
+            //Some tweaks
+            //db.Settings.AllowUpsertsOfSchemas = false;
             //db.Settings.SynchronizeSchemaChanges = false;
 
             //To get rid of warm up in tests as it first syncs schemas etc
             //db.UpsertStructureSet<Customer>();
 
             //ProfilingInserts(db, 1000, 5);
-
-            //InsertCustomers(1, 10000, db);
             //ProfilingQueries(() => GetAllCustomers(db));
             //ProfilingQueries(() => GetAllCustomersAsJson(db));
             //ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
             //ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
             //UpsertSp(db, 500, 550);
-            //ProfilingQueries(() => GetCustomersViaSp(db, 500, 550));
+            //ProfilingQueries(() => GetCustomersViaSpExp(db, 500, 550));
+            //ProfilingQueries(() => GetCustomersViaSpRaw(db, 500, 550));
 
             //ProfilingUpdateMany(db, 500, 550);
 
@@ -163,7 +165,20 @@ namespace SisoDb.SampleApp
             }
         }
 
-        private static int GetCustomersViaSp(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        private static int GetCustomersViaSpRaw(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        {
+            using (var session = database.BeginSession())
+            {
+                var q = new NamedQuery("CustomersViaSP");
+                q.Add(new DacParameter("p0", customerNoFrom));
+                q.Add(new DacParameter("p1", customerNoTo));
+                q.Add(new DacParameter("p2", "The delivery street #544"));
+
+                return session.Advanced.NamedQuery<Customer>(q).ToArray().Length;
+            }
+        }
+        
+        private static int GetCustomersViaSpExp(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
             using (var session = database.BeginSession())
             {
@@ -173,7 +188,7 @@ namespace SisoDb.SampleApp
                     && c.DeliveryAddress.Street == "The delivery street #544").ToArray().Length;
             }
         }
-
+        
         private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
             using (var session = database.BeginSession())
