@@ -7,57 +7,60 @@ namespace SisoDb.DbSchema
 {
 	public class SqlDbSchemaUpserter : IDbSchemaUpserter
 	{
-	    private readonly ISisoDatabase _db;
-	    private readonly SqlDbStructuresSchemaBuilder _structuresDbSchemaBuilder;
-		private readonly SqlDbIndexesSchemaBuilder _indexesDbSchemaBuilder;
-		private readonly SqlDbUniquesSchemaBuilder _uniquesDbSchemaBuilder;
+	    protected readonly ISisoDatabase Db;
+	    protected readonly SqlDbStructuresSchemaBuilder StructuresDbSchemaBuilder;
+	    protected readonly SqlDbIndexesSchemaBuilder IndexesDbSchemaBuilder;
+	    protected readonly SqlDbUniquesSchemaBuilder UniquesDbSchemaBuilder;
 
-		private readonly SqlDbIndexesSchemaSynchronizer _indexesDbSchemaSynchronizer;
-		private readonly SqlDbUniquesSchemaSynchronizer _uniquesDbSchemaSynchronizer;
+	    protected readonly SqlDbIndexesSchemaSynchronizer IndexesDbSchemaSynchronizer;
+	    protected readonly SqlDbUniquesSchemaSynchronizer UniquesDbSchemaSynchronizer;
 
 		public SqlDbSchemaUpserter(ISisoDatabase db, ISqlStatements sqlStatements)
 		{
 		    Ensure.That(db, "db").IsNotNull();
 		    Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
-            _db = db;
-			_structuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(sqlStatements);
-			_indexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(sqlStatements);
-			_uniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(sqlStatements);
+            Db = db;
+			StructuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(sqlStatements);
+			IndexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(sqlStatements);
+			UniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(sqlStatements);
 
-			_indexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(sqlStatements);
-			_uniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(sqlStatements);
+			IndexesDbSchemaSynchronizer = new SqlDbIndexesSchemaSynchronizer(sqlStatements);
+			UniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(sqlStatements);
 		}
 
-		public void Upsert(IStructureSchema structureSchema, IDbClient dbClient)
+		public virtual void Upsert(IStructureSchema structureSchema, IDbClient dbClient)
 		{
+            if(!Db.Settings.AllowUpsertsOfSchemas)
+                return;
+
 		    var modelInfo = dbClient.GetModelTablesInfo(structureSchema);
 
-            if(_db.Settings.SynchronizeSchemaChanges)
+            if (Db.Settings.SynchronizeSchemaChanges)
             {
-                _indexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
+                IndexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
 
                 if (modelInfo.Statuses.UniquesTableExists)
-                    _uniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
+                    UniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
             }
 
-			if (modelInfo.Statuses.AllExists)
+		    if (modelInfo.Statuses.AllExists)
 				return;
 
 			foreach (var sql in GenerateSql(structureSchema, modelInfo))
                 dbClient.ExecuteNonQuery(sql, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name));
 		}
 
-        private IEnumerable<string> GenerateSql(IStructureSchema structureSchema, ModelTablesInfo modelInfo)
+	    protected virtual IEnumerable<string> GenerateSql(IStructureSchema structureSchema, ModelTablesInfo modelInfo)
 		{
 			if (!modelInfo.Statuses.StructureTableExists)
-				yield return _structuresDbSchemaBuilder.GenerateSql(structureSchema);
+				yield return StructuresDbSchemaBuilder.GenerateSql(structureSchema);
 
             if (!modelInfo.Statuses.UniquesTableExists)
-				yield return _uniquesDbSchemaBuilder.GenerateSql(structureSchema);
+				yield return UniquesDbSchemaBuilder.GenerateSql(structureSchema);
 
             if (!modelInfo.Statuses.IndexesTableStatuses.AllExists)
-				foreach (var sql in _indexesDbSchemaBuilder.GenerateSql(structureSchema, modelInfo.Names.IndexesTableNames, modelInfo.Statuses.IndexesTableStatuses))
+				foreach (var sql in IndexesDbSchemaBuilder.GenerateSql(structureSchema, modelInfo.Names.IndexesTableNames, modelInfo.Statuses.IndexesTableStatuses))
 					yield return sql;
 		}
 	}

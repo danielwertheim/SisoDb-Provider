@@ -197,7 +197,15 @@ namespace SisoDb.Querying
             }
         }
 
-		public virtual string[] ToArrayOfJson()
+        public virtual TResult[] ToArrayOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class
+        {
+            using (var session = SessionFactory.Invoke())
+            {
+                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), projection.ReturnType).ToArray();
+            }
+        }
+
+        public virtual string[] ToArrayOfJson()
 		{
 			using (var session = SessionFactory.Invoke())
 			{
@@ -220,7 +228,12 @@ namespace SisoDb.Querying
 	        throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 	    }
 
-	    public virtual IEnumerable<string> ToEnumerableOfJson()
+        public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class
+        {
+            throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
+        }
+
+        public virtual IEnumerable<string> ToEnumerableOfJson()
 		{
 			throw new SisoDbException(ExceptionMessages.ReadOnceQueryable_YieldingNotSupported);
 		}
@@ -249,7 +262,15 @@ namespace SisoDb.Querying
             }
         }
 
-	    public virtual IList<string> ToListOfJson()
+        public virtual IList<TResult> ToListOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class
+        {
+            using (var session = SessionFactory.Invoke())
+            {
+                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), projection.ReturnType).ToList();
+            }
+        }
+
+        public virtual IList<string> ToListOfJson()
 		{
 			using (var session = SessionFactory.Invoke())
 			{

@@ -184,7 +184,7 @@ namespace SisoDb
                 queryBuilder.Where(predicate);
                 var query = queryBuilder.Build();
                 var sqlExpression = SqlExpressionBuilder.Process(query);
-                
+
                 var namedQuery = new NamedQuery(name);
                 namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
 
@@ -224,7 +224,9 @@ namespace SisoDb
             });
         }
 
-        protected virtual IEnumerable<TOut> OnNamedQueryAs<TContract, TOut>(INamedQuery query) where TContract : class where TOut : class 
+        protected virtual IEnumerable<TOut> OnNamedQueryAs<TContract, TOut>(INamedQuery query)
+            where TContract : class
+            where TOut : class
         {
             Ensure.That(query, "query").IsNotNull();
 
@@ -455,12 +457,12 @@ namespace SisoDb
             return TransactionalDbClient.RowCountByQuery(structureSchema, whereSql);
         }
 
-        bool IQueryEngine.Exists<T>(object id)
+        public virtual bool Exists<T>(object id) where T : class 
         {
             return Try(() => OnExists(TypeFor<T>.Type, id));
         }
 
-        bool IQueryEngine.Exists(Type structureType, object id)
+        public virtual bool Exists(Type structureType, object id)
         {
             return Try(() => OnExists(structureType, id));
         }
@@ -507,7 +509,7 @@ namespace SisoDb
             });
         }
 
-        IEnumerable<object> IQueryEngine.Query(Type structureType, IQuery query)
+        IEnumerable<object> IQueryEngine.Query(IQuery query, Type structureType)
         {
             return Try(() =>
             {
@@ -526,7 +528,7 @@ namespace SisoDb
                     sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
                 }
 
-                return Db.Serializer.DeserializeMany(structureType, sourceData.ToArray());
+                return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
             });
         }
 
@@ -554,24 +556,31 @@ namespace SisoDb
 
         IEnumerable<TResult> IQueryEngine.QueryAsAnonymous<T, TResult>(IQuery query, TResult template)
         {
-            return Try(() =>
+            return Try(() => OnQueryAsAnonymous<T, TResult>(query, typeof(TResult)));
+        }
+
+        IEnumerable<TResult> IQueryEngine.QueryAsAnonymous<T, TResult>(IQuery query, Type templateType)
+        {
+            return Try(() => OnQueryAsAnonymous<T, TResult>(query, templateType));
+        }
+
+        protected virtual IEnumerable<TResult> OnQueryAsAnonymous<T, TResult>(IQuery query, Type templateType) where T :class where TResult : class 
+        {
+            Ensure.That(query, "query").IsNotNull();
+
+            var structureSchema = OnUpsertStructureSchema<T>();
+
+            IEnumerable<string> sourceData;
+
+            if (query.IsEmpty)
+                sourceData = TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema);
+            else
             {
-                Ensure.That(query, "query").IsNotNull();
+                var sqlQuery = QueryGenerator.GenerateQuery(query);
+                sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
+            }
 
-                var structureSchema = OnUpsertStructureSchema<T>();
-
-                IEnumerable<string> sourceData;
-
-                if (query.IsEmpty)
-                    sourceData = TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema);
-                else
-                {
-                    var sqlQuery = QueryGenerator.GenerateQuery(query);
-                    sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-                }
-
-                return Db.Serializer.DeserializeManyAnonymous(sourceData.ToArray(), template);
-            });
+            return Db.Serializer.DeserializeManyUsingTemplate<TResult>(sourceData.ToArray(), templateType);
         }
 
         IEnumerable<string> IQueryEngine.QueryAsJson<T>(IQuery query)
@@ -579,7 +588,7 @@ namespace SisoDb
             return Try(() => OnQueryAsJson(TypeFor<T>.Type, query));
         }
 
-        IEnumerable<string> IQueryEngine.QueryAsJson(Type structuretype, IQuery query)
+        IEnumerable<string> IQueryEngine.QueryAsJson(IQuery query, Type structuretype)
         {
             return Try(() => OnQueryAsJson(structuretype, query));
         }
@@ -706,8 +715,8 @@ namespace SisoDb
                 structureSchema,
                 structureId,
                 sid => Db.Serializer.Deserialize(
-                    structureSchema.Type.Type,
-                    TransactionalDbClient.GetJsonById(sid, structureSchema)),
+                    TransactionalDbClient.GetJsonById(sid, structureSchema),
+                    structureSchema.Type.Type),
                 CacheConsumeMode);
 
             return Db.Serializer.Serialize(item);
@@ -736,13 +745,15 @@ namespace SisoDb
             var items = Db.CacheProvider.Consume(
                 structureSchema,
                 structureIds,
-                sids => Db.Serializer.DeserializeMany(structureSchema.Type.Type, TransactionalDbClient.GetJsonByIds(sids, structureSchema)).Where(s => s != null).ToArray(),
+                sids => Db.Serializer.DeserializeMany(
+                    TransactionalDbClient.GetJsonByIds(sids, structureSchema),
+                    structureSchema.Type.Type).Where(s => s != null).ToArray(),
                 CacheConsumeMode);
 
             return Db.Serializer.SerializeMany(items).ToArray();
         }
 
-        public virtual void Insert<T>(T item) where T : class
+        public virtual ISession Insert<T>(T item) where T : class
         {
             Try(() =>
             {
@@ -756,9 +767,11 @@ namespace SisoDb
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
             });
+
+            return this;
         }
 
-        public virtual void InsertAs<T>(object item) where T : class
+        public virtual ISession InsertAs<T>(object item) where T : class
         {
             Try(() =>
             {
@@ -775,6 +788,8 @@ namespace SisoDb
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
+
+            return this;
         }
 
         public virtual string InsertJson<T>(string json) where T : class
@@ -793,7 +808,7 @@ namespace SisoDb
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
-            var item = Db.Serializer.Deserialize(structureType, json);
+            var item = Db.Serializer.Deserialize(json, structureType);
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
@@ -804,7 +819,7 @@ namespace SisoDb
             return structure.Data;
         }
 
-        public virtual void InsertMany<T>(IEnumerable<T> items) where T : class
+        public virtual ISession InsertMany<T>(IEnumerable<T> items) where T : class
         {
             Try(() =>
             {
@@ -822,6 +837,8 @@ namespace SisoDb
                 foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
             });
+
+            return this;
         }
 
         public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
@@ -847,7 +864,7 @@ namespace SisoDb
                 Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(structureSchema.Type.Type, json).Batch(Db.Settings.MaxInsertManyBatchSize))
+            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(json, structureSchema.Type.Type).Batch(Db.Settings.MaxInsertManyBatchSize))
             {
                 var structures = structureBuilder.CreateStructures(structuresJsonBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
@@ -856,14 +873,18 @@ namespace SisoDb
             }
         }
 
-        public virtual void Update<T>(T item) where T : class
+        public virtual ISession Update<T>(T item) where T : class
         {
             Try(() => OnUpdate(TypeFor<T>.Type, item));
+
+            return this;
         }
 
-        public virtual void Update(Type structureType, object item)
+        public virtual ISession Update(Type structureType, object item)
         {
             Try(() => OnUpdate(structureType, item));
+
+            return this;
         }
 
         protected virtual void OnUpdate(Type structureType, object item)
@@ -894,7 +915,7 @@ namespace SisoDb
             bulkInserter.Replace(structureSchema, updatedStructure);
         }
 
-        public virtual void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
+        public virtual ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
         {
             Try(() =>
             {
@@ -928,6 +949,8 @@ namespace SisoDb
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 bulkInserter.Replace(structureSchema, updatedStructure);
             });
+
+            return this;
         }
 
         protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
@@ -937,7 +960,7 @@ namespace SisoDb
             if (string.IsNullOrWhiteSpace(existingJson))
                 throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
 
-            var existingItem = Db.Serializer.Deserialize(structureSchema.Type.Type, existingJson);
+            var existingItem = Db.Serializer.Deserialize(existingJson, structureSchema.Type.Type);
             var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
             var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
 
@@ -967,14 +990,18 @@ namespace SisoDb
             throw new SisoDbException(ExceptionMessages.ConcurrencyTokenIsOfWrongType);
         }
 
-        public virtual void DeleteById<T>(object id) where T : class
+        public virtual ISession DeleteById<T>(object id) where T : class
         {
             Try(() => OnDeleteById(TypeFor<T>.Type, id));
+
+            return this;
         }
 
-        public virtual void DeleteById(Type structureType, object id)
+        public virtual ISession DeleteById(Type structureType, object id)
         {
             Try(() => OnDeleteById(structureType, id));
+
+            return this;
         }
 
         protected virtual void OnDeleteById(Type structureType, object id)
@@ -990,14 +1017,18 @@ namespace SisoDb
             TransactionalDbClient.DeleteById(structureId, structureSchema);
         }
 
-        public virtual void DeleteByIds<T>(params object[] ids) where T : class
+        public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
         {
             Try(() => OnDeleteByIds(TypeFor<T>.Type, ids));
+
+            return this;
         }
 
-        public virtual void DeleteByIds(Type structureType, params object[] ids)
+        public virtual ISession DeleteByIds(Type structureType, params object[] ids)
         {
             Try(() => OnDeleteByIds(structureType, ids));
+
+            return this;
         }
 
         protected virtual void OnDeleteByIds(Type structureType, params object[] ids)

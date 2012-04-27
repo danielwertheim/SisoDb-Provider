@@ -197,7 +197,6 @@
     <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IWhereParser.cs" />
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\ISortingParser.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="GlobalResourceContainer.cs" />
@@ -231,7 +230,6 @@
     <Compile Include="Querying\Lambdas\Operators\OrOperator.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambda.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortDirections.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\SortingParser.cs" />
     <Compile Include="QueryExtensions.cs" />
     <Compile Include="INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />

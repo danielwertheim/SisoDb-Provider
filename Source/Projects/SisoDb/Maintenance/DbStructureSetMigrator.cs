@@ -109,7 +109,7 @@ namespace SisoDb.Maintenance
             if (structureSchemaFrom.Type.Type.Equals(structureSchemaFromTemplate.Type.Type))
                 fromDeserializer = serializer.Deserialize<TFromTemplate>;
             else
-                fromDeserializer = serializer.DeserializeAnonymous<TFromTemplate>;
+                fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;
 
             using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
             {
@@ -156,7 +156,7 @@ namespace SisoDb.Maintenance
             if (structureSchemaFrom.Type.Type.Equals(structureSchemaFromTemplate.Type.Type))
                 fromDeserializer = serializer.Deserialize<TFromTemplate>;
             else
-                fromDeserializer = serializer.DeserializeAnonymous<TFromTemplate>;
+                fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;
 
             using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
             {

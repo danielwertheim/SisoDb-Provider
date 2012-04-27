@@ -11,6 +11,94 @@ namespace SisoDb.Specifications.Database
     class UpsertStructureSet
     {
         [Subject(typeof(ISisoDatabase), "Upsert structure set")]
+        public class when_using_generics_and_no_set_exists_and_allow_upsert_of_schemas_is_false : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.Settings.AllowUpsertsOfSchemas = false;
+                TestContext.Database.DropStructureSet<OrgModel.MyClass>();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
+            };
+
+            Because of =
+                () => TestContext.Database.UpsertStructureSet<OrgModel.MyClass>();
+
+            It should_not_have_created_structure_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetStructureTableName()).ShouldBeFalse();
+
+            It should_not_have_created_integers_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers)).ShouldBeFalse();
+
+            It should_not_have_created_fractals_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals)).ShouldBeFalse();
+
+            It should_not_have_created_booleans_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans)).ShouldBeFalse();
+
+            It should_not_have_created_dates_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates)).ShouldBeFalse();
+
+            It should_not_have_created_guids_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids)).ShouldBeFalse();
+
+            It should_not_have_created_strings_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeFalse();
+
+            It should_not_have_created_texts_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Texts)).ShouldBeFalse();
+
+            It should_not_have_created_uniques_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeFalse();
+
+            private static IStructureSchema _structureSchema;
+        }
+
+        [Subject(typeof(ISisoDatabase), "Upsert structureset")]
+        public class when_using_type_and_no_set_exists_and_allow_upsert_of_schemas_is_false : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.Settings.AllowUpsertsOfSchemas = false;
+                TestContext.Database.DropStructureSet<OrgModel.MyClass>();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
+            };
+
+            Because of =
+                () => TestContext.Database.UpsertStructureSet(typeof(OrgModel.MyClass));
+
+            It should_not_have_created_structure_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetStructureTableName()).ShouldBeFalse();
+
+            It should_not_have_created_integers_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Integers)).ShouldBeFalse();
+
+            It should_not_have_created_fractals_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Fractals)).ShouldBeFalse();
+
+            It should_not_have_created_booleans_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Booleans)).ShouldBeFalse();
+
+            It should_not_have_created_dates_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Dates)).ShouldBeFalse();
+
+            It should_not_have_created_guids_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Guids)).ShouldBeFalse();
+
+            It should_not_have_created_strings_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeFalse();
+
+            It should_not_have_created_texts_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Texts)).ShouldBeFalse();
+
+            It should_not_have_created_uniques_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeFalse();
+
+            private static IStructureSchema _structureSchema;
+        }
+
+        [Subject(typeof(ISisoDatabase), "Upsert structure set")]
         public class when_using_generics_and_no_set_exists : SpecificationBase
         {
             Establish context = () =>
@@ -43,6 +131,9 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_created_strings_indexes_table =
 				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeTrue();
+
+            It should_have_created_texts_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Texts)).ShouldBeTrue();
 
             It should_have_created_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
@@ -83,6 +174,9 @@ namespace SisoDb.Specifications.Database
 
 			It should_have_created_strings_indexes_table =
 				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeTrue();
+
+            It should_have_created_texts_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Texts)).ShouldBeTrue();
 
             It should_have_created_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
@@ -164,6 +258,9 @@ namespace SisoDb.Specifications.Database
 
 			It should_still_have_strings_indexes_table =
 				() => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Strings)).ShouldBeTrue();
+
+            It should_still_have_texts_indexes_table =
+                () => TestContext.DbHelper.TableExists(_structureSchema.GetIndexesTableNameFor(IndexesTypes.Texts)).ShouldBeTrue();
 
             It should_still_have_original_structureid_in_indexes_table = () =>
             {
