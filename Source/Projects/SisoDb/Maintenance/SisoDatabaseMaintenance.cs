@@ -92,7 +92,7 @@ namespace SisoDb.Maintenance
             }
         }
 
-        public void Migrate<TFrom, TFromTemplate, TTo>(Migration<TFrom, TFromTemplate, TTo> migration)
+        public virtual void Migrate<TFrom, TFromTemplate, TTo>(Migration<TFrom, TFromTemplate, TTo> migration)
             where TFrom : class
             where TFromTemplate : class
             where TTo : class
