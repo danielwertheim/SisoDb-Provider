@@ -246,15 +246,15 @@ namespace SisoDb.Dac
 
         public virtual void SetRowIdsOn()
         {
-            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOn"));
+            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOnForStructures"), SqlStatements.GetSql("SetRowIdsOnForIndexesAndUniques"));
         }
 
         public virtual void SetRowIdsOff()
         {
-            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOff"));
+            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOffForStructures"), SqlStatements.GetSql("SetRowIdsOffForIndexesAndUniques"));
         }
 
-        protected virtual void SetRowIdOnOrOff(string setRowIdToXForTableY)
+        protected virtual void SetRowIdOnOrOff(string setRowIdToXForStructureTable, string setRowIdToXForIndexesAndUniquesTable)
         {
             var tableNames = new List<string>();
             var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
@@ -270,7 +270,10 @@ namespace SisoDb.Dac
 
                 foreach (var tableName in tableNames)
                 {
-                    cmd.CommandText = setRowIdToXForTableY.Inject(tableName);
+                    cmd.CommandText = tableName.EndsWith(DbSchemas.Suffixes.StructureTableNameSuffix) 
+                        ? setRowIdToXForStructureTable.Inject(tableName) 
+                        : setRowIdToXForIndexesAndUniquesTable.Inject(tableName);
+
                     cmd.ExecuteNonQuery();
                 }
             }

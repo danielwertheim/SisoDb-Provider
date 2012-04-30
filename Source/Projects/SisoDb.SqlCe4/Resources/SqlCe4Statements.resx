@@ -545,11 +545,18 @@ order by groupId</value>
   <data name="GetModelTableStatuses" xml:space="preserve">
     <value>select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
   </data>
-  <data name="SetRowIdsOff" xml:space="preserve">
+  <data name="SetRowIdsOffForIndexesAndUniques" xml:space="preserve">
+    <value>alter table [{0}] drop constraint [PK_{0}];
+alter table [{0}] drop column [RowId];</value>
+  </data>
+  <data name="SetRowIdsOnForIndexesAndUniques" xml:space="preserve">
+    <value>alter table [{0}] add [RowId] bigint identity not null constraint [PK_{0}] primary key</value>
+  </data>
+  <data name="SetRowIdsOffForStructures" xml:space="preserve">
     <value>drop index [{0}].[IX_{0}_RowId];
 alter table [{0}] drop column [RowId];</value>
   </data>
-  <data name="SetRowIdsOn" xml:space="preserve">
+  <data name="SetRowIdsOnForStructures" xml:space="preserve">
     <value>alter table [{0}] add [RowId] bigint identity;
 create unique nonclustered index [IX_{0}_RowId] on [{0}] ([RowId]);</value>
   </data>

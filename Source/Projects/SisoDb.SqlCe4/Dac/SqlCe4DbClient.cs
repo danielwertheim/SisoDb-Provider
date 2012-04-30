@@ -108,7 +108,7 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        protected override void SetRowIdOnOrOff(string setRowIdToXForTableY)
+        protected override void SetRowIdOnOrOff(string setRowIdToXForStructureTable, string setRowIdToXForIndexesAndUniquesTable)
         {
             var tableNames = new List<string>();
             var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
@@ -124,7 +124,11 @@ namespace SisoDb.SqlCe4.Dac
 
                 foreach (var tableName in tableNames)
                 {
-                    foreach (var statement in setRowIdToXForTableY.Inject(tableName).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    var commandText = tableName.EndsWith(DbSchemas.Suffixes.StructureTableNameSuffix) 
+                        ? setRowIdToXForStructureTable.Inject(tableName) 
+                        : setRowIdToXForIndexesAndUniquesTable.Inject(tableName);
+
+                    foreach (var statement in commandText.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         cmd.CommandText = statement.Trim();
                         cmd.ExecuteNonQuery();

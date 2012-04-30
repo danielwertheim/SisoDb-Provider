@@ -615,7 +615,29 @@ select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0
   <data name="DropSp" xml:space="preserve">
     <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>
   </data>
-  <data name="SetRowIdsOff" xml:space="preserve">
+  <data name="SetRowIdsOffForIndexesAndUniques" xml:space="preserve">
+    <value>if(select count(1) from sys.indexes where name = 'PK_{0}') &gt; 0
+begin
+	alter table [dbo].[{0}] drop constraint [PK_{0}]
+end
+
+if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &gt; 0
+begin
+	alter table [dbo].[{0}] drop column [RowId];
+end</value>
+  </data>
+  <data name="SetRowIdsOnForIndexesAndUniques" xml:space="preserve">
+    <value>if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &lt; 1
+begin
+	alter table [dbo].[{0}] add [RowId] bigint identity not null constraint [PK_{0}] primary key clustered ([RowId]);
+end
+
+if(select count(1) from sys.indexes where name = 'PK_{0}') &lt; 1
+begin
+	alter table [dbo].[{0}] add constraint [PK_{0}] primary key clustered ([RowId]);
+end</value>
+  </data>
+  <data name="SetRowIdsOffForStructures" xml:space="preserve">
     <value>if(select count(1) from sys.indexes where name = 'IX_{0}_RowId') &gt; 0
 begin
 	drop index [IX_{0}_RowId] on [dbo].[{0}];
@@ -626,7 +648,7 @@ begin
 	alter table [dbo].[{0}] drop column [RowId];
 end</value>
   </data>
-  <data name="SetRowIdsOn" xml:space="preserve">
+  <data name="SetRowIdsOnForStructures" xml:space="preserve">
     <value>if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &lt; 1
 begin
 	alter table [dbo].[{0}] add [RowId] bigint identity;
