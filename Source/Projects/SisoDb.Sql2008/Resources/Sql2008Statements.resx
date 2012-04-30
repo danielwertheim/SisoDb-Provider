@@ -483,11 +483,11 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
   </data>
   <data name="RowCount" xml:space="preserve">
     <value>set nocount on;
-select count(*) from [dbo].[{0}];</value>
+select count(1) from [dbo].[{0}];</value>
   </data>
   <data name="RowCountByQuery" xml:space="preserve">
     <value>set nocount on;
-select count(*) from [dbo].[{0}] s where s.StructureId in({1});</value>
+select count(1) from [dbo].[{0}] s where s.StructureId in({1});</value>
   </data>
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
     <value>set nocount on;
