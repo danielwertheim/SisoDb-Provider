@@ -15,7 +15,7 @@ namespace SisoDb.UnitTests.DbSchema
         [Test]
         public void AllTableNames_WhenRegistreredManualStructureNameGenerator_AllTableNamesShouldHaveGainedThePrefix()
         {
-            DbSchemaNamingPolicy.StructureNameGenerator = s => string.Concat("Gooofy_", s);
+            DbSchemaNamingPolicy.StructureNamePrefix = "Gooofy_";
 
             var names = new ModelTableNames("MyStructure");
 

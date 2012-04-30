@@ -80,6 +80,7 @@
     <Compile Include="CustomAssert.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslatorTests.cs" />
     <Compile Include="DbSchema\DbObjectNameValidatorTests.cs" />
+    <Compile Include="DbSchema\DbSchemaNamingPolicyTests.cs" />
     <Compile Include="DbSchema\DbSchemasTests.cs" />
     <Compile Include="DbSchema\ModelTableNamesTests.cs" />
     <Compile Include="DbSchema\ModelTableStatusesTests.cs" />
