@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using EnsureThat;
@@ -16,6 +15,8 @@ namespace SisoDb.SqlCe4.Dac
     {
         private const int MaxBatchedIdsSize = 32;
 
+        
+
         public SqlCe4DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
             : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
@@ -28,10 +29,10 @@ namespace SisoDb.SqlCe4.Dac
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
-            if (!sql.Contains(";"))
+            if (!sql.IsMultiStatement())
                 base.ExecuteNonQuery(sql, parameters);
             else
-                base.ExecuteNonQuery(sql.Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries), parameters);
+                base.ExecuteNonQuery(sql.ToSqlStatements(), parameters);
         }
 
         public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
@@ -128,9 +129,9 @@ namespace SisoDb.SqlCe4.Dac
                         ? setRowIdToXForStructureTable.Inject(tableName) 
                         : setRowIdToXForIndexesAndUniquesTable.Inject(tableName);
 
-                    foreach (var statement in commandText.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var statement in commandText.ToSqlStatements())
                     {
-                        cmd.CommandText = statement.Trim();
+                        cmd.CommandText = statement;
                         cmd.ExecuteNonQuery();
                     }
                 }

@@ -92,7 +92,7 @@ namespace SisoDb.Dac
             {
                 foreach (var sqlStatement in sqls.Where(statement => !string.IsNullOrWhiteSpace(statement)))
                 {
-                    cmd.CommandText = sqlStatement.Trim();
+                    cmd.CommandText = sqlStatement;
                     cmd.ExecuteNonQuery();
                 }
             }
