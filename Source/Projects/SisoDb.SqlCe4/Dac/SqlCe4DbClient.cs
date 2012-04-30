@@ -53,7 +53,7 @@ namespace SisoDb.SqlCe4.Dac
 
             ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldUniquesTableName, oldStructureTableName));
             
-            foreach (var oldIndexTableName in oldIndexesTableNames.AllTableNames)
+            foreach (var oldIndexTableName in oldIndexesTableNames.All)
                 ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldIndexTableName, oldStructureTableName));
         }
 
@@ -63,7 +63,7 @@ namespace SisoDb.SqlCe4.Dac
 
             ExecuteNonQuery(addFkContraintSqlFormat.Inject(newUniquesTableName, newStructureTableName));
 
-            foreach (var newIndexTableName in newIndexesTableNames.AllTableNames)
+            foreach (var newIndexTableName in newIndexesTableNames.All)
                 ExecuteNonQuery(addFkContraintSqlFormat.Inject(newIndexTableName, newStructureTableName));
         }
 
@@ -92,7 +92,7 @@ namespace SisoDb.SqlCe4.Dac
         {
             using (var cmd = CreateCommand(null))
             {
-                for (var i = 0; i < oldIndexesTableNames.AllTableNames.Length; i++)
+                for (var i = 0; i < oldIndexesTableNames.All.Length; i++)
                 {
                     var oldTableName = oldIndexesTableNames[i];
                     var newTableName = newIndexesTableNames[i];
@@ -104,6 +104,31 @@ namespace SisoDb.SqlCe4.Dac
                         new DacParameter("objtype", "OBJECT"));
                     cmd.CommandText = "sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype";
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        protected override void SetRowIdOnOrOff(string setRowIdToXForTableY)
+        {
+            var tableNames = new List<string>();
+            var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
+
+            using (var cmd = CreateCommand(sql))
+            {
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                {
+                    while (reader.Read())
+                        tableNames.Add(reader.GetString(0));
+                    reader.Close();
+                }
+
+                foreach (var tableName in tableNames)
+                {
+                    foreach (var statement in setRowIdToXForTableY.Inject(tableName).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        cmd.CommandText = statement.Trim();
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -198,7 +223,7 @@ namespace SisoDb.SqlCe4.Dac
 
             using(var cmd = CreateCommand(null))
             {
-                foreach (var tableName in indexesTables.AllTableNames)
+                foreach (var tableName in indexesTables.All)
                 {
                     cmd.CommandText = sqlFormat.Inject(tableName);
                     cmd.ExecuteNonQuery();

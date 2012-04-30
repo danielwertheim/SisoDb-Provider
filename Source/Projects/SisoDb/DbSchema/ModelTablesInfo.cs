@@ -22,9 +22,9 @@ namespace SisoDb.DbSchema
         public string[] GetIndexesTableNamesForExisting()
         {
             if (Statuses.IndexesTableStatuses.AllExists)
-                return Names.IndexesTableNames.AllTableNames;
+                return Names.IndexesTableNames.All;
 
-            var names = new string[Names.IndexesTableNames.AllTableNames.Length];
+            var names = new string[Names.IndexesTableNames.All.Length];
 
             if (Statuses.IndexesTableStatuses.IntegersTableExists)
                 names[0] = Names.IndexesTableNames.IntegersTableName;

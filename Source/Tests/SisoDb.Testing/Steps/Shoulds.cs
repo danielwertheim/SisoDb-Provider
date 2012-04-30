@@ -26,7 +26,7 @@ namespace SisoDb.Testing.Steps
         public static void should_have_been_deleted_from_indexes_tables(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
 		{
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
-			foreach (var indexesTableName in indexesTableNames.AllTableNames)
+			foreach (var indexesTableName in indexesTableNames.All)
 				db.RowCount(indexesTableName, "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(0);
 		}
 
@@ -34,7 +34,7 @@ namespace SisoDb.Testing.Steps
 		{
 			var indexesTableNames = structureSchema.GetIndexesTableNames();
 			var countSum = 0;
-			foreach (var indexesTableName in indexesTableNames.AllTableNames)
+			foreach (var indexesTableName in indexesTableNames.All)
 				countSum += db.RowCount(indexesTableName, "{0} = '{1}'".Inject(IndexStorageSchema.Fields.StructureId.Name, structureId));
 
 			countSum.ShouldBeGreaterThan(0);
@@ -162,6 +162,38 @@ namespace SisoDb.Testing.Steps
             db.RowCount(tablename, "{0} = '{1}' and {2} = '{3}'".Inject(
                 IndexStorageSchema.Fields.StructureId.Name, structureId,
                 IndexStorageSchema.Fields.MemberPath.Name, memberPath)).ShouldEqual(0);
+        }
+
+        public static void should_have_column(this ITestDbUtils db, string tablename, string columnName)
+        {
+            db.GetColumns(tablename)
+                .SingleOrDefault(c => c.Name == columnName)
+                .ShouldNotBeNull();
+        }
+
+        public static void should_not_have_column(this ITestDbUtils db, string tablename, string columnName)
+        {
+            db.GetColumns(tablename)
+                .SingleOrDefault(c => c.Name == columnName)
+                .ShouldBeNull();
+        }
+
+        public static void should_have_column_in_all_indexestables(this ITestDbUtils db, IndexesTableNames tableNames, string columnName)
+        {
+            var columnsPerTable = tableNames.All
+                .GroupBy(t => t)
+                .Select(t => new { Name = t.Key, HasRowId = db.GetColumns(t.Key).Any(c => c.Name == columnName) }).ToArray();
+
+            columnsPerTable.Count(v => v.HasRowId == false).ShouldEqual(0);
+        }
+
+        public static void should_not_have_column_in_any_indexestables(this ITestDbUtils db, IndexesTableNames tableNames, string columnName)
+        {
+            var columnsPerTable = tableNames.All
+                .GroupBy(t => t)
+                .Select(t => new { Name = t.Key, HasRowId = db.GetColumns(t.Key).Any(c => c.Name == columnName) }).ToArray();
+
+            columnsPerTable.Count(v => v.HasRowId).ShouldEqual(0);
         }
 
 		private static string GetMemberPath<T>(Expression<Func<T, object>> e)

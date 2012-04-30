@@ -16,6 +16,28 @@ namespace SisoDb.Maintenance
             _db = db;
         }
 
+        public virtual void SetRowIdsOn()
+        {
+            lock (_db.LockObject)
+            {
+                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
+                {
+                    dbClient.SetRowIdsOn();
+                }
+            }
+        }
+
+        public virtual void SetRowIdsOff()
+        {
+            lock (_db.LockObject)
+            {
+                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
+                {
+                    dbClient.SetRowIdsOff();
+                }
+            }
+        }
+
         public virtual void Reset()
         {
             lock (_db.LockObject)

@@ -12,10 +12,10 @@ namespace SisoDb.DbSchema
 
 	    public string this[int i]
 	    {
-            get { return AllTableNames[i]; }
+            get { return All[i]; }
 	    }
 
-	    public string[] AllTableNames { get; private set; }
+	    public string[] All { get; private set; }
 		public string IntegersTableName { get; private set; }
 		public string FractalsTableName { get; private set; }
 		public string DatesTableName { get; private set; }
@@ -53,7 +53,7 @@ namespace SisoDb.DbSchema
 	        StringsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Strings);
 	        TextsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Texts);
 
-	        AllTableNames = new[]
+	        All = new[]
 	        {
 	            IntegersTableName,
 	            FractalsTableName,

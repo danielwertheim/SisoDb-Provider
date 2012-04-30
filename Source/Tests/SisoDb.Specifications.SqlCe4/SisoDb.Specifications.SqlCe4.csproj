@@ -91,6 +91,12 @@
     <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Reset.cs">
       <Link>Database\Maintenance\Reset.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\SetRowIdsOff.cs">
+      <Link>Database\Maintenance\SetRowIdsOff.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\SetRowIdsOn.cs">
+      <Link>Database\Maintenance\SetRowIdsOn.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\UpsertStructureSet.cs">
       <Link>Database\UpsertStructureSet.cs</Link>
     </Compile>
