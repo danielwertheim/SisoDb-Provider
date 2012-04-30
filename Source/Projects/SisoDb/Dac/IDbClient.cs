@@ -23,6 +23,8 @@ namespace SisoDb.Dac
         
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
         void RenameStructureSet(string oldStructureName, string newStructureName);
+        void SetRowIdsOn();
+        void SetRowIdsOff();
         void Drop(IStructureSchema structureSchema);
         void UpsertSp(string name, string createSpSql);
         void Reset();

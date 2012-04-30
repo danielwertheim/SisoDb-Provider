@@ -29,7 +29,7 @@ namespace SisoDb.Specifications.Database.Maintenance
                 () => TestContext.DbHelper.TableExists(_orgStructureSchema.GetUniquesTableName()).ShouldBeFalse();
 
             It should_have_no_old_indexes_tables =
-                () => TestContext.DbHelper.TablesExists(_orgStructureSchema.GetIndexesTableNames().AllTableNames).ShouldBeFalse();
+                () => TestContext.DbHelper.TablesExists(_orgStructureSchema.GetIndexesTableNames().All).ShouldBeFalse();
 
             It should_have_new_structure_table =
                 () => TestContext.DbHelper.TableExists(DbSchemas.GenerateStructureTableName(_newStructureName)).ShouldBeTrue();
@@ -38,7 +38,7 @@ namespace SisoDb.Specifications.Database.Maintenance
                 () => TestContext.DbHelper.TableExists(DbSchemas.GenerateUniquesTableName(_newStructureName)).ShouldBeTrue();
 
             It should_have_new_indexes_tables =
-                () => TestContext.DbHelper.TablesExists(new IndexesTableNames(_newStructureName).AllTableNames).ShouldBeTrue();
+                () => TestContext.DbHelper.TablesExists(new IndexesTableNames(_newStructureName).All).ShouldBeTrue();
 
             private static IStructureSchema _orgStructureSchema;
             private static string _newStructureName;

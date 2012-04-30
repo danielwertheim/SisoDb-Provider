@@ -319,7 +319,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [{0}] (
-[StructureId] [bigint] not null constraint [PK_{0}] primary key,
+[StructureId] [bigint] not null constraint [PK_{0}] primary key nonclustered,
 [Json] [ntext] not null);
 
 insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
@@ -501,7 +501,7 @@ delete from [{7}] where StructureId = @id;</value>
   <data name="SingleUpdateOfStructure" xml:space="preserve">
     <value>update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
   </data>
-  <data name="GetTableNamesToDrop" xml:space="preserve">
+  <data name="GetTableNamesForAllDataTables" xml:space="preserve">
     <value>select TABLE_NAME from 
 (
 	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Booleans'
@@ -544,5 +544,13 @@ order by groupId</value>
   </data>
   <data name="GetModelTableStatuses" xml:space="preserve">
     <value>select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
+  </data>
+  <data name="SetRowIdsOff" xml:space="preserve">
+    <value>drop index [{0}].[IX_{0}_RowId];
+alter table [{0}] drop column [RowId];</value>
+  </data>
+  <data name="SetRowIdsOn" xml:space="preserve">
+    <value>alter table [{0}] add [RowId] bigint identity;
+create unique nonclustered index [IX_{0}_RowId] on [{0}] ([RowId]);</value>
   </data>
 </root>

@@ -39,7 +39,7 @@ namespace SisoDb.DbSchema
 	            StructureTableName,
                 UniquesTableName
 	        }
-            .MergeWith(IndexesTableNames.AllTableNames)
+            .MergeWith(IndexesTableNames.All)
             .ToArray();
         }
     }

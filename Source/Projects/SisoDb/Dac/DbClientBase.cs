@@ -215,7 +215,7 @@ namespace SisoDb.Dac
         {
             using (var cmd = CreateSpCommand("sp_rename"))
             {
-                for(var i = 0; i < oldIndexesTableNames.AllTableNames.Length; i++)
+                for(var i = 0; i < oldIndexesTableNames.All.Length; i++)
                 {
                     var oldTableName = oldIndexesTableNames[i];
                     var newTableName = newIndexesTableNames[i];
@@ -239,6 +239,38 @@ namespace SisoDb.Dac
                         new DacParameter("objname", string.Format("{0}.IX_{1}_Q", newTableName, oldTableName)),
                         new DacParameter("newname", string.Format("IX_{0}_Q", newTableName)),
                         new DacParameter("objtype", "INDEX"));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public virtual void SetRowIdsOn()
+        {
+            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOn"));
+        }
+
+        public virtual void SetRowIdsOff()
+        {
+            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOff"));
+        }
+
+        protected virtual void SetRowIdOnOrOff(string setRowIdToXForTableY)
+        {
+            var tableNames = new List<string>();
+            var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
+
+            using (var cmd = CreateCommand(sql))
+            {
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                {
+                    while (reader.Read())
+                        tableNames.Add(reader.GetString(0));
+                    reader.Close();
+                }
+
+                foreach (var tableName in tableNames)
+                {
+                    cmd.CommandText = setRowIdToXForTableY.Inject(tableName);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -282,7 +314,7 @@ namespace SisoDb.Dac
         public virtual void Reset()
         {
             var tableNamesToDrop = new List<string>();
-            var sql = SqlStatements.GetSql("GetTableNamesToDrop");
+            var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
             var dropTableTemplate = SqlStatements.GetSql("DropTable");
 
             using (var cmd = CreateCommand(sql))

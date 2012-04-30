@@ -323,7 +323,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
-[StructureId] [bigint] not null constraint [PK_{0}] primary key clustered ([StructureId]),
+[StructureId] [bigint] not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
 insert into [dbo].[SisoDbIdentities] ([EntityName]) values(@entityName);</value>
@@ -572,7 +572,7 @@ update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
     <value>set nocount on;
 if object_id(N'{0}', N'U') is not null drop table [dbo].[{0}];</value>
   </data>
-  <data name="GetTableNamesToDrop" xml:space="preserve">
+  <data name="GetTableNamesForAllDataTables" xml:space="preserve">
     <value>set nocount on;
 select TABLE_NAME from 
 (
@@ -616,5 +616,27 @@ select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0
   </data>
   <data name="DropSp" xml:space="preserve">
     <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>
+  </data>
+  <data name="SetRowIdsOff" xml:space="preserve">
+    <value>if(select count(1) from sys.indexes where name = 'IX_{0}_RowId') &gt; 0
+begin
+	drop index [IX_{0}_RowId] on [dbo].[{0}];
+end
+
+if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &gt; 0
+begin
+	alter table [dbo].[{0}] drop column [RowId];
+end</value>
+  </data>
+  <data name="SetRowIdsOn" xml:space="preserve">
+    <value>if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &lt; 1
+begin
+	alter table [dbo].[{0}] add RowId bigint identity;
+end
+
+if(select count(*) from sys.indexes where name = 'IX_{0}_RowId') &lt; 1
+begin
+	create unique clustered index [IX_{0}_RowId] on [dbo].[{0}] ([RowId]);
+end</value>
   </data>
 </root>

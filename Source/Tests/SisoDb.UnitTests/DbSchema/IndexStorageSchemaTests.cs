@@ -17,6 +17,7 @@ namespace SisoDb.UnitTests.DbSchema
             Assert.AreEqual(IndexStorageSchema.Fields.MemberPath, fields[1]);
 			Assert.AreEqual(IndexStorageSchema.Fields.Value, fields[2]);
 			Assert.AreEqual(IndexStorageSchema.Fields.StringValue, fields[3]);
+            Assert.AreEqual(IndexStorageSchema.Fields.RowId, fields[4]);
         }
 
         [Test]
@@ -83,6 +84,21 @@ namespace SisoDb.UnitTests.DbSchema
             Assert.AreEqual(3, field.Ordinal);
         }
 
+        [Test]
+        public void SchemaField_RowId_HasCorrectName()
+        {
+            var field = IndexStorageSchema.Fields.RowId;
+
+            Assert.AreEqual("RowId", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_RowId_HasCorrectOrdinal()
+        {
+            var field = IndexStorageSchema.Fields.RowId;
+
+            Assert.AreEqual(4, field.Ordinal);
+        }
         
         [Test]
         public void GetFieldsOrderedByIndex_WhenPlainAndUniquesExistsInSchema_FieldsAreReturnedInCorrectOrder()
@@ -93,7 +109,7 @@ namespace SisoDb.UnitTests.DbSchema
 
             var fieldsByIndex = indexStorageSchema.GetFieldsOrderedByIndex().ToList();
 
-            Assert.AreEqual(4, fieldsByIndex.Count);
+            Assert.AreEqual(5, fieldsByIndex.Count);
 
             Assert.AreEqual(0, fieldsByIndex[0].Ordinal);
             Assert.AreEqual(IndexStorageSchema.Fields.StructureId.Name, fieldsByIndex[0].Name);
@@ -106,6 +122,9 @@ namespace SisoDb.UnitTests.DbSchema
 
             Assert.AreEqual(3, fieldsByIndex[3].Ordinal);
             Assert.AreEqual(IndexStorageSchema.Fields.StringValue.Name, fieldsByIndex[3].Name);
+
+            Assert.AreEqual(4, fieldsByIndex[4].Ordinal);
+            Assert.AreEqual(IndexStorageSchema.Fields.RowId.Name, fieldsByIndex[4].Name);
 		}
     }
 }

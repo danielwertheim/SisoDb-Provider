@@ -12,6 +12,7 @@ namespace SisoDb.DbSchema
             public static readonly SchemaField MemberPath = new SchemaField(1, "MemberPath");
             public static readonly SchemaField Value = new SchemaField(2, "Value");
 			public static readonly SchemaField StringValue = new SchemaField(3, "StringValue");
+            public static readonly SchemaField RowId = new SchemaField(4, "RowId");
         }
         
         public static readonly SchemaField[] OrderedFields = new[]
@@ -19,7 +20,8 @@ namespace SisoDb.DbSchema
             Fields.StructureId,
             Fields.MemberPath,
             Fields.Value,
-			Fields.StringValue
+			Fields.StringValue,
+            Fields.RowId
         };
 
     	public IndexStorageSchema(IStructureSchema structureSchema, string storageSchemaName) 
