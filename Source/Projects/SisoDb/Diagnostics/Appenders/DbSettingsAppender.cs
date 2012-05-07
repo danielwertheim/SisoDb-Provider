@@ -12,11 +12,10 @@ namespace SisoDb.Diagnostics.Appenders
         public void Append(IDbSettings settings)
         {
             var section = Context.AddSection("Settings");
-            var group = section.AddGroup("Settings");
-            group.AddNode("AllowUpsertsOfSchemas", settings.AllowUpsertsOfSchemas);
-            group.AddNode("SynchronizeSchemaChanges", settings.SynchronizeSchemaChanges);
-            group.AddNode("MaxInsertManyBatchSize", settings.MaxInsertManyBatchSize);
-            group.AddNode("MaxUpdateManyBatchSize", settings.MaxUpdateManyBatchSize);
+            section.AddNode("AllowUpsertsOfSchemas", settings.AllowUpsertsOfSchemas);
+            section.AddNode("SynchronizeSchemaChanges", settings.SynchronizeSchemaChanges);
+            section.AddNode("MaxInsertManyBatchSize", settings.MaxInsertManyBatchSize);
+            section.AddNode("MaxUpdateManyBatchSize", settings.MaxUpdateManyBatchSize);
         }
     }
 }
