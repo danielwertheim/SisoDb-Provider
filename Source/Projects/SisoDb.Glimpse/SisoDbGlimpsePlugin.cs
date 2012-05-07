@@ -49,10 +49,10 @@ namespace SisoDb.Glimpse
         {
             foreach (var diagnosticsContext in contexts)
             {
-                var sections = new List<object[]> { new[] { diagnosticsContext.Name + ", contains", " " } };
+                var sections = new List<object[]> { new[] { diagnosticsContext.Name + ", contains", string.Empty } };
                 foreach (var section in diagnosticsContext.Sections)
                 {
-                    var groups = new List<object[]> { new object[] { section.Name + ", contains", " " } };
+                    var groups = new List<object[]> { new object[] { section.Name + ", contains", string.Empty } };
                     foreach (var group in section.Groups)
                     {
                         var groupNodes = new List<object[]> { new[] { group.Name + ", contains", "Value" } };
@@ -65,6 +65,13 @@ namespace SisoDb.Glimpse
 
                     if (groups.Count > 1)
                         sections.Add(new object[] { section.Name, groups });
+
+                    var sectionNodes = new List<object[]> { new object[] { section.Name + ", contains", "Value" } };
+                    foreach (var node in section.Nodes)
+                        sectionNodes.Add(new[] { node.Name, node.Value });
+
+                    if (sectionNodes.Count > 1)
+                        sections.Add(new object[] { section.Name, sectionNodes });
                 }
 
                 if (sections.Count > 1)

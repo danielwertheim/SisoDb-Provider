@@ -18,6 +18,7 @@ namespace SisoDb.Diagnostics
         public DiagnosticsGroup(string name, params object[] formattingArgs)
         {
             Name = formattingArgs.Any() ? string.Format(name, formattingArgs) : name;
+            
             _nodes = new Dictionary<string, DiagnosticsNode>();
         }
 
