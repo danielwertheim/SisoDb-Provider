@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>SisoDb.Glimpse</id>    
+		<title>SisoDb.Glimpse - Simple Structure Oriented Db</title>
+		<version>$version$</version>
+		<authors>danielwertheim</authors>
+		<copyright>Daniel Wertheim</copyright>
+		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
+		<summary>Glimpse package for SisoDb, the document-oriented provider for SQL-Server.</summary>
+		<description>
+			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
+			This package lets you output some diagnostics info for SisoDb using Glimpse.
+		</description>
+		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
+		<projectUrl>http://www.sisodb.com</projectUrl>
+		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<tags>glimpse, diagnostics, sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
+		<dependencies>
+		    <dependency id="SisoDb" version="[$version$]" />
+			<dependency id="Ensure.That" version="0.7.0" />
+			<dependency id="NCore" version="[0.28.0]" />
+			<dependency id="PineCone" version="[1.0.0]" />
+			<dependency id="Glimpse" version="0.87" />
+		</dependencies>
+	</metadata>
+	<files>
+	  <file src="..\Source\Projects\SisoDb.Glimpse\bin\Release\SisoDb.Glimpse.dll" target="lib\net40\" />
+	  <file src="..\Source\Projects\SisoDb.Glimpse\bin\Release\SisoDb.Glimpse.xml" target="lib\net40\" />
+	</files>
+</package>
