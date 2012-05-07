@@ -15,15 +15,23 @@ namespace SisoDb.Diagnostics
 
         public virtual DiagnosticsContext Build()
         {
-            var context = new DiagnosticsContext("SisoDb - Db: {0}", Database.Name);
-            return AppendStructureSchemas(context);
+            var context = new DiagnosticsContext("Db: '{0}'", Database.Name);
+            AppendSettings(context);
+            AppendStructureSchemas(context);
+
+            return context;
         }
 
-        protected virtual DiagnosticsContext AppendStructureSchemas(DiagnosticsContext context)
+        protected virtual void AppendSettings(DiagnosticsContext context)
         {
-            var appender = new StructureSchemasAppender(context);
-            appender.Append(Database.StructureSchemas);
-            return context;
+            var settingsAppender = new DbSettingsAppender(context);
+            settingsAppender.Append(Database.Settings);
+        }
+
+        protected virtual void AppendStructureSchemas(DiagnosticsContext context)
+        {
+            var schemasAppender = new StructureSchemasAppender(context);
+            schemasAppender.Append(Database.StructureSchemas);
         }
     }
 }

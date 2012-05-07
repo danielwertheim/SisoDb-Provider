@@ -101,6 +101,7 @@
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
+    <Compile Include="Diagnostics\Appenders\DbSettingsAppender.cs" />
     <Compile Include="Diagnostics\DiagnosticsContext.cs" />
     <Compile Include="Diagnostics\DiagnosticsExtensions.cs" />
     <Compile Include="Diagnostics\DiagnosticsGroup.cs" />

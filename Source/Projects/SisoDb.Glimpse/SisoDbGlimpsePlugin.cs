@@ -7,7 +7,7 @@ using SisoDb.Diagnostics;
 
 namespace SisoDb.Glimpse
 {
-    [GlimpsePlugin(ShouldSetupInInit = true)]
+    [GlimpsePlugin]
     public class SisoDbGlimpsePlugin : IGlimpsePlugin
     {
         public string Name
@@ -19,42 +19,23 @@ namespace SisoDb.Glimpse
 
         protected List<object[]> NonChangingContextData { get; set; }
 
-        public void SetupInit()
+        public virtual void SetupInit() { }
+
+        public virtual object GetData(HttpContextBase context)
         {
-            NonChangingContextData = BuildNonChanginContextData();
-        }
+            var data = new List<object[]> { new[] { "Context", " " } };
 
-        private List<object[]> BuildNonChanginContextData()
-        {
-            var contexts = OnResolveDatabases()
-                .Select(db => new DbDiagnosticsContextBuilder(db).Build()).ToArray();
+            AppendDbContextData(data);
 
-            var data = new List<object[]> { new[] { "Key", "Value" } };
-            foreach (var diagnosticsContext in contexts)
-            {
-                data.Add(new[] { "Context", diagnosticsContext.Name });
-
-                foreach (var section in diagnosticsContext.Sections)
-                {
-                    var groups = new List<object> { new[] { "Name", string.Empty } };
-                    foreach (var group in section.Groups)
-                    {
-                        var nodes = new List<object> { new[] { "Name", "Value" } };
-                        foreach (var node in group.Nodes)
-                            nodes.Add(new[] { node.Name, node.Value });
-
-                        groups.Add(new object[] { @group.Name, nodes });
-                    }
-
-                    data.Add(new object[] { section.Name, groups });
-                }
-            }
             return data;
         }
 
-        public object GetData(HttpContextBase context)
+        protected virtual void AppendDbContextData(List<object[]> output)
         {
-            return NonChangingContextData;
+            var contexts = OnResolveDatabases()
+                .Select(db => new DbDiagnosticsContextBuilder(db).Build());
+
+            AppendContextsData(output, contexts);
         }
 
         protected virtual IEnumerable<ISisoDatabase> OnResolveDatabases()
@@ -62,6 +43,33 @@ namespace SisoDb.Glimpse
             return ResolveDatabasesUsing == null
                 ? Enumerable.Empty<ISisoDatabase>()
                 : ResolveDatabasesUsing.Invoke();
+        }
+
+        protected void AppendContextsData(List<object[]> output, IEnumerable<DiagnosticsContext> contexts)
+        {
+            foreach (var diagnosticsContext in contexts)
+            {
+                var sections = new List<object[]> { new[] { diagnosticsContext.Name + ", contains", " " } };
+                foreach (var section in diagnosticsContext.Sections)
+                {
+                    var groups = new List<object[]> { new object[] { section.Name + ", contains", " " } };
+                    foreach (var group in section.Groups)
+                    {
+                        var groupNodes = new List<object[]> { new[] { group.Name + ", contains", "Value" } };
+                        foreach (var node in group.Nodes)
+                            groupNodes.Add(new[] { node.Name, node.Value });
+
+                        if (groupNodes.Count > 1)
+                            groups.Add(new object[] { section.Name == group.Name ? null : group.Name, groupNodes });
+                    }
+
+                    if (groups.Count > 1)
+                        sections.Add(new object[] { section.Name, groups });
+                }
+
+                if (sections.Count > 1)
+                    output.Add(new object[] { diagnosticsContext.Name, sections });
+            }
         }
     }
 }

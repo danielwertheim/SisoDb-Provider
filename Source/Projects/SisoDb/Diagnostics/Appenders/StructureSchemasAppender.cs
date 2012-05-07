@@ -18,15 +18,13 @@ namespace SisoDb.Diagnostics.Appenders
             var section = Context.AddSection("StructureSchemas");
             foreach (var schema in structureSchemas.GetSchemas().OrderBy(s => s.Name))
             {
-                var schemaGrp = new DiagnosticsGroup(schema.Name);
-                section.AddGroup(schemaGrp);
+                var schemaGrp = section.AddGroup(schema.Name);
                 OnAppendStructureSchema(schemaGrp, schema);
 
                 for (var i = 0; i < schema.IndexAccessors.Count; i++)
                 {
                     var indexAccessor = schema.IndexAccessors[i];
-                    var iacGrp = new DiagnosticsGroup("{0}.IndexAccessor[{1}]", schema.Name, i);
-                    section.AddGroup(iacGrp);
+                    var iacGrp = section.AddGroup("{0}.IndexAccessor[{1}]", schema.Name, i);
                     OnAppendIndexAccessor(iacGrp, indexAccessor);
                 }
             }

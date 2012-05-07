@@ -8,6 +8,7 @@ namespace SisoDb.Diagnostics
     public class DiagnosticsSection
     {
         private readonly Dictionary<string, DiagnosticsGroup> _groups;
+
         public string Name { get; private set; }
         public IEnumerable<DiagnosticsGroup> Groups
         {
@@ -21,19 +22,12 @@ namespace SisoDb.Diagnostics
             _groups = new Dictionary<string, DiagnosticsGroup>();
         }
 
-        public DiagnosticsSection AddGroup(DiagnosticsGroup group)
+        public DiagnosticsGroup AddGroup(string name, params object[] formattingArgs)
         {
+            var group = new DiagnosticsGroup(name, formattingArgs);
             _groups.Add(group.Name, group);
 
-            return this;
-        }
-
-        public DiagnosticsSection AddGroupsFor<T>(IEnumerable<T> items, Func<T, DiagnosticsGroup> fn)
-        {
-            foreach (var grp in items.Select(fn.Invoke))
-                _groups.Add(grp.Name, grp);
-
-            return this;
+            return group;
         }
     }
 }
