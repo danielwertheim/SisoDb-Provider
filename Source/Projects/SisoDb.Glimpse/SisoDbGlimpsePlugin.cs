@@ -23,19 +23,21 @@ namespace SisoDb.Glimpse
 
         public virtual object GetData(HttpContextBase context)
         {
-            var data = new List<object[]> { new[] { "Context", " " } };
+            var data = new List<object[]>();
 
-            AppendDbContextData(data);
+            AppendDbDiagnostics(data);
 
             return data;
         }
 
-        protected virtual void AppendDbContextData(List<object[]> output)
+        protected virtual void AppendDbDiagnostics(List<object[]> output)
         {
-            var contexts = OnResolveDatabases()
-                .Select(db => new DbDiagnosticsContextBuilder(db).Build());
+            var sections = OnResolveDatabases()
+                .Select(db => new DbDiagnosticsSectionBuilder(db).Build());
 
-            AppendContextsData(output, contexts);
+            output.Add(new[] { "Section", string.Empty });
+            foreach (var section in sections)
+                AppendSection(output, section);
         }
 
         protected virtual IEnumerable<ISisoDatabase> OnResolveDatabases()
@@ -45,38 +47,40 @@ namespace SisoDb.Glimpse
                 : ResolveDatabasesUsing.Invoke();
         }
 
-        protected void AppendContextsData(List<object[]> output, IEnumerable<DiagnosticsContext> contexts)
+        protected void AppendSection(List<object[]> output, DiagnosticsSection section)
         {
-            foreach (var diagnosticsContext in contexts)
+            var sectionContents = new List<object[]> { new object[] { "Contains", "" } };
+            foreach (var node in section.Nodes)
+                sectionContents.Add(new object[] { node.Name, node.Value });
+
+            foreach (var group in section.Groups)
             {
-                var sections = new List<object[]> { new[] { diagnosticsContext.Name + ", contains", string.Empty } };
-                foreach (var section in diagnosticsContext.Sections)
-                {
-                    var groups = new List<object[]> { new object[] { section.Name + ", contains", string.Empty } };
-                    foreach (var group in section.Groups)
-                    {
-                        var groupNodes = new List<object[]> { new[] { group.Name + ", contains", "Value" } };
-                        foreach (var node in group.Nodes)
-                            groupNodes.Add(new[] { node.Name, node.Value });
-
-                        if (groupNodes.Count > 1)
-                            groups.Add(new object[] { section.Name == group.Name ? null : group.Name, groupNodes });
-                    }
-
-                    if (groups.Count > 1)
-                        sections.Add(new object[] { section.Name, groups });
-
-                    var sectionNodes = new List<object[]> { new object[] { section.Name + ", contains", "Value" } };
-                    foreach (var node in section.Nodes)
-                        sectionNodes.Add(new[] { node.Name, node.Value });
-
-                    if (sectionNodes.Count > 1)
-                        sections.Add(new object[] { section.Name, sectionNodes });
-                }
-
-                if (sections.Count > 1)
-                    output.Add(new object[] { diagnosticsContext.Name, sections });
+                var groupContents = GetGroupContents(group);
+                if(groupContents.Count > 1)
+                    sectionContents.Add(new object[] { group.Name, groupContents });
             }
+
+            if(sectionContents.Count > 1)
+                output.Add(new object[] { section.Name, sectionContents });
+        }
+
+        public List<object[]> GetGroupContents(DiagnosticsGroup group)
+        {
+            var groupContents = new List<object[]> { new object[] { "Contains", "" } };
+
+            foreach (var node in group.Nodes)
+                groupContents.Add(new object[] { node.Name, node.Value });
+
+            foreach (var childGroup in group.Groups)
+            {
+                var childGroupContents = GetGroupContents(childGroup);
+                if(childGroupContents.Count > 1)
+                    groupContents.Add(new object[] { childGroup.Name, childGroupContents });
+            }
+
+            
+
+            return groupContents;
         }
     }
 }

@@ -2,9 +2,9 @@
 {
     public static class DiagnosticsExtensions
     {
-         public static DiagnosticsContext GetDiagnostics(this ISisoDatabase database)
+         public static DiagnosticsSection GetDiagnostics(this ISisoDatabase database)
          {
-             return new DbDiagnosticsContextBuilder(database).Build();
+             return new DbDiagnosticsSectionBuilder(database).Build();
          }
     }
 }

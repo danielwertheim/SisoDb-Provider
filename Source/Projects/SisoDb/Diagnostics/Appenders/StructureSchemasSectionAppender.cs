@@ -1,38 +1,32 @@
 using System.Linq;
 using PineCone.Structures.Schemas;
+using PineCone.Structures.Schemas.Configuration;
 using PineCone.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Diagnostics.Appenders
 {
-    public class StructureSchemasAppender : IDiagnosticsContextAppender<IStructureSchemas>
+    public class StructureSchemasSectionAppender : IDiagnosticsSectionAppender<IStructureSchemas>
     {
-        protected readonly DiagnosticsContext Context;
+        protected readonly DiagnosticsSection Section;
 
-        public StructureSchemasAppender(DiagnosticsContext context)
+        public StructureSchemasSectionAppender(DiagnosticsSection section)
         {
-            Context = context;
+            Section = section;
         }
 
         public virtual void Append(IStructureSchemas structureSchemas)
         {
-            var section = Context.AddSection("StructureSchemas");
+            var group = Section.AddGroup("StructureSchemas");
             foreach (var schema in structureSchemas.GetSchemas().OrderBy(s => s.Name))
             {
-                var schemaGrp = section.AddGroup(schema.Name);
-                OnAppendStructureSchema(schemaGrp, schema);
-
-                for (var i = 0; i < schema.IndexAccessors.Count; i++)
-                {
-                    var indexAccessor = schema.IndexAccessors[i];
-                    var iacGrp = section.AddGroup("{0}.IndexAccessor[{1}]", schema.Name, i);
-                    OnAppendIndexAccessor(iacGrp, indexAccessor);
-                }
+                var typeConfig = structureSchemas.StructureTypeFactory.Configurations.GetConfiguration(schema.Type.Type);
+                OnAppendStructureSchema(group, schema, typeConfig);
             }
         }
 
-        protected virtual void OnAppendStructureSchema(DiagnosticsGroup group, IStructureSchema schema)
+        protected virtual void OnAppendStructureSchema(DiagnosticsGroup parent, IStructureSchema schema, IStructureTypeConfig typeConfig)
         {
-            group
+            var group = parent.AddGroup(schema.Name)
                 .AddNode("Name", schema.Name)
                 .AddNode("Hash", schema.Hash)
                 .AddNode("HasId", schema.HasId)
@@ -60,11 +54,31 @@ namespace SisoDb.Diagnostics.Appenders
                     .AddNode("TimeStampAccessor.Path", schema.TimeStampAccessor.Path)
                     .AddNode("TimeStampAccessor.DataType", schema.TimeStampAccessor.DataType);
             }
+
+            if(typeConfig != null)
+                OnAppendNonIndexedMemberPaths(group, typeConfig);
+
+            if(schema.IndexAccessors.Any())
+                OnAppendIndexAccessors(group, schema);
         }
 
-        protected virtual void OnAppendIndexAccessor(DiagnosticsGroup group, IIndexAccessor indexAccessor)
+        protected virtual void OnAppendNonIndexedMemberPaths(DiagnosticsGroup parent, IStructureTypeConfig typeConfig)
         {
-            group
+            var groupOfNotIndexedPaths = parent.AddGroup("Member paths NOT being indexed");
+            foreach (var notIndexed in typeConfig.MemberPathsNotBeingIndexed)
+                groupOfNotIndexedPaths.AddNode(notIndexed, null);
+        }
+
+        protected virtual void OnAppendIndexAccessors(DiagnosticsGroup parent, IStructureSchema schema)
+        {
+            var indexAccessorsGroup = parent.AddGroup("Indexes");
+            foreach (var indexAccessor in schema.IndexAccessors)
+                OnAppendIndexAccessor(indexAccessorsGroup, schema, indexAccessor);
+        }
+
+        protected virtual void OnAppendIndexAccessor(DiagnosticsGroup parent, IStructureSchema schema, IIndexAccessor indexAccessor)
+        {
+            var group = parent.AddGroup(indexAccessor.Path)
                 .AddNode("Path", indexAccessor.Path)
                 .AddNode("DataType", indexAccessor.DataType)
 

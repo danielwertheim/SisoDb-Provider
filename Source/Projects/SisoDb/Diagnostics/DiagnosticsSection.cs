@@ -11,6 +11,14 @@ namespace SisoDb.Diagnostics
         private readonly Dictionary<string, DiagnosticsNode> _nodes;
 
         public string Name { get; private set; }
+        public bool HasGroups
+        {
+            get { return _groups.Any(); }
+        }
+        public bool HasNodes
+        {
+            get { return _nodes.Any(); }
+        }
         public IEnumerable<DiagnosticsGroup> Groups
         {
             get { return _groups.Values; }
