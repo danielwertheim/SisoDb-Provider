@@ -51,6 +51,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
+    <Reference Include="Glimpse.Core, Version=0.87.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -72,6 +75,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -98,6 +102,7 @@
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
     <Compile Include="Diagnostics\DbDiagnosticsBuilderTests.cs" />
     <Compile Include="Dynamic\DynamicLambdaBuilderTests.cs" />
+    <Compile Include="Glimpse\SisoDbGlimpsePluginTests.cs" />
     <Compile Include="JsonApprovals.cs" />
     <Compile Include="Providers\Caching\CacheTestsBase.cs" />
     <Compile Include="Providers\Caching\Sql2008CacheTests.cs" />
@@ -143,6 +148,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
       <Project>{9202564D-92FD-448F-851D-3DD3D1AA3137}</Project>
       <Name>SisoDb.Dynamic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Glimpse\SisoDb.Glimpse.csproj">
+      <Project>{35D70540-2CB9-4DE7-9741-2292F275518B}</Project>
+      <Name>SisoDb.Glimpse</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
