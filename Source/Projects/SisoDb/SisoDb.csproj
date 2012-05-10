@@ -36,8 +36,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SisoDb.XML</DocumentationFile>
@@ -71,6 +70,8 @@
     <Compile Include="Caching\CacheConsumeModes.cs" />
     <Compile Include="Caching\CacheProviderBase.cs" />
     <Compile Include="Caching\CacheProviderExtensions.cs" />
+    <Compile Include="Configurations\ConfigurationExtensions.cs" />
+    <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
     <Compile Include="Dac\AdoDriver.cs" />
