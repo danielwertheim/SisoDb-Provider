@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Glimpse.Core.Extensibility;
 using SisoDb.Diagnostics;
+using SisoDb.Diagnostics.Builders;
 
 namespace SisoDb.Glimpse
 {
@@ -33,7 +34,7 @@ namespace SisoDb.Glimpse
         protected virtual void AppendDbDiagnostics(List<object[]> output)
         {
             var sections = OnResolveDatabases()
-                .Select(db => new DbDiagnosticsSectionBuilder(db).Build());
+                .Select(db => new DbDiagnosticsBuilder(db).Build());
 
             output.Add(new[] { "Section", string.Empty });
             foreach (var section in sections)
@@ -47,7 +48,7 @@ namespace SisoDb.Glimpse
                 : ResolveDatabasesUsing.Invoke();
         }
 
-        protected void AppendSection(List<object[]> output, DiagnosticsSection section)
+        protected void AppendSection(List<object[]> output, DiagnosticsInfo section)
         {
             var sectionContents = new List<object[]> { new object[] { "Contains", "" } };
             foreach (var node in section.Nodes)
