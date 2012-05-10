@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using ApprovalTests.Reporters;
+using NUnit.Framework;
 
 namespace SisoDb.UnitTests
 {
     [TestFixture]
+    [UseReporter(typeof(DiffReporter))]
     public abstract class UnitTestBase
     {
         [TestFixtureSetUp]
