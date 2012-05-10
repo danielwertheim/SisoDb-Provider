@@ -2,11 +2,11 @@ using PineCone.Serializers;
 
 namespace SisoDb.Serialization
 {
-    public class SerializerForStructureBuilder : IStructureSerializer
+    public class StructureSerializer : IStructureSerializer
     {
-        private readonly IJsonSerializer _serializer;
+        private readonly ISisoDbSerializer _serializer;
 
-        public SerializerForStructureBuilder(IJsonSerializer serializer)
+        public StructureSerializer(ISisoDbSerializer serializer)
         {
             _serializer = serializer;
         }

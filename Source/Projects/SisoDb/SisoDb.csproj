@@ -204,6 +204,8 @@
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
+    <Compile Include="Structures\StructureBuilderFactoryForInserts.cs" />
+    <Compile Include="Structures\StructureBuilderFactoryForUpdates.cs" />
     <Compile Include="Structures\StructureBuilders.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
@@ -212,7 +214,7 @@
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
-    <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
+    <Compile Include="Serialization\StructureSerializer.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="IDbProviderFactory.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
@@ -252,7 +254,7 @@
     <Compile Include="Dac\ISqlStatements.cs" />
     <Compile Include="Dac\SqlStatementsBase.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
-    <Compile Include="Serialization\IJsonSerializer.cs" />
+    <Compile Include="Serialization\ISisoDbSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="DbSchema\DbSchemaManager.cs" />
     <Compile Include="Dac\DacParameter.cs" />

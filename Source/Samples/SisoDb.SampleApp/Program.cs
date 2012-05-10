@@ -17,14 +17,14 @@ namespace SisoDb.SampleApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hi. Goto the Sample-app and open Program.cs and App.config and ensure that you are satisfied with the connection string.");
-            Console.ReadKey();
-            return;
+            //Console.WriteLine("Hi. Goto the Sample-app and open Program.cs and App.config and ensure that you are satisfied with the connection string.");
+            //Console.ReadKey();
+            //return;
 
             //********* SQL2008 ***********
             //var db = "SisoDb.Sql2008".CreateSql2008Db();
             //********* SQL2012 ***********
-            //var db = "SisoDb.Sql2012".CreateSql2012Db();
+            var db = "SisoDb.Sql2012".CreateSql2012Db();
             //********* SQLCE4 ***********
             //var db = "SisoDb.SqlCe4".CreateSqlCe4Db();
             //********************************************
@@ -34,20 +34,20 @@ namespace SisoDb.SampleApp
 
             //Some tweaks
             //db.Settings.AllowUpsertsOfSchemas = false;
-            //db.Settings.SynchronizeSchemaChanges = false;
+            db.Settings.SynchronizeSchemaChanges = false;
 
             //To get rid of warm up in tests as it first syncs schemas etc
-            //db.UpsertStructureSet<Customer>();
+            db.UpsertStructureSet<Customer>();
 
-            //ProfilingInserts(db, 1000, 5);
+            ProfilingInserts(db, 1000, 5);
             //ProfilingQueries(() => GetAllCustomers(db));
             //ProfilingQueries(() => GetAllCustomersAsJson(db));
-            //ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
+            ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
             //ProfilingQueries(() => GetCustomersAsJsonViaIndexesTable(db, 500, 550));
 
-            //UpsertSp(db, 500, 550);
-            //ProfilingQueries(() => GetCustomersViaSpExp(db, 500, 550));
-            //ProfilingQueries(() => GetCustomersViaSpRaw(db, 500, 550));
+            UpsertSp(db, 500, 550);
+            ProfilingQueries(() => GetCustomersViaSpExp(db, 500, 550));
+            ProfilingQueries(() => GetCustomersViaSpRaw(db, 500, 550));
 
             //ProfilingUpdateMany(db, 500, 550);
 

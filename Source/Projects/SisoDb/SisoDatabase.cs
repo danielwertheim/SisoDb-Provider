@@ -21,7 +21,7 @@ namespace SisoDb
         private IDbSettings _settings;
         private IStructureSchemas _structureSchemas;
         private IStructureBuilders _structureBuilders;
-        private IJsonSerializer _serializer;
+        private ISisoDbSerializer _serializer;
 
         protected readonly IServerClient ServerClient;
         
@@ -86,7 +86,7 @@ namespace SisoDb
             }
         }
 
-        public IJsonSerializer Serializer
+        public ISisoDbSerializer Serializer
         {
             get { return _serializer; }
             set

@@ -1,9 +1,12 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using NUnit.Framework;
 using PineCone.Structures.IdGenerators;
+using PineCone.Structures.Schemas;
 using SisoDb.Configurations;
 using SisoDb.Serialization;
 using SisoDb.Structures;
+using SisoDb.UnitTests.TestFactories;
 
 namespace SisoDb.UnitTests.Configurations
 {
@@ -11,17 +14,47 @@ namespace SisoDb.UnitTests.Configurations
     public class DbConfigurationTests : UnitTestBase
     {
         [Test]
-        public void UseManualStructureIdAssignment_Should_user_structurebuilder_with_EmptyStructureIdGenerator_and_default_serializer()
+        public void UseManualStructureIdAssignment_Should_make_ForInserts_to_return_builder_with_EmptyStructureIdGenerator()
         {
-            StructureBuilderFactoryForInserts assigned = null;
-            var dbMock = new Mock<ISisoDatabase>();
-            dbMock.SetupSet(f => f.StructureBuilders.ForInserts = It.IsAny<StructureBuilderFactoryForInserts>()).Callback<StructureBuilderFactoryForInserts>(value => assigned = value);
+            var serializerFake = new Mock<ISisoDbSerializer>();
+            var structureBuilders = new StructureBuilders(() => serializerFake.Object);
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
 
-            dbMock.Object.Configure().UseManualStructureIdAssignment();
-            var builder = assigned(null, null);
+            dbFake.Object.Configure().UseManualStructureIdAssignment();
+            var builder = structureBuilders.ForInserts(Mock.Of<IStructureSchema>(), Mock.Of<IIdentityStructureIdGenerator>());
 
             Assert.AreEqual(typeof(EmptyStructureIdGenerator), builder.StructureIdGenerator.GetType());
-            Assert.AreEqual(typeof(SerializerForStructureBuilder), builder.StructureSerializer.GetType());
+        }
+
+        [Test]
+        public void ResolveGuidStructureIdGeneratorBy_Should_make_ForInserts_to_return_builder_with_configured_id_generator()
+        {
+            var serializerFake = new Mock<ISisoDbSerializer>();
+            var structureBuilders = new StructureBuilders(() => serializerFake.Object);
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
+
+            dbFake.Object.Configure().ResolveGuidStructureIdGeneratorBy(() => new EmptyStructureIdGenerator());
+            var builder = structureBuilders.ForInserts(StructureSchemaTestFactory.Stub<MyClassWithGuidId>(generateIdAccessor: true), Mock.Of<IIdentityStructureIdGenerator>());
+
+            Assert.AreEqual(typeof(EmptyStructureIdGenerator), builder.StructureIdGenerator.GetType());
+        }
+
+        [Test]
+        public void UseSerializerOf_Should_assign_new_serialzer_on_Db()
+        {
+            var serializerFake = Mock.Of<ISisoDbSerializer>();
+            var dbFake = new Mock<ISisoDatabase>();
+
+            dbFake.Object.Configure().UseSerializerOf(serializerFake);
+
+            dbFake.VerifySet(f => f.Serializer = serializerFake, Times.Once());
+        }
+
+        private class MyClassWithGuidId
+        {
+            public Guid StructureId { get; set; }
         }
     }
 }

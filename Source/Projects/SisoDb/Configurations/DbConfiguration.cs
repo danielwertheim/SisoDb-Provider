@@ -1,5 +1,8 @@
+using System;
 using EnsureThat;
-using PineCone.Structures.IdGenerators;
+using PineCone.Structures;
+using SisoDb.Serialization;
+using SisoDb.Structures;
 
 namespace SisoDb.Configurations
 {
@@ -13,9 +16,23 @@ namespace SisoDb.Configurations
             Database = database;
         }
 
-        public DbConfiguration UseManualStructureIdAssignment()
+        public virtual DbConfiguration UseManualStructureIdAssignment()
         {
-            Database.StructureBuilders.StructureIdGeneratorFn = (schema) => new EmptyStructureIdGenerator();
+            Database.StructureBuilders.ForInserts = (schema, generator) => StructureBuilders.ForPreservingStructureIds(Database.Serializer);
+
+            return this;
+        }
+
+        public virtual DbConfiguration ResolveGuidStructureIdGeneratorBy(Func<IStructureIdGenerator> fn)
+        {
+            Database.StructureBuilders.GuidStructureIdGeneratorFn = fn;
+
+            return this;
+        }
+
+        public virtual DbConfiguration UseSerializerOf(ISisoDbSerializer serializer)
+        {
+            Database.Serializer = serializer;
 
             return this;
         }

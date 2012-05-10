@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SisoDb.Serialization
 {
-    public interface IJsonSerializer
+    public interface ISisoDbSerializer
     {
         /// <summary>
         /// Determines if the deserialization should be performed in parallel.

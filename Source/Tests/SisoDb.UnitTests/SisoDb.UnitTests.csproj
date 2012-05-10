@@ -122,7 +122,8 @@
     <Compile Include="Connections\SisoConnectionInfoTests.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
     <Compile Include="Stub.cs" />
-    <Compile Include="TestFactories\StructureSchemaStubFactory.cs" />
+    <Compile Include="TestFactories\StructureSchemasStub.cs" />
+    <Compile Include="TestFactories\StructureSchemaTestFactory.cs" />
     <Compile Include="TestFactories\StructurePropertyTestFactory.cs" />
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
