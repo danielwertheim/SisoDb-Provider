@@ -76,6 +76,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configurations\DbConfigurationTests.cs" />
     <Compile Include="Connections\ConnectionStringTests.cs" />
     <Compile Include="CustomAssert.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslatorTests.cs" />

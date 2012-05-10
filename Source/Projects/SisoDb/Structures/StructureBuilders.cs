@@ -1,4 +1,3 @@
-using System;
 using EnsureThat;
 using NCore;
 using PineCone.Structures;
@@ -9,19 +8,26 @@ using SisoDb.Serialization;
 
 namespace SisoDb.Structures
 {
+    public delegate IStructureBuilder StructureBuilderFactoryForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator);
+    public delegate IStructureBuilder StructureBuilderFactoryForUpdates(IStructureSchema structureSchema);
+
     public class StructureBuilders : IStructureBuilders
     {
-    	public Func<IStructureSchema, IIdentityStructureIdGenerator, IStructureBuilder> ForInserts { get; set; }
-
-        public Func<IStructureSchema, IStructureBuilder> ForUpdates { get; set; }
+        public StructureBuilderFactoryForInserts ForInserts { get; set; }
+        public StructureBuilderFactoryForUpdates ForUpdates { get; set; }
 
 		public StructureBuilders()
 		{
-			ForInserts = CreateForInserts;
-            ForUpdates = CreateForUpdates;
+			Reset();
         }
 
-		private IStructureBuilder CreateForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator)
+        public void Reset()
+        {
+            ForInserts = DefaultForInserts;
+            ForUpdates = DefaultForUpdates;
+        }
+
+        public static IStructureBuilder DefaultForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator)
 		{
 			Ensure.That(structureSchema, "structureSchema").IsNotNull();
 			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
@@ -52,7 +58,16 @@ namespace SisoDb.Structures
             throw new SisoDbException(ExceptionMessages.StructureBuilders_CreateForInsert.Inject(idType, structureSchema.Name));
         }
 
-        private static IStructureBuilder CreateForUpdates(IStructureSchema structureSchema)
+        public static IStructureBuilder DefaultForUpdates(IStructureSchema structureSchema)
+        {
+            return new StructureBuilderPreservingId
+            {
+                StructureIdGenerator = new EmptyStructureIdGenerator(),
+                StructureSerializer = new SerializerForStructureBuilder()
+            };
+        }
+
+        public static IStructureBuilder ForManualStructureIdAssignment()
         {
             return new StructureBuilderPreservingId
             {
