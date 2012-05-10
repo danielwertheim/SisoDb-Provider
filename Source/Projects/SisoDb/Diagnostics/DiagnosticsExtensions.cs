@@ -1,10 +1,12 @@
-﻿namespace SisoDb.Diagnostics
+﻿using SisoDb.Diagnostics.Builders;
+
+namespace SisoDb.Diagnostics
 {
     public static class DiagnosticsExtensions
     {
-         public static DiagnosticsSection GetDiagnostics(this ISisoDatabase database)
+         public static DiagnosticsInfo GetDiagnostics(this ISisoDatabase database)
          {
-             return new DbDiagnosticsSectionBuilder(database).Build();
+             return new DbDiagnosticsBuilder(database).Build();
          }
     }
 }

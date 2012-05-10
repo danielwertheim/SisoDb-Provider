@@ -5,18 +5,18 @@ using PineCone.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Diagnostics.Appenders
 {
-    public class StructureSchemasSectionAppender : IDiagnosticsSectionAppender<IStructureSchemas>
+    public class StructureSchemasDiagnosticsAppender : IDiagnosticsAppender<IStructureSchemas>
     {
-        protected readonly DiagnosticsSection Section;
+        protected readonly DiagnosticsInfo Info;
 
-        public StructureSchemasSectionAppender(DiagnosticsSection section)
+        public StructureSchemasDiagnosticsAppender(DiagnosticsInfo info)
         {
-            Section = section;
+            Info = info;
         }
 
         public virtual void Append(IStructureSchemas structureSchemas)
         {
-            var group = Section.AddGroup("StructureSchemas");
+            var group = Info.AddGroup("StructureSchemas");
             foreach (var schema in structureSchemas.GetSchemas().OrderBy(s => s.Name))
             {
                 var typeConfig = structureSchemas.StructureTypeFactory.Configurations.GetConfiguration(schema.Type.Type);

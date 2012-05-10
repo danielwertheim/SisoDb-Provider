@@ -5,7 +5,7 @@ using System.Linq;
 namespace SisoDb.Diagnostics
 {
     [Serializable]
-    public class DiagnosticsSection
+    public class DiagnosticsInfo
     {
         private readonly Dictionary<string, DiagnosticsGroup> _groups;
         private readonly Dictionary<string, DiagnosticsNode> _nodes;
@@ -28,7 +28,7 @@ namespace SisoDb.Diagnostics
             get { return _nodes.Values; }
         }
 
-        public DiagnosticsSection(string name, params object[] formattingArgs)
+        public DiagnosticsInfo(string name, params object[] formattingArgs)
         {
             Name = formattingArgs.Any() ? string.Format(name, formattingArgs) : name;
 
@@ -44,14 +44,14 @@ namespace SisoDb.Diagnostics
             return group;
         }
 
-        public DiagnosticsSection AddNode(string name, object value)
+        public DiagnosticsInfo AddNode(string name, object value)
         {
             _nodes.Add(name, new DiagnosticsNode(name, value.ToString()));
 
             return this;
         }
 
-        public DiagnosticsSection AddNode(string name, string value)
+        public DiagnosticsInfo AddNode(string name, string value)
         {
             _nodes.Add(name, new DiagnosticsNode(name, value));
 

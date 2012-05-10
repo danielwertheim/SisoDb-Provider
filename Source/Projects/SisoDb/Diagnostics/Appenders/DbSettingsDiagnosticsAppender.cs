@@ -1,17 +1,17 @@
 namespace SisoDb.Diagnostics.Appenders
 {
-    public class DbSettingsSectionAppender : IDiagnosticsSectionAppender<IDbSettings>
+    public class DbSettingsDiagnosticsAppender : IDiagnosticsAppender<IDbSettings>
     {
-        protected readonly DiagnosticsSection Section;
+        protected readonly DiagnosticsInfo Info;
 
-        public DbSettingsSectionAppender(DiagnosticsSection section)
+        public DbSettingsDiagnosticsAppender(DiagnosticsInfo info)
         {
-            Section = section;
+            Info = info;
         }
 
         public void Append(IDbSettings settings)
         {
-            Section.AddGroup("Settings")
+            Info.AddGroup("Settings")
                 .AddNode("AllowUpsertsOfSchemas", settings.AllowUpsertsOfSchemas)
                 .AddNode("SynchronizeSchemaChanges", settings.SynchronizeSchemaChanges)
                 .AddNode("MaxInsertManyBatchSize", settings.MaxInsertManyBatchSize)

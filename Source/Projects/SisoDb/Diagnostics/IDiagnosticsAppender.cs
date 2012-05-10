@@ -1,6 +1,6 @@
 namespace SisoDb.Diagnostics
 {
-    public interface IDiagnosticsSectionAppender<in T> 
+    public interface IDiagnosticsAppender<in T> 
     {
         void Append(T info);
     }
