@@ -1,5 +1,5 @@
 using EnsureThat;
-using SisoDb.Structures;
+using PineCone.Structures.IdGenerators;
 
 namespace SisoDb.Configurations
 {
@@ -15,8 +15,7 @@ namespace SisoDb.Configurations
 
         public DbConfiguration UseManualStructureIdAssignment()
         {
-            Database.StructureBuilders.ForInserts = (schema, getNextIdentity) =>
-                StructureBuilders.ForManualStructureIdAssignment();
+            Database.StructureBuilders.StructureIdGeneratorFn = (schema) => new EmptyStructureIdGenerator();
 
             return this;
         }

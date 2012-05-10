@@ -6,9 +6,9 @@ namespace SisoDb.Serialization
     {
         private readonly IJsonSerializer _serializer;
 
-        public SerializerForStructureBuilder()
+        public SerializerForStructureBuilder(IJsonSerializer serializer)
         {
-            _serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+            _serializer = serializer;
         }
 
         public string Serialize<T>(T item) where T : class

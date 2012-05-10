@@ -1,5 +1,7 @@
+using System;
 using EnsureThat;
 using NCore;
+using PineCone.Serializers;
 using PineCone.Structures;
 using PineCone.Structures.IdGenerators;
 using PineCone.Structures.Schemas;
@@ -8,26 +10,18 @@ using SisoDb.Serialization;
 
 namespace SisoDb.Structures
 {
-    public delegate IStructureBuilder StructureBuilderFactoryForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator);
-    public delegate IStructureBuilder StructureBuilderFactoryForUpdates(IStructureSchema structureSchema);
-
     public class StructureBuilders : IStructureBuilders
     {
-        public StructureBuilderFactoryForInserts ForInserts { get; set; }
-        public StructureBuilderFactoryForUpdates ForUpdates { get; set; }
+        protected readonly Func<IJsonSerializer> SerializerFn;
 
-		public StructureBuilders()
-		{
-			Reset();
-        }
+        public Func<IStructureSchema, IStructureIdGenerator> StructureIdGeneratorFn { get; set; }
 
-        public void Reset()
+        public StructureBuilders(Func<IJsonSerializer> serializerFn)
         {
-            ForInserts = DefaultForInserts;
-            ForUpdates = DefaultForUpdates;
+            SerializerFn = serializerFn;
         }
 
-        public static IStructureBuilder DefaultForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator)
+        public virtual IStructureBuilder ForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator)
 		{
 			Ensure.That(structureSchema, "structureSchema").IsNotNull();
 			Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
@@ -38,42 +32,38 @@ namespace SisoDb.Structures
                 return new StructureBuilder
                 {
                     StructureIdGenerator = new SequentialGuidStructureIdGenerator(),
-                    StructureSerializer = new SerializerForStructureBuilder()
+                    StructureSerializer = GetStructureSerializer()
                 };
 
             if (idType.IsIdentity())
                 return new StructureBuilder
                 {
 					StructureIdGenerator = identityStructureIdGenerator,
-                    StructureSerializer = new SerializerForStructureBuilder()
+                    StructureSerializer = GetStructureSerializer()
                 };
 
             if (idType == StructureIdTypes.String)
                 return new StructureBuilderPreservingId
                 {
                     StructureIdGenerator = new EmptyStructureIdGenerator(),
-                    StructureSerializer = new SerializerForStructureBuilder()
+                    StructureSerializer = GetStructureSerializer()
                 };
 
             throw new SisoDbException(ExceptionMessages.StructureBuilders_CreateForInsert.Inject(idType, structureSchema.Name));
         }
 
-        public static IStructureBuilder DefaultForUpdates(IStructureSchema structureSchema)
+        public virtual IStructureBuilder ForUpdates(IStructureSchema structureSchema)
         {
             return new StructureBuilderPreservingId
             {
                 StructureIdGenerator = new EmptyStructureIdGenerator(),
-                StructureSerializer = new SerializerForStructureBuilder()
+                StructureSerializer = GetStructureSerializer()
             };
         }
 
-        public static IStructureBuilder ForManualStructureIdAssignment()
+        protected virtual IStructureSerializer GetStructureSerializer()
         {
-            return new StructureBuilderPreservingId
-            {
-                StructureIdGenerator = new EmptyStructureIdGenerator(),
-                StructureSerializer = new SerializerForStructureBuilder()
-            };
+            return new SerializerForStructureBuilder(SerializerFn());
         }
     }
 }

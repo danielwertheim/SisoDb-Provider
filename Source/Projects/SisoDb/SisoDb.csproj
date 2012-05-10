@@ -210,7 +210,6 @@
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
-    <Compile Include="GlobalResourceContainer.cs" />
     <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="IDbProviderFactory.cs" />

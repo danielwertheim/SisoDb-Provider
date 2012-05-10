@@ -14,15 +14,12 @@ namespace SisoDb
 
         public static readonly IHashService HashService;
 
-        public static readonly GlobalResourceContainer Resources;
-
         static SisoEnvironment()
         {
             Formatting = new SisoDbFormatting();
             StringConverter = new StringConverter(Formatting);
             StringComparer = StringComparer.InvariantCultureIgnoreCase;
             HashService = new Crc32HashService();
-            Resources = new GlobalResourceContainer();
         }
     }
 }
