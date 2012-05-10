@@ -1,5 +1,4 @@
 ﻿using System;
-using ApprovalTests;
 using Moq;
 using NUnit.Framework;
 using PineCone.Structures.Schemas;
@@ -28,7 +27,7 @@ namespace SisoDb.UnitTests.Diagnostics
             var dbDiagnostics = new DbDiagnosticsBuilder(dbFake.Object);
             var info = dbDiagnostics.Build();
 
-            Approvals.Verify(info.ToJson());
+            JsonApprovals.VerifyAsJson(info);
         }
 
         private class MyDummy
