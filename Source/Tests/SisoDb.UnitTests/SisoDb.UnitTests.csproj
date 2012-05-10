@@ -41,6 +41,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ApprovalTests">
+      <HintPath>..\..\packages\ApprovalTests.1.9\lib\ApprovalTests.dll</HintPath>
+    </Reference>
+    <Reference Include="ApprovalUtilities">
+      <HintPath>..\..\packages\ApprovalTests.1.9\lib\ApprovalUtilities.dll</HintPath>
+    </Reference>
     <Reference Include="EnsureThat, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
@@ -90,6 +96,7 @@
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Diagnostics\DbDiagnosticsBuilderTests.cs" />
     <Compile Include="Dynamic\DynamicLambdaBuilderTests.cs" />
     <Compile Include="Providers\Caching\CacheTestsBase.cs" />
     <Compile Include="Providers\Caching\Sql2008CacheTests.cs" />
@@ -139,6 +146,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Serialization\SisoDb.Serialization.csproj">
+      <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
+      <Name>SisoDb.Serialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
