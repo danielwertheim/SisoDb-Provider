@@ -74,6 +74,16 @@ namespace SisoDb.Serialization.Common
 
 		public static DateTimeOffset ParseDateTimeOffset(string dateTimeOffsetStr)
 		{
+            if (string.IsNullOrEmpty(dateTimeOffsetStr)) return default(DateTimeOffset);
+
+            // for interop, do not assume format based on config
+            // format: prefer TimestampOffset, DCJSCompatible
+            if (dateTimeOffsetStr.StartsWith(EscapedWcfJsonPrefix))
+            {
+                return ParseWcfJsonDateOffset(dateTimeOffsetStr);
+            }
+
+            // format: next preference ISO8601
 			// assume utc when no offset specified
 			if (dateTimeOffsetStr.LastIndexOfAny(TimeZoneChars) < 10 && !dateTimeOffsetStr.EndsWith("Z"))
 				dateTimeOffsetStr += "Z";
@@ -86,10 +96,32 @@ namespace SisoDb.Serialization.Common
 			return XmlConvert.ToString(dateTime.ToStableUniversalTime(), XmlDateTimeSerializationMode.Utc);
 		}
 
+        public static string ToXsdTimeSpanString(TimeSpan timeSpan)
+        {
+            return XmlConvert.ToString(timeSpan);
+        }
+
+        public static string ToXsdTimeSpanString(TimeSpan? timeSpan)
+        {
+            return (timeSpan != null) ? XmlConvert.ToString(timeSpan.Value) : null;
+        }
+
 		public static DateTime ParseXsdDateTime(string dateTimeStr)
 		{
 			return XmlConvert.ToDateTime(dateTimeStr, XmlDateTimeSerializationMode.Utc);
 		}
+
+        public static TimeSpan ParseXsdTimeSpan(string dateTimeStr)
+        {
+            return XmlConvert.ToTimeSpan(dateTimeStr);
+        }
+
+        public static TimeSpan? ParseXsdNullableTimeSpan(string dateTimeStr)
+        {
+            return String.IsNullOrEmpty(dateTimeStr) ? 
+                null :
+                new TimeSpan?(XmlConvert.ToTimeSpan(dateTimeStr));
+        }
 
 		public static string ToShortestXsdDateTimeString(DateTime dateTime)
 		{
@@ -112,20 +144,20 @@ namespace SisoDb.Serialization.Common
 		/// </summary>
 		/// <param name="wcfJsonDate"></param>
 		/// <returns></returns>
-		public static DateTime ParseWcfJsonDate(string wcfJsonDate)
+		public static DateTimeOffset ParseWcfJsonDateOffset(string wcfJsonDate)
 		{
-
-			if (wcfJsonDate[0] == JsonUtils.EscapeChar)
+			if (wcfJsonDate[0] == '\\')
 			{
 				wcfJsonDate = wcfJsonDate.Substring(1);
 			}
 
 			var suffixPos = wcfJsonDate.IndexOf(WcfJsonSuffix);
-			var timeString = wcfJsonDate.Substring(WcfJsonPrefix.Length, suffixPos - WcfJsonPrefix.Length);
+			var timeString = (suffixPos < 0) ? wcfJsonDate : wcfJsonDate.Substring(WcfJsonPrefix.Length, suffixPos - WcfJsonPrefix.Length);
 
-			if (JsConfig.DateHandler == JsonDateHandler.ISO8601)
+			// for interop, do not assume format based on config
+			if (!wcfJsonDate.StartsWith(WcfJsonPrefix))
 			{
-				return DateTime.Parse(timeString, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+				return DateTimeOffset.Parse(timeString, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 			}
 
 			var timeZonePos = timeString.LastIndexOfAny(TimeZoneChars);
@@ -143,12 +175,57 @@ namespace SisoDb.Serialization.Common
 			if (JsConfig.DateHandler == JsonDateHandler.DCJSCompatible)
 			{
 				// DCJS ignores the offset and considers it local time if any offset exists
+				// REVIEW: DCJS shoves offset in a separate field 'offsetMinutes', we have the offset in the format, so shouldn't we use it?
 				return unixTime.FromUnixTimeMs().ToLocalTime();
 			}
 
 			var offset = timeZone.FromTimeOffsetString();
-			var date = unixTime.FromUnixTimeMs(offset);
-			return date;
+			var date = unixTime.FromUnixTimeMs().ToLocalTime();
+			return new DateTimeOffset(date.Ticks, offset);
+		}
+
+		/// <summary>
+		/// WCF Json format: /Date(unixts+0000)/
+		/// </summary>
+		/// <param name="wcfJsonDate"></param>
+		/// <returns></returns>
+		public static DateTime ParseWcfJsonDate(string wcfJsonDate)
+		{
+			if (wcfJsonDate[0] == JsonUtils.EscapeChar)
+			{
+				wcfJsonDate = wcfJsonDate.Substring(1);
+			}
+
+			var suffixPos = wcfJsonDate.IndexOf(WcfJsonSuffix);
+			var timeString = wcfJsonDate.Substring(WcfJsonPrefix.Length, suffixPos - WcfJsonPrefix.Length);
+
+            // for interop, do not assume format based on config
+            if (!wcfJsonDate.StartsWith(WcfJsonPrefix))
+            {
+				return DateTime.Parse(timeString, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+			}
+
+			var timeZonePos = timeString.LastIndexOfAny(TimeZoneChars);
+			var timeZone = timeZonePos <= 0 ? string.Empty : timeString.Substring(timeZonePos);
+			var unixTimeString = timeString.Substring(0, timeString.Length - timeZone.Length);
+
+			var unixTime = long.Parse(unixTimeString);
+
+			if (timeZone == string.Empty)
+			{
+                // when no timezone offset is supplied, then treat the time as UTC
+				return unixTime.FromUnixTimeMs();
+			}
+
+			if (JsConfig.DateHandler == JsonDateHandler.DCJSCompatible)
+			{
+                // DCJS ignores the offset and considers it local time if any offset exists
+				return unixTime.FromUnixTimeMs().ToLocalTime();
+			}
+
+            var offset = timeZone.FromTimeOffsetString();
+            var date = unixTime.FromUnixTimeMs(offset);
+            return new DateTimeOffset(date, offset).DateTime;
 		}
 
 		public static string ToWcfJsonDate(DateTime dateTime)

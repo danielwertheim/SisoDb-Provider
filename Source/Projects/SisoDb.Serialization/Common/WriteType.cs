@@ -71,7 +71,7 @@ namespace SisoDb.Serialization.Common
 
 		private static bool Init()
 		{
-			if (!typeof(T).IsClass && !typeof(T).IsInterface) return false;
+			if (!typeof(T).IsClass && !typeof(T).IsInterface && !JsConfig.TreatAsRefType(typeof(T))) return false;
 
 			var propertyInfos = TypeConfig<T>.Properties;
 			if (propertyInfos.Length == 0 && !JsState.IsWritingDynamic)

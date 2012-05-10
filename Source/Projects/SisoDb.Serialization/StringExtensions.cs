@@ -11,12 +11,17 @@
 //
 
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using SisoDb.Serialization.Support;
+
+#if WINDOWS_PHONE
+using System.IO.IsolatedStorage;
+using ServiceStack.Text.WP;
+
+#endif
 
 namespace SisoDb.Serialization
 {
@@ -175,7 +180,7 @@ namespace SisoDb.Serialization
             if (string.IsNullOrEmpty(text)) return text;
             if (anyCharOf == null || anyCharOf.Length == 0) return text;
 
-            var encodeCharMap = new HashSet<char>(anyCharOf);
+            var encodeCharMap = new System.Collections.Generic.HashSet<char>(anyCharOf);
 
             var sb = new StringBuilder();
             var textLength = text.Length;
@@ -260,6 +265,11 @@ namespace SisoDb.Serialization
                 return path + "/";
             }
             return path;
+        }
+
+        public static string AppendPath(this string uri, params string[] uriComponents)
+        {
+        	return AppendUrlPaths(uri, uriComponents);
         }
 
         public static string AppendUrlPaths(this string uri, params string[] uriComponents)
@@ -437,6 +447,15 @@ namespace SisoDb.Serialization
 			{
 				return new StreamReader( fileStream ).ReadToEnd( ) ;
 			}
+
+#elif WINDOWS_PHONE
+            using (var isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                using (var fileStream = isoStore.OpenFile(filePath, FileMode.Open))
+                {
+                    return new StreamReader(fileStream).ReadToEnd();
+                }
+            }
 #else
             return File.ReadAllText(filePath);
 #endif

@@ -167,6 +167,12 @@ namespace SisoDb.Serialization.Common
 			if (type == typeof(DateTimeOffset?))
 				return Serializer.WriteNullableDateTimeOffset;
 
+            if (type == typeof(TimeSpan))
+                return Serializer.WriteTimeSpan;
+
+            if (type == typeof(TimeSpan?))
+                return Serializer.WriteNullableTimeSpan;
+
             if (type == typeof(Guid))
                 return Serializer.WriteGuid;
 
@@ -197,7 +203,7 @@ namespace SisoDb.Serialization.Common
                 return Serializer.WriteObjectString;
             }
 
-            if (typeof(T).IsValueType)
+            if (typeof(T).IsValueType && !JsConfig.TreatAsRefType(typeof(T)))
             {
                 return JsConfig<T>.SerializeFn != null
                     ? JsConfig<T>.WriteFn<TSerializer>
@@ -276,7 +282,7 @@ namespace SisoDb.Serialization.Common
                 return WriteListsOfElements<TSerializer>.WriteIEnumerable;
             }
 
-            if (typeof(T).IsClass || typeof(T).IsInterface)
+            if (typeof(T).IsClass || typeof(T).IsInterface || JsConfig.TreatAsRefType(typeof(T)))
             {
                 var typeToStringMethod = WriteType<T, TSerializer>.Write;
                 if (typeToStringMethod != null)
