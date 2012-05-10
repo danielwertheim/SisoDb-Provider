@@ -23,16 +23,31 @@ namespace SisoDb.Configurations
             return this;
         }
 
-        public virtual DbConfiguration ResolveGuidStructureIdGeneratorBy(Func<IStructureIdGenerator> fn)
+        public virtual DbConfiguration UseGuidStructureIdGeneratorResolvedBy(Func<IStructureIdGenerator> fn)
         {
             Database.StructureBuilders.GuidStructureIdGeneratorFn = fn;
 
             return this;
         }
 
-        public virtual DbConfiguration UseSerializerOf(ISisoDbSerializer serializer)
+        public virtual DbConfiguration UseSerializerResolvedBy(Func<ISisoDbSerializer> fn)
         {
-            Database.Serializer = serializer;
+            Database.Serializer = fn();
+
+            return this;
+        }
+
+        public virtual DbConfiguration UseCacheProviderResolvedBy(Func<ICacheProvider> fn)
+        {
+            Database.CacheProvider = fn.Invoke();
+
+            return this;
+        }
+
+        public virtual DbConfiguration ForProduction()
+        {
+            Database.Settings.AllowUpsertsOfSchemas = false;
+            Database.Settings.SynchronizeSchemaChanges = false;
 
             return this;
         }

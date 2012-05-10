@@ -51,6 +51,7 @@ namespace SisoDb
         }
 
         public ICacheProvider CacheProvider { get; set; }
+
         public IDbProviderFactory ProviderFactory
         {
             get { return _providerFactory; }
