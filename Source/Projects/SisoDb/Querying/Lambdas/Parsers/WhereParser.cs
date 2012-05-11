@@ -16,12 +16,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
     {
     	protected static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
         private readonly object _lock;
-        private readonly List<MemberExpression> _virtualPrefixMembers;
-        private INodesCollection _nodes;
+	    protected readonly List<MemberExpression> VirtualPrefixMembers;
+	    protected INodesCollection Nodes;
 
         protected bool IsFlatteningMembers
         {
-            get { return _virtualPrefixMembers.Count > 0; }
+            get { return VirtualPrefixMembers.Count > 0; }
         }
 
         static WhereParser()
@@ -38,17 +38,17 @@ namespace SisoDb.Querying.Lambdas.Parsers
         public WhereParser()
         {
             _lock = new object();
-            _virtualPrefixMembers = new List<MemberExpression>();
+            VirtualPrefixMembers = new List<MemberExpression>();
         }
 
-        public IParsedLambda Parse(LambdaExpression e)
+        public virtual IParsedLambda Parse(LambdaExpression e)
         {
             if (e.Body.NodeType == ExpressionType.MemberAccess && !e.Body.Type.IsBoolType())
                 throw new SisoDbException(ExceptionMessages.WhereExpressionParser_NoMemberExpressions);
 
             lock (_lock)
             {
-                _nodes = new NodesCollection();
+                Nodes = new NodesCollection();
 
                 Visit(e);
 
@@ -56,11 +56,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
             }
         }
 
-		protected IParsedLambda CreateParsedLambda()
+		protected virtual IParsedLambda CreateParsedLambda()
 		{
 			var nodes =
 				new BoolNodesTransformer().Transform(
-				new NullableNodesTransformer().Transform(_nodes));
+				new NullableNodesTransformer().Transform(Nodes));
 
 			return new ParsedLambda(nodes.ToArray());
 		}
@@ -79,7 +79,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             switch (e.NodeType)
             {
                 case ExpressionType.Not:
-                    _nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
+                    Nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
                     Visit(e.Operand);
                     break;
                 case ExpressionType.Convert:
@@ -99,17 +99,17 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			var isGroupExpression = e.Left is BinaryExpression || e.Right is BinaryExpression;
 
             if (isGroupExpression)
-                _nodes.AddNode(new StartGroupNode());
+                Nodes.AddNode(new StartGroupNode());
 
             if (e.Left.NodeType == ExpressionType.Parameter)
-                Visit(_virtualPrefixMembers.LastOrDefault());
+                Visit(VirtualPrefixMembers.LastOrDefault());
             else
                 Visit(e.Left);
 
             if (ExpressionUtils.IsNullConstant(e.Right))
-                _nodes.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
+                Nodes.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
-                _nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
+                Nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
 
 			if(e.Left.NodeType == ExpressionType.Convert)
 			{
@@ -123,7 +123,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 				Visit(e.Right);
 
             if (isGroupExpression)
-                _nodes.AddNode(new EndGroupNode());
+                Nodes.AddNode(new EndGroupNode());
 
             return e;
         }
@@ -132,11 +132,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             if (ExpressionUtils.IsNullConstant(e))
             {
-                _nodes.AddNode(new NullNode());
+                Nodes.AddNode(new NullNode());
                 return e;
             }
 
-            _nodes.AddNode(new ValueNode(e.Value));
+            Nodes.AddNode(new ValueNode(e.Value));
 
             return e;
         }
@@ -150,7 +150,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			
         	if (isMember || isNullableMember)
 			{
-                _nodes.AddNode(CreateNewMemberNode(e));
+                Nodes.AddNode(CreateNewMemberNode(e));
 
 				return e;
 			}
@@ -165,19 +165,19 @@ namespace SisoDb.Querying.Lambdas.Parsers
             catch
             {
                 var memberNode = CreateNewMemberNode(e);
-                _nodes.AddNode(memberNode);
+                Nodes.AddNode(memberNode);
 
                 return e;
             }
         }
 
-        private MemberNode CreateNewMemberNode(MemberExpression e)
+        protected virtual MemberNode CreateNewMemberNode(MemberExpression e)
         {
             var graphLine = new List<MemberExpression>();
 
             if (IsFlatteningMembers)
             {
-                graphLine.AddRange(_virtualPrefixMembers);
+                graphLine.AddRange(VirtualPrefixMembers);
 
                 if(!graphLine.Last().Equals(e))
                     graphLine.Add(e);
@@ -243,25 +243,25 @@ namespace SisoDb.Querying.Lambdas.Parsers
             {
                 case "StartsWith":
 					var startsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
-					_nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
-                    _nodes.AddNode(new OperatorNode(Operator.Like()));
+					Nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
+                    Nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(Expression.Constant(string.Concat(startsWithValue, "%")));
 					break;
                 case "EndsWith":
 					var endsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
-					_nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
-                    _nodes.AddNode(new OperatorNode(Operator.Like()));
+					Nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
+                    Nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(Expression.Constant(string.Concat("%", endsWithValue)));
                     break;
                 case "ToLower":
-                    _nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
+                    Nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
                     break;
                 case "ToUpper":
-                    _nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
+                    Nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
                     break;
                 case "Contains":
                     Visit(member);
-                    _nodes.AddNode(new OperatorNode(Operator.Like()));
+                    Nodes.AddNode(new OperatorNode(Operator.Like()));
 
                     var containsValue = e.Arguments[0].Evaluate().ToStringOrNull();
                     var constant = Expression.Constant("%{0}%".Inject(containsValue).Replace("%%", "%"));
@@ -292,20 +292,20 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     var constant = Expression.Constant(newValue);
 
 					if(methodName == "QxStartsWith")
-						_nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
+						Nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
 					else if(methodName == "QxEndsWith")
-						_nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
+						Nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
 					else
 						Visit(member);
 
-                    _nodes.AddNode(new OperatorNode(Operator.Like()));
+                    Nodes.AddNode(new OperatorNode(Operator.Like()));
                     Visit(constant);
                     break;
                 case "QxToLower":
-					_nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
+					Nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
                     break;
                 case "QxToUpper":
-					_nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
+					Nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
                     break;
             }
 
@@ -322,9 +322,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
             {
                 case "QxAny":
                     EnsureSupportedEnumerableQxOperator(lambda);
-                    _virtualPrefixMembers.Add(member);
+                    VirtualPrefixMembers.Add(member);
                     Visit(lambda);
-                    _virtualPrefixMembers.RemoveAt(_virtualPrefixMembers.Count - 1);
+                    VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
                     break;
             }
 
