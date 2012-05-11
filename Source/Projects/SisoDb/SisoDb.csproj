@@ -134,10 +134,10 @@
     <Compile Include="Querying\Lambdas\Nodes\NodesExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StartsWithMemberNode.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\BoolNodesTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\BoolNodeTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IExpressionParsers.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\INodeTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\NullableNodeTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="Maintenance\DbStructureSetMigrator.cs" />
     <Compile Include="Querying\Sql\ISqlExpressionBuilder.cs" />
