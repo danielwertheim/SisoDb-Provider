@@ -16,7 +16,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
     {
     	protected static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
         private readonly object _lock;
-        private readonly Stack<MemberExpression> _virtualPrefixMembers;
+        private readonly List<MemberExpression> _virtualPrefixMembers;
         private INodesCollection _nodes;
 
         protected bool IsFlatteningMembers
@@ -38,12 +38,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
         public WhereParser()
         {
             _lock = new object();
-            _virtualPrefixMembers = new Stack<MemberExpression>();
+            _virtualPrefixMembers = new List<MemberExpression>();
         }
 
         public IParsedLambda Parse(LambdaExpression e)
         {
-            if (e.Body.NodeType == ExpressionType.MemberAccess && e.Body.Type != typeof(bool))
+            if (e.Body.NodeType == ExpressionType.MemberAccess && !e.Body.Type.IsBoolType())
                 throw new SisoDbException(ExceptionMessages.WhereExpressionParser_NoMemberExpressions);
 
             lock (_lock)
@@ -102,7 +102,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 _nodes.AddNode(new StartGroupNode());
 
             if (e.Left.NodeType == ExpressionType.Parameter)
-                Visit(_virtualPrefixMembers.Peek());
+                Visit(_virtualPrefixMembers.LastOrDefault());
             else
                 Visit(e.Left);
 
@@ -150,8 +150,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			
         	if (isMember || isNullableMember)
 			{
-				var memberNode = CreateNewMemberNode(e);
-				_nodes.AddNode(memberNode);
+                _nodes.AddNode(CreateNewMemberNode(e));
 
 				return e;
 			}
@@ -161,7 +160,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 var value = e.Evaluate();
                 var constantExpression = Expression.Constant(value);
 
-                return Visit(constantExpression);
+                return VisitConstant(constantExpression);
             }
             catch
             {
@@ -174,13 +173,17 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         private MemberNode CreateNewMemberNode(MemberExpression e)
         {
-            var graphLine = new List<MemberExpression> {e};
-            
-            if (IsFlatteningMembers)
-                graphLine.InsertRange(0, _virtualPrefixMembers.Reverse().Where(vir => !graphLine.Any(gl => gl.Equals(vir))));
+            var graphLine = new List<MemberExpression>();
 
-            if (graphLine.Count < 1)
-                return null;
+            if (IsFlatteningMembers)
+            {
+                graphLine.AddRange(_virtualPrefixMembers);
+
+                if(!graphLine.Last().Equals(e))
+                    graphLine.Add(e);
+            }
+            else
+                graphLine.Add(e);
 
             MemberNode previousNode = null;
             for (var c = 0; c < graphLine.Count; c++)
@@ -212,7 +215,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if (e.Method.DeclaringType == typeof(StringQueryExtensions))
                 return VisitStringQxMethodCall(e);
 
-            if (e.Method.DeclaringType == typeof(string))
+            if (e.Method.DeclaringType.IsStringType())
                 return VisitStringMethodCall(e);
             
             if (e.Method.DeclaringType == typeof(EnumerableQueryExtensions))
@@ -220,9 +223,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             try
             {
-                var value = e.Evaluate();
-                var constant = Expression.Constant(value);
-                Visit(constant);
+                Visit(Expression.Constant(e.Evaluate()));
             }
             catch (Exception ex)
             {
@@ -321,9 +322,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
             {
                 case "QxAny":
                     EnsureSupportedEnumerableQxOperator(lambda);
-                    _virtualPrefixMembers.Push(member);
+                    _virtualPrefixMembers.Add(member);
                     Visit(lambda);
-                    _virtualPrefixMembers.Pop();
+                    _virtualPrefixMembers.RemoveAt(_virtualPrefixMembers.Count - 1);
                     break;
             }
 
