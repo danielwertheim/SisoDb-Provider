@@ -1,4 +1,3 @@
-using System.Linq;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 
@@ -8,9 +7,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
 	{
 		public INodesCollection Transform(INodesCollection nodes)
 		{
-			if (!nodes.OfType<NullableMemberNode>().Any(n => n.IsForHasValueCheck))
-				return nodes;
-
 			var maxIndex = nodes.Count - 1;
 			var newNodes = new NodesCollection();
 
