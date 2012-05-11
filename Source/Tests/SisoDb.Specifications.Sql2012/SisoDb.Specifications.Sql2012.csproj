@@ -45,9 +45,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.1.0.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.2.0.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -90,6 +89,12 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Database\Maintenance\Reset.cs">
       <Link>Database\Maintenance\Reset.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\SetRowIdsOff.cs">
+      <Link>Database\Maintenance\SetRowIdsOff.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Database\Maintenance\SetRowIdsOn.cs">
+      <Link>Database\Maintenance\SetRowIdsOn.cs</Link>
     </Compile>
     <Compile Include="..\sisodb.specifications\database\UpsertStructureSet.cs">
       <Link>Database\UpsertStructureSet.cs</Link>

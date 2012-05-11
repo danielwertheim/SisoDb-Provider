@@ -1,22 +1,42 @@
 using System;
+using NCore;
+using PineCone.Structures.Schemas;
+using SisoDb.Resources;
 
 namespace SisoDb.DbSchema
 {
     public static class DbSchemaNamingPolicy
     {
-        private static readonly Func<string, string> DefaultStructureNameGenerator;
- 
-        public static Func<string, string> StructureNameGenerator;
+        public const int MaxLenOfPrefix = 10;
+        private static string _structureNamePrefix;
 
-        static DbSchemaNamingPolicy()
+        public static string StructureNamePrefix
         {
-            DefaultStructureNameGenerator = name => name;
-            StructureNameGenerator = DefaultStructureNameGenerator;
+            get { return _structureNamePrefix; }
+            set
+            {
+                if(value != null && value.Length > MaxLenOfPrefix)
+                    throw new ArgumentException(ExceptionMessages.DbSchemaNamingPolicy_StructureNamePrefix_IsToLong.Inject(MaxLenOfPrefix));
+
+                _structureNamePrefix = value;
+            }
+        }
+
+        public static string GenerateFor(IStructureSchema structureSchema)
+        {
+            return GenerateFor(structureSchema.Name);
+        }
+
+        public static string GenerateFor(string structureSchemaName)
+        {
+            return StructureNamePrefix == null
+                       ? structureSchemaName
+                       : string.Concat(StructureNamePrefix, structureSchemaName);
         }
 
         public static void Reset()
         {
-            StructureNameGenerator = DefaultStructureNameGenerator;
+            StructureNamePrefix = null;
         }
     }
 }

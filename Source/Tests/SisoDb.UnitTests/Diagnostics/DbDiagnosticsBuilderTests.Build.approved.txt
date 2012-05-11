@@ -1,0 +1,236 @@
+{
+	"Name": "Db: 'UnitTestDb'",
+	"HasGroups": true,
+	"HasNodes": false,
+	"Groups": 
+	[
+		{
+			"Name": "ConnectionInfo",
+			"HasGroups": false,
+			"HasNodes": true,
+			"Groups": [],
+			"Nodes": 
+			[
+				{
+					"Name": "DbName",
+					"Value": "foo"
+				},
+				{
+					"Name": "ProviderType",
+					"Value": "Sql2012"
+				},
+				{
+					"Name": "ClientConnectionString",
+					"Value": "data source=.;initial catalog=foo;integrated security=true;"
+				},
+				{
+					"Name": "ServerConnectionString",
+					"Value": "Data Source=.;Initial Catalog=;Integrated Security=True"
+				}
+			]
+		},
+		{
+			"Name": "Serializer",
+			"HasGroups": false,
+			"HasNodes": true,
+			"Groups": [],
+			"Nodes": 
+			[
+				{
+					"Name": "Type",
+					"Value": "ServiceStackJsonSerializer"
+				},
+				{
+					"Name": "DeserializeManyInParallel",
+					"Value": "True"
+				}
+			]
+		},
+		{
+			"Name": "Settings",
+			"HasGroups": false,
+			"HasNodes": true,
+			"Groups": [],
+			"Nodes": 
+			[
+				{
+					"Name": "AllowUpsertsOfSchemas",
+					"Value": "True"
+				},
+				{
+					"Name": "SynchronizeSchemaChanges",
+					"Value": "True"
+				},
+				{
+					"Name": "MaxInsertManyBatchSize",
+					"Value": "500"
+				},
+				{
+					"Name": "MaxUpdateManyBatchSize",
+					"Value": "500"
+				}
+			]
+		},
+		{
+			"Name": "StructureSchemas",
+			"HasGroups": true,
+			"HasNodes": false,
+			"Groups": 
+			[
+				{
+					"Name": "MyDummy",
+					"HasGroups": true,
+					"HasNodes": true,
+					"Groups": 
+					[
+						{
+							"Name": "Indexes",
+							"HasGroups": true,
+							"HasNodes": false,
+							"Groups": 
+							[
+								{
+									"Name": "StructureId",
+									"HasGroups": false,
+									"HasNodes": true,
+									"Groups": [],
+									"Nodes": 
+									[
+										{
+											"Name": "Path",
+											"Value": "StructureId"
+										},
+										{
+											"Name": "DataType",
+											"Value": "System.Guid"
+										},
+										{
+											"Name": "IsElement",
+											"Value": "False"
+										},
+										{
+											"Name": "IsEnumerable",
+											"Value": "False"
+										},
+										{
+											"Name": "IsUnique",
+											"Value": "False"
+										}
+									]
+								},
+								{
+									"Name": "TimeStamp",
+									"HasGroups": false,
+									"HasNodes": true,
+									"Groups": [],
+									"Nodes": 
+									[
+										{
+											"Name": "Path",
+											"Value": "TimeStamp"
+										},
+										{
+											"Name": "DataType",
+											"Value": "System.DateTime"
+										},
+										{
+											"Name": "IsElement",
+											"Value": "False"
+										},
+										{
+											"Name": "IsEnumerable",
+											"Value": "False"
+										},
+										{
+											"Name": "IsUnique",
+											"Value": "False"
+										}
+									]
+								},
+								{
+									"Name": "StringValue",
+									"HasGroups": false,
+									"HasNodes": true,
+									"Groups": [],
+									"Nodes": 
+									[
+										{
+											"Name": "Path",
+											"Value": "StringValue"
+										},
+										{
+											"Name": "DataType",
+											"Value": "System.String"
+										},
+										{
+											"Name": "IsElement",
+											"Value": "False"
+										},
+										{
+											"Name": "IsEnumerable",
+											"Value": "False"
+										},
+										{
+											"Name": "IsUnique",
+											"Value": "False"
+										}
+									]
+								}
+							],
+							"Nodes": []
+						}
+					],
+					"Nodes": 
+					[
+						{
+							"Name": "Name",
+							"Value": "MyDummy"
+						},
+						{
+							"Name": "HasId",
+							"Value": "True"
+						},
+						{
+							"Name": "HasConcurrencyToken",
+							"Value": "True"
+						},
+						{
+							"Name": "HasTimeStamp",
+							"Value": "True"
+						},
+						{
+							"Name": "IdAccessor.Path",
+							"Value": "StructureId"
+						},
+						{
+							"Name": "IdAccessor.DataType",
+							"Value": "System.Guid"
+						},
+						{
+							"Name": "IdAccessor.IdType",
+							"Value": "Guid"
+						},
+						{
+							"Name": "ConcurrencyTokenAccessor.Path",
+							"Value": "ConcurrencyToken"
+						},
+						{
+							"Name": "ConcurrencyTokenAccessor.DataType",
+							"Value": "System.Guid"
+						},
+						{
+							"Name": "TimeStampAccessor.Path",
+							"Value": "TimeStamp"
+						},
+						{
+							"Name": "TimeStampAccessor.DataType",
+							"Value": "System.DateTime"
+						}
+					]
+				}
+			],
+			"Nodes": []
+		}
+	],
+	"Nodes": []
+}

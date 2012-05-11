@@ -7,7 +7,7 @@ using EnsureThat;
 
 namespace SisoDb.Serialization
 {
-    public class ServiceStackJsonSerializer : IJsonSerializer
+    public class ServiceStackJsonSerializer : ISisoDbSerializer
     {
         public bool DeserializeManyInParallel { get; set; }
 

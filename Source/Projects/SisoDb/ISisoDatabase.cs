@@ -70,7 +70,7 @@ namespace SisoDb
         /// <summary>
         /// The serializer used to handle Json.
         /// </summary>
-        IJsonSerializer Serializer { get; set; }
+        ISisoDbSerializer Serializer { get; set; }
 
         /// <summary>
         /// Used for maintenance tasks of the database.

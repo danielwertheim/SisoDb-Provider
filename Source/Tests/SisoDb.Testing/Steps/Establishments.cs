@@ -10,7 +10,7 @@ namespace SisoDb.Testing.Steps
         public static IList<string> InsertJsonItems<T>(this ISisoDatabase db, int numOfItems) where T : class
         {
             var itemsAsJson = new List<string>(numOfItems);
-            var serializer = SisoEnvironment.Resources.ResolveJsonSerializer();
+            var serializer = db.Serializer;
 
             for (var c = 0; c < numOfItems; c++)
             {

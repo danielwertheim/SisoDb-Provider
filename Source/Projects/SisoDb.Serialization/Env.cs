@@ -23,7 +23,7 @@ namespace SisoDb.Serialization
 				+ (IsMonoTouch ? " MonoTouch" : "");
 		}
 
-		public static decimal ServiceStackVersion = 3.60m;
+		public static decimal ServiceStackVersion = 3.69m;
 
 		public static bool IsUnix { get; set; }
 

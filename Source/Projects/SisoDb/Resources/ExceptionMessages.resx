@@ -289,4 +289,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DbDataTypeTranslator_UnsupportedType" xml:space="preserve">
     <value>Don't know how to translate the type '{0}' to a DbType. Send us a pull request.</value>
   </data>
+  <data name="DbSchemaNamingPolicy_StructureNamePrefix_IsToLong" xml:space="preserve">
+    <value>The StructureNamePrefix is to long. Max len is {0} chars.</value>
+  </data>
 </root>

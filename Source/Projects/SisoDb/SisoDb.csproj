@@ -36,8 +36,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SisoDb.XML</DocumentationFile>
@@ -53,9 +52,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.1.0.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.2.0.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -71,6 +69,8 @@
     <Compile Include="Caching\CacheConsumeModes.cs" />
     <Compile Include="Caching\CacheProviderBase.cs" />
     <Compile Include="Caching\CacheProviderExtensions.cs" />
+    <Compile Include="Configurations\ConfigurationExtensions.cs" />
+    <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
     <Compile Include="Dac\AdoDriver.cs" />
@@ -101,6 +101,18 @@
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
+    <Compile Include="Diagnostics\Appenders\ConnectionInfoDiagnosticsAppender.cs" />
+    <Compile Include="Diagnostics\Appenders\DbSettingsDiagnosticsAppender.cs" />
+    <Compile Include="Diagnostics\Appenders\SerializerDiagnosticsAppender.cs" />
+    <Compile Include="Diagnostics\DiagnosticsContext.cs" />
+    <Compile Include="Diagnostics\DiagnosticsExtensions.cs" />
+    <Compile Include="Diagnostics\DiagnosticsGroup.cs" />
+    <Compile Include="Diagnostics\DiagnosticsNode.cs" />
+    <Compile Include="Diagnostics\DiagnosticsInfo.cs" />
+    <Compile Include="Diagnostics\IDiagnosticsAppender.cs" />
+    <Compile Include="Diagnostics\IDiagnosticsBuilder.cs" />
+    <Compile Include="Diagnostics\Appenders\StructureSchemasDiagnosticsAppender.cs" />
+    <Compile Include="Diagnostics\Builders\DbDiagnosticsBuilder.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="IDbSettings.cs" />
@@ -121,10 +133,10 @@
     <Compile Include="Querying\Lambdas\Nodes\NodesExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StartsWithMemberNode.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\BoolNodesTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\BoolNodeTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IExpressionParsers.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\INodesTransformer.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\NullableNodesTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\INodeTransformer.cs" />
+    <Compile Include="Querying\Lambdas\Parsers\NullableNodeTransformer.cs" />
     <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="Maintenance\DbStructureSetMigrator.cs" />
     <Compile Include="Querying\Sql\ISqlExpressionBuilder.cs" />
@@ -191,6 +203,8 @@
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
+    <Compile Include="Structures\StructureBuilderFactoryForInserts.cs" />
+    <Compile Include="Structures\StructureBuilderFactoryForUpdates.cs" />
     <Compile Include="Structures\StructureBuilders.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
@@ -199,8 +213,7 @@
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
-    <Compile Include="GlobalResourceContainer.cs" />
-    <Compile Include="Serialization\SerializerForStructureBuilder.cs" />
+    <Compile Include="Serialization\StructureSerializer.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="IDbProviderFactory.cs" />
     <Compile Include="Querying\Sql\SqlInclude.cs" />
@@ -240,7 +253,7 @@
     <Compile Include="Dac\ISqlStatements.cs" />
     <Compile Include="Dac\SqlStatementsBase.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
-    <Compile Include="Serialization\IJsonSerializer.cs" />
+    <Compile Include="Serialization\ISisoDbSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="DbSchema\DbSchemaManager.cs" />
     <Compile Include="Dac\DacParameter.cs" />

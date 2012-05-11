@@ -41,9 +41,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ApprovalTests">
+      <HintPath>..\..\packages\ApprovalTests.1.9\lib\ApprovalTests.dll</HintPath>
+    </Reference>
+    <Reference Include="ApprovalUtilities">
+      <HintPath>..\..\packages\ApprovalTests.1.9\lib\ApprovalUtilities.dll</HintPath>
+    </Reference>
     <Reference Include="EnsureThat, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core, Version=0.87.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
@@ -57,15 +66,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.1.0.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.2.0.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -76,10 +85,12 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configurations\DbConfigurationTests.cs" />
     <Compile Include="Connections\ConnectionStringTests.cs" />
     <Compile Include="CustomAssert.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslatorTests.cs" />
     <Compile Include="DbSchema\DbObjectNameValidatorTests.cs" />
+    <Compile Include="DbSchema\DbSchemaNamingPolicyTests.cs" />
     <Compile Include="DbSchema\DbSchemasTests.cs" />
     <Compile Include="DbSchema\ModelTableNamesTests.cs" />
     <Compile Include="DbSchema\ModelTableStatusesTests.cs" />
@@ -88,7 +99,10 @@
     <Compile Include="DbSchema\StorageSchemaTestBase.cs" />
     <Compile Include="DbSchema\StructureStorageSchemaTests.cs" />
     <Compile Include="DbSchema\UniqueStorageSchemaTests.cs" />
+    <Compile Include="Diagnostics\DbDiagnosticsBuilderTests.cs" />
     <Compile Include="Dynamic\DynamicLambdaBuilderTests.cs" />
+    <Compile Include="Glimpse\SisoDbGlimpsePluginTests.cs" />
+    <Compile Include="JsonApprovals.cs" />
     <Compile Include="Providers\Caching\CacheTestsBase.cs" />
     <Compile Include="Providers\Caching\Sql2008CacheTests.cs" />
     <Compile Include="Providers\Caching\Sql2012CacheTests.cs" />
@@ -120,7 +134,8 @@
     <Compile Include="Connections\SisoConnectionInfoTests.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
     <Compile Include="Stub.cs" />
-    <Compile Include="TestFactories\StructureSchemaStubFactory.cs" />
+    <Compile Include="TestFactories\StructureSchemasStub.cs" />
+    <Compile Include="TestFactories\StructureSchemaTestFactory.cs" />
     <Compile Include="TestFactories\StructurePropertyTestFactory.cs" />
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
@@ -133,9 +148,17 @@
       <Project>{9202564D-92FD-448F-851D-3DD3D1AA3137}</Project>
       <Name>SisoDb.Dynamic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Glimpse\SisoDb.Glimpse.csproj">
+      <Project>{35D70540-2CB9-4DE7-9741-2292F275518B}</Project>
+      <Name>SisoDb.Glimpse</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Serialization\SisoDb.Serialization.csproj">
+      <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
+      <Name>SisoDb.Serialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
@@ -157,7 +180,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

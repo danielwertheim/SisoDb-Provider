@@ -45,9 +45,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.1.0.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.2.0.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,6 +60,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Database\Maintenance\SetRowIdsOff.cs" />
     <Compile Include="Database\Maintenance\RegenerateQueryIndexes.cs" />
     <Compile Include="Database\Maintenance\Reset.cs" />
     <Compile Include="Database\Maintenance\RenameStructure.cs" />
@@ -71,6 +71,7 @@
     <Compile Include="Database\DropStructureSets.cs" />
     <Compile Include="Database\EnsureNewDatabase.cs" />
     <Compile Include="Database\InitializeExisting.cs" />
+    <Compile Include="Database\Maintenance\SetRowIdsOn.cs" />
     <Compile Include="Model\QueryNullableItem.cs" />
     <Compile Include="Session\Caching.cs" />
     <Compile Include="Session\Querying\Any.cs" />

@@ -39,10 +39,10 @@ namespace SisoDb.Specifications.Database.Maintenance
                 () => TestContext.DbHelper.TableExists(_structureSchemaForSetTwo.GetUniquesTableName()).ShouldBeFalse();
 
             It should_have_dropped_all_indexes_tables_for_SetOne = 
-                () => TestContext.DbHelper.TablesExists(_structureSchemaForSetOne.GetIndexesTableNames().AllTableNames).ShouldBeFalse();
+                () => TestContext.DbHelper.TablesExists(_structureSchemaForSetOne.GetIndexesTableNames().All).ShouldBeFalse();
 
             It should_have_dropped_all_indexes_tables_for_SetTwo =
-                () => TestContext.DbHelper.TablesExists(_structureSchemaForSetTwo.GetIndexesTableNames().AllTableNames).ShouldBeFalse();
+                () => TestContext.DbHelper.TablesExists(_structureSchemaForSetTwo.GetIndexesTableNames().All).ShouldBeFalse();
 
             private static IStructureSchema _structureSchemaForSetOne;
             private static IStructureSchema _structureSchemaForSetTwo;

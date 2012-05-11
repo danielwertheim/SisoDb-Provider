@@ -1,6 +1,5 @@
 ﻿using System;
 using PineCone.Structures.Schemas;
-using SisoDb.Structures;
 
 namespace SisoDb.DbSchema
 {
@@ -11,9 +10,10 @@ namespace SisoDb.DbSchema
         {
             public static readonly SchemaField Id = new SchemaField(0, "StructureId");
             public static readonly SchemaField Json = new SchemaField(1, "Json");
+            public static readonly SchemaField RowId = new SchemaField(2, "RowId");
         }
 
-        public static readonly SchemaField[] OrderedFields = new[] { Fields.Id, Fields.Json };
+        public static readonly SchemaField[] OrderedFields = new[] { Fields.Id, Fields.Json, Fields.RowId };
 
 		public StructureStorageSchema(IStructureSchema structureSchema, string storageSchemaName)
 			: base(structureSchema, storageSchemaName)

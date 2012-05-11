@@ -159,7 +159,7 @@ namespace SisoDb.Testing.Sql2008
                 {
                     cmd.CommandType = CommandType.Text;
 
-                    foreach (var tableName in indexesTableNames.AllTableNames)
+                    foreach (var tableName in indexesTableNames.All)
                     {
                         cmd.CommandText = sqlFormat.Inject(tableName);
                         cmd.ExecuteNonQuery();
@@ -173,7 +173,7 @@ namespace SisoDb.Testing.Sql2008
         {
             var memberPath = GetMemberPath(member);
             var indexesTableNames = structureSchema.GetIndexesTableNames();
-            foreach (var indexesTableName in indexesTableNames.AllTableNames)
+            foreach (var indexesTableName in indexesTableNames.All)
                 if (RowCount(indexesTableName, "[{0}] = '{1}'".Inject(IndexStorageSchema.Fields.MemberPath.Name, memberPath)) > 0)
                     return true;
 

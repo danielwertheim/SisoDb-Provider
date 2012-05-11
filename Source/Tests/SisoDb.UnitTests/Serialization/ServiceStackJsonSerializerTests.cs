@@ -8,12 +8,12 @@ namespace SisoDb.UnitTests.Serialization
     [TestFixture]
     public class ServiceStackJsonSerializerTests : UnitTestBase
     {
-        private readonly IJsonSerializer _jsonSerializer = new ServiceStackJsonSerializer();
+        private readonly ISisoDbSerializer _sisoDbSerializer = new ServiceStackJsonSerializer();
 
         [Test]
         public void Serialize_WhenNullEntity_ReturnsEmptyString()
         {
-            var json = _jsonSerializer.Serialize<JsonEntity>(null);
+            var json = _sisoDbSerializer.Serialize<JsonEntity>(null);
 
             Assert.AreEqual(string.Empty, json);
         }
@@ -23,7 +23,7 @@ namespace SisoDb.UnitTests.Serialization
         {
             var entity = new JsonEntityWithPrivateGetter { Name = "Daniel" };
 
-            var json = _jsonSerializer.Serialize(entity);
+            var json = _sisoDbSerializer.Serialize(entity);
 
             Assert.AreEqual("{}", json);
         }
@@ -34,7 +34,7 @@ namespace SisoDb.UnitTests.Serialization
             var entity = new JsonEntity();
             entity.SetName("Daniel");
 
-            var json = _jsonSerializer.Serialize(entity);
+            var json = _sisoDbSerializer.Serialize(entity);
 
             Assert.AreEqual("{\"Name\":\"Daniel\"}", json);
         }
@@ -44,7 +44,7 @@ namespace SisoDb.UnitTests.Serialization
         {
             var json = @"{""Name"":""Daniel""}";
 
-            var entity = _jsonSerializer.Deserialize<JsonEntity>(json);
+            var entity = _sisoDbSerializer.Deserialize<JsonEntity>(json);
 
             Assert.AreEqual("Daniel", entity.Name);
         }
@@ -54,7 +54,7 @@ namespace SisoDb.UnitTests.Serialization
         {
             var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)).ToArray() };
 
-            var json = _jsonSerializer.Serialize<JsonEntityX>(y);
+            var json = _sisoDbSerializer.Serialize<JsonEntityX>(y);
 
 			Assert.AreEqual("{\"Data\":\"TQEAAA==\",\"String1\":\"The String1\",\"Int1\":42}", json);
         }
@@ -69,7 +69,7 @@ namespace SisoDb.UnitTests.Serialization
                 Item = {String1 = "To be included"}
             };
 
-            var json = _jsonSerializer.Serialize(structure);
+            var json = _sisoDbSerializer.Serialize(structure);
 
             const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);

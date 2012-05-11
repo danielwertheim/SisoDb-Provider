@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using EnsureThat;
@@ -16,6 +15,8 @@ namespace SisoDb.SqlCe4.Dac
     {
         private const int MaxBatchedIdsSize = 32;
 
+        
+
         public SqlCe4DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
             : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
@@ -28,10 +29,10 @@ namespace SisoDb.SqlCe4.Dac
 
         public override void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
-            if (!sql.Contains(";"))
+            if (!sql.IsMultiStatement())
                 base.ExecuteNonQuery(sql, parameters);
             else
-                base.ExecuteNonQuery(sql.Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries), parameters);
+                base.ExecuteNonQuery(sql.ToSqlStatements(), parameters);
         }
 
         public override long CheckOutAndGetNextIdentity(string entityName, int numOfIds)
@@ -53,7 +54,7 @@ namespace SisoDb.SqlCe4.Dac
 
             ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldUniquesTableName, oldStructureTableName));
             
-            foreach (var oldIndexTableName in oldIndexesTableNames.AllTableNames)
+            foreach (var oldIndexTableName in oldIndexesTableNames.All)
                 ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldIndexTableName, oldStructureTableName));
         }
 
@@ -63,7 +64,7 @@ namespace SisoDb.SqlCe4.Dac
 
             ExecuteNonQuery(addFkContraintSqlFormat.Inject(newUniquesTableName, newStructureTableName));
 
-            foreach (var newIndexTableName in newIndexesTableNames.AllTableNames)
+            foreach (var newIndexTableName in newIndexesTableNames.All)
                 ExecuteNonQuery(addFkContraintSqlFormat.Inject(newIndexTableName, newStructureTableName));
         }
 
@@ -92,7 +93,7 @@ namespace SisoDb.SqlCe4.Dac
         {
             using (var cmd = CreateCommand(null))
             {
-                for (var i = 0; i < oldIndexesTableNames.AllTableNames.Length; i++)
+                for (var i = 0; i < oldIndexesTableNames.All.Length; i++)
                 {
                     var oldTableName = oldIndexesTableNames[i];
                     var newTableName = newIndexesTableNames[i];
@@ -104,6 +105,35 @@ namespace SisoDb.SqlCe4.Dac
                         new DacParameter("objtype", "OBJECT"));
                     cmd.CommandText = "sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype";
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        protected override void SetRowIdOnOrOff(string setRowIdToXForStructureTable, string setRowIdToXForIndexesAndUniquesTable)
+        {
+            var tableNames = new List<string>();
+            var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
+
+            using (var cmd = CreateCommand(sql))
+            {
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+                {
+                    while (reader.Read())
+                        tableNames.Add(reader.GetString(0));
+                    reader.Close();
+                }
+
+                foreach (var tableName in tableNames)
+                {
+                    var commandText = tableName.EndsWith(DbSchemas.Suffixes.StructureTableNameSuffix) 
+                        ? setRowIdToXForStructureTable.Inject(tableName) 
+                        : setRowIdToXForIndexesAndUniquesTable.Inject(tableName);
+
+                    foreach (var statement in commandText.ToSqlStatements())
+                    {
+                        cmd.CommandText = statement;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -198,7 +228,7 @@ namespace SisoDb.SqlCe4.Dac
 
             using(var cmd = CreateCommand(null))
             {
-                foreach (var tableName in indexesTables.AllTableNames)
+                foreach (var tableName in indexesTables.All)
                 {
                     cmd.CommandText = sqlFormat.Inject(tableName);
                     cmd.ExecuteNonQuery();

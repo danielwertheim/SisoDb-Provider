@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using SisoDb.Serialization.Common;
 
+#if WINDOWS_PHONE
+using ServiceStack.Text.WP;
+#endif
+
 namespace SisoDb.Serialization
 {
 	public static class
@@ -13,8 +17,9 @@ namespace SisoDb.Serialization
 			//In-built default serialization, to Deserialize Color struct do:
 			//JsConfig<System.Drawing.Color>.SerializeFn = c => c.ToString().Replace("Color ", "").Replace("[", "").Replace("]", "");
 			//JsConfig<System.Drawing.Color>.DeSerializeFn = System.Drawing.Color.FromName;
+            Reset();
 		}
-		
+        
 		[ThreadStatic]
 		private static bool? tsConvertObjectTypesIntoStringDictionary;
 		private static bool? sConvertObjectTypesIntoStringDictionary;
@@ -26,7 +31,7 @@ namespace SisoDb.Serialization
 			}
 			set
 			{
-				if (!tsConvertObjectTypesIntoStringDictionary.HasValue) tsConvertObjectTypesIntoStringDictionary = value;
+				tsConvertObjectTypesIntoStringDictionary = value;
 				if (!sConvertObjectTypesIntoStringDictionary.HasValue) sConvertObjectTypesIntoStringDictionary = value;
 			}
 		}
@@ -42,7 +47,7 @@ namespace SisoDb.Serialization
 			}
 			set
 			{
-				if (!tsIncludeNullValues.HasValue) tsIncludeNullValues = value;
+				tsIncludeNullValues = value;
 				if (!sIncludeNullValues.HasValue) sIncludeNullValues = value;
 			}
 		}
@@ -58,7 +63,7 @@ namespace SisoDb.Serialization
 			}
 			set
 			{
-				if (!tsExcludeTypeInfo.HasValue) tsExcludeTypeInfo = value;
+				tsExcludeTypeInfo = value;
 				if (!sExcludeTypeInfo.HasValue) sExcludeTypeInfo = value;
 			}
 		}
@@ -74,7 +79,7 @@ namespace SisoDb.Serialization
 			}
 			set
 			{
-				if (!tsDateHandler.HasValue) tsDateHandler = value;
+				tsDateHandler = value;
 				if (!sDateHandler.HasValue) sDateHandler = value;
 			}
 		}
@@ -98,7 +103,7 @@ namespace SisoDb.Serialization
 			}
 			set
 			{
-				if (!tsEmitCamelCaseNames.HasValue) tsEmitCamelCaseNames = value;
+				tsEmitCamelCaseNames = value;
 				if (!sEmitCamelCaseNames.HasValue) sEmitCamelCaseNames = value;
 			}
 		}
@@ -120,15 +125,21 @@ namespace SisoDb.Serialization
 			}
 			set
 			{
-				bool theValue = value;
-				if (!tsThrowOnDeserializationError.HasValue) tsThrowOnDeserializationError = value;
+				tsThrowOnDeserializationError = value;
 				if (!sThrowOnDeserializationError.HasValue) sThrowOnDeserializationError = value;
 			}
 		}
 
-		internal static HashSet<Type> HasSerializeFn = new HashSet<Type>();
+        internal static System.Collections.Generic.HashSet<Type> HasSerializeFn = new System.Collections.Generic.HashSet<Type>();
 
-		public static void Reset()
+        internal static System.Collections.Generic.HashSet<Type> TreatValueAsRefTypes = new System.Collections.Generic.HashSet<Type>();
+
+        internal static bool TreatAsRefType(Type valueType)
+        {
+            return TreatValueAsRefTypes.Contains(valueType.IsGenericType ? valueType.GetGenericTypeDefinition() : valueType);
+        }
+
+	    public static void Reset()
 		{
 			tsConvertObjectTypesIntoStringDictionary = sConvertObjectTypesIntoStringDictionary = null;
 			tsIncludeNullValues = sIncludeNullValues = null;
@@ -136,7 +147,10 @@ namespace SisoDb.Serialization
 			tsEmitCamelCaseNames = sEmitCamelCaseNames = null;
 			tsDateHandler = sDateHandler = null;
 			tsThrowOnDeserializationError = sThrowOnDeserializationError = null;
-			HasSerializeFn = new HashSet<Type>();
+            HasSerializeFn = new System.Collections.Generic.HashSet<Type>();
+            TreatValueAsRefTypes = new System.Collections.Generic.HashSet<Type> {
+                typeof(KeyValuePair<,>)
+            };
 		}
 
 #if SILVERLIGHT || MONOTOUCH
@@ -327,6 +341,21 @@ namespace SisoDb.Serialization
 					JsConfig.HasSerializeFn.Remove(typeof(T));
 			}
 		}
+
+        /// <summary>
+        /// Opt-in flag to set some Value Types to be treated as a Ref Type
+        /// </summary>
+        public bool TreatValueAsRefTypes
+	    {
+	        get { return JsConfig.TreatValueAsRefTypes.Contains(typeof (T)); }
+	        set
+	        {
+                if (value)
+	                JsConfig.TreatValueAsRefTypes.Add(typeof(T));
+                else
+                    JsConfig.TreatValueAsRefTypes.Remove(typeof(T));
+            }
+	    }
 
 		/// <summary>
 		/// Define custom deserialization fn for BCL Structs

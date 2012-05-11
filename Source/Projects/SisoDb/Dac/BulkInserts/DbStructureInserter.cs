@@ -110,7 +110,8 @@ namespace SisoDb.Dac.BulkInserts
                     bulkInserter.DestinationTableName = structuresReader.StorageSchema.Name;
                     bulkInserter.BatchSize = structures.Length;
 
-                    foreach (var field in structuresReader.StorageSchema.GetFieldsOrderedByIndex())
+                    var fields = structuresReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
+                    foreach (var field in fields)
                         bulkInserter.AddColumnMapping(field.Name, field.Name);
 
                     bulkInserter.Write(structuresReader);
@@ -126,6 +127,9 @@ namespace SisoDb.Dac.BulkInserts
 
         protected virtual void BulkInsertIndexes(IndexesReader indexesReader)
         {
+            var isValueTypeIndexesReader = indexesReader is ValueTypeIndexesReader;
+            var fieldsToSkip = GetStorageSchemaFieldsToSkip(isValueTypeIndexesReader);
+
             using (indexesReader)
             {
                 if (indexesReader.RecordsAffected < 1)
@@ -136,17 +140,23 @@ namespace SisoDb.Dac.BulkInserts
                     bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
                     bulkInserter.BatchSize = indexesReader.RecordsAffected;
 
-                    var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex();
+                    var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex().Except(fieldsToSkip).ToArray();
                     foreach (var field in fields)
-                    {
-                        if (field.Name == IndexStorageSchema.Fields.StringValue.Name && !(indexesReader is ValueTypeIndexesReader))
-                            continue;
-
                         bulkInserter.AddColumnMapping(field.Name, field.Name);
-                    }
+
                     bulkInserter.Write(indexesReader);
                 }
             }
+        }
+
+        protected virtual ISet<SchemaField> GetStorageSchemaFieldsToSkip(bool isValueTypeIndexesReader)
+        {
+            var fieldsToSkip = new HashSet<SchemaField> { IndexStorageSchema.Fields.RowId };
+
+            if (!isValueTypeIndexesReader)
+                fieldsToSkip.Add(IndexStorageSchema.Fields.StringValue);
+            
+            return fieldsToSkip;
         }
 
         protected virtual void InsertUniques(IStructureSchema structureSchema, IStructure[] structures)
@@ -178,7 +188,8 @@ namespace SisoDb.Dac.BulkInserts
                     bulkInserter.DestinationTableName = uniquesReader.StorageSchema.Name;
                     bulkInserter.BatchSize = uniques.Length;
 
-                    foreach (var field in uniquesReader.StorageSchema.GetFieldsOrderedByIndex())
+                    var fields = uniquesReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
+                    foreach (var field in fields)
                         bulkInserter.AddColumnMapping(field.Name, field.Name);
 
                     bulkInserter.Write(uniquesReader);
@@ -189,7 +200,7 @@ namespace SisoDb.Dac.BulkInserts
         protected virtual IndexInsertAction[] CreateGroupedIndexInsertActions(IStructureSchema structureSchema, IStructure[] structures)
         {
             var indexesTableNames = structureSchema.GetIndexesTableNames();
-            var insertActions = new Dictionary<DataTypeCode, IndexInsertAction>(indexesTableNames.AllTableNames.Length);
+            var insertActions = new Dictionary<DataTypeCode, IndexInsertAction>(indexesTableNames.All.Length);
             foreach (var group in structures.SelectMany(s => s.Indexes).GroupBy(i => i.DataTypeCode))
             {
                 var insertAction = CreateIndexInsertActionGroup(structureSchema, indexesTableNames, group.Key, group.ToArray());

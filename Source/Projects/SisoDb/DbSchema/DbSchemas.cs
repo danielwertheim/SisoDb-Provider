@@ -50,7 +50,7 @@ namespace SisoDb.DbSchema
 
         public static string GenerateStructureTableName(string structureName)
         {
-            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureName), Suffixes.StructureTableNameSuffix);
+            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.StructureTableNameSuffix);
         }
 
         public static IndexesTableNames GetIndexesTableNames(this IStructureSchema structureSchema)
@@ -60,7 +60,7 @@ namespace SisoDb.DbSchema
 
         public static string GenerateIndexesTableNameFor(string structureName, IndexesTypes type)
         {
-            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureName), type.ToString());
+            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), type.ToString());
         }
 
         public static string GetIndexesTableNameFor(this IStructureSchema structureSchema, IndexesTypes type)
@@ -75,7 +75,7 @@ namespace SisoDb.DbSchema
 
         public static string GenerateUniquesTableName(string structureName)
         {
-            return string.Concat(DbSchemaNamingPolicy.StructureNameGenerator.Invoke(structureName), Suffixes.UniquesTableNameSuffix);
+            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.UniquesTableNameSuffix);
         }
     }
 }

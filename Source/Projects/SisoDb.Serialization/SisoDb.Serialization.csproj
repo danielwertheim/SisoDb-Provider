@@ -28,8 +28,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\SisoDb.Serialization.XML</DocumentationFile>
@@ -42,9 +41,8 @@
     <Reference Include="NCore">
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.1.0.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone">
+      <HintPath>..\..\packages\PineCone.2.0.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -87,6 +85,7 @@
     <Compile Include="CsvWriter.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="Env.cs" />
+    <Compile Include="HashSet.cs" />
     <Compile Include="ITracer.cs" />
     <Compile Include="ITypeSerializer.Generic.cs" />
     <Compile Include="JsConfig.cs" />
@@ -117,12 +116,14 @@
     <Compile Include="Support\AssemblyTypeDefinition.cs" />
     <Compile Include="Support\DoubleConverter.cs" />
     <Compile Include="Support\TypePair.cs" />
+    <Compile Include="SystemTime.cs" />
     <Compile Include="TextExtensions.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="TranslateListWithElements.cs" />
     <Compile Include="TypeConfig.cs" />
     <Compile Include="TypeSerializer.cs" />
     <Compile Include="TypeSerializer.Generic.cs" />
+    <Compile Include="WebRequestExtensions.cs" />
     <Compile Include="XmlSerializer.cs" />
   </ItemGroup>
   <ItemGroup>

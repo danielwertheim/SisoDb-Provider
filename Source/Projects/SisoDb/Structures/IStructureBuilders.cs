@@ -1,12 +1,12 @@
 using System;
 using PineCone.Structures;
-using PineCone.Structures.Schemas;
 
 namespace SisoDb.Structures
 {
     public interface IStructureBuilders 
     {
-        Func<IStructureSchema, IIdentityStructureIdGenerator, IStructureBuilder> ForInserts { get; set; }
-        Func<IStructureSchema, IStructureBuilder> ForUpdates { get; set; }
+        Func<IStructureIdGenerator> GuidStructureIdGeneratorFn { get; set; }
+        StructureBuilderFactoryForInserts ForInserts { get; set; }
+        StructureBuilderFactoryForUpdates ForUpdates { get; set; }
     }
 }

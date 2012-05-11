@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NCore;
 using NCore.Reflections;
 
@@ -67,13 +68,28 @@ namespace SisoDb.Core.Expressions
 
 		public static object Evaluate(this MethodCallExpression methodExpression)
 		{
+            if(methodExpression.Object == null)
+            {
+                var args = methodExpression.Arguments.OfType<ConstantExpression>().Select(c => c.Value).ToArray();
+                if (args.Length == methodExpression.Arguments.Count)
+                    return methodExpression.Method.Invoke(null, args);
+            }
+
 			return Expression.Lambda(methodExpression).Compile().DynamicInvoke();
 		}
 
-		public static object Evaluate(this MemberExpression memberExpression)
-		{
-			return Expression.Lambda(memberExpression).Compile().DynamicInvoke();
-		}
+        public static object Evaluate(this MemberExpression memberExpression)
+        {
+            if (memberExpression.Member.MemberType == MemberTypes.Field && memberExpression.Expression is ConstantExpression)
+            {
+                var ce = (ConstantExpression)memberExpression.Expression;
+                var obj = ce.Value;
+                return obj == null
+                    ? null
+                    : ((FieldInfo)memberExpression.Member).GetValue(obj);
+            }
+            return Expression.Lambda(memberExpression).Compile().DynamicInvoke();
+        }
 
 		public static object Evaluate(this ConstantExpression constantExpression)
 		{

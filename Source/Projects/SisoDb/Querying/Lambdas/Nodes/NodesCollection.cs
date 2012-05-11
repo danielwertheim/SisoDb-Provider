@@ -14,6 +14,11 @@ namespace SisoDb.Querying.Lambdas.Nodes
             _nodes = new List<INode>();
         }
 
+        public NodesCollection(IEnumerable<INode> nodes)
+        {
+            _nodes = new List<INode>(nodes);
+        }
+
     	public INode this[int index]
     	{
 			get { return _nodes[index]; }
