@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using PineCone.Structures.Schemas.MemberAccessors;
 using SisoDb.Dac;
-using SisoDb.DbSchema;
 using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.SampleApp.Model;
 using SisoDb.Sql2008;
 using SisoDb.Sql2012;
