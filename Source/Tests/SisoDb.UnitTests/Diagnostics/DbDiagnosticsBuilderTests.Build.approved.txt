@@ -187,10 +187,6 @@
 							"Value": "MyDummy"
 						},
 						{
-							"Name": "Hash",
-							"Value": "dc8abde8"
-						},
-						{
 							"Name": "HasId",
 							"Value": "True"
 						},

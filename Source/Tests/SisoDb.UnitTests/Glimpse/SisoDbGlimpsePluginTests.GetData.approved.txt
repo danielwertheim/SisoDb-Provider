@@ -96,10 +96,6 @@
 								"MyDummy"
 							],
 							[
-								"Hash",
-								"dc8abde8"
-							],
-							[
 								"HasId",
 								"True"
 							],

@@ -28,7 +28,6 @@ namespace SisoDb.Diagnostics.Appenders
         {
             var group = parent.AddGroup(schema.Name)
                 .AddNode("Name", schema.Name)
-                .AddNode("Hash", schema.Hash)
                 .AddNode("HasId", schema.HasId)
                 .AddNode("HasConcurrencyToken", schema.HasConcurrencyToken)
                 .AddNode("HasTimeStamp", schema.HasTimeStamp);
