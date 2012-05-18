@@ -109,35 +109,6 @@ namespace SisoDb.SqlCe4.Dac
             }
         }
 
-        protected override void SetRowIdOnOrOff(string setRowIdToXForStructureTable, string setRowIdToXForIndexesAndUniquesTable)
-        {
-            var tableNames = new List<string>();
-            var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
-
-            using (var cmd = CreateCommand(sql))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                        tableNames.Add(reader.GetString(0));
-                    reader.Close();
-                }
-
-                foreach (var tableName in tableNames)
-                {
-                    var commandText = tableName.EndsWith(DbSchemas.Suffixes.StructureTableNameSuffix) 
-                        ? setRowIdToXForStructureTable.Inject(tableName) 
-                        : setRowIdToXForIndexesAndUniquesTable.Inject(tableName);
-
-                    foreach (var statement in commandText.ToSqlStatements())
-                    {
-                        cmd.CommandText = statement;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-        }
-
         public override void Drop(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

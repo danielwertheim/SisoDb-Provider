@@ -119,6 +119,7 @@
   </resheader>
   <data name="CreateBooleansIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bit] null,
@@ -130,6 +131,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateBooleansIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bit] null,
@@ -141,6 +143,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateBooleansIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bit] null,
@@ -156,6 +159,7 @@ ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 100;</value>
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [datetime] null,
@@ -167,6 +171,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateDatesIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [datetime] null,
@@ -178,6 +183,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateDatesIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [datetime] null,
@@ -189,6 +195,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateFractalsIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [real] null,
@@ -200,6 +207,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateFractalsIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [real] null,
@@ -211,6 +219,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateFractalsIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [real] null,
@@ -222,6 +231,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateGuidsIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [uniqueidentifier] null,
@@ -233,6 +243,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateGuidsIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [uniqueidentifier] null,
@@ -244,6 +255,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateGuidsIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [uniqueidentifier] null,
@@ -255,6 +267,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateIntegersIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bigint] null,
@@ -266,6 +279,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateIntegersIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bigint] null,
@@ -277,6 +291,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateIntegersIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [bigint] null,
@@ -288,6 +303,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStringsIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [nvarchar](300) null);
@@ -298,6 +314,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStringsIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [nvarchar](300) null);
@@ -308,6 +325,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStringsIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [nvarchar](300) null);
@@ -318,11 +336,13 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null,
 [StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null,
 [StructureId] [bigint] not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
@@ -330,11 +350,13 @@ insert into [dbo].[SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null,
 [StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateTextsIndexesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [nvarchar](max) null);
@@ -347,6 +369,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateTextsIndexesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
 [Value] [nvarchar](max) null);
@@ -359,6 +382,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateTextsIndexesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
 [Value] [nvarchar](max) null);
@@ -371,6 +395,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [UqStructureId] [uniqueidentifier] null,
 [UqMemberPath] [varchar](250) not null,
@@ -382,6 +407,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [UqStructureId] [bigint] null,
 [UqMemberPath] [varchar](250) not null,
@@ -393,6 +419,7 @@ alter table [dbo].[{0}] with nocheck add constraint FK_{0}_{1} foreign key (Stru
   </data>
   <data name="CreateUniquesString" xml:space="preserve">
     <value>create table [dbo].[{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [UqStructureId] [nvarchar](16) null,
 [UqMemberPath] [varchar](250) not null,
@@ -616,49 +643,5 @@ select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0
   </data>
   <data name="DropSp" xml:space="preserve">
     <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>
-  </data>
-  <data name="SetRowIdsOffForIndexesAndUniques" xml:space="preserve">
-    <value>if(select count(1) from sys.indexes where name = 'PK_{0}') &gt; 0
-begin
-	alter table [dbo].[{0}] drop constraint [PK_{0}]
-end
-
-if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &gt; 0
-begin
-	alter table [dbo].[{0}] drop column [RowId];
-end</value>
-  </data>
-  <data name="SetRowIdsOnForIndexesAndUniques" xml:space="preserve">
-    <value>if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &lt; 1
-begin
-	alter table [dbo].[{0}] add [RowId] bigint identity not null constraint [PK_{0}] primary key clustered ([RowId]);
-end
-
-if(select count(1) from sys.indexes where name = 'PK_{0}') &lt; 1
-begin
-	alter table [dbo].[{0}] add constraint [PK_{0}] primary key clustered ([RowId]);
-end</value>
-  </data>
-  <data name="SetRowIdsOffForStructures" xml:space="preserve">
-    <value>if(select count(1) from sys.indexes where name = 'IX_{0}_RowId') &gt; 0
-begin
-	drop index [IX_{0}_RowId] on [dbo].[{0}];
-end
-
-if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &gt; 0
-begin
-	alter table [dbo].[{0}] drop column [RowId];
-end</value>
-  </data>
-  <data name="SetRowIdsOnForStructures" xml:space="preserve">
-    <value>if(select count(1) from sys.columns where OBJECT_NAME(object_id) = '{0}' and name = 'RowId') &lt; 1
-begin
-	alter table [dbo].[{0}] add [RowId] bigint identity;
-end
-
-if(select count(1) from sys.indexes where name = 'IX_{0}_RowId') &lt; 1
-begin
-	create unique clustered index [IX_{0}_RowId] on [dbo].[{0}] ([RowId]);
-end</value>
   </data>
 </root>

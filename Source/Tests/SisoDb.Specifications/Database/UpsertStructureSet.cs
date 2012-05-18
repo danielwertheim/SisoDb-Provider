@@ -5,6 +5,7 @@ using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.Testing;
+using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.Database
 {
@@ -138,6 +139,15 @@ namespace SisoDb.Specifications.Database
             It should_have_created_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
 
+            It should_have_added_row_id_to_structure_table =
+                () => TestContext.DbHelper.should_have_column(_structureSchema.GetStructureTableName(), StructureStorageSchema.Fields.RowId.Name);
+
+            It should_have_added_row_id_to_uniques_table =
+                () => TestContext.DbHelper.should_have_column(_structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.RowId.Name);
+
+            It should_have_added_row_id_to_indexes_tables =
+                () => TestContext.DbHelper.should_have_column_in_all_indexestables(_structureSchema.GetIndexesTableNames(), IndexStorageSchema.Fields.RowId.Name);
+
             private static IStructureSchema _structureSchema;
         }
 
@@ -180,6 +190,15 @@ namespace SisoDb.Specifications.Database
 
             It should_have_created_uniques_table =
                 () => TestContext.DbHelper.TableExists(_structureSchema.GetUniquesTableName()).ShouldBeTrue();
+
+            It should_have_added_row_id_to_structure_table =
+                () => TestContext.DbHelper.should_have_column(_structureSchema.GetStructureTableName(), StructureStorageSchema.Fields.RowId.Name);
+
+            It should_have_added_row_id_to_uniques_table =
+                () => TestContext.DbHelper.should_have_column(_structureSchema.GetUniquesTableName(), UniqueStorageSchema.Fields.RowId.Name);
+
+            It should_have_added_row_id_to_indexes_tables =
+                () => TestContext.DbHelper.should_have_column_in_all_indexestables(_structureSchema.GetIndexesTableNames(), IndexStorageSchema.Fields.RowId.Name);
 
             private static IStructureSchema _structureSchema;
         }

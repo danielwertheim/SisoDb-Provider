@@ -244,41 +244,6 @@ namespace SisoDb.Dac
             }
         }
 
-        public virtual void SetRowIdsOn()
-        {
-            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOnForStructures"), SqlStatements.GetSql("SetRowIdsOnForIndexesAndUniques"));
-        }
-
-        public virtual void SetRowIdsOff()
-        {
-            SetRowIdOnOrOff(SqlStatements.GetSql("SetRowIdsOffForStructures"), SqlStatements.GetSql("SetRowIdsOffForIndexesAndUniques"));
-        }
-
-        protected virtual void SetRowIdOnOrOff(string setRowIdToXForStructureTable, string setRowIdToXForIndexesAndUniquesTable)
-        {
-            var tableNames = new List<string>();
-            var sql = SqlStatements.GetSql("GetTableNamesForAllDataTables");
-
-            using (var cmd = CreateCommand(sql))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                {
-                    while (reader.Read())
-                        tableNames.Add(reader.GetString(0));
-                    reader.Close();
-                }
-
-                foreach (var tableName in tableNames)
-                {
-                    cmd.CommandText = tableName.EndsWith(DbSchemas.Suffixes.StructureTableNameSuffix) 
-                        ? setRowIdToXForStructureTable.Inject(tableName) 
-                        : setRowIdToXForIndexesAndUniquesTable.Inject(tableName);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
         public virtual void Drop(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
