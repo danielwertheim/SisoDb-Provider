@@ -161,6 +161,12 @@ namespace SisoDb
             return this;
         }
 
+        protected virtual void OnClearCache()
+        {
+            CacheProvider.NotifyOfPurgeAll();
+            SchemaManager.ClearCache();
+        }
+
         public virtual bool Exists()
         {
             lock (LockObject)
@@ -246,12 +252,6 @@ namespace SisoDb
         public ISingleOperationSession UseOnceTo()
         {
             return new SingleOperationSession(this);
-        }
-
-        protected virtual void OnClearCache()
-        {
-            CacheProvider.NotifyOfPurgeAll();
-            SchemaManager.ClearCache();
         }
     }
 }
