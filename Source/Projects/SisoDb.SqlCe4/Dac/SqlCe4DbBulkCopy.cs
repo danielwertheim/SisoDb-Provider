@@ -52,6 +52,8 @@ namespace SisoDb.SqlCe4.Dac
         public void Write(IDataReader reader)
         {
         	var columnsCount = _columnMappings.Count;
+            const int rowIdIndex = 0;
+            var offsetCausedByRowId = rowIdIndex + 1;
 
 			using(var cmd = _connection.CreateCommand())
 			{
@@ -63,12 +65,11 @@ namespace SisoDb.SqlCe4.Dac
 				using (var rsIn = cmd.ExecuteResultSet(ResultSetOptions.Updatable))
 				{
 					var newRecord = rsIn.CreateRecord();
-
 					while(reader.Read())
 					{
 						for (var i = 0; i < columnsCount; i++)
 						{
-							newRecord.SetValue(i, reader.GetValue(i));
+							newRecord.SetValue(i + offsetCausedByRowId, reader.GetValue(i));
 						}
 						rsIn.Insert(newRecord);
 					}

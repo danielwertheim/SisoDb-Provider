@@ -18,7 +18,6 @@ namespace SisoDb.Maintenance
         public DbStructureSetMigrator(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
-
             Db = db;
         }
 
@@ -36,12 +35,9 @@ namespace SisoDb.Maintenance
         {
             Ensure.That(migration, "migration").IsNotNull();
 
-            Func<IDbClient, bool> onMigrationOfX;
-            Action onCleanup;
             var structuresHasSameType = migration.From.Equals(migration.To);
-            var structuresHasSameName = structuresHasSameType || string.Equals(migration.From.Name, migration.To.Name, StringComparison.OrdinalIgnoreCase);
+            var isMigratingSameStructureSet = structuresHasSameType || string.Equals(migration.From.Name, migration.To.Name, StringComparison.OrdinalIgnoreCase);
             var fromTypeAndFromTemplateHasSameType = migration.From.Equals(migration.FromTemplate);
-
             IStructureSchema structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo;
 
             if (structuresHasSameType)
@@ -51,8 +47,6 @@ namespace SisoDb.Maintenance
                     ? structureSchemaFrom
                     : Db.StructureSchemas.GetSchema(migration.FromTemplate);
                 structureSchemaTo = structureSchemaFrom;
-                onMigrationOfX = dbClient => OnMigrationOfSameStructureSet<TFrom, TFromTemplate, TTo>(structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo, dbClient, migration.Modifier);
-                onCleanup = () => Db.CacheProvider.NotifyOfPurge(structureSchemaFrom);
             }
             else
             {
@@ -62,40 +56,41 @@ namespace SisoDb.Maintenance
                     : Db.StructureSchemas.GetSchema(migration.FromTemplate);
                 structureSchemaTo = Db.StructureSchemas.GetSchema(migration.To);
                 EnsureThatSchemasAreCompatible(structureSchemaFrom, structureSchemaTo);
+            }
+
+            Func<IDbClient, bool> onMigration = dbClient =>
+                OnMigrationOfStructureSet<TFrom, TFromTemplate, TTo>(isMigratingSameStructureSet, structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo, dbClient, migration.Modifier);
+
+            Action onCleanup;
+            if (structuresHasSameType)
+                onCleanup = () => Db.CacheProvider.NotifyOfPurge(structureSchemaFrom);
+            else
                 onCleanup = () =>
                 {
                     Db.CacheProvider.NotifyOfPurge(structureSchemaFrom);
                     Db.CacheProvider.NotifyOfPurge(structureSchemaTo);
                 };
 
-                if (structuresHasSameName)
-                    onMigrationOfX = dbClient =>
-                        OnMigrationOfSameStructureSet<TFrom, TFromTemplate, TTo>(structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo, dbClient, migration.Modifier);
-                else
-                    onMigrationOfX = dbClient =>
-                        OnMigrationOfDifferentStructureSets<TFrom, TFromTemplate, TTo>(structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo, dbClient, migration.Modifier);
-            }
-
-            OnMigrate(onMigrationOfX, onCleanup);
+            OnMigrate(onMigration, onCleanup);
         }
 
-        protected virtual void OnMigrate(Func<IDbClient, bool> onMigrationOfX, Action onCleanup)
+        protected virtual void OnMigrate(Func<IDbClient, bool> migrate, Action cleanup)
         {
             using (var dbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo))
             {
                 try
                 {
-                    if (!onMigrationOfX.Invoke(dbClient))
+                    if (!migrate.Invoke(dbClient))
                         dbClient.MarkAsFailed();
                 }
                 finally
                 {
-                    onCleanup.Invoke();
+                    cleanup.Invoke();
                 }
             }
         }
 
-        protected virtual bool OnMigrationOfDifferentStructureSets<TFrom, TFromTemplate, TTo>(IStructureSchema structureSchemaFrom, IStructureSchema structureSchemaFromTemplate, IStructureSchema structureSchemaTo, IDbClient dbClientTransactional, Func<TFromTemplate, TTo, MigrationStatuses> modifier)
+        protected virtual bool OnMigrationOfStructureSet<TFrom, TFromTemplate, TTo>(bool isMigratingSameStructureSet, IStructureSchema structureSchemaFrom, IStructureSchema structureSchemaFromTemplate, IStructureSchema structureSchemaTo, IDbClient dbClientTransactional, Func<TFromTemplate, TTo, MigrationStatuses> modifier)
             where TFrom : class
             where TFromTemplate : class
             where TTo : class
@@ -103,8 +98,9 @@ namespace SisoDb.Maintenance
             var maxKeepQueueSize = Db.Settings.MaxInsertManyBatchSize;
             var serializer = Db.Serializer;
             var keepQueue = new List<TTo>(maxKeepQueueSize);
+            var trashQueue = new List<IStructureId>(maxKeepQueueSize);
             var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaTo);
-            
+
             Func<string, TFromTemplate> fromDeserializer;
             if (structureSchemaFrom.Type.Type.Equals(structureSchemaFromTemplate.Type.Type))
                 fromDeserializer = serializer.Deserialize<TFromTemplate>;
@@ -131,70 +127,28 @@ namespace SisoDb.Maintenance
                     if (modifierStatus == MigrationStatuses.Keep)
                         keepQueue.Add(newItem);
 
-                    if (keepQueue.Count == maxKeepQueueSize)
-                        ProcessKeepQueue(keepQueue, structureSchemaTo, dbClientTransactional, structureBuilder);
-                }
-            }
-
-            ProcessKeepQueue(keepQueue, structureSchemaTo, dbClientTransactional, structureBuilder);
-
-            return true;
-        }
-
-        protected virtual bool OnMigrationOfSameStructureSet<TFrom, TFromTemplate, TTo>(IStructureSchema structureSchemaFrom, IStructureSchema structureSchemaFromTemplate, IStructureSchema structureSchemaTo, IDbClient dbClientTransactional, Func<TFromTemplate, TTo, MigrationStatuses> modifier)
-            where TFrom : class
-            where TFromTemplate : class
-            where TTo : class
-        {
-            var maxKeepQueueSize = Db.Settings.MaxInsertManyBatchSize;
-            var serializer = Db.Serializer;
-            var keepQueue = new List<TTo>(maxKeepQueueSize);
-            var trashQueue = new List<IStructureId>(maxKeepQueueSize);
-            var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaTo);
-
-            Func<string, TFromTemplate> fromDeserializer;
-            if (structureSchemaFrom.Type.Type.Equals(structureSchemaFromTemplate.Type.Type))
-                fromDeserializer = serializer.Deserialize<TFromTemplate>;
-            else
-                fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;
-
-            using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
-            {
-                Db.SchemaManager.UpsertStructureSet(structureSchemaTo, dbClientNonTransactional);
-
-                foreach (var json in dbClientNonTransactional.GetJsonOrderedByStructureId(structureSchemaTo))
-                {
-                    var oldItem = fromDeserializer(json);
-                    var oldId = GetOldStructureId(structureSchemaFromTemplate, oldItem);
-                    var newItem = serializer.Deserialize<TTo>(json);
-
-                    var modifierStatus = modifier.Invoke(oldItem, newItem);
-                    if (modifierStatus == MigrationStatuses.Abort)
-                        return false;
-
-                    var newId = GetNewStructureId(structureSchemaTo, newItem);
-                    EnsureThatNewIdEqualsOldId(oldId, newId);
-
-                    if (modifierStatus == MigrationStatuses.Keep)
-                        keepQueue.Add(newItem);
-
-                    trashQueue.Add(newId);
+                    if (isMigratingSameStructureSet)
+                        trashQueue.Add(newId);
 
                     if (keepQueue.Count == maxKeepQueueSize)
                     {
-                        ProcessTrashQueue(trashQueue, structureSchemaTo, dbClientTransactional);
+                        if (isMigratingSameStructureSet)
+                            ProcessTrashQueue(trashQueue, structureSchemaTo, dbClientTransactional);
+
                         ProcessKeepQueue(keepQueue, structureSchemaTo, dbClientTransactional, structureBuilder);
                     }
                 }
             }
 
-            ProcessTrashQueue(trashQueue, structureSchemaTo, dbClientTransactional);
+            if (isMigratingSameStructureSet)
+                ProcessTrashQueue(trashQueue, structureSchemaTo, dbClientTransactional);
+
             ProcessKeepQueue(keepQueue, structureSchemaTo, dbClientTransactional, structureBuilder);
 
             return true;
         }
 
-        protected void ProcessKeepQueue<T>(IList<T> keepQueue, IStructureSchema structureSchema, IDbClient dbClient, IStructureBuilder structureBuilder) where T : class
+        protected virtual void ProcessKeepQueue<T>(IList<T> keepQueue, IStructureSchema structureSchema, IDbClient dbClient, IStructureBuilder structureBuilder) where T : class
         {
             if (keepQueue.Count < 1)
                 return;
@@ -209,7 +163,7 @@ namespace SisoDb.Maintenance
             bulkInserter.Insert(structureSchema, structures);
         }
 
-        protected void ProcessTrashQueue(IList<IStructureId> structureIds, IStructureSchema structureSchema, IDbClient dbClient)
+        protected virtual void ProcessTrashQueue(IList<IStructureId> structureIds, IStructureSchema structureSchema, IDbClient dbClient)
         {
             if (!structureIds.Any())
                 return;
@@ -218,7 +172,7 @@ namespace SisoDb.Maintenance
             structureIds.Clear();
         }
 
-        protected IStructureId GetOldStructureId<T>(IStructureSchema structureSchema, T oldStructure) where T : class
+        protected virtual IStructureId GetOldStructureId<T>(IStructureSchema structureSchema, T oldStructure) where T : class
         {
             var id = structureSchema.IdAccessor.GetValue(oldStructure);
             if (id == null)
@@ -227,7 +181,7 @@ namespace SisoDb.Maintenance
             return id;
         }
 
-        protected IStructureId GetNewStructureId<T>(IStructureSchema structureSchema, T oldStructure) where T : class
+        protected virtual IStructureId GetNewStructureId<T>(IStructureSchema structureSchema, T oldStructure) where T : class
         {
             var id = structureSchema.IdAccessor.GetValue(oldStructure);
             if (id == null)
@@ -236,7 +190,7 @@ namespace SisoDb.Maintenance
             return id;
         }
 
-        protected void EnsureThatSchemasAreCompatible(IStructureSchema structureSchemaFrom, IStructureSchema structureSchemaTo)
+        protected virtual void EnsureThatSchemasAreCompatible(IStructureSchema structureSchemaFrom, IStructureSchema structureSchemaTo)
         {
             Ensure.That(structureSchemaFrom, "structureSchemaFrom").IsNotNull();
             Ensure.That(structureSchemaTo, "structureSchemaTo").IsNotNull();
@@ -245,7 +199,7 @@ namespace SisoDb.Maintenance
                 throw new SisoDbException(ExceptionMessages.StructureSetMigrator_MissmatchInIdTypes);
         }
 
-        protected void EnsureThatNewIdEqualsOldId(IStructureId oldId, IStructureId newId)
+        protected virtual void EnsureThatNewIdEqualsOldId(IStructureId oldId, IStructureId newId)
         {
             if (!newId.Value.Equals(oldId.Value))
                 throw new SisoDbException(ExceptionMessages.StructureSetMigrator_NewIdDoesNotMatchOldId.Inject(newId.Value, oldId.Value));

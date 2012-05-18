@@ -119,6 +119,7 @@
   </resheader>
   <data name="CreateBooleansIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bit] null,
@@ -130,6 +131,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateBooleansIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bit] null,
@@ -141,6 +143,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateBooleansIndexesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bit] null,
@@ -152,6 +155,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [datetime] null,
@@ -163,6 +167,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateDatesIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [datetime] null,
@@ -174,6 +179,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateDatesIndexesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [datetime] null,
@@ -185,6 +191,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateFractalsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
@@ -196,6 +203,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateFractalsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [real] null,
@@ -207,6 +215,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateFractalsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [real] null,
@@ -218,6 +227,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateGuidsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [uniqueidentifier] null,
@@ -229,6 +239,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateGuidsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [uniqueidentifier] null,
@@ -240,6 +251,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateGuidsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [uniqueidentifier] null,
@@ -251,6 +263,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateIntegersIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
@@ -262,6 +275,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateIntegersIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
@@ -273,6 +287,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateIntegersIndexesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [bigint] null,
@@ -284,6 +299,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateStringsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [nvarchar](300) null);
@@ -294,6 +310,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateStringsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [nvarchar](300) null);
@@ -304,6 +321,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateStringsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [nvarchar](300) null);
@@ -314,11 +332,13 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null,
 [StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered,
 [Json] [ntext] not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null,
 [StructureId] [bigint] not null constraint [PK_{0}] primary key nonclustered,
 [Json] [ntext] not null);
 
@@ -326,11 +346,13 @@ insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null,
 [StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered,
 [Json] [ntext] not null);</value>
   </data>
   <data name="CreateTextsIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [nvarchar](4000) null);
@@ -342,6 +364,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateTextsIndexesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [nvarchar](4000) null);
@@ -353,6 +376,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateTextsIndexesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [nvarchar](250) not null,
 [Value] [nvarchar](4000) null);
@@ -364,6 +388,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateUniquesGuid" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [uniqueidentifier] not null,
 [UqStructureId] [uniqueidentifier] null,
 [UqMemberPath] [nvarchar](250) not null,
@@ -375,6 +400,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateUniquesIdentity" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [bigint] not null,
 [UqStructureId] [bigint] null,
 [UqMemberPath] [nvarchar](250) not null,
@@ -386,6 +412,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="CreateUniquesString" xml:space="preserve">
     <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key,
 [StructureId] [nvarchar](16) not null,
 [UqStructureId] [nvarchar](16) null,
 [UqMemberPath] [nvarchar](250) not null,
@@ -544,20 +571,5 @@ order by groupId</value>
   </data>
   <data name="GetModelTableStatuses" xml:space="preserve">
     <value>select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
-  </data>
-  <data name="SetRowIdsOffForIndexesAndUniques" xml:space="preserve">
-    <value>alter table [{0}] drop constraint [PK_{0}];
-alter table [{0}] drop column [RowId];</value>
-  </data>
-  <data name="SetRowIdsOnForIndexesAndUniques" xml:space="preserve">
-    <value>alter table [{0}] add [RowId] bigint identity not null constraint [PK_{0}] primary key</value>
-  </data>
-  <data name="SetRowIdsOffForStructures" xml:space="preserve">
-    <value>drop index [{0}].[IX_{0}_RowId];
-alter table [{0}] drop column [RowId];</value>
-  </data>
-  <data name="SetRowIdsOnForStructures" xml:space="preserve">
-    <value>alter table [{0}] add [RowId] bigint identity;
-create unique nonclustered index [IX_{0}_RowId] on [{0}] ([RowId]);</value>
   </data>
 </root>
