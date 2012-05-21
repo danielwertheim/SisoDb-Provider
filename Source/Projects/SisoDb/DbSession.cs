@@ -24,7 +24,6 @@ namespace SisoDb
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
         protected ITransactionalDbClient TransactionalDbClient;
-        protected IDbClient NonTransactionalDbClient;
         protected CacheConsumeModes CacheConsumeMode;
 
         public ISisoDatabase Db
@@ -51,7 +50,6 @@ namespace SisoDb
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
             SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
 
-            NonTransactionalDbClient = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo);
             TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
 
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
@@ -65,11 +63,6 @@ namespace SisoDb
             {
                 TransactionalDbClient.Dispose();
                 TransactionalDbClient = null;
-            }
-            if (NonTransactionalDbClient != null)
-            {
-                NonTransactionalDbClient.Dispose();
-                NonTransactionalDbClient = null;
             }
         }
 
@@ -112,7 +105,7 @@ namespace SisoDb
         protected virtual IStructureSchema OnUpsertStructureSchema(Type structuretype)
         {
             var structureSchema = Db.StructureSchemas.GetSchema(structuretype);
-            Db.SchemaManager.UpsertStructureSet(structureSchema, NonTransactionalDbClient);
+            Db.UpsertStructureSet(structuretype);
             return structureSchema;
         }
 
