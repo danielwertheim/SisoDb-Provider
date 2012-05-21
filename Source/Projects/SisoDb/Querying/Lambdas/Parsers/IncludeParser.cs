@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using NCore.Expressions;
 
@@ -8,7 +9,15 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public class IncludeParser : IIncludeParser
     {
-        public IParsedLambda Parse(string includedStructureSetName, LambdaExpression[] includeExpressions)
+        protected readonly IDataTypeConverter DataTypeConverter;
+
+        public IncludeParser(IDataTypeConverter dataTypeConverter)
+        {
+            Ensure.That(dataTypeConverter, "dataTypeConverter").IsNotNull();
+            DataTypeConverter = dataTypeConverter;
+        }
+
+        public virtual IParsedLambda Parse(string includedStructureSetName, LambdaExpression[] includeExpressions)
         {
 			Ensure.That(includedStructureSetName, "includedStructureSetName").IsNotNullOrWhiteSpace();
             Ensure.That(includeExpressions, "includeExpressions").HasItems();
@@ -21,14 +30,14 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 var idReferencePath = memberExpression.ToPath();
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
 
-                nodes.AddNode(
-                    new IncludeNode(includedStructureSetName, idReferencePath, objectReferencePath, memberExpression.Type));    
+                nodes.AddNode(new IncludeNode(
+                    includedStructureSetName, idReferencePath, objectReferencePath, memberExpression.Type, DataTypeConverter.Convert(memberExpression.Type, idReferencePath)));    
             }
 
             return new ParsedLambda(nodes.ToArray());
         }
 
-        private static string BuildObjectReferencePath(string idReferencePath)
+        protected virtual string BuildObjectReferencePath(string idReferencePath)
         {
             return !idReferencePath.EndsWith("Id") 
                 ? idReferencePath 

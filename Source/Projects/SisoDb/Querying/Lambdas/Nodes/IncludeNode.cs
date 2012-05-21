@@ -1,5 +1,6 @@
 ﻿using System;
 using EnsureThat;
+using PineCone.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
@@ -12,19 +13,22 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
         public string ObjectReferencePath { get; private set; }
 
-        public Type MemberType { get; private set; }
+        public Type DataType { get; private set; }
 
-        public IncludeNode(string referencedStructureName, string idReferencePath, string objectReferencePath, Type memberType)
+        public DataTypeCode DataTypeCode { get; private set; }
+
+        public IncludeNode(string referencedStructureName, string idReferencePath, string objectReferencePath, Type dataType, DataTypeCode dataTypeCode)
         {
 			Ensure.That(referencedStructureName, "referencedStructureName").IsNotNullOrWhiteSpace();
             Ensure.That(idReferencePath, "idReferencePath").IsNotNullOrWhiteSpace();
             Ensure.That(objectReferencePath, "objectReferencePath").IsNotNullOrWhiteSpace();
-            Ensure.That(memberType, "memberType").IsNotNull();
+            Ensure.That(dataType, "dataType").IsNotNull();
 
             ReferencedStructureName = referencedStructureName;
             IdReferencePath = idReferencePath;
             ObjectReferencePath = objectReferencePath;
-            MemberType = memberType;
+            DataType = dataType;
+            DataTypeCode = dataTypeCode;
         }
     }
 }

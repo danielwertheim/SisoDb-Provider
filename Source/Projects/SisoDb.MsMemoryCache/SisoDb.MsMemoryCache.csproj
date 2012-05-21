@@ -42,7 +42,7 @@
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.2.0.0\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.3.1.0\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

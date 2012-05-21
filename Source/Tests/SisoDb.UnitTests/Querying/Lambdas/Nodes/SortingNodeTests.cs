@@ -12,8 +12,8 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Nodes
             var node1 = new SortingNode("GOOFY", typeof (int));
             var node2 = new SortingNode("GOOFY", typeof(string));
 
-            Assert.AreEqual(typeof(int), node1.MemberType);
-            Assert.AreEqual(typeof(string), node2.MemberType);
+            Assert.AreEqual(typeof(int), node1.DataType);
+            Assert.AreEqual(typeof(string), node2.DataType);
         }
 
         [Test]

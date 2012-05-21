@@ -251,12 +251,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -281,12 +281,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -311,12 +311,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -341,12 +341,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -371,12 +371,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}
@@ -401,12 +401,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}
@@ -431,12 +431,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}
@@ -461,12 +461,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}

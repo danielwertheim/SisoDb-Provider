@@ -1,11 +1,12 @@
 using System;
+using PineCone.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
 	[Serializable]
 	public class StartsWithMemberNode : MemberNode
 	{
-		public StartsWithMemberNode(string memberPath, Type memberType)
-			: base(memberPath, memberType) {}
+		public StartsWithMemberNode(string memberPath, Type dataType, DataTypeCode dataTypeCode)
+			: base(memberPath, dataType, dataTypeCode) {}
 	}
 }

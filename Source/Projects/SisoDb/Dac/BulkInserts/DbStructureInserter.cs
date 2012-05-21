@@ -22,14 +22,8 @@ namespace SisoDb.Dac.BulkInserts
             }
         }
 
-        protected static readonly Type TextType;
         protected const int MaxNumOfStructuresBeforeParallelEscalation = 10;
         protected readonly IDbClient MainDbClient;
-
-        static DbStructureInserter()
-        {
-            TextType = typeof(Text);
-        }
 
         public DbStructureInserter(IDbClient mainDbClient)
         {
@@ -262,8 +256,7 @@ namespace SisoDb.Dac.BulkInserts
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.StringsTableName);
                     break;
-                case DataTypeCode.Unknown:
-                    container.Data = container.Data.Where(i => i.DataType == TextType).ToArray();
+                case DataTypeCode.Text:
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data));
                     if (container.Data.Length == 1)
