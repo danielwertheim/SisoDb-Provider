@@ -28,7 +28,7 @@ namespace SisoDb.UnitTests.DbSchema
             var manager = new DbSchemaManager(upserterFake.Object);
             manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 
-            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object), Times.Once());
+            upserterFake.Verify(f => f.Upsert(_structureSchema, () => dbClientFake.Object), Times.Once());
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace SisoDb.UnitTests.DbSchema
             manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 			manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 
-            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object), Times.Once());
+            upserterFake.Verify(f => f.Upsert(_structureSchema, () => dbClientFake.Object), Times.Once());
         }
 
         [Test]
