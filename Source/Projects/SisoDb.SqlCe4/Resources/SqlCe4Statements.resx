@@ -504,7 +504,7 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
     <value>select ([CurrentId] + 1) from [SisoDbIdentities] where [EntityName] = @entityName;</value>
   </data>
   <data name="Sys_Identities_Increase" xml:space="preserve">
-    <value>update [SisoDbIdentities] set [CurrentId] = ([CurrentId] + @numOfIds) where [EntityName] = @entityName;</value>
+    <value>update [SisoDbIdentities] with(updlock, rowlock) set [CurrentId] = ([CurrentId] + @numOfIds) where [EntityName] = @entityName;</value>
   </data>
   <data name="TableExists" xml:space="preserve">
     <value>select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@tableName;</value>

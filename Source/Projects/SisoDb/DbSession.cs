@@ -101,7 +101,7 @@ namespace SisoDb
 
         protected virtual long OnCheckOutAndGetNextIdentity(IStructureSchema structureSchema, int numOfIds)
         {
-            return NonTransactionalDbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
+            return TransactionalDbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
         }
 
         protected virtual IStructureSchema OnUpsertStructureSchema<T>() where T : class

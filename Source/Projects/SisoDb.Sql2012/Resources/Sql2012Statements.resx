@@ -534,7 +534,7 @@ insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});</value>
   <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
     <value>set nocount on;
 declare @id bigint;
-update [dbo].[SisoDbIdentities] set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityName] = @entityName;
+update [dbo].[SisoDbIdentities] with(updlock, rowlock) set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityName] = @entityName;
 select @id as StructureId;</value>
   </data>
   <data name="Sys_Identities_CreateIfNotExists" xml:space="preserve">
