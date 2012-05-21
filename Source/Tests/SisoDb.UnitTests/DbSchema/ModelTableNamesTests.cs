@@ -1,5 +1,7 @@
 using System;
 using NUnit.Framework;
+using PineCone.Structures;
+using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 
 namespace SisoDb.UnitTests.DbSchema
@@ -7,9 +9,16 @@ namespace SisoDb.UnitTests.DbSchema
     [TestFixture]
     public class ModelTableNamesTests : UnitTestBase
     {
+        private readonly IDataTypeConverter _dataTypeConverter = new DataTypeConverter();
+
         protected override void OnTestFinalize()
         {
             DbSchemaNamingPolicy.Reset();
+        }
+
+        private DataTypeCode GetAsDataTypeCode(Type type, string memberName = null)
+        {
+            return _dataTypeConverter.Convert(type, memberName ?? "Foo");
         }
 
         [Test]
@@ -97,49 +106,61 @@ namespace SisoDb.UnitTests.DbSchema
         [Test]
         public void GetNameByType_WhenIntegerType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureIntegers()
         {
-            Assert.AreEqual("MyStructureIntegers", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(int)));
+            Assert.AreEqual("MyStructureIntegers", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(int))));
         }
 
         [Test]
         public void GetNameByType_WhenIntegerType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureFractals()
         {
-            Assert.AreEqual("MyStructureFractals", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(decimal)));
+            Assert.AreEqual("MyStructureFractals", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(decimal))));
         }
 
         [Test]
         public void GetNameByType_WhenBoolType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureBooleans()
         {
-            Assert.AreEqual("MyStructureBooleans", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(bool)));
+            Assert.AreEqual("MyStructureBooleans", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(bool))));
         }
 
         [Test]
         public void GetNameByType_WhenDateTimeType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureDates()
         {
-            Assert.AreEqual("MyStructureDates", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(DateTime)));
+            Assert.AreEqual("MyStructureDates", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(DateTime))));
         }
 
         [Test]
         public void GetNameByType_WhenGuidType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureGuids()
         {
-            Assert.AreEqual("MyStructureGuids", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(Guid)));
+            Assert.AreEqual("MyStructureGuids", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(Guid))));
         }
 
         [Test]
         public void GetNameByType_WhenStringType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureStrings()
         {
-            Assert.AreEqual("MyStructureStrings", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(string)));
+            Assert.AreEqual("MyStructureStrings", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(string))));
         }
 
         [Test]
-        public void GetNameByType_WhenTextType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureTexts()
+        public void GetNameByType_WhenStringType_and_member_endswith_Text_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureTexts()
         {
-            Assert.AreEqual("MyStructureTexts", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(Text)));
+            Assert.AreEqual("MyStructureTexts", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(string), "FooText")));
+        }
+
+        [Test]
+        public void GetNameByType_WhenStringType_and_member_endswith_Content_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureTexts()
+        {
+            Assert.AreEqual("MyStructureTexts", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(string), "FooContent")));
+        }
+
+        [Test]
+        public void GetNameByType_WhenStringType_and_member_endswith_Description_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureTexts()
+        {
+            Assert.AreEqual("MyStructureTexts", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(string), "FooDescription")));
         }
 
         [Test]
         public void GetNameByType_WhenEnumType_and_StructureIsNamed_MyStructure_it_ShouldBe_MyStructureStrings()
         {
-            Assert.AreEqual("MyStructureStrings", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(typeof(StringComparison)));
+            Assert.AreEqual("MyStructureStrings", new ModelTableNames("MyStructure").IndexesTableNames.GetNameByType(GetAsDataTypeCode(typeof(StringComparison))));
         }
     }
 }

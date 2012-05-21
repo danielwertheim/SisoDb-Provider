@@ -1,4 +1,5 @@
 using EnsureThat;
+using PineCone.Structures.Schemas;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {
@@ -8,11 +9,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
         private IWhereParser _whereParser;
         private IOrderByParser _orderByParser;
 
-		public ExpressionParsers()
+		public ExpressionParsers(IDataTypeConverter dataTypeConverter)
 		{
-			IncludeParser = new IncludeParser();
-			WhereParser = new WhereParser();
-			OrderByParser = new OrderByParser();
+			IncludeParser = new IncludeParser(dataTypeConverter);
+			WhereParser = new WhereParser(dataTypeConverter);
+			OrderByParser = new OrderByParser(dataTypeConverter);
 		}
 
 	    public IIncludeParser IncludeParser

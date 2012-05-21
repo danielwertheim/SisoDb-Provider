@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Querying.Lambdas.Parsers;
@@ -11,12 +12,19 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
     [TestFixture]
     public class WhereParserCommunitySupportTests : UnitTestBase
     {
+        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
+
+        private WhereParser CreateParser()
+        {
+            return new WhereParser(_dataTypeConverter);
+        }
+
         [Test]
         public void Parse_When_StringQxStartsWith_or_IntEquals_or_ListOfStringsQxAny__ReturnsCorrectNodes()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.MyString.QxStartsWith("Foo") || m.MyInt == 42 || m.MyListOfStrings.QxAny(i => i == "Bar"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();

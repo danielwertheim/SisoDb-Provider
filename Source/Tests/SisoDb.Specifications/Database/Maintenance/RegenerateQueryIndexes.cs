@@ -60,10 +60,10 @@ namespace SisoDb.Specifications.Database.Maintenance
                 TestContext.DbHelper.AnyIndexesTableHasMember<MyStructure>(_structureSchema, _structures[1].StructureId, m => m.StringValue);
 
             It should_have_one_text_value_for_structure_one = () =>
-                TestContext.DbHelper.AnyIndexesTableHasMember<MyStructure>(_structureSchema, _structures[0].StructureId, m => m.TextValue);
+                TestContext.DbHelper.AnyIndexesTableHasMember<MyStructure>(_structureSchema, _structures[0].StructureId, m => m.Text);
 
             It should_have_one_text_value_for_structure_two = () =>
-                TestContext.DbHelper.AnyIndexesTableHasMember<MyStructure>(_structureSchema, _structures[1].StructureId, m => m.TextValue);
+                TestContext.DbHelper.AnyIndexesTableHasMember<MyStructure>(_structureSchema, _structures[1].StructureId, m => m.Text);
 
             private static IStructureSchema _structureSchema;
             private static MyStructure[] _structures;
@@ -78,7 +78,7 @@ namespace SisoDb.Specifications.Database.Maintenance
             public bool BoolValue { get; set; }
             public DateTime DateTimeValue { get; set; }
             public string StringValue { get; set; }
-            public Text TextValue { get; set; }
+            public string Text { get; set; }
 
             public static MyStructure Create()
             {
@@ -90,7 +90,7 @@ namespace SisoDb.Specifications.Database.Maintenance
                     BoolValue = false,
                     DateTimeValue = new DateTime(2012, 2, 3, 11, 32, 59),
                     StringValue = "Foo",
-                    TextValue = "Bar"
+                    Text = "Bar"
                 };
             }
         }

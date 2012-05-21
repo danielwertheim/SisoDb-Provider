@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using EnsureThat;
 using NCore;
 using NCore.Collections;
 using NCore.Expressions;
 using NCore.Reflections;
+using PineCone.Structures.Schemas;
 using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
@@ -19,6 +21,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         private readonly object _lock;
         protected readonly List<MemberExpression> VirtualPrefixMembers;
         protected INodesCollection Nodes;
+        protected readonly IDataTypeConverter DataTypeConverter;
 
         protected bool IsFlatteningMembers
         {
@@ -36,8 +39,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
             };
         }
 
-        public WhereParser()
+        public WhereParser(IDataTypeConverter dataTypeConverter)
         {
+            Ensure.That(dataTypeConverter, "dataTypeConverter").IsNotNull();
+            
+            DataTypeConverter = dataTypeConverter;
             _lock = new object();
             VirtualPrefixMembers = new List<MemberExpression>();
         }
@@ -211,18 +217,21 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 var path = previousNode == null ? memberExpression.ToPath() : string.Format("{0}.{1}", previousNode.Path, memberExpression.ToPath());
 
                 if (isLast && memberExpression.Type.IsEnumerableType())
-                    previousNode = new MemberNode(path, memberExpression.Type.GetEnumerableElementType());
+                {
+                    var elementType = memberExpression.Type.GetEnumerableElementType();
+                    previousNode = new MemberNode(path, elementType, DataTypeConverter.Convert(elementType, path));
+                }
                 else
-                    previousNode = new MemberNode(path, memberExpression.Type);
+                    previousNode = new MemberNode(path, memberExpression.Type, DataTypeConverter.Convert(memberExpression.Type, path));
             }
 
             if (previousNode != null)
             {
                 if (e.Type.IsNullablePrimitiveType())
-                    return new NullableMemberNode(previousNode.Path, e.Type);
+                    return new NullableMemberNode(previousNode.Path, e.Type, DataTypeConverter.Convert(e.Type, previousNode.Path));
 
                 if (e.Expression.Type.IsNullablePrimitiveType())
-                    return new NullableMemberNode(previousNode.Path, e.Expression.Type);
+                    return new NullableMemberNode(previousNode.Path, e.Expression.Type, DataTypeConverter.Convert(e.Expression.Type, previousNode.Path));
             }
 
             return previousNode;

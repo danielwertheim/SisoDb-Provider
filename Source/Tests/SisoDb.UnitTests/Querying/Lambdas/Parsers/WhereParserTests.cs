@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using NCore;
 using NUnit.Framework;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
@@ -11,10 +12,17 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
     [TestFixture]
     public class WhereParserTests : UnitTestBase
     {
+        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
+
+        private WhereParser CreateParser()
+        {
+            return new WhereParser(_dataTypeConverter);
+        }
+
 		[Test]
 		public void Parse_WhenOnlyMemberIsPassed_ThrowsException()
 		{
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.String1);
 
 			var ex = Assert.Throws<SisoDbException>(
@@ -26,7 +34,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		[Test]
 		public void Parse_WhenUnsupportedMethodInvocation_NotSupportedException()
 		{
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == Convert.ToString(m.Int1));
 
 			var ex = Assert.Throws<NotSupportedException>(
@@ -42,7 +50,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -64,7 +72,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var item = new MyClass {Bool1 = false};
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1 == item.Bool1);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -85,7 +93,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1 == true);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -106,7 +114,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.Bool1 || m.NullableInt1.HasValue);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -136,7 +144,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1.HasValue && m.NullableInt1 != null);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -169,7 +177,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
     		var foo = (int?) 1;
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 == foo);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -191,7 +199,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var foo = (int?)null;
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 == foo);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -212,7 +220,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 == 1);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -233,7 +241,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1.Value == 1);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -254,7 +262,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 == null);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -275,7 +283,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1 != null);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -296,7 +304,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1.HasValue == false);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -317,7 +325,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1.HasValue == true);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -338,7 +346,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt1.HasValue);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -359,7 +367,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => !m.NullableInt1.HasValue);
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();

@@ -1,4 +1,5 @@
 using System;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;
@@ -8,6 +9,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 {
     public abstract class QueryGeneratorStringFunctionTests : UnitTestBase
     {
+        protected readonly IDataTypeConverter DataTypeConverter = new DataTypeConverter();
         protected abstract IDbQueryGenerator GetQueryGenerator();
 
 		public abstract void GenerateQuery_for_Where_with_String_StartsWith_on_Nullable_ToString_GeneratesCorrectQuery();
@@ -162,7 +164,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
 
         protected virtual IQuery BuildQuery<T>(Action<IQueryBuilder<T>> commandInitializer) where T : class
         {
-            var builder = new QueryBuilder<T>(new StructureSchemasStub(), new ExpressionParsers());
+            var builder = new QueryBuilder<T>(new StructureSchemasStub(), new ExpressionParsers(DataTypeConverter));
 
             commandInitializer(builder);
 
