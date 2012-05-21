@@ -104,9 +104,25 @@ namespace SisoDb
 
         protected virtual IStructureSchema OnUpsertStructureSchema(Type structuretype)
         {
-            var structureSchema = Db.StructureSchemas.GetSchema(structuretype);
-            Db.UpsertStructureSet(structuretype);
-            return structureSchema;
+            IDbClient dbClient = null;
+            try
+            {
+                var structureSchema = Db.StructureSchemas.GetSchema(structuretype);
+                Db.SchemaManager.UpsertStructureSet(structureSchema, () =>
+                {
+                    dbClient = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo);
+                    return dbClient;
+                });
+                return structureSchema;
+            }
+            finally
+            {
+                if (dbClient != null)
+                {
+                    dbClient.Dispose();
+                    dbClient = null;
+                }
+            }
         }
 
         public virtual IStructureSchema GetStructureSchema<T>() where T : class
@@ -450,7 +466,7 @@ namespace SisoDb
             return TransactionalDbClient.RowCountByQuery(structureSchema, whereSql);
         }
 
-        public virtual bool Exists<T>(object id) where T : class 
+        public virtual bool Exists<T>(object id) where T : class
         {
             return Try(() => OnExists(TypeFor<T>.Type, id));
         }
@@ -557,7 +573,9 @@ namespace SisoDb
             return Try(() => OnQueryAsAnonymous<T, TResult>(query, templateType));
         }
 
-        protected virtual IEnumerable<TResult> OnQueryAsAnonymous<T, TResult>(IQuery query, Type templateType) where T :class where TResult : class 
+        protected virtual IEnumerable<TResult> OnQueryAsAnonymous<T, TResult>(IQuery query, Type templateType)
+            where T : class
+            where TResult : class
         {
             Ensure.That(query, "query").IsNotNull();
 
