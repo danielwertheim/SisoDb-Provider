@@ -158,7 +158,7 @@ namespace SisoDb.Testing.Steps
         public static void should_have_stored_member_in_indexes_table<T>(this ITestDbUtils db, IStructureSchema structureSchema, object structureId, Expression<Func<T, object>> memberExpression, Type memberType)
         {
             var memberPath = GetMemberPath(memberExpression);
-            structureSchema.IndexAccessors.Count(iac => iac.Path == memberPath).ShouldEqual(0);
+            structureSchema.IndexAccessors.Count(iac => iac.Path == memberPath).ShouldBeGreaterThan(0);
 
             var tablename = structureSchema.GetIndexesTableNames().GetNameByType(DataTypeConverter.Convert(memberType, memberPath));
             db.RowCount(tablename, "{0} = '{1}' and {2} = '{3}'".Inject(
