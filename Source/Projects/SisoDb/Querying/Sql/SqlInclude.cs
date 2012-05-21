@@ -1,5 +1,6 @@
 ﻿using System;
 using EnsureThat;
+using PineCone.Structures;
 
 namespace SisoDb.Querying.Sql
 {
@@ -14,6 +15,7 @@ namespace SisoDb.Querying.Sql
         private readonly string _objectReferencePath;
         private readonly bool _isEmpty;
     	private readonly Type _dataType;
+        private readonly DataTypeCode _dataTypeCode;
 
         public virtual int Index
         {
@@ -50,12 +52,17 @@ namespace SisoDb.Querying.Sql
 			get { return _dataType; }
     	}
 
+        public virtual DataTypeCode DataTypeCode
+        {
+            get { return _dataTypeCode; }
+        }
+
         public virtual bool IsEmpty
         {
             get { return _isEmpty; }
         }
 
-        public SqlInclude(int index, string tableName, string alias, string indexValueColumnName, string memberPathReference, string objectReferencePath, Type dataType)
+        public SqlInclude(int index, string tableName, string alias, string indexValueColumnName, string memberPathReference, string objectReferencePath, Type dataType, DataTypeCode dataTypeCode)
         {
             Ensure.That(index, "index").IsGte(0);
             Ensure.That(tableName, "tableName").IsNotNullOrWhiteSpace();
@@ -73,6 +80,7 @@ namespace SisoDb.Querying.Sql
             _memberPathReference = memberPathReference;
             _objectReferencePath = objectReferencePath;
         	_dataType = dataType;
+            _dataTypeCode = dataTypeCode;
         }
 
         private SqlInclude()

@@ -412,7 +412,7 @@ namespace SisoDb.Specifications.Session
 
         private class TextElement
         {
-            public Text Value { get; set; }
+            public string Text { get; set; }
         }
 
         private class DateTimeElement

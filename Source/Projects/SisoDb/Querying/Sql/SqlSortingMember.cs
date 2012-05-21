@@ -1,5 +1,6 @@
 ﻿using System;
 using EnsureThat;
+using PineCone.Structures;
 
 namespace SisoDb.Querying.Sql
 {
@@ -13,6 +14,7 @@ namespace SisoDb.Querying.Sql
         private readonly string _direction;
         private readonly bool _isEmpty;
     	private readonly Type _dataType;
+        private readonly DataTypeCode _dataTypeCode;
 
         public virtual int Index
         {
@@ -44,12 +46,17 @@ namespace SisoDb.Querying.Sql
 			get { return _dataType; }
     	}
 
+        public virtual DataTypeCode DataTypeCode
+        {
+            get { return _dataTypeCode; }
+        }
+
         public virtual bool IsEmpty
         {
             get { return _isEmpty; }
         }
 
-        public SqlSortingMember(int index, string memberPath, string alias, string indexStorageColumnName, string direction, Type dataType)
+        public SqlSortingMember(int index, string memberPath, string alias, string indexStorageColumnName, string direction, Type dataType, DataTypeCode dataTypeCode)
         {
             Ensure.That(index, "index").IsGte(0);
             Ensure.That(memberPath, "memberPath").IsNotNullOrWhiteSpace();
@@ -65,6 +72,7 @@ namespace SisoDb.Querying.Sql
             _indexStorageColumnName = indexStorageColumnName;
             _direction = direction;
         	_dataType = dataType;
+            _dataTypeCode = dataTypeCode;
         }
 
         private SqlSortingMember()
@@ -75,6 +83,7 @@ namespace SisoDb.Querying.Sql
             _indexStorageColumnName = string.Empty;
             _direction = string.Empty;
         	_dataType = TypeFor<object>.Type;
+            _dataTypeCode = DataTypeCode.Unknown;
         }
 
         public static SqlSortingMember Empty()

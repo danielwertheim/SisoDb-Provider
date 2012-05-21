@@ -12,24 +12,20 @@ namespace SisoDb.UnitTests.DbSchema
     [TestFixture]
     public class DbDataTypeTranslatorTests : UnitTestBase
     {
-        private DbDataTypeTranslator _translator;
-
-        protected override void OnFixtureInitialize()
-        {
-            _translator = new DbDataTypeTranslator();
-        }
-
+        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
+        private readonly DbDataTypeTranslator _translator = new DbDataTypeTranslator();
+        
         [Test]
         public void ToSql_ForByteArray_ThrowsException()
         {
             var propertyFake = new Mock<IStructureProperty>();
             propertyFake.Setup(x => x.Path).Returns("Bytes");
             propertyFake.Setup(x => x.IsEnumerable).Returns(true);
-            propertyFake.Setup(x => x.ElementType).Returns(typeof(byte));
-            propertyFake.Setup(x => x.PropertyType).Returns(typeof(byte[]));
+            propertyFake.Setup(x => x.ElementDataType).Returns(typeof(byte));
+            propertyFake.Setup(x => x.DataType).Returns(typeof(byte[]));
             propertyFake.Setup(x => x.IsRootMember).Returns(true);
 
-            var iac = new IndexAccessor(propertyFake.Object);
+            var iac = new IndexAccessor(propertyFake.Object, _dataTypeConverter.Convert(propertyFake.Object));
 
             var ex = Assert.Throws<SisoDbException>(() => _translator.ToDbType(iac.DataType));
 

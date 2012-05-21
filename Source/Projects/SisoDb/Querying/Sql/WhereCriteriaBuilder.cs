@@ -79,7 +79,7 @@ namespace SisoDb.Querying.Sql
             if (member is ToUpperMemberNode)
                 memFormat = string.Format("upper({0})", memFormat);
 
-        	if ((member is StartsWithMemberNode || member is EndsWithMemberNode) && !(member.MemberType.IsStringType() || member.MemberType.IsAnyEnumType()))
+        	if ((member is StartsWithMemberNode || member is EndsWithMemberNode) && !(member.DataType.IsStringType() || member.DataType.IsAnyEnumType()))
         		return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name);
 
         	return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
@@ -112,7 +112,7 @@ namespace SisoDb.Querying.Sql
             if (SqlContains(ValueMarker))
                 Sql = Sql.Replace(ValueMarker, nullNode.ToString());
             else
-                Sql.Append(nullNode.ToString());
+                Sql.Append(nullNode);
 
             HasWrittenValue = true;
         }

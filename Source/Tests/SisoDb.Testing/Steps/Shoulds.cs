@@ -13,6 +13,8 @@ namespace SisoDb.Testing.Steps
 {
 	public static class Shoulds
 	{
+        private static readonly IDataTypeConverter DataTypeConverter = new DataTypeConverter();
+
 		public static void should_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
 		{
 			db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(0);
@@ -153,12 +155,23 @@ namespace SisoDb.Testing.Steps
 				structureJson.Contains("\"{0}\"".Inject(part)).ShouldBeFalse();
 		}
 
+        public static void should_have_stored_member_in_indexes_table<T>(this ITestDbUtils db, IStructureSchema structureSchema, object structureId, Expression<Func<T, object>> memberExpression, Type memberType)
+        {
+            var memberPath = GetMemberPath(memberExpression);
+            structureSchema.IndexAccessors.Count(iac => iac.Path == memberPath).ShouldEqual(0);
+
+            var tablename = structureSchema.GetIndexesTableNames().GetNameByType(DataTypeConverter.Convert(memberType, memberPath));
+            db.RowCount(tablename, "{0} = '{1}' and {2} = '{3}'".Inject(
+                IndexStorageSchema.Fields.StructureId.Name, structureId,
+                IndexStorageSchema.Fields.MemberPath.Name, memberPath)).ShouldBeGreaterThan(0);
+        }
+
         public static void should_not_have_stored_member_in_indexes_table<T>(this ITestDbUtils db, IStructureSchema structureSchema, object structureId, Expression<Func<T, object>> memberExpression, Type memberType)
         {
             var memberPath = GetMemberPath(memberExpression);
             structureSchema.IndexAccessors.Count(iac => iac.Path == memberPath).ShouldEqual(0);
-            
-            var tablename = structureSchema.GetIndexesTableNames().GetNameByType(memberType);
+
+            var tablename = structureSchema.GetIndexesTableNames().GetNameByType(DataTypeConverter.Convert(memberType, memberPath));
             db.RowCount(tablename, "{0} = '{1}' and {2} = '{3}'".Inject(
                 IndexStorageSchema.Fields.StructureId.Name, structureId,
                 IndexStorageSchema.Fields.MemberPath.Name, memberPath)).ShouldEqual(0);

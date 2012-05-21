@@ -67,9 +67,9 @@ namespace SisoDb.SqlCe4.Dac
 					var newRecord = rsIn.CreateRecord();
 					while(reader.Read())
 					{
-						for (var i = 0; i < columnsCount; i++)
+                        for (var i = offsetCausedByRowId; i <= columnsCount; i++)
 						{
-							newRecord.SetValue(i + offsetCausedByRowId, reader.GetValue(i));
+							newRecord.SetValue(i, reader.GetValue(i));
 						}
 						rsIn.Insert(newRecord);
 					}

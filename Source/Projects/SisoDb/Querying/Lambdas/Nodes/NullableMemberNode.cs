@@ -1,6 +1,7 @@
 using System;
 using NCore;
 using NCore.Reflections;
+using PineCone.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
@@ -9,7 +10,8 @@ namespace SisoDb.Querying.Lambdas.Nodes
 	{
 		public bool IsForHasValueCheck { get; private set; }
 
-		public NullableMemberNode(string memberPath, Type memberType) : base(ApplyPathRules(memberPath), ExtractType(memberType))
+		public NullableMemberNode(string memberPath, Type dataType, DataTypeCode dataTypeCode) 
+            : base(ApplyPathRules(memberPath), ExtractType(dataType), dataTypeCode)
 		{
 			IsForHasValueCheck = memberPath.EndsWith(".HasValue");
 		}

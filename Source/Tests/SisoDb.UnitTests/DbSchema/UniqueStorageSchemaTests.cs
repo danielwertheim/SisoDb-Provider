@@ -12,10 +12,27 @@ namespace SisoDb.UnitTests.DbSchema
         {
             var fields = UniqueStorageSchema.OrderedFields;
 
-            Assert.AreEqual(UniqueStorageSchema.Fields.StructureId, fields[0]);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqStructureId, fields[1]);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqMemberPath, fields[2]);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqValue, fields[3]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.RowId, fields[0]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.StructureId, fields[1]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqStructureId, fields[2]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqMemberPath, fields[3]);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqValue, fields[4]);
+        }
+
+        [Test]
+        public void SchemaField_RowId_HasCorrectName()
+        {
+            var field = UniqueStorageSchema.Fields.RowId;
+
+            Assert.AreEqual("RowId", field.Name);
+        }
+
+        [Test]
+        public void SchemaField_RowId_HasCorrectOrdinal()
+        {
+            var field = UniqueStorageSchema.Fields.RowId;
+
+            Assert.AreEqual(0, field.Ordinal);
         }
 
         [Test]
@@ -31,7 +48,7 @@ namespace SisoDb.UnitTests.DbSchema
         {
             var field = UniqueStorageSchema.Fields.StructureId;
 
-            Assert.AreEqual(0, field.Ordinal);
+            Assert.AreEqual(1, field.Ordinal);
         }
 
         [Test]
@@ -47,7 +64,7 @@ namespace SisoDb.UnitTests.DbSchema
         {
             var field = UniqueStorageSchema.Fields.UqStructureId;
 
-            Assert.AreEqual(1, field.Ordinal);
+            Assert.AreEqual(2, field.Ordinal);
         }
 
         [Test]
@@ -63,7 +80,7 @@ namespace SisoDb.UnitTests.DbSchema
         {
             var field = UniqueStorageSchema.Fields.UqMemberPath;
 
-            Assert.AreEqual(2, field.Ordinal);
+            Assert.AreEqual(3, field.Ordinal);
         }
 
         [Test]
@@ -78,22 +95,6 @@ namespace SisoDb.UnitTests.DbSchema
         public void SchemaField_UqValue_HasCorrectOrdinal()
         {
             var field = UniqueStorageSchema.Fields.UqValue;
-
-            Assert.AreEqual(3, field.Ordinal);
-        }
-
-        [Test]
-        public void SchemaField_RowId_HasCorrectName()
-        {
-            var field = UniqueStorageSchema.Fields.RowId;
-
-            Assert.AreEqual("RowId", field.Name);
-        }
-
-        [Test]
-        public void SchemaField_RowId_HasCorrectOrdinal()
-        {
-            var field = UniqueStorageSchema.Fields.RowId;
 
             Assert.AreEqual(4, field.Ordinal);
         }
@@ -110,19 +111,19 @@ namespace SisoDb.UnitTests.DbSchema
             Assert.AreEqual(5, fieldsByIndex.Count);
 
             Assert.AreEqual(0, fieldsByIndex[0].Ordinal);
-            Assert.AreEqual(UniqueStorageSchema.Fields.StructureId.Name, fieldsByIndex[0].Name);
+            Assert.AreEqual(UniqueStorageSchema.Fields.RowId.Name, fieldsByIndex[0].Name);
 
             Assert.AreEqual(1, fieldsByIndex[1].Ordinal);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqStructureId.Name, fieldsByIndex[1].Name);
+            Assert.AreEqual(UniqueStorageSchema.Fields.StructureId.Name, fieldsByIndex[1].Name);
 
             Assert.AreEqual(2, fieldsByIndex[2].Ordinal);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqMemberPath.Name, fieldsByIndex[2].Name);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqStructureId.Name, fieldsByIndex[2].Name);
 
             Assert.AreEqual(3, fieldsByIndex[3].Ordinal);
-            Assert.AreEqual(UniqueStorageSchema.Fields.UqValue.Name, fieldsByIndex[3].Name);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqMemberPath.Name, fieldsByIndex[3].Name);
 
             Assert.AreEqual(4, fieldsByIndex[4].Ordinal);
-            Assert.AreEqual(UniqueStorageSchema.Fields.RowId.Name, fieldsByIndex[4].Name);
+            Assert.AreEqual(UniqueStorageSchema.Fields.UqValue.Name, fieldsByIndex[4].Name);
         }
     }
 }

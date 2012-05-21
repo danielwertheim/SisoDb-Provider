@@ -306,7 +306,7 @@ namespace SisoDb.Specifications.Session
 
             public string String { get; set; }
 
-			public Text Text { get; set; }
+			public string Text { get; set; }
 
             public double Double { get; set; }
 
@@ -326,7 +326,7 @@ namespace SisoDb.Specifications.Session
 
             public string String { get; set; }
 
-			public Text Text { get; set; }
+			public string Text { get; set; }
 
             public double? Double { get; set; }
 

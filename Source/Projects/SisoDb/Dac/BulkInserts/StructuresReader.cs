@@ -14,12 +14,13 @@ namespace SisoDb.Dac.BulkInserts
 
         public override object GetValue(int ordinal)
         {
-            var schemaField = StorageSchema[ordinal];
-            
-            if (schemaField.Name == StructureStorageSchema.Fields.Id.Name)
+            if (ordinal == StructureStorageSchema.Fields.RowId.Ordinal)
+                return DBNull.Value;
+
+            if (ordinal == StructureStorageSchema.Fields.Id.Ordinal)
                 return Enumerator.Current.Id.Value;
 
-            if(schemaField.Name == StructureStorageSchema.Fields.Json.Name)
+            if(ordinal == StructureStorageSchema.Fields.Json.Ordinal)
                 return Enumerator.Current.Data;
 
             throw new NotSupportedException();

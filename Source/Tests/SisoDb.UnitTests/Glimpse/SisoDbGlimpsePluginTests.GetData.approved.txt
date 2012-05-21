@@ -201,6 +201,35 @@
 										]
 									],
 									[
+										"ConcurrencyToken",
+										[
+											[
+												"Contains",
+												""
+											],
+											[
+												"Path",
+												"ConcurrencyToken"
+											],
+											[
+												"DataType",
+												"System.Guid"
+											],
+											[
+												"IsElement",
+												"False"
+											],
+											[
+												"IsEnumerable",
+												"False"
+											],
+											[
+												"IsUnique",
+												"False"
+											]
+										]
+									],
+									[
 										"StringValue",
 										[
 											[

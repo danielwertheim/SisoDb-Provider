@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using NCore;
 using NUnit.Framework;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
 
@@ -10,10 +11,17 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
     [TestFixture]
     public class IncludeParserTests : UnitTestBase
     {
+        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
+
+        private IncludeParser CreateParser()
+        {
+            return new IncludeParser(_dataTypeConverter);
+        }
+
         [Test]
         public void Parse_WhenNonMemberExpression_ThrowsSisoDbException()
         {
-            var parser = new IncludeParser();
+            var parser = CreateParser();
             var nonMemberExpression = Reflect<Master>.BoolExpressionFrom(m => m.Int1 == 32);
 
             var ex = Assert.Throws<NCoreException>(() => parser.Parse(StructureTypeNameFor<Child>.Name, new[] { nonMemberExpression }));
@@ -25,14 +33,14 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         public void Parse_WhenNullExpressions_ThrowsArgumentException()
         {
             Assert.Throws<ArgumentException>(
-                () => new IncludeParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, null));
+                () => CreateParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, null));
         }
 
         [Test]
         public void Parse_WhenEmptyExpressions_ThrowsArgumentException()
         {
             Assert.Throws<ArgumentException>(
-                () => new IncludeParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new LambdaExpression[0]));
+                () => CreateParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new LambdaExpression[0]));
         }
 
         [Test]
@@ -40,7 +48,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
 
-            var parser = new IncludeParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
 
             Assert.AreEqual(1, parsedLambda.Nodes.Length);
@@ -52,7 +60,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
 
-            var parser = new IncludeParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
             var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
@@ -64,7 +72,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var lambda = Reflect<Master>.LambdaFrom(m => m.Child.GrandChild.StructureId);
 
-            var parser = new IncludeParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
             var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
@@ -76,7 +84,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
 
-            var parser = new IncludeParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
             var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
