@@ -32,14 +32,26 @@ namespace SisoDb.DbSchema
             public const string DbNameParamPrefix = "@dbName";
             public const string TableNameParamPrefix = "@tableName";
             public const string EntityNameParamPrefix = "@entityName";
+            public static readonly string StringValueForValueTypeIndexParamName;
 
-            public static bool IsSysParam(IDacParameter param)
+            static Parameters()
+            {
+                StringValueForValueTypeIndexParamName = string.Concat("@", IndexStorageSchema.Fields.StringValue.Name);
+            }
+
+            public static bool ShouldBeNonUnicodeString(IDacParameter param)
             {
                 const StringComparison c = StringComparison.OrdinalIgnoreCase;
 
                 return param.Name.StartsWith(DbNameParamPrefix, c)
                     || param.Name.StartsWith(TableNameParamPrefix, c)
-                    || param.Name.StartsWith(EntityNameParamPrefix, c);
+                    || param.Name.StartsWith(EntityNameParamPrefix, c)
+                    || param.Name.Equals(StringValueForValueTypeIndexParamName);
+            }
+
+            public static bool ShouldBeUnicodeString(IDacParameter param)
+            {
+                return param.Value is string;
             }
         }
 

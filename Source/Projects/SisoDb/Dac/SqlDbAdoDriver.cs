@@ -6,8 +6,10 @@ using SisoDb.DbSchema;
 
 namespace SisoDb.Dac
 {
-    public class AdoDriver : IAdoDriver
+    public class SqlDbAdoDriver : IAdoDriver
     {
+        private const int MaxLenOfStringBeforeEscalating = 4000;
+
         public virtual IDbConnection CreateConnection(string connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
@@ -49,9 +51,9 @@ namespace SisoDb.Dac
                 var parameter = cmd.CreateParameter();
                 parameter.ParameterName = dacParameter.Name;
 
-                OnParameterCreated(parameter, dacParameter);
+                parameter = OnParameterCreated(parameter, dacParameter);
 
-                parameter.Value = dacParameter.Value;
+                parameter.Value = dacParameter.Value; //Yes, value should be set after OnParameterCreated
 
                 cmd.Parameters.Add(parameter);
             }
@@ -59,23 +61,27 @@ namespace SisoDb.Dac
 
         protected virtual IDbDataParameter OnParameterCreated(IDbDataParameter parameter, IDacParameter dacParameter)
         {
-            if (DbSchemas.Parameters.IsSysParam(dacParameter))
-            {
-                parameter.DbType = DbType.AnsiString;
-                parameter.Size = dacParameter.Value.ToString().Length;
+            var dbParam = (SqlParameter)parameter;
 
-                return parameter;
+            if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
+            {
+                dbParam.SqlDbType = SqlDbType.VarChar;
+                dbParam.Size = dacParameter.Value.ToString().Length;
+
+                return dbParam;
             }
 
-            if(dacParameter.Value is string)
+            if(DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
             {
-                parameter.DbType = DbType.String;
-                parameter.Size = (dacParameter.Value.ToStringOrNull() ?? " ").Length;
+                dbParam.SqlDbType = SqlDbType.NVarChar;
+                dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? " ").Length;
+                if (dbParam.Size > MaxLenOfStringBeforeEscalating)
+                    dbParam.Size = -1;
 
-                return parameter;
+                return dbParam;
             }
 
-            return parameter;
+            return dbParam;
         }
     }
 }

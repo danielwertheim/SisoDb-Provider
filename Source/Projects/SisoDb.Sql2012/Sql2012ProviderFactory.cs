@@ -41,7 +41,7 @@ namespace SisoDb.Sql2012
 
 	    public virtual IAdoDriver GetAdoDriver()
 	    {
-	        return new AdoDriver();
+	        return new SqlDbAdoDriver();
 	    }
 
 	    public virtual IDbSettings GetSettings()

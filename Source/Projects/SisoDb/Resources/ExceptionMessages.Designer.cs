@@ -386,6 +386,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The SQLCE4 does not support individual string values longer than 4000chars..
+        /// </summary>
+        public static string SqlCe4_ToLongIndividualStringValue {
+            get {
+                return ResourceManager.GetString("SqlCe4_ToLongIndividualStringValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exceptions occured while releasing SqlCe4Connections from the pool..
         /// </summary>
         public static string SqlCe4ConnectionManager_ReleaseAllDbConnections {

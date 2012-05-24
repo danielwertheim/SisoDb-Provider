@@ -143,6 +143,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\InsertAs.cs">
       <Link>Session\InsertAs.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertBigStructures.cs">
+      <Link>Session\InsertBigStructures.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\InsertsComplete.cs">
       <Link>Session\InsertsComplete.cs</Link>
     </Compile>
