@@ -64,17 +64,13 @@ namespace SisoDb.Dac
             var dbParam = (SqlParameter)parameter;
 
             if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
-            {
                 dbParam.SqlDbType = SqlDbType.VarChar;
-                dbParam.Size = dacParameter.Value.ToString().Length;
-
-                return dbParam;
-            }
-
-            if(DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
-            {
+            else if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
                 dbParam.SqlDbType = SqlDbType.NVarChar;
-                dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? " ").Length;
+
+            if(dbParam.SqlDbType == SqlDbType.VarChar || dbParam.SqlDbType == SqlDbType.NVarChar)
+            {
+                dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
                 if (dbParam.Size > MaxLenOfStringBeforeEscalating)
                     dbParam.Size = -1;
 

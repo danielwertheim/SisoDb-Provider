@@ -23,18 +23,10 @@ namespace SisoDb.SqlCe4.Dac
         {
             var dbParam = (SqlCeParameter)parameter;
 
-            if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
-            {
-                dbParam.SqlDbType = SqlDbType.NVarChar;
-                dbParam.Size = dacParameter.Value.ToString().Length;
-
-                return dbParam;
-            }
-
             if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.NVarChar;
-                var len = (dacParameter.Value.ToStringOrNull() ?? " ").Length;
+                var len = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
                 if (len > MaxLenOfStringBeforeEscalating)
                     throw new SisoDbException(ExceptionMessages.SqlCe4_ToLongIndividualStringValue);
 
