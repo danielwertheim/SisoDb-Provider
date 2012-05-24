@@ -782,6 +782,25 @@ namespace SisoDb
             return this;
         }
 
+        public virtual ISession Insert(Type structuretype, object item)
+        {
+            Try(() =>
+            {
+                Ensure.That(structuretype, "contract").IsNotNull();
+                Ensure.That(item, "item").IsNotNull();
+
+                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+                var structureSchema = OnUpsertStructureSchema(structuretype);
+
+                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
+            });
+
+            return this;
+        }
+
         public virtual ISession InsertAs<T>(object item) where T : class
         {
             Try(() =>

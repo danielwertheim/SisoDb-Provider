@@ -121,6 +121,17 @@ namespace SisoDb
             }
         }
 
+        public virtual void Insert(Type structuretype, object item)
+        {
+            Ensure.That(structuretype, "structuretype").IsNotNull();
+            Ensure.That(item, "item").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.Insert(structuretype, item);
+            }
+        }
+
         public virtual void InsertAs<T>(object item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();

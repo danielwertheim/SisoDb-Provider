@@ -10,6 +10,27 @@ namespace SisoDb.Specifications.Session
 	class InsertsComplete
     {
         [Subject(typeof(ISession), "Insert (complete)")]
+        public class when_inserting_complete_guid_entity_with_populated_hierarchy_using_type_and_object : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structure = ModelFactory.CreateItems<CompleteGuidEntity, Guid>(1).Single();
+            };
+
+            Because of =
+                () => TestContext.Database.UseOnceTo().Insert(typeof(CompleteGuidEntity), _structure);
+
+            It should_have_been_inserted =
+                () => TestContext.Database.should_have_X_num_of_items<CompleteGuidEntity>(1);
+
+            It should_have_been_inserted_completely =
+                () => TestContext.Database.should_have_identical_structures(_structure);
+
+            private static CompleteGuidEntity _structure;
+        }
+
+        [Subject(typeof(ISession), "Insert (complete)")]
         public class when_inserting_complete_guid_entity_with_populated_hierarchy : SpecificationBase
         {
             Establish context = () =>
@@ -19,7 +40,7 @@ namespace SisoDb.Specifications.Session
             };
 
             Because of =
-                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().Insert(_structure);
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteGuidEntity>(1);
@@ -61,7 +82,7 @@ namespace SisoDb.Specifications.Session
             };
 
             Because of =
-                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().Insert(_structure);
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteStringEntity>(1);
@@ -103,7 +124,7 @@ namespace SisoDb.Specifications.Session
             };
 
             Because of =
-                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().Insert(_structure);
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteIdentityEntity>(1);
@@ -145,7 +166,7 @@ namespace SisoDb.Specifications.Session
             };
 
             Because of =
-                () => TestContext.Database.UseOnceTo().InsertMany(new[] { _structure });
+                () => TestContext.Database.UseOnceTo().Insert(_structure);
 
             It should_have_been_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<CompleteBigIdentityEntity>(1);

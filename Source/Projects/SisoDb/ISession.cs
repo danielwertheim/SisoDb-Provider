@@ -164,6 +164,15 @@ namespace SisoDb
         ISession Insert<T>(T item) where T : class;
 
         /// <summary>
+        /// Inserts a single structure using the <paramref name="structuretype"/> as
+        /// the contract for the structure being inserted.
+        /// </summary>
+        /// <param name="structuretype"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+	    ISession Insert(Type structuretype, object item);
+
+        /// <summary>
         /// Inserts a single structure using the <typeparamref name="T"/> as
         /// the contract for the structure being inserted. As item, you can pass
         /// any type that has partial or full match of the contract, without extending it.
