@@ -822,6 +822,28 @@ namespace SisoDb
             return this;
         }
 
+        public virtual ISession InsertAs(Type structureType, object item)
+        {
+            Try(() =>
+            {
+                Ensure.That(structureType, "structureType").IsNotNull();
+                Ensure.That(item, "item").IsNotNull();
+
+                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+                var json = Db.Serializer.Serialize(item);
+                var realItem = Db.Serializer.Deserialize(json, structureType);
+
+                var structureSchema = OnUpsertStructureSchema(structureType);
+
+                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
+            });
+
+            return this;
+        }
+
         public virtual string InsertJson<T>(string json) where T : class
         {
             return Try(() => OnInsertJson(TypeFor<T>.Type, json));
@@ -868,6 +890,28 @@ namespace SisoDb
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
             });
 
+            return this;
+        }
+
+        public virtual ISession InsertMany(Type structureType, IEnumerable<object> items)
+        {
+            Try(() =>
+            {
+                Ensure.That(structureType, "structureType").IsNotNull();
+                Ensure.That(items, "items").IsNotNull();
+
+                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+                var structureSchema = OnUpsertStructureSchema(structureType);
+
+                var structureBuilder = Db.StructureBuilders.ForInserts(
+                    structureSchema,
+                    Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
+
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
+                    structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
+            });
             return this;
         }
 

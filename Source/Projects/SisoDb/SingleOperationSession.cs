@@ -142,6 +142,17 @@ namespace SisoDb
             }
         }
 
+        public virtual void InsertAs(Type structureType, object item)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(item, "item").IsNotNull();
+
+            using(var session = Db.BeginSession())
+            {
+                session.InsertAs(structureType, item);
+            }
+        }
+
         public virtual string InsertJson<T>(string json) where T : class
         {
             Ensure.That(json, "json").IsNotNullOrWhiteSpace();
@@ -170,6 +181,17 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.InsertMany(items);
+            }
+        }
+
+        public virtual void InsertMany(Type structureType, IEnumerable<object> items)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(items, "items").IsNotNull();
+
+            using(var session = Db.BeginSession())
+            {
+                session.InsertMany(structureType, items);
             }
         }
 

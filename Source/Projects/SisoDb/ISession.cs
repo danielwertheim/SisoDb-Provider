@@ -183,6 +183,17 @@ namespace SisoDb
         ISession InsertAs<T>(object item) where T : class;
 
         /// <summary>
+        /// Inserts a single structure using the <paramref name="structureType"/> as
+        /// the contract for the structure being inserted. As item, you can pass
+        /// any type that has partial or full match of the contract, without extending it.
+        /// E.g An anonymous type.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+	    ISession InsertAs(Type structureType, object item);
+
+        /// <summary>
         /// Inserts Json strcutures using the <typeparamref name="T"/> as
         /// the contract for the structure being inserted.
         /// </summary>
@@ -212,6 +223,15 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="items"></param>
         ISession InsertMany<T>(IEnumerable<T> items) where T : class;
+
+        /// <summary>
+        /// Inserts multiple structures using the <typeparamref name="T"/> as
+        /// the contract for the structures being inserted. 
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
+	    ISession InsertMany(Type structureType, IEnumerable<object> items);
 
 	    /// <summary>
 	    /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as

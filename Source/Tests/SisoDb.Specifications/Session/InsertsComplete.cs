@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.Session
 	class InsertsComplete
     {
         [Subject(typeof(ISession), "Insert (complete)")]
-        public class when_inserting_complete_guid_entity_with_populated_hierarchy_using_type_and_object : SpecificationBase
+        public class when_inserting_complete_guid_entity_with_populated_hierarchy_using_type : SpecificationBase
         {
             Establish context = () =>
             {
@@ -28,6 +28,27 @@ namespace SisoDb.Specifications.Session
                 () => TestContext.Database.should_have_identical_structures(_structure);
 
             private static CompleteGuidEntity _structure;
+        }
+
+        [Subject(typeof(ISession), "Insert (complete)")]
+        public class when_inserting_two_complete_guid_entities_with_populated_hierarchy_using_type : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = ModelFactory.CreateItems<CompleteGuidEntity, Guid>(2);
+            };
+
+            Because of =
+                () => TestContext.Database.UseOnceTo().InsertMany(typeof(CompleteGuidEntity), _structures);
+
+            It should_have_inserted_both =
+                () => TestContext.Database.should_have_X_num_of_items<CompleteGuidEntity>(2);
+
+            It should_have_inserted_both_completely =
+                () => TestContext.Database.should_have_identical_structures(_structures.ToArray());
+
+            private static IList<CompleteGuidEntity> _structures;
         }
 
         [Subject(typeof(ISession), "Insert (complete)")]
