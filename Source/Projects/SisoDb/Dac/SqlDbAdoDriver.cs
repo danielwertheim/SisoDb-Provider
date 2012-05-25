@@ -8,8 +8,6 @@ namespace SisoDb.Dac
 {
     public class SqlDbAdoDriver : IAdoDriver
     {
-        private const int MaxLenOfStringBeforeEscalating = 4000;
-
         public virtual IDbConnection CreateConnection(string connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
@@ -71,8 +69,6 @@ namespace SisoDb.Dac
             if(dbParam.SqlDbType == SqlDbType.VarChar || dbParam.SqlDbType == SqlDbType.NVarChar)
             {
                 dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
-                if (dbParam.Size > MaxLenOfStringBeforeEscalating)
-                    dbParam.Size = -1;
 
                 return dbParam;
             }
