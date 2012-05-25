@@ -33,7 +33,7 @@ namespace SisoDb.Sql2008.Dac
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
                 Value = ids.Select(id => CreateBigIdentityIdRecord(id)),
-                TypeName = "dbo.StructureIdentityIds"
+                TypeName = "StructureIdentityIds"
             };
         }
 
@@ -42,7 +42,7 @@ namespace SisoDb.Sql2008.Dac
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
                 Value = ids.Select(CreateBigIdentityIdRecord),
-                TypeName = "dbo.StructureIdentityIds"
+                TypeName = "StructureIdentityIds"
             };
         }
 
@@ -60,7 +60,7 @@ namespace SisoDb.Sql2008.Dac
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
                 Value = ids.Select(CreateStringIdRecord),
-                TypeName = "dbo.SisoStringIds"
+                TypeName = "SisoStringIds"
             };
         }
 
@@ -78,7 +78,7 @@ namespace SisoDb.Sql2008.Dac
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
                 Value = ids.Select(CreateGuidIdRecord),
-                TypeName = "dbo.SisoGuidIds"
+                TypeName = "SisoGuidIds"
             };
         }
 

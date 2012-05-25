@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
@@ -18,7 +19,7 @@ namespace SisoDb.DbSchema
             _upsertedSchemas = new HashSet<string>();
         }
 
-        public void ClearCache()
+        public virtual void ClearCache()
         {
             lock (_upsertedSchemas)
             {
@@ -26,7 +27,7 @@ namespace SisoDb.DbSchema
             }
         }
 
-        public void RemoveFromCache(string structureSchemaName)
+        public virtual void RemoveFromCache(string structureSchemaName)
         {
             lock (_upsertedSchemas)
             {
@@ -34,7 +35,7 @@ namespace SisoDb.DbSchema
             }
         }
 
-        public void RemoveFromCache(IStructureSchema structureSchema)
+        public virtual void RemoveFromCache(IStructureSchema structureSchema)
 		{
 			lock (_upsertedSchemas)
 			{
@@ -42,7 +43,7 @@ namespace SisoDb.DbSchema
 			}
 		}
 
-        public void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
+        public virtual void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
         {
             lock (_upsertedSchemas)
             {
@@ -52,14 +53,19 @@ namespace SisoDb.DbSchema
             }
         }
 
-        public void UpsertStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
+        public virtual void UpsertStructureSet(IStructureSchema structureSchema, IDbClient dbClient)
+        {
+            UpsertStructureSet(structureSchema, () => dbClient);
+        }
+
+        public virtual void UpsertStructureSet(IStructureSchema structureSchema, Func<IDbClient> dbClientFn)
         {
             lock (_upsertedSchemas)
             {
                 if (_upsertedSchemas.Contains(structureSchema.Name))
                     return;
 
-                _dbSchemaUpserter.Upsert(structureSchema, dbClient);
+                _dbSchemaUpserter.Upsert(structureSchema, dbClientFn);
 
                 _upsertedSchemas.Add(structureSchema.Name);
             }

@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
 
@@ -9,12 +10,19 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
     [TestFixture]
     public class WhereParserStringQueryTests : UnitTestBase
     {
+        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
+
+        private WhereParser CreateParser()
+        {
+            return new WhereParser(_dataTypeConverter);
+        }
+
         [Test]
         public void Parse_WhenToLower_ReturnsCorrectNodes()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.ToLower() == "foo");
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -31,7 +39,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.ToUpper() == "foo");
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -49,7 +57,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var q = new StartsWithQueryObject{Value = "Foo"};
 			var expression = q.CreateExpression();
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -66,7 +74,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.StartsWith("Foo"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -83,7 +91,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.EndsWith("bar"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -100,7 +108,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxToLower() == "foo");
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -117,7 +125,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxToUpper() == "foo");
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -134,7 +142,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxStartsWith("Foo"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -151,7 +159,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxEndsWith("bar"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -168,7 +176,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxLike("Foo%bar"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -185,7 +193,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxContains("Foo"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -202,7 +210,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.Contains("Foo"));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -219,7 +227,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.Contains(null));
 
-            var parser = new WhereParser();
+            var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
@@ -236,7 +244,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().StartsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -251,12 +259,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -266,7 +274,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().QxStartsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -281,12 +289,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -296,7 +304,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().StartsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -311,12 +319,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -326,7 +334,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().QxStartsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -341,12 +349,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("42%", valueNode.Value);
 		}
@@ -356,7 +364,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().EndsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -371,12 +379,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}
@@ -386,7 +394,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.ToString().QxEndsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -401,12 +409,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}
@@ -416,7 +424,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().EndsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -431,12 +439,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}
@@ -446,7 +454,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var expression = Reflect<MyClass>.LambdaFrom(m => m.NullableInt.HasValue && m.NullableInt.Value.ToString().QxEndsWith("42"));
 
-			var parser = new WhereParser();
+			var parser = CreateParser();
 			var parsedLambda = parser.Parse(expression);
 
 			var listOfNodes = parsedLambda.Nodes.ToList();
@@ -461,12 +469,12 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var valueNode = (ValueNode)listOfNodes[6];
 
 			Assert.AreEqual("NullableInt", memberNode1.Path);
-			Assert.AreEqual(typeof(int), memberNode1.MemberType);
+			Assert.AreEqual(typeof(int), memberNode1.DataType);
 			Assert.AreEqual("is not", isNotNode1.Operator.ToString());
 			Assert.AreEqual("null", nullNode1.ToString());
 			Assert.AreEqual("and", andNode.ToString());
 			Assert.AreEqual("NullableInt", memberNode2.Path);
-			Assert.AreEqual(typeof(int), memberNode2.MemberType);
+			Assert.AreEqual(typeof(int), memberNode2.DataType);
 			Assert.AreEqual("like", likeNode.Operator.ToString());
 			Assert.AreEqual("%42", valueNode.Value);
 		}

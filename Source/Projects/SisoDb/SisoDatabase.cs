@@ -161,6 +161,12 @@ namespace SisoDb
             return this;
         }
 
+        protected virtual void OnClearCache()
+        {
+            CacheProvider.NotifyOfPurgeAll();
+            SchemaManager.ClearCache();
+        }
+
         public virtual bool Exists()
         {
             lock (LockObject)
@@ -197,11 +203,9 @@ namespace SisoDb
                     {
                         CacheProvider.NotifyOfPurge(type);
 
-                        var structureSchema = _structureSchemas.GetSchema(type);
-
+                        var structureSchema = StructureSchemas.GetSchema(type);
                         SchemaManager.DropStructureSet(structureSchema, dbClient);
-
-                        _structureSchemas.RemoveSchema(type);
+                        StructureSchemas.RemoveSchema(type);
                     }
                 }
             }
@@ -222,13 +226,25 @@ namespace SisoDb
 
             lock (LockObject)
             {
-                CacheProvider.NotifyOfPurge(type);
+                IDbClient dbClient = null;
 
-                var structureSchema = _structureSchemas.GetSchema(type);
-
-                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+                try
                 {
-                    SchemaManager.UpsertStructureSet(structureSchema, dbClient);
+                    var structureSchema = StructureSchemas.GetSchema(type);
+                    SchemaManager.UpsertStructureSet(structureSchema, () =>
+                    {
+                        CacheProvider.NotifyOfPurge(type);
+                        dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo);
+                        return dbClient;
+                    });
+                }
+                finally
+                {
+                    if (dbClient != null)
+                    {
+                        dbClient.Dispose();
+                        dbClient = null;
+                    }
                 }
             }
 
@@ -246,12 +262,6 @@ namespace SisoDb
         public ISingleOperationSession UseOnceTo()
         {
             return new SingleOperationSession(this);
-        }
-
-        protected virtual void OnClearCache()
-        {
-            CacheProvider.NotifyOfPurgeAll();
-            SchemaManager.ClearCache();
         }
     }
 }

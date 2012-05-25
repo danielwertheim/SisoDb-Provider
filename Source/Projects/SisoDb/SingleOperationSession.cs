@@ -121,6 +121,17 @@ namespace SisoDb
             }
         }
 
+        public virtual void Insert(Type structuretype, object item)
+        {
+            Ensure.That(structuretype, "structuretype").IsNotNull();
+            Ensure.That(item, "item").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.Insert(structuretype, item);
+            }
+        }
+
         public virtual void InsertAs<T>(object item) where T : class
         {
             Ensure.That(item, "item").IsNotNull();
@@ -128,6 +139,17 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.InsertAs<T>(item);
+            }
+        }
+
+        public virtual void InsertAs(Type structureType, object item)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(item, "item").IsNotNull();
+
+            using(var session = Db.BeginSession())
+            {
+                session.InsertAs(structureType, item);
             }
         }
 
@@ -159,6 +181,17 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.InsertMany(items);
+            }
+        }
+
+        public virtual void InsertMany(Type structureType, IEnumerable<object> items)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(items, "items").IsNotNull();
+
+            using(var session = Db.BeginSession())
+            {
+                session.InsertMany(structureType, items);
             }
         }
 

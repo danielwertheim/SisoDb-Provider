@@ -21,12 +21,12 @@
 		    <dependency id="SisoDb" version="[$version$]" />
 			<dependency id="Ensure.That" version="0.7.0" />
 			<dependency id="NCore" version="[0.28.0]" />
-			<dependency id="PineCone" version="[2.0.0]" />
+			<dependency id="PineCone" version="[3.1.1]" />
 			<dependency id="MiniProfiler" version="2.0.1" />
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.MiniProfiler\bin\Release\SisoDb.MiniProfiler.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.MiniProfiler\bin\Release\SisoDb.MiniProfiler.xml" target="lib\net40\" />
+	  <file src="**\SisoDb.MiniProfiler.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.MiniProfiler.xml" target="lib\net40\" />
 	</files>
 </package>

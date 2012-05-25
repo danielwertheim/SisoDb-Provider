@@ -148,6 +148,35 @@
 									]
 								},
 								{
+									"Name": "ConcurrencyToken",
+									"HasGroups": false,
+									"HasNodes": true,
+									"Groups": [],
+									"Nodes": 
+									[
+										{
+											"Name": "Path",
+											"Value": "ConcurrencyToken"
+										},
+										{
+											"Name": "DataType",
+											"Value": "System.Guid"
+										},
+										{
+											"Name": "IsElement",
+											"Value": "False"
+										},
+										{
+											"Name": "IsEnumerable",
+											"Value": "False"
+										},
+										{
+											"Name": "IsUnique",
+											"Value": "False"
+										}
+									]
+								},
+								{
 									"Name": "StringValue",
 									"HasGroups": false,
 									"HasNodes": true,

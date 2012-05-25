@@ -12,19 +12,20 @@ namespace SisoDb.Dac.BulkInserts
 		{}
 
 		public override object GetValue(int ordinal)
-		{
-			var schemaField = StorageSchema[ordinal];
+        {
+            if (ordinal == IndexStorageSchema.Fields.RowId.Ordinal)
+                return DBNull.Value;
 
-			if (schemaField.Name == IndexStorageSchema.Fields.StructureId.Name)
+			if (ordinal == IndexStorageSchema.Fields.StructureId.Ordinal)
 				return Enumerator.Current.StructureId.Value;
 
-			if (schemaField.Name == IndexStorageSchema.Fields.MemberPath.Name)
+			if (ordinal == IndexStorageSchema.Fields.MemberPath.Ordinal)
 				return Enumerator.Current.Path;
 
-			if (schemaField.Name == IndexStorageSchema.Fields.Value.Name)
+			if (ordinal == IndexStorageSchema.Fields.Value.Ordinal)
 				return Enumerator.Current.Value;
 
-			if (schemaField.Name == IndexStorageSchema.Fields.StringValue.Name)
+			if (ordinal == IndexStorageSchema.Fields.StringValue.Ordinal)
 				return SisoEnvironment.StringConverter.AsString(Enumerator.Current.Value);
 
 			throw new NotSupportedException();

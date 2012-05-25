@@ -65,9 +65,10 @@ namespace SisoDb.Querying.Sql
                             memberIndex,
                             memNode.Path, 
                             string.Concat("mem", memberIndex), 
-                            memNode.MemberType));
+                            memNode.DataType,
+                            memNode.DataTypeCode));
 
-        			if (memNode.MemberType.IsAnyBoolType())
+        			if (memNode.DataType.IsAnyBoolType())
         			{
         				var leftNode = wheresLambda.Nodes.PeekLeft(i);
 						var rightNode = wheresLambda.Nodes.PeekRight(i);
@@ -122,7 +123,8 @@ namespace SisoDb.Querying.Sql
                     string.Concat("mem", memberIndex),
                     valueField.Name,
                     sortingNode.Direction.ToString(), 
-					sortingNode.MemberType));
+					sortingNode.DataType,
+                    sortingNode.DataTypeCode));
             }
         }
 
@@ -142,7 +144,8 @@ namespace SisoDb.Querying.Sql
                     IndexStorageSchema.Fields.Value.Name,
                     includeNode.IdReferencePath,
                     includeNode.ObjectReferencePath,
-					includeNode.MemberType));
+					includeNode.DataType,
+                    includeNode.DataTypeCode));
             }
         }
     }

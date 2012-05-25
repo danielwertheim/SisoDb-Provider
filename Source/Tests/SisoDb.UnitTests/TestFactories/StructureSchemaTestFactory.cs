@@ -8,6 +8,8 @@ namespace SisoDb.UnitTests.TestFactories
 {
     internal static class StructureSchemaTestFactory
     {
+        private static readonly DataTypeConverter DataTypeConverter = new DataTypeConverter();
+
         internal static IStructureSchema Stub(string name = "Temp")
         {
             var schemaStub = new Mock<IStructureSchema>();
@@ -35,7 +37,11 @@ namespace SisoDb.UnitTests.TestFactories
 
             if (indexAccessorsPaths != null)
             {
-                var indexAccessors = indexAccessorsPaths.Select(path => new IndexAccessor(StructurePropertyTestFactory.GetPropertyByPath(structureType, path)));
+                var indexAccessors = indexAccessorsPaths.Select(path =>
+                {
+                    var property = StructurePropertyTestFactory.GetPropertyByPath(structureType, path);
+                    return new IndexAccessor(property, DataTypeConverter.Convert(property));
+                });
                 schemaStub.Setup(s => s.IndexAccessors).Returns(indexAccessors.ToArray);
             }
 

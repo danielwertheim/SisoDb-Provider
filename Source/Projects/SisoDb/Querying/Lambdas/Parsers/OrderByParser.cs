@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using EnsureThat;
 using NCore.Expressions;
 using NCore.Reflections;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Resources;
 
@@ -10,11 +11,19 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
 	public class OrderByParser : IOrderByParser
 	{
-		public IParsedLambda Parse(OrderByExpression[] orderByExpressions)
+        protected readonly IDataTypeConverter DataTypeConverter;
+
+        public OrderByParser(IDataTypeConverter dataTypeConverter)
+        {
+            Ensure.That(dataTypeConverter, "dataTypeConverter").IsNotNull();
+            DataTypeConverter = dataTypeConverter;
+        }
+
+		public virtual IParsedLambda Parse(OrderByExpression[] orderByExpressions)
 		{
 			Ensure.That(orderByExpressions, "orderByExpressions").HasItems();
 
-			var nodesContainer = new Nodes.NodesCollection();
+			var nodesContainer = new NodesCollection();
 			foreach (var orderByExpression in orderByExpressions.Where(e => e != null))
 			{
 				var memberExpression = orderByExpression.InnerLambdaExpression.Body.GetRightMostMember();
@@ -30,7 +39,8 @@ namespace SisoDb.Querying.Lambdas.Parsers
 					memberType = memberType.GetEnumerableElementType();
 
 				var sortDirection = orderByExpression is OrderByAscExpression ? SortDirections.Asc : SortDirections.Desc;
-				var sortingNode = new SortingNode(memberExpression.ToPath(), memberType, sortDirection);
+			    var memberPath = memberExpression.ToPath();
+			    var sortingNode = new SortingNode(memberPath, memberType, DataTypeConverter.Convert(memberType, memberPath), sortDirection);
 				nodesContainer.AddNode(sortingNode);
 			}
 

@@ -20,16 +20,16 @@
 		<dependencies>
 			<dependency id="Ensure.That" version="0.7.0" />
 			<dependency id="NCore" version="[0.28.0]" />
-			<dependency id="PineCone" version="[2.0.0]" />
+			<dependency id="PineCone" version="[3.1.1]" />
 		</dependencies>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Data" targetFramework="net40" />
 		</frameworkAssemblies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb\bin\Release\SisoDb.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb\bin\Release\SisoDb.xml" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb\bin\Release\SisoDb.Serialization.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb\bin\Release\SisoDb.Serialization.xml" target="lib\net40\" />
+	  <file src="**\SisoDb.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.xml" target="lib\net40\" />
+	  <file src="**\SisoDb.Serialization.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.Serialization.xml" target="lib\net40\" />
 	</files>
 </package>

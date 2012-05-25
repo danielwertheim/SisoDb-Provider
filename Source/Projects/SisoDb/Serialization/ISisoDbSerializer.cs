@@ -73,7 +73,7 @@ namespace SisoDb.Serialization
         IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class;
 
         /// <summary>
-        /// Deserializes sent JSON to yielded stream of <paramref name="structureType"/>.
+        /// Deserializes sent JSON to yielded stream of <param name="structureType"></param>.
         /// Either done sequentially or in parallel. It is controlled by <see cref="DeserializeManyInParallel"/>
         /// </summary>
         /// <param name="sourceData"></param>

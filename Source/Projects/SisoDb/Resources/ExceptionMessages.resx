@@ -292,4 +292,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DbSchemaNamingPolicy_StructureNamePrefix_IsToLong" xml:space="preserve">
     <value>The StructureNamePrefix is to long. Max len is {0} chars.</value>
   </data>
+  <data name="SqlCe4_ToLongIndividualStringValue" xml:space="preserve">
+    <value>The SQLCE4 does not support individual string values longer than 4000chars.</value>
+  </data>
 </root>

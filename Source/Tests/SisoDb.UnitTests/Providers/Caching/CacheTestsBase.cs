@@ -280,26 +280,6 @@ namespace SisoDb.UnitTests.Providers.Caching
 			FooCacheFake.Verify(f => f.Clear(), Times.Never());
 		}
 
-		[Test]
-		public void SisoDatabase_UpsertStructureSetOfT_WithCacheProvider_InvokesClearOnCache()
-		{
-			var db = OnCreateSisoDatabaseWithCaching();
-
-			db.UpsertStructureSet<Foo>();
-
-			FooCacheFake.Verify(f => f.Clear(), Times.Exactly(1));
-		}
-
-		[Test]
-		public void SisoDatabase_UpsertStructureSet_WithCacheProvider_InvokesClearOnCache()
-		{
-			var db = OnCreateSisoDatabaseWithCaching();
-
-			db.UpsertStructureSet(typeof(Foo));
-
-			FooCacheFake.Verify(f => f.Clear(), Times.Exactly(1));
-		}
-
 		private class Foo
 		{
 			public Guid Id { get; set; }

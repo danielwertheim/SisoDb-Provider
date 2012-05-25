@@ -6,7 +6,7 @@ using SisoDb.DbSchema;
 
 namespace SisoDb.Dac
 {
-    public class AdoDriver : IAdoDriver
+    public class SqlDbAdoDriver : IAdoDriver
     {
         public virtual IDbConnection CreateConnection(string connectionString)
         {
@@ -49,9 +49,9 @@ namespace SisoDb.Dac
                 var parameter = cmd.CreateParameter();
                 parameter.ParameterName = dacParameter.Name;
 
-                OnParameterCreated(parameter, dacParameter);
+                parameter = OnParameterCreated(parameter, dacParameter);
 
-                parameter.Value = dacParameter.Value;
+                parameter.Value = dacParameter.Value; //Yes, value should be set after OnParameterCreated
 
                 cmd.Parameters.Add(parameter);
             }
@@ -59,23 +59,21 @@ namespace SisoDb.Dac
 
         protected virtual IDbDataParameter OnParameterCreated(IDbDataParameter parameter, IDacParameter dacParameter)
         {
-            if (DbSchemas.Parameters.IsSysParam(dacParameter))
-            {
-                parameter.DbType = DbType.AnsiString;
-                parameter.Size = dacParameter.Value.ToString().Length;
+            var dbParam = (SqlParameter)parameter;
 
-                return parameter;
+            if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
+                dbParam.SqlDbType = SqlDbType.VarChar;
+            else if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
+                dbParam.SqlDbType = SqlDbType.NVarChar;
+
+            if(dbParam.SqlDbType == SqlDbType.VarChar || dbParam.SqlDbType == SqlDbType.NVarChar)
+            {
+                dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
+
+                return dbParam;
             }
 
-            if(dacParameter.Value is string)
-            {
-                parameter.DbType = DbType.String;
-                parameter.Size = (dacParameter.Value.ToStringOrNull() ?? " ").Length;
-
-                return parameter;
-            }
-
-            return parameter;
+            return dbParam;
         }
     }
 }

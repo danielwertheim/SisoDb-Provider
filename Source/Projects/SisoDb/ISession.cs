@@ -112,7 +112,7 @@ namespace SisoDb
         /// <param name="structureType">
         /// Structure type, used as a contract defining the scheme.</param>
         /// <param name="id"></param>
-        /// <returns>Json representation of (<paramref name="structureType"/>) or Null</returns>
+        /// <returns>Json representation of (<param name="structureType"></param>) or Null</returns>
         string GetByIdAsJson(Type structureType, object id);
 
 		/// <summary>
@@ -146,12 +146,12 @@ namespace SisoDb
 		IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class;
 
         /// <summary>
-        /// Returns Json representation for all structures for the defined structure <paramref name="structureType"/>
+        /// Returns Json representation for all structures for the defined structure <param name="structureType"></param>
         /// matching passed ids.
         /// </summary>
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
         /// <param name="ids">Ids used for matching the structures to return.</param>
-        /// <returns>IEnumerable Json representation of <paramref name="structureType"/>.</returns>
+        /// <returns>IEnumerable Json representation of <param name="structureType"></param>.</returns>
         IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids);
 
 		/// <summary>
@@ -164,6 +164,15 @@ namespace SisoDb
         ISession Insert<T>(T item) where T : class;
 
         /// <summary>
+        /// Inserts a single structure using the <param name="structureType"></param> as
+        /// the contract for the structure being inserted.
+        /// </summary>
+        /// <param name="structuretype"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+	    ISession Insert(Type structuretype, object item);
+
+        /// <summary>
         /// Inserts a single structure using the <typeparamref name="T"/> as
         /// the contract for the structure being inserted. As item, you can pass
         /// any type that has partial or full match of the contract, without extending it.
@@ -172,6 +181,17 @@ namespace SisoDb
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
         ISession InsertAs<T>(object item) where T : class;
+
+        /// <summary>
+        /// Inserts a single structure using the <param name="structureType"></param> as
+        /// the contract for the structure being inserted. As item, you can pass
+        /// any type that has partial or full match of the contract, without extending it.
+        /// E.g An anonymous type.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+	    ISession InsertAs(Type structureType, object item);
 
         /// <summary>
         /// Inserts Json strcutures using the <typeparamref name="T"/> as
@@ -185,7 +205,7 @@ namespace SisoDb
         string InsertJson<T>(string json) where T : class;
 
 	    /// <summary>
-	    /// Inserts Json strcutures using the <paramref name="structureType"/> as
+	    /// Inserts Json strcutures using the <param name="structureType"></param> as
 	    /// the contract for the structure being inserted.
 	    /// </summary>
 	    /// <remarks>Deserialization of the Json structure will take place, 
@@ -204,6 +224,15 @@ namespace SisoDb
         /// <param name="items"></param>
         ISession InsertMany<T>(IEnumerable<T> items) where T : class;
 
+        /// <summary>
+        /// Inserts multiple structures using the <typeparamref name="T"/> as
+        /// the contract for the structures being inserted. 
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
+	    ISession InsertMany(Type structureType, IEnumerable<object> items);
+
 	    /// <summary>
 	    /// Inserts multiple Json strcutures using the <typeparamref name="T"/> as
 	    /// the contract for the structures being inserted.
@@ -216,7 +245,7 @@ namespace SisoDb
 	    void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class;
 
         /// <summary>
-        /// Inserts multiple Json strcutures using the <paramref name="structureType"/> as
+        /// Inserts multiple Json strcutures using the <param name="structureType"></param> as
         /// the contract for the structures being inserted.
         /// </summary>
         /// <remarks>Deserialization of the Json structures will take place, 
@@ -282,7 +311,7 @@ namespace SisoDb
         ISession DeleteByIds<T>(params object[] ids) where T : class;
 
 	    /// <summary>
-	    /// Deletes all structures for the defined structure <paramref name="structureType"/>
+	    /// Deletes all structures for the defined structure <param name="structureType"></param>
 	    /// matching passed ids.
 	    /// </summary>
 	    /// <param name="structureType">

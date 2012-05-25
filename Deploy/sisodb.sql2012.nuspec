@@ -21,11 +21,11 @@
 			<dependency id="SisoDb" version="[$version$]" />
 			<dependency id="Ensure.That" version="0.7.0" />
 			<dependency id="NCore" version="[0.28.0]" />
-			<dependency id="PineCone" version="[2.0.0]" />
+			<dependency id="PineCone" version="[3.1.1]" />
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.Sql2012\bin\Release\SisoDb.Sql2012.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Sql2012\bin\Release\SisoDb.Sql2012.xml" target="lib\net40\" />
+	  <file src="**\SisoDb.Sql2012.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.Sql2012.xml" target="lib\net40\" />
 	</files>
 </package>

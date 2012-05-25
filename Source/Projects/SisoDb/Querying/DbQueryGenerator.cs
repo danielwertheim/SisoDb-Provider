@@ -180,7 +180,7 @@ namespace SisoDb.Querying
             {
                 joins.AddRange(wheres.Select(where =>
                     string.Format(joinFormat,
-                    indexesTableNames.GetNameByType(where.DataType),
+                    indexesTableNames.GetNameByType(where.DataTypeCode),
                     where.Index,
                     where.MemberPath)));
             }
@@ -189,7 +189,7 @@ namespace SisoDb.Querying
             {
                 joins.AddRange(sortings.Select(sorting =>
                     string.Format(joinFormat,
-                    indexesTableNames.GetNameByType(sorting.DataType),
+                    indexesTableNames.GetNameByType(sorting.DataTypeCode),
                     sorting.Index,
                     sorting.MemberPath)));
             }
@@ -218,7 +218,7 @@ namespace SisoDb.Querying
                     include.Index,
                     include.ObjectReferencePath,
                     structureTableName,
-                    indexesTableNames.GetNameByType(include.DataType),
+                    indexesTableNames.GetNameByType(include.DataTypeCode),
                     include.MemberPathReference,
                     include.TableName)));
         }

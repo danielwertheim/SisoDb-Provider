@@ -42,8 +42,9 @@
     <Reference Include="NCore">
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.2.0.0\lib\net40\PineCone.dll</HintPath>
+    <Reference Include="PineCone, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PineCone.3.1.1\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

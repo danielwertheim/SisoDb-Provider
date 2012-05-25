@@ -22,32 +22,48 @@ namespace SisoDb.Serialization
                 return string.Empty;
 
             var itemType = item.GetType();
-
             ServiceStackTypeConfig<T>.Config(itemType);
             JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
-            JsConfig<Text>.SerializeFn = t => t.ToString();
 
             return JsonSerializer.SerializeToString(item, itemType);
         }
 
         public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class
         {
-            return items.Select(Serialize);
+            ServiceStackTypeConfig<T>.Config(TypeFor<T>.Type);
+            JsConfig.ExcludeTypeInfo = true;
+            JsConfig<T>.ExcludeTypeInfo = true;
+
+            Type itemType = null;
+            foreach (var item in items)
+            {
+                if (itemType == null)
+                {
+                    //Yes, it's ok for now to use first item as template.
+                    itemType = item.GetType();
+                    ServiceStackTypeConfig<T>.Config(itemType);
+                }
+
+                yield return OnSerialize(item, itemType);
+            }
+        }
+
+        protected virtual string OnSerialize(object item, Type itemType)
+        {
+            return item != null
+                ? JsonSerializer.SerializeToString(item, itemType) 
+                : string.Empty;
         }
 
         public virtual T Deserialize<T>(string json) where T : class
         {
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
-
             return OnDeserialize<T>(json);
         }
 
         public virtual object Deserialize(string json, Type structureType)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
-
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
             return OnDeserialize(json, structureType);
         }
@@ -61,7 +77,6 @@ namespace SisoDb.Serialization
         {
             Ensure.That(templateType, "templateType").IsNotNull();
 
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
             TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
 
             return OnDeserialize<TTemplate>(json, templateType);
@@ -69,8 +84,6 @@ namespace SisoDb.Serialization
 
         public virtual IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
-
             return DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, OnDeserialize<T>)
                     : OnDeserializeManyInSequential(sourceData, OnDeserialize<T>);
@@ -79,8 +92,6 @@ namespace SisoDb.Serialization
         public virtual IEnumerable<object> DeserializeMany(IEnumerable<string> sourceData, Type structureType)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
-
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
 
             return DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(json, structureType))
@@ -98,7 +109,6 @@ namespace SisoDb.Serialization
         {
             Ensure.That(templateType, "templateType").IsNotNull();
 
-            JsConfig<Text>.DeSerializeFn = t => new Text(t);
             TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
 
             return DeserializeManyInParallel
@@ -134,13 +144,11 @@ namespace SisoDb.Serialization
 
         protected virtual IEnumerable<T> OnDeserializeManyInParallel<T>(IEnumerable<string> sourceData, Func<string, T> deserializer) where T : class
         {
-            using (var q = new BlockingCollection<string>())
+            using (var q = new BlockingCollection<string>(new ConcurrentQueue<string>()))
             {
-                Task task = null;
-
                 try
                 {
-                    task = Task.Factory.StartNew(() =>
+                    var task = Task.Factory.StartNew(() =>
                     {
                         foreach (var json in sourceData)
                             q.Add(json);
@@ -152,12 +160,11 @@ namespace SisoDb.Serialization
                         yield return deserializer.Invoke(e);
 
                     Task.WaitAll(task);
+                    if (task != null && task.Status == TaskStatus.RanToCompletion)
+                        task.Dispose();
                 }
                 finally
                 {
-                    if (task != null && task.Status == TaskStatus.RanToCompletion)
-                        task.Dispose();
-
                     q.CompleteAdding();
                 }
             }

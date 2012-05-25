@@ -41,7 +41,7 @@ namespace SisoDb.Sql2008
 
         public virtual IAdoDriver GetAdoDriver()
         {
-            return new AdoDriver();
+            return new SqlDbAdoDriver();
         }
 
         public virtual IDbSettings GetSettings()
@@ -107,12 +107,12 @@ namespace SisoDb.Sql2008
 
         public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
         {
-            return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers());
+            return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers(structureSchemas.SchemaBuilder.DataTypeConverter));
         }
 
         public virtual IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
         {
-            return new QueryBuilder<T>(structureSchemas, new ExpressionParsers());
+            return new QueryBuilder<T>(structureSchemas, new ExpressionParsers(structureSchemas.SchemaBuilder.DataTypeConverter));
         }
 
         public virtual ISqlExpressionBuilder GetSqlExpressionBuilder()

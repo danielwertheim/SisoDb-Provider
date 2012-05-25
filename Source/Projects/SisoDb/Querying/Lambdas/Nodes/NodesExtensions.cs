@@ -19,22 +19,22 @@ namespace SisoDb.Querying.Lambdas.Nodes
 
          public static StartsWithMemberNode ToStartsWithNode(this MemberNode memberNode)
          {
-             return new StartsWithMemberNode(memberNode.Path, memberNode.MemberType);
+             return new StartsWithMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode);
          }
 
          public static EndsWithMemberNode ToEndsWithNode(this MemberNode memberNode)
          {
-             return new EndsWithMemberNode(memberNode.Path, memberNode.MemberType);
+             return new EndsWithMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode);
          }
 
          public static ToLowerMemberNode ToLowerNode(this MemberNode memberNode)
          {
-             return new ToLowerMemberNode(memberNode.Path, memberNode.MemberType);
+             return new ToLowerMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode);
          }
 
          public static ToUpperMemberNode ToUpperNode(this MemberNode memberNode)
          {
-             return new ToUpperMemberNode(memberNode.Path, memberNode.MemberType);
+             return new ToUpperMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode);
          }
     }
 }

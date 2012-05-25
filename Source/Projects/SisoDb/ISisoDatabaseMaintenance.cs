@@ -6,17 +6,6 @@ namespace SisoDb
     public interface ISisoDatabaseMaintenance
     {
         /// <summary>
-        /// Will add a field called RowId to all tables. It will also (if the provider supports it)
-        /// create a clustered index against this field, so that you could use replication, Azure etc.
-        /// </summary>
-        void SetRowIdsOn();
-
-        /// <summary>
-        /// Will remove the RowId field and associated index from all data tables.
-        /// </summary>
-        void SetRowIdsOff();
-
-        /// <summary>
         /// Drops all structure sets and removes entries from SisoDb system tables.
         /// </summary>
         void Reset();

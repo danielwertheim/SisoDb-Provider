@@ -1,5 +1,6 @@
 ﻿using System;
 using EnsureThat;
+using PineCone.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
@@ -8,15 +9,18 @@ namespace SisoDb.Querying.Lambdas.Nodes
     {
         public string Path { get; private set;  }
 
-        public Type MemberType { get; private set; }
+        public Type DataType { get; private set; }
 
-        public MemberNode(string memberPath, Type memberType)
+        public DataTypeCode DataTypeCode { get; private set; }
+
+        public MemberNode(string memberPath, Type dataType, DataTypeCode dataTypeCode)
         {
             Ensure.That(memberPath, "memberPath").IsNotNullOrWhiteSpace();
-            Ensure.That(memberType, "memberType").IsNotNull();
+            Ensure.That(dataType, "dataType").IsNotNull();
 
             Path = memberPath;
-            MemberType = memberType;
+            DataType = dataType;
+            DataTypeCode = dataTypeCode;
         }
 
         public override string ToString()

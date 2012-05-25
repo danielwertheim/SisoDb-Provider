@@ -1,8 +1,7 @@
 using System;
-using System.Linq.Expressions;
 using NCore;
 using NUnit.Framework;
-using SisoDb.Querying;
+using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
@@ -12,10 +11,17 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 	[TestFixture]
 	public class OrderByParserTests : UnitTestBase
 	{
+        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
+
+        private OrderByParser CreateParser()
+        {
+            return new OrderByParser(_dataTypeConverter);
+        }
+
 		[Test]
 		public void Parse_WhenNonMemberExpression_ThrowsException()
 		{
-			var parser = new OrderByParser();
+			var parser = CreateParser();
 			var nonMemberExpression = new OrderByAscExpression(Reflect<MyClass>.BoolExpressionFrom(m => m.Int1 == 32));
 
 			var ex = Assert.Throws<NCoreException>(() => parser.Parse(new[] { nonMemberExpression }));
@@ -27,14 +33,14 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		public void Parse_WhenNullExpressions_ThrowsException()
 		{
 			Assert.Throws<ArgumentException>(
-				() => new OrderByParser().Parse(null));
+				() => CreateParser().Parse(null));
 		}
 
 		[Test]
 		public void Parse_WhenEmptyExpressions_ThrowsException()
 		{
 			Assert.Throws<ArgumentException>(
-				() => new OrderByParser().Parse(new OrderByExpression[] { }));
+				() => CreateParser().Parse(new OrderByExpression[] { }));
 		}
 
 		[Test]
@@ -43,7 +49,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 
 			Assert.DoesNotThrow(
-				() => new OrderByParser().Parse(new OrderByExpression[] { lambda, null }));
+				() => CreateParser().Parse(new OrderByExpression[] { lambda, null }));
 		}
 
 		[Test]
@@ -52,7 +58,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.Child.DoSomething()));
 
 			var ex = Assert.Throws<SisoDbException>(
-				() => new OrderByParser().Parse(new[] { lambda }));
+				() => CreateParser().Parse(new[] { lambda }));
 
 			Assert.AreEqual(ExceptionMessages.OrderByParser_UnsupportedMethodForSortingDirection, ex.Message);
 		}
@@ -62,7 +68,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 
-			var parsedLambda = new OrderByParser().Parse(new[] { lambda });
+			var parsedLambda = CreateParser().Parse(new[] { lambda });
 
 			Assert.AreEqual(1, parsedLambda.Nodes.Length);
 			Assert.IsInstanceOf(typeof(SortingNode), parsedLambda.Nodes[0]);
@@ -74,7 +80,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var lambda1 = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 			var lambda2 = new OrderByDescExpression(Reflect<MyClass>.LambdaFrom(m => m.Int1));
 
-			var parsedLambda = new OrderByParser().Parse(new OrderByExpression[] { lambda1, lambda2 });
+			var parsedLambda = CreateParser().Parse(new OrderByExpression[] { lambda1, lambda2 });
 
 			Assert.AreEqual(2, parsedLambda.Nodes.Length);
 			Assert.IsInstanceOf(typeof(SortingNode), parsedLambda.Nodes[0]);
@@ -86,7 +92,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 
-			var parsedLambda = new OrderByParser().Parse(new[] { lambda });
+			var parsedLambda = CreateParser().Parse(new[] { lambda });
 
 			var node = (SortingNode)parsedLambda.Nodes[0];
 			Assert.AreEqual("String1", node.MemberPath);
@@ -97,7 +103,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.Child.String1));
 
-			var parsedLambda = new OrderByParser().Parse(new[] { lambda });
+			var parsedLambda = CreateParser().Parse(new[] { lambda });
 
 			var node = (SortingNode)parsedLambda.Nodes[0];
 			Assert.AreEqual("Child.String1", node.MemberPath);
@@ -108,7 +114,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 
-			var parsedLambda = new OrderByParser().Parse(new[] { lambda });
+			var parsedLambda = CreateParser().Parse(new[] { lambda });
 
 			var node = (SortingNode)parsedLambda.Nodes[0];
 			Assert.AreEqual(SortDirections.Asc, node.Direction);
@@ -119,7 +125,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.Child.String1));
 
-			var parsedLambda = new OrderByParser().Parse(new[] { lambda });
+			var parsedLambda = CreateParser().Parse(new[] { lambda });
 
 			var node = (SortingNode)parsedLambda.Nodes[0];
 			Assert.AreEqual(SortDirections.Asc, node.Direction);
@@ -130,7 +136,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var lambda = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.Child.String1));
 
-			var parsedLambda = new OrderByParser().Parse(new[] { lambda });
+			var parsedLambda = CreateParser().Parse(new[] { lambda });
 
 			var node = (SortingNode)parsedLambda.Nodes[0];
 			Assert.AreEqual("Child.String1", node.MemberPath);
@@ -141,7 +147,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 		{
 			var lambda = new OrderByDescExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 
-			var parsedLambda = new OrderByParser().Parse(new[] { lambda });
+			var parsedLambda = CreateParser().Parse(new[] { lambda });
 
 			var node = (SortingNode)parsedLambda.Nodes[0];
 			Assert.AreEqual(SortDirections.Desc, node.Direction);
@@ -153,7 +159,7 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var lambda1 = new OrderByAscExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 			var lambda2 = new OrderByDescExpression(Reflect<MyClass>.LambdaFrom(m => m.String1));
 
-			var parsedLambda = new OrderByParser()
+			var parsedLambda = CreateParser()
 				.Parse(new OrderByExpression [] { lambda1, lambda2 });
 
 			Assert.AreEqual(2, parsedLambda.Nodes.Length);

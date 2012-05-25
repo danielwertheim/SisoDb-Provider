@@ -9,7 +9,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         public virtual INode[] Transform(int maxIndex, ref int index, INode node, INodesCollection orgNodes)
         {
             var memberNode = node as MemberNode;
-            if (memberNode == null || !memberNode.MemberType.IsBoolType())
+            if (memberNode == null || !memberNode.DataType.IsBoolType())
                 return new[] { node };
 
             var firstNextNode = orgNodes.GetItemOrNullByIndex(index + 1) as OperatorNode;

@@ -179,8 +179,8 @@ namespace SisoDb.Specifications.Session
             It should_have_updated_values_in_database =
                 () => TestContext.Database.should_have_identical_structures(new[] { _copy2 });
 
-            It should_not_have_stored_the_concurrency_token_in_the_index_table =
-                () => TestContext.DbHelper.should_not_have_stored_member_in_indexes_table<ModelWithGuidToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(Guid));
+            It should_have_stored_the_concurrency_token_in_the_index_table =
+                () => TestContext.DbHelper.should_have_stored_member_in_indexes_table<ModelWithGuidToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(Guid));
 
             private static IStructureSchema _structureSchema;
             private static ModelWithGuidToken _orgItem;
@@ -227,8 +227,8 @@ namespace SisoDb.Specifications.Session
                 _copy2.ConcurrencyToken = 2;
             };
 
-            It should_not_have_stored_the_concurrency_token_in_the_index_table =
-                () => TestContext.DbHelper.should_not_have_stored_member_in_indexes_table<ModelWithIntToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(int));
+            It should_have_stored_the_concurrency_token_in_the_index_table =
+                () => TestContext.DbHelper.should_have_stored_member_in_indexes_table<ModelWithIntToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(int));
 
             private static IStructureSchema _structureSchema;
             private static ModelWithIntToken _orgItem;
@@ -275,8 +275,8 @@ namespace SisoDb.Specifications.Session
                 _copy2.ConcurrencyToken = 2;
             };
 
-            It should_not_have_stored_the_concurrency_token_in_the_index_table =
-                () => TestContext.DbHelper.should_not_have_stored_member_in_indexes_table<ModelWithLongToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(long));
+            It should_have_stored_the_concurrency_token_in_the_index_table =
+                () => TestContext.DbHelper.should_have_stored_member_in_indexes_table<ModelWithLongToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(long));
 
             private static IStructureSchema _structureSchema;
             private static ModelWithLongToken _orgItem;

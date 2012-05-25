@@ -15,11 +15,11 @@ namespace SisoDb.Serialization
 
         private static readonly Type TypeConfigType;
 
-        private static readonly ConcurrentDictionary<Type, object> ConfigChildSync;
+        private static readonly ConcurrentDictionary<Type, bool> ChildConfig;
 
         static ServiceStackTypeConfig()
         {
-            ConfigChildSync = new ConcurrentDictionary<Type, object>();
+            ChildConfig = new ConcurrentDictionary<Type, bool>();
 
             StructureTypeReflecter = new StructureTypeReflecter();
             ItemType = typeof(T);
@@ -34,10 +34,10 @@ namespace SisoDb.Serialization
             if (propertiesAllreadyExcludedInStaticCtor)
                 return;
 
-            if (ConfigChildSync.ContainsKey(type))
+            if (ChildConfig.ContainsKey(type))
                 return;
 
-            if (ConfigChildSync.TryAdd(type, new object()))
+            if (ChildConfig.TryAdd(type, true))
                 ConfigureTypeConfigToExcludeReferencedStructures(type);
         }
 
