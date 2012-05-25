@@ -144,13 +144,11 @@ namespace SisoDb.Serialization
 
         protected virtual IEnumerable<T> OnDeserializeManyInParallel<T>(IEnumerable<string> sourceData, Func<string, T> deserializer) where T : class
         {
-            using (var q = new BlockingCollection<string>())
+            using (var q = new BlockingCollection<string>(new ConcurrentQueue<string>()))
             {
-                Task task = null;
-
                 try
                 {
-                    task = Task.Factory.StartNew(() =>
+                    var task = Task.Factory.StartNew(() =>
                     {
                         foreach (var json in sourceData)
                             q.Add(json);
@@ -162,12 +160,11 @@ namespace SisoDb.Serialization
                         yield return deserializer.Invoke(e);
 
                     Task.WaitAll(task);
+                    if (task != null && task.Status == TaskStatus.RanToCompletion)
+                        task.Dispose();
                 }
                 finally
                 {
-                    if (task != null && task.Status == TaskStatus.RanToCompletion)
-                        task.Dispose();
-
                     q.CompleteAdding();
                 }
             }
