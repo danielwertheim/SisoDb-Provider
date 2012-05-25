@@ -125,7 +125,7 @@
 [Value] [bit] null,
 [StringValue] [varchar](5) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -137,7 +137,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [bit] null,
 [StringValue] [varchar](5) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -149,7 +149,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [bit] null,
 [StringValue] [varchar](5) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -165,7 +165,7 @@ ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 110;</value>
 [Value] [datetime] null,
 [StringValue] [varchar](33) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -177,7 +177,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [datetime] null,
 [StringValue] [varchar](33) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -189,7 +189,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [datetime] null,
 [StringValue] [varchar](33) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -201,7 +201,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [real] null,
 [StringValue] [varchar](33) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -213,7 +213,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [real] null,
 [StringValue] [varchar](33) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -225,7 +225,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [real] null,
 [StringValue] [varchar](33) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -237,7 +237,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [uniqueidentifier] null,
 [StringValue] [varchar](36) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -249,7 +249,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [uniqueidentifier] null,
 [StringValue] [varchar](36) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -261,7 +261,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [uniqueidentifier] null,
 [StringValue] [varchar](36) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -273,7 +273,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [bigint] null,
 [StringValue] [varchar](20) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -285,7 +285,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [bigint] null,
 [StringValue] [varchar](20) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
@@ -297,7 +297,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [Value] [bigint] null,
 [StringValue] [varchar](20) null);
 
-create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
 
 alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
   </data>
