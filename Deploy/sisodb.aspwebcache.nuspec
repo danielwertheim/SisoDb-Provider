@@ -28,7 +28,7 @@
 		</frameworkAssemblies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.AspWebCache\bin\Release\SisoDb.AspWebCache.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.AspWebCache\bin\Release\SisoDb.AspWebCache.xml" target="lib\net40\" />
+	  <file src="**\SisoDb.AspWebCache.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.AspWebCache.xml" target="lib\net40\" />
 	</files>
 </package>

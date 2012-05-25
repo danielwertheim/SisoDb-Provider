@@ -25,7 +25,7 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.Sql2008\bin\Release\SisoDb.Sql2008.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Sql2008\bin\Release\SisoDb.Sql2008.xml" target="lib\net40\" />
+	  <file src="**\SisoDb.Sql2008.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.Sql2008.xml" target="lib\net40\" />
 	</files>
 </package>

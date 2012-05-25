@@ -26,7 +26,7 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="..\Source\Projects\SisoDb.Glimpse\bin\Release\SisoDb.Glimpse.dll" target="lib\net40\" />
-	  <file src="..\Source\Projects\SisoDb.Glimpse\bin\Release\SisoDb.Glimpse.xml" target="lib\net40\" />
+	  <file src="**\SisoDb.Glimpse.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.Glimpse.xml" target="lib\net40\" />
 	</files>
 </package>
