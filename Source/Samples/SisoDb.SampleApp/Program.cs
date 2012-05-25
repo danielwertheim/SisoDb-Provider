@@ -38,6 +38,8 @@ namespace SisoDb.SampleApp
             //db.UpsertStructureSet<Customer>();
 
             //ProfilingInserts(db, 1000, 5);
+            //ProfilingQueries(() => FirstOrDefault(db, 500, 550));
+            //ProfilingQueries(() => SingleOrDefault(db, 500, 550));
             //ProfilingQueries(() => GetAllCustomers(db));
             //ProfilingQueries(() => GetAllCustomersAsJson(db));
             //ProfilingQueries(() => GetCustomersViaIndexesTable(db, 500, 550));
@@ -192,6 +194,22 @@ namespace SisoDb.SampleApp
             using (var session = database.BeginSession())
             {
                 return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
+            }
+        }
+
+        private static int FirstOrDefault(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        {
+            using (var session = database.BeginSession())
+            {
+                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").FirstOrDefault() == null ? 0 : 1;
+            }
+        }
+
+        private static int SingleOrDefault(ISisoDatabase database, int customerNoFrom, int customerNoTo)
+        {
+            using (var session = database.BeginSession())
+            {
+                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").SingleOrDefault() == null ? 0 : 1;
             }
         }
     }
