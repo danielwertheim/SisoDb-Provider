@@ -28,14 +28,15 @@ namespace SisoDb.SampleApp
             //********************************************
 
             //db.EnsureNewDatabase();
-            //InsertCustomers(1, 10000, db);
-
+            
             //Some tweaks
             //db.Settings.AllowUpsertsOfSchemas = false;
             //db.Settings.SynchronizeSchemaChanges = false;
 
             //To get rid of warm up in tests as it first syncs schemas etc
             //db.UpsertStructureSet<Customer>();
+
+            //InsertCustomers(1, 10000, db);
 
             //ProfilingInserts(db, 1000, 5);
             //ProfilingQueries(() => FirstOrDefault(db, 500, 550));
