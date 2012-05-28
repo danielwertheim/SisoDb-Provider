@@ -5,10 +5,11 @@ using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Resources;
+using SisoDb.SqlServer;
 
-namespace SisoDb.SqlCe4.Dac
+namespace SisoDb.SqlCe4
 {
-    public class SqlCe4AdoDriver : SqlDbAdoDriver
+    public class SqlCe4AdoDriver : SqlServerAdoDriver
     {
         private const int MaxLenOfStringBeforeEscalating = 4000;
 

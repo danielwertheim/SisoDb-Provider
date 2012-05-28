@@ -7,11 +7,11 @@ using Microsoft.SqlServer.Server;
 using NCore;
 using PineCone.Structures;
 
-namespace SisoDb.Sql2008.Dac
+namespace SisoDb.SqlServer
 {
-    internal static class Sql2008IdsTableParam
+    public static class SqlServerIdsTableParam
     {
-        internal static SqlParameter CreateIdsTableParam(StructureIdTypes idType, IEnumerable<IStructureId> ids)
+        public static SqlParameter CreateIdsTableParam(StructureIdTypes idType, IEnumerable<IStructureId> ids)
         {
             if (idType == StructureIdTypes.String)
                 return CreateStringIdsTableParam(ids.Select(id => (string)id.Value));

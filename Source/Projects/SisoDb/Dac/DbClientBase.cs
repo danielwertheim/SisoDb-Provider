@@ -73,10 +73,7 @@ namespace SisoDb.Dac
             Failed = true;
         }
 
-        public virtual IDbBulkCopy GetBulkCopy()
-        {
-            return new DbBulkCopy(this);
-        }
+        public abstract IDbBulkCopy GetBulkCopy();
 
         public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {

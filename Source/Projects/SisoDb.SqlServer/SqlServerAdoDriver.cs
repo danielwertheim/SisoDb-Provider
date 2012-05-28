@@ -2,11 +2,12 @@
 using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
+using SisoDb.Dac;
 using SisoDb.DbSchema;
 
-namespace SisoDb.Dac
+namespace SisoDb.SqlServer
 {
-    public class SqlDbAdoDriver : IAdoDriver
+    public class SqlServerAdoDriver : IAdoDriver
     {
         public virtual IDbConnection CreateConnection(string connectionString)
         {

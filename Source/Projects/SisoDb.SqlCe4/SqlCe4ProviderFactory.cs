@@ -1,67 +1,41 @@
 ﻿using System;
 using System.Data;
-using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
-using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
-using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.Querying.Sql;
-using SisoDb.SqlCe4.Dac;
-using SisoDb.Structures;
+using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4
 {
-	public class SqlCe4ProviderFactory : IDbProviderFactory
+    public class SqlCe4ProviderFactory : SqlServerProviderFactory
     {
-		private IConnectionManager _connectionManager;
-        private readonly ISqlStatements _sqlStatements;
-
-        public SqlCe4ProviderFactory()
-        {
-            _connectionManager = new SqlCe4ConnectionManager(GetAdoDriver());
-            _sqlStatements = new SqlCe4Statements();
-        }
-
-        public StorageProviders ProviderType
+        public override StorageProviders ProviderType
         {
             get { return StorageProviders.SqlCe4; }
         }
 
-        public IConnectionManager ConnectionManager
+        public SqlCe4ProviderFactory() : base(new SqlCe4Statements())
+        { }
+
+        protected override IConnectionManager OnCreateConnectionManager()
         {
-            get { return _connectionManager; }
-            set
-            {
-                Ensure.That(value, "ConnectionManager").IsNotNull();
-                _connectionManager = value;
-            }
+            return new SqlCe4ConnectionManager(GetAdoDriver());
         }
 
-	    public virtual IAdoDriver GetAdoDriver()
+        public override IAdoDriver GetAdoDriver()
 	    {
             return new SqlCe4AdoDriver();
 	    }
 
-	    public virtual IDbSettings GetSettings()
+		public override IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            return DbSettings.CreateDefault();
+            return new SqlCe4ServerClient(GetAdoDriver(),(SqlCe4ConnectionInfo)connectionInfo, ConnectionManager, SqlStatements);
         }
 
-	    public virtual ISqlStatements GetSqlStatements()
-		{
-			return _sqlStatements;
-		}
-
-		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+        public override ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            return new SqlCe4ServerClient(GetAdoDriver(),(SqlCe4ConnectionInfo)connectionInfo, _connectionManager, _sqlStatements);
-        }
-
-        public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
-        {
-            var connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+            var connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
             var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlCe4DbClient(
@@ -69,63 +43,33 @@ namespace SisoDb.SqlCe4
                 connectionInfo,
                 connection,
                 transaction,
-                _connectionManager, 
-                _sqlStatements);
+                ConnectionManager, 
+                SqlStatements);
         }
 
-        public virtual IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public override IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
 	    {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
-                Transactions.SuppressOngoingTransactionWhile(() => connection = _connectionManager.OpenClientDbConnection(connectionInfo));
+                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientDbConnection(connectionInfo));
             else
-                connection = _connectionManager.OpenClientDbConnection(connectionInfo);
+                connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
 
             return new SqlCe4DbClient(
                 GetAdoDriver(), 
                 connectionInfo,
                 connection,
                 null,
-                _connectionManager,
-                _sqlStatements);
+                ConnectionManager,
+                SqlStatements);
 	    }
 
-	    public virtual IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db)
+        public override IDbQueryGenerator GetDbQueryGenerator()
         {
-			return new DbSchemaManager(new SqlDbSchemaUpserter(db, _sqlStatements));
+            return new SqlCe4QueryGenerator(SqlStatements, GetSqlExpressionBuilder());
         }
 
-        public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
-        {
-            return new DbStructureInserter(dbClient);
-        }
-
-        public virtual IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
-    	{
-    		return new DbIdentityStructureIdGenerator(action);
-    	}
-
-    	public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
-        {
-            return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers(structureSchemas.SchemaBuilder.DataTypeConverter));
-        }
-
-        public virtual IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
-        {
-            return new QueryBuilder<T>(structureSchemas, new ExpressionParsers(structureSchemas.SchemaBuilder.DataTypeConverter));
-        }
-
-        public virtual ISqlExpressionBuilder GetSqlExpressionBuilder()
-        {
-            return new SqlExpressionBuilder();
-        }
-
-        public virtual IDbQueryGenerator GetDbQueryGenerator()
-        {
-            return new SqlCe4QueryGenerator(_sqlStatements, GetSqlExpressionBuilder());
-        }
-
-	    public INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas) where T : class
+	    public override INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas)
 	    {
 	        throw new NotSupportedException("SQL CE4 does not support Stored procedures.");
 	    }

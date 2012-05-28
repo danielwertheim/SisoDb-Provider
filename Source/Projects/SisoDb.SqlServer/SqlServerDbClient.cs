@@ -8,15 +8,23 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 
-namespace SisoDb.Sql2012.Dac
+namespace SisoDb.SqlServer
 {
-    public class Sql2012DbClient : DbClientBase
+    public class SqlServerDbClient : DbClientBase
     {
-		private const int MaxBatchedIdsSize = 100;
+        protected virtual int MaxBatchedIdsSize
+        {
+            get { return 100; }
+        }
 
-        public Sql2012DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+        public SqlServerDbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
             : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
         {
+        }
+
+        public override IDbBulkCopy GetBulkCopy()
+        {
+            return new SqlServerBulkCopy(this);
         }
 
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
@@ -30,7 +38,7 @@ namespace SisoDb.Sql2012.Dac
             	foreach (var idBatch in ids.Batch(MaxBatchedIdsSize))
             	{
 					cmd.Parameters.Clear();
-					cmd.Parameters.Add(Sql2012IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
+					cmd.Parameters.Add(SqlServerIdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
 					cmd.ExecuteNonQuery();	
             	}
             }
@@ -47,7 +55,7 @@ namespace SisoDb.Sql2012.Dac
 				foreach (var idBatch in ids.Batch(MaxBatchedIdsSize))
 				{
 					cmd.Parameters.Clear();
-					cmd.Parameters.Add(Sql2012IdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
+                    cmd.Parameters.Add(SqlServerIdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
 
 					using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
 					{

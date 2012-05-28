@@ -2,7 +2,7 @@
 using System.Data.SqlServerCe;
 using SisoDb.Dac.Profiling;
 
-namespace SisoDb.SqlCe4.Dac.Profiling
+namespace SisoDb.SqlCe4.Profiling
 {
     internal static class ConnectionExtensions
     {
