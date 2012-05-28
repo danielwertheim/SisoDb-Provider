@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace SisoDb.SqlCe4.Dac
+namespace SisoDb.SqlCe4
 {
     internal static class SqlStatementStringExtensions
     {

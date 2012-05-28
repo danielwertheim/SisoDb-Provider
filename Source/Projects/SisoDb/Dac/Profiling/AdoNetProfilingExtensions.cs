@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace SisoDb.Dac.Profiling
 {
-    public static class ConnectionExtensions
+    public static class AdoNetProfilingExtensions
     {
         public static SqlConnection ToSqlConnection(this IDbConnection connection)
         {

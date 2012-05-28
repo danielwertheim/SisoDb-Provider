@@ -2,12 +2,12 @@ using System.Linq;
 using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.Querying;
 using SisoDb.Querying.Sql;
+using SisoDb.SqlServer;
 
 namespace SisoDb.Sql2008
 {
-    public class Sql2008QueryGenerator : DbQueryGenerator
+    public class Sql2008QueryGenerator : SqlServerQueryGenerator
     {
         public Sql2008QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder) 
             : base(sqlStatements, sqlExpressionBuilder) {}

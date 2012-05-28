@@ -1,7 +1,7 @@
 using System;
 using System.Transactions;
 
-namespace SisoDb.Dac
+namespace SisoDb.SqlServer
 {
     public static class Transactions
     {
