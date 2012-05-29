@@ -61,12 +61,12 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dac\Profiling\ConnectionExtensions.cs" />
-    <Compile Include="Dac\SqlCe4AdoDriver.cs" />
-    <Compile Include="Dac\SqlCe4DbBulkCopy.cs" />
-    <Compile Include="Dac\SqlCe4DbClient.cs" />
-    <Compile Include="Dac\SqlCe4ServerClient.cs" />
-    <Compile Include="Dac\SqlStatementStringExtensions.cs" />
+    <Compile Include="Profiling\ConnectionExtensions.cs" />
+    <Compile Include="SqlCe4AdoDriver.cs" />
+    <Compile Include="SqlCe4DbBulkCopy.cs" />
+    <Compile Include="SqlCe4DbClient.cs" />
+    <Compile Include="SqlCe4ServerClient.cs" />
+    <Compile Include="SqlStatementStringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SisoDbCe4Extensions.cs" />
     <Compile Include="SqlCe4ConnectionManager.cs" />
@@ -79,6 +79,10 @@
     <Compile Include="SqlCe4Statements.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SisoDb.SqlServer\SisoDb.SqlServer.csproj">
+      <Project>{D9EC3CDF-61A0-4A7E-9022-2903D9A5FF96}</Project>
+      <Name>SisoDb.SqlServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>

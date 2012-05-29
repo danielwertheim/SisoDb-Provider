@@ -2,24 +2,17 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using EnsureThat;
+using SisoDb.Dac;
 using SisoDb.Dac.Profiling;
 
-namespace SisoDb.Dac
+namespace SisoDb.SqlServer
 {
-    public class DbBulkCopy : IDbBulkCopy
+    public class SqlServerBulkCopy : IDbBulkCopy
     {
         private IDbClient _dbClient;
         private SqlBulkCopy _innerBulkCopy;
 
-        public DbBulkCopy(IDbClient dbClient)
-        {
-            Ensure.That(dbClient, "dbClient").IsNotNull();
-
-            _dbClient = dbClient;
-            Initialize(dbClient.Connection);
-        }
-
-        public DbBulkCopy(ITransactionalDbClient dbClient)
+        public SqlServerBulkCopy(ITransactionalDbClient dbClient)
         {
             Ensure.That(dbClient, "dbClient").IsNotNull();
 

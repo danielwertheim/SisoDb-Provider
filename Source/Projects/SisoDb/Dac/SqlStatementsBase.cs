@@ -31,7 +31,9 @@ namespace SisoDb.Dac
 						_sqlStrings.Add(e.Key.ToString(), e.Value.ToString());
 					}
 				}
-				resourceStream.Close();
+
+                if(resourceStream != null)
+				    resourceStream.Close();
 			}
         }
 

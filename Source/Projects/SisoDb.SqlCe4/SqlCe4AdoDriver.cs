@@ -5,12 +5,13 @@ using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Resources;
+using SisoDb.SqlServer;
 
-namespace SisoDb.SqlCe4.Dac
+namespace SisoDb.SqlCe4
 {
-    public class SqlCe4AdoDriver : SqlDbAdoDriver
+    public class SqlCe4AdoDriver : SqlServerAdoDriver
     {
-        private const int MaxLenOfStringBeforeEscalating = 4000;
+        public const int MaxLenOfStringBeforeEscalating = 4000;
 
         public override IDbConnection CreateConnection(string connectionString)
         {
@@ -22,6 +23,13 @@ namespace SisoDb.SqlCe4.Dac
         protected override IDbDataParameter OnParameterCreated(IDbDataParameter parameter, IDacParameter dacParameter)
         {
             var dbParam = (SqlCeParameter)parameter;
+
+            if (DbSchemas.Parameters.IsJsonParam(dacParameter))
+            {
+                dbParam.SqlDbType = SqlDbType.NText;
+                dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
+                return dbParam;
+            }
 
             if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
             {

@@ -8,9 +8,9 @@ namespace SisoDb
     [Serializable]
     public abstract class SisoConnectionInfo : ISisoConnectionInfo
     {
-        public abstract string DbName { get; }
+        public StorageProviders ProviderType { get; private set; }
 
-        public abstract StorageProviders ProviderType { get; }
+        public string DbName { get; private set; }
 
         public BackgroundIndexing BackgroundIndexing { get; private set; }
 
@@ -18,14 +18,17 @@ namespace SisoDb
 
         public IConnectionString ServerConnectionString { get; private set; }
 
-        protected SisoConnectionInfo(IConnectionString connectionString)
+        protected SisoConnectionInfo(StorageProviders providerType, IConnectionString connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
+
+            ProviderType = providerType;
             EnsureCorrectProviderIfItExists(connectionString);
 
             ClientConnectionString = FormatConnectionString(connectionString);
             ServerConnectionString = FormatServerConnectionString(connectionString);
             BackgroundIndexing = ExtractBackgroundIndexing(ClientConnectionString);
+            DbName = ExtractDbName(ClientConnectionString);
 
             if (BackgroundIndexing != BackgroundIndexing.Off)
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
@@ -75,6 +78,11 @@ namespace SisoDb
             return OnExtractBackgroundIndexing(connectionString);
         }
 
+        protected string ExtractDbName(IConnectionString connectionString)
+        {
+            return OnExtractDbName(connectionString);
+        }
+
         protected virtual IConnectionString OnFormatConnectionString(IConnectionString connectionString)
         {
             return connectionString;
@@ -99,5 +107,7 @@ namespace SisoDb
                 ? BackgroundIndexing.Off
                 : (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.BackgroundIndexing, true);
         }
+
+        protected abstract string OnExtractDbName(IConnectionString connectionString);
     }
 }

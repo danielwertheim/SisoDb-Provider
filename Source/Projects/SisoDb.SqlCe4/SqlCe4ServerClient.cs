@@ -4,7 +4,7 @@ using SisoDb.Core.Io;
 using SisoDb.Dac;
 using SisoDb.Resources;
 
-namespace SisoDb.SqlCe4.Dac
+namespace SisoDb.SqlCe4
 {
     public class SqlCe4ServerClient : DbServerClient
     {

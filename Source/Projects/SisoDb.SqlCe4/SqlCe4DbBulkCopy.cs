@@ -4,9 +4,9 @@ using System.Data;
 using System.Data.SqlServerCe;
 using EnsureThat;
 using SisoDb.Dac;
-using SisoDb.SqlCe4.Dac.Profiling;
+using SisoDb.SqlCe4.Profiling;
 
-namespace SisoDb.SqlCe4.Dac
+namespace SisoDb.SqlCe4
 {
     public class SqlCe4DbBulkCopy : IDbBulkCopy
     {
