@@ -296,6 +296,10 @@
       <Project>{C70A59D2-F7B0-46D0-95C4-F375EEDAEB5E}</Project>
       <Name>SisoDb.SqlCe4</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.SqlServer\SisoDb.SqlServer.csproj">
+      <Project>{D9EC3CDF-61A0-4A7E-9022-2903D9A5FF96}</Project>
+      <Name>SisoDb.SqlServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>
