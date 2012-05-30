@@ -41,6 +41,11 @@ namespace SisoDb.DbSchema
                 StringValueForValueTypeIndexParamName = string.Concat("@", IndexStorageSchema.Fields.StringValue.Name);
             }
 
+            public static bool ShouldBeDateTime(IDacParameter param)
+            {
+                return param.Value is DateTime;
+            }
+
             public static bool ShouldBeNonUnicodeString(IDacParameter param)
             {
                 const StringComparison c = StringComparison.OrdinalIgnoreCase;
@@ -56,7 +61,7 @@ namespace SisoDb.DbSchema
                 return param.Value is string;
             }
 
-            public static bool IsJsonParam(IDacParameter param)
+            public static bool ShouldBeJson(IDacParameter param)
             {
                 return param.Name.Equals(JsonParam, StringComparison.OrdinalIgnoreCase);
             }

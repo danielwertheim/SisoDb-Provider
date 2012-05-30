@@ -52,7 +52,7 @@ namespace SisoDb.SqlServer
 
                 parameter = OnParameterCreated(parameter, dacParameter);
 
-                parameter.Value = dacParameter.Value; //Yes, value should be set after OnParameterCreated
+                parameter.Value = dacParameter.Value; //PERF: Yes, value should be set after OnParameterCreated
 
                 cmd.Parameters.Add(parameter);
             }
@@ -62,6 +62,12 @@ namespace SisoDb.SqlServer
         {
             var dbParam = (SqlParameter)parameter;
             var setSize = false;
+
+            if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
+            {
+                dbParam.DbType = DbType.DateTime2;
+                return dbParam;
+            }
 
             if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
             {
