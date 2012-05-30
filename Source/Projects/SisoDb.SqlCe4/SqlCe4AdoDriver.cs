@@ -39,7 +39,6 @@ namespace SisoDb.SqlCe4
                     throw new SisoDbException(ExceptionMessages.SqlCe4_ToLongIndividualStringValue);
 
                 dbParam.Size = len;
-                
                 return dbParam;
             }
 

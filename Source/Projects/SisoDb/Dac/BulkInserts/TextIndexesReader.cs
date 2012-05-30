@@ -23,7 +23,7 @@ namespace SisoDb.Dac.BulkInserts
 				return Enumerator.Current.Path;
 
 			if (ordinal == IndexStorageSchema.Fields.Value.Ordinal)
-				return Enumerator.Current.Value.ToString();
+				return Enumerator.Current.Value;
 
 			throw new NotSupportedException();
 		}

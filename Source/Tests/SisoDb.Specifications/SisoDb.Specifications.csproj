@@ -84,7 +84,7 @@
     <Compile Include="Session\Querying\StringFunctions\Contains.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />
     <Compile Include="Session\InsertAs.cs" />
-    <Compile Include="Session\InsertsOfSingleValues.cs" />
+    <Compile Include="Session\Inserts.cs" />
     <Compile Include="Session\InsertsWithCustomStructureId.cs" />
     <Compile Include="Session\Querying\Count.cs" />
     <Compile Include="Session\Querying\EnumerableFunctions\QxAny.cs" />

@@ -61,16 +61,22 @@ namespace SisoDb.SqlServer
         protected virtual IDbDataParameter OnParameterCreated(IDbDataParameter parameter, IDacParameter dacParameter)
         {
             var dbParam = (SqlParameter)parameter;
+            var setSize = false;
 
             if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
+            {
                 dbParam.SqlDbType = SqlDbType.VarChar;
+                setSize = true;
+            }
             else if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
+            {
                 dbParam.SqlDbType = SqlDbType.NVarChar;
+                setSize = true;
+            }
 
-            if(dbParam.SqlDbType == SqlDbType.VarChar || dbParam.SqlDbType == SqlDbType.NVarChar)
+            if(setSize)
             {
                 dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
-
                 return dbParam;
             }
 
