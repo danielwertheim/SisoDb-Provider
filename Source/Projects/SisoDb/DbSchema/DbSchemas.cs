@@ -32,11 +32,18 @@ namespace SisoDb.DbSchema
             public const string DbNameParamPrefix = "@dbName";
             public const string TableNameParamPrefix = "@tableName";
             public const string EntityNameParamPrefix = "@entityName";
+            public static readonly string JsonParam;
             public static readonly string StringValueForValueTypeIndexParamName;
-
+            
             static Parameters()
             {
+                JsonParam = string.Concat("@", StructureStorageSchema.Fields.Json.Name);
                 StringValueForValueTypeIndexParamName = string.Concat("@", IndexStorageSchema.Fields.StringValue.Name);
+            }
+
+            public static bool ShouldBeDateTime(IDacParameter param)
+            {
+                return param.Value is DateTime;
             }
 
             public static bool ShouldBeNonUnicodeString(IDacParameter param)
@@ -52,6 +59,11 @@ namespace SisoDb.DbSchema
             public static bool ShouldBeUnicodeString(IDacParameter param)
             {
                 return param.Value is string;
+            }
+
+            public static bool ShouldBeJson(IDacParameter param)
+            {
+                return param.Name.Equals(JsonParam, StringComparison.OrdinalIgnoreCase);
             }
         }
 

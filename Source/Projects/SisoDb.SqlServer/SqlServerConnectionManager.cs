@@ -3,13 +3,13 @@ using System.Data;
 using EnsureThat;
 using SisoDb.Dac;
 
-namespace SisoDb
+namespace SisoDb.SqlServer
 {
-    public class ConnectionManager : IConnectionManager
+    public class SqlServerConnectionManager : IConnectionManager
     {
         protected readonly IAdoDriver Driver;
 
-        public ConnectionManager(IAdoDriver driver)
+        public SqlServerConnectionManager(IAdoDriver driver)
         {
             Ensure.That(driver, "driver").IsNotNull();
 

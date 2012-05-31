@@ -146,6 +146,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\InsertBigStructures.cs">
       <Link>Session\InsertBigStructures.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Inserts.cs">
+      <Link>Session\Inserts.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\InsertsComplete.cs">
       <Link>Session\InsertsComplete.cs</Link>
     </Compile>
@@ -154,9 +157,6 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\InsertsOfJson.cs">
       <Link>Session\InsertsOfJson.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\Session\InsertsOfSingleValues.cs">
-      <Link>Session\InsertsOfSingleValues.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\InsertsOfUniques.cs">
       <Link>Session\InsertsOfUniques.cs</Link>
@@ -295,6 +295,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.SqlServer\SisoDb.SqlServer.csproj">
+      <Project>{d9ec3cdf-61a0-4a7e-9022-2903d9a5ff96}</Project>
+      <Name>SisoDb.SqlServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>

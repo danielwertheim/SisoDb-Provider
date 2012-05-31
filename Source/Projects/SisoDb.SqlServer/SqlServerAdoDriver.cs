@@ -2,11 +2,12 @@
 using System.Data.SqlClient;
 using EnsureThat;
 using NCore;
+using SisoDb.Dac;
 using SisoDb.DbSchema;
 
-namespace SisoDb.Dac
+namespace SisoDb.SqlServer
 {
-    public class SqlDbAdoDriver : IAdoDriver
+    public class SqlServerAdoDriver : IAdoDriver
     {
         public virtual IDbConnection CreateConnection(string connectionString)
         {
@@ -51,7 +52,7 @@ namespace SisoDb.Dac
 
                 parameter = OnParameterCreated(parameter, dacParameter);
 
-                parameter.Value = dacParameter.Value; //Yes, value should be set after OnParameterCreated
+                parameter.Value = dacParameter.Value; //PERF: Yes, value should be set after OnParameterCreated
 
                 cmd.Parameters.Add(parameter);
             }
@@ -60,16 +61,28 @@ namespace SisoDb.Dac
         protected virtual IDbDataParameter OnParameterCreated(IDbDataParameter parameter, IDacParameter dacParameter)
         {
             var dbParam = (SqlParameter)parameter;
+            var setSize = false;
+
+            if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
+            {
+                dbParam.DbType = DbType.DateTime2;
+                return dbParam;
+            }
 
             if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
+            {
                 dbParam.SqlDbType = SqlDbType.VarChar;
+                setSize = true;
+            }
             else if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
+            {
                 dbParam.SqlDbType = SqlDbType.NVarChar;
+                setSize = true;
+            }
 
-            if(dbParam.SqlDbType == SqlDbType.VarChar || dbParam.SqlDbType == SqlDbType.NVarChar)
+            if(setSize)
             {
                 dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
-
                 return dbParam;
             }
 

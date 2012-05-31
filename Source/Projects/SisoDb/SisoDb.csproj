@@ -60,7 +60,6 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -74,11 +73,9 @@
     <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
-    <Compile Include="Dac\SqlDbAdoDriver.cs" />
-    <Compile Include="Dac\DbBulkCopy.cs" />
     <Compile Include="Dac\DbServerClient.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
-    <Compile Include="Dac\Profiling\ConnectionExtensions.cs" />
+    <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
     <Compile Include="Core\EnumerableExtensions.cs" />
     <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
@@ -96,7 +93,6 @@
     <Compile Include="DbSettings.cs" />
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
-    <Compile Include="Dac\Transactions.cs" />
     <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
     <Compile Include="DbSchema\DbSchemas.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
@@ -147,7 +143,6 @@
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
-    <Compile Include="ConnectionManager.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />

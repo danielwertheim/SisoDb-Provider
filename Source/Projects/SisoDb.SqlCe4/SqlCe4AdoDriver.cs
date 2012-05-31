@@ -5,12 +5,13 @@ using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Resources;
+using SisoDb.SqlServer;
 
-namespace SisoDb.SqlCe4.Dac
+namespace SisoDb.SqlCe4
 {
-    public class SqlCe4AdoDriver : SqlDbAdoDriver
+    public class SqlCe4AdoDriver : SqlServerAdoDriver
     {
-        private const int MaxLenOfStringBeforeEscalating = 4000;
+        public const int MaxLenOfStringBeforeEscalating = 4000;
 
         public override IDbConnection CreateConnection(string connectionString)
         {
@@ -23,6 +24,19 @@ namespace SisoDb.SqlCe4.Dac
         {
             var dbParam = (SqlCeParameter)parameter;
 
+            if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
+            {
+                dbParam.DbType = DbType.DateTime;
+                return dbParam;
+            }
+
+            if (DbSchemas.Parameters.ShouldBeJson(dacParameter))
+            {
+                dbParam.SqlDbType = SqlDbType.NText;
+                dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
+                return dbParam;
+            }
+
             if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.NVarChar;
@@ -31,7 +45,6 @@ namespace SisoDb.SqlCe4.Dac
                     throw new SisoDbException(ExceptionMessages.SqlCe4_ToLongIndividualStringValue);
 
                 dbParam.Size = len;
-                
                 return dbParam;
             }
 

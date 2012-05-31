@@ -5,10 +5,11 @@ using System.Data;
 using System.Data.SqlServerCe;
 using SisoDb.Dac;
 using SisoDb.Resources;
+using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4ConnectionManager : ConnectionManager
+    public class SqlCe4ConnectionManager : SqlServerConnectionManager
     {
         private readonly ConcurrentDictionary<string, IDbConnection> _warmupConnections;
 

@@ -16,25 +16,34 @@ namespace SisoDb.Serialization
             DeserializeManyInParallel = true;
         }
 
+        protected virtual void OnConfigForSerialization<T>(Type itemType) where T : class
+        {
+            JsConfig.DateHandler = JsonDateHandler.ISO8601;
+            JsConfig.ExcludeTypeInfo = true;
+            JsConfig<T>.ExcludeTypeInfo = true;
+            JsConfig.IncludeNullValues = false;
+            ServiceStackTypeConfig<T>.Config(itemType);
+        }
+
+        protected virtual void OnConfigForDeserialization()
+        {
+            JsConfig.DateHandler = JsonDateHandler.ISO8601;
+        }
+
         public virtual string Serialize<T>(T item) where T : class
         {
             if (item == null)
                 return string.Empty;
 
             var itemType = item.GetType();
-            ServiceStackTypeConfig<T>.Config(itemType);
-            JsConfig.ExcludeTypeInfo = true;
-            JsConfig<T>.ExcludeTypeInfo = true;
-
+            
+            OnConfigForSerialization<T>(itemType);
+            
             return JsonSerializer.SerializeToString(item, itemType);
         }
 
         public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class
         {
-            ServiceStackTypeConfig<T>.Config(TypeFor<T>.Type);
-            JsConfig.ExcludeTypeInfo = true;
-            JsConfig<T>.ExcludeTypeInfo = true;
-
             Type itemType = null;
             foreach (var item in items)
             {
@@ -42,7 +51,7 @@ namespace SisoDb.Serialization
                 {
                     //Yes, it's ok for now to use first item as template.
                     itemType = item.GetType();
-                    ServiceStackTypeConfig<T>.Config(itemType);
+                    OnConfigForSerialization<T>(itemType);
                 }
 
                 yield return OnSerialize(item, itemType);
@@ -58,12 +67,16 @@ namespace SisoDb.Serialization
 
         public virtual T Deserialize<T>(string json) where T : class
         {
+            OnConfigForDeserialization();
+
             return OnDeserialize<T>(json);
         }
 
         public virtual object Deserialize(string json, Type structureType)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
+
+            OnConfigForDeserialization();
 
             return OnDeserialize(json, structureType);
         }
@@ -77,6 +90,7 @@ namespace SisoDb.Serialization
         {
             Ensure.That(templateType, "templateType").IsNotNull();
 
+            OnConfigForDeserialization();
             TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
 
             return OnDeserialize<TTemplate>(json, templateType);
@@ -84,6 +98,8 @@ namespace SisoDb.Serialization
 
         public virtual IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
+            OnConfigForDeserialization();
+
             return DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, OnDeserialize<T>)
                     : OnDeserializeManyInSequential(sourceData, OnDeserialize<T>);
@@ -92,6 +108,8 @@ namespace SisoDb.Serialization
         public virtual IEnumerable<object> DeserializeMany(IEnumerable<string> sourceData, Type structureType)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
+
+            OnConfigForDeserialization();
 
             return DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(json, structureType))
@@ -102,6 +120,8 @@ namespace SisoDb.Serialization
         {
             Ensure.That(template, "template").IsNotNull();
 
+            OnConfigForDeserialization();
+
             return DeserializeManyUsingTemplate<TTemplate>(sourceData, template.GetType());
         }
 
@@ -109,6 +129,7 @@ namespace SisoDb.Serialization
         {
             Ensure.That(templateType, "templateType").IsNotNull();
 
+            OnConfigForDeserialization();
             TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
 
             return DeserializeManyInParallel

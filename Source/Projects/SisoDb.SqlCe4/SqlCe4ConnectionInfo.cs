@@ -3,20 +3,15 @@ using System.Data.SqlServerCe;
 using System.IO;
 using System.Web;
 using SisoDb.Resources;
+using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4
 {
     [Serializable]
-    public class SqlCe4ConnectionInfo : SisoConnectionInfo
+    public class SqlCe4ConnectionInfo : SqlServerConnectionInfo
     {
         private readonly string _serverPath;
         private readonly string _filePath;
-        private readonly string _dbName;
-
-        public override StorageProviders ProviderType
-        {
-            get { return StorageProviders.SqlCe4; }
-        }
 
         public string ServerPath
         {
@@ -28,31 +23,24 @@ namespace SisoDb.SqlCe4
             get { return _filePath; }
         }
 
-        public override string DbName
-        {
-            get { return _dbName; }
-        }
-
         public SqlCe4ConnectionInfo(string connectionStringOrName)
             : this(ConnectionString.Get(connectionStringOrName))
         { }
 
         public SqlCe4ConnectionInfo(IConnectionString connectionString)
-            : base(connectionString)
+            : base(StorageProviders.SqlCe4, connectionString)
         {
             _filePath = ExtractFilePath(ClientConnectionString);
-            _serverPath = ExtractServerPath(FilePath);
-            _dbName = ExtractDbName(FilePath);
+            _serverPath = Path.GetDirectoryName(FilePath);
 
-            if (string.IsNullOrWhiteSpace(_dbName))
+            if (string.IsNullOrWhiteSpace(DbName))
                 throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
         }
 
         protected override IConnectionString OnFormatConnectionString(IConnectionString connectionString)
         {
             var cnString = base.OnFormatConnectionString(connectionString);
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString);
-            cnStringBuilder.Enlist = false;
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString) { Enlist = false };
 
             return connectionString.ReplacePlain(cnStringBuilder.ConnectionString);
         }
@@ -66,7 +54,16 @@ namespace SisoDb.SqlCe4
             return cnString.ReplacePlain(cnStringBuilder.ConnectionString);
         }
 
-        private string ExtractFilePath(IConnectionString connectionString)
+        protected override string OnExtractDbName(IConnectionString connectionString)
+        {
+            var filePath = ExtractFilePath(ClientConnectionString);
+
+            return filePath.Contains(Path.DirectorySeparatorChar.ToString())
+                ? Path.GetFileNameWithoutExtension(filePath)
+                : filePath;
+        }
+
+        private static string ExtractFilePath(IConnectionString connectionString)
         {
             var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString.PlainString);
 
@@ -81,18 +78,6 @@ namespace SisoDb.SqlCe4
             }
 
             return filePath;
-        }
-
-        private string ExtractDbName(string filePath)
-        {
-            return filePath.Contains(Path.DirectorySeparatorChar.ToString())
-                ? Path.GetFileNameWithoutExtension(filePath)
-                : filePath;
-        }
-
-        private string ExtractServerPath(string filePath)
-        {
-            return Path.GetDirectoryName(filePath);
         }
     }
 }

@@ -63,17 +63,12 @@ namespace SisoDb.UnitTests.Connections
 
         private class SisoConnectionInfoImplementation : SisoConnectionInfo
         {
-            public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(connectionString)
+            public SisoConnectionInfoImplementation(IConnectionString connectionString) : base(StorageProviders.Sql2008, connectionString)
             {}
 
-            public override StorageProviders ProviderType
+            protected override string OnExtractDbName(IConnectionString connectionString)
             {
-                get { return StorageProviders.Sql2008; }
-            }
-
-            public override string DbName
-            {
-                get { return "Foo"; }
+                return "Foo";
             }
         }
     }

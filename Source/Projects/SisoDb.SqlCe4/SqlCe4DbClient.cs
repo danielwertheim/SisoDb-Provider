@@ -8,14 +8,16 @@ using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.SqlServer;
 
-namespace SisoDb.SqlCe4.Dac
+namespace SisoDb.SqlCe4
 {
-    public class SqlCe4DbClient : DbClientBase
+    public class SqlCe4DbClient : SqlServerDbClient
     {
-        private const int MaxBatchedIdsSize = 32;
-
-        
+        protected override int MaxBatchedIdsSize
+        {
+            get { return 32; }
+        }
 
         public SqlCe4DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
             : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
