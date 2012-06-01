@@ -110,7 +110,7 @@ namespace SisoDb.Querying.Sql
 
         public virtual void AddValues(ArrayValueNode valueNode)
         {
-            var param = new DacParameter(string.Concat("p", Params.Count), valueNode.Value);
+            var param = new ArrayDacParameter(string.Concat("p", Params.Count), valueNode.Value);
             Params.Add(param);
 
             if (SqlContains(ValueMarker))

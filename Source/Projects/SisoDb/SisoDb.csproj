@@ -73,6 +73,7 @@
     <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
+    <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\DbServerClient.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
