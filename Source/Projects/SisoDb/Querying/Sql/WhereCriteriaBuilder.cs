@@ -108,6 +108,19 @@ namespace SisoDb.Querying.Sql
             HasWrittenValue = true;
         }
 
+        public virtual void AddValues(ArrayValueNode valueNode)
+        {
+            var param = new DacParameter(string.Concat("p", Params.Count), valueNode.Value);
+            Params.Add(param);
+
+            if (SqlContains(ValueMarker))
+                Sql = Sql.Replace(ValueMarker, param.Name);
+            else
+                Sql.Append(param.Name);
+
+            HasWrittenValue = true;
+        }
+
         public virtual void AddNullValue(NullNode nullNode)
         {
             if (SqlContains(ValueMarker))

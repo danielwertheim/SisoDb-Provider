@@ -125,6 +125,7 @@
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\ArrayValueNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\InSetMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\LikeMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StringEndsWithMemberNode.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StringStartsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StringContainsMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Operators\InSetOperator.cs" />
     <Compile Include="Querying\Lambdas\Parsers\BoolNodeTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IExpressionParsers.cs" />
     <Compile Include="Querying\Lambdas\Parsers\INodeTransformer.cs" />

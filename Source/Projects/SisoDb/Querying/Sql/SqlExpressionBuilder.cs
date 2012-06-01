@@ -144,15 +144,15 @@ namespace SisoDb.Querying.Sql
         protected virtual void OnProcessWhereInSetMemberNode(WhereCriteriaBuilder builder, InSetMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
-            builder.AddOp(new OperatorNode(Operator.Like()));
-            //builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value, "%").Replace("%%", "%")));
+            builder.AddOp(new OperatorNode(Operator.InSet()));
+            builder.AddValues(new ArrayValueNode(memberNode.Values));
         }
 
         protected virtual void OnProcessWhereLikeMemberNode(WhereCriteriaBuilder builder, LikeMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
-            builder.AddValue(new ValueNode(memberNode.Value.ToStringOrNull() ?? "%"));
+            builder.AddValue(new ValueNode(memberNode.Value));
         }
 
         protected virtual void OnProcessWhereStringContainsMemberNode(WhereCriteriaBuilder builder, StringContainsMemberNode memberNode, int memberIndex)
