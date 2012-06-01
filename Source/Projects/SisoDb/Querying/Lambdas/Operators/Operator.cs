@@ -23,7 +23,8 @@ namespace SisoDb.Querying.Lambdas.Operators
 			LessThanOrEqual,
 			GreaterThan,
 			GreaterThanOrEqual,
-			Like
+			Like,
+            InSet
 		}
 
         private static readonly Dictionary<ExpressionType, Func<Operator>> OperatorMap;
@@ -68,11 +69,6 @@ namespace SisoDb.Querying.Lambdas.Operators
 			return new EqualOperator();
 		}
 
-        public static LikeOperator Like()
-        {
-            return new LikeOperator();
-        }
-
         public static Operator IsOrIsNot(ExpressionType expressionType)
         {
             if (expressionType == ExpressionType.Equal)
@@ -93,6 +89,16 @@ namespace SisoDb.Querying.Lambdas.Operators
         public static IsNotOperator IsNot()
         {
             return new IsNotOperator();
+        }
+
+        public static LikeOperator Like()
+        {
+            return new LikeOperator();
+        }
+
+        public static InSetOperator InSet()
+        {
+            return new InSetOperator();
         }
 
         public override string ToString()

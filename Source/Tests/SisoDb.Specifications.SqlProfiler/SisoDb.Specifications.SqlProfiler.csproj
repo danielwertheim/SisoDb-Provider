@@ -186,6 +186,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\EnumerableFunctions\QxAny.cs">
       <Link>Session\Querying\EnumerableFunctions\QxAny.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\EnumerableFunctions\QxIn.cs">
+      <Link>Session\Querying\EnumerableFunctions\QxIn.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Exists.cs">
       <Link>Session\Querying\Exists.cs</Link>
     </Compile>
