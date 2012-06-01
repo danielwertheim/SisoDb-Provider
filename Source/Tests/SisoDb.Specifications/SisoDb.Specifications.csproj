@@ -80,6 +80,7 @@
     <Compile Include="Session\Querying\Dynamic\Count.cs" />
     <Compile Include="Session\Querying\Dynamic\Exists.cs" />
     <Compile Include="Session\Querying\Dynamic\Query.cs" />
+    <Compile Include="Session\Querying\EnumerableFunctions\QxIn.cs" />
     <Compile Include="Session\Querying\Projection.cs" />
     <Compile Include="Session\Querying\StringFunctions\Contains.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />

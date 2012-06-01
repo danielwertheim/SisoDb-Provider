@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
+    <Compile Include="SisoDbNotSupportedException.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />

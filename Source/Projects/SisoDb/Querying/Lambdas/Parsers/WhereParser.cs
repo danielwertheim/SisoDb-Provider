@@ -65,10 +65,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected virtual IParsedLambda CreateParsedLambda()
         {
-            //var nodes =
-            //    new BoolNodeTransformer().Transform(
-            //    new NullableNodeTransformer().Transform(Nodes));
-
+            //PERF: This ugly processing of nodes for boht transformers in one loop is for performance. Perhaps move bach to older cleaner solution
             var nullableNodeTransformer = new NullableNodeTransformer();
             var boolNodeTransformer = new BoolNodeTransformer();
 
@@ -248,6 +245,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if (e.Method.DeclaringType == typeof(EnumerableQueryExtensions))
                 return VisitEnumerableQxMethodCall(e);
 
+            if (e.Method.DeclaringType == typeof(SingleValueTypeQueryExtensions))
+                return VisitSingleValueTypeQxMethodCall(e);
+
             try
             {
                 Visit(Expression.Constant(e.Evaluate()));
@@ -334,6 +334,8 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 case "QxToUpper":
                     Nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
                     break;
+                default:
+                    throw new SisoDbNotSupportedException("String query extension (Qx) method '{0}', is not supported.".Inject(methodName));
             }
 
             return e;
@@ -348,24 +350,35 @@ namespace SisoDb.Querying.Lambdas.Parsers
             switch (methodName)
             {
                 case "QxAny":
-                    EnsureSupportedEnumerableQxOperator(lambda);
                     VirtualPrefixMembers.Add(member);
                     Visit(lambda);
                     VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
                     break;
+                default:
+                    throw new SisoDbNotSupportedException("Enumerable query extension (Qx) method '{0}', is not supported.".Inject(methodName));
             }
 
             return e;
         }
 
-        protected virtual void EnsureSupportedEnumerableQxOperator(LambdaExpression e)
+        protected virtual Expression VisitSingleValueTypeQxMethodCall(MethodCallExpression e)
         {
-            var isSupportedMethodCall = e.Body.NodeType == ExpressionType.Call && ((MethodCallExpression)e.Body).Method.Name == "QxAny";
+            var member = (MemberExpression)e.Arguments[0];
+            var methodName = e.Method.Name;
+            var lambda = e.Arguments[1] as LambdaExpression;
 
-            var operatorIsSupported = isSupportedMethodCall || SupportedEnumerableQxOperators.Contains(e.Body.NodeType);
+            switch (methodName)
+            {
+                case "QxIn":
+                    VirtualPrefixMembers.Add(member);
+                    Visit(lambda);
+                    VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
+                    break;
+                default:
+                    throw new SisoDbNotSupportedException("Single value type query extension (Qx) method '{0}', is not supported.".Inject(methodName));
+            }
 
-            if (!operatorIsSupported)
-                throw new SisoDbException(ExceptionMessages.WhereParser_QxEnumerables_OperatorNotSupported.Inject(e.Body.NodeType));
+            return e;
         }
     }
 }
