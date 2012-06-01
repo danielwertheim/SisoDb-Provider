@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -48,10 +49,18 @@ namespace SisoDb.Core.Expressions
 			if (e is ConstantExpression)
 				return (e as ConstantExpression).Evaluate();
 
-            throw new SisoDbException("Don't know how to evaluate the expression type: '{0}'".Inject(e.GetType().Name));
+		    if (e is NewArrayExpression)
+		        return (e as NewArrayExpression).Evaluate();
+
+		    throw new SisoDbException("Don't know how to evaluate the expression type: '{0}'".Inject(e.GetType().Name));
 		}
 
-		public static object Evaluate(this MethodCallExpression methodExpression)
+        public static object[] Evaluate(this NewArrayExpression e)
+        {
+            return e.Expressions.Cast<ConstantExpression>().Select(ce => ce.Value).ToArray();
+        }
+
+        public static object Evaluate(this MethodCallExpression methodExpression)
 		{
             if(methodExpression.Object == null)
             {

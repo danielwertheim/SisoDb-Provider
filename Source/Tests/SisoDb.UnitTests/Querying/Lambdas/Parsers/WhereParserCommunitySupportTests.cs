@@ -28,26 +28,24 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
             var parsedLambda = parser.Parse(expression);
 
             var listOfNodes = parsedLambda.Nodes.ToList();
-            Assert.AreEqual(15, listOfNodes.Count);
+            Assert.AreEqual(13, listOfNodes.Count);
 
             Assert.AreEqual(typeof(StartGroupNode), listOfNodes[0].GetType());
             Assert.AreEqual(typeof(StartGroupNode), listOfNodes[1].GetType());
-            Assert.AreEqual("MyString", listOfNodes[2].CastAs<MemberNode>().Path);
-            Assert.AreEqual(typeof(string), listOfNodes[2].CastAs<MemberNode>().DataType);
-            Assert.AreEqual(Operator.Types.Like, listOfNodes[3].CastAs<OperatorNode>().Operator.OperatorType);
-            Assert.AreEqual("Foo%", listOfNodes[4].CastAs<ValueNode>().Value);
-            Assert.AreEqual(Operator.Types.Or, listOfNodes[5].CastAs<OperatorNode>().Operator.OperatorType);
-            Assert.AreEqual("MyInt", listOfNodes[6].CastAs<MemberNode>().Path);
-            Assert.AreEqual(typeof(int), listOfNodes[6].CastAs<MemberNode>().DataType);
-            Assert.AreEqual(Operator.Types.Equal, listOfNodes[7].CastAs<OperatorNode>().Operator.OperatorType);
-            Assert.AreEqual(42, listOfNodes[8].CastAs<ValueNode>().Value);
-            Assert.AreEqual(typeof(EndGroupNode), listOfNodes[9].GetType());
-            Assert.AreEqual(Operator.Types.Or, listOfNodes[10].CastAs<OperatorNode>().Operator.OperatorType);
-            Assert.AreEqual("MyListOfStrings", listOfNodes[11].CastAs<MemberNode>().Path);
-            Assert.AreEqual(typeof(string), listOfNodes[11].CastAs<MemberNode>().DataType);
-            Assert.AreEqual(Operator.Types.Equal, listOfNodes[12].CastAs<OperatorNode>().Operator.OperatorType);
-            Assert.AreEqual("Bar", listOfNodes[13].CastAs<ValueNode>().Value);
-            Assert.AreEqual(typeof(EndGroupNode), listOfNodes[14].GetType());
+            Assert.AreEqual("MyString", listOfNodes[2].CastAs<StringStartsWithMemberNode>().Path);
+            Assert.AreEqual(typeof(string), listOfNodes[2].CastAs<StringStartsWithMemberNode>().DataType);
+            Assert.AreEqual(Operator.Types.Or, listOfNodes[3].CastAs<OperatorNode>().Operator.OperatorType);
+            Assert.AreEqual("MyInt", listOfNodes[4].CastAs<MemberNode>().Path);
+            Assert.AreEqual(typeof(int), listOfNodes[4].CastAs<MemberNode>().DataType);
+            Assert.AreEqual(Operator.Types.Equal, listOfNodes[5].CastAs<OperatorNode>().Operator.OperatorType);
+            Assert.AreEqual(42, listOfNodes[6].CastAs<ValueNode>().Value);
+            Assert.AreEqual(typeof(EndGroupNode), listOfNodes[7].GetType());
+            Assert.AreEqual(Operator.Types.Or, listOfNodes[8].CastAs<OperatorNode>().Operator.OperatorType);
+            Assert.AreEqual("MyListOfStrings", listOfNodes[9].CastAs<MemberNode>().Path);
+            Assert.AreEqual(typeof(string), listOfNodes[9].CastAs<MemberNode>().DataType);
+            Assert.AreEqual(Operator.Types.Equal, listOfNodes[10].CastAs<OperatorNode>().Operator.OperatorType);
+            Assert.AreEqual("Bar", listOfNodes[11].CastAs<ValueNode>().Value);
+            Assert.AreEqual(typeof(EndGroupNode), listOfNodes[12].GetType());
         }
 
         private class MyClass
