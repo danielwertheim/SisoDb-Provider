@@ -11,6 +11,14 @@ namespace SisoDb
         }
     }
 
+    public static class SingleValueTypeQueryExtensions
+    {
+        public static bool QxIn<T>(this T m, params T[] s) where T : struct 
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public static class StringQueryExtensions
     {
         public static bool QxLike(this string m, string value)
