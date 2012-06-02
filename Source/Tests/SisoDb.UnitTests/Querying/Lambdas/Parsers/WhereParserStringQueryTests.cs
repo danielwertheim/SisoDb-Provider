@@ -183,6 +183,22 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
+        public void Parse_WhenQxEquals_ReturnsCorrectNodes()
+        {
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxEquals("Foo"));
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            Assert.AreEqual(1, listOfNodes.Count);
+
+            var memberNode = (StringEqualsMemberNode)listOfNodes[0];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("Foo", memberNode.Value);
+        }
+
+        [Test]
         public void Parse_WhenQxContains_ReturnsCorrectNodes()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxContains("Foo"));

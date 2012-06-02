@@ -113,6 +113,12 @@ namespace SisoDb.Querying.Sql
                 return;
             }
 
+            if (memberNode is StringEqualsMemberNode)
+            {
+                OnProcessWhereStringEqualsMemberNode(builder, (StringContainsMemberNode)memberNode, memberIndex);
+                return;
+            }
+
             if (memberNode is StringEndsWithMemberNode)
             {
                 OnProcessWhereStringEndsWithMemberNode(builder, (StringEndsWithMemberNode)memberNode, memberIndex);
@@ -160,6 +166,13 @@ namespace SisoDb.Querying.Sql
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value, "%").Replace("%%", "%")));
+        }
+
+        protected virtual void OnProcessWhereStringEqualsMemberNode(WhereCriteriaBuilder builder, StringContainsMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex);
+            builder.AddOp(new OperatorNode(Operator.Equal()));
+            builder.AddValue(new ValueNode(memberNode.Value));
         }
 
         protected virtual void OnProcessWhereStringEndsWithMemberNode(WhereCriteriaBuilder builder, StringEndsWithMemberNode memberNode, int memberIndex)

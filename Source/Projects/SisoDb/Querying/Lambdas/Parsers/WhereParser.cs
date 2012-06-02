@@ -310,6 +310,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 case "QxLike":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLikeNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
+                case "QxEquals":
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringEqualsNode(e.Arguments[1].Evaluate().ToStringOrNull()));
+                    break;
                 case "ToLower":
                 case "QxToLower":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());

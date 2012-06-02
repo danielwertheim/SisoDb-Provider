@@ -26,7 +26,7 @@ namespace SisoDb.Serialization
         /// <param name="items"></param>
         /// <returns></returns>
         IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class;
-        
+
         /// <summary>
         /// Deserializes sent JSON as <see cref="T"/>.
         /// </summary>
@@ -62,7 +62,7 @@ namespace SisoDb.Serialization
         /// <param name="templateType"></param>
         /// <returns></returns>
         TTemplate DeserializeUsingTemplate<TTemplate>(string json, Type templateType) where TTemplate : class;
-        
+
         /// <summary>
         /// Deserializes sent JSON to yielded stream of <see cref="T"/>.
         /// Either done sequentially or in parallel. It is controlled by <see cref="DeserializeManyInParallel"/>

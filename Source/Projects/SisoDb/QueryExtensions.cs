@@ -26,6 +26,11 @@ namespace SisoDb
             throw new NotImplementedException();
         }
 
+        public static bool QxEquals(this string m, string value)
+        {
+            throw new NotImplementedException();
+        }
+
         public static bool QxStartsWith(this string m, string value)
         {
             throw new NotImplementedException();
