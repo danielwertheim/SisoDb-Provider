@@ -14,11 +14,13 @@ namespace SisoDb.SqlServer
 
         static TableParams()
         {
-            Creators = new Dictionary<Type, Func<string, object[], SqlParameter>>();
-            Creators.Add(typeof(int), CreateForIntegers);
-            Creators.Add(typeof(int?), CreateForIntegers);
-            Creators.Add(typeof(long), CreateForIntegers);
-            Creators.Add(typeof(long?), CreateForIntegers);
+            Creators = new Dictionary<Type, Func<string, object[], SqlParameter>>
+            {
+                { typeof (int), CreateForIntegers },
+                { typeof (int?), CreateForIntegers },
+                { typeof (long), CreateForIntegers },
+                { typeof (long?), CreateForIntegers }
+            };
         }
 
         public static SqlParameter Create(string name, object[] values)
