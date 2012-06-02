@@ -558,9 +558,9 @@ begin
 create type SisoGuidIds as table (Id uniqueidentifier primary key not null);	
 end
 
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'StructureIdentityIds') is null
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIdentityIds') is null
 begin
-create type StructureIdentityIds as table (Id bigint primary key not null);	
+create type SisoIdentityIds as table (Id bigint primary key not null);	
 end
 
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStringIds') is null

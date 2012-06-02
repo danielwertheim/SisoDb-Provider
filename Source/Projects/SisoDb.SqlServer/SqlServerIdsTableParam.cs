@@ -33,7 +33,7 @@ namespace SisoDb.SqlServer
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
                 Value = ids.Select(id => CreateBigIdentityIdRecord(id)),
-                TypeName = "StructureIdentityIds"
+                TypeName = "SisoIdentityIds"
             };
         }
 
@@ -42,7 +42,7 @@ namespace SisoDb.SqlServer
             return new SqlParameter("@ids", SqlDbType.Structured)
             {
                 Value = ids.Select(CreateBigIdentityIdRecord),
-                TypeName = "StructureIdentityIds"
+                TypeName = "SisoIdentityIds"
             };
         }
 
