@@ -27,14 +27,14 @@ namespace SisoDb.Specifications.Database
             It should_have_created_custom_ids_data_types = () =>
             {
                 _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
-                _testContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeTrue();
+                _testContext.DbHelper.TypeExists("SisoIdentityIds").ShouldBeTrue();
             };
 #endif
 #if SqlCe4Provider
             It should_not_have_created_custom_ids_data_types = () =>
             {
                 _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeFalse();
-                _testContext.DbHelper.TypeExists("StructureIdentityIds").ShouldBeFalse();
+                _testContext.DbHelper.TypeExists("SisoIdentityIds").ShouldBeFalse();
             };
 #endif
             private static ITestContext _testContext;
