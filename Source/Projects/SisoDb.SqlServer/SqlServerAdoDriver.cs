@@ -63,6 +63,9 @@ namespace SisoDb.SqlServer
             var dbParam = (SqlParameter)parameter;
             var setSize = false;
 
+            if (DbSchemas.Parameters.ShouldBeMultivalue(dacParameter))
+                return TableParams.Create(dbParam.ParameterName, (object[]) dacParameter.Value);
+
             if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
             {
                 dbParam.DbType = DbType.DateTime2;

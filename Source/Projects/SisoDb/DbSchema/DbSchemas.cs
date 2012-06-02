@@ -41,6 +41,11 @@ namespace SisoDb.DbSchema
                 StringValueForValueTypeIndexParamName = string.Concat("@", IndexStorageSchema.Fields.StringValue.Name);
             }
 
+            public static bool ShouldBeMultivalue(IDacParameter param)
+            {
+                return param is ArrayDacParameter;
+            }
+
             public static bool ShouldBeDateTime(IDacParameter param)
             {
                 return param.Value is DateTime;

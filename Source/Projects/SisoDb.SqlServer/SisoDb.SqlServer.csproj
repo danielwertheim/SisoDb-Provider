@@ -63,6 +63,7 @@
     <Compile Include="SqlServerDbClient.cs" />
     <Compile Include="SqlServerIdsTableParam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TableParams.cs" />
     <Compile Include="Transactions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using EnsureThat;
+using Microsoft.SqlServer.Server;
+
+namespace SisoDb.SqlServer
+{
+    public static class TableParams
+    {
+        private static readonly Dictionary<Type, Func<string, object[], SqlParameter>> Creators;
+
+        static TableParams()
+        {
+            Creators = new Dictionary<Type, Func<string, object[], SqlParameter>>();
+            Creators.Add(typeof(int), CreateForIntegers);
+            Creators.Add(typeof(int?), CreateForIntegers);
+            Creators.Add(typeof(long), CreateForIntegers);
+            Creators.Add(typeof(long?), CreateForIntegers);
+        }
+
+        public static SqlParameter Create(string name, object[] values)
+        {
+            Ensure.That(values, "values").HasItems();
+
+            return Creators[values[0].GetType()].Invoke(name, values);
+        }
+
+        private static SqlParameter CreateForIntegers(string name, object[] values)
+        {
+            return new SqlParameter(name, SqlDbType.Structured)
+            {
+                Value = values.Cast<int>().Select(CreateIntegerRecord),
+                TypeName = "SisoIntegers"
+            };
+        }
+
+        private static SqlDataRecord CreateIntegerRecord(int value)
+        {
+            var record = new SqlDataRecord(new SqlMetaData("Value", SqlDbType.BigInt));
+
+            record.SetInt64(0, value);
+
+            return record;
+        }
+    }
+}
