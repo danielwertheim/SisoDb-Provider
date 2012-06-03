@@ -8,11 +8,11 @@ using Microsoft.SqlServer.Server;
 
 namespace SisoDb.SqlServer
 {
-    public static class TableParams
+    public class SqlServerTableParams
     {
-        private static readonly Dictionary<Type, Func<string, object[], SqlParameter>> Creators;
+        protected static readonly Dictionary<Type, Func<string, object[], SqlParameter>> Creators;
 
-        static TableParams()
+        static SqlServerTableParams()
         {
             Creators = new Dictionary<Type, Func<string, object[], SqlParameter>>
             {
@@ -23,7 +23,7 @@ namespace SisoDb.SqlServer
             };
         }
 
-        public static SqlParameter Create(string name, object[] values)
+        public virtual SqlParameter Create(string name, object[] values)
         {
             Ensure.That(values, "values").HasItems();
 
@@ -34,12 +34,12 @@ namespace SisoDb.SqlServer
         {
             return new SqlParameter(name, SqlDbType.Structured)
             {
-                Value = values.Cast<int>().Select(CreateIntegerRecord),
+                Value = values.Cast<long>().Select(CreateIntegerRecord),
                 TypeName = "SisoIntegers"
             };
         }
 
-        private static SqlDataRecord CreateIntegerRecord(int value)
+        private static SqlDataRecord CreateIntegerRecord(long value)
         {
             var record = new SqlDataRecord(new SqlMetaData("Value", SqlDbType.BigInt));
 
