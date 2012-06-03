@@ -52,7 +52,7 @@ namespace SisoDb.SqlServer
 
                 parameter = OnParameterCreated(parameter, dacParameter);
 
-                parameter.Value = dacParameter.Value; //PERF: Yes, value should be set after OnParameterCreated
+                parameter.Value = dacParameter.Value; //PERF: Yes, value should be set after OnParameterCreated otherwise ADO.Net will do some type mapping before we do.
 
                 cmd.Parameters.Add(parameter);
             }
