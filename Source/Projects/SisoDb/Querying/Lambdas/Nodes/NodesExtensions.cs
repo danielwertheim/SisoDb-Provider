@@ -27,9 +27,9 @@ namespace SisoDb.Querying.Lambdas.Nodes
             return new LikeMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, value);
         }
 
-        public static StringEqualsMemberNode ToStringEqualsNode(this MemberNode memberNode, string value)
+        public static StringEqualsMemberNode ToStringEqualsNode(this MemberNode memberNode, bool isTextType, string value, bool exactMatch = false)
         {
-            return new StringEqualsMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, value);
+            return new StringEqualsMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, isTextType, value, exactMatch);
         }
 
         public static StringContainsMemberNode ToStringContainsNode(this MemberNode memberNode, string value)

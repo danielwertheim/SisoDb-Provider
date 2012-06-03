@@ -8,10 +8,16 @@ namespace SisoDb.Querying.Lambdas.Nodes
     {
         public string Value { get; set; }
 
-        public StringEqualsMemberNode(string memberPath, Type dataType, DataTypeCode dataTypeCode, string value)
+        public bool ExactMatch { get; set; }
+
+        public bool IsTextType { get; set; }
+
+        public StringEqualsMemberNode(string memberPath, Type dataType, DataTypeCode dataTypeCode, bool isTextType, string value, bool exactMatch)
             : base(memberPath, dataType, dataTypeCode)
         {
             Value = value;
+            ExactMatch = exactMatch;
+            IsTextType = isTextType;
         }
     }
 }

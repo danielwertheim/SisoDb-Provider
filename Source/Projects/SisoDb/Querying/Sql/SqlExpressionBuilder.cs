@@ -115,7 +115,7 @@ namespace SisoDb.Querying.Sql
 
             if (memberNode is StringEqualsMemberNode)
             {
-                OnProcessWhereStringEqualsMemberNode(builder, (StringContainsMemberNode)memberNode, memberIndex);
+                OnProcessWhereStringEqualsMemberNode(builder, (StringEqualsMemberNode)memberNode, memberIndex);
                 return;
             }
 
@@ -168,7 +168,7 @@ namespace SisoDb.Querying.Sql
             builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value, "%").Replace("%%", "%")));
         }
 
-        protected virtual void OnProcessWhereStringEqualsMemberNode(WhereCriteriaBuilder builder, StringContainsMemberNode memberNode, int memberIndex)
+        protected virtual void OnProcessWhereStringEqualsMemberNode(WhereCriteriaBuilder builder, StringEqualsMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Equal()));
