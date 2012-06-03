@@ -89,8 +89,8 @@ namespace SisoDb.Querying.Sql
         public virtual void AddOp(OperatorNode op)
         {
             var opSql = string.Format(op.Operator is NotOperator ? "{0} " : " {0} ", op);
-            if (SqlContains("[%OP%]"))
-                Sql = Sql.Replace("[%OP%]", opSql);
+            if (SqlContains(OpMarker))
+                Sql = Sql.Replace(OpMarker, opSql);
             else
                 Sql.Append(opSql);
         }
