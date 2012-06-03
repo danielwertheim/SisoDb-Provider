@@ -8,9 +8,9 @@ using Microsoft.SqlServer.Server;
 
 namespace SisoDb.SqlServer
 {
-    public class SqlServerTableParams
+    public static class SqlServerTableParams
     {
-        protected static readonly Dictionary<Type, Func<string, object[], SqlParameter>> Creators;
+        private static readonly Dictionary<Type, Func<string, object[], SqlParameter>> Creators;
 
         static SqlServerTableParams()
         {
@@ -23,7 +23,7 @@ namespace SisoDb.SqlServer
             };
         }
 
-        public virtual SqlParameter Create(string name, object[] values)
+        public static SqlParameter Create(string name, object[] values)
         {
             Ensure.That(values, "values").HasItems();
 

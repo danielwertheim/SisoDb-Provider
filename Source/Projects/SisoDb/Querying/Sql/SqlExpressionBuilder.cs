@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using System.Linq.Expressions;
 using EnsureThat;
-using NCore;
 using NCore.Collections;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas;
