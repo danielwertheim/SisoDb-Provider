@@ -127,7 +127,9 @@
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ArrayValueNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\IMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\InSetMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\IStringOperationMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\LikeMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StringEndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="SisoDbNotSupportedException.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
+    <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />

@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.Text;
 using EnsureThat;
 using NCore.Reflections;
+using PineCone.Structures;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
+using SisoDb.Structures;
 
 namespace SisoDb.Querying.Sql
 {
@@ -80,10 +82,10 @@ namespace SisoDb.Querying.Sql
             if (member is ToUpperMemberNode)
                 memFormat = string.Format("upper({0})", memFormat);
 
-        	if ((member is StringStartsWithMemberNode || member is StringEndsWithMemberNode) && !(member.DataType.IsStringType() || member.DataType.IsAnyEnumType()))
-        		return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name);
-
-        	return string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
+            var shouldUseExplicitStringValue = member is IStringOperationMemberNode && member.DataTypeCode.IsValueType();
+        	return shouldUseExplicitStringValue
+                ? string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name)
+                : string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
         }
 
         public virtual void AddOp(OperatorNode op)
