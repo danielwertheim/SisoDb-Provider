@@ -51,36 +51,6 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
             private static IList<QueryGuidItem> _fetchedStructures;
         }
 
-        //[Subject(typeof(ISession), "QxLike")]
-        //public class when_two_items_has_string_that_ends_with_queried_argument : SpecificationBase
-        //{
-        //    Establish context = () =>
-        //    {
-        //        TestContext = TestContextFactory.Create();
-        //        _structures = QueryGuidItem.CreateItems<QueryGuidItem>(10, (i, item) =>
-        //        {
-        //            item.SortOrder = i + 1;
-        //            item.StringValue = item.SortOrder <= 2 ? "Alpha" : "Bravo";
-        //        });
-        //        TestContext.Database.UseOnceTo().InsertMany(_structures);
-        //    };
-
-        //    Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-        //            .Query<QueryGuidItem>().Where(i => i.StringValue.QxLike("%ha")).ToList();
-
-        //    It should_have_fetched_two_structures =
-        //        () => _fetchedStructures.Count.ShouldEqual(2);
-
-        //    It should_have_fetched_the_two_first_structures = () =>
-        //    {
-        //        _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
-        //        _fetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
-        //    };
-
-        //    private static IList<QueryGuidItem> _structures;
-        //    private static IList<QueryGuidItem> _fetchedStructures;
-        //}
-
         [Subject(typeof(ISession), "QxEquals")]
         public class when_two_items_has_string_that_completely_matches_argument : SpecificationBase
         {
