@@ -3,8 +3,8 @@ using PineCone.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
-	[Serializable]
-	public class StringStartsWithMemberNode : MemberNode
+    [Serializable]
+	public class StringStartsWithMemberNode : MemberNode, IStringOperationMemberNode
 	{
         public string Value { get; private set; }
 
