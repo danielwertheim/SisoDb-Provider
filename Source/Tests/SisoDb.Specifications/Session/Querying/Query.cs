@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
+using NCore;
 using SisoDb.Dynamic;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
@@ -11,7 +12,7 @@ namespace SisoDb.Specifications.Session.Querying
     class Query
     {
         [Subject(typeof(ISisoQueryable<>), "Query")]
-        public class when_using_plain_bool_and_nullable_value_type_hasvalue_and_chained_wheres_in_expression : SpecificationBase
+        public class when_using_plain_bool_and_nullable_int_hasvalue_and_chained_wheres_in_expression : SpecificationBase
         {
             Establish context = () =>
             {
@@ -21,6 +22,7 @@ namespace SisoDb.Specifications.Session.Querying
 				{
 					new QueryNullableItem { NullableInt = null, BoolValue = true, StringValue = "Null" },
 					new QueryNullableItem { NullableInt = 1, BoolValue = false, StringValue = "One" },
+                    new QueryNullableItem { NullableInt = 41, BoolValue = true, StringValue = "Fourthy one"},
 					new QueryNullableItem { NullableInt = 42, BoolValue = true, StringValue = "Fourthy two"}
 				};
 
@@ -28,21 +30,20 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
-                .Where(i => i.BoolValue && i.NullableInt.HasValue && i.NullableInt != null).Where(i => i.NullableInt == 42).ToList();
+                .Where(i => i.BoolValue && i.NullableInt.HasValue).Where(i => i.NullableInt == 42).ToList();
 
             It should_have_fetched_one_structure =
                 () => _fetchedStructures.Count.ShouldEqual(1);
 
-            It should_have_fetched_the_last_structure =
-                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[2]);
-
+            It should_have_fetched_the_structure_having_true_bool_and_non_null_int_where_int_is_42 =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[3]);
 
             private static IList<QueryNullableItem> _structures;
             private static IList<QueryNullableItem> _fetchedStructures;
         }
 
         [Subject(typeof(ISisoQueryable<>), "Query")]
-        public class when_using_nullable_value_types_in_expression : SpecificationBase
+        public class when_using_plain_bool_and_nullable_int_notnull_and_chained_wheres_in_expression : SpecificationBase
         {
             Establish context = () =>
             {
@@ -50,8 +51,39 @@ namespace SisoDb.Specifications.Session.Querying
 
                 _structures = new List<QueryNullableItem>
 				{
-					new QueryNullableItem { NullableInt = null, StringValue = "Null" },
+					new QueryNullableItem { NullableInt = null, BoolValue = true, StringValue = "Null" },
+					new QueryNullableItem { NullableInt = 1, BoolValue = false, StringValue = "One" },
+                    new QueryNullableItem { NullableInt = 41, BoolValue = true, StringValue = "Fourthy one"},
+					new QueryNullableItem { NullableInt = 42, BoolValue = true, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.BoolValue && i.NullableInt != null).Where(i => i.NullableInt == 42).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_true_bool_and_non_null_int_where_int_is_42 =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[3]);
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_int_hasvalue_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
 					new QueryNullableItem { NullableInt = 1, StringValue = "One" },
+                    new QueryNullableItem { NullableInt = null, StringValue = "Null" },
 					new QueryNullableItem { NullableInt = 42, StringValue = "Fourthy two"}
 				};
 
@@ -59,16 +91,428 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
-                .Where(i => i.NullableInt.HasValue && i.NullableInt != null).ToList();
+                .Where(i => i.NullableInt.HasValue).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
 
-            It should_have_fetched_the_two_last_structures = () =>
+            It should_have_fetched_the_structures_having_an_int = () =>
             {
-                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
                 _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
             };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_int_notnull_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableInt = 1, StringValue = "One" },
+                    new QueryNullableItem { NullableInt = null, StringValue = "Null" },
+					new QueryNullableItem { NullableInt = 42, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableInt != null).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_structures_having_an_int = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_int_not_hasvalue_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableInt = 1, StringValue = "One" },
+                    new QueryNullableItem { NullableInt = null, StringValue = "Null" },
+					new QueryNullableItem { NullableInt = 42, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableInt.HasValue == false).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_a_nullableint_being_null = 
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_int_isnull_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableInt = 1, StringValue = "One" },
+                    new QueryNullableItem { NullableInt = null, StringValue = "Null" },
+					new QueryNullableItem { NullableInt = 42, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableInt == null).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_a_nullableint_being_null = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_decimal_hasvalue_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDecimal = 1M, StringValue = "One" },
+                    new QueryNullableItem { NullableInt = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDecimal = 42M, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDecimal.HasValue).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_structures_having_an_int = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_decimal_notnull_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDecimal = 1M, StringValue = "One" },
+                    new QueryNullableItem { NullableDecimal = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDecimal = 42M, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDecimal != null).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_structures_having_an_int = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_decimal_not_hasvalue_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDecimal = 1M, StringValue = "One" },
+                    new QueryNullableItem { NullableDecimal = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDecimal = 42M, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDecimal.HasValue == false).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_a_nullableint_being_null =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_decimal_isnull_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDecimal = 1M, StringValue = "One" },
+                    new QueryNullableItem { NullableDecimal = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDecimal = 42M, StringValue = "Fourthy two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDecimal == null).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_a_nullableint_being_null = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_datetime_hasvalue_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "One" },
+                    new QueryNullableItem { NullableDateTime = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "Two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDateTime.HasValue).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_structures_having_a_datetime = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_datetime_notnull_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "One" },
+                    new QueryNullableItem { NullableDateTime = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "Two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDateTime != null).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_structures_having_a_datetime = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_datetime_not_hasvalue_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "One" },
+                    new QueryNullableItem { NullableDateTime = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "Two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDateTime.HasValue == false).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_an_nullableint_being_null =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_nullable_datetime_isnull_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "One" },
+                    new QueryNullableItem { NullableDateTime = null, StringValue = "Null" },
+					new QueryNullableItem { NullableDateTime = SysDateTime.Now, StringValue = "Two"}
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.NullableDateTime == null).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_an_nullabledatetime_being_null =
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_string_notnull_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableInt = 1, StringValue = "1" },
+					new QueryNullableItem { NullableInt = 2, StringValue = null },
+					new QueryNullableItem { NullableInt = 3, StringValue = "2" }
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.StringValue != null).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_structures_having_not_null_in_stringvalue = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryNullableItem> _structures;
+            private static IList<QueryNullableItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query")]
+        public class when_using_string_null_in_expression : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new List<QueryNullableItem>
+				{
+					new QueryNullableItem { NullableInt = 1, StringValue = "1" },
+					new QueryNullableItem { NullableInt = 2, StringValue = null },
+					new QueryNullableItem { NullableInt = 3, StringValue = "2" }
+				};
+
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryNullableItem>()
+                .Where(i => i.StringValue == null).ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_fetched_the_structure_having_null_in_stringvalue = 
+                () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
 
             private static IList<QueryNullableItem> _structures;
             private static IList<QueryNullableItem> _fetchedStructures;
