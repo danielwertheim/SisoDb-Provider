@@ -10,6 +10,8 @@ namespace SisoDb.Specifications.Model
 
 		public int? NullableInt { get; set; }
 
+        public DateTime? NullableDateTime { get; set; }
+
 		public string StringValue { get; set; }
 	}
 }
