@@ -130,7 +130,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             else
                 Visit(e.Left);
 
-            if (ExpressionUtils.IsNullConstant(e.Right))
+            if (ExpressionUtils.ExpressionRepresentsNullValue(e.Right))
                 Nodes.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
                 Nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
