@@ -12,6 +12,8 @@ namespace SisoDb.Specifications.Model
 
         public DateTime? NullableDateTime { get; set; }
 
+        public Decimal? NullableDecimal { get; set; }
+
 		public string StringValue { get; set; }
 	}
 }
