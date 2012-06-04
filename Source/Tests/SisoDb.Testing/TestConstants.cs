@@ -1,14 +1,18 @@
-﻿namespace SisoDb.Testing
+﻿using System;
+
+namespace SisoDb.Testing
 {
     public class TestConstants
     {
+        public static readonly DateTime FixedDateTime = new DateTime(2012, 1, 2, 3, 4, 5, 6);
+
         public const string ConnectionStringNameForSql2008 = "SisoDb.Sql2008";
 
         public const string ConnectionStringNameForSql2008Temp = "SisoDb.Sql2008.Temp";
 
-		public const string ConnectionStringNameForSql2012 = "SisoDb.Sql2012";
+        public const string ConnectionStringNameForSql2012 = "SisoDb.Sql2012";
 
-		public const string ConnectionStringNameForSql2012Temp = "SisoDb.Sql2012.Temp";
+        public const string ConnectionStringNameForSql2012Temp = "SisoDb.Sql2012.Temp";
 
         public const string ConnectionStringNameForSqlCe4 = "SisoDb.SqlCe4";
 

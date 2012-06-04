@@ -3,7 +3,7 @@ using Machine.Specifications;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
 
-namespace SisoDb.Specifications.UnitOfWork
+namespace SisoDb.Specifications.Session
 {
 #if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
     class TransactionScopes

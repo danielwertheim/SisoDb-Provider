@@ -141,6 +141,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\InsertAs.cs">
       <Link>Session\InsertAs.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\InsertBigStructures.cs">
+      <Link>Session\InsertBigStructures.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Inserts.cs">
       <Link>Session\Inserts.cs</Link>
     </Compile>
@@ -200,6 +203,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\NamedQueries.cs">
       <Link>Session\Querying\NamedQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\Projection.cs">
+      <Link>Session\Querying\Projection.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Query.cs">
       <Link>Session\Querying\Query.cs</Link>
@@ -268,7 +274,6 @@
       <Link>TestContextFactory.cs</Link>
     </Compile>
     <Compile Include="AssemblyContext.cs" />
-    <Compile Include="ContextCleanup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
