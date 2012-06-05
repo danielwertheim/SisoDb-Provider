@@ -34,12 +34,12 @@ namespace SisoDb.SqlServer
         {
             return new SqlParameter(name, SqlDbType.Structured)
             {
-                Value = values.Cast<long>().Select(CreateIntegerRecord),
+                Value = values.Cast<int>().Select(CreateIntegerRecord),
                 TypeName = "SisoIntegers"
             };
         }
 
-        private static SqlDataRecord CreateIntegerRecord(long value)
+        private static SqlDataRecord CreateIntegerRecord(int value)
         {
             var record = new SqlDataRecord(new SqlMetaData("Value", SqlDbType.BigInt));
 

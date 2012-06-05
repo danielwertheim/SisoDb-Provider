@@ -1,8 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using EnsureThat;
-using NCore.Reflections;
-using PineCone.Structures;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas.Nodes;
@@ -91,6 +90,16 @@ namespace SisoDb.Querying.Sql
         public virtual void AddOp(OperatorNode op)
         {
             var opSql = string.Format(op.Operator is NotOperator ? "{0} " : " {0} ", op);
+            AppendOperator(opSql);
+        }
+
+        public virtual void AddOpWithContainedValues(OperatorNode op, Action valueAppender)
+        {
+            AppendOperator("()");
+        }
+
+        protected virtual void AppendOperator(string opSql)
+        {
             if (SqlContains("[%OP%]"))
                 Sql = Sql.Replace("[%OP%]", opSql);
             else
