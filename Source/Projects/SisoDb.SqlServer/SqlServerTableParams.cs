@@ -18,8 +18,8 @@ namespace SisoDb.SqlServer
             {
                 { typeof (int), CreateForIntegers },
                 { typeof (int?), CreateForIntegers },
-                { typeof (long), CreateForIntegers },
-                { typeof (long?), CreateForIntegers }
+                { typeof (long), CreateForLongs },
+                { typeof (long?), CreateForLongs }
             };
         }
 
@@ -40,6 +40,24 @@ namespace SisoDb.SqlServer
         }
 
         private static SqlDataRecord CreateIntegerRecord(int value)
+        {
+            var record = new SqlDataRecord(new SqlMetaData("Value", SqlDbType.Int));
+
+            record.SetInt32(0, value);
+
+            return record;
+        }
+
+        private static SqlParameter CreateForLongs(string name, object[] values)
+        {
+            return new SqlParameter(name, SqlDbType.Structured)
+            {
+                Value = values.Cast<long>().Select(CreateLongRecord),
+                TypeName = "SisoIntegers"
+            };
+        }
+
+        private static SqlDataRecord CreateLongRecord(long value)
         {
             var record = new SqlDataRecord(new SqlMetaData("Value", SqlDbType.BigInt));
 

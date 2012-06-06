@@ -54,31 +54,24 @@ namespace SisoDb.Querying.Sql
 
         	for (var i = 0; i < lambda.Nodes.Length; i++)
         	{
-                if(i > 0)
-                    builder.Flush();
-
         		var node = lambda.Nodes[i];
-                if(node is MemberNode)
-                {
-                    OnProcessWhereMemberNode(lambda, expression, builder, i, (MemberNode)node);
-                    continue;
-                }
+        	    if (node is MemberNode)
+        	        OnProcessWhereMemberNode(lambda, expression, builder, i, (MemberNode) node);
+        	    else if (node is OperatorNode)
+        	        builder.AddOp((OperatorNode) node);
+        	    else if (node is ValueNode)
+        	        builder.AddValue((ValueNode) node);
+        	    else if (node is NullNode)
+        	        builder.AddNullValue((NullNode) node);
+        	    else
+        	        builder.AddRaw(node.ToString());
 
-        		if (node is OperatorNode)
-        			builder.AddOp((OperatorNode) node);
-        		else if (node is ValueNode)
-        			builder.AddValue((ValueNode) node);
-        		else if (node is NullNode)
-        			builder.AddNullValue((NullNode) node);
-        		else
-        			builder.Sql.Append(node);
+        	    builder.Flush();
         	}
 
-            builder.Flush();
-
-        	var whereCriteria = builder.Sql.Length > 0 
-                ? new SqlWhereCriteria(builder.Sql.ToString(), builder.Params.ToArray())
-                : SqlWhereCriteria.Empty();
+            var whereCriteria = builder.IsEmpty
+                ? SqlWhereCriteria.Empty()
+                : new SqlWhereCriteria(builder.Sql, builder.Params.ToArray());
 
             expression.SetWhereCriteria(whereCriteria);
         }
@@ -143,7 +136,7 @@ namespace SisoDb.Querying.Sql
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.InSet()));
-            builder.AddValues(new ArrayValueNode(memberNode.Values));
+            builder.AddSetOfValues(new ArrayValueNode(memberNode.Values));
         }
 
         protected virtual void OnProcessWhereLikeMemberNode(WhereCriteriaBuilder builder, LikeMemberNode memberNode, int memberIndex)
