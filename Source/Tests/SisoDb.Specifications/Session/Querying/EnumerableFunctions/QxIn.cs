@@ -20,6 +20,7 @@ namespace SisoDb.Specifications.Session.Querying.EnumerableFunctions
                     new Model { IntValue = 3 }, 
                     new Model { IntValue = 4 }
                 };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
             Because of = () =>

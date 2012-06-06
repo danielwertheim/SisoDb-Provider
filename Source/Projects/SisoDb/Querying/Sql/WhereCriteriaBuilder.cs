@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using EnsureThat;
@@ -12,17 +11,28 @@ namespace SisoDb.Querying.Sql
 {
     public class WhereCriteriaBuilder
     {
-        public const string OpMarker = "[%OP%]";
-        public const string ValueMarker = "[%VALUE%]";
+        private const string OpMarker = "[%OP%]";
+        private const string ValueMarker = "[%VALUE%]";
 
-        public StringBuilder Sql { get; protected set; }
+        protected StringBuilder State;
+        protected bool HasWrittenMember;
+        protected bool HasWrittenValue;
+
         public ISet<IDacParameter> Params { get; protected set; }
-        public bool HasWrittenMember { get; set; }
-        public bool HasWrittenValue { get; set; }
+        
+        public bool IsEmpty
+        {
+            get { return State.Length == 0; }
+        }
+
+        public string Sql
+        {
+            get { return State.ToString(); }
+        }
 
         public WhereCriteriaBuilder()
         {
-            Sql = new StringBuilder();
+            State = new StringBuilder();
             Params = new HashSet<IDacParameter>();
         }
 
@@ -33,14 +43,9 @@ namespace SisoDb.Querying.Sql
                 HasWrittenMember = false;
                 HasWrittenValue = false;
 
-                Sql = Sql.Replace(OpMarker, string.Empty);
-                Sql = Sql.Replace(ValueMarker, string.Empty);
+                State = State.Replace(OpMarker, string.Empty);
+                State = State.Replace(ValueMarker, string.Empty);
             }
-        }
-
-        protected virtual bool SqlContains(string value)
-        {
-            return Sql.ToString().Contains(value);
         }
 
         public virtual void AddMember(MemberNode member, int memberIndex)
@@ -49,19 +54,18 @@ namespace SisoDb.Querying.Sql
 
             if (!HasWrittenMember)
             {
-                Sql.AppendFormat("({0}{1}{2})",
+                State.AppendFormat("({0}{1}{2})",
                     GetMemberNodeString(member, memberIndex),
                     OpMarker,
                     ValueMarker);
 
                 HasWrittenMember = true;
-
                 return;
             }
 
             if (!HasWrittenValue)
             {
-                Sql = Sql.Replace(ValueMarker,
+                State = State.Replace(ValueMarker,
                     string.Format("({0}{1}{2})",
                     GetMemberNodeString(member, memberIndex),
                     OpMarker,
@@ -69,6 +73,56 @@ namespace SisoDb.Querying.Sql
 
                 HasWrittenValue = true;
             }
+        }
+
+        public virtual void AddOp(OperatorNode op)
+        {
+            var opSql = string.Format(op.Operator is NotOperator ? "{0} " : " {0} ", op);
+            if (SqlContains(OpMarker))
+                State = State.Replace(OpMarker, opSql);
+            else
+                State.Append(opSql);
+        }
+
+        public virtual void AddValue(ValueNode valueNode)
+        {
+            var param = new DacParameter(GetNextParameterName(), valueNode.Value);
+            Params.Add(param);
+
+            OnAddValue(param.Name);
+        }
+
+        public virtual void AddNullValue(NullNode nullNode)
+        {
+            OnAddValue(nullNode.ToString());
+        }
+
+        public virtual void AddSetOfValues(ArrayValueNode valueNode)
+        {
+            var param = new ArrayDacParameter(GetNextParameterName(), valueNode.Value);
+            Params.Add(param);
+
+            OnAddValue(string.Concat("(select [Value] from ", param.Name, ")"));
+        }
+
+        public virtual void AddRaw(string sql)
+        {
+            State.Append(sql);
+        }
+
+        protected virtual void OnAddValue(string value)
+        {
+            if (SqlContains(ValueMarker))
+                State = State.Replace(ValueMarker, value);
+            else
+                State.Append(value);
+
+            HasWrittenValue = true;
+        }
+
+        protected string GetNextParameterName()
+        {
+            return string.Concat("p", Params.Count);
         }
 
         protected virtual string GetMemberNodeString(MemberNode member, int memberIndex)
@@ -82,64 +136,14 @@ namespace SisoDb.Querying.Sql
                 memFormat = string.Format("upper({0})", memFormat);
 
             var shouldUseExplicitStringValue = member is IStringOperationMemberNode && member.DataTypeCode.IsValueType();
-        	return shouldUseExplicitStringValue
+            return shouldUseExplicitStringValue
                 ? string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name)
                 : string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
         }
 
-        public virtual void AddOp(OperatorNode op)
+        protected virtual bool SqlContains(string value)
         {
-            var opSql = string.Format(op.Operator is NotOperator ? "{0} " : " {0} ", op);
-            AppendOperator(opSql);
-        }
-
-        public virtual void AddOpWithContainedValues(OperatorNode op, Action valueAppender)
-        {
-            AppendOperator("()");
-        }
-
-        protected virtual void AppendOperator(string opSql)
-        {
-            if (SqlContains("[%OP%]"))
-                Sql = Sql.Replace("[%OP%]", opSql);
-            else
-                Sql.Append(opSql);
-        }
-
-        public virtual void AddValue(ValueNode valueNode)
-        {
-            var param = new DacParameter(string.Concat("p", Params.Count), valueNode.Value);
-            Params.Add(param);
-
-            if (SqlContains(ValueMarker))
-                Sql = Sql.Replace(ValueMarker, param.Name);
-            else
-                Sql.Append(param.Name);
-
-            HasWrittenValue = true;
-        }
-
-        public virtual void AddValues(ArrayValueNode valueNode)
-        {
-            var param = new ArrayDacParameter(string.Concat("p", Params.Count), valueNode.Value);
-            Params.Add(param);
-
-            if (SqlContains(ValueMarker))
-                Sql = Sql.Replace(ValueMarker, param.Name);
-            else
-                Sql.Append(param.Name);
-
-            HasWrittenValue = true;
-        }
-
-        public virtual void AddNullValue(NullNode nullNode)
-        {
-            if (SqlContains(ValueMarker))
-                Sql = Sql.Replace(ValueMarker, nullNode.ToString());
-            else
-                Sql.Append(nullNode);
-
-            HasWrittenValue = true;
+            return State.ToString().Contains(value);
         }
     }
 }
