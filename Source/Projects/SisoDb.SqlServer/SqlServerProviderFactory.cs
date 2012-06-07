@@ -118,7 +118,12 @@ namespace SisoDb.SqlServer
 
 	    public virtual ISqlExpressionBuilder GetSqlExpressionBuilder()
         {
-            return new SqlExpressionBuilder();
+            return new SqlExpressionBuilder(GetWhereCriteriaBuilder);
+        }
+
+        public virtual ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
+        {
+            return new SqlWhereCriteriaBuilder();
         }
 
 	    public abstract IDbQueryGenerator GetDbQueryGenerator();

@@ -9,7 +9,7 @@ using SisoDb.Structures;
 
 namespace SisoDb.Querying.Sql
 {
-    public class WhereCriteriaBuilder
+    public class SqlWhereCriteriaBuilder : ISqlWhereCriteriaBuilder
     {
         private const string OpMarker = "[%OP%]";
         private const string ValueMarker = "[%VALUE%]";
@@ -30,7 +30,7 @@ namespace SisoDb.Querying.Sql
             get { return State.ToString(); }
         }
 
-        public WhereCriteriaBuilder()
+        public SqlWhereCriteriaBuilder()
         {
             State = new StringBuilder();
             Params = new HashSet<IDacParameter>();
@@ -44,7 +44,7 @@ namespace SisoDb.Querying.Sql
                 HasWrittenValue = false;
 
                 State = State.Replace(OpMarker, string.Empty);
-                State = State.Replace(ValueMarker, string.Empty);
+                State = State.Replace(ValueMarker, string.Empty); //TODO: This is "hängslen med livrem".
             }
         }
 
@@ -63,14 +63,10 @@ namespace SisoDb.Querying.Sql
                 return;
             }
 
-            if (!HasWrittenValue)
+            //TODO: Perhaps AddMemberAsValue
+            if (!HasWrittenValue) //When using member as value, eg. Where Name = SecondName
             {
-                State = State.Replace(ValueMarker,
-                    string.Format("({0}{1}{2})",
-                    GetMemberNodeString(member, memberIndex),
-                    OpMarker,
-                    ValueMarker));
-
+                State = State.Replace(ValueMarker, GetMemberNodeString(member, memberIndex));
                 HasWrittenValue = true;
             }
         }
@@ -89,12 +85,12 @@ namespace SisoDb.Querying.Sql
             var param = new DacParameter(GetNextParameterName(), valueNode.Value);
             Params.Add(param);
 
-            OnAddValue(param.Name);
+            AddValue(param.Name);
         }
 
         public virtual void AddNullValue(NullNode nullNode)
         {
-            OnAddValue(nullNode.ToString());
+            AddValue("null");
         }
 
         public virtual void AddSetOfValues(ArrayValueNode valueNode)
@@ -102,7 +98,7 @@ namespace SisoDb.Querying.Sql
             var param = new ArrayDacParameter(GetNextParameterName(), valueNode.Value);
             Params.Add(param);
 
-            OnAddValue(string.Concat("(select [Value] from ", param.Name, ")"));
+            AddValue(string.Concat("(select [Value] from ", param.Name, ")"));
         }
 
         public virtual void AddRaw(string sql)
@@ -110,7 +106,7 @@ namespace SisoDb.Querying.Sql
             State.Append(sql);
         }
 
-        protected virtual void OnAddValue(string value)
+        protected virtual void AddValue(string value)
         {
             if (SqlContains(ValueMarker))
                 State = State.Replace(ValueMarker, value);

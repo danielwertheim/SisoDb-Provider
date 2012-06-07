@@ -145,6 +145,7 @@
     <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="Maintenance\DbStructureSetMigrator.cs" />
     <Compile Include="Querying\Sql\ISqlExpressionBuilder.cs" />
+    <Compile Include="Querying\Sql\ISqlWhereCriteriaBuilder.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -190,7 +191,7 @@
     <Compile Include="Querying\Sql\ISqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlQueryFormatter.cs" />
-    <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
+    <Compile Include="Querying\Sql\SqlWhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\DbQuery.cs" />
     <Compile Include="IConnectionString.cs" />
     <Compile Include="ISisoDatabaseFactory.cs" />
