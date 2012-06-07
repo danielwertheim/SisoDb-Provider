@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Machine.Specifications;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.Session.Querying.EnumerableFunctions
+namespace SisoDb.Specifications.Session.Querying.SetFunctions
 {
     class QxIn
     {
@@ -520,7 +520,7 @@ namespace SisoDb.Specifications.Session.Querying.EnumerableFunctions
             public int?[] NullableIntValues { get; set; }
             public string StringValue { get; set; }
             public string[] StringValues { get; set; }
-            public DateTime DateTimeValue { get; set; }
+            public DateTime? DateTimeValue { get; set; }
             public DateTime[] DateTimeValues { get; set; }
             public Bag Bag { get; set; }
             public Bag[] Bags { get; set; }
