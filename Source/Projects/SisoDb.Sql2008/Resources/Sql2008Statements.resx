@@ -595,12 +595,12 @@ end
 
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStrings') is null
 begin
-create type SisoStrings as table ([Value] varchar(50) null);	
+create type SisoStrings as table ([Value] nvarchar(50) null);	
 end
 
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoTexts') is null
 begin
-create type SisoTexts as table ([Value] varchar(50) null);	
+create type SisoTexts as table ([Value] nvarchar(50) null);	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">
