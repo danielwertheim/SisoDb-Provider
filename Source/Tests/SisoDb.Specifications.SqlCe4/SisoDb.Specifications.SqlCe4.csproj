@@ -188,12 +188,6 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Dynamic\Query.cs">
       <Link>Session\Querying\Dynamic\Query.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\Session\Querying\EnumerableFunctions\QxAny.cs">
-      <Link>Session\Querying\EnumerableFunctions\QxAny.cs</Link>
-    </Compile>
-    <Compile Include="..\SisoDb.Specifications\Session\Querying\EnumerableFunctions\QxIn.cs">
-      <Link>Session\Querying\EnumerableFunctions\QxIn.cs</Link>
-    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Exists.cs">
       <Link>Session\Querying\Exists.cs</Link>
     </Compile>
@@ -220,6 +214,12 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\RawQueries.cs">
       <Link>Session\Querying\RawQueries.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\SetFunctions\QxAny.cs">
+      <Link>Session\Querying\SetFunctions\QxAny.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\SetFunctions\QxIn.cs">
+      <Link>Session\Querying\SetFunctions\QxIn.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\Contains.cs">
       <Link>Session\Querying\StringFunctions\Contains.cs</Link>

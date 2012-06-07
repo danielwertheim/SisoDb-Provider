@@ -80,7 +80,7 @@
     <Compile Include="Session\Querying\Dynamic\Count.cs" />
     <Compile Include="Session\Querying\Dynamic\Exists.cs" />
     <Compile Include="Session\Querying\Dynamic\Query.cs" />
-    <Compile Include="Session\Querying\EnumerableFunctions\QxIn.cs" />
+    <Compile Include="Session\Querying\SetFunctions\QxIn.cs" />
     <Compile Include="Session\Querying\Projection.cs" />
     <Compile Include="Session\Querying\StringFunctions\Contains.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="Session\Inserts.cs" />
     <Compile Include="Session\InsertsWithCustomStructureId.cs" />
     <Compile Include="Session\Querying\Count.cs" />
-    <Compile Include="Session\Querying\EnumerableFunctions\QxAny.cs" />
+    <Compile Include="Session\Querying\SetFunctions\QxAny.cs" />
     <Compile Include="Session\Querying\Exists.cs" />
     <Compile Include="Session\Querying\GetById.cs" />
     <Compile Include="Session\Querying\GetByIds.cs" />

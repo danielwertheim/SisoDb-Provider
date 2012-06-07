@@ -53,7 +53,7 @@ namespace SisoDb.SqlCe4
         {
         	var columnsCount = _columnMappings.Count;
             const int rowIdIndex = 0;
-            var offsetCausedByRowId = rowIdIndex + 1;
+            const int offsetCausedByRowId = rowIdIndex + 1;
 
 			using(var cmd = _connection.CreateCommand())
 			{

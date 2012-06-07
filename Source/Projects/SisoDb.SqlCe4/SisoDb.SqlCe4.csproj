@@ -65,6 +65,7 @@
     <Compile Include="SqlCe4AdoDriver.cs" />
     <Compile Include="SqlCe4DbBulkCopy.cs" />
     <Compile Include="SqlCe4DbClient.cs" />
+    <Compile Include="SqlCe4ExpressionBuilder.cs" />
     <Compile Include="SqlCe4ServerClient.cs" />
     <Compile Include="SqlStatementStringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
