@@ -3,7 +3,6 @@ using Moq;
 using NUnit.Framework;
 using PineCone.Structures.IdGenerators;
 using PineCone.Structures.Schemas;
-using SisoDb.Configurations;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.UnitTests.TestFactories;
@@ -42,14 +41,17 @@ namespace SisoDb.UnitTests.Configurations
         }
 
         [Test]
-        public void UseSerializerResolvedBy_Should_assign_new_serialzer_on_Db()
+        public void Serializer_Should_assign_new_serialzer_on_Db()
         {
-            var serializerFake = Mock.Of<ISisoDbSerializer>();
             var dbFake = new Mock<ISisoDatabase>();
+            var serializerFake = new Mock<ISisoDbSerializer>();
+            var optionsFake = new Mock<SerializerOptions>();
+            serializerFake.Setup(f => f.Options).Returns(optionsFake.Object);
+            dbFake.Setup(f => f.Serializer).Returns(serializerFake.Object);
 
-            dbFake.Object.Configure().UseSerializerResolvedBy(() => serializerFake);
+            dbFake.Object.Configure().Serializer(o => o.DateSerializationMode = DateSerializationModes.TimestampOffset);
 
-            dbFake.VerifySet(f => f.Serializer = serializerFake, Times.Once());
+            optionsFake.VerifySet(f => f.DateSerializationMode = DateSerializationModes.TimestampOffset, Times.Once());
         }
 
         [Test]
@@ -74,6 +76,17 @@ namespace SisoDb.UnitTests.Configurations
 
             settingsFake.VerifySet(f => f.AllowUpsertsOfSchemas = false);
             settingsFake.VerifySet(f => f.SynchronizeSchemaChanges = false);
+        }
+
+        [Test]
+        public void UseSerializerResolvedBy_Should_assign_new_serialzer_on_Db()
+        {
+            var serializerFake = Mock.Of<ISisoDbSerializer>();
+            var dbFake = new Mock<ISisoDatabase>();
+
+            dbFake.Object.Configure().UseSerializerResolvedBy(() => serializerFake);
+
+            dbFake.VerifySet(f => f.Serializer = serializerFake, Times.Once());
         }
 
         private class MyClassWithGuidId

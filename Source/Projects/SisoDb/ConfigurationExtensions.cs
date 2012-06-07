@@ -1,4 +1,6 @@
-﻿namespace SisoDb.Configurations
+﻿using SisoDb.Configurations;
+
+namespace SisoDb
 {
     public static class ConfigurationExtensions
     {

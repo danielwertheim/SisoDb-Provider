@@ -5,7 +5,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Session.Querying.SetFunctions
 {
-    class QxIn
+    namespace QxIn
     {
         [Subject(typeof(ISisoQueryable<>), "QxIn")]
         public class when_querying_strings_and_two_of_four_in_set_matches_two_of_four_structures : SpecificationBase
@@ -511,7 +511,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             private static IList<Model> _refetchedStructures;
         }
 
-        private class Model
+        public class Model
         {
             public Guid Id { get; set; }
             public int IntValue { get; set; }
@@ -526,7 +526,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             public Bag[] Bags { get; set; }
         }
 
-        private class Bag
+        public class Bag
         {
             public int IntValue { get; set; }
             public int? NullableIntValue { get; set; }

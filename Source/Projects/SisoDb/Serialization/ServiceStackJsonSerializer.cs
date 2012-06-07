@@ -9,16 +9,21 @@ namespace SisoDb.Serialization
 {
     public class ServiceStackJsonSerializer : ISisoDbSerializer
     {
-        public bool DeserializeManyInParallel { get; set; }
+        public SerializerOptions Options { get; set; }
+
+        protected JsonDateHandler DateHandler
+        {
+            get { return Options.DateSerializationMode.ToServiceStackValue(); }
+        }
 
         public ServiceStackJsonSerializer()
         {
-            DeserializeManyInParallel = true;
+            Options = new SerializerOptions();
         }
 
         protected virtual void OnConfigForSerialization<T>(Type itemType) where T : class
         {
-            JsConfig.DateHandler = JsonDateHandler.ISO8601;
+            JsConfig.DateHandler = DateHandler;
             JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
             JsConfig.IncludeNullValues = false;
@@ -27,7 +32,7 @@ namespace SisoDb.Serialization
 
         protected virtual void OnConfigForDeserialization()
         {
-            JsConfig.DateHandler = JsonDateHandler.ISO8601;
+            JsConfig.DateHandler = DateHandler;
         }
 
         public virtual string Serialize<T>(T item) where T : class
@@ -100,7 +105,7 @@ namespace SisoDb.Serialization
         {
             OnConfigForDeserialization();
 
-            return DeserializeManyInParallel
+            return Options.DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, OnDeserialize<T>)
                     : OnDeserializeManyInSequential(sourceData, OnDeserialize<T>);
         }
@@ -111,7 +116,7 @@ namespace SisoDb.Serialization
 
             OnConfigForDeserialization();
 
-            return DeserializeManyInParallel
+            return Options.DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(json, structureType))
                     : OnDeserializeManyInSequential(sourceData, json => OnDeserialize(json, structureType));
         }
@@ -132,7 +137,7 @@ namespace SisoDb.Serialization
             OnConfigForDeserialization();
             TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
 
-            return DeserializeManyInParallel
+            return Options.DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize<TTemplate>(json, templateType))
                     : OnDeserializeManyInSequential(sourceData, json => OnDeserialize<TTemplate>(json, templateType));
         }
