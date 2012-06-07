@@ -346,13 +346,17 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
-            var lambda = e.Arguments[1] as LambdaExpression;
 
             switch (methodName)
             {
                 case "QxAny":
                     VirtualPrefixMembers.Add(member);
-                    Visit(lambda);
+                    Visit(e.Arguments[1] as LambdaExpression);
+                    VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
+                    break;
+                case "QxIn":
+                    VirtualPrefixMembers.Add(member);
+                    Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as object[]));
                     VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
                     break;
                 default:
