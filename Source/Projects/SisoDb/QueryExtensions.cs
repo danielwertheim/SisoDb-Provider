@@ -17,6 +17,11 @@ namespace SisoDb
         {
             throw new NotImplementedException();
         }
+
+        public static bool QxIn<T>(this T? m, params T?[] s) where T : struct
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static class StringQueryExtensions
