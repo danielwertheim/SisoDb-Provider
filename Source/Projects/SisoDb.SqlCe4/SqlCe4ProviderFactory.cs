@@ -70,11 +70,6 @@ namespace SisoDb.SqlCe4
             return new SqlCe4QueryGenerator(SqlStatements, GetSqlExpressionBuilder());
         }
 
-        public override ISqlExpressionBuilder GetSqlExpressionBuilder()
-        {
-            return new SqlCe4ExpressionBuilder(GetWhereCriteriaBuilder);
-        }
-
         public override ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
         {
             return new SqlCe4WhereCriteriaBuilder();
