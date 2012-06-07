@@ -564,6 +564,41 @@ end
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStringIds') is null
 begin
 create type SisoStringIds as table (Id nvarchar(16) primary key not null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIntegers') is null
+begin
+create type SisoIntegers as table ([Value] bigint null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoFractals') is null
+begin
+create type SisoFractals as table ([Value] real null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoDates') is null
+begin
+create type SisoDates as table ([Value] datetime2 null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoBooleans') is null
+begin
+create type SisoBooleans as table ([Value] bit null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuids') is null
+begin
+create type SisoGuids as table ([Value] uniqueidentifier null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStrings') is null
+begin
+create type SisoStrings as table ([Value] nvarchar(50) null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoTexts') is null
+begin
+create type SisoTexts as table ([Value] nvarchar(50) null);	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">

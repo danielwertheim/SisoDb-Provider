@@ -52,7 +52,8 @@ namespace SisoDb.SqlServer
 
                 parameter = OnParameterCreated(parameter, dacParameter);
 
-                parameter.Value = dacParameter.Value; //PERF: Yes, value should be set after OnParameterCreated
+                if(parameter.Value == null)
+                    parameter.Value = dacParameter.Value; //PERF: Yes, value should be set after OnParameterCreated otherwise ADO.Net will do some type mapping before we do.
 
                 cmd.Parameters.Add(parameter);
             }
@@ -64,7 +65,14 @@ namespace SisoDb.SqlServer
             var setSize = false;
 
             if (DbSchemas.Parameters.ShouldBeMultivalue(dacParameter))
-                return TableParams.Create(dbParam.ParameterName, (object[]) dacParameter.Value);
+            {
+                var arrayDacParam = (ArrayDacParameter) dacParameter;
+                return SqlServerTableParams.Create(
+                    arrayDacParam.Name, 
+                    arrayDacParam.MemberDataType, 
+                    arrayDacParam.MemberDataTypeCode, 
+                    (object[])dacParameter.Value);
+            }
 
             if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
             {
