@@ -44,7 +44,7 @@ namespace SisoDb.Querying.Sql
                 HasWrittenValue = false;
 
                 State = State.Replace(OpMarker, string.Empty);
-                State = State.Replace(ValueMarker, string.Empty); //TODO: This is "hängslen med livrem".
+                State = State.Replace(ValueMarker, string.Empty); //TODO: Remove? This is "hängslen med livrem".
             }
         }
 
@@ -95,7 +95,7 @@ namespace SisoDb.Querying.Sql
 
         public virtual void AddSetOfValues(ArrayValueNode valueNode)
         {
-            var param = new ArrayDacParameter(GetNextParameterName(), valueNode.Value);
+            var param = new ArrayDacParameter(GetNextParameterName(), valueNode.MemberDataType, valueNode.MemberDataTypeCode, valueNode.Value);
             Params.Add(param);
 
             AddValue(string.Concat("(select [Value] from ", param.Name, ")"));

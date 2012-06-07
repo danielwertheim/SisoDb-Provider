@@ -145,7 +145,7 @@ namespace SisoDb.Querying.Sql
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.InSet()));
-            builder.AddSetOfValues(new ArrayValueNode(memberNode.Values));
+            builder.AddSetOfValues(new ArrayValueNode(memberNode.DataType, memberNode.DataTypeCode, memberNode.Values));
         }
 
         protected virtual void OnProcessWhereLikeMemberNode(ISqlWhereCriteriaBuilder builder, LikeMemberNode memberNode, int memberIndex)
