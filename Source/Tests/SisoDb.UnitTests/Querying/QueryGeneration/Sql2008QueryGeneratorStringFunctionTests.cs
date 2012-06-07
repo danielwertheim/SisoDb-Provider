@@ -10,7 +10,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new Sql2008QueryGenerator(new Sql2008Statements(), new SqlExpressionBuilder());
+            return new Sql2008QueryGenerator(new Sql2008Statements(), new SqlExpressionBuilder(() => new SqlWhereCriteriaBuilder()));
         }
 
         [Test]

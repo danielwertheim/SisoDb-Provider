@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using EnsureThat;
 using NCore.Collections;
 using SisoDb.DbSchema;
@@ -11,6 +12,14 @@ namespace SisoDb.Querying.Sql
 {
     public class SqlExpressionBuilder : ISqlExpressionBuilder
     {
+        protected readonly Func<ISqlWhereCriteriaBuilder> WhereCriteriaBuilderFn;
+
+        public SqlExpressionBuilder(Func<ISqlWhereCriteriaBuilder> whereCriteriaBuilderFn)
+        {
+            Ensure.That(whereCriteriaBuilderFn, "whereCriteriaBuilderFn").IsNotNull();
+            WhereCriteriaBuilderFn = whereCriteriaBuilderFn;
+        }
+
         public virtual ISqlExpression Process(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
@@ -50,7 +59,7 @@ namespace SisoDb.Querying.Sql
 
         protected virtual void OnProcessWheres(IParsedLambda lambda, SqlExpression expression)
         {
-            var builder = new WhereCriteriaBuilder();
+            var builder = WhereCriteriaBuilderFn();
 
         	for (var i = 0; i < lambda.Nodes.Length; i++)
         	{
@@ -76,7 +85,7 @@ namespace SisoDb.Querying.Sql
             expression.SetWhereCriteria(whereCriteria);
         }
 
-        protected virtual void OnProcessWhereMemberNode(IParsedLambda lambda, SqlExpression expression, WhereCriteriaBuilder builder, int nodeIndex, MemberNode memberNode)
+        protected virtual void OnProcessWhereMemberNode(IParsedLambda lambda, SqlExpression expression, ISqlWhereCriteriaBuilder builder, int nodeIndex, MemberNode memberNode)
         {
             var memberIndex = expression.GetExistingOrNewMemberIndexFor(memberNode.Path);
             if (!expression.ContainsWhereMemberFor(memberNode.Path))
@@ -132,42 +141,42 @@ namespace SisoDb.Querying.Sql
             builder.AddMember(memberNode, memberIndex);
         }
 
-        protected virtual void OnProcessWhereInSetMemberNode(WhereCriteriaBuilder builder, InSetMemberNode memberNode, int memberIndex)
+        protected virtual void OnProcessWhereInSetMemberNode(ISqlWhereCriteriaBuilder builder, InSetMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.InSet()));
             builder.AddSetOfValues(new ArrayValueNode(memberNode.Values));
         }
 
-        protected virtual void OnProcessWhereLikeMemberNode(WhereCriteriaBuilder builder, LikeMemberNode memberNode, int memberIndex)
+        protected virtual void OnProcessWhereLikeMemberNode(ISqlWhereCriteriaBuilder builder, LikeMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(memberNode.Value));
         }
 
-        protected virtual void OnProcessWhereStringContainsMemberNode(WhereCriteriaBuilder builder, StringContainsMemberNode memberNode, int memberIndex)
+        protected virtual void OnProcessWhereStringContainsMemberNode(ISqlWhereCriteriaBuilder builder, StringContainsMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value, "%").Replace("%%", "%")));
         }
 
-        protected virtual void OnProcessWhereStringEndsWithMemberNode(WhereCriteriaBuilder builder, StringEndsWithMemberNode memberNode, int memberIndex)
+        protected virtual void OnProcessWhereStringEndsWithMemberNode(ISqlWhereCriteriaBuilder builder, StringEndsWithMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value)));
         }
 
-        protected virtual void OnProccessWhereStringStartsWithMemberNode(WhereCriteriaBuilder builder, StringStartsWithMemberNode memberNode, int memberIndex)
+        protected virtual void OnProccessWhereStringStartsWithMemberNode(ISqlWhereCriteriaBuilder builder, StringStartsWithMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(string.Concat(memberNode.Value, "%")));
         }
 
-        protected virtual void OnProcessWhereImplicitBoolMemberNode(WhereCriteriaBuilder builder, MemberNode memberNode, int memberIndex)
+        protected virtual void OnProcessWhereImplicitBoolMemberNode(ISqlWhereCriteriaBuilder builder, MemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Equal()));
