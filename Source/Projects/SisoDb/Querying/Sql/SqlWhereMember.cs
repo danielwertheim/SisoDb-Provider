@@ -44,17 +44,16 @@ namespace SisoDb.Querying.Sql
             get { return _isEmpty; }
         }
 
-        public SqlWhereMember(int index, string memberPath, string alias, Type dataType, DataTypeCode dataTypeCode)
+        public SqlWhereMember(int index, string memberPath, Type dataType, DataTypeCode dataTypeCode)
         {
             Ensure.That(index, "index").IsGte(0);
             Ensure.That(memberPath, "memberPath").IsNotNullOrWhiteSpace();
-            Ensure.That(alias, "alias").IsNotNullOrWhiteSpace();
         	Ensure.That(dataType, "dataType").IsNotNull();
 
             _isEmpty = false;
             _index = index;
             _memberPath = memberPath;
-            _alias = alias;
+            _alias = string.Concat("mem", _index);
         	_dataType = dataType;
             _dataTypeCode = dataTypeCode;
         }

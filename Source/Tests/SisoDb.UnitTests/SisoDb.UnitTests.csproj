@@ -74,6 +74,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +133,8 @@
     <Compile Include="Querying\QueryTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="Connections\SisoConnectionInfoTests.cs" />
+    <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
+    <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
     <Compile Include="Stub.cs" />
     <Compile Include="TestFactories\StructureSchemasStub.cs" />

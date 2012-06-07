@@ -4,13 +4,11 @@ using PineCone.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
-	[Serializable]
-    public class MemberNode : INode
+    [Serializable]
+    public class MemberNode : IMemberNode
     {
         public string Path { get; private set;  }
-
         public Type DataType { get; private set; }
-
         public DataTypeCode DataTypeCode { get; private set; }
 
         public MemberNode(string memberPath, Type dataType, DataTypeCode dataTypeCode)

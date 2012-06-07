@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
-using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;

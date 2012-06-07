@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
 
 namespace SisoDb.Querying.Sql
 {
+    [Serializable]
     public class SqlExpression : ISqlExpression
     {
         private readonly List<string> _allMemberPaths = new List<string>(); 

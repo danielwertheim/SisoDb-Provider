@@ -73,6 +73,7 @@
     <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
+    <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\DbServerClient.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
@@ -125,11 +126,18 @@
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\EndsWithMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\ArrayValueNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\IMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\InSetMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\IStringOperationMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\LikeMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\StringEndsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NodesExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\StartsWithMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\StringStartsWithMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\StringContainsMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Operators\InSetOperator.cs" />
     <Compile Include="Querying\Lambdas\Parsers\BoolNodeTransformer.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IExpressionParsers.cs" />
     <Compile Include="Querying\Lambdas\Parsers\INodeTransformer.cs" />
@@ -137,6 +145,7 @@
     <Compile Include="Querying\RawQuery.cs" />
     <Compile Include="Maintenance\DbStructureSetMigrator.cs" />
     <Compile Include="Querying\Sql\ISqlExpressionBuilder.cs" />
+    <Compile Include="Querying\Sql\ISqlWhereCriteriaBuilder.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -144,7 +153,9 @@
     </Compile>
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
+    <Compile Include="SisoDbNotSupportedException.cs" />
     <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
+    <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
     <Compile Include="Dac\IDbClient.cs" />
@@ -180,7 +191,7 @@
     <Compile Include="Querying\Sql\ISqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlExpression.cs" />
     <Compile Include="Querying\Sql\SqlQueryFormatter.cs" />
-    <Compile Include="Querying\Sql\WhereCriteriaBuilder.cs" />
+    <Compile Include="Querying\Sql\SqlWhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\DbQuery.cs" />
     <Compile Include="IConnectionString.cs" />
     <Compile Include="ISisoDatabaseFactory.cs" />

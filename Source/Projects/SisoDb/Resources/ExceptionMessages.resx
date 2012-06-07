@@ -295,4 +295,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SqlCe4_ToLongIndividualStringValue" xml:space="preserve">
     <value>The SQLCE4 does not support individual string values longer than 4000chars.</value>
   </data>
+  <data name="SqlServerTableParams_ToLongString" xml:space="preserve">
+    <value>Max length of '{0}' exceeded with string value '{1}'.</value>
+  </data>
 </root>
