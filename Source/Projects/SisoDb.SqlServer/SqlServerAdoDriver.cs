@@ -65,7 +65,14 @@ namespace SisoDb.SqlServer
             var setSize = false;
 
             if (DbSchemas.Parameters.ShouldBeMultivalue(dacParameter))
-                return SqlServerTableParams.Create(dbParam.ParameterName, (object[]) dacParameter.Value);
+            {
+                var arrayDacParam = (ArrayDacParameter) dacParameter;
+                return SqlServerTableParams.Create(
+                    arrayDacParam.Name, 
+                    arrayDacParam.MemberDataType, 
+                    arrayDacParam.MemberDataTypeCode, 
+                    (object[])dacParameter.Value);
+            }
 
             if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
             {
