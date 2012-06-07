@@ -6,10 +6,9 @@ namespace SisoDb.Serialization
     public interface ISisoDbSerializer
     {
         /// <summary>
-        /// Determines if the deserialization should be performed in parallel.
-        /// DEFAULT IS: True
+        /// Configuration options.
         /// </summary>
-        bool DeserializeManyInParallel { get; set; }
+        SerializerOptions Options { get; set; }
 
         /// <summary>
         /// Serializes sent <see cref="T"/> to JSON.

@@ -51,5 +51,12 @@ namespace SisoDb.Configurations
 
             return this;
         }
+
+        public virtual DbConfiguration Serializer(Action<SerializerOptions> config)
+        {
+            config(Database.Serializer.Options);
+
+            return this;
+        }
     }
 }

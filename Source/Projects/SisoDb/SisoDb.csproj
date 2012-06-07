@@ -69,7 +69,7 @@
     <Compile Include="Caching\CacheConsumeModes.cs" />
     <Compile Include="Caching\CacheProviderBase.cs" />
     <Compile Include="Caching\CacheProviderExtensions.cs" />
-    <Compile Include="Configurations\ConfigurationExtensions.cs" />
+    <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="ConnectionString.cs" />
     <Compile Include="Core\CastExtensions.cs" />
@@ -151,6 +151,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Serialization\DateSerializationModes.cs" />
+    <Compile Include="Serialization\DateSerializationModesExtension.cs" />
+    <Compile Include="Serialization\SerializerOptions.cs" />
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="SisoDbNotSupportedException.cs" />

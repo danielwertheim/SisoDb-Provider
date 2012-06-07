@@ -49,6 +49,10 @@
 					[
 						"DeserializeManyInParallel",
 						"True"
+					],
+					[
+						"DateSerializationMode",
+						"Iso8601"
 					]
 				]
 			],
