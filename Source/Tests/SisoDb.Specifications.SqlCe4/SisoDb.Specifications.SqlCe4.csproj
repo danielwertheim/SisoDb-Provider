@@ -282,7 +282,6 @@
       <Link>TestContextFactory.cs</Link>
     </Compile>
     <Compile Include="AssemblyContext.cs" />
-    <Compile Include="ContextCleanup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

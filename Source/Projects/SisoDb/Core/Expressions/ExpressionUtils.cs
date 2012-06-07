@@ -4,42 +4,27 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NCore;
-using NCore.Reflections;
 
 namespace SisoDb.Core.Expressions
 {
     public static class ExpressionUtils
     {
-		public static bool IsNullableValueTypeMemberExpression(this Expression e)
-		{
-			var memberExpression = e as MemberExpression;
-
-			if (memberExpression == null)
-				return false;
-
-			return memberExpression.Type.IsNullablePrimitiveType() || memberExpression.Expression.Type.IsNullablePrimitiveType();
-		}
-
-    	public static Expression<Func<T, object>> GetMemberExpression<T>(string memberName) where T : class
-		{
-			var p = Expression.Parameter(typeof(T));
-			var ma = Expression.MakeMemberAccess(p, typeof(T).GetMember(memberName)[0]);
-			var conv = Expression.Convert(ma, typeof(object));
-			var getter = Expression.Lambda(conv, p);
-
-			return (Expression<Func<T, object>>)getter;
-		}
-
-        public static bool IsNullConstant(Expression e)
+        public static bool ExpressionRepresentsNullValue(Expression e)
         {
-            var constant = e as ConstantExpression;
-            if (constant == null)
-                return false;
+            if (e is ConstantExpression)
+                return (e as ConstantExpression).IsNullConstant();
 
-            return IsNullConstant(constant);
+            if (e is UnaryExpression && e.NodeType == ExpressionType.Convert)
+            {
+                var ue = (UnaryExpression)e;
+                if (ue.Operand is ConstantExpression)
+                    return (ue.Operand as ConstantExpression).IsNullConstant();
+            }
+
+            return false;
         }
 
-        public static bool IsNullConstant(ConstantExpression e)
+        public static bool IsNullConstant(this ConstantExpression e)
         {
             return e.Value == null || DBNull.Value.Equals(e.Value);
         }
@@ -67,12 +52,23 @@ namespace SisoDb.Core.Expressions
 		    if (e is NewArrayExpression)
 		        return (e as NewArrayExpression).Evaluate();
 
+            if (e is UnaryExpression)
+                return (e as UnaryExpression).Evaluate();
+
 		    throw new SisoDbException("Don't know how to evaluate the expression type: '{0}'".Inject(e.GetType().Name));
 		}
 
         public static object[] Evaluate(this NewArrayExpression e)
         {
-            return e.Expressions.Cast<ConstantExpression>().Select(ce => ce.Value).ToArray();
+            return e.Expressions.Select(ie => ie.Evaluate()).ToArray();
+        }
+
+        public static object Evaluate(this UnaryExpression e)
+        {
+            if (e.Operand is ConstantExpression)
+                return (e.Operand as ConstantExpression).Evaluate();
+
+            throw new SisoDbException("Don't know how to evaluate the unary expression of node type: '{0}'".Inject(e.NodeType));
         }
 
         public static object Evaluate(this MethodCallExpression methodExpression)

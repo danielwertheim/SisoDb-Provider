@@ -44,7 +44,6 @@ namespace SisoDb.Querying.Sql
                 HasWrittenValue = false;
 
                 State = State.Replace(OpMarker, string.Empty);
-                State = State.Replace(ValueMarker, string.Empty); //TODO: Remove? This is "hängslen med livrem".
             }
         }
 
