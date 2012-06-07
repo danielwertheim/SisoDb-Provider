@@ -9,6 +9,9 @@ namespace SisoDb.Querying.Lambdas.Nodes
             var sb = new StringBuilder();
             foreach (var node in nodes)
             {
+                if (node is OperatorNode)
+                    sb.Append(" ");
+
                 sb.Append(node);
 
                 if (node is OperatorNode)

@@ -41,22 +41,6 @@ namespace SisoDb.Querying.Sql
             return expression;
         }
 
-        protected virtual IParsedLambda GetMergedIncludeLambda(IQuery query)
-        {
-            if (!query.HasIncludes)
-                return null;
-
-            IParsedLambda mergedIncludes = null;
-            foreach (var include in query.Includes)
-            {
-                mergedIncludes = mergedIncludes == null 
-                    ? include 
-                    : mergedIncludes.MergeAsNew(include);
-            }
-
-            return mergedIncludes;
-        }
-
         protected virtual void OnProcessWheres(IParsedLambda lambda, SqlExpression expression)
         {
             var builder = WhereCriteriaBuilderFn();
@@ -64,6 +48,7 @@ namespace SisoDb.Querying.Sql
         	for (var i = 0; i < lambda.Nodes.Length; i++)
         	{
         		var node = lambda.Nodes[i];
+
         	    if (node is MemberNode)
         	        OnProcessWhereMemberNode(lambda, expression, builder, i, (MemberNode) node);
         	    else if (node is OperatorNode)
@@ -168,7 +153,7 @@ namespace SisoDb.Querying.Sql
             builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value, "%").Replace("%%", "%")));
         }
 
-        protected virtual void OnProcessWhereStringEqualsMemberNode(WhereCriteriaBuilder builder, StringEqualsMemberNode memberNode, int memberIndex)
+        protected virtual void OnProcessWhereStringEqualsMemberNode(ISqlWhereCriteriaBuilder builder, StringEqualsMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Equal()));
@@ -240,6 +225,22 @@ namespace SisoDb.Querying.Sql
 					includeNode.DataType,
                     includeNode.DataTypeCode));
             }
+        }
+
+        protected virtual IParsedLambda GetMergedIncludeLambda(IQuery query)
+        {
+            if (!query.HasIncludes)
+                return null;
+
+            IParsedLambda mergedIncludes = null;
+            foreach (var include in query.Includes)
+            {
+                mergedIncludes = mergedIncludes == null
+                    ? include
+                    : mergedIncludes.MergeAsNew(include);
+            }
+
+            return mergedIncludes;
         }
     }
 }

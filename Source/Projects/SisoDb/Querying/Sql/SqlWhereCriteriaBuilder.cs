@@ -54,7 +54,7 @@ namespace SisoDb.Querying.Sql
 
             if (!HasWrittenMember)
             {
-                State.AppendFormat("({0}{1}{2})",
+                State.AppendFormat(GetMemberFormatString(member),
                     GetMemberNodeString(member, memberIndex),
                     OpMarker,
                     ValueMarker);
@@ -135,6 +135,12 @@ namespace SisoDb.Querying.Sql
             return shouldUseExplicitStringValue
                 ? string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name)
                 : string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);
+        }
+
+
+        protected virtual string GetMemberFormatString(MemberNode member)
+        {
+            return "({0}{1}{2})"; // {0} = left, {1} = operator, {2} = right
         }
 
         protected virtual bool SqlContains(string value)

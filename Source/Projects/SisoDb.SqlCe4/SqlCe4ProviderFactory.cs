@@ -64,6 +64,11 @@ namespace SisoDb.SqlCe4
                 SqlStatements);
 	    }
 
+        public override Querying.Sql.ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
+        {
+            return new SqlCe4WhereCriteriaBuilder();
+        }
+
         public override IDbQueryGenerator GetDbQueryGenerator()
         {
             return new SqlCe4QueryGenerator(SqlStatements, GetSqlExpressionBuilder());
