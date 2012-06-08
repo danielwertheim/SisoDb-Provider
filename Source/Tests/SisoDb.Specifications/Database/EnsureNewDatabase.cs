@@ -23,7 +23,7 @@ namespace SisoDb.Specifications.Database
             private It should_have_created_identities_table =
                 () => _testContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
 
-#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
             private It should_have_created_custom_ids_data_types = () =>
             {
                 _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
