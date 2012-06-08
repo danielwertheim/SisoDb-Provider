@@ -65,7 +65,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Sql2005\Sql2008TestContext.cs" />
+    <Compile Include="Sql2005\Sql2005TestContext.cs" />
     <Compile Include="Sql2005\Sql2005TestDbUtils.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestContext.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestDbUtils.cs" />
