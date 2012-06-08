@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="Sql2005\Sql2005TestContext.cs" />
     <Compile Include="Sql2005\Sql2005TestDbUtils.cs" />
+    <Compile Include="SqlServerTestDbUtils.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestContext.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestDbUtils.cs" />
     <Compile Include="Sql2012\Sql2012TestDbUtils.cs" />
