@@ -1,0 +1,682 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CreateBooleansIndexesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bit] null,
+[StringValue] [varchar](5) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateBooleansIndexesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bit] null,
+[StringValue] [varchar](5) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateBooleansIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bit] null,
+[StringValue] [varchar](5) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateDatabase" xml:space="preserve">
+    <value>create database [{0}];
+ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 90;</value>
+  </data>
+  <data name="CreateDatesIndexesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [datetime2] null,
+[StringValue] [varchar](33) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateDatesIndexesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [datetime2] null,
+[StringValue] [varchar](33) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateDatesIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [datetime2] null,
+[StringValue] [varchar](33) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateFractalsIndexesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [real] null,
+[StringValue] [varchar](33) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateFractalsIndexesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [real] null,
+[StringValue] [varchar](33) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateFractalsIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [real] null,
+[StringValue] [varchar](33) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateGuidsIndexesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [uniqueidentifier] null,
+[StringValue] [varchar](36) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateGuidsIndexesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [uniqueidentifier] null,
+[StringValue] [varchar](36) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateGuidsIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [uniqueidentifier] null,
+[StringValue] [varchar](36) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateIntegersIndexesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bigint] null,
+[StringValue] [varchar](20) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateIntegersIndexesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bigint] null,
+[StringValue] [varchar](20) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateIntegersIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [bigint] null,
+[StringValue] [varchar](20) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateStringsIndexesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](300) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateStringsIndexesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](300) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateStringsIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](300) null);
+
+create nonclustered index [IX_{0}_Q] on [{0}] ([MemberPath],[Value],[StructureId]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateStructuresGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null,
+[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered ([StructureId]),
+[Json] [nvarchar](max) not null);</value>
+  </data>
+  <data name="CreateStructuresIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null,
+[StructureId] [bigint] not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
+[Json] [nvarchar](max) not null);
+
+insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
+  </data>
+  <data name="CreateStructuresString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null,
+[StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
+[Json] [nvarchar](max) not null);</value>
+  </data>
+  <data name="CreateTextsIndexesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](max) null);
+
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath])
+include([Value], [StructureId]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateTextsIndexesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](max) null);
+
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath])
+include([Value], [StructureId]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateTextsIndexesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[MemberPath] [varchar](250) not null,
+[Value] [nvarchar](max) null);
+
+create nonclustered index [IX_{0}_Q]
+on [{0}] ([MemberPath])
+include([Value], [StructureId]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateUniquesGuid" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [uniqueidentifier] not null,
+[UqStructureId] [uniqueidentifier] null,
+[UqMemberPath] [varchar](250) not null,
+[UqValue] [nvarchar](10) not null);
+
+create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateUniquesIdentity" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [bigint] not null,
+[UqStructureId] [bigint] null,
+[UqMemberPath] [varchar](250) not null,
+[UqValue] [nvarchar](10) not null);
+
+create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="CreateUniquesString" xml:space="preserve">
+    <value>create table [{0}] (
+[RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
+[StructureId] [nvarchar](16) not null,
+[UqStructureId] [nvarchar](16) null,
+[UqMemberPath] [varchar](250) not null,
+[UqValue] [nvarchar](10) not null);
+
+create unique index [UQ_{0}] on [{0}] ([UqStructureId], [UqMemberPath], [UqValue]);
+
+alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureId) references [{1}] (StructureId) on update no action on delete cascade;</value>
+  </data>
+  <data name="DatabaseExists" xml:space="preserve">
+    <value>select DB_ID(@dbName);</value>
+  </data>
+  <data name="DeleteById" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId = @id;</value>
+  </data>
+  <data name="DeleteByIds" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId in (select Id from @ids);</value>
+  </data>
+  <data name="DeleteByQuery" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId in({1});</value>
+  </data>
+  <data name="DeleteWhereIdIsBetween" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId &gt;= @idFrom and StructureId &lt;= @idTo;</value>
+  </data>
+  <data name="DropDatabase" xml:space="preserve">
+    <value>if (select DB_ID('{0}')) is not null
+begin
+    alter database [{0}] set offline with rollback immediate;
+    alter database [{0}] set online;
+    drop database [{0}];
+end</value>
+  </data>
+  <data name="DropStructureTables" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null drop table [{0}];
+if object_id(N'{1}', N'U') is not null drop table [{1}];
+if object_id(N'{2}', N'U') is not null drop table [{2}];
+if object_id(N'{3}', N'U') is not null drop table [{3}];
+if object_id(N'{4}', N'U') is not null drop table [{4}];
+if object_id(N'{5}', N'U') is not null drop table [{5}];
+if object_id(N'{6}', N'U') is not null drop table [{6}];
+if object_id(N'{7}', N'U') is not null drop table [{7}];
+if object_id(N'{8}', N'U') is not null drop table [{8}];
+
+if object_id(N'[SisoDbIdentities]', N'U') is not null delete from [SisoDbIdentities] where [EntityName] = @entityName;</value>
+  </data>
+  <data name="ExistsById" xml:space="preserve">
+    <value>set nocount on;
+select 1 from [{0}] where StructureId =@id;</value>
+  </data>
+  <data name="GetAllJson" xml:space="preserve">
+    <value>set nocount on;
+select Json from [{0}] order by [StructureId];</value>
+  </data>
+  <data name="GetJsonById" xml:space="preserve">
+    <value>set nocount on;
+select Json from [{0}] where StructureId =@id;</value>
+  </data>
+  <data name="GetJsonByIds" xml:space="preserve">
+    <value>set nocount on;
+select Json from [{0}] where StructureId in (select Id from @ids);</value>
+  </data>
+  <data name="GetJsonByIdWithLock" xml:space="preserve">
+    <value>set nocount on;
+select Json from [{0}] with(xlock, rowlock) where StructureId =@id;</value>
+  </data>
+  <data name="IndexesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where [{1}] in({2});</value>
+  </data>
+  <data name="IndexesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
+    <value>set nocount on;
+select distinct [{0}] from [{1}];</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>[%Start%]
+select [%Take%]s.[Json][%IncludedJsonMembers%] from (select s.[StructureId][%OrderByMembers%][%Paging%] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%] group by s.[StructureId]) rs inner join [[%MainStructureTable%]] s on s.[StructureId] = rs.[StructureId][%IncludesJoins%][%OrderBy%]
+[%End%];</value>
+  </data>
+  <data name="QueryReturningStructureIds" xml:space="preserve">
+    <value>[%Start%]
+select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]
+[%End%]</value>
+  </data>
+  <data name="RowCount" xml:space="preserve">
+    <value>set nocount on;
+select count(1) from [{0}];</value>
+  </data>
+  <data name="RowCountByQuery" xml:space="preserve">
+    <value>set nocount on;
+select count(1) from [{0}] s where s.StructureId in({1});</value>
+  </data>
+  <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
+  </data>
+  <data name="SingleInsertOfUniqueIndex" xml:space="preserve">
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
+  </data>
+  <data name="SingleInsertOfValueTypeIndex" xml:space="preserve">
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}], [{3}], [{4}]) values (@{1}, @{2}, @{3}, @{4});</value>
+  </data>
+  <data name="SingleInsertStructure" xml:space="preserve">
+    <value>set nocount on;
+insert into [{0}] ([{1}], [{2}]) values (@{1}, @{2});</value>
+  </data>
+  <data name="Sys_Identities_CheckOutAndGetNextIdentity" xml:space="preserve">
+    <value>set nocount on;
+declare @id bigint;
+update [SisoDbIdentities] with(updlock, rowlock) set @id = CurrentId + 1, CurrentId = CurrentId + @numOfIds where [EntityName] = @entityName;
+select @id as StructureId;</value>
+  </data>
+  <data name="Sys_Identities_CreateIfNotExists" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'[{0}]..[SisoDbIdentities]', N'U') is null
+begin
+	create table [{0}]..[SisoDbIdentities]
+	(
+		[EntityName] [varchar](100) NOT NULL,
+		[CurrentId] [bigint] NOT NULL default(0),
+		constraint [PK_SisoDbIdentities] primary key([EntityName])
+	);
+end</value>
+  </data>
+  <data name="Sys_Types_CreateIfNotExists" xml:space="preserve">
+    <value>use [{0}];
+set nocount on;
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuidIds') is null
+begin
+create type SisoGuidIds as table (Id uniqueidentifier primary key not null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIdentityIds') is null
+begin
+create type SisoIdentityIds as table (Id bigint primary key not null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStringIds') is null
+begin
+create type SisoStringIds as table (Id nvarchar(16) primary key not null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIntegers') is null
+begin
+create type SisoIntegers as table ([Value] bigint null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoFractals') is null
+begin
+create type SisoFractals as table ([Value] real null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoDates') is null
+begin
+create type SisoDates as table ([Value] datetime2 null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoBooleans') is null
+begin
+create type SisoBooleans as table ([Value] bit null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuids') is null
+begin
+create type SisoGuids as table ([Value] uniqueidentifier null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStrings') is null
+begin
+create type SisoStrings as table ([Value] nvarchar(50) null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoTexts') is null
+begin
+create type SisoTexts as table ([Value] nvarchar(50) null);	
+end</value>
+  </data>
+  <data name="TableExists" xml:space="preserve">
+    <value>set nocount on;
+select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME=@tableName;</value>
+  </data>
+  <data name="UniquesSchemaSynchronizer_DeleteRecordsMatchingKeyNames" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where [{1}] in({2});</value>
+  </data>
+  <data name="UniquesSchemaSynchronizer_GetKeyNames" xml:space="preserve">
+    <value>set nocount on;
+select distinct [{0}] from [{1}];</value>
+  </data>
+  <data name="DeleteIndexesAndUniquesById" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId = @id;
+delete from [{1}] where StructureId = @id;
+delete from [{2}] where StructureId = @id;
+delete from [{3}] where StructureId = @id;
+delete from [{4}] where StructureId = @id;
+delete from [{5}] where StructureId = @id;
+delete from [{6}] where StructureId = @id;
+delete from [{7}] where StructureId = @id;</value>
+  </data>
+  <data name="SingleUpdateOfStructure" xml:space="preserve">
+    <value>set nocount on;
+update [{0}] set [{1}] = @{1} where [{2}] = @{2};</value>
+  </data>
+  <data name="DropTable" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null drop table [{0}];</value>
+  </data>
+  <data name="GetTableNamesForAllDataTables" xml:space="preserve">
+    <value>set nocount on;
+select TABLE_NAME from 
+(
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Booleans'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Dates'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Fractals'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Guids'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Integers'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Strings'
+	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Texts'
+	union
+	select 1, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
+	union
+	select 2, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
+) tables
+order by groupId;</value>
+  </data>
+  <data name="TruncateSisoDbIdentities" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'[SisoDbIdentities]', N'U') is not null truncate table [SisoDbIdentities];</value>
+  </data>
+  <data name="ClearIndexesTables" xml:space="preserve">
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null delete from [{0}];
+if object_id(N'{1}', N'U') is not null delete from [{1}];
+if object_id(N'{2}', N'U') is not null delete from [{2}];
+if object_id(N'{3}', N'U') is not null delete from [{3}];
+if object_id(N'{4}', N'U') is not null delete from [{4}];
+if object_id(N'{5}', N'U') is not null delete from [{5}];
+if object_id(N'{6}', N'U') is not null delete from [{6}];</value>
+  </data>
+  <data name="GetModelTableStatuses" xml:space="preserve">
+    <value>set nocount on;
+select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
+  </data>
+  <data name="DropSp" xml:space="preserve">
+    <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>
+  </data>
+</root>

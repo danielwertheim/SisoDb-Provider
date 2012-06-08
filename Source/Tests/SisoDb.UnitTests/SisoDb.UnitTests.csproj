@@ -74,6 +74,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
@@ -104,9 +105,11 @@
     <Compile Include="Glimpse\SisoDbGlimpsePluginTests.cs" />
     <Compile Include="JsonApprovals.cs" />
     <Compile Include="Providers\Caching\CacheTestsBase.cs" />
+    <Compile Include="Providers\Caching\Sql2005CacheTests.cs" />
     <Compile Include="Providers\Caching\Sql2008CacheTests.cs" />
     <Compile Include="Providers\Caching\Sql2012CacheTests.cs" />
     <Compile Include="Providers\Caching\SqlCe4CacheTests.cs" />
+    <Compile Include="Providers\Connections\Sql2005ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\Sql2012ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\SqlCe4ConnectionInfoTests.cs" />
@@ -132,6 +135,8 @@
     <Compile Include="Querying\QueryTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
     <Compile Include="Connections\SisoConnectionInfoTests.cs" />
+    <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
+    <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
     <Compile Include="Stub.cs" />
     <Compile Include="TestFactories\StructureSchemasStub.cs" />
@@ -159,6 +164,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.Serialization\SisoDb.Serialization.csproj">
       <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
       <Name>SisoDb.Serialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2005\SisoDb.Sql2005.csproj">
+      <Project>{47bf9f27-5794-48b6-9476-2dfacd3ba806}</Project>
+      <Name>SisoDb.Sql2005</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>

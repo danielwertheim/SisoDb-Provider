@@ -4,6 +4,7 @@ using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Querying;
+using SisoDb.Querying.Sql;
 using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4
@@ -67,6 +68,11 @@ namespace SisoDb.SqlCe4
         public override IDbQueryGenerator GetDbQueryGenerator()
         {
             return new SqlCe4QueryGenerator(SqlStatements, GetSqlExpressionBuilder());
+        }
+
+        public override ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
+        {
+            return new SqlCe4WhereCriteriaBuilder();
         }
 
 	    public override INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas)

@@ -16,7 +16,7 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _json = "{\"String1\":\"1\",\"Int1\":1,\"Decimal1\":0.1,\"DateTime1\":\"\\/Date(946681200000+0100)\\/\",\"Ints\":[1,2]}";
+                _json = "{\"String1\":\"1\",\"Int1\":1,\"Decimal1\":0.1,\"DateTime1\":\"2000-01-01T00:00:00.0000000+01:00\",\"Ints\":[1,2]}";
             };
 
             Because of = () =>
@@ -66,7 +66,7 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _json = "{\"String1\":\"1\",\"Int1\":1,\"Decimal1\":0.1,\"DateTime1\":\"\\/Date(946681200000+0100)\\/\",\"Ints\":[1,2]}";
+                _json = "{\"String1\":\"1\",\"Int1\":1,\"Decimal1\":0.1,\"DateTime1\":\"2000-01-01T00:00:00.0000000+01:00\",\"Ints\":[1,2]}";
             };
 
             Because of = () =>

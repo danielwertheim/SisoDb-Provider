@@ -9,6 +9,39 @@ namespace SisoDb
         {
             throw new NotImplementedException();
         }
+
+        public static bool QxIn(this IEnumerable<string> m, params string[] s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxIn<T>(this IEnumerable<T> m, params T[] s) where T : struct 
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxIn<T>(this IEnumerable<T?> m, params T?[] s) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public static class SingleValueTypeQueryExtensions
+    {
+        public static bool QxIn(this string m, params string[] s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxIn<T>(this T m, params T[] s) where T : struct 
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxIn<T>(this T? m, params T?[] s) where T : struct
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static class StringQueryExtensions

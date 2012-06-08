@@ -24,7 +24,13 @@ namespace SisoDb.SqlCe4
         {
             var dbParam = (SqlCeParameter)parameter;
 
-            if (DbSchemas.Parameters.IsJsonParam(dacParameter))
+            if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
+            {
+                dbParam.DbType = DbType.DateTime;
+                return dbParam;
+            }
+
+            if (DbSchemas.Parameters.ShouldBeJson(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.NText;
                 dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;

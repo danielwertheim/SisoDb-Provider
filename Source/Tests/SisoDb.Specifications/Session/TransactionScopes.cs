@@ -5,7 +5,7 @@ using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.Session
 {
-#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
     class TransactionScopes
     {
         [Subject(typeof(ISession), "Transaction scopes")]

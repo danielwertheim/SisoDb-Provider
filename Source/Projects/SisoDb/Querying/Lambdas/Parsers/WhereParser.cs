@@ -65,10 +65,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected virtual IParsedLambda CreateParsedLambda()
         {
-            //var nodes =
-            //    new BoolNodeTransformer().Transform(
-            //    new NullableNodeTransformer().Transform(Nodes));
-
+            //PERF: This ugly processing of nodes for boht transformers in one loop is for performance. Perhaps move bach to older cleaner solution
             var nullableNodeTransformer = new NullableNodeTransformer();
             var boolNodeTransformer = new BoolNodeTransformer();
 
@@ -248,6 +245,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
             if (e.Method.DeclaringType == typeof(EnumerableQueryExtensions))
                 return VisitEnumerableQxMethodCall(e);
 
+            if (e.Method.DeclaringType == typeof(SingleValueTypeQueryExtensions))
+                return VisitSingleValueTypeQxMethodCall(e);
+
             try
             {
                 Visit(Expression.Constant(e.Evaluate()));
@@ -268,31 +268,20 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             switch (methodName)
             {
+                case "Contains":
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringContainsNode(e.Arguments[0].Evaluate().ToStringOrNull()));
+                    break;
                 case "StartsWith":
-                    var startsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
-                    Nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
-                    Nodes.AddNode(new OperatorNode(Operator.Like()));
-                    Visit(Expression.Constant(string.Concat(startsWithValue, "%")));
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringStartsWithNode(e.Arguments[0].Evaluate().ToStringOrNull()));
                     break;
                 case "EndsWith":
-                    var endsWithValue = e.Arguments[0].Evaluate().ToStringOrNull();
-                    Nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
-                    Nodes.AddNode(new OperatorNode(Operator.Like()));
-                    Visit(Expression.Constant(string.Concat("%", endsWithValue)));
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringEndsWithNode(e.Arguments[0].Evaluate().ToStringOrNull()));
                     break;
                 case "ToLower":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
                     break;
                 case "ToUpper":
                     Nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
-                    break;
-                case "Contains":
-                    Visit(member);
-                    Nodes.AddNode(new OperatorNode(Operator.Like()));
-
-                    var containsValue = e.Arguments[0].Evaluate().ToStringOrNull();
-                    var constant = Expression.Constant("%{0}%".Inject(containsValue).Replace("%%", "%"));
-                    Visit(constant);
                     break;
             }
 
@@ -306,34 +295,48 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             switch (methodName)
             {
-                case "StartsWith":
-                case "EndsWith":
-                case "QxLike":
-                case "QxStartsWith":
-                case "QxEndsWith":
+                case "Contains":
                 case "QxContains":
-                    var useSuffix = methodName != "QxLike" && (methodName == "QxStartsWith" || methodName == "QxContains");
-                    var usePrefix = methodName != "QxLike" && (methodName == "QxEndsWith" || methodName == "QxContains");
-                    var argValue = e.Arguments[1].Evaluate().ToStringOrNull();
-                    var newValue = string.Format("{0}{1}{2}", usePrefix ? "%" : "", argValue, useSuffix ? "%" : "");
-                    var constant = Expression.Constant(newValue);
-
-                    if (methodName == "QxStartsWith")
-                        Nodes.AddNode(CreateNewMemberNode(member).ToStartsWithNode());
-                    else if (methodName == "QxEndsWith")
-                        Nodes.AddNode(CreateNewMemberNode(member).ToEndsWithNode());
-                    else
-                        Visit(member);
-
-                    Nodes.AddNode(new OperatorNode(Operator.Like()));
-                    Visit(constant);
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringContainsNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
+                case "StartsWith":
+                case "QxStartsWith":
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringStartsWithNode(e.Arguments[1].Evaluate().ToStringOrNull()));
+                    break;
+                case "EndsWith":
+                case "QxEndsWith":
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringEndsWithNode(e.Arguments[1].Evaluate().ToStringOrNull()));
+                    break;
+                case "QxLike":
+                    Nodes.AddNode(CreateNewMemberNode(member).ToLikeNode(e.Arguments[1].Evaluate().ToStringOrNull()));
+                    break;
+                case "ToLower":
                 case "QxToLower":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
                     break;
+                case "ToUpper":
                 case "QxToUpper":
                     Nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
                     break;
+                default:
+                    throw new SisoDbNotSupportedException("String query extension (Qx) method '{0}', is not supported.".Inject(methodName));
+            }
+
+            return e;
+        }
+
+        protected virtual Expression VisitSingleValueTypeQxMethodCall(MethodCallExpression e)
+        {
+            var member = e.GetRightMostMember();
+            var methodName = e.Method.Name;
+
+            switch (methodName)
+            {
+                case "QxIn":
+                    Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as object[]));
+                    break;
+                default:
+                    throw new SisoDbNotSupportedException("Single value type query extension (Qx) method '{0}', is not supported.".Inject(methodName));
             }
 
             return e;
@@ -343,29 +346,24 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             var member = (MemberExpression)e.Arguments[0];
             var methodName = e.Method.Name;
-            var lambda = e.Arguments[1] as LambdaExpression;
 
             switch (methodName)
             {
                 case "QxAny":
-                    EnsureSupportedEnumerableQxOperator(lambda);
                     VirtualPrefixMembers.Add(member);
-                    Visit(lambda);
+                    Visit(e.Arguments[1] as LambdaExpression);
                     VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
                     break;
+                case "QxIn":
+                    VirtualPrefixMembers.Add(member);
+                    Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as object[]));
+                    VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
+                    break;
+                default:
+                    throw new SisoDbNotSupportedException("Enumerable query extension (Qx) method '{0}', is not supported.".Inject(methodName));
             }
 
             return e;
-        }
-
-        protected virtual void EnsureSupportedEnumerableQxOperator(LambdaExpression e)
-        {
-            var isSupportedMethodCall = e.Body.NodeType == ExpressionType.Call && ((MethodCallExpression)e.Body).Method.Name == "QxAny";
-
-            var operatorIsSupported = isSupportedMethodCall || SupportedEnumerableQxOperators.Contains(e.Body.NodeType);
-
-            if (!operatorIsSupported)
-                throw new SisoDbException(ExceptionMessages.WhereParser_QxEnumerables_OperatorNotSupported.Inject(e.Body.NodeType));
         }
     }
 }

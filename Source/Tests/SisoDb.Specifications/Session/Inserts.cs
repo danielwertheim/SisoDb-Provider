@@ -75,7 +75,53 @@ namespace SisoDb.Specifications.Session
                 refetched.Value.ShouldBeNull();
             };
         }
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+        [Subject(typeof(ISession), "Insert")]
+        public class when_inserting_item_with_single_datetime_member_having_min_value : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+            };
 
+            Because of =
+                () => TestContext.Database.UseOnceTo().Insert(new SingleDateTimeMember { Value = DateTime.MinValue });
+
+            It should_have_one_item_inserted =
+                () => TestContext.Database.should_have_X_num_of_items<SingleDateTimeMember>(1);
+
+            It should_have_inserted_item_with_min_value = () =>
+            {
+                var refetched = TestContext.Database.UseOnceTo().Query<SingleDateTimeMember>().FirstOrDefault();
+                refetched.Value.ShouldEqual(DateTime.MinValue);
+            };
+        }
+
+        [Subject(typeof(ISession), "InsertMany")]
+        public class when_inserting_items_with_datetimes_having_min_value : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().InsertMany(new[]
+            {
+                new MultiDateTimeMember { Dates = new[] { DateTime.MinValue, DateTime.MinValue } },
+                new MultiDateTimeMember { Dates = new[] { DateTime.MinValue, DateTime.MinValue } },
+                new MultiDateTimeMember { Dates = new[] { DateTime.MinValue, DateTime.MinValue } }
+            });
+
+            It should_have_one_item_inserted =
+                () => TestContext.Database.should_have_X_num_of_items<MultiDateTimeMember>(3);
+
+            It should_have_inserted_item_with_min_value = () =>
+            {
+                var refetched = TestContext.Database.UseOnceTo().Query<MultiDateTimeMember>().ToArray();
+                refetched.SelectMany(r => r.Dates).All(d => d.Equals(DateTime.MinValue)).ShouldBeTrue();
+            };
+        }
+#endif
         [Subject(typeof(ISession), "Insert")]
         public class when_inserting_item_with_single_text_member_that_is_null : SpecificationBase
         {
@@ -123,22 +169,28 @@ namespace SisoDb.Specifications.Session
             };
         }
 
-        private class SingleTextMember
-        {
-            public Guid StructureId { get; set; }
-            public string Text { get; set; }
-        }
-
         private class SingleStringMember
         {
             public Guid StructureId { get; set; }
             public string Value { get; set; }
         }
 
+        private class SingleTextMember
+        {
+            public Guid StructureId { get; set; }
+            public string Text { get; set; }
+        }
+
         private class SingleDateTimeMember
         {
             public Guid StructureId { get; set; }
             public DateTime? Value { get; set; }
+        }
+
+        private class MultiDateTimeMember
+        {
+            public Guid StructureId { get; set; }
+            public DateTime[] Dates { get; set; }
         }
     }
 }

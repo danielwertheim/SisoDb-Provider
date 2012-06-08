@@ -162,7 +162,7 @@ ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 110;</value>
 [RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
-[Value] [datetime] null,
+[Value] [datetime2] null,
 [StringValue] [varchar](33) null);
 
 create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
@@ -174,7 +174,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
-[Value] [datetime] null,
+[Value] [datetime2] null,
 [StringValue] [varchar](33) null);
 
 create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
@@ -186,7 +186,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
-[Value] [datetime] null,
+[Value] [datetime2] null,
 [StringValue] [varchar](33) null);
 
 create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
@@ -556,14 +556,49 @@ begin
 create type SisoGuidIds as table (Id uniqueidentifier primary key not null);	
 end
 
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'StructureIdentityIds') is null
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIdentityIds') is null
 begin
-create type StructureIdentityIds as table (Id bigint primary key not null);	
+create type SisoIdentityIds as table (Id bigint primary key not null);	
 end
 
 if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStringIds') is null
 begin
 create type SisoStringIds as table (Id nvarchar(16) primary key not null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIntegers') is null
+begin
+create type SisoIntegers as table ([Value] bigint null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoFractals') is null
+begin
+create type SisoFractals as table ([Value] real null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoDates') is null
+begin
+create type SisoDates as table ([Value] datetime2 null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoBooleans') is null
+begin
+create type SisoBooleans as table ([Value] bit null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuids') is null
+begin
+create type SisoGuids as table ([Value] uniqueidentifier null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStrings') is null
+begin
+create type SisoStrings as table ([Value] nvarchar(50) null);	
+end
+
+if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoTexts') is null
+begin
+create type SisoTexts as table ([Value] nvarchar(50) null);	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">

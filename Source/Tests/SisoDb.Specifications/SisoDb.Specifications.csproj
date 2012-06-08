@@ -37,11 +37,11 @@
     </Reference>
     <Reference Include="Machine.Specifications, Version=0.5.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Machine.Specifications.0.5.7-beta3\lib\net40\Machine.Specifications.dll</HintPath>
+      <HintPath>..\..\packages\Machine.Specifications.0.5.7-beta4\lib\net40\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Specifications.Clr4, Version=0.5.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Machine.Specifications.0.5.7-beta3\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
+      <HintPath>..\..\packages\Machine.Specifications.0.5.7-beta4\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
     </Reference>
     <Reference Include="NCore, Version=0.28.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -80,6 +80,7 @@
     <Compile Include="Session\Querying\Dynamic\Count.cs" />
     <Compile Include="Session\Querying\Dynamic\Exists.cs" />
     <Compile Include="Session\Querying\Dynamic\Query.cs" />
+    <Compile Include="Session\Querying\SetFunctions\QxIn.cs" />
     <Compile Include="Session\Querying\Projection.cs" />
     <Compile Include="Session\Querying\StringFunctions\Contains.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />
@@ -87,7 +88,7 @@
     <Compile Include="Session\Inserts.cs" />
     <Compile Include="Session\InsertsWithCustomStructureId.cs" />
     <Compile Include="Session\Querying\Count.cs" />
-    <Compile Include="Session\Querying\EnumerableFunctions\QxAny.cs" />
+    <Compile Include="Session\Querying\SetFunctions\QxAny.cs" />
     <Compile Include="Session\Querying\Exists.cs" />
     <Compile Include="Session\Querying\GetById.cs" />
     <Compile Include="Session\Querying\GetByIds.cs" />

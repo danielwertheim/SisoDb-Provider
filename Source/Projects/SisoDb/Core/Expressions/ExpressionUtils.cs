@@ -48,10 +48,32 @@ namespace SisoDb.Core.Expressions
 			if (e is ConstantExpression)
 				return (e as ConstantExpression).Evaluate();
 
-            throw new SisoDbException("Don't know how to evaluate the expression type: '{0}'".Inject(e.GetType().Name));
+		    if (e is NewArrayExpression)
+		        return (e as NewArrayExpression).Evaluate();
+
+            if (e is UnaryExpression)
+                return (e as UnaryExpression).Evaluate();
+
+		    throw new SisoDbException("Don't know how to evaluate the expression type: '{0}'".Inject(e.GetType().Name));
 		}
 
-		public static object Evaluate(this MethodCallExpression methodExpression)
+        public static object[] Evaluate(this NewArrayExpression e)
+        {
+            return e.Expressions.Select(ie => ie.Evaluate()).ToArray();
+        }
+
+        public static object Evaluate(this UnaryExpression e)
+        {
+            if (e.Operand is ConstantExpression)
+                return (e.Operand as ConstantExpression).Evaluate();
+
+            if (e.Operand is MethodCallExpression)
+                return (e.Operand as MethodCallExpression).Evaluate();
+
+            throw new SisoDbException("Don't know how to evaluate the unary expression of node type: '{0}'".Inject(e.NodeType));
+        }
+
+        public static object Evaluate(this MethodCallExpression methodExpression)
 		{
             if(methodExpression.Object == null)
             {
