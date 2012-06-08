@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>SisoDb.Sql2005</id>    
+		<title>SisoDb.Sql2005 - Simple Structure Oriented Db</title>
+		<version>$version$</version>
+		<authors>danielwertheim</authors>
+		<copyright>Daniel Wertheim</copyright>
+		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
+		<summary>SisoDb is the document-oriented provider over SQL-Server. This package is for SQL-Server 2005.</summary>
+		<description>
+			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
+			This package is for SQL-Server 2005.
+		</description>
+		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
+		<projectUrl>http://www.sisodb.com</projectUrl>
+		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<tags>sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2005,mssql2005,nosql</tags>
+		<dependencies>
+			<dependency id="SisoDb" version="[$version$]" />
+			<dependency id="Ensure.That" version="0.7.0" />
+			<dependency id="NCore" version="[0.28.0]" />
+			<dependency id="PineCone" version="[3.1.1]" />
+		</dependencies>
+	</metadata>
+	<files>
+	  <file src="**\SisoDb.Sql2005.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.Sql2005.xml" target="lib\net40\" />
+      <file src="**\SisoDb.SqlServer.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.SqlServer.xml" target="lib\net40\" />
+	</files>
+</package>
