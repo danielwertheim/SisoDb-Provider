@@ -105,9 +105,11 @@
     <Compile Include="Glimpse\SisoDbGlimpsePluginTests.cs" />
     <Compile Include="JsonApprovals.cs" />
     <Compile Include="Providers\Caching\CacheTestsBase.cs" />
+    <Compile Include="Providers\Caching\Sql2005CacheTests.cs" />
     <Compile Include="Providers\Caching\Sql2008CacheTests.cs" />
     <Compile Include="Providers\Caching\Sql2012CacheTests.cs" />
     <Compile Include="Providers\Caching\SqlCe4CacheTests.cs" />
+    <Compile Include="Providers\Connections\Sql2005ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\Sql2012ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\SqlCe4ConnectionInfoTests.cs" />
