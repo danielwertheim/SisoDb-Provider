@@ -156,7 +156,7 @@ zip :zipSql2008 do |zip|
 end
 
 zip :zipSql2012 do |zip|
-    zipProject(zip, sql2008OutputPath, @env_buildnameSql2012)
+    zipProject(zip, sql2012OutputPath, @env_buildnameSql2012)
 end
 
 zip :zipSqlCe4 do |zip|
