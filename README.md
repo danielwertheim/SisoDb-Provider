@@ -1,4 +1,4 @@
-# SisoDb - Simple-Structure-Oriented-Db - a document-oriented db-provider for SQL-Server.
+# SisoDb - Simple-Structure-Oriented-Db - a document-oriented db-provider for SQL-Server 2005-2012 & SQLCE4.
 
 By using SisoDb you get to store and retrieve complete POCO-graphs without having to specify:
 
@@ -13,6 +13,8 @@ Either you can read about it here, in the [Wiki](https://github.com/danielwerthe
 
 ## NuGet
 SisoDb is available via [NuGet](http://nuget.org/packages?q=sisodb).
+
+### [PM> Install-Package SisoDb.Sql2005](http://nuget.org/packages/SisoDb.Sql2005)
 
 ### [PM> Install-Package SisoDb.Sql2008](http://nuget.org/packages/SisoDb.Sql2008)
 
