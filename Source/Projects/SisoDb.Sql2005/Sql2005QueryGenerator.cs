@@ -5,11 +5,11 @@ using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 using SisoDb.SqlServer;
 
-namespace SisoDb.Sql2008
+namespace SisoDb.Sql2005
 {
-    public class Sql2008QueryGenerator : SqlServerQueryGenerator
+    public class Sql2005QueryGenerator : SqlServerQueryGenerator
     {
-        public Sql2008QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder) 
+        public Sql2005QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder) 
             : base(sqlStatements, sqlExpressionBuilder) {}
 
         protected override SqlQueryFormatter CreateSqlQueryFormatter(IQuery query, ISqlExpression sqlExpression)

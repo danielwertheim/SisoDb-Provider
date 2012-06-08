@@ -120,7 +120,7 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<Album> _fetchedStructures;
         }
 
-#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
         [Subject(typeof(IQueryEngine), "Includes using Named Query")]
         public class when_named_query_including_different_firstlevel_members : SpecificationBase, ICleanupAfterEveryContextInAssembly
         {
@@ -192,7 +192,7 @@ namespace SisoDb.Specifications.Session.Querying
         }
 #endif
 
-		internal static class Establishments
+        internal static class Establishments
         {
             internal static Album[] SetupStructuresForIncludes(ITestContext testContext)
             {

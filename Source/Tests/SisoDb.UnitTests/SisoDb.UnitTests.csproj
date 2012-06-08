@@ -163,6 +163,10 @@
       <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
       <Name>SisoDb.Serialization</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2005\SisoDb.Sql2005.csproj">
+      <Project>{47bf9f27-5794-48b6-9476-2dfacd3ba806}</Project>
+      <Name>SisoDb.Sql2005</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
       <Name>SisoDb.Sql2008</Name>
