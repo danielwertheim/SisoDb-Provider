@@ -83,6 +83,7 @@
     <Compile Include="Session\Querying\SetFunctions\QxIn.cs" />
     <Compile Include="Session\Querying\Projection.cs" />
     <Compile Include="Session\Querying\StringFunctions\Contains.cs" />
+    <Compile Include="Session\Querying\StringFunctions\QxEquals.cs" />
     <Compile Include="Session\UpdatesOfSingleValues.cs" />
     <Compile Include="Session\InsertAs.cs" />
     <Compile Include="Session\Inserts.cs" />

@@ -9,6 +9,9 @@ namespace SisoDb.Querying.Lambdas.Nodes
             var sb = new StringBuilder();
             foreach (var node in nodes)
             {
+                if (node is OperatorNode)
+                    sb.Append(" ");
+
                 sb.Append(node);
 
                 if (node is OperatorNode)
@@ -25,6 +28,11 @@ namespace SisoDb.Querying.Lambdas.Nodes
         public static LikeMemberNode ToLikeNode(this MemberNode memberNode, string value)
         {
             return new LikeMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, value);
+        }
+
+        public static StringEqualsMemberNode ToStringEqualsNode(this MemberNode memberNode, bool isTextType, string value, bool exactMatch = false)
+        {
+            return new StringEqualsMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, isTextType, value, exactMatch);
         }
 
         public static StringContainsMemberNode ToStringContainsNode(this MemberNode memberNode, string value)

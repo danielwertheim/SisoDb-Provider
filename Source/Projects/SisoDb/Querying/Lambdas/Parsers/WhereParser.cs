@@ -42,7 +42,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         public WhereParser(IDataTypeConverter dataTypeConverter)
         {
             Ensure.That(dataTypeConverter, "dataTypeConverter").IsNotNull();
-            
+
             DataTypeConverter = dataTypeConverter;
             _lock = new object();
             VirtualPrefixMembers = new List<MemberExpression>();
@@ -65,7 +65,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected virtual IParsedLambda CreateParsedLambda()
         {
-            //PERF: This ugly processing of nodes for boht transformers in one loop is for performance. Perhaps move bach to older cleaner solution
+            //PERF: This ugly processing of nodes for both transformers in one loop is for performance. Perhaps move bach to older cleaner solution
             var nullableNodeTransformer = new NullableNodeTransformer();
             var boolNodeTransformer = new BoolNodeTransformer();
 
@@ -310,6 +310,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 case "QxLike":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLikeNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
+                case "QxEquals":
+                    ProcessQxEqualsMember(e, member);
+                    break;
                 case "ToLower":
                 case "QxToLower":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
@@ -323,6 +326,22 @@ namespace SisoDb.Querying.Lambdas.Parsers
             }
 
             return e;
+        }
+
+        protected virtual void ProcessQxEqualsMember(MethodCallExpression e, MemberExpression member)
+        {
+            var memberNode = CreateNewMemberNode(member);
+            var isTextType = DataTypeConverter.MemberNameIsForTextType(memberNode.Path);
+
+            if (e.Arguments.Count > 2)
+            {
+                Nodes.AddNode(memberNode.ToStringEqualsNode(isTextType, e.Arguments[1].Evaluate().ToStringOrNull(),
+                    (bool)e.Arguments[2].Evaluate()));
+            }
+            else
+            {
+                Nodes.AddNode(memberNode.ToStringEqualsNode(isTextType, e.Arguments[1].Evaluate().ToStringOrNull()));
+            }
         }
 
         protected virtual Expression VisitSingleValueTypeQxMethodCall(MethodCallExpression e)

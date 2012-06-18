@@ -233,6 +233,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxEndsWith.cs">
       <Link>Session\Querying\StringFunctions\QxEndsWith.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxEquals.cs">
+      <Link>Session\Querying\StringFunctions\QxEquals.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxLike.cs">
       <Link>Session\Querying\StringFunctions\QxLike.cs</Link>
     </Compile>
@@ -282,7 +285,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

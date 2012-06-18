@@ -127,6 +127,7 @@
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ArrayValueNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\StringEqualsMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\InSetMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IStringOperationMemberNode.cs" />
