@@ -38,7 +38,7 @@ namespace SisoDb.Sql2008
             var takeFromRowNum = (query.Paging.PageIndex * query.Paging.PageSize) + 1;
             var takeToRowNum = (takeFromRowNum + query.Paging.PageSize) - 1;
 
-            return new[]
+            return new IDacParameter[]
             {
                 new DacParameter("pagingFrom", takeFromRowNum),
                 new DacParameter("pagingTo", takeToRowNum)

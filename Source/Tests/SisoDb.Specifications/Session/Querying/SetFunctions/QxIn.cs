@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Machine.Specifications;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.Session.Querying.EnumerableFunctions
+namespace SisoDb.Specifications.Session.Querying.SetFunctions
 {
-    class QxIn
+    namespace QxIn
     {
         [Subject(typeof(ISisoQueryable<>), "QxIn")]
         public class when_querying_strings_and_two_of_four_in_set_matches_two_of_four_structures : SpecificationBase
@@ -511,7 +511,7 @@ namespace SisoDb.Specifications.Session.Querying.EnumerableFunctions
             private static IList<Model> _refetchedStructures;
         }
 
-        private class Model
+        public class Model
         {
             public Guid Id { get; set; }
             public int IntValue { get; set; }
@@ -520,13 +520,13 @@ namespace SisoDb.Specifications.Session.Querying.EnumerableFunctions
             public int?[] NullableIntValues { get; set; }
             public string StringValue { get; set; }
             public string[] StringValues { get; set; }
-            public DateTime DateTimeValue { get; set; }
+            public DateTime? DateTimeValue { get; set; }
             public DateTime[] DateTimeValues { get; set; }
             public Bag Bag { get; set; }
             public Bag[] Bags { get; set; }
         }
 
-        private class Bag
+        public class Bag
         {
             public int IntValue { get; set; }
             public int? NullableIntValue { get; set; }

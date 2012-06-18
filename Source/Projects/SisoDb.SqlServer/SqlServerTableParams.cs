@@ -203,7 +203,7 @@ namespace SisoDb.SqlServer
 
         private static SqlDataRecord CreateDateTimeRecord(DateTime? value)
         {
-            var record = new SqlDataRecord(new SqlMetaData("Value", SqlDbType.DateTime2)); //TODO: Sql2005
+            var record = new SqlDataRecord(new SqlMetaData("Value", SqlDbType.DateTime2));
 
             if (value.HasValue)
                 record.SetDateTime(0, value.Value);

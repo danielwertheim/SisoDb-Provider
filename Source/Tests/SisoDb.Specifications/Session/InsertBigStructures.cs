@@ -23,7 +23,7 @@ namespace SisoDb.Specifications.Session
                 };
             };
 
-#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
             Because of = () => 
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
 
@@ -59,7 +59,7 @@ namespace SisoDb.Specifications.Session
                 TestContext = TestContextFactory.Create();
             };
 
-#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
             Because of = () =>
                 TestContext.Database.UseOnceTo().Insert(new Model { LongText = new string('a', 4001) });
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -67,6 +66,9 @@ namespace SisoDb.Core.Expressions
         {
             if (e.Operand is ConstantExpression)
                 return (e.Operand as ConstantExpression).Evaluate();
+
+            if (e.Operand is MethodCallExpression)
+                return (e.Operand as MethodCallExpression).Evaluate();
 
             throw new SisoDbException("Don't know how to evaluate the unary expression of node type: '{0}'".Inject(e.NodeType));
         }

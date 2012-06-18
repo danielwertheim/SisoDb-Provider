@@ -65,6 +65,9 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Sql2005\Sql2005TestContext.cs" />
+    <Compile Include="Sql2005\Sql2005TestDbUtils.cs" />
+    <Compile Include="SqlServerTestDbUtils.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestContext.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestDbUtils.cs" />
     <Compile Include="Sql2012\Sql2012TestDbUtils.cs" />
@@ -110,6 +113,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.MiniProfiler\SisoDb.MiniProfiler.csproj">
       <Project>{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}</Project>
       <Name>SisoDb.MiniProfiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Sql2005\SisoDb.Sql2005.csproj">
+      <Project>{47bf9f27-5794-48b6-9476-2dfacd3ba806}</Project>
+      <Name>SisoDb.Sql2005</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>

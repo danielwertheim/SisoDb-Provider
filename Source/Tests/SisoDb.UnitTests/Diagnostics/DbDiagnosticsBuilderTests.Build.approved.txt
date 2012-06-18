@@ -43,6 +43,10 @@
 				{
 					"Name": "DeserializeManyInParallel",
 					"Value": "True"
+				},
+				{
+					"Name": "DateSerializationMode",
+					"Value": "Iso8601"
 				}
 			]
 		},

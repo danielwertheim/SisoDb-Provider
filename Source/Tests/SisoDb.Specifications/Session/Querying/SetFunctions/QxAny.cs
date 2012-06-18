@@ -3,7 +3,7 @@ using Machine.Specifications;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 
-namespace SisoDb.Specifications.Session.Querying.EnumerableFunctions
+namespace SisoDb.Specifications.Session.Querying.SetFunctions
 {
     namespace QxAny
     {

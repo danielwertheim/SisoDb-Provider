@@ -75,6 +75,11 @@ namespace SisoDb.SqlCe4
             return new SqlCe4QueryGenerator(SqlStatements, GetSqlExpressionBuilder());
         }
 
+        public override ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
+        {
+            return new SqlCe4WhereCriteriaBuilder();
+        }
+
 	    public override INamedQueryGenerator<T> GetNamedQueryGenerator<T>(IStructureSchemas structureSchemas)
 	    {
 	        throw new NotSupportedException("SQL CE4 does not support Stored procedures.");
