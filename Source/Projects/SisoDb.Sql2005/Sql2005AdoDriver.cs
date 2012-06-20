@@ -14,16 +14,6 @@ namespace SisoDb.Sql2005
             var dbParam = (SqlParameter)parameter;
             var setSize = false;
 
-            if (DbSchemas.Parameters.ShouldBeMultivalue(dacParameter))
-            {
-                var arrayDacParam = (ArrayDacParameter)dacParameter;
-                return SqlServerTableParams.Create(
-                    arrayDacParam.Name,
-                    arrayDacParam.MemberDataType,
-                    arrayDacParam.MemberDataTypeCode,
-                    (object[])dacParameter.Value);
-            }
-
             if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
             {
                 dbParam.DbType = DbType.DateTime;

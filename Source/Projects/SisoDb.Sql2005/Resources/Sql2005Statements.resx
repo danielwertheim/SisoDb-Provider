@@ -438,7 +438,7 @@ delete from [{0}] where StructureId = @id;</value>
   </data>
   <data name="DeleteByIds" xml:space="preserve">
     <value>set nocount on;
-delete from [{0}] where StructureId in (select Id from @ids);</value>
+delete from [{0}] where StructureId in ({1});</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
@@ -484,7 +484,7 @@ select Json from [{0}] where StructureId =@id;</value>
   </data>
   <data name="GetJsonByIds" xml:space="preserve">
     <value>set nocount on;
-select Json from [{0}] where StructureId in (select Id from @ids);</value>
+select Json from [{0}] where StructureId in ({1});</value>
   </data>
   <data name="GetJsonByIdWithLock" xml:space="preserve">
     <value>set nocount on;
