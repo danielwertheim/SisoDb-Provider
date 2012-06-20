@@ -155,7 +155,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
   </data>
   <data name="CreateDatabase" xml:space="preserve">
     <value>create database [{0}];
-ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 90;</value>
+EXEC sp_dbcmptlevel [{0}], 90;</value>
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
