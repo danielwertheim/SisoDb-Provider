@@ -1,5 +1,6 @@
 ﻿using SisoDb.Dac;
 using SisoDb.Querying;
+using SisoDb.Querying.Sql;
 using SisoDb.SqlServer;
 
 namespace SisoDb.Sql2005
@@ -20,9 +21,19 @@ namespace SisoDb.Sql2005
             return new Sql2005ServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
         }
 
+        public override IAdoDriver GetAdoDriver()
+        {
+            return new Sql2005AdoDriver();
+        }
+
         public override IDbQueryGenerator GetDbQueryGenerator()
         {
             return new Sql2005QueryGenerator(SqlStatements, GetSqlExpressionBuilder());
+        }
+
+        public override ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
+        {
+            return new Sql2005WhereCriteriaBuilder();
         }
     }
 }
