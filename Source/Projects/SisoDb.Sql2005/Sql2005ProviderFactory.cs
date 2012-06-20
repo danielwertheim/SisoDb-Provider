@@ -1,4 +1,5 @@
-﻿using SisoDb.Querying;
+﻿using SisoDb.Dac;
+using SisoDb.Querying;
 using SisoDb.SqlServer;
 
 namespace SisoDb.Sql2005
@@ -12,6 +13,11 @@ namespace SisoDb.Sql2005
         public override StorageProviders ProviderType
         {
             get { return StorageProviders.Sql2005; }
+        }
+
+        public override IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+        {
+            return new Sql2005ServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
         }
 
         public override IDbQueryGenerator GetDbQueryGenerator()

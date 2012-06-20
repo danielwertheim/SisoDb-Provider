@@ -60,6 +60,7 @@
     <Compile Include="Sql2005DbFactory.cs" />
     <Compile Include="Sql2005ProviderFactory.cs" />
     <Compile Include="Sql2005QueryGenerator.cs" />
+    <Compile Include="Sql2005ServerClient.cs" />
     <Compile Include="Sql2005Session.cs" />
     <Compile Include="Sql2005Statements.cs" />
   </ItemGroup>

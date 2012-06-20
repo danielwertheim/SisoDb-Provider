@@ -52,6 +52,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="SqlServerClient.cs" />
     <Compile Include="SqlServerConnectionManager.cs" />
     <Compile Include="SqlServerDatabase.cs" />
     <Compile Include="SqlServerSession.cs" />

@@ -2,12 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
-using System.Linq;
-using System.Linq.Expressions;
 using EnsureThat;
 using NCore;
-using NCore.Expressions;
-using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 
