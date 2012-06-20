@@ -57,7 +57,7 @@ namespace SisoDb.SqlServer
 
 		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            return new DbServerClient(GetAdoDriver(), connectionInfo, _connectionManager, SqlStatements);
+            return new SqlServerClient(GetAdoDriver(), connectionInfo, _connectionManager, SqlStatements);
         }
 
         public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)

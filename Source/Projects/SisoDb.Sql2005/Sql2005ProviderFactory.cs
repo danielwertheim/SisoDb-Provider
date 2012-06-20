@@ -1,4 +1,7 @@
-﻿using SisoDb.Querying;
+﻿using System.Data;
+using SisoDb.Dac;
+using SisoDb.Querying;
+using SisoDb.Querying.Sql;
 using SisoDb.SqlServer;
 
 namespace SisoDb.Sql2005
@@ -14,9 +17,55 @@ namespace SisoDb.Sql2005
             get { return StorageProviders.Sql2005; }
         }
 
+        public override IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+        {
+            return new Sql2005ServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
+        }
+
+        public override ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        {
+            var connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+            var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+            return new Sql2005DbClient(
+                GetAdoDriver(),
+                connectionInfo,
+                connection,
+                transaction,
+                ConnectionManager,
+                SqlStatements);
+        }
+
+        public override IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        {
+            IDbConnection connection = null;
+            if (Transactions.ActiveTransactionExists)
+                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientDbConnection(connectionInfo));
+            else
+                connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+
+            return new Sql2005DbClient(
+                GetAdoDriver(),
+                connectionInfo,
+                connection,
+                null,
+                ConnectionManager,
+                SqlStatements);
+        }
+
+        public override IAdoDriver GetAdoDriver()
+        {
+            return new Sql2005AdoDriver();
+        }
+
         public override IDbQueryGenerator GetDbQueryGenerator()
         {
             return new Sql2005QueryGenerator(SqlStatements, GetSqlExpressionBuilder());
+        }
+
+        public override ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
+        {
+            return new Sql2005WhereCriteriaBuilder();
         }
     }
 }

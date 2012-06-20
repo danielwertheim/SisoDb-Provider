@@ -55,13 +55,17 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SisoDb2005Extensions.cs" />
+    <Compile Include="Sql2005AdoDriver.cs" />
     <Compile Include="Sql2005ConnectionInfo.cs" />
     <Compile Include="Sql2005Database.cs" />
+    <Compile Include="Sql2005DbClient.cs" />
     <Compile Include="Sql2005DbFactory.cs" />
     <Compile Include="Sql2005ProviderFactory.cs" />
     <Compile Include="Sql2005QueryGenerator.cs" />
+    <Compile Include="Sql2005ServerClient.cs" />
     <Compile Include="Sql2005Session.cs" />
     <Compile Include="Sql2005Statements.cs" />
+    <Compile Include="Sql2005WhereCriteriaBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SisoDb.SqlServer\SisoDb.SqlServer.csproj">

@@ -3,10 +3,11 @@ using NCore;
 using SisoDb.Core.Io;
 using SisoDb.Dac;
 using SisoDb.Resources;
+using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4ServerClient : DbServerClient
+    public class SqlCe4ServerClient : SqlServerClient
     {
         private readonly SqlCe4ConnectionInfo _connectionInfo;
         

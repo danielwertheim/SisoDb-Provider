@@ -7,5 +7,10 @@ namespace SisoDb.Testing.Sql2005
         public Sql2005TestDbUtils(IAdoDriver driver, string connectionString) : base(driver, connectionString)
         {
         }
+
+        public override bool TypeExists(string name)
+        {
+            return false;
+        }
     }
 }
