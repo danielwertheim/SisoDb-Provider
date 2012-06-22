@@ -19,7 +19,7 @@
 		<tags>glimpse, diagnostics, sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
 		<dependencies>
 		    <dependency id="SisoDb" version="[$version$]" />
-			<dependency id="Ensure.That" version="0.7.0" />
+			<dependency id="Ensure.That" version="0.8.1" />
 			<dependency id="NCore" version="[0.28.0]" />
 			<dependency id="PineCone" version="[3.1.1]" />
 			<dependency id="Glimpse" version="0.87" />
