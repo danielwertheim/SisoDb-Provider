@@ -35,8 +35,9 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EnsureThat">
-      <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
+    <Reference Include="EnsureThat, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Ensure.That.0.8.1\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
     <Reference Include="NCore">
       <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
