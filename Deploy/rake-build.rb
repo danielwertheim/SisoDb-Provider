@@ -26,7 +26,7 @@ require 'albacore'
 
 @env_buildfolderpath = 'build'
 @env_assversion = "14.0.0"
-@env_version = "#{@env_assversion}-pre1"
+@env_version = "#{@env_assversion}-pre2"
 @env_buildversion = @env_version + (ENV['env_buildnumber'].to_s.empty? ? "" : ".#{ENV['env_buildnumber'].to_s}")
 @env_buildconfigname = ENV['env_buildconfigname'].to_s.empty? ? "Release" : ENV['env_buildconfigname'].to_s
 
