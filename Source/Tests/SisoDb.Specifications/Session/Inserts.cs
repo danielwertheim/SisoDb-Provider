@@ -151,8 +151,8 @@ namespace SisoDb.Specifications.Session
                 TestContext = TestContextFactory.Create();
             };
 
-            Because of = () => 
-                TestContext.Database.UseOnceTo().InsertMany(new []
+            Because of = () =>
+                TestContext.Database.UseOnceTo().InsertMany(new[]
                 {
                     new SingleTextMember { Text = null },
                     new SingleTextMember { Text = null },
@@ -167,6 +167,29 @@ namespace SisoDb.Specifications.Session
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleTextMember>().ToArray();
                 refetched.All(s => s.Text == null).ShouldBeTrue();
             };
+        }
+
+        [Subject(typeof(ISession), "Insert")]
+        public class when_inserting_item_with_unsigned_members : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _orgItem = new UnsignedMembers { UShort = 42, UInt = 142, ULong = 242 };
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_orgItem);
+
+            It should_have_one_item_inserted =
+                () => TestContext.Database.should_have_X_num_of_items<UnsignedMembers>(1);
+
+            It should_have_insert_one_item_with_correct_unsigned_values = () =>
+            {
+                var refetched = TestContext.Database.UseOnceTo().GetById<UnsignedMembers>(_orgItem.StructureId);
+                refetched.ShouldBeValueEqualTo(_orgItem);
+            };
+
+            private static UnsignedMembers _orgItem;
         }
 
         private class SingleStringMember
@@ -191,6 +214,14 @@ namespace SisoDb.Specifications.Session
         {
             public Guid StructureId { get; set; }
             public DateTime[] Dates { get; set; }
+        }
+
+        private class UnsignedMembers
+        {
+            public Guid StructureId { get; set; }
+            public ushort UShort { get; set; }
+            public uint UInt { get; set; }
+            public ulong ULong { get; set; }
         }
     }
 }
