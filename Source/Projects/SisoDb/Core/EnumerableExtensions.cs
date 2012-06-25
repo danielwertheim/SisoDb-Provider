@@ -28,7 +28,7 @@ namespace SisoDb.Core
 					yield return i;
 			}
 		}	 
-		public static SisoDbException Try<T>(this IEnumerable<T> source, Action<T> action, string errorMessage) where T : class
+		public static SisoDbException TryAll<T>(this IEnumerable<T> source, Action<T> action, string errorMessage) where T : class
 		{
 			var exceptions = new List<Exception>();
 			foreach (var element in source)
