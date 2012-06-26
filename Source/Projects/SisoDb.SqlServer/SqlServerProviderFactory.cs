@@ -62,7 +62,7 @@ namespace SisoDb.SqlServer
 
         public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            var connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+            var connection = ConnectionManager.OpenClientConnection(connectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlServerDbClient(
@@ -78,9 +78,9 @@ namespace SisoDb.SqlServer
 	    {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
-                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientDbConnection(connectionInfo));
+                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientConnection(connectionInfo));
             else
-                connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+                connection = ConnectionManager.OpenClientConnection(connectionInfo);
 
             return new SqlServerDbClient(
                 GetAdoDriver(),

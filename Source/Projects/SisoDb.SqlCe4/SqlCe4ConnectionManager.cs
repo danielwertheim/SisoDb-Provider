@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
+using System.Linq;
 using SisoDb.Dac;
 using SisoDb.Resources;
 using SisoDb.SqlServer;
@@ -17,7 +18,7 @@ namespace SisoDb.SqlCe4
         {
             _warmupConnections = new ConcurrentDictionary<string, IDbConnection>();
 
-            AppDomain.CurrentDomain.DomainUnload += (sender, args) => ReleaseAllDbConnections();
+            AppDomain.CurrentDomain.DomainUnload += (sender, args) => ReleaseAllConnections();
         }
 
         public override IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
@@ -27,16 +28,16 @@ namespace SisoDb.SqlCe4
             return base.OpenServerConnection(connectionInfo);
         }
 
-        public override IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        public override IDbConnection OpenClientConnection(ISisoConnectionInfo connectionInfo)
         {
             EnsureWarmedUp((SqlCe4ConnectionInfo)connectionInfo);
 
-            return base.OpenClientDbConnection(connectionInfo);
+            return base.OpenClientConnection(connectionInfo);
         }
 
-        public override void ReleaseAllDbConnections()
+        public override void ReleaseAllConnections()
         {
-            if(_warmupConnections.Count < 1)
+            if(!_warmupConnections.Any())
                 return;
 
             var exceptions = new List<Exception>();

@@ -24,7 +24,7 @@ namespace SisoDb.Sql2005
 
         public override ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            var connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+            var connection = ConnectionManager.OpenClientConnection(connectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new Sql2005DbClient(
@@ -40,9 +40,9 @@ namespace SisoDb.Sql2005
         {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
-                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientDbConnection(connectionInfo));
+                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientConnection(connectionInfo));
             else
-                connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+                connection = ConnectionManager.OpenClientConnection(connectionInfo);
 
             return new Sql2005DbClient(
                 GetAdoDriver(),

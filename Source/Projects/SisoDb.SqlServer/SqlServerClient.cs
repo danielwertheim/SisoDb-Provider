@@ -63,7 +63,7 @@ namespace SisoDb.SqlServer
 
         public virtual void EnsureNewDb()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn =>
             {
@@ -76,7 +76,7 @@ namespace SisoDb.SqlServer
 
         public virtual void CreateDbIfItDoesNotExist()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn =>
             {
@@ -93,7 +93,7 @@ namespace SisoDb.SqlServer
 
         public virtual void InitializeExistingDb()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn =>
             {
@@ -124,7 +124,7 @@ namespace SisoDb.SqlServer
 
         public virtual void DropDbIfItExists()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn => OnExecuteNonQuery(cn, SqlStatements.GetSql("DropDatabase").Inject(ConnectionInfo.DbName)));
         }

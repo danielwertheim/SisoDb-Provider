@@ -10,10 +10,10 @@ namespace SisoDb
         void ResetOnConnectionCreated();
 
         IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo);
-        IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo);
+        IDbConnection OpenClientConnection(ISisoConnectionInfo connectionInfo);
 
-        void ReleaseAllDbConnections();
+        void ReleaseAllConnections();
         void ReleaseServerConnection(IDbConnection dbConnection);
-        void ReleaseClientDbConnection(IDbConnection dbConnection);
+        void ReleaseClientConnection(IDbConnection dbConnection);
     }
 }
