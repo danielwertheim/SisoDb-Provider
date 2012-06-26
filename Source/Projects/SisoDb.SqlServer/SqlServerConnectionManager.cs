@@ -41,14 +41,14 @@ namespace SisoDb.SqlServer
             return cn;
         }
 
-        public virtual IDbConnection OpenClientDbConnection(ISisoConnectionInfo connectionInfo)
+        public virtual IDbConnection OpenClientConnection(ISisoConnectionInfo connectionInfo)
         {
             var cn = OnConnectionCreated(Driver.CreateConnection(connectionInfo.ClientConnectionString.PlainString));
             cn.Open();
             return cn;
         }
 
-        public virtual void ReleaseAllDbConnections() { }
+        public virtual void ReleaseAllConnections() { }
 
         public virtual void ReleaseServerConnection(IDbConnection dbConnection)
         {
@@ -59,7 +59,7 @@ namespace SisoDb.SqlServer
             dbConnection.Dispose();
         }
 
-        public virtual void ReleaseClientDbConnection(IDbConnection dbConnection)
+        public virtual void ReleaseClientConnection(IDbConnection dbConnection)
         {
             if (dbConnection == null)
                 return;

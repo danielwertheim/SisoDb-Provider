@@ -15,7 +15,7 @@ namespace SisoDb.Testing
 			if (Database != null)
 			{
 				Database.Maintenance.Reset();
-                Database.ProviderFactory.ConnectionManager.ReleaseAllDbConnections();
+                Database.ProviderFactory.ConnectionManager.ReleaseAllConnections();
 				Database = null;
 			}
         }

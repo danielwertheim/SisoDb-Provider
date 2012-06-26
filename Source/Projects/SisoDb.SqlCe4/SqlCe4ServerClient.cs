@@ -28,7 +28,7 @@ namespace SisoDb.SqlCe4
             if(DbExists())
                 return;
 
-            ConnectionManager.ReleaseAllDbConnections();
+            ConnectionManager.ReleaseAllConnections();
 
             using (var engine = new SqlCeEngine(_connectionInfo.ClientConnectionString.PlainString))
             {
@@ -43,7 +43,7 @@ namespace SisoDb.SqlCe4
             if (!DbExists())
                 throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(_connectionInfo.FilePath));
 
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn =>
             {
@@ -63,7 +63,7 @@ namespace SisoDb.SqlCe4
 
         public override void DropDbIfItExists()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             IoHelper.DeleteIfFileExists(_connectionInfo.FilePath);
         }

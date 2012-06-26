@@ -60,7 +60,7 @@ namespace SisoDb.Dac
 
             if (Connection != null)
             {
-                ConnectionManager.ReleaseClientDbConnection(Connection);
+                ConnectionManager.ReleaseClientConnection(Connection);
                 Connection = null;
             }
 
