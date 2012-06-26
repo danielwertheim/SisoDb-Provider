@@ -4,15 +4,25 @@ using PineCone.Structures.Schemas;
 
 namespace SisoDb
 {
-	/// <summary>
+    /// <summary>
 	/// A short lived sessioni used to interact with the database.
 	/// </summary>
 	public interface ISession : IDisposable
 	{
         /// <summary>
+        /// Unique identifier for the Session.
+        /// </summary>
+        Guid Id { get; }
+
+        /// <summary>
         /// The database that this session is executed against.
         /// </summary>
 	    ISisoDatabase Db { get; }
+
+        /// <summary>
+        /// Indicates the current status (<see cref="SessionStatus"/>) of the session.
+        /// </summary>
+	    SessionStatus Status { get; }
 
 	    /// <summary>
 		/// Low level API that executes queries as <see cref="IQuery"/>.

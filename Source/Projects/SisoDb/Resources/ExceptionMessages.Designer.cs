@@ -368,6 +368,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session with id: &apos;{0}&apos;; against db: &apos;{1}&apos;; has allready been disposed..
+        /// </summary>
+        public static string Session_AllreadyDisposed {
+            get {
+                return ResourceManager.GetString("Session_AllreadyDisposed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided StorageProvider &apos;{0}&apos; is not supported..
         /// </summary>
         public static string SisoDbFactory_UnknownStorageProvider {
