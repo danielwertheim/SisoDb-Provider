@@ -8,7 +8,6 @@ using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Caching;
-using SisoDb.Core;
 using SisoDb.Dac;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
@@ -19,6 +18,7 @@ namespace SisoDb
     //TODO: Use composition instead for e.g IQueryEngine and IAdvanced
     public abstract class DbSession : ISession, IQueryEngine, IAdvanced
     {
+        private readonly Guid _id;
         private readonly ISisoDatabase _db;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
@@ -26,37 +26,35 @@ namespace SisoDb
         protected ITransactionalDbClient TransactionalDbClient;
         protected CacheConsumeModes CacheConsumeMode;
 
-        public ISisoDatabase Db
-        {
-            get { return _db; }
-        }
-
-        public IQueryEngine QueryEngine
-        {
-            get { return this; }
-        }
-
-        public IAdvanced Advanced
-        {
-            get { return this; }
-        }
+        public Guid Id { get { return _id; } }
+        public ISisoDatabase Db { get { return _db; } }
+        public SessionStatus Status { get; private set; }
+        public IQueryEngine QueryEngine { get { return this; } }
+        public IAdvanced Advanced { get { return this; } }
 
         protected DbSession(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
 
+            _id = Guid.NewGuid();
             _db = db;
+            Status = SessionStatus.Active;
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
             SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
-
             TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
-
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
         }
 
         public virtual void Dispose()
         {
+            if (Status.IsDisposed())
+                throw new ObjectDisposedException(typeof(DbSession).Name, ExceptionMessages.Session_AllreadyDisposed.Inject(Id, Db.Name));
+
+            Status = TransactionalDbClient.Failed
+                ? SessionStatus.DisposedWithFailure
+                : SessionStatus.Disposed;
+
             GC.SuppressFinalize(this);
 
             if (TransactionalDbClient != null)
@@ -74,6 +72,7 @@ namespace SisoDb
             }
             catch
             {
+                Status = SessionStatus.Failed;
                 TransactionalDbClient.MarkAsFailed();
                 throw;
             }
@@ -87,6 +86,7 @@ namespace SisoDb
             }
             catch
             {
+                Status = SessionStatus.Failed;
                 TransactionalDbClient.MarkAsFailed();
                 throw;
             }

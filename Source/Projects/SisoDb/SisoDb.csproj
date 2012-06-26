@@ -152,6 +152,7 @@
     <Compile Include="Serialization\DateSerializationModes.cs" />
     <Compile Include="Serialization\DateSerializationModesExtension.cs" />
     <Compile Include="Serialization\SerializerOptions.cs" />
+    <Compile Include="SessionStatus.cs" />
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="SisoDbNotSupportedException.cs" />

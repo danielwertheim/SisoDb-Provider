@@ -298,4 +298,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SqlServerTableParams_ToLongString" xml:space="preserve">
     <value>Max length of '{0}' exceeded with string value '{1}'.</value>
   </data>
+  <data name="Session_AllreadyDisposed" xml:space="preserve">
+    <value>Session with id: '{0}'; against db: '{1}'; has allready been disposed.</value>
+  </data>
 </root>
