@@ -189,6 +189,16 @@ namespace SisoDb.Specifications.Session
                 refetched.ShouldBeValueEqualTo(_orgItem);
             };
 
+            It should_be_possible_to_query_on_unsigned_values = () =>
+            {
+                var refetched = TestContext.Database.UseOnceTo().Query<UnsignedMembers>().Where(i =>
+                    i.UShort == _orgItem.UShort
+                    && i.UInt == _orgItem.UInt
+                    && i.ULong == _orgItem.ULong).SingleOrDefault();
+                refetched.ShouldNotBeNull();
+                refetched.ShouldBeValueEqualTo(_orgItem);
+            };
+
             private static UnsignedMembers _orgItem;
         }
 
