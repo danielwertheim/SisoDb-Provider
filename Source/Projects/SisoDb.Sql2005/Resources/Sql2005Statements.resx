@@ -630,4 +630,8 @@ select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0
     <value>set nocount on;
 delete from [{0}] where StructureId not in ({1});</value>
   </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}];</value>
+  </data>
 </root>
