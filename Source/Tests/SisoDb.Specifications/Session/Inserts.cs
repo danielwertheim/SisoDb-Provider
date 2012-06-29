@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Machine.Specifications;
+using PineCone.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -176,6 +177,7 @@ namespace SisoDb.Specifications.Session
             {
                 TestContext = TestContextFactory.Create();
                 _orgItem = new UnsignedMembers { UShort = 42, UInt = 142, ULong = 242 };
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UnsignedMembers>();
             };
 
             Because of = () => TestContext.Database.UseOnceTo().Insert(_orgItem);
@@ -183,23 +185,32 @@ namespace SisoDb.Specifications.Session
             It should_have_one_item_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<UnsignedMembers>(1);
 
-            It should_have_insert_one_item_with_correct_unsigned_values = () =>
+            It should_have_inserted_one_item_with_correct_unsigned_values = () =>
             {
                 var refetched = TestContext.Database.UseOnceTo().GetById<UnsignedMembers>(_orgItem.StructureId);
                 refetched.ShouldBeValueEqualTo(_orgItem);
             };
 
-            It should_be_possible_to_query_on_unsigned_values = () =>
-            {
-                var refetched = TestContext.Database.UseOnceTo().Query<UnsignedMembers>().Where(i =>
-                    i.UShort == _orgItem.UShort
-                    && i.UInt == _orgItem.UInt
-                    && i.ULong == _orgItem.ULong).SingleOrDefault();
-                refetched.ShouldNotBeNull();
-                refetched.ShouldBeValueEqualTo(_orgItem);
-            };
+            It should_not_have_inserted_any_ushort_indexes =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<UnsignedMembers>(
+                    _structureSchema,
+                    _orgItem.StructureId,
+                    x => x.UShort).ShouldBeFalse();
+
+            It should_not_have_inserted_any_uint_indexes =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<UnsignedMembers>(
+                    _structureSchema,
+                    _orgItem.StructureId,
+                    x => x.UInt).ShouldBeFalse();
+
+            It should_not_have_inserted_any_ulong_indexes =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<UnsignedMembers>(
+                    _structureSchema,
+                    _orgItem.StructureId,
+                    x => x.ULong).ShouldBeFalse();
 
             private static UnsignedMembers _orgItem;
+            private static IStructureSchema _structureSchema;
         }
 
         private class SingleStringMember
