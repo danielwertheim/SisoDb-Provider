@@ -677,4 +677,8 @@ select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0
   <data name="DropSp" xml:space="preserve">
     <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>
   </data>
+  <data name="DeleteAllExceptIds" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId not in (select Id from @ids);</value>
+  </data>
 </root>

@@ -297,6 +297,22 @@ namespace SisoDb
         ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
 
         /// <summary>
+        /// Deletes all items except items having an id present in <paramref name="ids"/>.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="ids">Ids for the structures to keep.</param>
+        /// <returns></returns>
+        ISession DeleteAllExceptIds<T>(params object[] ids) where T : class;
+
+        /// <summary>
+        /// Deletes all items except items having an id present in <paramref name="ids"/>.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        ISession DeleteAllExceptIds(Type structureType, params object[] ids);
+
+        /// <summary>
         /// Deletes structure by id.
         /// </summary>
         /// <typeparam name="T">
@@ -307,8 +323,7 @@ namespace SisoDb
         /// <summary>
         /// Deletes structure by id.
         /// </summary>
-        /// <param name="structureType">
-        /// Structure type, used as a contract defining the scheme.</param>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
         /// <param name="id"></param>
         ISession DeleteById(Type structureType, object id);
 
