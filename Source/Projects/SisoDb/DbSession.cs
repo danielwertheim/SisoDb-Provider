@@ -1106,7 +1106,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
+            Db.CacheProvider.NotifyOfPurge(structureType);
 
             TransactionalDbClient.DeleteAllExceptIds(structureIds, structureSchema);
         }
