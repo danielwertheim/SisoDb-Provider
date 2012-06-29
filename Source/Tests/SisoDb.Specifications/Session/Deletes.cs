@@ -908,5 +908,179 @@ namespace SisoDb.Specifications.Session
             private static IStructureSchema _structureSchema;
             private static IList<BigIdentityItem> _structures;
         }
+
+        [Subject(typeof(ISession), "Delete all Except ids")]
+        public class when_four_guiditems_and_deleting_all_except_first_and_last_using_generic_version : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertGuidItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<GuidItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    session.DeleteAllExceptIds<GuidItem>(_structures[0].StructureId, _structures[3].StructureId);
+                }
+            };
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
+
+            It should_have_first_and_last_items_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<GuidItem> _structures;
+        }
+
+        [Subject(typeof(ISession), "Delete all Except ids")]
+        public class when_four_guiditems_and_deleting_all_except_first_and_last_using_non_generic_version : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertGuidItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<GuidItem>();
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    session.DeleteAllExceptIds(typeof(GuidItem), _structures[0].StructureId, _structures[3].StructureId);
+                }
+            };
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
+
+            It should_have_first_and_last_items_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<GuidItem> _structures;
+        }
+
+        [Subject(typeof(ISession), "Delete all Except ids")]
+        public class when_four_guiditems_and_deleting_all_except_first_and_last_using_useonceto_generic_version : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertGuidItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<GuidItem>();
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo()
+                .DeleteAllExceptIds<GuidItem>(_structures[0].StructureId, _structures[3].StructureId);
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
+
+            It should_have_first_and_last_items_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<GuidItem> _structures;
+        }
+
+        [Subject(typeof(ISession), "Delete all Except ids")]
+        public class when_four_guiditems_and_deleting_all_except_first_and_last_using_useonceto_non_generic_version : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = TestContext.Database.InsertGuidItems(4);
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<GuidItem>();
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo()
+                .DeleteAllExceptIds(typeof(GuidItem), _structures[0].StructureId, _structures[3].StructureId);
+
+            It should_only_have_two_items_left =
+                () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
+
+            It should_have_first_and_last_items_left =
+                () => TestContext.Database.should_have_first_and_last_item_left(_structures);
+
+            It should_not_have_deleted_first_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[0].StructureId);
+
+            It should_not_have_deleted_last_item_from_structures_table =
+                () => TestContext.DbHelper.should_not_have_been_deleted_from_structures_table(_structureSchema, _structures[3].StructureId);
+
+            It should_have_deleted_second_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_structures_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_structures_table(_structureSchema, _structures[2].StructureId);
+
+            It should_have_deleted_second_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[1].StructureId);
+
+            It should_have_deleted_third_item_from_indexes_table =
+                () => TestContext.DbHelper.should_have_been_deleted_from_indexes_tables(_structureSchema, _structures[2].StructureId);
+
+            private static IStructureSchema _structureSchema;
+            private static IList<GuidItem> _structures;
+        }
     }
 }
