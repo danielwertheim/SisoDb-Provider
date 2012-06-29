@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.Session
                 }
             };
 
-            It should_have_no_items_left = () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
+            It should_have_no_items_left = () => TestContext.Database.should_have_X_num_of_items<GuidItem>(0);
         }
 
         [Subject(typeof(ISession), "Clear")]
@@ -38,7 +38,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () => TestContext.Database.UseOnceTo().Clear<GuidItem>();
 
-            It should_have_no_items_left = () => TestContext.Database.should_have_X_num_of_items<GuidItem>(2);
+            It should_have_no_items_left = () => TestContext.Database.should_have_X_num_of_items<GuidItem>(0);
         }
     }
 }
