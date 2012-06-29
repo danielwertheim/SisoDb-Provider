@@ -22,6 +22,25 @@ namespace SisoDb.Sql2005
         public Sql2005DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements) 
             : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements) {}
 
+        public override void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            var sqlFormat = SqlStatements.GetSql("DeleteAllExceptIds").Inject(structureSchema.GetStructureTableName(), "{0}");
+
+            using (var cmd = CreateCommand(string.Empty))
+            {
+                foreach (var batchedIds in structureIds.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
+                {
+                    cmd.Parameters.Clear();
+                    Driver.AddCommandParametersTo(cmd, batchedIds);
+
+                    var paramsString = string.Join(",", batchedIds.Select(p => p.Name));
+                    cmd.CommandText = sqlFormat.Inject(paramsString);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

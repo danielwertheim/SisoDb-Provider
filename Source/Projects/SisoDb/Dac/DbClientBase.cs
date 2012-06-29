@@ -324,6 +324,8 @@ namespace SisoDb.Dac
             }
         }
 
+        public abstract void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema);
+
         public virtual void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

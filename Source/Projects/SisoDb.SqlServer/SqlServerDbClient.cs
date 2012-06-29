@@ -27,6 +27,23 @@ namespace SisoDb.SqlServer
             return new SqlServerBulkCopy(this);
         }
 
+        public override void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("DeleteAllExceptIds").Inject(structureSchema.GetStructureTableName());
+
+            using (var cmd = CreateCommand(sql))
+            {
+                foreach (var idBatch in structureIds.Batch(MaxBatchedIdsSize))
+                {
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add(SqlServerIdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();

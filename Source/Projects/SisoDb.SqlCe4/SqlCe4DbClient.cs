@@ -209,6 +209,25 @@ namespace SisoDb.SqlCe4
             }
         }
 
+        public override void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            var sqlFormat = SqlStatements.GetSql("DeleteAllExceptIds").Inject(structureSchema.GetStructureTableName(), "{0}");
+
+            using (var cmd = CreateCommand(string.Empty))
+            {
+                foreach (var batchedIds in structureIds.Batch<IStructureId, IDacParameter>(MaxBatchedIdsSize, (id, batchCount) => new DacParameter(string.Concat("id", batchCount), id.Value)))
+                {
+                    cmd.Parameters.Clear();
+                    Driver.AddCommandParametersTo(cmd, batchedIds);
+
+                    var paramsString = string.Join(",", batchedIds.Select(p => p.Name));
+                    cmd.CommandText = sqlFormat.Inject(paramsString);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public override void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
