@@ -1057,6 +1057,60 @@ namespace SisoDb
             throw new SisoDbException(ExceptionMessages.ConcurrencyTokenIsOfWrongType);
         }
 
+        public virtual ISession Clear<T>() where T : class
+        {
+            Try(() => OnClear(TypeFor<T>.Type));
+
+            return this;
+        }
+
+        public virtual ISession Clear(Type structureType)
+        {
+            Try(() => OnClear(structureType));
+
+            return this;
+        }
+
+        protected virtual void OnClear(Type structureType)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+
+            var structureSchema = OnUpsertStructureSchema(structureType);
+
+            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+            Db.CacheProvider.NotifyOfPurge(structureType);
+
+            TransactionalDbClient.DeleteAll(structureSchema);
+        }
+
+        public virtual ISession DeleteAllExceptIds<T>(params object[] ids) where T : class
+        {
+            Try(() => OnDeleteAllExceptIds(TypeFor<T>.Type, ids));
+
+            return this;
+        }
+
+        public virtual ISession DeleteAllExceptIds(Type structureType, params object[] ids)
+        {
+            Try(() => OnDeleteAllExceptIds(structureType, ids));
+
+            return this;
+        }
+
+        protected virtual void OnDeleteAllExceptIds(Type structureType, params object[] ids)
+        {
+            Ensure.That(ids, "ids").HasItems();
+            Ensure.That(structureType, "structureType").IsNotNull();
+
+            var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
+            var structureSchema = OnUpsertStructureSchema(structureType);
+
+            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+            Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
+
+            TransactionalDbClient.DeleteAllExceptIds(structureIds, structureSchema);
+        }
+
         public virtual ISession DeleteById<T>(object id) where T : class
         {
             Try(() => OnDeleteById(TypeFor<T>.Type, id));
@@ -1096,34 +1150,6 @@ namespace SisoDb
             Try(() => OnDeleteByIds(structureType, ids));
 
             return this;
-        }
-
-        public virtual ISession DeleteAllExceptIds<T>(params object[] ids) where T : class
-        {
-            Try(() => OnDeleteAllExceptIds(TypeFor<T>.Type, ids));
-
-            return this;
-        }
-
-        public virtual ISession DeleteAllExceptIds(Type structureType, params object[] ids)
-        {
-            Try(() => OnDeleteAllExceptIds(structureType, ids));
-
-            return this;
-        }
-
-        protected virtual void OnDeleteAllExceptIds(Type structureType, params object[] ids)
-        {
-            Ensure.That(ids, "ids").HasItems();
-            Ensure.That(structureType, "structureType").IsNotNull();
-
-            var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
-            var structureSchema = OnUpsertStructureSchema(structureType);
-            
-            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
-
-            TransactionalDbClient.DeleteAllExceptIds(structureIds, structureSchema);
         }
 
         protected virtual void OnDeleteByIds(Type structureType, params object[] ids)

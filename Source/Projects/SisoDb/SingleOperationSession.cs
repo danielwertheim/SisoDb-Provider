@@ -248,6 +248,24 @@ namespace SisoDb
             }
         }
 
+        public virtual void Clear<T>() where T : class
+        {
+            using (var session = Db.BeginSession())
+            {
+                session.Clear<T>();
+            }
+        }
+
+        public virtual void Clear(Type structureType)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.Clear(structureType);
+            }
+        }
+
         public virtual void DeleteAllExceptIds<T>(params object[] ids) where T : class
         {
             Ensure.That(ids, "ids").HasItems();
