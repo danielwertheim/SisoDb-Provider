@@ -294,7 +294,22 @@ namespace SisoDb
 	    /// <param name="id"></param>
 	    /// <param name="modifier"></param>
         /// <param name="proceed">True to continue with update;False to abort</param>
+        /// <returns></returns>
         ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
+
+        /// <summary>
+        /// Clears all stored structures of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        ISession Clear<T>() where T : class;
+
+        /// <summary>
+        /// Clears all stored structures of type specified by <paramref name="structureType"/>.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <returns></returns>
+        ISession Clear(Type structureType);
 
         /// <summary>
         /// Deletes all items except items having an id present in <paramref name="ids"/>.
