@@ -135,6 +135,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\Caching.cs">
       <Link>Session\Caching.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Clear.cs">
+      <Link>Session\Clear.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Deletes.cs">
       <Link>Session\Deletes.cs</Link>
     </Compile>
