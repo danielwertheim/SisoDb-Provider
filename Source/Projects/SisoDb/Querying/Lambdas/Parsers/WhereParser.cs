@@ -264,8 +264,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
         protected virtual Expression VisitStringMethodCall(MethodCallExpression e)
         {
             var member = e.GetRightMostMember();
-            var methodName = e.Method.Name;
 
+            var expressionIsNotForMember = member == null;
+            if (expressionIsNotForMember)
+                return Visit(Expression.Constant(e.Evaluate()));
+
+            var methodName = e.Method.Name;
             switch (methodName)
             {
                 case "Contains":
@@ -295,26 +299,21 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
             switch (methodName)
             {
-                case "Contains":
                 case "QxContains":
                     Nodes.AddNode(CreateNewMemberNode(member).ToStringContainsNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
-                case "StartsWith":
                 case "QxStartsWith":
                     Nodes.AddNode(CreateNewMemberNode(member).ToStringStartsWithNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
-                case "EndsWith":
                 case "QxEndsWith":
                     Nodes.AddNode(CreateNewMemberNode(member).ToStringEndsWithNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
                 case "QxLike":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLikeNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
-                case "ToLower":
                 case "QxToLower":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLowerNode());
                     break;
-                case "ToUpper":
                 case "QxToUpper":
                     Nodes.AddNode(CreateNewMemberNode(member).ToUpperNode());
                     break;
