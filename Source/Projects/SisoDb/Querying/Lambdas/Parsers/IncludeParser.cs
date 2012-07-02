@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
+using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using NCore.Expressions;
+using SisoDb.Resources;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {
@@ -27,6 +29,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
             foreach (var includeExpression in includeExpressions)
             {
                 var memberExpression = includeExpression.GetRightMostMember();
+                if (memberExpression == null)
+                    throw new SisoDbException(ExceptionMessages.IncludeExpressionDoesNotTargetMember.Inject(includeExpression.ToString()));
+
                 var idReferencePath = memberExpression.ToPath();
                 var objectReferencePath = BuildObjectReferencePath(idReferencePath);
 

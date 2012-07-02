@@ -15,5 +15,10 @@ namespace SisoDb.Querying.Lambdas.Parsers
 		{
 			return e.InnerLambdaExpression;
 		}
+
+        public override string ToString()
+        {
+            return InnerLambdaExpression.ToString();
+        }
 	}
 }
