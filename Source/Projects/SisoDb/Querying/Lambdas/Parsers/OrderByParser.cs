@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using EnsureThat;
+using NCore;
 using NCore.Expressions;
 using NCore.Reflections;
 using PineCone.Structures.Schemas;
@@ -27,9 +28,12 @@ namespace SisoDb.Querying.Lambdas.Parsers
 			foreach (var orderByExpression in orderByExpressions.Where(e => e != null))
 			{
 				var memberExpression = orderByExpression.InnerLambdaExpression.Body.GetRightMostMember();
+                if (memberExpression == null)
+                    throw new SisoDbException(ExceptionMessages.OrderByExpressionDoesNotTargetMember.Inject(orderByExpression.ToString()));
+
 				var callExpression = (orderByExpression.InnerLambdaExpression.Body is UnaryExpression)
-										 ? ((UnaryExpression)orderByExpression.InnerLambdaExpression.Body).Operand as MethodCallExpression
-										 : orderByExpression.InnerLambdaExpression.Body as MethodCallExpression;
+                    ? ((UnaryExpression)orderByExpression.InnerLambdaExpression.Body).Operand as MethodCallExpression
+					: orderByExpression.InnerLambdaExpression.Body as MethodCallExpression;
 				
 				if (callExpression != null)
 					throw new SisoDbException(ExceptionMessages.OrderByParser_UnsupportedMethodForSortingDirection);
