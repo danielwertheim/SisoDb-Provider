@@ -40,8 +40,9 @@
     <Reference Include="Machine.Specifications.Clr4">
       <HintPath>..\..\packages\Machine.Specifications.0.5.7\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
     </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.30.0\lib\net40\NCore.dll</HintPath>
+    <Reference Include="NCore, Version=0.30.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NCore.0.30.1\lib\net40\NCore.dll</HintPath>
     </Reference>
     <Reference Include="PineCone, Version=3.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
