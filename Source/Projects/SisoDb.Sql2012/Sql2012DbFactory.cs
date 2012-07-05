@@ -1,17 +1,10 @@
 ﻿namespace SisoDb.Sql2012
 {
-    public class Sql2012DbFactory : ISisoDatabaseFactory
+    public class Sql2012DbFactory : ISisoDbFactory
     {
-		public static IDbProviderFactory ProviderFactory { get; set; }
-
-    	static Sql2012DbFactory()
+        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory providerFactory = null)
         {
-			ProviderFactory = new Sql2012ProviderFactory();
-        }
-
-        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
-        {
-            return new Sql2012Database(connectionInfo, ProviderFactory);
+            return new Sql2012Database(connectionInfo, providerFactory ?? new Sql2012ProviderFactory());
         }
     }
 }

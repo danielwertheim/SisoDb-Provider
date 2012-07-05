@@ -5,13 +5,8 @@ namespace SisoDb.Sql2012
 {
     public class Sql2012ProviderFactory : SqlServerProviderFactory
     {
-        public Sql2012ProviderFactory() : base(new Sql2012Statements())
-        { }
-
-        public override StorageProviders ProviderType
-        {
-            get { return StorageProviders.Sql2012; }
-        }
+        public Sql2012ProviderFactory() 
+            : base(StorageProviders.Sql2012,  new Sql2012Statements()) { }
 
 	    public override IDbQueryGenerator GetDbQueryGenerator()
 	    {

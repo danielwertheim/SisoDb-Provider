@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using EnsureThat;
+using System.Threading;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
@@ -12,30 +12,29 @@ using SisoDb.Structures;
 
 namespace SisoDb.SqlServer
 {
-	public abstract class SqlServerProviderFactory : IDbProviderFactory
+    public abstract class SqlServerProviderFactory : IDbProviderFactory
     {
-		private IConnectionManager _connectionManager;
+        protected readonly Lazy<IConnectionManager> ConnectionManagerFn; 
 	    protected readonly ISqlStatements SqlStatements;
 
-        public abstract StorageProviders ProviderType { get; }
+        public StorageProviders ProviderType
+        {
+            get; private set;
+        }
 
         public IConnectionManager ConnectionManager
         {
-            get { return _connectionManager; }
-            set
-            {
-                Ensure.That(value, "ConnectionManager").IsNotNull();
-                _connectionManager = value;
-            }
+            get { return ConnectionManagerFn.Value; }
         }
 
-	    protected SqlServerProviderFactory(ISqlStatements sqlStatements)
+        protected SqlServerProviderFactory(StorageProviders storageProvider, ISqlStatements sqlStatements)
         {
-            _connectionManager = OnCreateConnectionManager();
-	        SqlStatements = sqlStatements;
+            ProviderType = storageProvider;
+            SqlStatements = sqlStatements;
+            ConnectionManagerFn = new Lazy<IConnectionManager>(CreateConnectionManager, LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
-	    protected virtual IConnectionManager OnCreateConnectionManager()
+	    protected virtual IConnectionManager CreateConnectionManager()
 	    {
 	        return new SqlServerConnectionManager(GetAdoDriver());
 	    }
@@ -57,7 +56,7 @@ namespace SisoDb.SqlServer
 
 		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
-            return new SqlServerClient(GetAdoDriver(), connectionInfo, _connectionManager, SqlStatements);
+            return new SqlServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
         }
 
         public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)

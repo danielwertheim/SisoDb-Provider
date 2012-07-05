@@ -7,6 +7,8 @@ namespace SisoDb.SqlServer
 {
     public class SqlServerConnectionManager : IConnectionManager
     {
+        private Func<IDbConnection, IDbConnection> _onConnectionCreated;
+
         protected readonly IAdoDriver Driver;
 
         public SqlServerConnectionManager(IAdoDriver driver)
@@ -16,8 +18,6 @@ namespace SisoDb.SqlServer
             Driver = driver;
             OnConnectionCreated = cn => cn;
         }
-
-        private Func<IDbConnection, IDbConnection> _onConnectionCreated;
 
         public Func<IDbConnection, IDbConnection> OnConnectionCreated
         {
@@ -29,7 +29,7 @@ namespace SisoDb.SqlServer
             }
         }
 
-        public virtual void ResetOnConnectionCreated()
+        public virtual void Reset()
         {
             OnConnectionCreated = cn => cn;
         }

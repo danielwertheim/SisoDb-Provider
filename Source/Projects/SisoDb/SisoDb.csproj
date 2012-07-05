@@ -196,7 +196,7 @@
     <Compile Include="Querying\Sql\SqlWhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\DbQuery.cs" />
     <Compile Include="IConnectionString.cs" />
-    <Compile Include="ISisoDatabaseFactory.cs" />
+    <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="Dac\BulkInserts\IndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\SingleResultReaderBase.cs" />
     <Compile Include="Dac\BulkInserts\StructuresReader.cs" />

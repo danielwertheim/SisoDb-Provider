@@ -11,15 +11,10 @@ namespace SisoDb.SqlCe4
 {
     public class SqlCe4ProviderFactory : SqlServerProviderFactory
     {
-        public override StorageProviders ProviderType
-        {
-            get { return StorageProviders.SqlCe4; }
-        }
+        public SqlCe4ProviderFactory() 
+            : base(StorageProviders.SqlCe4, new SqlCe4Statements()) { }
 
-        public SqlCe4ProviderFactory() : base(new SqlCe4Statements())
-        { }
-
-        protected override IConnectionManager OnCreateConnectionManager()
+        protected override IConnectionManager CreateConnectionManager()
         {
             return new SqlCe4ConnectionManager(GetAdoDriver());
         }

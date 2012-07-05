@@ -8,16 +8,12 @@ using SisoDb.Structures;
 
 namespace SisoDb
 {
-	/// <summary>
-	/// When targeting a Database oriented provider, e.g all providers extending <see cref="SisoDatabase"/>, the infrastructure
-	/// could make use of this factory to ease the interaction with <see cref="SisoDatabase"/>.
-	/// </summary>
 	public interface IDbProviderFactory
     {
         StorageProviders ProviderType { get; }
 
-        IConnectionManager ConnectionManager { get; set; }
-
+	    IConnectionManager ConnectionManager { get; }
+    
 	    IAdoDriver GetAdoDriver();
 
 	    IDbSettings GetSettings();

@@ -121,14 +121,14 @@ namespace SisoDb
             }
         }
 
-        public virtual void Insert(Type structuretype, object item)
+        public virtual void Insert(Type structureType, object item)
         {
-            Ensure.That(structuretype, "structuretype").IsNotNull();
+            Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(item, "item").IsNotNull();
 
             using (var session = Db.BeginSession())
             {
-                session.Insert(structuretype, item);
+                session.Insert(structureType, item);
             }
         }
 

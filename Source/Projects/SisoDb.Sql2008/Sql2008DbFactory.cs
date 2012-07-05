@@ -1,17 +1,10 @@
 ﻿namespace SisoDb.Sql2008
 {
-    public class Sql2008DbFactory : ISisoDatabaseFactory
+    public class Sql2008DbFactory : ISisoDbFactory
     {
-		public static IDbProviderFactory ProviderFactory { get; set; }
-
-    	static Sql2008DbFactory()
+        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory providerFactory = null)
         {
-			ProviderFactory = new Sql2008ProviderFactory();
-        }
-
-        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
-        {
-            return new Sql2008Database(connectionInfo, ProviderFactory);
+            return new Sql2008Database(connectionInfo, providerFactory ?? new Sql2008ProviderFactory());
         }
     }
 }

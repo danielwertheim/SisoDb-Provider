@@ -1,17 +1,10 @@
 ﻿namespace SisoDb.Sql2005
 {
-    public class Sql2005DbFactory : ISisoDatabaseFactory
+    public class Sql2005DbFactory : ISisoDbFactory
     {
-		public static IDbProviderFactory ProviderFactory { get; set; }
-
-    	static Sql2005DbFactory()
+        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory providerFactory = null)
         {
-			ProviderFactory = new Sql2005ProviderFactory();
-        }
-
-        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
-        {
-            return new Sql2005Database(connectionInfo, ProviderFactory);
+            return new Sql2005Database(connectionInfo, providerFactory ?? new Sql2005ProviderFactory());
         }
     }
 }

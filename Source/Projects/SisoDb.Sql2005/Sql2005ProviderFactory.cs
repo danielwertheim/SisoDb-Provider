@@ -8,14 +8,8 @@ namespace SisoDb.Sql2005
 {
     public class Sql2005ProviderFactory : SqlServerProviderFactory
     {
-        public Sql2005ProviderFactory()
-            : base(new Sql2005Statements())
-        { }
-
-        public override StorageProviders ProviderType
-        {
-            get { return StorageProviders.Sql2005; }
-        }
+        public Sql2005ProviderFactory() 
+            : base(StorageProviders.Sql2005, new Sql2005Statements()) { }
 
         public override IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
         {
