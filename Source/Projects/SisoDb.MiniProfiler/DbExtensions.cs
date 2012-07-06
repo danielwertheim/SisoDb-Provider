@@ -14,7 +14,7 @@ namespace SisoDb.MiniProfiler
 
         public static void DeactivateProfiler(this ISisoDatabase db)
         {
-            db.ProviderFactory.ConnectionManager.ResetOnConnectionCreated();
+            db.ProviderFactory.ConnectionManager.Reset();
         }
     }
 }

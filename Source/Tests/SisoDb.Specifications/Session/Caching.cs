@@ -33,7 +33,7 @@ namespace SisoDb.Specifications.Session
                 () => _cacheContainer.GetCount().ShouldEqual(1);
 
             It should_have_one_the_item_in_cache =
-                () => _cacheContainer.First().Value.CastAs<IAmCached>().ShouldBeValueEqualTo(_originalStructure);
+                () => (_cacheContainer.First().Value as IAmCached).ShouldBeValueEqualTo(_originalStructure);
 
             It should_exist =
                 () => _itemExists.ShouldBeTrue();

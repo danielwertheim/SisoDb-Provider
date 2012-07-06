@@ -23,7 +23,7 @@ namespace SisoDb.Specifications.Database
             It should_have_created_identities_table =
                 () => _testContext.DbHelper.TableExists("SisoDbIdentities").ShouldBeTrue();
 
-#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
             It should_have_created_custom_ids_data_types = () =>
             {
                 _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeTrue();
@@ -42,7 +42,7 @@ namespace SisoDb.Specifications.Database
                 _testContext.DbHelper.TypeExists("SisoTexts").ShouldBeTrue();
             };
 #endif
-#if SqlCe4Provider
+#if SqlCe4Provider || Sql2005Provider
             It should_not_have_created_custom_ids_data_types = () =>
             {
                 _testContext.DbHelper.TypeExists("SisoGuidIds").ShouldBeFalse();

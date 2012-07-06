@@ -286,6 +286,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The include expression &apos;{0}&apos; does not target a member in the structure..
+        /// </summary>
+        public static string IncludeExpressionDoesNotTargetMember {
+            get {
+                return ResourceManager.GetString("IncludeExpressionDoesNotTargetMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An Index-instance must be provided with a name..
         /// </summary>
         public static string Index_IsMissingName {
@@ -341,6 +350,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The order by expression &apos;{0}&apos; does not target a member in the structure..
+        /// </summary>
+        public static string OrderByExpressionDoesNotTargetMember {
+            get {
+                return ResourceManager.GetString("OrderByExpressionDoesNotTargetMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The only supported methods for marking sortings are Asc() and Desc()..
         /// </summary>
         public static string OrderByParser_UnsupportedMethodForSortingDirection {
@@ -364,6 +382,15 @@ namespace SisoDb.Resources {
         public static string ReadOnceQueryable_YieldingNotSupported {
             get {
                 return ResourceManager.GetString("ReadOnceQueryable_YieldingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session with id: &apos;{0}&apos;; against db: &apos;{1}&apos;; has allready been disposed..
+        /// </summary>
+        public static string Session_AllreadyDisposed {
+            get {
+                return ResourceManager.GetString("Session_AllreadyDisposed", resourceCulture);
             }
         }
         

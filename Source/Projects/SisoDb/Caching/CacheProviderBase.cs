@@ -30,7 +30,7 @@ namespace SisoDb.Caching
 
         public virtual void Clear()
         {
-            var ex = CacheEntries.Values.Try(e => e.Clear(), ExceptionMessages.CacheProvider_Clear_failed);
+            var ex = CacheEntries.Values.TryAll(e => e.Clear(), ExceptionMessages.CacheProvider_Clear_failed);
             if (ex != null)
                 throw ex;
         }

@@ -1,17 +1,10 @@
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4DbFactory : ISisoDatabaseFactory
+    public class SqlCe4DbFactory : ISisoDbFactory
     {
-		public static IDbProviderFactory ProviderFactory { get; set; }
-
-		static SqlCe4DbFactory()
+        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo, IDbProviderFactory providerFactory = null)
         {
-			ProviderFactory = new SqlCe4ProviderFactory();
-        }
-
-        public virtual ISisoDatabase CreateDatabase(ISisoConnectionInfo connectionInfo)
-        {
-			return new SqlCe4Database(connectionInfo, ProviderFactory);
+            return new SqlCe4Database(connectionInfo, providerFactory ?? new SqlCe4ProviderFactory());
         }
     }
 }

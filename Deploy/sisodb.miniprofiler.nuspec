@@ -16,13 +16,13 @@
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>miniprofiler,profiling,sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,nosql</tags>
+		<tags>miniprofiler,profiling,sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,poco,blob,nosql</tags>
 		<dependencies>
 		    <dependency id="SisoDb" version="[$version$]" />
-			<dependency id="Ensure.That" version="0.7.0" />
-			<dependency id="NCore" version="[0.28.0]" />
-			<dependency id="PineCone" version="[3.1.1]" />
-			<dependency id="MiniProfiler" version="2.0.1" />
+			<dependency id="Ensure.That" version="0.8.1" />
+			<dependency id="NCore" version="[0.30.1]" />
+			<dependency id="PineCone" version="[3.4.1]" />
+			<dependency id="MiniProfiler" version="2.0.2" />
 		</dependencies>
 	</metadata>
 	<files>

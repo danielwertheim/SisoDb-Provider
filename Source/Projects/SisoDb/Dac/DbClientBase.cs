@@ -60,7 +60,7 @@ namespace SisoDb.Dac
 
             if (Connection != null)
             {
-                ConnectionManager.ReleaseClientDbConnection(Connection);
+                ConnectionManager.ReleaseClientConnection(Connection);
                 Connection = null;
             }
 
@@ -323,6 +323,17 @@ namespace SisoDb.Dac
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public virtual void DeleteAll(IStructureSchema structureSchema)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+
+            var sql = SqlStatements.GetSql("DeleteAll").Inject(structureSchema.GetStructureTableName());
+
+            ExecuteNonQuery(sql);
+        }
+
+        public abstract void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema);
 
         public virtual void DeleteById(IStructureId structureId, IStructureSchema structureSchema)
         {

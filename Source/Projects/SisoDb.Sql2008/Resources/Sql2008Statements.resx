@@ -336,13 +336,13 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity not null,
+[RowId] [bigint] identity not null constraint [SPK_{0}] unique clustered,
 [StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity not null,
+[RowId] [bigint] identity not null constraint [SPK_{0}] unique clustered,
 [StructureId] [bigint] not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
@@ -350,7 +350,7 @@ insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity not null,
+[RowId] [bigint] identity not null constraint [SPK_{0}] unique clustered,
 [StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
@@ -678,5 +678,13 @@ select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0
   </data>
   <data name="DropSp" xml:space="preserve">
     <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>
+  </data>
+  <data name="DeleteAllExceptIds" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId not in (select Id from @ids);</value>
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}];</value>
   </data>
 </root>

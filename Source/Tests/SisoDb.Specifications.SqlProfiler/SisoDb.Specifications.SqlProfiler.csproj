@@ -32,21 +32,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnsureThat">
-      <HintPath>..\..\packages\Ensure.That.0.7.0\lib\net40\EnsureThat.dll</HintPath>
+      <HintPath>..\..\packages\Ensure.That.0.8.1\lib\net40\EnsureThat.dll</HintPath>
     </Reference>
-    <Reference Include="Machine.Specifications, Version=0.5.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Machine.Specifications">
+      <HintPath>..\..\packages\Machine.Specifications.0.5.7\lib\net40\Machine.Specifications.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Specifications.Clr4">
+      <HintPath>..\..\packages\Machine.Specifications.0.5.7\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
+    </Reference>
+    <Reference Include="NCore, Version=0.30.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Machine.Specifications.0.5.7-beta4\lib\net40\Machine.Specifications.dll</HintPath>
+      <HintPath>..\..\packages\NCore.0.30.1\lib\net40\NCore.dll</HintPath>
     </Reference>
-    <Reference Include="Machine.Specifications.Clr4, Version=0.5.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PineCone, Version=3.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Machine.Specifications.0.5.7-beta4\lib\net40\Machine.Specifications.Clr4.dll</HintPath>
-    </Reference>
-    <Reference Include="NCore">
-      <HintPath>..\..\packages\NCore.0.28.0\lib\net40\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone">
-      <HintPath>..\..\packages\PineCone.3.1.1\lib\net40\PineCone.dll</HintPath>
+      <HintPath>..\..\packages\PineCone.3.4.1\lib\net40\PineCone.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -134,6 +134,9 @@
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Caching.cs">
       <Link>Session\Caching.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Clear.cs">
+      <Link>Session\Clear.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Deletes.cs">
       <Link>Session\Deletes.cs</Link>

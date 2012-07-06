@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Machine.Specifications;
+using PineCone.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -75,7 +76,7 @@ namespace SisoDb.Specifications.Session
                 refetched.Value.ShouldBeNull();
             };
         }
-#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
         [Subject(typeof(ISession), "Insert")]
         public class when_inserting_item_with_single_datetime_member_having_min_value : SpecificationBase
         {
@@ -151,8 +152,8 @@ namespace SisoDb.Specifications.Session
                 TestContext = TestContextFactory.Create();
             };
 
-            Because of = () => 
-                TestContext.Database.UseOnceTo().InsertMany(new []
+            Because of = () =>
+                TestContext.Database.UseOnceTo().InsertMany(new[]
                 {
                     new SingleTextMember { Text = null },
                     new SingleTextMember { Text = null },
@@ -167,6 +168,49 @@ namespace SisoDb.Specifications.Session
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleTextMember>().ToArray();
                 refetched.All(s => s.Text == null).ShouldBeTrue();
             };
+        }
+
+        [Subject(typeof(ISession), "Insert")]
+        public class when_inserting_item_with_unsigned_members : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _orgItem = new UnsignedMembers { UShort = 42, UInt = 142, ULong = 242 };
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<UnsignedMembers>();
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_orgItem);
+
+            It should_have_one_item_inserted =
+                () => TestContext.Database.should_have_X_num_of_items<UnsignedMembers>(1);
+
+            It should_have_inserted_one_item_with_correct_unsigned_values = () =>
+            {
+                var refetched = TestContext.Database.UseOnceTo().GetById<UnsignedMembers>(_orgItem.StructureId);
+                refetched.ShouldBeValueEqualTo(_orgItem);
+            };
+
+            It should_not_have_inserted_any_ushort_indexes =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<UnsignedMembers>(
+                    _structureSchema,
+                    _orgItem.StructureId,
+                    x => x.UShort).ShouldBeFalse();
+
+            It should_not_have_inserted_any_uint_indexes =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<UnsignedMembers>(
+                    _structureSchema,
+                    _orgItem.StructureId,
+                    x => x.UInt).ShouldBeFalse();
+
+            It should_not_have_inserted_any_ulong_indexes =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<UnsignedMembers>(
+                    _structureSchema,
+                    _orgItem.StructureId,
+                    x => x.ULong).ShouldBeFalse();
+
+            private static UnsignedMembers _orgItem;
+            private static IStructureSchema _structureSchema;
         }
 
         private class SingleStringMember
@@ -191,6 +235,14 @@ namespace SisoDb.Specifications.Session
         {
             public Guid StructureId { get; set; }
             public DateTime[] Dates { get; set; }
+        }
+
+        private class UnsignedMembers
+        {
+            public Guid StructureId { get; set; }
+            public ushort UShort { get; set; }
+            public uint UInt { get; set; }
+            public ulong ULong { get; set; }
         }
     }
 }

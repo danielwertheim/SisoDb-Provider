@@ -155,14 +155,14 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
   </data>
   <data name="CreateDatabase" xml:space="preserve">
     <value>create database [{0}];
-ALTER DATABASE [{0}] SET COMPATIBILITY_LEVEL = 90;</value>
+EXEC sp_dbcmptlevel [{0}], 90;</value>
   </data>
   <data name="CreateDatesIndexesGuid" xml:space="preserve">
     <value>create table [{0}] (
 [RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [uniqueidentifier] not null,
 [MemberPath] [varchar](250) not null,
-[Value] [datetime2] null,
+[Value] [datetime] null,
 [StringValue] [varchar](33) null);
 
 create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
@@ -174,7 +174,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [bigint] not null,
 [MemberPath] [varchar](250) not null,
-[Value] [datetime2] null,
+[Value] [datetime] null,
 [StringValue] [varchar](33) null);
 
 create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
@@ -186,7 +186,7 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
 [RowId] [bigint] identity not null constraint [PK_{0}] primary key clustered ([RowId]),
 [StructureId] [nvarchar](16) not null,
 [MemberPath] [varchar](250) not null,
-[Value] [datetime2] null,
+[Value] [datetime] null,
 [StringValue] [varchar](33) null);
 
 create nonclustered index [IX_{0}_Q] on [{0}] ([StructureId],[MemberPath],[Value]);
@@ -336,13 +336,13 @@ alter table [{0}] with nocheck add constraint FK_{0}_{1} foreign key (StructureI
   </data>
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity not null,
+[RowId] [bigint] identity not null constraint [SPK_{0}] unique clustered,
 [StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity not null,
+[RowId] [bigint] identity not null constraint [SPK_{0}] unique clustered,
 [StructureId] [bigint] not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);
 
@@ -350,7 +350,7 @@ insert into [SisoDbIdentities] ([EntityName]) values(@entityName);</value>
   </data>
   <data name="CreateStructuresString" xml:space="preserve">
     <value>create table [{0}] (
-[RowId] [bigint] identity not null,
+[RowId] [bigint] identity not null constraint [SPK_{0}] unique clustered,
 [StructureId] [nvarchar](16) not null constraint [PK_{0}] primary key nonclustered ([StructureId]),
 [Json] [nvarchar](max) not null);</value>
   </data>
@@ -438,7 +438,7 @@ delete from [{0}] where StructureId = @id;</value>
   </data>
   <data name="DeleteByIds" xml:space="preserve">
     <value>set nocount on;
-delete from [{0}] where StructureId in (select Id from @ids);</value>
+delete from [{0}] where StructureId in ({1});</value>
   </data>
   <data name="DeleteByQuery" xml:space="preserve">
     <value>set nocount on;
@@ -484,7 +484,7 @@ select Json from [{0}] where StructureId =@id;</value>
   </data>
   <data name="GetJsonByIds" xml:space="preserve">
     <value>set nocount on;
-select Json from [{0}] where StructureId in (select Id from @ids);</value>
+select Json from [{0}] where StructureId in ({1});</value>
   </data>
   <data name="GetJsonByIdWithLock" xml:space="preserve">
     <value>set nocount on;
@@ -548,59 +548,6 @@ begin
 		[CurrentId] [bigint] NOT NULL default(0),
 		constraint [PK_SisoDbIdentities] primary key([EntityName])
 	);
-end</value>
-  </data>
-  <data name="Sys_Types_CreateIfNotExists" xml:space="preserve">
-    <value>use [{0}];
-set nocount on;
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuidIds') is null
-begin
-create type SisoGuidIds as table (Id uniqueidentifier primary key not null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIdentityIds') is null
-begin
-create type SisoIdentityIds as table (Id bigint primary key not null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStringIds') is null
-begin
-create type SisoStringIds as table (Id nvarchar(16) primary key not null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoIntegers') is null
-begin
-create type SisoIntegers as table ([Value] bigint null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoFractals') is null
-begin
-create type SisoFractals as table ([Value] real null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoDates') is null
-begin
-create type SisoDates as table ([Value] datetime2 null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoBooleans') is null
-begin
-create type SisoBooleans as table ([Value] bit null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoGuids') is null
-begin
-create type SisoGuids as table ([Value] uniqueidentifier null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoStrings') is null
-begin
-create type SisoStrings as table ([Value] nvarchar(50) null);	
-end
-
-if(select 1 from sys.table_types where is_table_type = 1 and is_user_defined = 1 and name = 'SisoTexts') is null
-begin
-create type SisoTexts as table ([Value] nvarchar(50) null);	
 end</value>
   </data>
   <data name="TableExists" xml:space="preserve">
@@ -678,5 +625,13 @@ select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0
   </data>
   <data name="DropSp" xml:space="preserve">
     <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>
+  </data>
+  <data name="DeleteAllExceptIds" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}] where StructureId not in ({1});</value>
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>set nocount on;
+delete from [{0}];</value>
   </data>
 </root>

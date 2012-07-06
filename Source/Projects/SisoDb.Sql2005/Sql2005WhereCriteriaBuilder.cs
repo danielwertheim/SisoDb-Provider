@@ -3,9 +3,9 @@ using SisoDb.Dac;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Sql;
 
-namespace SisoDb.SqlCe4
+namespace SisoDb.Sql2005
 {
-    public class SqlCe4WhereCriteriaBuilder : SqlWhereCriteriaBuilder
+    public class Sql2005WhereCriteriaBuilder : SqlWhereCriteriaBuilder
     {
         public override void AddSetOfValues(ArrayValueNode valueNode)
         {

@@ -115,7 +115,7 @@ namespace SisoDb.Dac.BulkInserts
 
         protected virtual void InsertIndexes(IndexInsertAction[] groupedIndexInsertActions)
         {
-            foreach (var groupedIndexInsertAction in groupedIndexInsertActions)
+            foreach (var groupedIndexInsertAction in groupedIndexInsertActions.Where(i => i.Action != null))
                 groupedIndexInsertAction.Action.Invoke(groupedIndexInsertAction.Data, MainDbClient);
         }
 
@@ -261,6 +261,9 @@ namespace SisoDb.Dac.BulkInserts
                         container.Action = (data, dbClient) => BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.TextsTableName);
+                    break;
+                default:
+                    container.Action = null;
                     break;
             }
 

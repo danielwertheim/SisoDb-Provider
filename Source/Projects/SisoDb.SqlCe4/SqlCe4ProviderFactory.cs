@@ -11,15 +11,10 @@ namespace SisoDb.SqlCe4
 {
     public class SqlCe4ProviderFactory : SqlServerProviderFactory
     {
-        public override StorageProviders ProviderType
-        {
-            get { return StorageProviders.SqlCe4; }
-        }
+        public SqlCe4ProviderFactory() 
+            : base(StorageProviders.SqlCe4, new SqlCe4Statements()) { }
 
-        public SqlCe4ProviderFactory() : base(new SqlCe4Statements())
-        { }
-
-        protected override IConnectionManager OnCreateConnectionManager()
+        protected override IConnectionManager CreateConnectionManager()
         {
             return new SqlCe4ConnectionManager(GetAdoDriver());
         }
@@ -36,7 +31,7 @@ namespace SisoDb.SqlCe4
 
         public override ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
-            var connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+            var connection = ConnectionManager.OpenClientConnection(connectionInfo);
             var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlCe4DbClient(
@@ -52,9 +47,9 @@ namespace SisoDb.SqlCe4
 	    {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
-                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientDbConnection(connectionInfo));
+                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientConnection(connectionInfo));
             else
-                connection = ConnectionManager.OpenClientDbConnection(connectionInfo);
+                connection = ConnectionManager.OpenClientConnection(connectionInfo);
 
             return new SqlCe4DbClient(
                 GetAdoDriver(), 

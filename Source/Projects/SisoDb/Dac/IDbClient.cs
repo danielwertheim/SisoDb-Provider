@@ -31,7 +31,9 @@ namespace SisoDb.Dac
         bool TableExists(string name);
         ModelTablesInfo GetModelTablesInfo(IStructureSchema structureSchema);
         ModelTableStatuses GetModelTableStatuses(ModelTableNames names);
-        
+
+        void DeleteAll(IStructureSchema structureSchema);
+        void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema);
 		void DeleteById(IStructureId structureId, IStructureSchema structureSchema);
         void DeleteByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
         void DeleteByQuery(IDbQuery query, IStructureSchema structureSchema);

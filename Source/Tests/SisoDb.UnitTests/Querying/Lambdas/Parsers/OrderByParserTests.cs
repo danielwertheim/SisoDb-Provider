@@ -24,9 +24,9 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			var parser = CreateParser();
 			var nonMemberExpression = new OrderByAscExpression(Reflect<MyClass>.BoolExpressionFrom(m => m.Int1 == 32));
 
-			var ex = Assert.Throws<NCoreException>(() => parser.Parse(new[] { nonMemberExpression }));
+			var ex = Assert.Throws<SisoDbException>(() => parser.Parse(new[] { nonMemberExpression }));
 
-			Assert.AreEqual("No MemberExpression found in expression: '(m.Int1 == 32)'.", ex.Message);
+            Assert.AreEqual(ExceptionMessages.OrderByExpressionDoesNotTargetMember.Inject("m => (m.Int1 == 32)"), ex.Message);
 		}
 
 		[Test]

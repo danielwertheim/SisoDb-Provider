@@ -5,14 +5,8 @@ namespace SisoDb.Sql2008
 {
     public class Sql2008ProviderFactory : SqlServerProviderFactory
     {
-        public Sql2008ProviderFactory()
-            : base(new Sql2008Statements())
-        { }
-
-        public override StorageProviders ProviderType
-        {
-            get { return StorageProviders.Sql2008; }
-        }
+        public Sql2008ProviderFactory() 
+            : base(StorageProviders.Sql2008,  new Sql2008Statements()) { }
 
         public override IDbQueryGenerator GetDbQueryGenerator()
         {

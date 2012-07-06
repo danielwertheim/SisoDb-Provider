@@ -2,19 +2,20 @@
 using System.Data;
 using EnsureThat;
 using NCore;
+using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.Resources;
 
-namespace SisoDb.Dac
+namespace SisoDb.SqlServer
 {
-    public class DbServerClient : IServerClient
+    public class SqlServerClient : IServerClient
     {
         protected readonly IAdoDriver Driver;
         protected readonly ISisoConnectionInfo ConnectionInfo;
         protected readonly IConnectionManager ConnectionManager;
         protected readonly ISqlStatements SqlStatements;
 
-		public DbServerClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+		public SqlServerClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IConnectionManager connectionManager, ISqlStatements sqlStatements)
 		{
 		    Ensure.That(driver, "driver").IsNotNull();
             Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
@@ -62,20 +63,20 @@ namespace SisoDb.Dac
 
         public virtual void EnsureNewDb()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn =>
             {
                 OnExecuteNonQuery(cn, SqlStatements.GetSql("DropDatabase").Inject(ConnectionInfo.DbName));
                 OnExecuteNonQuery(cn, SqlStatements.GetSql("CreateDatabase").Inject(ConnectionInfo.DbName));
-                OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(ConnectionInfo.DbName));
-                OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(ConnectionInfo.DbName));
+                OnInitializeSysTables(cn);
+                OnInitializeSysTypes(cn);
             });
         }
 
         public virtual void CreateDbIfItDoesNotExist()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn =>
             {
@@ -85,14 +86,14 @@ namespace SisoDb.Dac
                     return;
                 
                 OnExecuteNonQuery(cn, SqlStatements.GetSql("CreateDatabase").Inject(ConnectionInfo.DbName));
-                OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(ConnectionInfo.DbName));
-                OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(ConnectionInfo.DbName));
+                OnInitializeSysTables(cn);
+                OnInitializeSysTypes(cn);
             });
         }
 
         public virtual void InitializeExistingDb()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn =>
             {
@@ -101,9 +102,19 @@ namespace SisoDb.Dac
                 if (!exists)
                     throw new SisoDbException(ExceptionMessages.SqlDatabase_InitializeExisting_DbDoesNotExist.Inject(ConnectionInfo.DbName));
 
-                OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(ConnectionInfo.DbName));
-                OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(ConnectionInfo.DbName));
+                OnInitializeSysTables(cn);
+                OnInitializeSysTypes(cn);
             });
+        }
+
+        protected virtual void OnInitializeSysTables(IDbConnection cn)
+        {
+            OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Identities_CreateIfNotExists").Inject(ConnectionInfo.DbName));
+        }
+
+        protected virtual void OnInitializeSysTypes(IDbConnection cn)
+        {
+            OnExecuteNonQuery(cn, SqlStatements.GetSql("Sys_Types_CreateIfNotExists").Inject(ConnectionInfo.DbName));
         }
 
         public virtual bool DbExists()
@@ -113,7 +124,7 @@ namespace SisoDb.Dac
 
         public virtual void DropDbIfItExists()
         {
-			ConnectionManager.ReleaseAllDbConnections();
+			ConnectionManager.ReleaseAllConnections();
 
             WithConnection(cn => OnExecuteNonQuery(cn, SqlStatements.GetSql("DropDatabase").Inject(ConnectionInfo.DbName)));
         }

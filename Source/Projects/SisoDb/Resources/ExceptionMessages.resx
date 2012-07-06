@@ -298,4 +298,13 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="SqlServerTableParams_ToLongString" xml:space="preserve">
     <value>Max length of '{0}' exceeded with string value '{1}'.</value>
   </data>
+  <data name="Session_AllreadyDisposed" xml:space="preserve">
+    <value>Session with id: '{0}'; against db: '{1}'; has allready been disposed.</value>
+  </data>
+  <data name="IncludeExpressionDoesNotTargetMember" xml:space="preserve">
+    <value>The include expression '{0}' does not target a member in the structure.</value>
+  </data>
+  <data name="OrderByExpressionDoesNotTargetMember" xml:space="preserve">
+    <value>The order by expression '{0}' does not target a member in the structure.</value>
+  </data>
 </root>

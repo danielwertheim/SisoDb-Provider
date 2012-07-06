@@ -121,14 +121,14 @@ namespace SisoDb
             }
         }
 
-        public virtual void Insert(Type structuretype, object item)
+        public virtual void Insert(Type structureType, object item)
         {
-            Ensure.That(structuretype, "structuretype").IsNotNull();
+            Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(item, "item").IsNotNull();
 
             using (var session = Db.BeginSession())
             {
-                session.Insert(structuretype, item);
+                session.Insert(structureType, item);
             }
         }
 
@@ -245,6 +245,45 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.Update(id, modifier, proceed);
+            }
+        }
+
+        public virtual void Clear<T>() where T : class
+        {
+            using (var session = Db.BeginSession())
+            {
+                session.Clear<T>();
+            }
+        }
+
+        public virtual void Clear(Type structureType)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.Clear(structureType);
+            }
+        }
+
+        public virtual void DeleteAllExceptIds<T>(params object[] ids) where T : class
+        {
+            Ensure.That(ids, "ids").HasItems();
+
+            using (var session = Db.BeginSession())
+            {
+                session.DeleteAllExceptIds<T>(ids);
+            }
+        }
+
+        public virtual void DeleteAllExceptIds(Type structureType, params object[] ids)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(ids, "ids").HasItems();
+
+            using (var session = Db.BeginSession())
+            {
+                session.DeleteAllExceptIds(structureType, ids);
             }
         }
 

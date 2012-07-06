@@ -590,4 +590,10 @@ order by groupId</value>
   <data name="GetModelTableStatuses" xml:space="preserve">
     <value>select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
   </data>
+  <data name="DeleteAllExceptIds" xml:space="preserve">
+    <value>delete from [{0}] where StructureId not in ({1});</value>
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>delete from [{0}];</value>
+  </data>
 </root>

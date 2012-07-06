@@ -14,7 +14,7 @@ namespace SisoDb
         bool Any<T>() where T : class;
 
         /// <summary>
-        /// Returns bool indicating if the specified structure <param name="structureType"></param>,
+        /// Returns bool indicating if the specified structure <paramref name="structureType" />,
         /// has any items at all.
         /// </summary>
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
@@ -31,7 +31,7 @@ namespace SisoDb
         bool Any<T>(IQuery query) where T : class;
 
         /// <summary>
-        /// Returns bool indicating if the specified structure <param name="structureType"></param>,
+        /// Returns bool indicating if the specified structure <paramref name="structureType" />,
         /// has any items matching the where expression in <see cref="IQuery.Where"/>.
         /// </summary>
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
@@ -49,7 +49,7 @@ namespace SisoDb
 
         /// <summary>
         /// Issues a simple count for how many structures there
-        /// are in the specified structure <param name="structureType"></param>.
+        /// are in the specified structure <paramref name="structureType"/>.
         /// </summary>
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
         /// <returns></returns>
@@ -67,7 +67,7 @@ namespace SisoDb
 
 	    /// <summary>
 	    /// Issues a simple count for how many structures there are
-        /// in the specified structure <param name="structureType"></param>,
+        /// in the specified structure <paramref name="structureType"/>,
 	    /// matching the where expression in <see cref="IQuery.Where"/>.
 	    /// </summary>
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
@@ -105,7 +105,7 @@ namespace SisoDb
         /// </summary>
         /// <param name="query"></param>
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
-        /// <returns>IEnumerable of object, representing <param name="structureType"></param>.</returns>
+        /// <returns>IEnumerable of object, representing <paramref name="structureType"/>.</returns>
         /// <remarks>The query is defered and is executed when you start yield the result.</remarks>
         IEnumerable<object> Query(IQuery query, Type structureType);
 
@@ -163,7 +163,7 @@ namespace SisoDb
 	    /// </summary>
         /// <param name="query"></param>
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
-        /// <returns>IEnumerable Json representation of <param name="structureType"></param>.</returns>
+        /// <returns>IEnumerable Json representation of <paramref name="structureType"/>.</returns>
         IEnumerable<string> QueryAsJson(IQuery query, Type structureType);
 	}
 }
