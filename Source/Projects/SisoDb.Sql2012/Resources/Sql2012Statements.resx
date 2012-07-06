@@ -457,7 +457,8 @@ begin
 end</value>
   </data>
   <data name="DropStructureTables" xml:space="preserve">
-    <value>if object_id(N'{0}', N'U') is not null drop table [{0}];
+    <value>set nocount on;
+if object_id(N'{0}', N'U') is not null drop table [{0}];
 if object_id(N'{1}', N'U') is not null drop table [{1}];
 if object_id(N'{2}', N'U') is not null drop table [{2}];
 if object_id(N'{3}', N'U') is not null drop table [{3}];
@@ -538,7 +539,8 @@ update [SisoDbIdentities] with(updlock, rowlock) set @id = CurrentId + 1, Curren
 select @id as StructureId;</value>
   </data>
   <data name="Sys_Identities_CreateIfNotExists" xml:space="preserve">
-    <value>if object_id(N'[{0}]..[SisoDbIdentities]', N'U') is null
+    <value>set nocount on;
+if object_id(N'[{0}]..[SisoDbIdentities]', N'U') is null
 begin
 	create table [{0}]..[SisoDbIdentities]
 	(
