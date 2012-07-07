@@ -25,6 +25,11 @@ namespace SisoDb
 
     public static class SessionStatusExtensions
     {
+        public static bool IsFailed(this SessionStatus status)
+        {
+            return status == SessionStatus.Failed || status == SessionStatus.DisposedWithFailure;
+        }
+
         public static bool IsDisposed(this SessionStatus status)
         {
             return status == SessionStatus.Disposed || status == SessionStatus.DisposedWithFailure;
