@@ -131,7 +131,7 @@
     <Compile Include="Session\InsertsOfUniques.cs" />
     <Compile Include="Session\InsertsUsingBaseClasses.cs" />
     <Compile Include="Session\InsertsUsingInterfaces.cs" />
-    <Compile Include="Session\TransactionScopes.cs" />
+    <Compile Include="Session\Transactions.cs" />
     <Compile Include="Session\Updates.cs" />
     <Compile Include="Session\UpdatesHandlingConcurreny.cs" />
   </ItemGroup>

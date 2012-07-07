@@ -261,8 +261,8 @@
     <Compile Include="..\SisoDb.Specifications\Session\TimeStamps.cs">
       <Link>Session\TimeStamps.cs</Link>
     </Compile>
-    <Compile Include="..\SisoDb.Specifications\Session\TransactionScopes.cs">
-      <Link>Session\TransactionScopes.cs</Link>
+    <Compile Include="..\SisoDb.Specifications\Session\Transactions.cs">
+      <Link>Session\Transactions.cs</Link>
     </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\UpdateMany.cs">
       <Link>Session\UpdateMany.cs</Link>
