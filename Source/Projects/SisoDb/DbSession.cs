@@ -16,14 +16,13 @@ using SisoDb.Resources;
 namespace SisoDb
 {
     //TODO: Use composition instead for e.g IQueryEngine and IAdvanced
-    public abstract class DbSession : ISession, IQueryEngine, IAdvanced
+    public abstract class DbSession : ITransactionalSession, IQueryEngine, IAdvanced
     {
         private readonly Guid _id;
         private readonly ISisoDatabase _db;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
-        protected ITransactionalDbClient TransactionalDbClient;
         protected CacheConsumeModes CacheConsumeMode;
 
         public Guid Id { get { return _id; } }
@@ -31,6 +30,7 @@ namespace SisoDb
         public SessionStatus Status { get; private set; }
         public IQueryEngine QueryEngine { get { return this; } }
         public IAdvanced Advanced { get { return this; } }
+        public ITransactionalDbClient TransactionalDbClient { get; protected set; }
 
         protected DbSession(ISisoDatabase db)
         {
