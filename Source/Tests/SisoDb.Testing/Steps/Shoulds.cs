@@ -52,6 +52,11 @@ namespace SisoDb.Testing.Steps
 			db.RowCount(structureSchema.GetUniquesTableName(), "{0} = '{1}'".Inject(UniqueStorageSchema.Fields.StructureId.Name, structureId)).ShouldEqual(1);
 		}
 
+        public static void should_have_none_items_left<T>(this ISisoDatabase db) where T : class
+        {
+            db.UseOnceTo().Query<T>().Count().ShouldEqual(0);
+        }
+
 		public static void should_have_X_num_of_items<T>(this ISisoDatabase db, int numOfItemsLeft) where T : class
 		{
 			db.UseOnceTo().Query<T>().Count().ShouldEqual(numOfItemsLeft);
