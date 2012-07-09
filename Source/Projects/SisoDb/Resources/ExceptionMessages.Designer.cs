@@ -395,6 +395,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session with Id: &apos;{0}&apos;; against db &apos;{1}&apos;; is in a failed state and can/should not be used anymore..
+        /// </summary>
+        public static string Session_AlreadyFailed {
+            get {
+                return ResourceManager.GetString("Session_AlreadyFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided StorageProvider &apos;{0}&apos; is not supported..
         /// </summary>
         public static string SisoDbFactory_UnknownStorageProvider {
