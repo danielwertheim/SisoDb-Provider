@@ -307,4 +307,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="OrderByExpressionDoesNotTargetMember" xml:space="preserve">
     <value>The order by expression '{0}' does not target a member in the structure.</value>
   </data>
+  <data name="Session_AlreadyFailed" xml:space="preserve">
+    <value>Session with Id: '{0}'; against db '{1}'; is in a failed state and can/should not be used anymore.</value>
+  </data>
 </root>

@@ -1,8 +1,10 @@
 ﻿using System.Transactions;
 using Machine.Specifications;
+using NCore;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
 using SisoDb.Testing.Steps;
+using SisoDb.Resources;
 
 namespace SisoDb.Specifications.Session
 {
@@ -96,8 +98,8 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _session = TestContext.Database.BeginSession();
-                _session.InsertMany(new[]
+                _transactionalSession = (ITransactionalSession)TestContext.Database.BeginSession();
+                _transactionalSession.InsertMany(new[]
                 {
                     new GuidItem {Value = 1},
                     new GuidItem {Value = 2},
@@ -107,31 +109,82 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
-                ((ITransactionalSession)_session).MarkAsFailed();
-                _session.Dispose();
+                _transactionalSession.MarkAsFailed();
+                _transactionalSession.Dispose();
             };
 
             It should_not_have_inserted_the_structures = () =>
                 TestContext.Database.should_have_none_items_left<GuidItem>();
 
-            It should_have_a_failed_session = () => 
-                ((ITransactionalSession) _session).Failed.ShouldBeTrue();
+            It should_have_a_failed_session = () =>
+                _transactionalSession.Failed.ShouldBeTrue();
 
             It should_have_a_session_with_failed_status = () =>
-                _session.Status.IsFailed().ShouldBeTrue();
+                _transactionalSession.Status.IsFailed().ShouldBeTrue();
 
             Cleanup after = () =>
             {
-                if(_session == null)
+                if (_transactionalSession == null)
                     return;
 
-                if(!_session.Status.IsDisposed())
-                    _session.Dispose();
+                if (!_transactionalSession.Status.IsDisposed())
+                    _transactionalSession.Dispose();
 
-                _session = null;
+                _transactionalSession = null;
             };
 
-            private static ISession _session;
+            private static ITransactionalSession _transactionalSession;
+        }
+
+        [Subject(typeof(ITransactionalSession), "Being used")]
+        public class when_transactional_session_allready_has_been_marked_as_failed : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _transactionalSession = (ITransactionalSession)TestContext.Database.BeginSession();
+                _transactionalSession.InsertMany(new[]
+                {
+                    new GuidItem {Value = 1},
+                    new GuidItem {Value = 2},
+                    new GuidItem {Value = 3}
+                });
+                _transactionalSession.MarkAsFailed();
+            };
+
+            Because of = () =>
+            {
+                CaughtException = Catch.Exception(() => _transactionalSession.Insert(new GuidItem { Value = 42 }));
+                _transactionalSession.Dispose();
+            };
+
+            It should_have_thrown_an_exception = () => 
+            {
+                CaughtException.ShouldNotBeNull();
+                CaughtException.Message.ShouldEqual(ExceptionMessages.Session_AlreadyFailed.Inject(_transactionalSession.Id, _transactionalSession.Db.Name));
+            };
+
+            It should_not_have_inserted_the_structures = () =>
+                TestContext.Database.should_have_none_items_left<GuidItem>();
+
+            It should_have_a_failed_session = () =>
+                _transactionalSession.Failed.ShouldBeTrue();
+
+            It should_have_a_session_with_failed_status = () =>
+                _transactionalSession.Status.IsFailed().ShouldBeTrue();
+
+            Cleanup after = () =>
+            {
+                if (_transactionalSession == null)
+                    return;
+
+                if (!_transactionalSession.Status.IsDisposed())
+                    _transactionalSession.Dispose();
+
+                _transactionalSession = null;
+            };
+
+            private static ITransactionalSession _transactionalSession;
         }
     }
 #endif
