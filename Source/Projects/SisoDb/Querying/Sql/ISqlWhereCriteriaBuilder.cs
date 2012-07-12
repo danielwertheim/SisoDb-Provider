@@ -18,6 +18,7 @@ namespace SisoDb.Querying.Sql
         void AddOp(OperatorNode op);
         void AddValue(ValueNode valueNode);
         void AddValue(ValueNode valueNode, string format);
+        void AddLastValueAgain(string format);
         void AddNullValue(NullNode nullNode);
         void AddSetOfValues(ArrayValueNode valueNode);
         void AddRaw(string sql);

@@ -182,9 +182,22 @@ namespace SisoDb.Querying.Sql
 
         protected virtual void OnProcessWhereStringExactMemberNode(ISqlWhereCriteriaBuilder builder, StringExactMemberNode memberNode, int memberIndex)
         {
-            builder.AddMember(memberNode, memberIndex, "cast({0} as varbinary)");
+            builder.AddRaw("(");
+            
+            builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Equal()));
-            builder.AddValue(new ValueNode(memberNode.Value), "cast({0} as varbinary)");
+            builder.AddValue(new ValueNode(memberNode.Value));
+            builder.Flush();
+
+            builder.AddRaw(" and ");
+
+            const string castAsVarbinary = "cast({0} as varbinary(300))";
+            builder.AddMember(memberNode, memberIndex, castAsVarbinary);
+            builder.AddOp(new OperatorNode(Operator.Equal()));
+            builder.AddLastValueAgain(castAsVarbinary);
+            builder.Flush();
+
+            builder.AddRaw(")");
         }
 
         protected virtual void OnProcessWhereStringEndsWithMemberNode(ISqlWhereCriteriaBuilder builder, StringEndsWithMemberNode memberNode, int memberIndex)

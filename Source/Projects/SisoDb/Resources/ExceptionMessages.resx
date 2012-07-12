@@ -310,4 +310,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="Session_AlreadyFailed" xml:space="preserve">
     <value>Session with Id: '{0}'; against db '{1}'; is in a failed state and can/should not be used anymore.</value>
   </data>
+  <data name="QxIsExactly_NotSupportedForTexts" xml:space="preserve">
+    <value>Member node: '{0}'; Exact match of strings is only supported for String members and NOT Text members.</value>
+  </data>
 </root>

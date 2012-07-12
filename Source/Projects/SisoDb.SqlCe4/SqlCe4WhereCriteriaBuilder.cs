@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using SisoDb.Dac;
 using SisoDb.Querying.Lambdas.Nodes;
-using SisoDb.Querying.Sql;
+using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4
 {
-    public class SqlCe4WhereCriteriaBuilder : SqlWhereCriteriaBuilder
+    public class SqlCe4WhereCriteriaBuilder : SqlServerWhereCriteriaBuilder
     {
         public override void AddSetOfValues(ArrayValueNode valueNode)
         {
