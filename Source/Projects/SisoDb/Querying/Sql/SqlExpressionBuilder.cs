@@ -191,9 +191,10 @@ namespace SisoDb.Querying.Sql
 
             builder.AddRaw(" and ");
 
-            builder.AddMember(memberNode, memberIndex, "cast({0} as varbinary)");
+            const string castAsVarbinary = "cast({0} as varbinary(300))";
+            builder.AddMember(memberNode, memberIndex, castAsVarbinary);
             builder.AddOp(new OperatorNode(Operator.Equal()));
-            builder.AddLastValueAgain("cast({0} as varbinary)");
+            builder.AddLastValueAgain(castAsVarbinary);
             builder.Flush();
 
             builder.AddRaw(")");

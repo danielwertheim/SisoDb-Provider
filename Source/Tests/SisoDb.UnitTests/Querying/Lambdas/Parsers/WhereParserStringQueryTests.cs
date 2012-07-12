@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Linq.Expressions;
+using NCore;
 using NUnit.Framework;
 using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Resources;
 
 namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 {
@@ -533,19 +535,14 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
-        public void Parse_WhenQxIsExactly_for_text_member_ReturnsCorrectNodes()
+        public void Parse_WhenQxIsExactly_for_text_member_ThrowsNotSupportedException()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.SomeText.QxIsExactly("Foo"));
-
             var parser = CreateParser();
-            var parsedLambda = parser.Parse(expression);
-
-            var listOfNodes = parsedLambda.Nodes.ToList();
-            Assert.AreEqual(1, listOfNodes.Count);
-
-            var memberNode = (StringExactMemberNode)listOfNodes[0];
-            Assert.AreEqual("SomeText", memberNode.Path);
-            Assert.AreEqual("Foo", memberNode.Value);
+            
+            var ex = Assert.Throws<SisoDbNotSupportedException>(() => parser.Parse(expression));
+            
+            Assert.AreEqual(ExceptionMessages.QxIsExactly_NotSupportedForTexts.Inject("SomeText"), ex.Message);
         }
 
         private class StartsWithQueryObject

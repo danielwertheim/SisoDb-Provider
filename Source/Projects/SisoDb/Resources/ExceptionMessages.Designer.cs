@@ -377,6 +377,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Member node: &apos;{0}&apos;; Exact match of strings is only supported for String members and NOT Text members..
+        /// </summary>
+        public static string QxIsExactly_NotSupportedForTexts {
+            get {
+                return ResourceManager.GetString("QxIsExactly_NotSupportedForTexts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ReadOnceQueryable doesn&apos;t support yielding result. Use matching ToList method instead..
         /// </summary>
         public static string ReadOnceQueryable_YieldingNotSupported {

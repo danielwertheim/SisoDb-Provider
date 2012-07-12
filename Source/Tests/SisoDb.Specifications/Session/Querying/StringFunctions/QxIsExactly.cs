@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Machine.Specifications;
+using NCore;
+using SisoDb.Resources;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Session.Querying.StringFunctions
@@ -96,70 +98,7 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
         }
         
         [Subject(typeof(ISession), "QxIsExactly")]
-        public class when_applied_on_text_member_value_that_has_different_value_ : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                _structures = new[] { new MyClass { MyText = "ABC" }, new MyClass { MyText = "DEF" } };
-                TestContext.Database.UseOnceTo().InsertMany(_structures);
-            };
-
-            Because of = () => _fetchedStructure = TestContext.Database.UseOnceTo()
-                .Query<MyClass>()
-                .Where(i => i.MyText.QxIsExactly("GHI"))
-                .SingleOrDefault();
-
-            It should_not_have_fetched_any_structure = () => _fetchedStructure.ShouldBeNull();
-
-            private static IList<MyClass> _structures;
-            private static MyClass _fetchedStructure;
-        }
-
-        [Subject(typeof(ISession), "QxIsExactly")]
-        public class when_applied_on_text_member_value_that_has_different_casing_ : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                _structures = new[] { new MyClass { MyText = "ABC" }, new MyClass { MyText = "DEF" } };
-                TestContext.Database.UseOnceTo().InsertMany(_structures);
-            };
-
-            Because of = () => _fetchedStructure = TestContext.Database.UseOnceTo()
-                .Query<MyClass>()
-                .Where(i => i.MyText.QxIsExactly("def"))
-                .SingleOrDefault();
-
-            It should_not_have_fetched_any_structure = () => _fetchedStructure.ShouldBeNull();
-
-            private static IList<MyClass> _structures;
-            private static MyClass _fetchedStructure;
-        }
-
-        [Subject(typeof(ISession), "QxIsExactly")]
-        public class when_applied_on_text_member_value_that_has_same_casing_but_different_length_ : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                _structures = new[] { new MyClass { MyText = "ABC" }, new MyClass { MyText = "DEF" } };
-                TestContext.Database.UseOnceTo().InsertMany(_structures);
-            };
-
-            Because of = () => _fetchedStructure = TestContext.Database.UseOnceTo()
-                .Query<MyClass>()
-                .Where(i => i.MyText.QxIsExactly("DEFG"))
-                .SingleOrDefault();
-
-            It should_not_have_fetched_any_structure = () => _fetchedStructure.ShouldBeNull();
-
-            private static IList<MyClass> _structures;
-            private static MyClass _fetchedStructure;
-        }
-
-        [Subject(typeof(ISession), "QxIsExactly")]
-        public class when_applied_on_text_member_value_that_has_same_casing_ : SpecificationBase
+        public class when_applied_on_text_member_ : SpecificationBase
         {
             Establish context = () =>
             {
@@ -168,16 +107,19 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = () => _fetchedStructure = TestContext.Database.UseOnceTo()
-                .Query<MyClass>()
-                .Where(i => i.MyText.QxIsExactly("def"))
-                .SingleOrDefault();
+            Because of = () => CaughtException = Catch.Exception(() => 
+                _fetchedStructure = TestContext.Database.UseOnceTo()
+                    .Query<MyClass>()
+                    .Where(i => i.MyText.QxIsExactly("def"))
+                    .SingleOrDefault());
 
-            It should_have_fetched_the_matching_structure = () =>
+            It should_have_thrown_not_supported_exception = () =>
             {
-                _fetchedStructure.ShouldNotBeNull();
-                _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
+                CaughtException.ShouldNotBeNull();
+                CaughtException.Message.ShouldEqual(ExceptionMessages.QxIsExactly_NotSupportedForTexts.Inject("MyText"));
             };
+
+            It should_not_have_returned_any_structure = () => _fetchedStructure.ShouldBeNull();
 
             private static IList<MyClass> _structures;
             private static MyClass _fetchedStructure;
