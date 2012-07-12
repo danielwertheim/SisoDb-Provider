@@ -134,15 +134,10 @@ namespace SisoDb.Querying.Sql
 
         protected virtual string GetMemberNodeString(MemberNode member, int memberIndex)
         {
-            var memFormat = "mem{0}.[{1}]";
-
-            if (member is ToLowerMemberNode)
-                memFormat = string.Format("lower({0})", memFormat);
-
-            if (member is ToUpperMemberNode)
-                memFormat = string.Format("upper({0})", memFormat);
+            const string memFormat = "mem{0}.[{1}]";
 
             var shouldUseExplicitStringValue = member is IStringOperationMemberNode && member.DataTypeCode.IsValueType();
+
             return shouldUseExplicitStringValue
                 ? string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.StringValue.Name)
                 : string.Format(memFormat, memberIndex, IndexStorageSchema.Fields.Value.Name);

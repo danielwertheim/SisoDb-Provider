@@ -131,6 +131,18 @@ namespace SisoDb.Querying.Sql
                 return;
             }
 
+            if(memberNode is ToLowerMemberNode)
+            {
+                OnProccessWhereToLowerMemberNode(builder, (ToLowerMemberNode)memberNode, memberIndex);
+                return;
+            }
+
+            if (memberNode is ToUpperMemberNode)
+            {
+                OnProccessWhereToUpperMemberNode(builder, (ToUpperMemberNode)memberNode, memberIndex);
+                return;
+            }
+
             if (memberNode.DataType.IsAnyBoolType())
             {
                 var leftNode = lambda.Nodes.PeekLeft(nodeIndex);
@@ -187,6 +199,16 @@ namespace SisoDb.Querying.Sql
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(string.Concat(memberNode.Value, "%")));
+        }
+
+        protected virtual void OnProccessWhereToLowerMemberNode(ISqlWhereCriteriaBuilder builder, ToLowerMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex, "lower({0})");
+        }
+
+        protected virtual void OnProccessWhereToUpperMemberNode(ISqlWhereCriteriaBuilder builder, ToUpperMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex, "upper({0})");
         }
 
         protected virtual void OnProcessWhereImplicitBoolMemberNode(ISqlWhereCriteriaBuilder builder, MemberNode memberNode, int memberIndex)
