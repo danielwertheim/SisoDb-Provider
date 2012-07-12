@@ -67,12 +67,15 @@ namespace SisoDb
 
         public virtual void MarkAsFailed()
         {
+            //This method is allowed to not be wrapped in Try, since try makes use of it.
             Status = SessionStatus.Failed;
             TransactionalDbClient.MarkAsFailed();
         }
 
         protected virtual void Try(Action action)
         {
+            EnsureNotAlreadyFailed();
+
             try
             {
                 action.Invoke();
@@ -86,6 +89,8 @@ namespace SisoDb
 
         protected virtual T Try<T>(Func<T> action)
         {
+            EnsureNotAlreadyFailed();
+
             try
             {
                 return action.Invoke();
@@ -95,6 +100,12 @@ namespace SisoDb
                 MarkAsFailed();
                 throw;
             }
+        }
+
+        protected virtual void EnsureNotAlreadyFailed()
+        {
+            if (Status.IsFailed())
+                throw new SisoDbException(ExceptionMessages.Session_AlreadyFailed.Inject(Id, Db.Name));
         }
 
         protected virtual long OnCheckOutAndGetNextIdentity(IStructureSchema structureSchema, int numOfIds)
