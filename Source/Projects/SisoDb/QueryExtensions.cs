@@ -68,12 +68,12 @@ namespace SisoDb
 
         public static string QxToLower(this string m)
         {
-            throw new NotImplementedException();
+            return m.ToLower();
         }
 
         public static string QxToUpper(this string m)
         {
-            throw new NotImplementedException();
+            return m.ToUpper();
         }
     }
 }

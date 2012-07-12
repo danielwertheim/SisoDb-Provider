@@ -265,7 +265,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
         {
             var member = e.GetRightMostMember();
 
-            var expressionIsNotForMember = member == null;
+            var expressionIsNotForMember = member == null || member.Expression.NodeType == ExpressionType.Constant;
             if (expressionIsNotForMember)
                 return Visit(Expression.Constant(e.Evaluate()));
 
@@ -295,6 +295,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
         protected virtual Expression VisitStringQxMethodCall(MethodCallExpression e)
         {
             var member = e.GetRightMostMember();
+
+            var expressionIsNotForMember = member == null || member.Expression.NodeType == ExpressionType.Constant;
+            if (expressionIsNotForMember)
+                return Visit(Expression.Constant(e.Evaluate()));
+
             var methodName = e.Method.Name;
 
             switch (methodName)

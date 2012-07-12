@@ -86,5 +86,75 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
             private static IList<StringFunctionsItem> _structures;
             private static IList<StringFunctionsItem> _fetchedStructures;
         }
+
+        [Subject(typeof(ISession), "ToUpper")]
+        public class when_applied_inline_on_variable_value_and_matches_subset_of_2_items : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = StringFunctionsItem.CreateItems(5, "ABC").MergeWith(StringFunctionsItem.CreateItems(5, "EFG")).ToList();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () =>
+            {
+                var criteria1 = "EFG2";
+                var criteria2 = "EFG3";
+                _fetchedStructures = TestContext.Database.UseOnceTo()
+                    .Query<StringFunctionsItem>()
+                    .Where(i => i.String1.ToUpper() == criteria1.ToUpper() || i.String1.ToUpper() == criteria2.ToUpper()).ToList();
+            };
+
+            It should_have_fetched_2_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_2_structures_matching_the_query = () =>
+            {
+                _fetchedStructures[0].String1.ShouldEqual("EFG2");
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[7]);
+
+                _fetchedStructures[1].String1.ShouldEqual("EFG3");
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[8]);
+            };
+
+            private static IList<StringFunctionsItem> _structures;
+            private static IList<StringFunctionsItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISession), "ToUpper")]
+        public class when_applied_on_variable_value_and_matches_subset_of_2_items : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = StringFunctionsItem.CreateItems(5, "ABC").MergeWith(StringFunctionsItem.CreateItems(5, "EFG")).ToList();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () =>
+            {
+                var criteria1 = "EFG2".ToUpper();
+                var criteria2 = "EFG3".ToUpper();
+                _fetchedStructures = TestContext.Database.UseOnceTo()
+                    .Query<StringFunctionsItem>()
+                    .Where(i => i.String1.ToUpper() == criteria1 || i.String1.ToUpper() == criteria2).ToList();
+            };
+
+            It should_have_fetched_2_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_2_structures_matching_the_query = () =>
+            {
+                _fetchedStructures[0].String1.ShouldEqual("EFG2");
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[7]);
+
+                _fetchedStructures[1].String1.ShouldEqual("EFG3");
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[8]);
+            };
+
+            private static IList<StringFunctionsItem> _structures;
+            private static IList<StringFunctionsItem> _fetchedStructures;
+        }
     }
 }
