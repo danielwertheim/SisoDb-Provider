@@ -113,6 +113,12 @@ namespace SisoDb.Querying.Sql
                 return;
             }
 
+            if (memberNode is StringExactMemberNode)
+            {
+                OnProcessWhereStringExactMemberNode(builder, (StringExactMemberNode)memberNode, memberIndex);
+                return;
+            }
+
             if (memberNode is StringEndsWithMemberNode)
             {
                 OnProcessWhereStringEndsWithMemberNode(builder, (StringEndsWithMemberNode)memberNode, memberIndex);
@@ -160,6 +166,13 @@ namespace SisoDb.Querying.Sql
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value, "%").Replace("%%", "%")));
+        }
+
+        protected virtual void OnProcessWhereStringExactMemberNode(ISqlWhereCriteriaBuilder builder, StringExactMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex, "cast({0} as varbinary)");
+            builder.AddOp(new OperatorNode(Operator.Equal()));
+            builder.AddValue(new ValueNode(memberNode.Value), "cast({0} as varbinary)");
         }
 
         protected virtual void OnProcessWhereStringEndsWithMemberNode(ISqlWhereCriteriaBuilder builder, StringEndsWithMemberNode memberNode, int memberIndex)

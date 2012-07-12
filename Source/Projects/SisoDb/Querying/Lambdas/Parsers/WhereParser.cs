@@ -313,6 +313,9 @@ namespace SisoDb.Querying.Lambdas.Parsers
                 case "QxEndsWith":
                     Nodes.AddNode(CreateNewMemberNode(member).ToStringEndsWithNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;
+                case "QxIsExactly":
+                    Nodes.AddNode(CreateNewMemberNode(member).ToStringExactNode(e.Arguments[1].Evaluate().ToStringOrNull()));
+                    break;
                 case "QxLike":
                     Nodes.AddNode(CreateNewMemberNode(member).ToLikeNode(e.Arguments[1].Evaluate().ToStringOrNull()));
                     break;

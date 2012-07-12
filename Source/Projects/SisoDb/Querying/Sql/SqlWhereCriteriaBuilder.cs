@@ -47,14 +47,18 @@ namespace SisoDb.Querying.Sql
             }
         }
 
-        public virtual void AddMember(MemberNode member, int memberIndex)
+        public virtual void AddMember(MemberNode member, int memberIndex, string format = null)
         {
             Ensure.That(memberIndex, "memberIndex").IsGte(0);
 
+            var memberPart = string.IsNullOrEmpty(format) 
+                ? GetMemberNodeString(member, memberIndex)
+                : string.Format(format, GetMemberNodeString(member, memberIndex));
+            
             if (!HasWrittenMember)
             {
                 State.AppendFormat("({0}{1}{2})",
-                    GetMemberNodeString(member, memberIndex),
+                    memberPart,
                     OpMarker,
                     ValueMarker);
 
@@ -65,7 +69,7 @@ namespace SisoDb.Querying.Sql
             //TODO: Perhaps AddMemberAsValue
             if (!HasWrittenValue) //When using member as value, eg. Where Name = SecondName
             {
-                State = State.Replace(ValueMarker, GetMemberNodeString(member, memberIndex));
+                State = State.Replace(ValueMarker, memberPart);
                 HasWrittenValue = true;
             }
         }
@@ -85,6 +89,14 @@ namespace SisoDb.Querying.Sql
             Params.Add(param);
 
             AddValue(param.Name);
+        }
+
+        public virtual void AddValue(ValueNode valueNode, string format)
+        {
+            var param = new DacParameter(GetNextParameterName(), valueNode.Value);
+            Params.Add(param);
+
+            AddValue(string.Format(format, param.Name));
         }
 
         public virtual void AddNullValue(NullNode nullNode)

@@ -32,6 +32,11 @@ namespace SisoDb.Querying.Lambdas.Nodes
             return new StringContainsMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, value);
         }
 
+        public static StringExactMemberNode ToStringExactNode(this MemberNode memberNode, string value)
+        {
+            return new StringExactMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, value);
+        }
+
         public static StringEndsWithMemberNode ToStringEndsWithNode(this MemberNode memberNode, string value)
         {
             return new StringEndsWithMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, value);

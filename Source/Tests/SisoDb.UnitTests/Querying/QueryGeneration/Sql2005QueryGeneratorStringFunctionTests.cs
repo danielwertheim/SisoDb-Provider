@@ -6,7 +6,7 @@ using SisoDb.Sql2008;
 namespace SisoDb.UnitTests.Querying.QueryGeneration
 {
     [TestFixture]
-    public class Sql2008QueryGeneratorStringFunctionTests : QueryGeneratorStringFunctionTests
+    public class Sql2005QueryGeneratorStringFunctionTests : QueryGeneratorStringFunctionTests
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {

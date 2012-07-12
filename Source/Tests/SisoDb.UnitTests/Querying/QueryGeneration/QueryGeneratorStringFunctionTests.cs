@@ -162,6 +162,26 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             return generator.GenerateQuery(queryCommand);
         }
 
+        public abstract void GenerateQuery_for_Where_with_String_QxIsExactly_GeneratesCorrectQuery();
+
+        protected IDbQuery On_GenerateQuery_for_Where_with_String_QxIsExactly_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.String1.QxIsExactly("Foo")));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
+        public abstract void GenerateQuery_for_Where_with_Text_QxIsExactly_GeneratesCorrectQuery();
+
+        protected IDbQuery On_GenerateQuery_for_Where_with_Text_QxIsExactly_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Where(i => i.MyText.QxIsExactly("Foo")));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
         protected virtual IQuery BuildQuery<T>(Action<IQueryBuilder<T>> commandInitializer) where T : class
         {
             var builder = new QueryBuilder<T>(new StructureSchemasStub(), new ExpressionParsers(DataTypeConverter));
@@ -174,6 +194,8 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         private class MyClass
         {
             public string String1 { get; set; }
+
+            public string MyText { get; set; }
 
 			public int? NullableInt1 { get; set; }
         }
