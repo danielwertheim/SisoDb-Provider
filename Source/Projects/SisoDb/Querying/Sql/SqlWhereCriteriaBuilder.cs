@@ -6,6 +6,7 @@ using SisoDb.DbSchema;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Structures;
+using System.Linq;
 
 namespace SisoDb.Querying.Sql
 {
@@ -96,6 +97,12 @@ namespace SisoDb.Querying.Sql
             var param = new DacParameter(GetNextParameterName(), valueNode.Value);
             Params.Add(param);
 
+            AddValue(string.Format(format, param.Name));
+        }
+
+        public virtual void AddLastValueAgain(string format)
+        {
+            var param = Params.Last();
             AddValue(string.Format(format, param.Name));
         }
 
