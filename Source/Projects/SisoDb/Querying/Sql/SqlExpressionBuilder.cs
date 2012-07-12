@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using EnsureThat;
 using NCore.Collections;
 using SisoDb.DbSchema;
@@ -182,9 +183,21 @@ namespace SisoDb.Querying.Sql
 
         protected virtual void OnProcessWhereStringExactMemberNode(ISqlWhereCriteriaBuilder builder, StringExactMemberNode memberNode, int memberIndex)
         {
+            builder.AddRaw("(");
+            
+            builder.AddMember(memberNode, memberIndex);
+            builder.AddOp(new OperatorNode(Operator.Equal()));
+            builder.AddValue(new ValueNode(memberNode.Value));
+            builder.Flush();
+
+            builder.AddRaw(" and ");
+
             builder.AddMember(memberNode, memberIndex, "cast({0} as varbinary)");
             builder.AddOp(new OperatorNode(Operator.Equal()));
-            builder.AddValue(new ValueNode(memberNode.Value), "cast({0} as varbinary)");
+            builder.AddLastValueAgain("cast({0} as varbinary)");
+            builder.Flush();
+
+            builder.AddRaw(")");
         }
 
         protected virtual void OnProcessWhereStringEndsWithMemberNode(ISqlWhereCriteriaBuilder builder, StringEndsWithMemberNode memberNode, int memberIndex)
