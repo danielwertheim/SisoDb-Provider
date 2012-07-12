@@ -113,6 +113,12 @@ namespace SisoDb.Querying.Sql
                 return;
             }
 
+            if (memberNode is StringExactMemberNode)
+            {
+                OnProcessWhereStringExactMemberNode(builder, (StringExactMemberNode)memberNode, memberIndex);
+                return;
+            }
+
             if (memberNode is StringEndsWithMemberNode)
             {
                 OnProcessWhereStringEndsWithMemberNode(builder, (StringEndsWithMemberNode)memberNode, memberIndex);
@@ -122,6 +128,18 @@ namespace SisoDb.Querying.Sql
             if(memberNode is StringStartsWithMemberNode)
             {
                 OnProccessWhereStringStartsWithMemberNode(builder, (StringStartsWithMemberNode)memberNode, memberIndex);
+                return;
+            }
+
+            if(memberNode is ToLowerMemberNode)
+            {
+                OnProccessWhereToLowerMemberNode(builder, (ToLowerMemberNode)memberNode, memberIndex);
+                return;
+            }
+
+            if (memberNode is ToUpperMemberNode)
+            {
+                OnProccessWhereToUpperMemberNode(builder, (ToUpperMemberNode)memberNode, memberIndex);
                 return;
             }
 
@@ -162,6 +180,26 @@ namespace SisoDb.Querying.Sql
             builder.AddValue(new ValueNode(string.Concat("%", memberNode.Value, "%").Replace("%%", "%")));
         }
 
+        protected virtual void OnProcessWhereStringExactMemberNode(ISqlWhereCriteriaBuilder builder, StringExactMemberNode memberNode, int memberIndex)
+        {
+            builder.AddRaw("(");
+            
+            builder.AddMember(memberNode, memberIndex);
+            builder.AddOp(new OperatorNode(Operator.Equal()));
+            builder.AddValue(new ValueNode(memberNode.Value));
+            builder.Flush();
+
+            builder.AddRaw(" and ");
+
+            const string castAsVarbinary = "cast({0} as varbinary(300))";
+            builder.AddMember(memberNode, memberIndex, castAsVarbinary);
+            builder.AddOp(new OperatorNode(Operator.Equal()));
+            builder.AddLastValueAgain(castAsVarbinary);
+            builder.Flush();
+
+            builder.AddRaw(")");
+        }
+
         protected virtual void OnProcessWhereStringEndsWithMemberNode(ISqlWhereCriteriaBuilder builder, StringEndsWithMemberNode memberNode, int memberIndex)
         {
             builder.AddMember(memberNode, memberIndex);
@@ -174,6 +212,16 @@ namespace SisoDb.Querying.Sql
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.Like()));
             builder.AddValue(new ValueNode(string.Concat(memberNode.Value, "%")));
+        }
+
+        protected virtual void OnProccessWhereToLowerMemberNode(ISqlWhereCriteriaBuilder builder, ToLowerMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex, "lower({0})");
+        }
+
+        protected virtual void OnProccessWhereToUpperMemberNode(ISqlWhereCriteriaBuilder builder, ToUpperMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex, "upper({0})");
         }
 
         protected virtual void OnProcessWhereImplicitBoolMemberNode(ISqlWhereCriteriaBuilder builder, MemberNode memberNode, int memberIndex)

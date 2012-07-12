@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Linq.Expressions;
+using NCore;
 using NUnit.Framework;
 using PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Resources;
 
 namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 {
@@ -35,9 +37,27 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
-        public void Parse_WhenToLowerOnInlineVariable_ReturnsCorrectNodes()
+        public void Parse_WhenToLowerOnInlineValue_ReturnsCorrectNodes()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == "FOO".ToLower());
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("=", operatorNode.Operator.ToString());
+            Assert.AreEqual("foo", operandNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenToLowerOnInlineVariable_ReturnsCorrectNodes()
+        {
+            var param = "FOO";
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == param.ToLower());
 
             var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
@@ -69,9 +89,27 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
-        public void Parse_WhenToUpperOnInlineVariable_ReturnsCorrectNodes()
+        public void Parse_WhenToUpperOnInlineValue_ReturnsCorrectNodes()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == "foo".ToUpper());
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("=", operatorNode.Operator.ToString());
+            Assert.AreEqual("FOO", operandNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenToUpperOnInlineVariable_ReturnsCorrectNodes()
+        {
+            var param = "foo";
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == param.ToUpper());
 
             var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
@@ -480,6 +518,33 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			Assert.AreEqual("42", memberNode2.Value);
 		}
 
+        [Test]
+        public void Parse_WhenQxIsExactly_for_simple_string_member_ReturnsCorrectNodes()
+        {
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxIsExactly("Foo"));
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            Assert.AreEqual(1, listOfNodes.Count);
+
+            var memberNode = (StringExactMemberNode)listOfNodes[0];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("Foo", memberNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenQxIsExactly_for_text_member_ThrowsNotSupportedException()
+        {
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.SomeText.QxIsExactly("Foo"));
+            var parser = CreateParser();
+            
+            var ex = Assert.Throws<SisoDbNotSupportedException>(() => parser.Parse(expression));
+            
+            Assert.AreEqual(ExceptionMessages.QxIsExactly_NotSupportedForTexts.Inject("SomeText"), ex.Message);
+        }
+
         private class StartsWithQueryObject
         {
             public string Value { get; set; }
@@ -493,6 +558,8 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         private class MyClass
         {
             public string String1 { get; set; }
+
+            public string SomeText { get; set; }
 
 			public int? NullableInt { get; set; }
         }

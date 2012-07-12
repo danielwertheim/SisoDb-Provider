@@ -46,6 +46,11 @@ namespace SisoDb
 
     public static class StringQueryExtensions
     {
+        public static bool QxIsExactly(this string m, string value)
+        {
+            throw new NotImplementedException();
+        }
+
         public static bool QxLike(this string m, string value)
         {
             throw new NotImplementedException();

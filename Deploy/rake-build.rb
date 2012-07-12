@@ -25,7 +25,7 @@ require 'albacore'
 @env_projectnameMiniProfiler = 'SisoDb.MiniProfiler'
 
 @env_buildfolderpath = 'build'
-@env_assversion = "14.1.1"
+@env_assversion = "14.2.0"
 @env_version = "#{@env_assversion}"
 @env_buildversion = @env_version + (ENV['env_buildnumber'].to_s.empty? ? "" : ".#{ENV['env_buildnumber'].to_s}")
 @env_buildconfigname = ENV['env_buildconfigname'].to_s.empty? ? "Release" : ENV['env_buildconfigname'].to_s
@@ -159,11 +159,11 @@ zip :zipCore do |zip|
 end
 
 zip :zipSql2005 do |zip|
-    zipProject(zip, coreOutputPath, @env_buildnameSql2005)
+    zipProject(zip, sql2005OutputPath, @env_buildnameSql2005)
 end
 
 zip :zipSql2008 do |zip|
-    zipProject(zip, coreOutputPath, @env_buildnameSql2008)
+    zipProject(zip, sql2008OutputPath, @env_buildnameSql2008)
 end
 
 zip :zipSql2012 do |zip|

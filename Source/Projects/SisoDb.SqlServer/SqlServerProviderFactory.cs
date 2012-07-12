@@ -122,7 +122,7 @@ namespace SisoDb.SqlServer
 
         public virtual ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
         {
-            return new SqlWhereCriteriaBuilder();
+            return new SqlServerWhereCriteriaBuilder();
         }
 
 	    public abstract IDbQueryGenerator GetDbQueryGenerator();

@@ -1,17 +1,17 @@
 using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
-using SisoDb.Sql2012;
+using SisoDb.Sql2008;
 using SisoDb.SqlServer;
 
 namespace SisoDb.UnitTests.Querying.QueryGeneration
 {
     [TestFixture]
-    public class Sql2012QueryGeneratorStringFunctionTests : QueryGeneratorStringFunctionTests
+    public class Sql2005QueryGeneratorStringFunctionTests : QueryGeneratorStringFunctionTests
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new Sql2012QueryGenerator(new Sql2012Statements(), new SqlExpressionBuilder(() => new SqlServerWhereCriteriaBuilder()));
+            return new Sql2008QueryGenerator(new Sql2008Statements(), new SqlExpressionBuilder(() => new SqlServerWhereCriteriaBuilder()));
         }
 
         [Test]
