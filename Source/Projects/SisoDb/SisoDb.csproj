@@ -134,6 +134,7 @@
     <Compile Include="Querying\Lambdas\Nodes\INodesCollection.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NodesExtensions.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NullableMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\StringExactMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StringStartsWithMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\StringContainsMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Operators\InSetOperator.cs" />

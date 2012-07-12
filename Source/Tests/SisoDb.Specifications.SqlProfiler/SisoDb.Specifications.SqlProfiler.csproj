@@ -234,6 +234,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxEndsWith.cs">
       <Link>Session\Querying\StringFunctions\QxEndsWith.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxIsExactly.cs">
+      <Link>Session\Querying\StringFunctions\QxIsExactly.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\StringFunctions\QxLike.cs">
       <Link>Session\Querying\StringFunctions\QxLike.cs</Link>
     </Compile>

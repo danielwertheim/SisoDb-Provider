@@ -14,9 +14,10 @@ namespace SisoDb.Querying.Sql
         string Sql { get; }
 
         void Flush();
-        void AddMember(MemberNode member, int memberIndex);
+        void AddMember(MemberNode member, int memberIndex, string format = null);
         void AddOp(OperatorNode op);
         void AddValue(ValueNode valueNode);
+        void AddValue(ValueNode valueNode, string format);
         void AddNullValue(NullNode nullNode);
         void AddSetOfValues(ArrayValueNode valueNode);
         void AddRaw(string sql);

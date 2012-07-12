@@ -213,5 +213,33 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual("FOO", sqlQuery.Parameters[0].Value);
         }
+
+        [Test]
+        public override void GenerateQuery_for_Where_with_String_QxIsExactly_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_for_Where_with_String_QxIsExactly_GeneratesCorrectQuery();
+
+            Assert.AreEqual(
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (cast(mem0.[Value] as varbinary) = cast(@p0 as varbinary)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+                sqlQuery.Sql);
+
+            Assert.AreEqual(1, sqlQuery.Parameters.Count);
+            Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual("Foo", sqlQuery.Parameters[0].Value);
+        }
+
+        [Test]
+        public override void GenerateQuery_for_Where_with_Text_QxIsExactly_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_for_Where_with_Text_QxIsExactly_GeneratesCorrectQuery();
+
+            Assert.AreEqual(
+                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassTexts] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'MyText' where (cast(mem0.[Value] as varbinary) = cast(@p0 as varbinary)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+                sqlQuery.Sql);
+
+            Assert.AreEqual(1, sqlQuery.Parameters.Count);
+            Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual("Foo", sqlQuery.Parameters[0].Value);
+        }
     }
 }

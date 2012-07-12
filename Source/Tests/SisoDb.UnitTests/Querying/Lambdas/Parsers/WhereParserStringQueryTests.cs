@@ -480,6 +480,38 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 			Assert.AreEqual("42", memberNode2.Value);
 		}
 
+        [Test]
+        public void Parse_WhenQxIsExactly_for_simple_string_member_ReturnsCorrectNodes()
+        {
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1.QxIsExactly("Foo"));
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            Assert.AreEqual(1, listOfNodes.Count);
+
+            var memberNode = (StringExactMemberNode)listOfNodes[0];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("Foo", memberNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenQxIsExactly_for_text_member_ReturnsCorrectNodes()
+        {
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.SomeText.QxIsExactly("Foo"));
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            Assert.AreEqual(1, listOfNodes.Count);
+
+            var memberNode = (StringExactMemberNode)listOfNodes[0];
+            Assert.AreEqual("SomeText", memberNode.Path);
+            Assert.AreEqual("Foo", memberNode.Value);
+        }
+
         private class StartsWithQueryObject
         {
             public string Value { get; set; }
@@ -493,6 +525,8 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         private class MyClass
         {
             public string String1 { get; set; }
+
+            public string SomeText { get; set; }
 
 			public int? NullableInt { get; set; }
         }
