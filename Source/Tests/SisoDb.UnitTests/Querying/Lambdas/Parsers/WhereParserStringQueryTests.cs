@@ -35,9 +35,27 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
-        public void Parse_WhenToLowerOnInlineVariable_ReturnsCorrectNodes()
+        public void Parse_WhenToLowerOnInlineValue_ReturnsCorrectNodes()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == "FOO".ToLower());
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("=", operatorNode.Operator.ToString());
+            Assert.AreEqual("foo", operandNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenToLowerOnInlineVariable_ReturnsCorrectNodes()
+        {
+            var param = "FOO";
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == param.ToLower());
 
             var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
@@ -69,9 +87,27 @@ namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
         }
 
         [Test]
-        public void Parse_WhenToUpperOnInlineVariable_ReturnsCorrectNodes()
+        public void Parse_WhenToUpperOnInlineValue_ReturnsCorrectNodes()
         {
             var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == "foo".ToUpper());
+
+            var parser = CreateParser();
+            var parsedLambda = parser.Parse(expression);
+
+            var listOfNodes = parsedLambda.Nodes.ToList();
+            var memberNode = (MemberNode)listOfNodes[0];
+            var operatorNode = (OperatorNode)listOfNodes[1];
+            var operandNode = (ValueNode)listOfNodes[2];
+            Assert.AreEqual("String1", memberNode.Path);
+            Assert.AreEqual("=", operatorNode.Operator.ToString());
+            Assert.AreEqual("FOO", operandNode.Value);
+        }
+
+        [Test]
+        public void Parse_WhenToUpperOnInlineVariable_ReturnsCorrectNodes()
+        {
+            var param = "foo";
+            var expression = Reflect<MyClass>.LambdaFrom(m => m.String1 == param.ToUpper());
 
             var parser = CreateParser();
             var parsedLambda = parser.Parse(expression);
