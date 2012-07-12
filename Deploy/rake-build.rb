@@ -159,11 +159,11 @@ zip :zipCore do |zip|
 end
 
 zip :zipSql2005 do |zip|
-    zipProject(zip, coreOutputPath, @env_buildnameSql2005)
+    zipProject(zip, sql2005OutputPath, @env_buildnameSql2005)
 end
 
 zip :zipSql2008 do |zip|
-    zipProject(zip, coreOutputPath, @env_buildnameSql2008)
+    zipProject(zip, sql2008OutputPath, @env_buildnameSql2008)
 end
 
 zip :zipSql2012 do |zip|
