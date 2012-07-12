@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using NCore.Collections;
@@ -9,7 +10,7 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
     class ToLower
     {
         //COLLATION FUCKS IT UP
-		//[Subject(typeof(IQueryEngine), "ToLower")]
+        //[Subject(typeof(IQueryEngine), "ToLower")]
         //public class when_query_does_not_match_any_items : SpecificationBase
         //{
         //    Establish context = () =>
@@ -37,9 +38,9 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            Because of = 
+            Because of =
                 () => _fetchedStructures = TestContext.Database.UseOnceTo()
-					.Query<StringFunctionsItem>().Where(i => i.String1.ToLower() == "efg2" || i.String1.ToLower() == "efg3").ToList();
+                    .Query<StringFunctionsItem>().Where(i => i.String1.ToLower() == "efg2" || i.String1.ToLower() == "efg3").ToList();
 
             It should_have_fetched_2_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -48,7 +49,7 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
             {
                 _fetchedStructures[0].String1.ShouldEqual("EFG2");
                 _fetchedStructures[0].ShouldBeValueEqualTo(_structures[7]);
-                
+
                 _fetchedStructures[1].String1.ShouldEqual("EFG3");
                 _fetchedStructures[1].ShouldBeValueEqualTo(_structures[8]);
             };
@@ -77,7 +78,7 @@ namespace SisoDb.Specifications.Session.Querying.StringFunctions
             {
                 _fetchedStructures[0].String1.ShouldEqual("EFG2");
                 _fetchedStructures[0].ShouldBeValueEqualTo(_structures[7]);
-                
+
                 _fetchedStructures[1].String1.ShouldEqual("EFG3");
                 _fetchedStructures[1].ShouldBeValueEqualTo(_structures[8]);
             };
