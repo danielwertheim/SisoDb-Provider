@@ -385,17 +385,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EnsureThat\Resources\ExceptionMessages.resx">
-      <CustomToolNamespace>EnsureThat.Resources</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="NCore\Resources\ExceptionMessages.resx">
-      <CustomToolNamespace>NCore.Resources</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="PineCone\Resources\ExceptionMessages.resx">
-      <CustomToolNamespace>PineCone.Resources</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
