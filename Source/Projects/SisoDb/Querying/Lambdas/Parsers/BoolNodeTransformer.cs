@@ -1,6 +1,6 @@
+using SisoDb.NCore.Reflections;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
-using NCore.Reflections;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {

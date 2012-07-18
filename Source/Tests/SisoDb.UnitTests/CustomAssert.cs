@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NCore;
-using NCore.Reflections;
 using NUnit.Framework;
+using SisoDb.NCore;
+using SisoDb.NCore.Reflections;
 
 namespace SisoDb.UnitTests
 {

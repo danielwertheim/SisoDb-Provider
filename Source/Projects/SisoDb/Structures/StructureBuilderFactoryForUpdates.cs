@@ -1,5 +1,5 @@
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Structures
 {

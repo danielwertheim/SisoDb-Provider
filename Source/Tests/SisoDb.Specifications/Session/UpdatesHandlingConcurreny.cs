@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Machine.Specifications;
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 

@@ -1,4 +1,4 @@
-using NCore;
+using SisoDb.NCore;
 
 namespace SisoDb.Serialization
 {

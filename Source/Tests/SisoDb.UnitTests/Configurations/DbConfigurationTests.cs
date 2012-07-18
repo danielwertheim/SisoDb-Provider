@@ -1,8 +1,8 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
-using PineCone.Structures.IdGenerators;
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.IdGenerators;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.UnitTests.TestFactories;

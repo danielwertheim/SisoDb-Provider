@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using System.Data.SqlServerCe;
-using EnsureThat;
-using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.EnsureThat;
+using SisoDb.NCore;
 using SisoDb.Resources;
 using SisoDb.SqlServer;
 

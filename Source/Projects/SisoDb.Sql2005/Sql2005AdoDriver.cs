@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.NCore;
 using SisoDb.SqlServer;
 
 namespace SisoDb.Sql2005

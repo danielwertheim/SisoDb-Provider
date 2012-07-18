@@ -1,7 +1,7 @@
 using Moq;
 using NUnit.Framework;
-using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.UnitTests.Structures
 {

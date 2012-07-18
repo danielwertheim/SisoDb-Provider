@@ -1,5 +1,5 @@
 using System;
-using NCore;
+using SisoDb.NCore;
 
 namespace SisoDb.Specifications.Model
 {

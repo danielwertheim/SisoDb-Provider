@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
-using EnsureThat;
 using SisoDb.Dac;
+using SisoDb.EnsureThat;
 using SisoDb.SqlCe4.Profiling;
 
 namespace SisoDb.SqlCe4

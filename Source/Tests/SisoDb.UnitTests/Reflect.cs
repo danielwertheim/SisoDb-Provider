@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
-using NCore.Expressions;
-using SisoDb.Core.Expressions;
+using SisoDb.NCore.Expressions;
 
 namespace SisoDb.UnitTests
 {

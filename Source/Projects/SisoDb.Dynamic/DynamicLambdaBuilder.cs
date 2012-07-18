@@ -6,9 +6,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using EnsureThat;
 using Mono.CSharp;
-using NCore;
+using SisoDb.EnsureThat;
+using SisoDb.NCore;
 using SisoDb.Resources;
 
 namespace SisoDb.Dynamic

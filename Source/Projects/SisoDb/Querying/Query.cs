@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using EnsureThat;
-using PineCone.Structures.Schemas;
+using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas;
 
 namespace SisoDb.Querying

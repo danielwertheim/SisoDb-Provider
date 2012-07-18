@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using PineCone.Structures;
 using SisoDb.DbSchema;
+using SisoDb.PineCone.Structures;
 
 namespace SisoDb.Dac.BulkInserts
 {

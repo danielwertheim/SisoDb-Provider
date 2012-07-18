@@ -1,4 +1,4 @@
-using PineCone.Structures;
+using SisoDb.PineCone.Structures;
 
 namespace SisoDb.Structures
 {

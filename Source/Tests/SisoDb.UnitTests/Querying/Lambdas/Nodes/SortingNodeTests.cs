@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 
 namespace SisoDb.UnitTests.Querying.Lambdas.Nodes

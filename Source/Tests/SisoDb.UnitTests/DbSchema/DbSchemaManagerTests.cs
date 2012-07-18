@@ -1,9 +1,9 @@
 using System;
 using Moq;
 using NUnit.Framework;
-using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.UnitTests.TestFactories;
 
 namespace SisoDb.UnitTests.DbSchema

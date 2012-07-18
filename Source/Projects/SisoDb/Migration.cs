@@ -1,5 +1,5 @@
 using System;
-using EnsureThat;
+using SisoDb.EnsureThat;
 using SisoDb.Maintenance;
 
 namespace SisoDb

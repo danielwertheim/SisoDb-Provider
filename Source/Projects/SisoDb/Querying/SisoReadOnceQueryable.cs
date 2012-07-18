@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using EnsureThat;
+using SisoDb.EnsureThat;
 using SisoDb.Resources;
 
 namespace SisoDb.Querying

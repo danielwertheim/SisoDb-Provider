@@ -1,9 +1,9 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using EnsureThat;
 using SisoDb.Dac;
 using SisoDb.Dac.Profiling;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.SqlServer
 {

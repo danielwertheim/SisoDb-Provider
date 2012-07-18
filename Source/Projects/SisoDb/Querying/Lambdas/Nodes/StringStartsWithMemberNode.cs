@@ -1,5 +1,5 @@
 using System;
-using PineCone.Structures;
+using SisoDb.PineCone.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {

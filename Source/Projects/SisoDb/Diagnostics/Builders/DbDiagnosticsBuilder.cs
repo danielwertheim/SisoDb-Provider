@@ -1,5 +1,5 @@
-﻿using EnsureThat;
-using SisoDb.Diagnostics.Appenders;
+﻿using SisoDb.Diagnostics.Appenders;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.Diagnostics.Builders
 {

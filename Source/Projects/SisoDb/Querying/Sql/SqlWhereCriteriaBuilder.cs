@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Text;
-using EnsureThat;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.EnsureThat;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Structures;

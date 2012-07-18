@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using EnsureThat;
-using NCore;
+using SisoDb.EnsureThat;
+using SisoDb.NCore;
 using SisoDb.Resources;
 
 namespace SisoDb

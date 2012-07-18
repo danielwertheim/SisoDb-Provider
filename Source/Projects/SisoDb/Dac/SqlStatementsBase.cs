@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Resources;
-using EnsureThat;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.Dac
 {

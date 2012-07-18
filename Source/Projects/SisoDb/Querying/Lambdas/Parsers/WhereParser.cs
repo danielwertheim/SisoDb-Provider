@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using EnsureThat;
-using NCore;
-using NCore.Collections;
-using NCore.Expressions;
-using NCore.Reflections;
-using PineCone.Structures.Schemas;
-using SisoDb.Core.Expressions;
+using SisoDb.EnsureThat;
+using SisoDb.NCore;
+using SisoDb.NCore.Collections;
+using SisoDb.NCore.Expressions;
+using SisoDb.NCore.Reflections;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Resources;
@@ -127,7 +126,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             else
                 Visit(e.Left);
 
-            if (ExpressionUtils.ExpressionRepresentsNullValue(e.Right))
+            if (e.Right.IsNullValue())
                 Nodes.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
                 Nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
@@ -151,7 +150,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected override Expression VisitConstant(ConstantExpression e)
         {
-            if (ExpressionUtils.IsNullConstant(e))
+            if (e.IsNullConstant())
             {
                 Nodes.AddNode(new NullNode());
                 return e;

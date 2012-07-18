@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using PineCone.Structures.Schemas;
-using PineCone.Structures.Schemas.Builders;
+using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Builders;
 
 namespace SisoDb.UnitTests.TestFactories
 {
