@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -339,7 +340,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             switch (methodName)
             {
                 case "QxIn":
-                    Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as object[]));
+                    Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as IEnumerable));
                     break;
                 default:
                     throw new SisoDbNotSupportedException("Single value type query extension (Qx) method '{0}', is not supported.".Inject(methodName));
@@ -362,7 +363,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     break;
                 case "QxIn":
                     VirtualPrefixMembers.Add(member);
-                    Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as object[]));
+                    Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as IEnumerable));
                     VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
                     break;
                 default:

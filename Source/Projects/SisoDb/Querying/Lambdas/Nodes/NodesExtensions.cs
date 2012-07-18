@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Linq;
+using System.Text;
+using SisoDb.NCore.Collections;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {
@@ -17,9 +20,9 @@ namespace SisoDb.Querying.Lambdas.Nodes
             return sb.ToString();
         }
 
-        public static InSetMemberNode ToInSetNode(this MemberNode memberNode, object[] values)
+        public static InSetMemberNode ToInSetNode(this MemberNode memberNode, IEnumerable values)
         {
-            return new InSetMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, values);
+            return new InSetMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, values.Yield().ToArray());
         }
 
         public static LikeMemberNode ToLikeNode(this MemberNode memberNode, string value)
