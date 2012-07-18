@@ -87,6 +87,14 @@ namespace SisoDb
 		/// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
 		T GetById<T>(object id) where T : class;
 
+        /// <summary>
+        /// Returns one single structure identified by an id.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="id"></param>
+        /// <returns>Structure for (<paramref name="structureType"/>) matching <paramref name="id"/> or NULL.</returns>
+        object GetById(Type structureType, object id);
+
 		/// <summary>
 		/// Returns one single structure identified
 		/// by an id. 

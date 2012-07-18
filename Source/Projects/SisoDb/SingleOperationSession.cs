@@ -35,6 +35,16 @@ namespace SisoDb
 			}
 		}
 
+        public virtual object GetById(Type structureType, object id)
+        {
+            Ensure.That(id, "id").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetById(structureType, id);
+            }
+        }
+
         public virtual TOut GetByIdAs<TContract, TOut>(object id)
             where TContract : class
             where TOut : class

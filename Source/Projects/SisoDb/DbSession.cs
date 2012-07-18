@@ -654,6 +654,26 @@ namespace SisoDb
             });
         }
 
+        public virtual object GetById(Type structureType, object id)
+        {
+            return Try(() =>
+            {
+                Ensure.That(id, "id").IsNotNull();
+
+                var structureId = StructureId.ConvertFrom(id);
+                var structureSchema = OnUpsertStructureSchema(structureType);
+
+                if (!Db.CacheProvider.IsEnabledFor(structureSchema))
+                    return Db.Serializer.Deserialize(TransactionalDbClient.GetJsonById(structureId, structureSchema), structureType);
+
+                return Db.CacheProvider.Consume(
+                    structureSchema,
+                    structureId,
+                    sid => Db.Serializer.Deserialize(TransactionalDbClient.GetJsonById(sid, structureSchema), structureType),
+                    CacheConsumeMode);
+            });
+        }
+
         public virtual IEnumerable<T> GetByIds<T>(params object[] ids) where T : class
         {
             return Try(() =>

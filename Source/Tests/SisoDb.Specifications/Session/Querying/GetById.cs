@@ -199,6 +199,86 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryBigIdentityItem> _structures;
             private static QueryBigIdentityItem _fetchedStructure;
         }
+
+        [Subject(typeof(ISession), "Get by Id (guid)")]
+        public class when_set_with_guid_id_contains_four_items_using_non_generic_api : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateFourItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of =
+                () => _fetchedStructure = TestContext.Database.UseOnceTo().GetById(typeof(QueryGuidItem), _structures[1].StructureId) as QueryGuidItem;
+
+            It should_fetch_the_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryGuidItem> _structures;
+            private static QueryGuidItem _fetchedStructure;
+        }
+
+        [Subject(typeof(ISession), "Get by Id (string)")]
+        public class when_set_with_string_id_contains_four_items_using_non_generic_api : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryStringItem.CreateFourItems<QueryStringItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of =
+                () => _fetchedStructure = TestContext.Database.UseOnceTo().GetById(typeof(QueryStringItem), _structures[1].StructureId) as QueryStringItem;
+
+            It should_fetch_the_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryStringItem> _structures;
+            private static QueryStringItem _fetchedStructure;
+        }
+
+        [Subject(typeof(ISession), "Get by Id (identity)")]
+        public class when_set_with_identity_id_contains_four_items_using_non_generic_api : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryIdentityItem.CreateFourItems<QueryIdentityItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of =
+                () => _fetchedStructure = TestContext.Database.UseOnceTo().GetById(typeof(QueryIdentityItem), _structures[1].StructureId) as QueryIdentityItem;
+
+            It should_fetch_the_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryIdentityItem> _structures;
+            private static QueryIdentityItem _fetchedStructure;
+        }
+
+        [Subject(typeof(ISession), "Get by Id (big identity)")]
+        public class when_set_with_big_identity_id_contains_four_items_using_non_generic_api : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryBigIdentityItem.CreateFourItems<QueryBigIdentityItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of =
+                () => _fetchedStructure = TestContext.Database.UseOnceTo().GetById(typeof(QueryBigIdentityItem), _structures[1].StructureId) as QueryBigIdentityItem;
+
+            It should_fetch_the_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[1]);
+
+            private static IList<QueryBigIdentityItem> _structures;
+            private static QueryBigIdentityItem _fetchedStructure;
+        }
         
         [Subject(typeof(ISession), "Get by Id as Json (guid)")]
         public class when_json_set_with_guid_id_contains_four_items : SpecificationBase
