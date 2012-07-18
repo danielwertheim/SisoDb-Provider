@@ -63,10 +63,7 @@
     <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
-    <Compile Include="Core\EnumerableExtensions.cs" />
-    <Compile Include="Core\Io\IoHelper.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
-    <Compile Include="Core\Disposer.cs" />
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
@@ -246,7 +243,6 @@
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
     <Compile Include="DbSchema\IDbSchemaManager.cs" />
-    <Compile Include="Core\Expressions\ExpressionUtils.cs" />
     <Compile Include="Querying\IDbQueryGenerator.cs" />
     <Compile Include="Dac\ISqlStatements.cs" />
     <Compile Include="Dac\SqlStatementsBase.cs" />
