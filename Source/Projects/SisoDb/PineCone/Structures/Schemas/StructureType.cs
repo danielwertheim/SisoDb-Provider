@@ -1,7 +1,7 @@
 using System;
 using SisoDb.EnsureThat;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     [Serializable]
     public class StructureType : IStructureType

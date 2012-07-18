@@ -1,8 +1,8 @@
 ﻿using System;
-using PineCone.Resources;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Resources;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
 	[Serializable]
     public class StructureIndex : IStructureIndex

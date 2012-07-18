@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
-using PineCone.Annotations;
+using SisoDb.PineCone.Annotations;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 

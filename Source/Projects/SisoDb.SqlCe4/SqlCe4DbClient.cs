@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Collections;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4

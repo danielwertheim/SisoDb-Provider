@@ -1,7 +1,7 @@
 ﻿using System;
 using SisoDb.NCore;
 
-namespace PineCone
+namespace SisoDb.PineCone
 {
     public static class Sys
     {

@@ -1,6 +1,6 @@
 ﻿using System;
-using PineCone.Structures;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures;
 
 namespace SisoDb.Querying.Sql
 {

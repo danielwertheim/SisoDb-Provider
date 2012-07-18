@@ -1,7 +1,7 @@
 using System.Linq;
-using PineCone.Structures.Schemas;
-using PineCone.Structures.Schemas.Configuration;
-using PineCone.Structures.Schemas.MemberAccessors;
+using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Configuration;
+using SisoDb.PineCone.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.Diagnostics.Appenders
 {

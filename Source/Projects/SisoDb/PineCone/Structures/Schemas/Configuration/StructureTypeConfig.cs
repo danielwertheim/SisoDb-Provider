@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using SisoDb.EnsureThat;
 using SisoDb.NCore.Expressions;
 
-namespace PineCone.Structures.Schemas.Configuration
+namespace SisoDb.PineCone.Structures.Schemas.Configuration
 {
     [Serializable]
     public class StructureTypeConfig : IStructureTypeConfig

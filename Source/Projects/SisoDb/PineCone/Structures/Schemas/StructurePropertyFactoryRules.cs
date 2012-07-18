@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public class StructurePropertyFactoryRules
     {

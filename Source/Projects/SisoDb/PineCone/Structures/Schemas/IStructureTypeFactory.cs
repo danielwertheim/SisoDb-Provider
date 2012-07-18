@@ -1,7 +1,7 @@
 ﻿using System;
-using PineCone.Structures.Schemas.Configuration;
+using SisoDb.PineCone.Structures.Schemas.Configuration;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public interface IStructureTypeFactory
     {

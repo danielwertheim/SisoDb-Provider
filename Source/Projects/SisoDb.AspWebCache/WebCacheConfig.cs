@@ -1,8 +1,8 @@
 using System;
 using System.Web.Caching;
-using PineCone.Structures;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
+using SisoDb.PineCone.Structures;
 
 namespace SisoDb.AspWebCache
 {

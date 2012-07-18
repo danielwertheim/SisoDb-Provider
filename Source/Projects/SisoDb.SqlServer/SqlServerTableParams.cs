@@ -4,10 +4,10 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.SqlServer.Server;
-using PineCone.Structures;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Reflections;
+using SisoDb.PineCone.Structures;
 using SisoDb.Resources;
 
 namespace SisoDb.SqlServer

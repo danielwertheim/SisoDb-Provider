@@ -1,4 +1,4 @@
-﻿namespace PineCone.Structures.Schemas
+﻿namespace SisoDb.PineCone.Structures.Schemas
 {
     public static class PropertyPathBuilder
     {

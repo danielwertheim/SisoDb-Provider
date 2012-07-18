@@ -1,6 +1,6 @@
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas;
 
-namespace PineCone.Structures.IdGenerators
+namespace SisoDb.PineCone.Structures.IdGenerators
 {
     public class SequentialGuidStructureIdGenerator : IStructureIdGenerator
     {

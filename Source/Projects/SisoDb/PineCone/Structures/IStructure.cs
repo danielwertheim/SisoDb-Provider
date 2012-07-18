@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     public interface IStructure
     {

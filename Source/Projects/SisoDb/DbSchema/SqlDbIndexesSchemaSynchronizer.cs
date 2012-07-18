@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {

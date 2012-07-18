@@ -1,10 +1,10 @@
 ﻿using System;
-using PineCone.Annotations;
-using PineCone.Resources;
 using SisoDb.NCore;
 using SisoDb.NCore.Reflections;
+using SisoDb.PineCone.Annotations;
+using SisoDb.PineCone.Resources;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     [Serializable]
     public class StructureProperty : IStructureProperty

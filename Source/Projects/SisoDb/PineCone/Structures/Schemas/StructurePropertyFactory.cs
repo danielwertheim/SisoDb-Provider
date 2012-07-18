@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using PineCone.Annotations;
+using SisoDb.PineCone.Annotations;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public class StructurePropertyFactory : IStructurePropertyFactory
     {

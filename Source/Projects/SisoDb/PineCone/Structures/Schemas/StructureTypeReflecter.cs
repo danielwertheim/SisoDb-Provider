@@ -6,7 +6,7 @@ using SisoDb.EnsureThat;
 using SisoDb.NCore.Collections;
 using SisoDb.NCore.Reflections;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public class StructureTypeReflecter : IStructureTypeReflecter
     {

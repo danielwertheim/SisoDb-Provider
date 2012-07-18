@@ -1,9 +1,9 @@
 using System;
-using PineCone.Resources;
 using SisoDb.NCore;
 using SisoDb.NCore.Reflections;
+using SisoDb.PineCone.Resources;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     [Serializable]
     public class StructureId : IStructureId

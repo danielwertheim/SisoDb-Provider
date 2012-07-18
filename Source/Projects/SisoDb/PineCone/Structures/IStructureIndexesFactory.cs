@@ -1,6 +1,6 @@
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     public interface IStructureIndexesFactory
     {

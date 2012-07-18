@@ -1,7 +1,7 @@
-﻿using PineCone.Serializers;
-using PineCone.Structures.Schemas;
+﻿using SisoDb.PineCone.Serializers;
+using SisoDb.PineCone.Structures.Schemas;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     /// <summary>
     /// Builds <see cref="IStructure"/> instances from sent Items.

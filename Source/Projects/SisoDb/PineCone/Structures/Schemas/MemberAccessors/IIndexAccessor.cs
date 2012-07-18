@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PineCone.Annotations;
+using SisoDb.PineCone.Annotations;
 
-namespace PineCone.Structures.Schemas.MemberAccessors
+namespace SisoDb.PineCone.Structures.Schemas.MemberAccessors
 {
     public interface IIndexAccessor : IMemberAccessor
     {

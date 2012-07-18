@@ -1,4 +1,4 @@
-using PineCone.Serializers;
+using SisoDb.PineCone.Serializers;
 
 namespace SisoDb.Serialization
 {

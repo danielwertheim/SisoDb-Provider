@@ -1,4 +1,4 @@
-﻿namespace PineCone.Structures.Schemas.Builders
+﻿namespace SisoDb.PineCone.Structures.Schemas.Builders
 {
     public interface ISchemaBuilder
     {

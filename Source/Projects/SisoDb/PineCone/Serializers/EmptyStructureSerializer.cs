@@ -1,4 +1,4 @@
-﻿namespace PineCone.Serializers
+﻿namespace SisoDb.PineCone.Serializers
 {
     public class EmptyStructureSerializer : IStructureSerializer
     {

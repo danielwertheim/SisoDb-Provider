@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PineCone.Structures.Schemas.Configuration
+namespace SisoDb.PineCone.Structures.Schemas.Configuration
 {
     public interface IStructureTypeConfigurations
     {

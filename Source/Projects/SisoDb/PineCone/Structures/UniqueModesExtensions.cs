@@ -1,8 +1,8 @@
 ﻿using System;
-using PineCone.Annotations;
-using PineCone.Resources;
+using SisoDb.PineCone.Annotations;
+using SisoDb.PineCone.Resources;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     public static class UniqueModesExtensions
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using PineCone.Structures.Schemas;
 using SisoDb.NCore;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;

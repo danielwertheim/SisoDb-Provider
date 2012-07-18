@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
-using PineCone.Structures.Schemas.Builders;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Builders;
 
-namespace PineCone
+namespace SisoDb.PineCone
 {
     public class PineConizer : IPineConizer
     {

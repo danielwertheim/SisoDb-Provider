@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PineCone
+namespace SisoDb.PineCone
 {
     internal static class Lists
     {

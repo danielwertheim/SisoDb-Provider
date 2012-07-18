@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using SisoDb.NCore.Reflections;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public static class DynamicPropertyFactory
     {

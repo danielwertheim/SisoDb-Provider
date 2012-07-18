@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PineCone.Structures.Schemas.MemberAccessors
+namespace SisoDb.PineCone.Structures.Schemas.MemberAccessors
 {
     public interface IMemberAccessor
     {

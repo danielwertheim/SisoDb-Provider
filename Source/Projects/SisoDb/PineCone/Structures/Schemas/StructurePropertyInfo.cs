@@ -1,8 +1,8 @@
 using System;
-using PineCone.Annotations;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Annotations;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     [Serializable]
     public struct StructurePropertyInfo

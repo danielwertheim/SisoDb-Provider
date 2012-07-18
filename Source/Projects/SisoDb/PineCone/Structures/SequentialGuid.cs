@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     /// <summary>
     /// <![CDATA[http://www.shirmanov.com/2010/05/generating-newsequentialid-compatible.html]]>

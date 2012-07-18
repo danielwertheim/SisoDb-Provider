@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace PineCone.Structures.Schemas.Configuration
+namespace SisoDb.PineCone.Structures.Schemas.Configuration
 {
     public interface IStructureTypeConfig
     {

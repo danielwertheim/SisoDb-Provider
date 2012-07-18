@@ -1,7 +1,7 @@
 using System;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {

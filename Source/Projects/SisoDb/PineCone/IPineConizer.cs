@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 
-namespace PineCone
+namespace SisoDb.PineCone
 {
     public interface IPineConizer
     {

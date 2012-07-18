@@ -2,10 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using PineCone.Structures.Schemas.Builders;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures.Schemas.Builders;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public class StructureSchemas : IStructureSchemas
     {

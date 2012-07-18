@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using PineCone.Serializers;
-using PineCone.Structures.IdGenerators;
-using PineCone.Structures.Schemas;
 using SisoDb.NCore;
+using SisoDb.PineCone.Serializers;
+using SisoDb.PineCone.Structures.IdGenerators;
+using SisoDb.PineCone.Structures.Schemas;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     public class StructureBuilderPreservingId : StructureBuilder
     {

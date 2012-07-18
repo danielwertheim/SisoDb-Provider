@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PineCone.Annotations
+namespace SisoDb.PineCone.Annotations
 {
     /// <summary>
     /// Defines how the <see cref="UniqueAttribute"/> should

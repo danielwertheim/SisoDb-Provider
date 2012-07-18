@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PineCone.Structures.Schemas.MemberAccessors;
+using SisoDb.PineCone.Structures.Schemas.MemberAccessors;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public interface IStructureSchema
     {

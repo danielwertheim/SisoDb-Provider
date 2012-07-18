@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PineCone.Resources;
-using PineCone.Structures.Schemas;
 using SisoDb.NCore;
+using SisoDb.PineCone.Resources;
+using SisoDb.PineCone.Structures.Schemas;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     public class StructureIndexesFactory : IStructureIndexesFactory
     {

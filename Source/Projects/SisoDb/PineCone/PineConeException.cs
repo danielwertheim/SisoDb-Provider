@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace PineCone
+namespace SisoDb.PineCone
 {
     [Serializable]
     public class PineConeException : AggregateException

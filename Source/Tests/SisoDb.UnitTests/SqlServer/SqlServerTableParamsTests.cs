@@ -5,8 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.SqlServer.Server;
 using NUnit.Framework;
-using PineCone.Structures;
 using SisoDb.NCore;
+using SisoDb.PineCone.Structures;
 using SisoDb.Resources;
 using SisoDb.SqlServer;
 

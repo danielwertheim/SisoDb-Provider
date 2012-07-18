@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PineCone.Structures
+namespace SisoDb.PineCone.Structures
 {
     [Serializable]
     public enum StructureIndexType

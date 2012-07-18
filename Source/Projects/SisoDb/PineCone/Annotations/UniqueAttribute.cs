@@ -1,6 +1,6 @@
 using System;
 
-namespace PineCone.Annotations
+namespace SisoDb.PineCone.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class UniqueAttribute : Attribute

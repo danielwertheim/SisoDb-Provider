@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
 using SisoDb.NCore.Collections;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Caching
 {

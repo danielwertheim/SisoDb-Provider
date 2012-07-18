@@ -1,5 +1,5 @@
-using PineCone.Structures.Schemas;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {

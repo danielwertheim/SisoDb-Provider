@@ -1,10 +1,10 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
-using PineCone.Structures.Schemas;
-using PineCone.Structures.Schemas.MemberAccessors;
 using SisoDb.DbSchema;
 using SisoDb.NCore;
+using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.MemberAccessors;
 using SisoDb.Resources;
 
 namespace SisoDb.UnitTests.DbSchema

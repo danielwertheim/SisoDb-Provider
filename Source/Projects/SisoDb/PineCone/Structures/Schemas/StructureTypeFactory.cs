@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using PineCone.Structures.Schemas.Configuration;
+using SisoDb.PineCone.Structures.Schemas.Configuration;
 
-namespace PineCone.Structures.Schemas
+namespace SisoDb.PineCone.Structures.Schemas
 {
     public class StructureTypeFactory : IStructureTypeFactory
     {

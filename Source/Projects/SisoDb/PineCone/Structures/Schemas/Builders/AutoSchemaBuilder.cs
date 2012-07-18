@@ -1,9 +1,9 @@
-﻿using PineCone.Resources;
-using PineCone.Structures.Schemas.MemberAccessors;
-using SisoDb.EnsureThat;
+﻿using SisoDb.EnsureThat;
 using SisoDb.NCore;
+using SisoDb.PineCone.Resources;
+using SisoDb.PineCone.Structures.Schemas.MemberAccessors;
 
-namespace PineCone.Structures.Schemas.Builders
+namespace SisoDb.PineCone.Structures.Schemas.Builders
 {
     public class AutoSchemaBuilder : ISchemaBuilder
     {
