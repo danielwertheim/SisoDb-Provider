@@ -25,7 +25,7 @@ require 'albacore'
 @env_projectnameMiniProfiler = 'SisoDb.MiniProfiler'
 
 @env_buildfolderpath = 'build'
-@env_assversion = "14.2.0"
+@env_assversion = "14.3.0"
 @env_version = "#{@env_assversion}"
 @env_buildversion = @env_version + (ENV['env_buildnumber'].to_s.empty? ? "" : ".#{ENV['env_buildnumber'].to_s}")
 @env_buildconfigname = ENV['env_buildconfigname'].to_s.empty? ? "Release" : ENV['env_buildconfigname'].to_s
