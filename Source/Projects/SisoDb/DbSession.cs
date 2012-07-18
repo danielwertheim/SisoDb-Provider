@@ -674,6 +674,26 @@ namespace SisoDb
             });
         }
 
+        public virtual object[] GetByIds(Type structureType, params object[] ids)
+        {
+            return Try(() =>
+            {
+                Ensure.That(ids, "ids").HasItems();
+
+                var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
+                var structureSchema = OnUpsertStructureSchema(structureType);
+
+                if (!Db.CacheProvider.IsEnabledFor(structureSchema))
+                    return Db.Serializer.DeserializeMany(TransactionalDbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray(), structureType).ToArray();
+
+                return Db.CacheProvider.Consume(
+                    structureSchema,
+                    structureIds,
+                    sids => Db.Serializer.DeserializeMany(TransactionalDbClient.GetJsonByIds(sids, structureSchema).Where(s => s != null).ToArray(), structureType),
+                    CacheConsumeMode).ToArray();               
+            });
+        }
+
         public virtual TOut GetByIdAs<TContract, TOut>(object id)
             where TContract : class
             where TOut : class
@@ -790,7 +810,7 @@ namespace SisoDb
 
                 var structureSchema = OnUpsertStructureSchema<T>();
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
-                
+
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
             });
@@ -809,7 +829,7 @@ namespace SisoDb
 
                 var structureSchema = OnUpsertStructureSchema(structureType);
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
-                
+
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
             });
@@ -829,7 +849,7 @@ namespace SisoDb
                 var realItem = Db.Serializer.Deserialize<T>(json);
                 var structureSchema = OnUpsertStructureSchema<T>();
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
-                
+
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
@@ -850,7 +870,7 @@ namespace SisoDb
                 var realItem = Db.Serializer.Deserialize(json, structureType);
                 var structureSchema = OnUpsertStructureSchema(structureType);
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
-                
+
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
@@ -898,7 +918,7 @@ namespace SisoDb
                     structureSchema,
                     Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                
+
                 foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
             });
@@ -920,7 +940,7 @@ namespace SisoDb
                     structureSchema,
                     Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-                
+
                 foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
             });
@@ -948,7 +968,7 @@ namespace SisoDb
                 structureSchema,
                 Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
             var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
-            
+
             foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(json, structureSchema.Type.Type).Batch(Db.Settings.MaxInsertManyBatchSize))
             {
                 var structures = structureBuilder.CreateStructures(structuresJsonBatch, structureSchema);

@@ -82,6 +82,15 @@ namespace SisoDb
 	    T[] GetByIds<T>(params object[] ids) where T : class;
 
         /// <summary>
+        /// Returns all structures for the defined structure type <paramref name="structureType"/>
+        /// that matches passed ids.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        object[] GetByIds(Type structureType, params object[] ids);
+
+        /// <summary>
         /// Returns all structures for the defined structure <typeparamref name="TContract"/>
         /// matching passed ids.
         /// </summary>
