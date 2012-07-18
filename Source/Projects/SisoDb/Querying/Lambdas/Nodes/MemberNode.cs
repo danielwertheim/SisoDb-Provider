@@ -1,6 +1,6 @@
 ﻿using System;
-using EnsureThat;
 using PineCone.Structures;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {

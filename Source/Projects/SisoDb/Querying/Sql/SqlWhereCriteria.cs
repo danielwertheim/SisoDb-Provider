@@ -1,6 +1,6 @@
 using System;
-using EnsureThat;
 using SisoDb.Dac;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.Querying.Sql
 {

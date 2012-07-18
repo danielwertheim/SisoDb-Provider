@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
-using EnsureThat.Resources;
+using SisoDb.EnsureThat.Resources;
 
-namespace EnsureThat
+namespace SisoDb.EnsureThat
 {
     public static class EnsureGuidExtensions
     {

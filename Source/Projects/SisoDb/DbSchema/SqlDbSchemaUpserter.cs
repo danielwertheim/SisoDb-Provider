@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using EnsureThat;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.DbSchema
 {

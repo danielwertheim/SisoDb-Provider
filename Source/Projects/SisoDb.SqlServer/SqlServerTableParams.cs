@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using EnsureThat;
 using Microsoft.SqlServer.Server;
 using NCore;
 using PineCone.Structures;
 using NCore.Reflections;
+using SisoDb.EnsureThat;
 using SisoDb.Resources;
 
 namespace SisoDb.SqlServer

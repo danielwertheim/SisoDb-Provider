@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Linq.Expressions;
-using EnsureThat;
 using NCore;
 using NCore.Expressions;
 using NCore.Reflections;
 using PineCone.Structures.Schemas;
+using SisoDb.EnsureThat;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Resources;
 

@@ -1,4 +1,4 @@
-namespace EnsureThat
+namespace SisoDb.EnsureThat
 {
     public abstract class Param
     {

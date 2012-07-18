@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using EnsureThat;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using PineCone.Structures.Schemas.Builders;
+using SisoDb.EnsureThat;
 
 namespace PineCone
 {

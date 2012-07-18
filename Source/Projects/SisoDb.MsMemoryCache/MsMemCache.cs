@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using EnsureThat;
 using PineCone.Structures;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.MsMemoryCache
 {

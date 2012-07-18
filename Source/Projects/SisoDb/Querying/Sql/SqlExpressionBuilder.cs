@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using EnsureThat;
 using NCore.Collections;
 using SisoDb.DbSchema;
+using SisoDb.EnsureThat;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
 using NCore.Reflections;

@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
-using EnsureThat.Resources;
 using NCore;
+using SisoDb.EnsureThat.Resources;
 
-namespace EnsureThat
+namespace SisoDb.EnsureThat
 {
     public static class EnsureDateTimeExtensions
     {

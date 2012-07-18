@@ -1,6 +1,6 @@
 ﻿using System;
-using EnsureThat;
 using PineCone.Resources;
+using SisoDb.EnsureThat;
 
 namespace PineCone.Structures
 {

@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using EnsureThat;
 using NCore;
 using PineCone.Serializers;
 using PineCone.Structures.IdGenerators;
 using PineCone.Structures.Schemas;
+using SisoDb.EnsureThat;
 
 namespace PineCone.Structures
 {

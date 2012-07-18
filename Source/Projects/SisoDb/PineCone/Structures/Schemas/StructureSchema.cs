@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using EnsureThat;
 using PineCone.Structures.Schemas.MemberAccessors;
+using SisoDb.EnsureThat;
 
 namespace PineCone.Structures.Schemas
 {

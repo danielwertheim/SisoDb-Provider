@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
-using EnsureThat;
 using SisoDb.Dac;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.SqlServer
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EnsureThat
+namespace SisoDb.EnsureThat
 {
     internal static class ExceptionFactory
     {

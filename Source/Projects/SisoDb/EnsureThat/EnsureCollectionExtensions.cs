@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using EnsureThat.Resources;
+using SisoDb.EnsureThat.Resources;
 
-namespace EnsureThat
+namespace SisoDb.EnsureThat
 {
     public static class EnsureCollectionExtensions
     {

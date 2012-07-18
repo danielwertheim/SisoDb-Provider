@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using EnsureThat;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.DbSchema
 {

@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using EnsureThat;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.DbSchema
 {

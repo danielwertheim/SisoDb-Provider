@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using NCore.Expressions;
 
-namespace EnsureThat
+namespace SisoDb.EnsureThat
 {
     public static class Ensure
     {

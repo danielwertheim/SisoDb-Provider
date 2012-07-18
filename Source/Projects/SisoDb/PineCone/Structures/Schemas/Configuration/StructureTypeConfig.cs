@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using EnsureThat;
 using NCore.Expressions;
+using SisoDb.EnsureThat;
 
 namespace PineCone.Structures.Schemas.Configuration
 {

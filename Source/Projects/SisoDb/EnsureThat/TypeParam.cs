@@ -1,6 +1,6 @@
 using System;
 
-namespace EnsureThat
+namespace SisoDb.EnsureThat
 {
     public class TypeParam : Param
     {
