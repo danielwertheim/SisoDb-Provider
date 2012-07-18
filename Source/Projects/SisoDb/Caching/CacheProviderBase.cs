@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Concurrent;
-using SisoDb.Core;
+using NCore.Collections;
 using SisoDb.Resources;
 
 namespace SisoDb.Caching
@@ -30,9 +30,9 @@ namespace SisoDb.Caching
 
         public virtual void Clear()
         {
-            var ex = CacheEntries.Values.TryAll(e => e.Clear(), ExceptionMessages.CacheProvider_Clear_failed);
-            if (ex != null)
-                throw ex;
+            var exceptions = CacheEntries.Values.TryForAll(e => e.Clear());
+            if (exceptions != null)
+                throw new SisoDbException(ExceptionMessages.CacheProvider_Clear_failed, exceptions);
         }
 
         public virtual bool Handles(Type structureType)

@@ -7,7 +7,6 @@ using EnsureThat;
 using NCore;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
-using SisoDb.Core;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 

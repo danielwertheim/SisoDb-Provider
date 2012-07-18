@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Runtime.Caching;
 using Machine.Specifications;
-using SisoDb.Core;
 using SisoDb.MsMemoryCache;
 using SisoDb.Testing;
 

@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlServerCe;
 using NCore;
-using SisoDb.Core.Io;
+using NCore.Io;
 using SisoDb.Dac;
 using SisoDb.Resources;
 using SisoDb.SqlServer;
@@ -58,14 +58,14 @@ namespace SisoDb.SqlCe4
 
         public override bool DbExists()
         {
-            return IoHelper.FileExists(_connectionInfo.FilePath);
+            return IoUtils.FileExists(_connectionInfo.FilePath);
         }
 
         public override void DropDbIfItExists()
         {
 			ConnectionManager.ReleaseAllConnections();
 
-            IoHelper.DeleteIfFileExists(_connectionInfo.FilePath);
+            IoUtils.DeleteIfFileExists(_connectionInfo.FilePath);
         }
     }
 }

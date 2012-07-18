@@ -94,6 +94,28 @@
     <Compile Include="Diagnostics\IDiagnosticsBuilder.cs" />
     <Compile Include="Diagnostics\Appenders\StructureSchemasDiagnosticsAppender.cs" />
     <Compile Include="Diagnostics\Builders\DbDiagnosticsBuilder.cs" />
+    <Compile Include="EnsureThat\Ensure.cs" />
+    <Compile Include="EnsureThat\EnsureBoolExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureCollectionExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureDateTimeExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureDecimalExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureDoubleExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureGuidExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureIntExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureLongExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureNullableValueTypeExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureObjectExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureShortExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureStringExtensions.cs" />
+    <Compile Include="EnsureThat\EnsureTypeExtensions.cs" />
+    <Compile Include="EnsureThat\ExceptionFactory.cs" />
+    <Compile Include="EnsureThat\Param.cs" />
+    <Compile Include="EnsureThat\Resources\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="EnsureThat\TypeParam.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="IDbSettings.cs" />
@@ -110,6 +132,105 @@
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
+    <Compile Include="NCore\Collections\DictionaryExtensions.cs" />
+    <Compile Include="NCore\Collections\EnumerableExtensions.cs" />
+    <Compile Include="NCore\Cryptography\Crc32Algorithm.cs" />
+    <Compile Include="NCore\Cryptography\Crc32HashService.cs" />
+    <Compile Include="NCore\Cryptography\IHashService.cs" />
+    <Compile Include="NCore\DefaultFormatting.cs" />
+    <Compile Include="NCore\Disposer.cs" />
+    <Compile Include="NCore\Expressions\ExpressionExtensions.cs" />
+    <Compile Include="NCore\IFormatting.cs" />
+    <Compile Include="NCore\Io\IoUtils.cs" />
+    <Compile Include="NCore\IStringConverter.cs" />
+    <Compile Include="NCore\NCoreException.cs" />
+    <Compile Include="NCore\Reflections\CopyObject.cs" />
+    <Compile Include="NCore\Reflections\TypeExtensions.cs" />
+    <Compile Include="NCore\Resources\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="NCore\StringConverter.cs" />
+    <Compile Include="NCore\StringExtensions.cs" />
+    <Compile Include="NCore\SysDateTime.cs" />
+    <Compile Include="PineCone\Annotations\UniqueAttribute.cs" />
+    <Compile Include="PineCone\Annotations\UniqueModes.cs" />
+    <Compile Include="PineCone\IPineConizer.cs" />
+    <Compile Include="PineCone\Lists.cs" />
+    <Compile Include="PineCone\PineConeException.cs" />
+    <Compile Include="PineCone\PineConizer.cs" />
+    <Compile Include="PineCone\Resources\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PineCone\Serializers\EmptyStructureSerializer.cs" />
+    <Compile Include="PineCone\Serializers\IStructureSerializer.cs" />
+    <Compile Include="PineCone\Structures\DataTypeCode.cs" />
+    <Compile Include="PineCone\Structures\IdGenerators\EmptyStructureIdGenerator.cs" />
+    <Compile Include="PineCone\Structures\IdGenerators\GuidStructureIdGenerator.cs" />
+    <Compile Include="PineCone\Structures\IdGenerators\SequentialGuidStructureIdGenerator.cs" />
+    <Compile Include="PineCone\Structures\IStructure.cs" />
+    <Compile Include="PineCone\Structures\IStructureBuilder.cs" />
+    <Compile Include="PineCone\Structures\IStructureId.cs" />
+    <Compile Include="PineCone\Structures\IStructureIdGenerator.cs" />
+    <Compile Include="PineCone\Structures\IStructureIndex.cs" />
+    <Compile Include="PineCone\Structures\IStructureIndexesFactory.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Builders\AutoSchemaBuilder.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Builders\ISchemaBuilder.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfig.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfigurations.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfig.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfigurations.cs" />
+    <Compile Include="PineCone\Structures\Schemas\DataTypeConverter.cs" />
+    <Compile Include="PineCone\Structures\Schemas\DynamicGetter.cs" />
+    <Compile Include="PineCone\Structures\Schemas\DynamicPropertyFactory.cs" />
+    <Compile Include="PineCone\Structures\Schemas\DynamicSetter.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IDataTypeConverter.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IStructureProperty.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IStructurePropertyFactory.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IStructureSchema.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IStructureSchemas.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IStructureType.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IStructureTypeFactory.cs" />
+    <Compile Include="PineCone\Structures\Schemas\IStructureTypeReflecter.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\ConcurrencyTokenAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IConcurrencyTokenAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IdAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IIndexAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IMemberAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IndexAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\ITimeStampAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\MemberAccessorBase.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\StructureIdGetters.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\StructureIdSetters.cs" />
+    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\TimeStampAccessor.cs" />
+    <Compile Include="PineCone\Structures\Schemas\PropertyPathBuilder.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureIdPropertyNames.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureProperty.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructurePropertyFactory.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructurePropertyFactoryRules.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructurePropertyInfo.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureSchema.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureSchemas.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureTimeStampPropertyNames.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureType.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureTypeFactory.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureTypeReflecter.cs" />
+    <Compile Include="PineCone\Structures\SequentialGuid.cs" />
+    <Compile Include="PineCone\Structures\Structure.cs" />
+    <Compile Include="PineCone\Structures\StructureBuilder.cs" />
+    <Compile Include="PineCone\Structures\StructureBuilderPreservingId.cs" />
+    <Compile Include="PineCone\Structures\StructureId.cs" />
+    <Compile Include="PineCone\Structures\StructureIdInterval.cs" />
+    <Compile Include="PineCone\Structures\StructureIdTypes.cs" />
+    <Compile Include="PineCone\Structures\StructureIndex.cs" />
+    <Compile Include="PineCone\Structures\StructureIndexesFactory.cs" />
+    <Compile Include="PineCone\Structures\StructureIndexType.cs" />
+    <Compile Include="PineCone\Structures\UniqueModesExtensions.cs" />
+    <Compile Include="PineCone\Sys.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ArrayValueNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\InSetMemberNode.cs" />
@@ -263,6 +384,21 @@
     <Compile Include="SisoEnvironment.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="EnsureThat\Resources\ExceptionMessages.resx">
+      <CustomToolNamespace>EnsureThat.Resources</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NCore\Resources\ExceptionMessages.resx">
+      <CustomToolNamespace>NCore.Resources</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PineCone\Resources\ExceptionMessages.resx">
+      <CustomToolNamespace>PineCone.Resources</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
@@ -284,6 +420,9 @@
       <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
       <Name>SisoDb.Serialization</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

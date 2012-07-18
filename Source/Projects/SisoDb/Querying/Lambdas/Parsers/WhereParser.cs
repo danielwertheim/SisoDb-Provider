@@ -8,7 +8,6 @@ using NCore.Collections;
 using NCore.Expressions;
 using NCore.Reflections;
 using PineCone.Structures.Schemas;
-using SisoDb.Core.Expressions;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Resources;
@@ -127,7 +126,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             else
                 Visit(e.Left);
 
-            if (ExpressionUtils.ExpressionRepresentsNullValue(e.Right))
+            if (e.Right.IsNullValue())
                 Nodes.AddNode(new OperatorNode(Operator.IsOrIsNot(e.NodeType)));
             else
                 Nodes.AddNode(new OperatorNode(Operator.Create(e.NodeType)));
@@ -151,7 +150,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected override Expression VisitConstant(ConstantExpression e)
         {
-            if (ExpressionUtils.IsNullConstant(e))
+            if (e.IsNullConstant())
             {
                 Nodes.AddNode(new NullNode());
                 return e;
