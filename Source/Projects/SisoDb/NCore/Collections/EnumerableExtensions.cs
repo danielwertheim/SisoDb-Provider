@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NCore.Collections
+namespace SisoDb.NCore.Collections
 {
     public static class EnumerableExtensions
     {

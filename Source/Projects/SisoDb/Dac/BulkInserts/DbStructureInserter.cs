@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
+using SisoDb.NCore.Collections;
 using SisoDb.Structures;
 
 namespace SisoDb.Dac.BulkInserts

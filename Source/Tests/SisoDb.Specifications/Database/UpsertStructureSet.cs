@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Machine.Specifications;
-using NCore;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
+using SisoDb.NCore;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using NCore.Resources;
+using SisoDb.NCore.Resources;
 
-namespace NCore
+namespace SisoDb.NCore
 {
     public class StringConverter : IStringConverter
     {

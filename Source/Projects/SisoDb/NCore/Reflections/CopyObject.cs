@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace NCore.Reflections
+namespace SisoDb.NCore.Reflections
 {
     public static class CopyObject
     {

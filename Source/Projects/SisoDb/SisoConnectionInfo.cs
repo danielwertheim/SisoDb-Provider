@@ -1,6 +1,6 @@
 using System;
-using NCore;
 using SisoDb.EnsureThat;
+using SisoDb.NCore;
 using SisoDb.Resources;
 
 namespace SisoDb

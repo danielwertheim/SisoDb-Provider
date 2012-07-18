@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
-using NCore;
+using SisoDb.NCore;
 
 namespace SisoDb.Querying.Sql
 {

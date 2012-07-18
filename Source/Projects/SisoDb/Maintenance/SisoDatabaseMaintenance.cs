@@ -1,9 +1,9 @@
 ﻿using System;
-using NCore.Collections;
 using PineCone.Serializers;
 using PineCone.Structures.Schemas;
 using SisoDb.Caching;
 using SisoDb.EnsureThat;
+using SisoDb.NCore.Collections;
 
 namespace SisoDb.Maintenance
 {

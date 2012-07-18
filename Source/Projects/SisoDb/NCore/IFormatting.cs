@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace NCore
+namespace SisoDb.NCore
 {
     public interface IFormatting 
     {

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Concurrent;
-using NCore.Collections;
+using SisoDb.NCore.Collections;
 using SisoDb.Resources;
 
 namespace SisoDb.Caching

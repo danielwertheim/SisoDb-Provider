@@ -1,6 +1,6 @@
 using System;
-using NCore;
 using PineCone.Resources;
+using SisoDb.NCore;
 
 namespace PineCone.Structures.Schemas.MemberAccessors
 {

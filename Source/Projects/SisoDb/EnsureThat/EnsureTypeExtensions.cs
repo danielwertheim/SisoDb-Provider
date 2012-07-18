@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
-using NCore;
 using SisoDb.EnsureThat.Resources;
+using SisoDb.NCore;
 
 namespace SisoDb.EnsureThat
 {

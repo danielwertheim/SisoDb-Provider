@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Machine.Specifications;
-using NCore;
-using NCore.Expressions;
 using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
+using SisoDb.NCore;
+using SisoDb.NCore.Expressions;
 
 namespace SisoDb.Testing.Steps
 {

@@ -1,10 +1,10 @@
 using System;
-using NCore;
 using PineCone.Serializers;
 using PineCone.Structures;
 using PineCone.Structures.IdGenerators;
 using PineCone.Structures.Schemas;
 using SisoDb.EnsureThat;
+using SisoDb.NCore;
 using SisoDb.Resources;
 using SisoDb.Serialization;
 

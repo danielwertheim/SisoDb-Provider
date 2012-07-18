@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
-using NCore;
 using SisoDb.Dynamic;
+using SisoDb.NCore;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
 

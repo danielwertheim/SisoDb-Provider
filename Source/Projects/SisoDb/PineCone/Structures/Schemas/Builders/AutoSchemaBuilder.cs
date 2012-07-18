@@ -1,7 +1,7 @@
-﻿using NCore;
-using PineCone.Resources;
+﻿using PineCone.Resources;
 using PineCone.Structures.Schemas.MemberAccessors;
 using SisoDb.EnsureThat;
+using SisoDb.NCore;
 
 namespace PineCone.Structures.Schemas.Builders
 {

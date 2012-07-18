@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using NCore.Reflections;
+using SisoDb.NCore.Reflections;
 
 namespace PineCone.Structures.Schemas
 {

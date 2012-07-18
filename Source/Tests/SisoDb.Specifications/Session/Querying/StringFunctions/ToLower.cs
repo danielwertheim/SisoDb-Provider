@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
-using NCore.Collections;
+using SisoDb.NCore.Collections;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Session.Querying.StringFunctions

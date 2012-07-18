@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using NCore;
 using PineCone.Serializers;
 using PineCone.Structures.IdGenerators;
 using PineCone.Structures.Schemas;
+using SisoDb.NCore;
 
 namespace PineCone.Structures
 {

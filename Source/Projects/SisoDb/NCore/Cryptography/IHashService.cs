@@ -1,4 +1,4 @@
-namespace NCore.Cryptography
+namespace SisoDb.NCore.Cryptography
 {
     public interface IHashService
     {

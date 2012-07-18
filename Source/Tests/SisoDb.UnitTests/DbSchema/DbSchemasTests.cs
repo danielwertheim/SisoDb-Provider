@@ -1,8 +1,8 @@
 ﻿using System;
-using NCore.Collections;
 using NUnit.Framework;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.NCore.Collections;
 
 namespace SisoDb.UnitTests.DbSchema
 {

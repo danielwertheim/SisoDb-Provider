@@ -1,7 +1,7 @@
 using System.Linq;
-using NCore;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.NCore;
 using SisoDb.Querying.Sql;
 using SisoDb.SqlServer;
 

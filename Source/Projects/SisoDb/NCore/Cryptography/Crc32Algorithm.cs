@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace NCore.Cryptography
+namespace SisoDb.NCore.Cryptography
 {
     /// <summary>
     /// <![CDATA[http://damieng.com/blog/2006/08/08/calculating_crc32_in_c_and_net]]>

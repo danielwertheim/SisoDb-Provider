@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using NCore;
 using SisoDb.EnsureThat.Resources;
+using SisoDb.NCore;
 
 namespace SisoDb.EnsureThat
 {

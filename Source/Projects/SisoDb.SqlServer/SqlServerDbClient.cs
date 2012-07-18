@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using NCore;
-using NCore.Collections;
 using PineCone.Structures;
 using PineCone.Structures.Schemas;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
+using SisoDb.NCore;
+using SisoDb.NCore.Collections;
 
 namespace SisoDb.SqlServer
 {

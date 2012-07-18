@@ -1,7 +1,7 @@
 using System;
-using NCore;
 using NUnit.Framework;
 using SisoDb.DbSchema;
+using SisoDb.NCore;
 using SisoDb.Resources;
 
 namespace SisoDb.UnitTests.DbSchema

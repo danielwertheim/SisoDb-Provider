@@ -1,5 +1,5 @@
-using NCore;
 using NUnit.Framework;
+using SisoDb.NCore;
 using SisoDb.Resources;
 using SisoDb.SqlCe4;
 

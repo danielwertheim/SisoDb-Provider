@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NCore
+namespace SisoDb.NCore
 {
     public static class SysDateTime
     {

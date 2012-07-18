@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace NCore.Cryptography
+namespace SisoDb.NCore.Cryptography
 {
     public class Crc32HashService : IHashService
     {

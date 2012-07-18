@@ -4,8 +4,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.SqlServer.Server;
-using NCore;
 using PineCone.Structures;
+using SisoDb.NCore;
 
 namespace SisoDb.SqlServer
 {

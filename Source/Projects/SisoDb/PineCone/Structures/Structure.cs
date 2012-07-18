@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NCore;
 using PineCone.Resources;
 using SisoDb.EnsureThat;
+using SisoDb.NCore;
 
 namespace PineCone.Structures
 {

@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Text;
 
-namespace NCore
+namespace SisoDb.NCore
 {
     public class DefaultFormatting : IFormatting
     {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NCore.Io
+namespace SisoDb.NCore.Io
 {
     public static class IoUtils
     {

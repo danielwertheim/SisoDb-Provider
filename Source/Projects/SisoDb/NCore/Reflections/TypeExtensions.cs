@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NCore.Resources;
+using SisoDb.NCore.Resources;
 
-namespace NCore.Reflections
+namespace SisoDb.NCore.Reflections
 {
     public static class TypeExtensions
     {

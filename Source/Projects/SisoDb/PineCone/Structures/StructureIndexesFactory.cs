@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NCore;
 using PineCone.Resources;
 using PineCone.Structures.Schemas;
+using SisoDb.NCore;
 
 namespace PineCone.Structures
 {

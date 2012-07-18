@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace NCore
+namespace SisoDb.NCore
 {
     [Serializable]
     public class NCoreException : AggregateException

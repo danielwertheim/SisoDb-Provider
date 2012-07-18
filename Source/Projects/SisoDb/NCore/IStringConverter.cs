@@ -1,4 +1,4 @@
-﻿namespace NCore
+﻿namespace SisoDb.NCore
 {
     public interface IStringConverter
     {

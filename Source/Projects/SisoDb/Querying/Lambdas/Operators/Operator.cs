@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NCore;
+using SisoDb.NCore;
 using SisoDb.Resources;
 
 namespace SisoDb.Querying.Lambdas.Operators

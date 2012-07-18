@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlServerCe;
-using NCore;
-using NCore.Io;
 using SisoDb.Dac;
+using SisoDb.NCore;
+using SisoDb.NCore.Io;
 using SisoDb.Resources;
 using SisoDb.SqlServer;
 

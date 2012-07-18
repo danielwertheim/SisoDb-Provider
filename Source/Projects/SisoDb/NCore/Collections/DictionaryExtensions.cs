@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NCore.Collections
+namespace SisoDb.NCore.Collections
 {
     public static class DictionaryExtensions
     {

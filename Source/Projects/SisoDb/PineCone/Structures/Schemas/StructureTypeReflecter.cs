@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NCore.Collections;
-using NCore.Reflections;
 using SisoDb.EnsureThat;
+using SisoDb.NCore.Collections;
+using SisoDb.NCore.Reflections;
 
 namespace PineCone.Structures.Schemas
 {

@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NCore.Resources;
+using SisoDb.NCore.Resources;
 
-namespace NCore.Expressions
+namespace SisoDb.NCore.Expressions
 {
     public static class ExpressionExtensions
     {

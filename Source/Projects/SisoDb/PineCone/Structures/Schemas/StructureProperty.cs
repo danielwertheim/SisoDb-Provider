@@ -1,8 +1,8 @@
 ﻿using System;
-using NCore;
-using NCore.Reflections;
 using PineCone.Annotations;
 using PineCone.Resources;
+using SisoDb.NCore;
+using SisoDb.NCore.Reflections;
 
 namespace PineCone.Structures.Schemas
 {
