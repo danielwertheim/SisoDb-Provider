@@ -55,7 +55,7 @@ namespace SisoDb.Testing.Steps
             var items = new List<GuidItem>(numOfItems);
 
             for (var c = 0; c < numOfItems; c++)
-                items.Add(new GuidItem { Value = c + 1 });
+                items.Add(new GuidItem { Value = c + 1, GuidValue = Guid.NewGuid() });
 
             db.UseOnceTo().InsertMany(items);
             
