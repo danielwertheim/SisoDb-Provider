@@ -25,14 +25,21 @@ namespace SisoDb
         ISisoQueryable<T> Query<T>() where T : class;
 
         /// <summary>
-        /// Returns one single structure identified
-        /// by an id.
+        /// Returns one single structure identified by an id.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
-        /// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
+        /// <returns>Structure for (<typeparamref name="T"/>) or NULL.</returns>
 	    T GetById<T>(object id) where T : class;
+
+        /// <summary>
+        /// Returns one single structure identified by an id.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="id"></param>
+        /// <returns>Structure for (<paramref name="structureType"/>) matching <paramref name="id"/> or NULL.</returns>
+        object GetById(Type structureType, object id);
 
         /// <summary>
         /// Returns one single structure identified
@@ -43,7 +50,7 @@ namespace SisoDb
         /// <typeparam name="TOut">
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="id"></param>
-        /// <returns>Structure (<typeparamref name="TOut"/>) or null.</returns>
+        /// <returns>Structure (<typeparamref name="TOut"/>) or NULL.</returns>
 	    TOut GetByIdAs<TContract, TOut>(object id) where TContract : class where TOut : class;
 
         /// <summary>
