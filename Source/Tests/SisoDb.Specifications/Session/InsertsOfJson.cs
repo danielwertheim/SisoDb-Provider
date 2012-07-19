@@ -1,7 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
-using NCore;
 using SisoDb.Dynamic;
+using SisoDb.NCore;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
 using SisoDb.Testing.Steps;

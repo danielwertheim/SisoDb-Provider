@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using EnsureThat;
+using SisoDb.EnsureThat;
 using SisoDb.Querying.Lambdas.Nodes;
 
 namespace SisoDb.Querying.Lambdas

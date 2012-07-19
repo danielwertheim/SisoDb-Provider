@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using EnsureThat;
-using NCore;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
-using SisoDb.Core;
 using SisoDb.DbSchema;
+using SisoDb.EnsureThat;
+using SisoDb.NCore;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Sql;
 
 namespace SisoDb.Dac

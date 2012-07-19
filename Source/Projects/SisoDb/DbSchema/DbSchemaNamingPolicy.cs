@@ -1,6 +1,6 @@
 using System;
-using NCore;
-using PineCone.Structures.Schemas;
+using SisoDb.NCore;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Resources;
 
 namespace SisoDb.DbSchema

@@ -1,6 +1,6 @@
 using System;
-using NCore;
-using PineCone.Structures;
+using SisoDb.NCore;
+using SisoDb.PineCone.Structures;
 using SisoDb.Resources;
 
 namespace SisoDb.Querying.Lambdas.Nodes

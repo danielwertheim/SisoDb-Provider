@@ -1,7 +1,7 @@
 ﻿using System;
 using Moq;
-using NCore;
 using NUnit.Framework;
+using SisoDb.NCore;
 using SisoDb.Resources;
 
 namespace SisoDb.UnitTests.Connections

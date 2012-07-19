@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
-using NCore.Reflections;
+using SisoDb.NCore.Reflections;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 using SisoDb.Testing.TestModel;

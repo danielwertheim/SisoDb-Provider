@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using Machine.Specifications;
-using NCore;
-using NCore.Reflections;
+using SisoDb.NCore;
+using SisoDb.NCore.Reflections;
 
 namespace SisoDb.Testing
 {

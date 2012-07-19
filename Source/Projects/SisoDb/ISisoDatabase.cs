@@ -1,6 +1,6 @@
 using System;
-using PineCone.Structures.Schemas;
 using SisoDb.DbSchema;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 

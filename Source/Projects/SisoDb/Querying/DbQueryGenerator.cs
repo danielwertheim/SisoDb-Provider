@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EnsureThat;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
+using SisoDb.EnsureThat;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
 

@@ -1,6 +1,6 @@
 ﻿using System.Transactions;
 using Machine.Specifications;
-using NCore;
+using SisoDb.NCore;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
 using SisoDb.Testing.Steps;

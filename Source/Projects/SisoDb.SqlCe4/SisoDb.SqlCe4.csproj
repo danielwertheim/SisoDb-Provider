@@ -34,19 +34,18 @@
     <DocumentationFile>bin\Release\SisoDb.SqlCe4.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Signed|AnyCPU'">
+    <OutputPath>bin\Signed\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Signed\SisoDb.SqlCe4.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>1591</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EnsureThat, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Ensure.That.0.8.1\lib\net40\EnsureThat.dll</HintPath>
-    </Reference>
-    <Reference Include="NCore, Version=0.30.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NCore.0.30.1\lib\net40\NCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PineCone, Version=3.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PineCone.3.4.1\lib\net40\PineCone.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />

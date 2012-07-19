@@ -25,14 +25,21 @@ namespace SisoDb
         ISisoQueryable<T> Query<T>() where T : class;
 
         /// <summary>
-        /// Returns one single structure identified
-        /// by an id.
+        /// Returns one single structure identified by an id.
         /// </summary>
         /// <typeparam name="T">
         /// Structure type, used as a contract defining the scheme.</typeparam>
         /// <param name="id"></param>
-        /// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
+        /// <returns>Structure for (<typeparamref name="T"/>) or NULL.</returns>
 	    T GetById<T>(object id) where T : class;
+
+        /// <summary>
+        /// Returns one single structure identified by an id.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="id"></param>
+        /// <returns>Structure for (<paramref name="structureType"/>) matching <paramref name="id"/> or NULL.</returns>
+        object GetById(Type structureType, object id);
 
         /// <summary>
         /// Returns one single structure identified
@@ -43,7 +50,7 @@ namespace SisoDb
         /// <typeparam name="TOut">
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="id"></param>
-        /// <returns>Structure (<typeparamref name="TOut"/>) or null.</returns>
+        /// <returns>Structure (<typeparamref name="TOut"/>) or NULL.</returns>
 	    TOut GetByIdAs<TContract, TOut>(object id) where TContract : class where TOut : class;
 
         /// <summary>
@@ -80,6 +87,15 @@ namespace SisoDb
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
 	    T[] GetByIds<T>(params object[] ids) where T : class;
+
+        /// <summary>
+        /// Returns all structures for the defined structure type <paramref name="structureType"/>
+        /// that matches passed ids.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        object[] GetByIds(Type structureType, params object[] ids);
 
         /// <summary>
         /// Returns all structures for the defined structure <typeparamref name="TContract"/>

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb
 {
@@ -87,6 +87,14 @@ namespace SisoDb
 		/// <returns>Structure (<typeparamref name="T"/>) or Null</returns>
 		T GetById<T>(object id) where T : class;
 
+        /// <summary>
+        /// Returns one single structure identified by an id.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="id"></param>
+        /// <returns>Structure for (<paramref name="structureType"/>) matching <paramref name="id"/> or NULL.</returns>
+        object GetById(Type structureType, object id);
+
 		/// <summary>
 		/// Returns one single structure identified
 		/// by an id. 
@@ -133,6 +141,15 @@ namespace SisoDb
 		/// <param name="ids">Ids used for matching the structures to return.</param>
 		/// <returns>IEnumerable of <typeparamref name="T"/>.</returns>
 		IEnumerable<T> GetByIds<T>(params object[] ids) where T : class;
+
+        /// <summary>
+        /// Returns all structures for the defined structure type <paramref name="structureType"/>
+        /// that matches passed ids.
+        /// </summary>
+        /// <param name="structureType"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        object[] GetByIds(Type structureType, params object[] ids);
 
 		/// <summary>
 		/// Returns all structures for the defined structure <typeparamref name="TContract"/>

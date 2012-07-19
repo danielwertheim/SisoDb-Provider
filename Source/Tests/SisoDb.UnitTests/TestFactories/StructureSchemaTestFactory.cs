@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Moq;
-using PineCone.Structures.Schemas;
-using PineCone.Structures.Schemas.MemberAccessors;
+using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.UnitTests.TestFactories
 {

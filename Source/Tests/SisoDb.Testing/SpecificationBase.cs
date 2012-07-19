@@ -1,6 +1,6 @@
 using System;
 using Machine.Specifications;
-using NCore;
+using SisoDb.NCore;
 
 namespace SisoDb.Testing
 {

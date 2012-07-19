@@ -1,6 +1,6 @@
 ﻿using System;
-using PineCone.Structures.Schemas;
 using SisoDb.Dac;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {

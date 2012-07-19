@@ -1,6 +1,6 @@
 using System;
-using NCore;
-using NCore.Reflections;
+using SisoDb.NCore;
+using SisoDb.NCore.Reflections;
 using SisoDb.Resources;
 
 namespace SisoDb.DbSchema

@@ -3,6 +3,9 @@
 #if DEBUG
 [assembly: AssemblyProduct("SisoDb (Debug)")]
 [assembly: AssemblyConfiguration("Debug")]
+#elif SIGNED
+[assembly: AssemblyProduct("SisoDb (Signed)")]
+[assembly: AssemblyConfiguration("Signed")]
 #else
 [assembly: AssemblyProduct("SisoDb (Release)")]
 [assembly: AssemblyConfiguration("Release")]
@@ -13,5 +16,5 @@
 [assembly: AssemblyCopyright("Copyright © Daniel Wertheim")]
 [assembly: AssemblyTrademark("")]
 
-[assembly: AssemblyVersion("14.2.0")]
-[assembly: AssemblyFileVersion("14.2.0")]
+[assembly: AssemblyVersion("0.0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0.0")]

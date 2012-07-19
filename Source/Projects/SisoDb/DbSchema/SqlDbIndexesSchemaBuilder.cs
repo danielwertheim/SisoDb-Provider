@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using NCore;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
 using SisoDb.Dac;
+using SisoDb.NCore;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Resources;
 
 namespace SisoDb.DbSchema

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EnsureThat;
+using SisoDb.EnsureThat;
 using SisoDb.Querying;
 
 namespace SisoDb
@@ -34,6 +34,16 @@ namespace SisoDb
 				return session.GetById<T>(id);
 			}
 		}
+
+        public virtual object GetById(Type structureType, object id)
+        {
+            Ensure.That(id, "id").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetById(structureType, id);
+            }
+        }
 
         public virtual TOut GetByIdAs<TContract, TOut>(object id)
             where TContract : class
@@ -77,6 +87,16 @@ namespace SisoDb
 				return session.GetByIds<T>(ids).ToArray();
 			}
 		}
+
+        public virtual object[] GetByIds(Type structureType, params object[] ids)
+        {
+            Ensure.That(ids, "ids").HasItems();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetByIds(structureType, ids).ToArray();
+            }
+        }
 
         public virtual TOut[] GetByIdsAs<TContract, TOut>(params object[] ids)
             where TContract : class

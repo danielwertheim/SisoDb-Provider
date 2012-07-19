@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EnsureThat;
+using SisoDb.EnsureThat;
 using SisoDb.Querying;
 
 namespace SisoDb.Dynamic

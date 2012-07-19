@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NCore;
+using SisoDb.NCore;
 
 namespace SisoDb.SampleApp.Model
 {

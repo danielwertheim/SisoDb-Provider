@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using NCore;
+using SisoDb.NCore;
 
 namespace SisoDb.Specifications.Model
 {

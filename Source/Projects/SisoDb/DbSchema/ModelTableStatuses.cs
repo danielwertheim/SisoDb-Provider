@@ -1,5 +1,5 @@
 using System;
-using EnsureThat;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.DbSchema
 {

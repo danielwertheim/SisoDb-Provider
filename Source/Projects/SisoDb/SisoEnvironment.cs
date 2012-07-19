@@ -1,6 +1,6 @@
 ﻿using System;
-using NCore;
-using NCore.Cryptography;
+using SisoDb.NCore;
+using SisoDb.NCore.Cryptography;
 
 namespace SisoDb
 {

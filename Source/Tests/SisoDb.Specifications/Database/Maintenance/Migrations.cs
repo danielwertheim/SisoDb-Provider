@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Machine.Specifications;
-using NCore;
 using SisoDb.Maintenance;
+using SisoDb.NCore;
 using SisoDb.Resources;
 using SisoDb.Testing;
 

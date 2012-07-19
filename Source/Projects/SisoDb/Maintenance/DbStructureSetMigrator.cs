@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EnsureThat;
-using NCore;
-using PineCone.Structures;
-using PineCone.Structures.Schemas;
 using SisoDb.Caching;
 using SisoDb.Dac;
+using SisoDb.EnsureThat;
+using SisoDb.NCore;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Resources;
 
 namespace SisoDb.Maintenance

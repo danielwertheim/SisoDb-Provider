@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Caching;
-using EnsureThat;
-using PineCone.Structures;
+using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures;
 
 namespace SisoDb.AspWebCache
 {
