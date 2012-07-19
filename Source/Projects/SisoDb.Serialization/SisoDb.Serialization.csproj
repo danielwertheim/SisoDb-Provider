@@ -37,7 +37,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Signed|AnyCPU'">
     <OutputPath>bin\Signed\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Release\SisoDb.Serialization.XML</DocumentationFile>
+    <DocumentationFile>bin\Signed\SisoDb.Serialization.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>1591</NoWarn>
     <DebugType>pdbonly</DebugType>
