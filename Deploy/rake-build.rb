@@ -54,12 +54,15 @@ msMemoryCacheOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameMsMemoryCac
 dynamicOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameDynamic}"
 glimpseOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameGlimpse}"
 miniProfilerOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameMiniProfiler}"
+sharedAssemblyInfoPath = "#{@env_solutionfolderpath}/SharedAssemblyInfo.cs"
 #--------------------------------------
 # Albacore flow controlling tasks
 #--------------------------------------
-task :ci => [:installNuGetPackages, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
+task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
-task :local => [:buildIt, :copyIt, :testIt, :zipIt, :packIt]
+task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
+
+task :local_signed => [:installNuGets, :cleanIt, :versionIt, :signIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 #--------------------------------------
 task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler]
 
@@ -71,27 +74,31 @@ task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe
 #--------------------------------------
 # Albacore tasks
 #--------------------------------------
-task :installNuGetPackages do
+task :installNuGets do
     FileList["#{@env_solutionfolderpath}/**/packages.config"].each { |filepath|
         sh "NuGet.exe i #{filepath} -o #{@env_solutionfolderpath}/packages"
     }
 end
 
-assemblyinfo :versionIt do |asm|
-    sharedAssemblyInfoPath = "#{@env_solutionfolderpath}/SharedAssemblyInfo.cs"
+task :cleanIt do
+	FileUtils.rm_rf(@env_buildfolderpath)
+	FileUtils.mkdir_p(@env_buildfolderpath)
+end
 
+assemblyinfo :versionIt do |asm|
     asm.input_file = sharedAssemblyInfoPath
     asm.output_file = sharedAssemblyInfoPath
     asm.version = @env_assversion
     asm.file_version = @env_buildversion
 end
 
-task :ensureCleanBuildFolder do
-    FileUtils.rm_rf(@env_buildfolderpath)
-    FileUtils.mkdir_p(@env_buildfolderpath)
+assemblyinfo :signIt do |asm|
+	asm.input_file = sharedAssemblyInfoPath
+	asm.output_file = sharedAssemblyInfoPath
+	asm.custom_attributes :AssemblyKeyFileAttribute => "..\\..\\#{@env_projectnameCore}.snk"
 end
 
-msbuild :buildIt => [:ensureCleanBuildFolder, :versionIt] do |msb|
+msbuild :buildIt do |msb|
     msb.properties :configuration => @env_buildconfigname
     msb.targets :Clean, :Build
     msb.solution = "#{@env_solutionfolderpath}/#{@env_solutionname}.sln"
