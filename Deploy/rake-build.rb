@@ -62,7 +62,7 @@ task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
 task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
-task :local_signed => [:installNuGets, :cleanIt, :versionIt, :signIt, :buildIt, :copyIt, :zipIt, :packIt]
+task :local_signed => [:installNuGets, :cleanIt, :versionIt, :signIt, :buildItSigned, :copyIt, :zipIt, :packIt]
 #--------------------------------------
 task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler]
 
@@ -100,6 +100,12 @@ end
 
 msbuild :buildIt do |msb|
     msb.properties :configuration => @env_buildconfigname
+    msb.targets :Clean, :Build
+    msb.solution = "#{@env_solutionfolderpath}/#{@env_solutionname}.sln"
+end
+
+msbuild :buildItSigned do |msb|
+    msb.properties :configuration => @env_buildconfigname, :DefineConstants => "SIGNED"
     msb.targets :Clean, :Build
     msb.solution = "#{@env_solutionfolderpath}/#{@env_solutionname}.sln"
 end
