@@ -62,7 +62,7 @@ task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
 task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
-task :local_signed => [:installNuGets, :cleanIt, :versionIt, :signIt, :buildItSigned, :copyIt, :zipIt, :packIt]
+task :local_signed => [:installNuGets, :cleanIt, :versionIt, :signIt, :buildItSigned, :copyIt, :zipIt]
 #--------------------------------------
 task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler]
 
