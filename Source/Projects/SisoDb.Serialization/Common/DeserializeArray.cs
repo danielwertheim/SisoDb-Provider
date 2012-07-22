@@ -1,11 +1,11 @@
 //
-// http://code.google.com/p/servicestack/wiki/TypeSerializer
-// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+// https://github.com/ServiceStack/ServiceStack.Text
+// ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
 //
 // Authors:
 //   Demis Bellot (demis.bellot@gmail.com)
 //
-// Copyright 2011 Liquidbit Ltd.
+// Copyright 2012 ServiceStack Ltd.
 //
 // Licensed under the same terms of ServiceStack: new BSD license.
 //
@@ -178,7 +178,7 @@ namespace SisoDb.Serialization.Common
 		public static byte[] ParseByteArray(string value)
 		{
 			if ((value = DeserializeListWithElements<TSerializer>.StripList(value)) == null) return null;
-			if ((value = Serializer.ParseRawString(value)) == null) return null;
+			if ((value = Serializer.UnescapeSafeString(value)) == null) return null;
 			return value == string.Empty
 			       	? new byte[0]
 			       	: Convert.FromBase64String(value);

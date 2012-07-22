@@ -1,11 +1,11 @@
 //
-// http://code.google.com/p/servicestack/wiki/TypeSerializer
-// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+// https://github.com/ServiceStack/ServiceStack.Text
+// ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
 //
 // Authors:
 //   Demis Bellot (demis.bellot@gmail.com)
 //
-// Copyright 2011 Liquidbit Ltd.
+// Copyright 2012 ServiceStack Ltd.
 //
 // Licensed under the same terms of ServiceStack: new BSD license.
 //
@@ -30,7 +30,7 @@ namespace SisoDb.Serialization
     {
         private static Dictionary<Type, object> DefaultValueTypes = new Dictionary<Type, object>();
 
-        public static object GetDefaultValue(Type type)
+        public static object GetDefaultValue(this Type type)
         {
             if (!type.IsValueType) return null;
 
