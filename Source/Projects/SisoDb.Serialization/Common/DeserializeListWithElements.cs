@@ -1,11 +1,11 @@
 //
-// http://code.google.com/p/servicestack/wiki/TypeSerializer
-// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+// https://github.com/ServiceStack/ServiceStack.Text
+// ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
 //
 // Authors:
 //   Demis Bellot (demis.bellot@gmail.com)
 //
-// Copyright 2011 Liquidbit Ltd.
+// Copyright 2012 ServiceStack Ltd.
 //
 // Licensed under the same terms of ServiceStack: new BSD license.
 //
@@ -76,7 +76,7 @@ namespace SisoDb.Serialization.Common
 			while (i < valueLength)
 			{
 				var elementValue = Serializer.EatValue(value, ref i);
-				var listValue = elementValue;
+                var listValue = Serializer.UnescapeString(elementValue);
 				to.Add(listValue);
 				Serializer.EatItemSeperatorOrMapEndChar(value, ref i);
 			}

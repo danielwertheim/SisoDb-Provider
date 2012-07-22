@@ -1,5 +1,5 @@
 
-#if !XBOX360 && !SILVERLIGHT && !WINDOWS_PHONE
+#if !XBOX360 && !SILVERLIGHT && !WINDOWS_PHONE && !MONOTOUCH
 using System.IO.Compression;
 using System;
 using System.IO;
@@ -18,7 +18,7 @@ namespace SisoDb.Serialization
 
         public static XmlSerializer Instance
             = new XmlSerializer(
-#if !SILVERLIGHT && !WINDOWS_PHONE
+#if !SILVERLIGHT && !WINDOWS_PHONE && !MONOTOUCH
                 new XmlDictionaryReaderQuotas { MaxStringContentLength = 1024 * 1024, }
 #endif
 );
@@ -26,7 +26,7 @@ namespace SisoDb.Serialization
         public XmlSerializer(XmlDictionaryReaderQuotas quotas=null, bool omitXmlDeclaration = false)
         {
             this.quotas = quotas;
-            XSettings.Encoding = Encoding.UTF8;
+            XSettings.Encoding = new UTF8Encoding(false);
             XSettings.OmitXmlDeclaration = omitXmlDeclaration;
         }
 
@@ -141,7 +141,7 @@ namespace SisoDb.Serialization
         }
 
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONOTOUCH
         public static void CompressToStream<TXmlDto>(TXmlDto from, Stream stream)
         {
             using (var deflateStream = new DeflateStream(stream, CompressionMode.Compress))

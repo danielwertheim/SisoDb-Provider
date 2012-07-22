@@ -153,13 +153,15 @@ namespace SisoDb.Serialization
             };
 		}
 
-#if SILVERLIGHT || MONOTOUCH
+#if MONOTOUCH
         /// <summary>
         /// Provide hint to MonoTouch AOT compiler to pre-compile generic classes for all your DTOs.
         /// Just needs to be called once in a static constructor.
         /// </summary>
-        public static void InitForAot() { }
+        [MonoTouch.Foundation.Preserve]
+		public static void InitForAot() { }
 
+        [MonoTouch.Foundation.Preserve]
         public static void RegisterForAot()
         {
             JsonAotConfig.Register<Poco>();
@@ -204,12 +206,37 @@ namespace SisoDb.Serialization
             RegisterCsvSerializer();
         }
 
+		[MonoTouch.Foundation.Preserve]
+		public static bool RegisterTypeForAot<T>()
+		{
+			bool ret = false;
+			try
+			{
+				JsonAotConfig.Register<T>();
+
+				int i = 0;
+				if(JsvWriter<T>.WriteFn() != null && JsvReader<T>.GetParseFn() != null) i++;
+				if(JsonWriter<T>.WriteFn() != null && JsonReader<T>.GetParseFn() != null) i++;
+				if(QueryStringWriter<Poco>.WriteFn() != null) i++;
+
+				CsvSerializer<T>.WriteFn();
+	            CsvSerializer<T>.WriteObject(null, null);
+	            CsvWriter<T>.WriteObject(null, null);
+	            CsvWriter<T>.WriteObjectRow(null, null);
+				ret = true;
+			}catch(Exception){}
+
+			return ret;
+		}
+
+        [MonoTouch.Foundation.Preserve]
         static void RegisterQueryStringWriter()
         {
             var i = 0;
             if (QueryStringWriter<Poco>.WriteFn() != null) i++;
         }
 
+        [MonoTouch.Foundation.Preserve]
         static void RegisterCsvSerializer()
         {
             CsvSerializer<Poco>.WriteFn();
@@ -218,6 +245,7 @@ namespace SisoDb.Serialization
             CsvWriter<Poco>.WriteObjectRow(null, null);
         }
 
+        [MonoTouch.Foundation.Preserve]
         public static void RegisterElement<T, TElement>()
         {
             JsonAotConfig.RegisterElement<T, TElement>();
@@ -226,21 +254,25 @@ namespace SisoDb.Serialization
 
 	}
 
-#if SILVERLIGHT || MONOTOUCH
+#if MONOTOUCH
+    [MonoTouch.Foundation.Preserve(AllMembers=true)]
     internal class Poco
     {
         public string Dummy { get; set; }
     }
 
+    [MonoTouch.Foundation.Preserve(AllMembers=true)]
     internal class JsonAotConfig
     {
         static JsReader<JsonTypeSerializer> reader;
+        static JsWriter<JsonTypeSerializer> writer;
         static JsonTypeSerializer serializer;
 
         static JsonAotConfig()
         {
             serializer = new JsonTypeSerializer();
             reader = new JsReader<JsonTypeSerializer>();
+            writer = new JsWriter<JsonTypeSerializer>();
         }
 
         public static ParseStringDelegate GetParseFn(Type type)
@@ -295,6 +327,7 @@ namespace SisoDb.Serialization
             QueryStringWriter<T>.WriteObject(null, null);
         }
 
+        // Edited to fix issues with null List<Guid> properties in response objects
         public static void RegisterElement<T, TElement>()
         {
             RegisterBuiltin<TElement>();
@@ -304,13 +337,22 @@ namespace SisoDb.Serialization
             ToStringDictionaryMethods<T, TElement, JsonTypeSerializer>.WriteIDictionary(null, null, null, null);
             ToStringDictionaryMethods<TElement, T, JsonTypeSerializer>.WriteIDictionary(null, null, null, null);
 
+            // Include List deserialisations from the Register<> method above.  This solves issue where List<Guid> properties on responses deserialise to null.
+            // No idea why this is happening because there is no visible exception raised.  Suspect MonoTouch is swallowing an AOT exception somewhere.
+            DeserializeArrayWithElements<TElement, JsonTypeSerializer>.ParseGenericArray(null, null);
+            DeserializeListWithElements<TElement, JsonTypeSerializer>.ParseGenericList(null, null, null);
+
+            // Cannot use the line below for some unknown reason - when trying to compile to run on device, mtouch bombs during native code compile.
+            // Something about this line or its inner workings is offensive to mtouch. Luckily this was not needed for my List<Guide> issue.
+            // DeserializeCollection<JsonTypeSerializer>.ParseCollection<TElement>(null, null, null);
+
             TranslateListWithElements<TElement>.LateBoundTranslateToGenericICollection(null, typeof(List<TElement>));
             TranslateListWithConvertibleElements<TElement, TElement>.LateBoundTranslateToGenericICollection(null, typeof(List<TElement>));
         }
     }
 #endif
 
-	public class JsConfig<T> //where T : struct
+    public class JsConfig<T> //where T : struct
 	{
 		/// <summary>
 		/// Never emit type info for this type
