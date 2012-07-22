@@ -1,11 +1,11 @@
 //
-// http://code.google.com/p/servicestack/wiki/TypeSerializer
-// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+// https://github.com/ServiceStack/ServiceStack.Text
+// ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
 //
 // Authors:
 //   Demis Bellot (demis.bellot@gmail.com)
 //
-// Copyright 2011 Liquidbit Ltd.
+// Copyright 2012 ServiceStack Ltd.
 //
 // Licensed under the same terms of ServiceStack: new BSD license.
 //
@@ -211,12 +211,10 @@ namespace SisoDb.Serialization.Jsv
 			writer.Write(enumValue.ToString());
 		}
 
-		public void WriteEnumFlags(TextWriter writer, object enumFlagValue)
-		{
-			if (enumFlagValue == null) return;
-			var intVal = (int)enumFlagValue;
-			writer.Write(intVal);
-		}
+        public void WriteEnumFlags(TextWriter writer, object enumFlagValue)
+        {
+			JsWriter.WriteEnumFlags(writer, enumFlagValue);
+        }
 
 		public object EncodeMapKey(object value)
 		{
@@ -233,6 +231,11 @@ namespace SisoDb.Serialization.Jsv
 			return JsvReader.GetParseFn(type);
 		}
 
+        public string UnescapeSafeString(string value)
+        {
+            return value.FromCsvField();
+        }
+
 		public string ParseRawString(string value)
 		{
 			return value;
@@ -243,7 +246,12 @@ namespace SisoDb.Serialization.Jsv
 			return value.FromCsvField();
 		}
 
-		public string EatTypeValue(string value, ref int i)
+	    public string UnescapeString(string value)
+	    {
+            return value.FromCsvField();
+        }
+
+	    public string EatTypeValue(string value, ref int i)
 		{
 			return EatValue(value, ref i);
 		}
@@ -353,7 +361,7 @@ namespace SisoDb.Serialization.Jsv
 						if (!isLiteralQuote)
 							break;
 					}
-					return value.Substring(tokenStartPos, i - tokenStartPos).FromCsvField();
+					return value.Substring(tokenStartPos, i - tokenStartPos);
 
 				//Is Type/Map, i.e. {...}
 				case JsWriter.MapStartChar:

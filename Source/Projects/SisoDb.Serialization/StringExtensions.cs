@@ -1,11 +1,11 @@
 //
-// http://code.google.com/p/servicestack/wiki/TypeSerializer
-// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+// https://github.com/ServiceStack/ServiceStack.Text
+// ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
 //
 // Authors:
 //   Demis Bellot (demis.bellot@gmail.com)
 //
-// Copyright 2011 Liquidbit Ltd.
+// Copyright 2012 ServiceStack Ltd.
 //
 // Licensed under the same terms of ServiceStack: new BSD license.
 //
@@ -15,6 +15,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using SisoDb.Serialization.Support;
 
 #if WINDOWS_PHONE
@@ -122,26 +123,24 @@ namespace SisoDb.Serialization
 
             var sb = new StringBuilder();
 
-            var textLength = text.Length;
-            for (var i = 0; i < textLength; i++)
+            foreach (var charCode in Encoding.UTF8.GetBytes(text))
             {
-                var c = text.Substring(i, 1);
-                int charCode = text[i];
 
                 if (
-                    charCode >= 65 && charCode <= 90		// A-Z
+                    charCode >= 65 && charCode <= 90        // A-Z
                     || charCode >= 97 && charCode <= 122    // a-z
-                    || charCode >= 48 && charCode <= 57		// 0-9
-                    || charCode >= 44 && charCode <= 46		// ,-.
+                    || charCode >= 48 && charCode <= 57     // 0-9
+                    || charCode >= 44 && charCode <= 46     // ,-.
                     )
                 {
-                    sb.Append(c);
+                    sb.Append((char)charCode);
                 }
                 else
                 {
                     sb.Append('%' + charCode.ToString("x"));
                 }
             }
+
             return sb.ToString();
         }
 
@@ -149,29 +148,28 @@ namespace SisoDb.Serialization
         {
             if (string.IsNullOrEmpty(text)) return null;
 
-            var sb = new StringBuilder();
+            var bytes = new List<byte>();
 
             var textLength = text.Length;
             for (var i = 0; i < textLength; i++)
             {
-                var c = text.Substring(i, 1);
-                if (c == "+")
+                var c = text[i];
+                if (c == '+')
                 {
-                    sb.Append(" ");
+                    bytes.Add(32);
                 }
-                else if (c == "%")
+                else if (c == '%')
                 {
-                    var hexNo = Convert.ToInt32(text.Substring(i + 1, 2), 16);
-                    sb.Append((char)hexNo);
+                    var hexNo = Convert.ToByte(text.Substring(i + 1, 2), 16);
+                    bytes.Add(hexNo);
                     i += 2;
                 }
                 else
                 {
-                    sb.Append(c);
+                    bytes.Add((byte)c);
                 }
             }
-
-            return sb.ToString();
+            return Encoding.UTF8.GetString(bytes.ToArray());
         }
 
 #if !XBOX
@@ -411,14 +409,14 @@ namespace SisoDb.Serialization
             return JsonSerializer.DeserializeFromString<T>(json);
         }
 
-#if !XBOX && !SILVERLIGHT
+#if !XBOX && !SILVERLIGHT && !MONOTOUCH
 		public static string ToXml<T>(this T obj)
 		{
 			return XmlSerializer.SerializeToString<T>(obj);
 		}
 #endif
 
-#if !XBOX && !SILVERLIGHT
+#if !XBOX && !SILVERLIGHT && !MONOTOUCH
         public static T FromXml<T>(this string json)
 		{
 			return XmlSerializer.DeserializeFromString<T>(json);
@@ -553,5 +551,20 @@ namespace SisoDb.Serialization
             return (char)(firstChar + LowerCaseOffset) + value.Substring(1);
         }
 
+        public static string SafeSubstring(this string value, int length)
+        {
+            return string.IsNullOrEmpty(value) 
+                ? string.Empty 
+                : value.Substring(Math.Min(length, value.Length));
+        }
+
+        public static string SafeSubstring(this string value, int startIndex, int length)
+        {
+            if (string.IsNullOrEmpty(value)) return string.Empty;
+            if (value.Length >= (startIndex + length))
+                return value.Substring(startIndex, length);
+
+            return value.Length > startIndex ? value.Substring(startIndex) : string.Empty;
+        }
     }
 }

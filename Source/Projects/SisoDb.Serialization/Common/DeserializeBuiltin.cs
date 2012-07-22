@@ -1,11 +1,11 @@
 //
-// http://code.google.com/p/servicestack/wiki/TypeSerializer
-// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+// https://github.com/ServiceStack/ServiceStack.Text
+// ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
 //
 // Authors:
 //   Demis Bellot (demis.bellot@gmail.com)
 //
-// Copyright 2011 Liquidbit Ltd.
+// Copyright 2012 ServiceStack Ltd.
 //
 // Licensed under the same terms of ServiceStack: new BSD license.
 //
@@ -59,10 +59,10 @@ namespace SisoDb.Serialization.Common
 			if (typeof(T) == typeof(DateTimeOffset) || typeof(T) == typeof(DateTimeOffset?))
 				return value => DateTimeSerializer.ParseDateTimeOffset(value);
             if (typeof(T) == typeof(TimeSpan))
-                return value => DateTimeSerializer.ParseXsdTimeSpan(value);
+                return value => DateTimeSerializer.ParseTimeSpan(value);
 			if (typeof(T) == typeof(TimeSpan?))
-                return value => DateTimeSerializer.ParseXsdNullableTimeSpan(value);
-			if (typeof(T) == typeof(char))
+                return value => DateTimeSerializer.ParseNullableTimeSpan(value);
+            if (typeof(T) == typeof(char))
 			{
 				char cValue;
 				return value => char.TryParse(value, out cValue) ? cValue : '\0';

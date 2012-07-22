@@ -1,11 +1,11 @@
 //
-// http://code.google.com/p/servicestack/wiki/TypeSerializer
-// ServiceStack.Text: .NET C# POCO Type Text Serializer.
+// https://github.com/ServiceStack/ServiceStack.Text
+// ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
 //
 // Authors:
 //   Demis Bellot (demis.bellot@gmail.com)
 //
-// Copyright 2011 Liquidbit Ltd.
+// Copyright 2012 ServiceStack Ltd.
 //
 // Licensed under the same terms of ServiceStack: new BSD license.
 //
@@ -78,7 +78,8 @@ namespace SisoDb.Serialization.Common
 
             // for interop, do not assume format based on config
             // format: prefer TimestampOffset, DCJSCompatible
-            if (dateTimeOffsetStr.StartsWith(EscapedWcfJsonPrefix))
+            if (dateTimeOffsetStr.StartsWith(EscapedWcfJsonPrefix) ||
+                dateTimeOffsetStr.StartsWith(WcfJsonPrefix))
             {
                 return ParseWcfJsonDateOffset(dateTimeOffsetStr);
             }
@@ -111,14 +112,28 @@ namespace SisoDb.Serialization.Common
 			return XmlConvert.ToDateTime(dateTimeStr, XmlDateTimeSerializationMode.Utc);
 		}
 
+        public static TimeSpan ParseTimeSpan(string dateTimeStr)
+        {
+            return dateTimeStr.StartsWith("P") || dateTimeStr.StartsWith("-P")
+                ? ParseXsdTimeSpan(dateTimeStr)
+                : TimeSpan.Parse(dateTimeStr);
+        }
+
         public static TimeSpan ParseXsdTimeSpan(string dateTimeStr)
         {
             return XmlConvert.ToTimeSpan(dateTimeStr);
         }
 
+        public static TimeSpan? ParseNullableTimeSpan(string dateTimeStr)
+        {
+            return string.IsNullOrEmpty(dateTimeStr) 
+                ? (TimeSpan?) null 
+                : ParseTimeSpan(dateTimeStr);
+        }
+
         public static TimeSpan? ParseXsdNullableTimeSpan(string dateTimeStr)
         {
-            return String.IsNullOrEmpty(dateTimeStr) ? 
+            return String.IsNullOrEmpty(dateTimeStr) ?
                 null :
                 new TimeSpan?(XmlConvert.ToTimeSpan(dateTimeStr));
         }
