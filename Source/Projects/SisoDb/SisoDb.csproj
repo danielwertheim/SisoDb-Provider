@@ -192,8 +192,10 @@
     <Compile Include="PineCone\Structures\Schemas\Builders\ISchemaBuilder.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfig.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfigurations.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfigurator.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfig.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfigurations.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfigurator.cs" />
     <Compile Include="PineCone\Structures\Schemas\DataTypeConverter.cs" />
     <Compile Include="PineCone\Structures\Schemas\DynamicGetter.cs" />
     <Compile Include="PineCone\Structures\Schemas\DynamicPropertyFactory.cs" />
@@ -230,6 +232,7 @@
     <Compile Include="PineCone\Structures\Schemas\StructureType.cs" />
     <Compile Include="PineCone\Structures\Schemas\StructureTypeFactory.cs" />
     <Compile Include="PineCone\Structures\Schemas\StructureTypeReflecter.cs" />
+    <Compile Include="PineCone\Structures\Schemas\StructureTypeReflecterOptions.cs" />
     <Compile Include="PineCone\Structures\SequentialGuid.cs" />
     <Compile Include="PineCone\Structures\Structure.cs" />
     <Compile Include="PineCone\Structures\StructureBuilder.cs" />

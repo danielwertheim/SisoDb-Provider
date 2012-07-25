@@ -5,12 +5,11 @@ namespace SisoDb.PineCone.Structures.Schemas
 {
     public interface IStructureTypeFactory
     {
-        IStructureTypeReflecter Reflecter { get; }
+        Func<Type, IStructureTypeReflecter> ReflecterFn { get; set; }
 
-        IStructureTypeConfigurations Configurations { get; }
+        IStructureTypeConfigurations Configurations { get; set; }
 
         IStructureType CreateFor<T>() where T : class;
-
         IStructureType CreateFor(Type type);
     }
 }

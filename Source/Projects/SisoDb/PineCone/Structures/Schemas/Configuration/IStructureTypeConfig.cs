@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace SisoDb.PineCone.Structures.Schemas.Configuration
 {
@@ -8,16 +7,8 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
     {
         Type Type { get; }
         bool IsEmpty { get; }
+        bool IncludeNestedStructureMembers { get; set; }
         ISet<string> MemberPathsBeingIndexed { get; }
         ISet<string> MemberPathsNotBeingIndexed { get; }
-
-        IStructureTypeConfig OnlyIndexThis(params string[] memberPaths);
-        IStructureTypeConfig DoNotIndexThis(params string[] memberPaths);
-    }
-
-    public interface IStructureTypeConfig<T> : IStructureTypeConfig where T : class 
-    {
-        IStructureTypeConfig<T> OnlyIndexThis(params Expression<Func<T, object>>[] members);
-        IStructureTypeConfig<T> DoNotIndexThis(params Expression<Func<T, object>>[] members);
     }
 }

@@ -5,28 +5,25 @@ namespace SisoDb.PineCone.Structures.Schemas
 {
     /// <summary>
     /// Responsible for identifying the Properties that should be used as
-    /// StructureId, TimeStamp, ConcurrencyToken and plain indexes.
+    /// StructureId, TimeStamp, ConcurrencyToken and plain indexes for a
+    /// certain structure type.
     /// </summary>
     public interface IStructureTypeReflecter
     {
-        IStructurePropertyFactory PropertyFactory { get; set; }
+        Type StructureType { get; }
+        IStructurePropertyFactory PropertyFactory { set; }
 
-        bool HasIdProperty(Type type);
+        bool HasIdProperty();
+        bool HasIdProperty(Type structureType);
+        bool HasConcurrencyTokenProperty();
+        bool HasTimeStampProperty();
 
-        bool HasConcurrencyTokenProperty(Type type);
-
-        bool HasTimeStampProperty(Type type);
-
-        IStructureProperty GetIdProperty(Type type);
-
-        IStructureProperty GetConcurrencyTokenProperty(Type type);
-
-        IStructureProperty GetTimeStampProperty(Type type);
-
-		IStructureProperty[] GetIndexableProperties(Type type);
-						  
-		IStructureProperty[] GetIndexablePropertiesExcept(Type type, ICollection<string> nonIndexablePaths);
-						  
-		IStructureProperty[] GetSpecificIndexableProperties(Type type, ICollection<string> indexablePaths);
+        IStructureProperty GetIdProperty();
+        IStructureProperty GetConcurrencyTokenProperty();
+        IStructureProperty GetTimeStampProperty();
+        
+        IStructureProperty[] GetIndexableProperties();
+		IStructureProperty[] GetIndexablePropertiesExcept(ICollection<string> nonIndexablePaths);
+        IStructureProperty[] GetSpecificIndexableProperties(ICollection<string> indexablePaths);
     }
 }

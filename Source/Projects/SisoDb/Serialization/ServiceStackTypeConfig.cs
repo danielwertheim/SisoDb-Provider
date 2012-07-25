@@ -21,9 +21,9 @@ namespace SisoDb.Serialization
         {
             ChildConfig = new ConcurrentDictionary<Type, bool>();
 
-            StructureTypeReflecter = new StructureTypeReflecter();
             ItemType = typeof(T);
             TypeConfigType = typeof(TypeConfig<>);
+            StructureTypeReflecter = new StructureTypeReflecter(ItemType);
 
             TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }

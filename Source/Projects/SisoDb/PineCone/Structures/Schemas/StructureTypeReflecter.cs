@@ -10,9 +10,9 @@ namespace SisoDb.PineCone.Structures.Schemas
 {
     public class StructureTypeReflecter : IStructureTypeReflecter
     {
-        private const string ConcurrencyTokenMemberName = "ConcurrencyToken";
-        private static readonly string[] NonIndexableSystemMembers = new string[0];
-        private IStructurePropertyFactory _propertyFactory;
+        protected const string ConcurrencyTokenMemberName = "ConcurrencyToken";
+        protected static readonly string[] NonIndexableSystemMembers = new string[0];
+        protected readonly StructureTypeReflecterOptions Options;
 
         public const BindingFlags IdPropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
@@ -20,40 +20,45 @@ namespace SisoDb.PineCone.Structures.Schemas
         public const BindingFlags PropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
-        public IStructurePropertyFactory PropertyFactory
-        {
-            get
-            {
-                return _propertyFactory;
-            }
-            set
-            {
-                Ensure.That(value, "PropertyFactory").IsNotNull();
-                _propertyFactory = value;
-            }
-        }
+        public Type StructureType { get; private set; }
+        
+        public IStructurePropertyFactory PropertyFactory { protected get; set; }
 
-        public StructureTypeReflecter()
+        public StructureTypeReflecter(Type structureType, StructureTypeReflecterOptions options = null)
         {
+            Ensure.That(structureType, "structureType").IsNotNull();
+
+            StructureType = structureType;
             PropertyFactory = new StructurePropertyFactory();
+            Options = options ?? new StructureTypeReflecterOptions();
         }
 
-        public bool HasIdProperty(Type type)
+        public virtual bool HasIdProperty()
         {
-            return GetIdProperty(type) != null;
+            return HasIdProperty(StructureType);
         }
 
-        public bool HasConcurrencyTokenProperty(Type type)
+        public virtual bool HasIdProperty(Type structureType)
         {
-            return GetConcurrencyTokenProperty(type) != null;
+            return GetIdProperty(structureType) != null;
         }
 
-        public bool HasTimeStampProperty(Type type)
+        public virtual bool HasConcurrencyTokenProperty()
         {
-            return GetTimeStampProperty(type) != null;
+            return GetConcurrencyTokenProperty() != null;
         }
 
-        public virtual IStructureProperty GetIdProperty(Type type)
+        public virtual bool HasTimeStampProperty()
+        {
+            return GetTimeStampProperty() != null;
+        }
+
+        public virtual IStructureProperty GetIdProperty()
+        {
+            return GetIdProperty(StructureType);
+        }
+
+        protected virtual IStructureProperty GetIdProperty(Type type)
         {
             var properties = type.GetProperties(IdPropertyBindingFlags).Where(p => p.Name.EndsWith(StructureIdPropertyNames.Indicator)).ToArray();
 
@@ -98,7 +103,12 @@ namespace SisoDb.PineCone.Structures.Schemas
             return properties.SingleOrDefault(p => p.Name.Equals(propertyName));
         }
 
-        public virtual IStructureProperty GetTimeStampProperty(Type type)
+        public virtual IStructureProperty GetTimeStampProperty()
+        {
+            return GetTimeStampProperty(StructureType);
+        }
+
+        protected virtual IStructureProperty GetTimeStampProperty(Type type)
         {
             var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.Name.EndsWith(StructureTimeStampPropertyNames.Indicator)).ToArray();
 
@@ -143,7 +153,12 @@ namespace SisoDb.PineCone.Structures.Schemas
             return properties.SingleOrDefault(p => p.Name.Equals(propertyName));
         }
 
-        public virtual IStructureProperty GetConcurrencyTokenProperty(Type type)
+        public virtual IStructureProperty GetConcurrencyTokenProperty()
+        {
+            return GetConcurrencyTokenProperty(StructureType);
+        }
+
+        protected virtual IStructureProperty GetConcurrencyTokenProperty(Type type)
         {
             var propertyInfo = type.GetProperty(ConcurrencyTokenMemberName, PropertyBindingFlags);
 
@@ -152,27 +167,23 @@ namespace SisoDb.PineCone.Structures.Schemas
                 : PropertyFactory.CreateRootPropertyFrom(propertyInfo);
         }
 
-        public virtual IStructureProperty[] GetIndexableProperties(Type type)
+        public virtual IStructureProperty[] GetIndexableProperties()
         {
-            Ensure.That(type, "type").IsNotNull();
-
-            return GetIndexableProperties(type, null, NonIndexableSystemMembers, null);
+            return GetIndexableProperties(StructureType, null, NonIndexableSystemMembers, null);
         }
 
-        public virtual IStructureProperty[] GetIndexablePropertiesExcept(Type type, ICollection<string> nonIndexablePaths)
+        public virtual IStructureProperty[] GetIndexablePropertiesExcept(ICollection<string> nonIndexablePaths)
         {
-            Ensure.That(type, "type").IsNotNull();
             Ensure.That(nonIndexablePaths, "nonIndexablePaths").HasItems();
 
-            return GetIndexableProperties(type, null, NonIndexableSystemMembers.MergeWith(nonIndexablePaths).ToArray(), null);
+            return GetIndexableProperties(StructureType, null, NonIndexableSystemMembers.MergeWith(nonIndexablePaths).ToArray(), null);
         }
 
-        public virtual IStructureProperty[] GetSpecificIndexableProperties(Type type, ICollection<string> indexablePaths)
+        public virtual IStructureProperty[] GetSpecificIndexableProperties(ICollection<string> indexablePaths)
         {
-            Ensure.That(type, "type").IsNotNull();
             Ensure.That(indexablePaths, "indexablePaths").HasItems();
 
-            return GetIndexableProperties(type, null, NonIndexableSystemMembers, indexablePaths);
+            return GetIndexableProperties(StructureType, null, NonIndexableSystemMembers, indexablePaths);
         }
 
         protected virtual IStructureProperty[] GetIndexableProperties(
@@ -212,10 +223,12 @@ namespace SisoDb.PineCone.Structures.Schemas
                     continue;
                 }
 
-                var elementProperties = GetIndexableProperties(enumerableProperty.ElementDataType,
-                                                               enumerableProperty,
-                                                               nonIndexablePaths,
-                                                               indexablePaths);
+                var elementProperties = GetIndexableProperties(
+                    enumerableProperty.ElementDataType,
+                    enumerableProperty,
+                    nonIndexablePaths,
+                    indexablePaths);
+
                 properties.AddRange(elementProperties);
             }
 
@@ -247,8 +260,10 @@ namespace SisoDb.PineCone.Structures.Schemas
 
             var filteredProperties = properties.Where(p =>
                 !p.PropertyType.IsSimpleType() &&
-                !p.PropertyType.IsEnumerableType() &&
-                GetIdProperty(p.PropertyType) == null);
+                !p.PropertyType.IsEnumerableType());
+
+            if (!Options.IncludeNestedStructureMembers)
+                filteredProperties = filteredProperties.Where(p => GetIdProperty(p.PropertyType) == null);
 
             if (nonIndexablePaths != null && nonIndexablePaths.Any())
                 filteredProperties = filteredProperties.Where(p => !nonIndexablePaths.Contains(
