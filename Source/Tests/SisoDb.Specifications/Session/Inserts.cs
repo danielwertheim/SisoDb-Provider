@@ -15,19 +15,27 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                _structure = new SingleStringMember { Value = null };
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<SingleStringMember>();
             };
 
             Because of =
-                () => TestContext.Database.UseOnceTo().Insert(new SingleStringMember { Value = null });
+                () => TestContext.Database.UseOnceTo().Insert(_structure);
 
             It should_have_one_item_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<SingleStringMember>(1);
 
-            It should_have_inserted_an_item_with_null_values = () =>
+            It should_have_inserted_an_item_with_string_null_value = () =>
             {
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleStringMember>().FirstOrDefault();
                 refetched.Value.ShouldBeNull();
             };
+
+            It should_not_have_insterted_null_value_for_string_in_any_indexes_table =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<SingleStringMember>(_structureSchema, _structure.StructureId, x => x.Value).ShouldBeFalse();
+
+            private static SingleStringMember _structure;
+            private static IStructureSchema _structureSchema;
         }
 
         [Subject(typeof(ISession), "InsertMany")]
@@ -36,15 +44,16 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<SingleStringMember>();
+                _structures = new[]
+                {
+                    new SingleStringMember {Value = null},
+                    new SingleStringMember {Value = null},
+                    new SingleStringMember {Value = null}
+                };
             };
 
-            Because of = () =>
-                TestContext.Database.UseOnceTo().InsertMany(new[]
-                {
-                    new SingleStringMember { Value = null },
-                    new SingleStringMember { Value = null },
-                    new SingleStringMember { Value = null }
-                });
+            Because of = () => TestContext.Database.UseOnceTo().InsertMany(_structures);
 
             It should_have_three_items_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<SingleStringMember>(3);
@@ -54,6 +63,18 @@ namespace SisoDb.Specifications.Session
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleStringMember>().ToArray();
                 refetched.All(s => s.Value == null).ShouldBeTrue();
             };
+
+            It should_not_have_insterted_null_value_for_string_in_any_indexes_table = () =>
+            {
+                foreach (var structure in _structures)
+                {
+                    TestContext.DbHelper.AnyIndexesTableHasMember<SingleStringMember>(
+                        _structureSchema, structure.StructureId, x => x.Value).ShouldBeFalse();
+                }
+            };
+
+            private static IStructureSchema _structureSchema;
+            private static SingleStringMember[] _structures;
         }
 
         [Subject(typeof(ISession), "Insert")]
@@ -62,10 +83,11 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<SingleDateTimeMember>();
+                _structure = new SingleDateTimeMember {Value = null};
             };
 
-            Because of =
-                () => TestContext.Database.UseOnceTo().Insert(new SingleDateTimeMember { Value = null });
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_structure);
 
             It should_have_one_item_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<SingleDateTimeMember>(1);
@@ -75,6 +97,12 @@ namespace SisoDb.Specifications.Session
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleDateTimeMember>().FirstOrDefault();
                 refetched.Value.ShouldBeNull();
             };
+
+            It should_not_have_insterted_null_value_for_datetime_in_any_indexes_table =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<SingleDateTimeMember>(_structureSchema, _structure.StructureId, x => x.Value).ShouldBeFalse();
+
+            private static IStructureSchema _structureSchema;
+            private static SingleDateTimeMember _structure;
         }
 #if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
         [Subject(typeof(ISession), "Insert")]
@@ -129,10 +157,11 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                _structure = new SingleTextMember { Text = null };
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<SingleTextMember>();
             };
 
-            Because of =
-                () => TestContext.Database.UseOnceTo().Insert(new SingleTextMember { Text = null });
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_structure);
 
             It should_have_one_item_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<SingleTextMember>(1);
@@ -142,6 +171,12 @@ namespace SisoDb.Specifications.Session
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleTextMember>().FirstOrDefault();
                 refetched.Text.ShouldBeNull();
             };
+
+            It should_not_have_insterted_null_value_for_string_in_any_indexes_table =
+                () => TestContext.DbHelper.AnyIndexesTableHasMember<SingleTextMember>(_structureSchema, _structure.StructureId, x => x.Text).ShouldBeFalse();
+
+            private static SingleTextMember _structure;
+            private static IStructureSchema _structureSchema;
         }
 
         [Subject(typeof(ISession), "InsertMany")]
@@ -150,15 +185,16 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<SingleTextMember>();
+                _structures = new[]
+                {
+                    new SingleTextMember {Text = null},
+                    new SingleTextMember {Text = null},
+                    new SingleTextMember {Text = null}
+                };
             };
 
-            Because of = () =>
-                TestContext.Database.UseOnceTo().InsertMany(new[]
-                {
-                    new SingleTextMember { Text = null },
-                    new SingleTextMember { Text = null },
-                    new SingleTextMember { Text = null }
-                });
+            Because of = () => TestContext.Database.UseOnceTo().InsertMany(_structures);
 
             It should_have_three_items_inserted =
                 () => TestContext.Database.should_have_X_num_of_items<SingleTextMember>(3);
@@ -168,6 +204,18 @@ namespace SisoDb.Specifications.Session
                 var refetched = TestContext.Database.UseOnceTo().Query<SingleTextMember>().ToArray();
                 refetched.All(s => s.Text == null).ShouldBeTrue();
             };
+
+            It should_not_have_insterted_null_value_for_text_in_any_indexes_table = () =>
+            {
+                foreach (var structure in _structures)
+                {
+                    TestContext.DbHelper.AnyIndexesTableHasMember<SingleTextMember>(
+                        _structureSchema, structure.StructureId, x => x.Text).ShouldBeFalse();
+                }
+            };
+
+            private static IStructureSchema _structureSchema;
+            private static SingleTextMember[] _structures;
         }
 
         [Subject(typeof(ISession), "Insert")]
