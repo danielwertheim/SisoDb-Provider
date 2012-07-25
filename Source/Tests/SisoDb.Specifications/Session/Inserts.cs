@@ -84,7 +84,7 @@ namespace SisoDb.Specifications.Session
             {
                 TestContext = TestContextFactory.Create();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<SingleDateTimeMember>();
-                _structure = new SingleDateTimeMember {Value = null};
+                _structure = new SingleDateTimeMember { Value = null };
             };
 
             Because of = () => TestContext.Database.UseOnceTo().Insert(_structure);
