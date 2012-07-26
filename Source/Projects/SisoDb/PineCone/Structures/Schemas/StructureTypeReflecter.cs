@@ -181,22 +181,40 @@ namespace SisoDb.PineCone.Structures.Schemas
             return GetIndexableProperties(StructureType, null, NonIndexableSystemMembers, indexablePaths);
         }
 
+        public virtual IStructureProperty[] GetContainedStructureProperties()
+        {
+            var propertyInfos = GetIndexablePropertyInfos(StructureType);
+
+            return GetContainedStructureProperties(propertyInfos);
+        }
+
+        protected virtual IStructureProperty[] GetContainedStructureProperties(PropertyInfo[] propertyInfos)
+        {
+            var complexPropertyInfos = GetComplexIndexablePropertyInfos(propertyInfos, true);
+
+            return complexPropertyInfos
+                .Where(p => GetIdProperty(p.PropertyType) != null)
+                .Select(p => PropertyFactory.CreateChildPropertyFrom(null, p)).ToArray();
+        }
+
         protected virtual IStructureProperty[] GetIndexableProperties(
             IReflect type,
             IStructureProperty parent,
             ICollection<string> nonIndexablePaths,
             ICollection<string> indexablePaths)
         {
-            var propertyInfos = type.GetProperties(PropertyBindingFlags);
-            if (propertyInfos.Length == 0)
+            var initialPropertyInfos = GetIndexablePropertyInfos(type);
+            if (initialPropertyInfos.Length == 0)
                 return new IStructureProperty[] { };
 
             var properties = new List<IStructureProperty>();
+            
+            var simplePropertyInfos = GetSimpleIndexablePropertyInfos(initialPropertyInfos, parent, nonIndexablePaths, indexablePaths);
+            properties.AddRange(simplePropertyInfos.Select(spi => PropertyFactory.CreateChildPropertyFrom(parent, spi)));
 
-            properties.AddRange(GetSimpleIndexablePropertyInfos(propertyInfos, parent, nonIndexablePaths, indexablePaths)
-                .Select(spi => PropertyFactory.CreateChildPropertyFrom(parent, spi)));
+            initialPropertyInfos = initialPropertyInfos.Where(p => !simplePropertyInfos.Contains(p)).ToArray();
 
-            foreach (var complexPropertyInfo in GetComplexIndexablePropertyInfos(propertyInfos, parent, nonIndexablePaths, indexablePaths))
+            foreach (var complexPropertyInfo in GetComplexIndexablePropertyInfos(initialPropertyInfos, Config.IncludeNestedStructureMembers, parent, nonIndexablePaths, indexablePaths))
             {
                 var complexProperty = PropertyFactory.CreateChildPropertyFrom(parent, complexPropertyInfo);
                 var simpleComplexProps = GetIndexableProperties(
@@ -209,7 +227,7 @@ namespace SisoDb.PineCone.Structures.Schemas
                     properties.Add(complexProperty);
             }
 
-            foreach (var enumerablePropertyInfo in GetEnumerableIndexablePropertyInfos(propertyInfos, parent, nonIndexablePaths, indexablePaths))
+            foreach (var enumerablePropertyInfo in GetEnumerableIndexablePropertyInfos(initialPropertyInfos, parent, nonIndexablePaths, indexablePaths))
             {
                 var enumerableProperty = PropertyFactory.CreateChildPropertyFrom(parent, enumerablePropertyInfo);
                 if (enumerableProperty.ElementDataType.IsSimpleType())
@@ -230,10 +248,15 @@ namespace SisoDb.PineCone.Structures.Schemas
             return properties.ToArray();
         }
 
-        protected virtual IEnumerable<PropertyInfo> GetSimpleIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
+        private static PropertyInfo[] GetIndexablePropertyInfos(IReflect type)
+        {
+            return type.GetProperties(PropertyBindingFlags);
+        }
+
+        protected virtual PropertyInfo[] GetSimpleIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
         {
             if (properties.Length == 0)
-                return properties;
+                return new PropertyInfo[0];
 
             var filteredProperties = properties.Where(p => p.PropertyType.IsSimpleType());
 
@@ -248,16 +271,16 @@ namespace SisoDb.PineCone.Structures.Schemas
             return filteredProperties.ToArray();
         }
 
-        protected virtual IEnumerable<PropertyInfo> GetComplexIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
+        protected virtual PropertyInfo[] GetComplexIndexablePropertyInfos(PropertyInfo[] properties, bool includeNestedStructureMembers, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
         {
             if (properties.Length == 0)
-                return properties;
+                return new PropertyInfo[0];
 
             var filteredProperties = properties.Where(p =>
                 !p.PropertyType.IsSimpleType() &&
                 !p.PropertyType.IsEnumerableType());
 
-            if (!Config.IncludeNestedStructureMembers)
+            if (!includeNestedStructureMembers)
                 filteredProperties = filteredProperties.Where(p => GetIdProperty(p.PropertyType) == null);
 
             if (nonIndexablePaths != null && nonIndexablePaths.Any())
@@ -271,10 +294,10 @@ namespace SisoDb.PineCone.Structures.Schemas
             return filteredProperties.ToArray();
         }
 
-        protected virtual IEnumerable<PropertyInfo> GetEnumerableIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
+        protected virtual PropertyInfo[] GetEnumerableIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
         {
             if (properties.Length == 0)
-                return properties;
+                return new PropertyInfo[0];
 
             var filteredProperties = properties.Where(p =>
                 !p.PropertyType.IsSimpleType() &&

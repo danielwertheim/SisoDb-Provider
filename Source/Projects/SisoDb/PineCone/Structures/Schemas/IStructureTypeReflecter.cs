@@ -24,5 +24,6 @@ namespace SisoDb.PineCone.Structures.Schemas
         IStructureProperty[] GetIndexableProperties();
 		IStructureProperty[] GetIndexablePropertiesExcept(ICollection<string> nonIndexablePaths);
         IStructureProperty[] GetSpecificIndexableProperties(ICollection<string> indexablePaths);
+        IStructureProperty[] GetContainedStructureProperties();
     }
 }

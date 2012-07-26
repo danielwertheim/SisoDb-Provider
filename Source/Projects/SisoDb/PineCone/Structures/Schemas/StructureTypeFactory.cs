@@ -32,7 +32,8 @@ namespace SisoDb.PineCone.Structures.Schemas
                     reflecter.GetIdProperty(),
                     reflecter.GetConcurrencyTokenProperty(),
                     reflecter.GetTimeStampProperty(),
-                    reflecter.GetIndexableProperties());
+                    reflecter.GetIndexableProperties(),
+                    reflecter.GetContainedStructureProperties());
 
             var shouldIndexAllMembersExcept = config.MemberPathsNotBeingIndexed.Count > 0;
             return new StructureType(
@@ -42,7 +43,8 @@ namespace SisoDb.PineCone.Structures.Schemas
                 reflecter.GetTimeStampProperty(),
                 (shouldIndexAllMembersExcept
                     ? reflecter.GetIndexablePropertiesExcept(config.MemberPathsNotBeingIndexed)
-                    : reflecter.GetSpecificIndexableProperties(config.MemberPathsBeingIndexed)));
+                    : reflecter.GetSpecificIndexableProperties(config.MemberPathsBeingIndexed)),
+                reflecter.GetContainedStructureProperties());
         }
     }
 }
