@@ -33,7 +33,7 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
         {
             return _configurations.ContainsKey(type)
                 ? _configurations[type]
-                : null;
+                : new StructureTypeConfig(type);
         }
 
         public virtual IStructureTypeConfig GetConfiguration<T>() where T : class
@@ -46,7 +46,7 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
             Ensure.That(type, "type").IsNotNull();
             Ensure.That(configure, "configure").IsNotNull();
 
-            var config = GetConfiguration(type) ?? new StructureTypeConfig(type);
+            var config = GetConfiguration(type);
             var configurator = new StructureTypeConfigurator(config);
             configure(configurator);
 
@@ -57,8 +57,7 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
         {
             Ensure.That(configure, "configure").IsNotNull();
 
-            var type = typeof (T);
-            var config = GetConfiguration(type) ?? new StructureTypeConfig(type);
+            var config = GetConfiguration<T>();
             var configurator = new StructureTypeConfigurator<T>(config);
             configure(configurator);
 

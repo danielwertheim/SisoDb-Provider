@@ -232,7 +232,6 @@
     <Compile Include="PineCone\Structures\Schemas\StructureType.cs" />
     <Compile Include="PineCone\Structures\Schemas\StructureTypeFactory.cs" />
     <Compile Include="PineCone\Structures\Schemas\StructureTypeReflecter.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureTypeReflecterOptions.cs" />
     <Compile Include="PineCone\Structures\SequentialGuid.cs" />
     <Compile Include="PineCone\Structures\Structure.cs" />
     <Compile Include="PineCone\Structures\StructureBuilder.cs" />

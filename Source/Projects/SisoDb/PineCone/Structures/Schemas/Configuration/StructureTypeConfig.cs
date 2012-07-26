@@ -11,7 +11,7 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
         private readonly HashSet<string> _memberPathsNotBeingIndexed;
 
         public Type Type { get; private set; }
-        public bool IsEmpty
+        public bool IndexConfigIsEmpty
         {
             get { return MemberPathsBeingIndexed.Count < 1 && MemberPathsNotBeingIndexed.Count < 1; }
         }

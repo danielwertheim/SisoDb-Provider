@@ -14,7 +14,6 @@ namespace SisoDb.PineCone.Structures.Schemas
         IStructurePropertyFactory PropertyFactory { set; }
 
         bool HasIdProperty();
-        bool HasIdProperty(Type structureType);
         bool HasConcurrencyTokenProperty();
         bool HasTimeStampProperty();
 

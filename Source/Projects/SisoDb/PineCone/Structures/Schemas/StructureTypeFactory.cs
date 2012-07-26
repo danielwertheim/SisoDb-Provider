@@ -5,13 +5,13 @@ namespace SisoDb.PineCone.Structures.Schemas
 {
     public class StructureTypeFactory : IStructureTypeFactory
     {
-        public Func<Type, IStructureTypeReflecter> ReflecterFn { get; set; }
+        public Func<IStructureTypeConfig, IStructureTypeReflecter> ReflecterFn { get; set; }
 
         public IStructureTypeConfigurations Configurations { get; set; }
 
-        public StructureTypeFactory(Func<Type, IStructureTypeReflecter> reflecterFn = null, IStructureTypeConfigurations configurations = null)
+        public StructureTypeFactory(Func<IStructureTypeConfig, IStructureTypeReflecter> reflecterFn = null, IStructureTypeConfigurations configurations = null)
         {
-            ReflecterFn = reflecterFn ?? (t => new StructureTypeReflecter(t));
+            ReflecterFn = reflecterFn ?? (cfg => new StructureTypeReflecter(cfg));
             Configurations = configurations ?? new StructureTypeConfigurations();
         }
 
@@ -22,9 +22,9 @@ namespace SisoDb.PineCone.Structures.Schemas
 
         public virtual IStructureType CreateFor(Type type)
         {
-            var reflecter = ReflecterFn(type);
             var config = Configurations.GetConfiguration(type);
-            var shouldIndexAllMembers = config == null || config.IsEmpty;
+            var reflecter = ReflecterFn(config);
+            var shouldIndexAllMembers = config.IndexConfigIsEmpty;
 
             if (shouldIndexAllMembers)
                 return new StructureType(

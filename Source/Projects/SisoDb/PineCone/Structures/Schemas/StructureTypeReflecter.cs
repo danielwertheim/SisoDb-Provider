@@ -5,6 +5,7 @@ using System.Reflection;
 using SisoDb.EnsureThat;
 using SisoDb.NCore.Collections;
 using SisoDb.NCore.Reflections;
+using SisoDb.PineCone.Structures.Schemas.Configuration;
 
 namespace SisoDb.PineCone.Structures.Schemas
 {
@@ -12,7 +13,7 @@ namespace SisoDb.PineCone.Structures.Schemas
     {
         protected const string ConcurrencyTokenMemberName = "ConcurrencyToken";
         protected static readonly string[] NonIndexableSystemMembers = new string[0];
-        protected readonly StructureTypeReflecterOptions Options;
+        protected readonly IStructureTypeConfig Config;
 
         public const BindingFlags IdPropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
@@ -20,27 +21,21 @@ namespace SisoDb.PineCone.Structures.Schemas
         public const BindingFlags PropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
-        public Type StructureType { get; private set; }
-        
+        public Type StructureType { get { return Config.Type; } }
+
         public IStructurePropertyFactory PropertyFactory { protected get; set; }
 
-        public StructureTypeReflecter(Type structureType, StructureTypeReflecterOptions options = null)
+        public StructureTypeReflecter(IStructureTypeConfig structureTypeConfig)
         {
-            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(structureTypeConfig, "structureTypeConfig").IsNotNull();
 
-            StructureType = structureType;
+            Config = structureTypeConfig;
             PropertyFactory = new StructurePropertyFactory();
-            Options = options ?? new StructureTypeReflecterOptions();
         }
 
         public virtual bool HasIdProperty()
         {
-            return HasIdProperty(StructureType);
-        }
-
-        public virtual bool HasIdProperty(Type structureType)
-        {
-            return GetIdProperty(structureType) != null;
+            return GetIdProperty() != null;
         }
 
         public virtual bool HasConcurrencyTokenProperty()
@@ -262,7 +257,7 @@ namespace SisoDb.PineCone.Structures.Schemas
                 !p.PropertyType.IsSimpleType() &&
                 !p.PropertyType.IsEnumerableType());
 
-            if (!Options.IncludeNestedStructureMembers)
+            if (!Config.IncludeNestedStructureMembers)
                 filteredProperties = filteredProperties.Where(p => GetIdProperty(p.PropertyType) == null);
 
             if (nonIndexablePaths != null && nonIndexablePaths.Any())
