@@ -307,6 +307,7 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations.Configure<Root>(cfg => cfg.AllowNestedStructures());
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root>();
                 _structure = new Root
                 {
