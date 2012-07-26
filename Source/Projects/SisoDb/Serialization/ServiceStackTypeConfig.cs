@@ -9,41 +9,36 @@ namespace SisoDb.Serialization
 {
     internal static class ServiceStackTypeConfig<T>
     {
-        private static readonly IStructureTypeReflecter StructureTypeReflecter;
-
-        private static readonly Type ItemType;
-
+        private static readonly Type StructureContractType;
         private static readonly Type TypeConfigType;
-
-        private static readonly ConcurrentDictionary<Type, bool> ChildConfig;
+        private static readonly ConcurrentDictionary<Type, bool> PreviousConfigurations;
 
         static ServiceStackTypeConfig()
         {
-            ChildConfig = new ConcurrentDictionary<Type, bool>();
+            PreviousConfigurations = new ConcurrentDictionary<Type, bool>();
 
-            ItemType = typeof(T);
+            StructureContractType = typeof(T);
             TypeConfigType = typeof(TypeConfig<>);
-            StructureTypeReflecter = new StructureTypeReflecter(ItemType);
 
             TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 
-        internal static void Config(Type type)
+        internal static void Config(Type itemType)
         {
-            var propertiesAllreadyExcludedInStaticCtor = type == ItemType;
+            var propertiesAllreadyExcludedInStaticCtor = itemType == StructureContractType;
             if (propertiesAllreadyExcludedInStaticCtor)
                 return;
 
-            if (ChildConfig.ContainsKey(type))
+            if (PreviousConfigurations.ContainsKey(itemType))
                 return;
 
-            if (ChildConfig.TryAdd(type, true))
-                ConfigureTypeConfigToExcludeReferencedStructures(type);
+            if (PreviousConfigurations.TryAdd(itemType, true))
+                ConfigureTypeConfigToExcludeReferencedStructures(itemType);
         }
 
         private static void ConfigureTypeConfigToExcludeReferencedStructures(Type type)
         {
-            var propertiesAllreadyExcludedInStaticCtor = type == ItemType;
+            var propertiesAllreadyExcludedInStaticCtor = type == StructureContractType;
             if (propertiesAllreadyExcludedInStaticCtor)
                 return;
 
