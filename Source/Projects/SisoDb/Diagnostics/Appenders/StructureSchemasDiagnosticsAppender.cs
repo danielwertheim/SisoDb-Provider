@@ -63,6 +63,9 @@ namespace SisoDb.Diagnostics.Appenders
 
         protected virtual void OnAppendNonIndexedMemberPaths(DiagnosticsGroup parent, IStructureTypeConfig typeConfig)
         {
+            if(!typeConfig.MemberPathsNotBeingIndexed.Any())
+                return;
+
             var groupOfNotIndexedPaths = parent.AddGroup("Member paths NOT being indexed");
             foreach (var notIndexed in typeConfig.MemberPathsNotBeingIndexed)
                 groupOfNotIndexedPaths.AddNode(notIndexed, null);
