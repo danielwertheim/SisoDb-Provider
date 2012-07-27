@@ -41,17 +41,20 @@ namespace SisoDb.UnitTests.Configurations
         }
 
         [Test]
-        public void Serializer_Should_assign_new_serialzer_on_Db()
+        public void Serializer_It_should_assign_new_options_on_serializer_assigned_to_db()
         {
             var dbFake = new Mock<ISisoDatabase>();
+            var options = new SerializerOptions();
+            var orgDateSerializationMode = options.DateSerializationMode;
             var serializerFake = new Mock<ISisoDbSerializer>();
-            var optionsFake = new Mock<SerializerOptions>();
-            serializerFake.Setup(f => f.Options).Returns(optionsFake.Object);
+            serializerFake.Setup(f => f.Options).Returns(options);
             dbFake.Setup(f => f.Serializer).Returns(serializerFake.Object);
 
             dbFake.Object.Configure().Serializer(o => o.DateSerializationMode = DateSerializationModes.TimestampOffset);
 
-            optionsFake.VerifySet(f => f.DateSerializationMode = DateSerializationModes.TimestampOffset, Times.Once());
+            dbFake.VerifySet(f => f.Serializer = serializerFake.Object, Times.Never());
+            Assert.AreNotEqual(orgDateSerializationMode, options.DateSerializationMode);
+            Assert.AreEqual(DateSerializationModes.TimestampOffset, options.DateSerializationMode);
         }
 
         [Test]
