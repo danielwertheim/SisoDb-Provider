@@ -786,7 +786,7 @@ namespace SisoDb
                     structureSchema.Type.Type),
                 CacheConsumeMode);
 
-            return Db.Serializer.Serialize(item);
+            return Db.Serializer.Serialize(item, structureSchema);
         }
 
         public virtual IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class
@@ -817,7 +817,7 @@ namespace SisoDb
                     structureSchema.Type.Type).Where(s => s != null).ToArray(),
                 CacheConsumeMode);
 
-            return Db.Serializer.SerializeMany(items).ToArray();
+            return Db.Serializer.SerializeMany(items, structureSchema).ToArray();
         }
 
         public virtual ISession Insert<T>(T item) where T : class
@@ -865,11 +865,11 @@ namespace SisoDb
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
-                var json = Db.Serializer.Serialize(item);
-                var realItem = Db.Serializer.Deserialize<T>(json);
                 var structureSchema = OnUpsertStructureSchema<T>();
+                var json = Db.Serializer.Serialize(item, structureSchema);
+                var realItem = Db.Serializer.Deserialize<T>(json);
+                
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
-
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
@@ -886,9 +886,9 @@ namespace SisoDb
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
-                var json = Db.Serializer.Serialize(item);
-                var realItem = Db.Serializer.Deserialize(json, structureType);
                 var structureSchema = OnUpsertStructureSchema(structureType);
+                var json = Db.Serializer.Serialize(item, structureSchema);
+                var realItem = Db.Serializer.Deserialize(json, structureType);
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);

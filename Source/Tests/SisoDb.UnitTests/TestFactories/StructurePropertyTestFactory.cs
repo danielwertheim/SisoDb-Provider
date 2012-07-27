@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Configuration;
 
 namespace SisoDb.UnitTests.TestFactories
 {
@@ -18,7 +19,7 @@ namespace SisoDb.UnitTests.TestFactories
 
         private static IStructureTypeReflecter ReflecterFor(Type structureType)
         {
-            return new StructureTypeReflecter(structureType);
+            return new StructureTypeReflecter(new StructureTypeConfig(structureType));
         }
     }
 }

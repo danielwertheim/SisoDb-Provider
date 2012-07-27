@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
@@ -21,13 +22,13 @@ namespace SisoDb.Serialization
             Options = new SerializerOptions();
         }
 
-        protected virtual void OnConfigForSerialization<T>(Type itemType) where T : class
+        protected virtual void OnConfigForSerialization<T>(IStructureSchema structureSchema, Type itemType) where T : class
         {
             JsConfig.DateHandler = DateHandler;
             JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
             JsConfig.IncludeNullValues = false;
-            ServiceStackTypeConfig<T>.Config(itemType);
+            ServiceStackTypeConfig<T>.Config(structureSchema, itemType);
         }
 
         protected virtual void OnConfigForDeserialization()
@@ -35,19 +36,19 @@ namespace SisoDb.Serialization
             JsConfig.DateHandler = DateHandler;
         }
 
-        public virtual string Serialize<T>(T item) where T : class
+        public virtual string Serialize<T>(T item, IStructureSchema structureSchema) where T : class
         {
             if (item == null)
                 return string.Empty;
 
             var itemType = item.GetType();
             
-            OnConfigForSerialization<T>(itemType);
+            OnConfigForSerialization<T>(structureSchema, itemType);
             
             return JsonSerializer.SerializeToString(item, itemType);
         }
 
-        public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class
+        public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items, IStructureSchema structureSchema) where T : class
         {
             Type itemType = null;
             foreach (var item in items)
@@ -56,7 +57,7 @@ namespace SisoDb.Serialization
                 {
                     //Yes, it's ok for now to use first item as template.
                     itemType = item.GetType();
-                    OnConfigForSerialization<T>(itemType);
+                    OnConfigForSerialization<T>(structureSchema, itemType);
                 }
 
                 yield return OnSerialize(item, itemType);
@@ -88,12 +89,7 @@ namespace SisoDb.Serialization
 
         public virtual TTemplate DeserializeUsingTemplate<TTemplate>(string json) where TTemplate : class
         {
-            return DeserializeUsingTemplate<TTemplate>(json, typeof(TTemplate));
-        }
-
-        public virtual TTemplate DeserializeUsingTemplate<TTemplate>(string json, Type templateType) where TTemplate : class
-        {
-            Ensure.That(templateType, "templateType").IsNotNull();
+            var templateType = typeof (TTemplate);
 
             OnConfigForDeserialization();
             TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
@@ -119,15 +115,6 @@ namespace SisoDb.Serialization
             return Options.DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(json, structureType))
                     : OnDeserializeManyInSequential(sourceData, json => OnDeserialize(json, structureType));
-        }
-
-        public virtual IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, TTemplate template) where TTemplate : class
-        {
-            Ensure.That(template, "template").IsNotNull();
-
-            OnConfigForDeserialization();
-
-            return DeserializeManyUsingTemplate<TTemplate>(sourceData, template.GetType());
         }
 
         public virtual IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, Type templateType) where TTemplate : class

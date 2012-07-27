@@ -15,44 +15,48 @@ namespace SisoDb.Serialization
 
         static ServiceStackTypeConfig()
         {
-            PreviousConfigurations = new ConcurrentDictionary<Type, bool>();
-
             StructureContractType = typeof(T);
             TypeConfigType = typeof(TypeConfig<>);
-
-            TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
+            PreviousConfigurations = new ConcurrentDictionary<Type, bool>();
+            //TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 
-        internal static void Config(Type itemType)
+        internal static void Config(IStructureSchema structureSchema, Type itemType)
         {
-            var propertiesAllreadyExcludedInStaticCtor = itemType == StructureContractType;
-            if (propertiesAllreadyExcludedInStaticCtor)
+            if(!structureSchema.Type.ContainedStructureProperties.Any())
                 return;
+            
+            //var propertiesAllreadyExcludedInStaticCtor = itemType == StructureContractType;
+            //if (propertiesAllreadyExcludedInStaticCtor)
+            //    return;
 
             if (PreviousConfigurations.ContainsKey(itemType))
                 return;
 
             if (PreviousConfigurations.TryAdd(itemType, true))
-                ConfigureTypeConfigToExcludeReferencedStructures(itemType);
+                ConfigureTypeConfigToExcludeReferencedStructures(structureSchema, itemType);
         }
 
-        private static void ConfigureTypeConfigToExcludeReferencedStructures(Type type)
+        private static void ConfigureTypeConfigToExcludeReferencedStructures(IStructureSchema structureSchema, Type itemType)
         {
-            var propertiesAllreadyExcludedInStaticCtor = type == StructureContractType;
-            if (propertiesAllreadyExcludedInStaticCtor)
+            if (!structureSchema.Type.ContainedStructureProperties.Any())
                 return;
 
-            var cfg = TypeConfigType.MakeGenericType(type);
+            //var propertiesAllreadyExcludedInStaticCtor = itemType == StructureContractType;
+            //if (propertiesAllreadyExcludedInStaticCtor)
+            //    return;
+
+            var cfg = TypeConfigType.MakeGenericType(itemType);
             var propertiesProperty = cfg.GetProperty("Properties", BindingFlags.Static | BindingFlags.Public);
             propertiesProperty.SetValue(
                 null,
-                ExcludePropertiesThatHoldStructures((PropertyInfo[])propertiesProperty.GetValue(null, new object[] { })),
+                ExcludePropertiesThatHoldStructures(structureSchema, (PropertyInfo[])propertiesProperty.GetValue(null, new object[] { })),
                 new object[] { });
         }
 
-        private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
+        private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IStructureSchema structureSchema, IEnumerable<PropertyInfo> properties)
         {
-            return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+            return properties.Where(p => !structureSchema.Type.ContainedStructureProperties.Any(cp => cp.Name == p.Name)).ToArray();
         }
     }
 }

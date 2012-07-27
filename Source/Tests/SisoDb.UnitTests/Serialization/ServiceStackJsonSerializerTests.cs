@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
+using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
 
 namespace SisoDb.UnitTests.Serialization
@@ -9,23 +11,30 @@ namespace SisoDb.UnitTests.Serialization
     public class ServiceStackJsonSerializerTests : UnitTestBase
     {
         private readonly ISisoDbSerializer _sisoDbSerializer = new ServiceStackJsonSerializer();
+        private readonly IStructureTypeFactory _structureTypeFactory = new StructureTypeFactory();
+        private readonly ISchemaBuilder _schemaBuilder = new AutoSchemaBuilder();
+
+        private IStructureSchema GetSchema<T>() where T : class
+        {
+            return _schemaBuilder.CreateSchema(_structureTypeFactory.CreateFor<T>());
+        }
 
         [Test]
         public void Serialize_WhenNullEntity_ReturnsEmptyString()
         {
-            var json = _sisoDbSerializer.Serialize<JsonEntity>(null);
+            var json = _sisoDbSerializer.Serialize<JsonEntity>(null, GetSchema<JsonEntity>());
 
             Assert.AreEqual(string.Empty, json);
         }
 
         [Test]
-        public void Serialize_WhenPrivateGetterExists_ReturnsEmptyJson()
+        public void Serialize_WhenOnlyPrivateGetterAndStructureIdExists_ReturnsJsonWithStructureId()
         {
             var entity = new JsonEntityWithPrivateGetter { Name = "Daniel" };
 
-            var json = _sisoDbSerializer.Serialize(entity);
+            var json = _sisoDbSerializer.Serialize(entity, GetSchema<JsonEntityWithPrivateGetter>());
 
-            Assert.AreEqual("{}", json);
+            Assert.AreEqual("{\"StructureId\":0}", json);
         }
 
         [Test]
@@ -34,9 +43,9 @@ namespace SisoDb.UnitTests.Serialization
             var entity = new JsonEntity();
             entity.SetName("Daniel");
 
-            var json = _sisoDbSerializer.Serialize(entity);
+            var json = _sisoDbSerializer.Serialize(entity, GetSchema<JsonEntity>());
 
-            Assert.AreEqual("{\"Name\":\"Daniel\"}", json);
+            Assert.AreEqual("{\"StructureId\":0,\"Name\":\"Daniel\"}", json);
         }
 
         [Test]
@@ -54,9 +63,9 @@ namespace SisoDb.UnitTests.Serialization
         {
             var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)).ToArray() };
 
-            var json = _sisoDbSerializer.Serialize<JsonEntityX>(y);
+            var json = _sisoDbSerializer.Serialize<JsonEntityX>(y, GetSchema<JsonEntityX>());
 
-			Assert.AreEqual("{\"Data\":\"TQEAAA==\",\"String1\":\"The String1\",\"Int1\":42}", json);
+			Assert.AreEqual("{\"Data\":\"TQEAAA==\",\"StructureId\":0,\"String1\":\"The String1\",\"Int1\":42}", json);
         }
 
         [Test]
@@ -69,7 +78,7 @@ namespace SisoDb.UnitTests.Serialization
                 Item = {String1 = "To be included"}
             };
 
-            var json = _sisoDbSerializer.Serialize(structure);
+            var json = _sisoDbSerializer.Serialize(structure, GetSchema<Structure>());
 
             const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);
@@ -77,6 +86,7 @@ namespace SisoDb.UnitTests.Serialization
 
         private class JsonEntity
         {
+            public int StructureId { get; set; }
             public string Name { get; private set; }
 
             public void SetName(string name)
@@ -87,13 +97,14 @@ namespace SisoDb.UnitTests.Serialization
 
         private class JsonEntityWithPrivateGetter
         {
+            public int StructureId { get; set; }
             public string Name { private get; set; }
         }
 
         private class JsonEntityX
         {
+            public int StructureId { get; set; }
             public string String1 { get; set; }
-
             public int Int1 { get; set; }
         }
 
@@ -105,16 +116,13 @@ namespace SisoDb.UnitTests.Serialization
         private class Item
         {
             public string String1 { get; set; }
-
             public int Int1 { get; set; }
-
             public DateTime? DateTime1 { get; set; }
         }
 
         private class Structure
         {
             public int StructureId { get; set; }
-
             public int ReferencedStructureId 
             {
                 get { return ReferencedStructure.StructureId; }
@@ -122,9 +130,7 @@ namespace SisoDb.UnitTests.Serialization
             }
 
             public OtherStructure ReferencedStructure { get; set; }
-
             public Item Item { get; set; }
-
             public Structure()
             {
                 ReferencedStructure = new OtherStructure();
@@ -135,7 +141,6 @@ namespace SisoDb.UnitTests.Serialization
         private class OtherStructure
         {
             public int StructureId { get; set; }
-
             public string OtherStructureString { get; set; }
         }
     }

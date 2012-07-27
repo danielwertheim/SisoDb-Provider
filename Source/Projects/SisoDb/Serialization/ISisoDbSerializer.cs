@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
@@ -15,16 +16,18 @@ namespace SisoDb.Serialization
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
+        /// <param name="structureSchema"></param>
         /// <returns></returns>
-        string Serialize<T>(T item) where T : class;
+        string Serialize<T>(T item, IStructureSchema structureSchema) where T : class;
 
         /// <summary>
         /// Serializes many <typeparamref name="T"/> to stream of JSON.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
+        /// <param name="structureSchema"></param>
         /// <returns></returns>
-        IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class;
+        IEnumerable<string> SerializeMany<T>(IEnumerable<T> items, IStructureSchema structureSchema) where T : class;
         
         /// <summary>
         /// Deserializes sent JSON as <typeparamref name="T"/>.
@@ -53,16 +56,6 @@ namespace SisoDb.Serialization
         TTemplate DeserializeUsingTemplate<TTemplate>(string json) where TTemplate : class;
 
         /// <summary>
-        /// Deserializes sent JSON to <typeparamref name="TTemplate"/> using <paramref name="templateType"/>.
-        /// Enables support for Anonymous types, hence <paramref name="templateType"/> could be an anonymous type.
-        /// </summary>
-        /// <typeparam name="TTemplate"></typeparam>
-        /// <param name="json"></param>
-        /// <param name="templateType"></param>
-        /// <returns></returns>
-        TTemplate DeserializeUsingTemplate<TTemplate>(string json, Type templateType) where TTemplate : class;
-        
-        /// <summary>
         /// Deserializes sent JSON to yielded stream of <typeparamref name="T"/>.
         /// Either done sequentially or in parallel. It is controlled by <see cref="Options"/>
         /// </summary>
@@ -79,17 +72,6 @@ namespace SisoDb.Serialization
         /// <param name="structureType"></param>
         /// <returns></returns>
         IEnumerable<object> DeserializeMany(IEnumerable<string> sourceData, Type structureType);
-
-        /// <summary>
-        /// Deserializes sent JSON to yielded stream of <typeparamref name="TTemplate"/>.
-        /// Enables support for Anonymous types, hence <typeparamref name="TTemplate"/> could be an anonymous type.
-        /// Either done sequentially or in parallel. It is controlled by <see cref="Options"/>
-        /// </summary>
-        /// <typeparam name="TTemplate"></typeparam>
-        /// <param name="sourceData"></param>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, TTemplate template) where TTemplate : class;
 
         /// <summary>
         /// Deserializes sent JSON to yielded stream of <typeparamref name="TTemplate"/> using <paramref name="templateType"/>.
