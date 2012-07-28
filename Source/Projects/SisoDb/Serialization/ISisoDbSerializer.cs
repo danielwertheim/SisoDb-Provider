@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
@@ -16,18 +15,16 @@ namespace SisoDb.Serialization
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
-        /// <param name="structureSchema"></param>
         /// <returns></returns>
-        string Serialize<T>(T item, IStructureSchema structureSchema) where T : class;
+        string Serialize<T>(T item) where T : class;
 
         /// <summary>
         /// Serializes many <typeparamref name="T"/> to stream of JSON.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
-        /// <param name="structureSchema"></param>
         /// <returns></returns>
-        IEnumerable<string> SerializeMany<T>(IEnumerable<T> items, IStructureSchema structureSchema) where T : class;
+        IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class;
         
         /// <summary>
         /// Deserializes sent JSON as <typeparamref name="T"/>.

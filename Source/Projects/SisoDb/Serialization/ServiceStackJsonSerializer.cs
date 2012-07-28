@@ -36,7 +36,7 @@ namespace SisoDb.Serialization
             JsConfig.DateHandler = DateHandler;
         }
 
-        public virtual string Serialize<T>(T item, IStructureSchema structureSchema) where T : class
+        public virtual string Serialize<T>(T item) where T : class
         {
             if (item == null)
                 return string.Empty;
@@ -48,7 +48,7 @@ namespace SisoDb.Serialization
             return JsonSerializer.SerializeToString(item, itemType);
         }
 
-        public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items, IStructureSchema structureSchema) where T : class
+        public virtual IEnumerable<string> SerializeMany<T>(IEnumerable<T> items) where T : class
         {
             Type itemType = null;
             foreach (var item in items)
