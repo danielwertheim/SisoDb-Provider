@@ -5,7 +5,6 @@ using System.Reflection;
 using SisoDb.EnsureThat;
 using SisoDb.NCore.Collections;
 using SisoDb.NCore.Reflections;
-using SisoDb.PineCone.Structures.Schemas.Configuration;
 
 namespace SisoDb.PineCone.Structures.Schemas
 {
@@ -13,7 +12,6 @@ namespace SisoDb.PineCone.Structures.Schemas
     {
         protected const string ConcurrencyTokenMemberName = "ConcurrencyToken";
         protected static readonly string[] NonIndexableSystemMembers = new string[0];
-        protected readonly IStructureTypeConfig Config;
 
         public const BindingFlags IdPropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
@@ -21,51 +19,41 @@ namespace SisoDb.PineCone.Structures.Schemas
         public const BindingFlags PropertyBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
 
-        public Type StructureType { get { return Config.Type; } }
-
         public IStructurePropertyFactory PropertyFactory { protected get; set; }
 
-        public StructureTypeReflecter(IStructureTypeConfig structureTypeConfig)
+        public StructureTypeReflecter()
         {
-            Ensure.That(structureTypeConfig, "structureTypeConfig").IsNotNull();
-
-            Config = structureTypeConfig;
             PropertyFactory = new StructurePropertyFactory();
         }
 
-        public virtual bool HasIdProperty()
+        public virtual bool HasIdProperty(Type structureType)
         {
-            return GetIdProperty() != null;
+            return GetIdProperty(structureType) != null;
         }
 
-        public virtual bool HasConcurrencyTokenProperty()
+        public virtual bool HasConcurrencyTokenProperty(Type structureType)
         {
-            return GetConcurrencyTokenProperty() != null;
+            return GetConcurrencyTokenProperty(structureType) != null;
         }
 
-        public virtual bool HasTimeStampProperty()
+        public virtual bool HasTimeStampProperty(Type structureType)
         {
-            return GetTimeStampProperty() != null;
+            return GetTimeStampProperty(structureType) != null;
         }
 
-        public virtual IStructureProperty GetIdProperty()
+        public virtual IStructureProperty GetIdProperty(Type structureType)
         {
-            return GetIdProperty(StructureType);
-        }
-
-        protected virtual IStructureProperty GetIdProperty(Type type)
-        {
-            var properties = type.GetProperties(IdPropertyBindingFlags).Where(p => p.Name.EndsWith(StructureIdPropertyNames.Indicator)).ToArray();
+            var properties = structureType.GetProperties(IdPropertyBindingFlags).Where(p => p.Name.EndsWith(StructureIdPropertyNames.Indicator)).ToArray();
 
             var defaultProp = GetDefaultStructureIdProperty(properties);
             if (defaultProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(defaultProp);
 
-            var typeNamedIdProp = GetTypeNamedStructureIdProperty(type, properties);
+            var typeNamedIdProp = GetTypeNamedStructureIdProperty(structureType, properties);
             if (typeNamedIdProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(typeNamedIdProp);
 
-            var interfaceNamedIdProp = GetInterfaceNamedStructureIdProperty(type, properties);
+            var interfaceNamedIdProp = GetInterfaceNamedStructureIdProperty(structureType, properties);
             if (interfaceNamedIdProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(interfaceNamedIdProp);
 
@@ -81,41 +69,36 @@ namespace SisoDb.PineCone.Structures.Schemas
             return properties.SingleOrDefault(p => p.Name.Equals(StructureIdPropertyNames.Default));
         }
 
-        protected virtual PropertyInfo GetTypeNamedStructureIdProperty(Type type, IEnumerable<PropertyInfo> properties)
+        protected virtual PropertyInfo GetTypeNamedStructureIdProperty(Type structureType, IEnumerable<PropertyInfo> properties)
         {
-            var propertyName = StructureIdPropertyNames.GetTypeNamePropertyNameFor(type);
+            var propertyName = StructureIdPropertyNames.GetTypeNamePropertyNameFor(structureType);
 
             return properties.SingleOrDefault(p => p.Name.Equals(propertyName));
         }
 
-        protected virtual PropertyInfo GetInterfaceNamedStructureIdProperty(Type type, IEnumerable<PropertyInfo> properties)
+        protected virtual PropertyInfo GetInterfaceNamedStructureIdProperty(Type structureType, IEnumerable<PropertyInfo> properties)
         {
-            if (!type.IsInterface)
+            if (!structureType.IsInterface)
                 return null;
 
-            var propertyName = StructureIdPropertyNames.GetInterfaceTypeNamePropertyNameFor(type);
+            var propertyName = StructureIdPropertyNames.GetInterfaceTypeNamePropertyNameFor(structureType);
 
             return properties.SingleOrDefault(p => p.Name.Equals(propertyName));
         }
 
-        public virtual IStructureProperty GetTimeStampProperty()
+        public virtual IStructureProperty GetTimeStampProperty(Type structureType)
         {
-            return GetTimeStampProperty(StructureType);
-        }
-
-        protected virtual IStructureProperty GetTimeStampProperty(Type type)
-        {
-            var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.Name.EndsWith(StructureTimeStampPropertyNames.Indicator)).ToArray();
+            var properties = structureType.GetProperties(PropertyBindingFlags).Where(p => p.Name.EndsWith(StructureTimeStampPropertyNames.Indicator)).ToArray();
 
             var defaultProp = GetDefaultStructureTimeStampProperty(properties);
             if (defaultProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(defaultProp);
 
-            var typeNamedProp = GetTypeNamedStructureTimeStampProperty(type, properties);
+            var typeNamedProp = GetTypeNamedStructureTimeStampProperty(structureType, properties);
             if (typeNamedProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(typeNamedProp);
 
-            var interfaceNamedProp = GetInterfaceNamedStructureTimeStampProperty(type, properties);
+            var interfaceNamedProp = GetInterfaceNamedStructureTimeStampProperty(structureType, properties);
             if (interfaceNamedProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(interfaceNamedProp);
 
@@ -131,66 +114,55 @@ namespace SisoDb.PineCone.Structures.Schemas
             return properties.SingleOrDefault(p => p.Name.Equals(StructureTimeStampPropertyNames.Default));
         }
 
-        protected virtual PropertyInfo GetTypeNamedStructureTimeStampProperty(Type type, IEnumerable<PropertyInfo> properties)
+        protected virtual PropertyInfo GetTypeNamedStructureTimeStampProperty(Type structureType, IEnumerable<PropertyInfo> properties)
         {
-            var propertyName = StructureTimeStampPropertyNames.GetTypeNamePropertyNameFor(type);
+            var propertyName = StructureTimeStampPropertyNames.GetTypeNamePropertyNameFor(structureType);
 
             return properties.SingleOrDefault(p => p.Name.Equals(propertyName));
         }
 
-        protected virtual PropertyInfo GetInterfaceNamedStructureTimeStampProperty(Type type, IEnumerable<PropertyInfo> properties)
+        protected virtual PropertyInfo GetInterfaceNamedStructureTimeStampProperty(Type structureType, IEnumerable<PropertyInfo> properties)
         {
-            if (!type.IsInterface)
+            if (!structureType.IsInterface)
                 return null;
 
-            var propertyName = StructureTimeStampPropertyNames.GetInterfaceTypeNamePropertyNameFor(type);
+            var propertyName = StructureTimeStampPropertyNames.GetInterfaceTypeNamePropertyNameFor(structureType);
 
             return properties.SingleOrDefault(p => p.Name.Equals(propertyName));
         }
 
-        public virtual IStructureProperty GetConcurrencyTokenProperty()
+        public virtual IStructureProperty GetConcurrencyTokenProperty(Type structureType)
         {
-            return GetConcurrencyTokenProperty(StructureType);
-        }
-
-        protected virtual IStructureProperty GetConcurrencyTokenProperty(Type type)
-        {
-            var propertyInfo = type.GetProperty(ConcurrencyTokenMemberName, PropertyBindingFlags);
+            var propertyInfo = structureType.GetProperty(ConcurrencyTokenMemberName, PropertyBindingFlags);
 
             return propertyInfo == null
                 ? null
                 : PropertyFactory.CreateRootPropertyFrom(propertyInfo);
         }
 
-        public virtual IStructureProperty[] GetIndexableProperties()
+        public virtual IStructureProperty[] GetIndexableProperties(Type structureType, bool includeContainedStructureMembers)
         {
-            return GetIndexableProperties(StructureType, null, NonIndexableSystemMembers, null);
+            return GetIndexableProperties(structureType, null, includeContainedStructureMembers, NonIndexableSystemMembers, null);
         }
 
-        public virtual IStructureProperty[] GetIndexablePropertiesExcept(ICollection<string> nonIndexablePaths)
+        public virtual IStructureProperty[] GetIndexablePropertiesExcept(Type structureType, bool includeContainedStructureMembers, ICollection<string> nonIndexablePaths)
         {
             Ensure.That(nonIndexablePaths, "nonIndexablePaths").HasItems();
 
-            return GetIndexableProperties(StructureType, null, NonIndexableSystemMembers.MergeWith(nonIndexablePaths).ToArray(), null);
+            return GetIndexableProperties(structureType, null, includeContainedStructureMembers, NonIndexableSystemMembers.MergeWith(nonIndexablePaths).ToArray(), null);
         }
 
-        public virtual IStructureProperty[] GetSpecificIndexableProperties(ICollection<string> indexablePaths)
+        public virtual IStructureProperty[] GetSpecificIndexableProperties(Type structureType, bool includeContainedStructureMembers, ICollection<string> indexablePaths)
         {
             Ensure.That(indexablePaths, "indexablePaths").HasItems();
 
-            return GetIndexableProperties(StructureType, null, NonIndexableSystemMembers, indexablePaths);
+            return GetIndexableProperties(structureType, null, includeContainedStructureMembers, NonIndexableSystemMembers, indexablePaths);
         }
 
-        public virtual IStructureProperty[] GetContainedStructureProperties()
+        public virtual IStructureProperty[] GetContainedStructureProperties(Type structureType)
         {
-            var propertyInfos = GetIndexablePropertyInfos(StructureType);
-
-            return GetContainedStructureProperties(propertyInfos);
-        }
-
-        protected virtual IStructureProperty[] GetContainedStructureProperties(PropertyInfo[] propertyInfos)
-        {
-            var complexPropertyInfos = GetComplexIndexablePropertyInfos(propertyInfos, true);
+            var propertyInfos = GetIndexablePropertyInfos(structureType, true);
+            var complexPropertyInfos = GetComplexIndexablePropertyInfos(propertyInfos);
 
             return complexPropertyInfos
                 .Where(p => GetIdProperty(p.PropertyType) != null)
@@ -200,25 +172,26 @@ namespace SisoDb.PineCone.Structures.Schemas
         protected virtual IStructureProperty[] GetIndexableProperties(
             IReflect type,
             IStructureProperty parent,
+            bool includeContainedStructureMembers,
             ICollection<string> nonIndexablePaths,
             ICollection<string> indexablePaths)
         {
-            var initialPropertyInfos = GetIndexablePropertyInfos(type);
+            var initialPropertyInfos = GetIndexablePropertyInfos(type, includeContainedStructureMembers);
             if (initialPropertyInfos.Length == 0)
                 return new IStructureProperty[] { };
 
             var properties = new List<IStructureProperty>();
-            
+
             var simplePropertyInfos = GetSimpleIndexablePropertyInfos(initialPropertyInfos, parent, nonIndexablePaths, indexablePaths);
             properties.AddRange(simplePropertyInfos.Select(spi => PropertyFactory.CreateChildPropertyFrom(parent, spi)));
 
             initialPropertyInfos = initialPropertyInfos.Where(p => !simplePropertyInfos.Contains(p)).ToArray();
 
-            foreach (var complexPropertyInfo in GetComplexIndexablePropertyInfos(initialPropertyInfos, Config.IncludeNestedStructureMembers, parent, nonIndexablePaths, indexablePaths))
+            foreach (var complexPropertyInfo in GetComplexIndexablePropertyInfos(initialPropertyInfos, parent, nonIndexablePaths, indexablePaths))
             {
                 var complexProperty = PropertyFactory.CreateChildPropertyFrom(parent, complexPropertyInfo);
                 var simpleComplexProps = GetIndexableProperties(
-                    complexProperty.DataType, complexProperty, nonIndexablePaths, indexablePaths);
+                    complexProperty.DataType, complexProperty, includeContainedStructureMembers, nonIndexablePaths, indexablePaths);
 
                 var beforeCount = properties.Count;
                 properties.AddRange(simpleComplexProps);
@@ -239,6 +212,7 @@ namespace SisoDb.PineCone.Structures.Schemas
                 var elementProperties = GetIndexableProperties(
                     enumerableProperty.ElementDataType,
                     enumerableProperty,
+                    includeContainedStructureMembers,
                     nonIndexablePaths,
                     indexablePaths);
 
@@ -248,9 +222,11 @@ namespace SisoDb.PineCone.Structures.Schemas
             return properties.ToArray();
         }
 
-        private static PropertyInfo[] GetIndexablePropertyInfos(IReflect type)
+        private PropertyInfo[] GetIndexablePropertyInfos(IReflect type, bool includeContainedStructureMembers)
         {
-            return type.GetProperties(PropertyBindingFlags);
+            return includeContainedStructureMembers
+                ? type.GetProperties(PropertyBindingFlags)
+                : type.GetProperties(PropertyBindingFlags).Where(p => HasIdProperty(p.PropertyType) == false).ToArray();
         }
 
         protected virtual PropertyInfo[] GetSimpleIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
@@ -271,7 +247,7 @@ namespace SisoDb.PineCone.Structures.Schemas
             return filteredProperties.ToArray();
         }
 
-        protected virtual PropertyInfo[] GetComplexIndexablePropertyInfos(PropertyInfo[] properties, bool includeNestedStructureMembers, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
+        protected virtual PropertyInfo[] GetComplexIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
         {
             if (properties.Length == 0)
                 return new PropertyInfo[0];
@@ -280,8 +256,8 @@ namespace SisoDb.PineCone.Structures.Schemas
                 !p.PropertyType.IsSimpleType() &&
                 !p.PropertyType.IsEnumerableType());
 
-            if (!includeNestedStructureMembers)
-                filteredProperties = filteredProperties.Where(p => GetIdProperty(p.PropertyType) == null);
+            //if (!includeContainedStructureMembers)
+            //    filteredProperties = filteredProperties.Where(p => GetIdProperty(p.PropertyType) == null);
 
             if (nonIndexablePaths != null && nonIndexablePaths.Any())
                 filteredProperties = filteredProperties.Where(p => !nonIndexablePaths.Contains(

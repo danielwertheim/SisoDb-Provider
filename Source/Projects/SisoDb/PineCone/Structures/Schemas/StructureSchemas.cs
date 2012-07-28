@@ -10,23 +10,21 @@ namespace SisoDb.PineCone.Structures.Schemas
     public class StructureSchemas : IStructureSchemas
     {
         private readonly ConcurrentDictionary<Type, IStructureSchema> _schemas;
-
         private readonly Func<Type, IStructureSchema> _schemaFactoryFn;
 
         public IStructureTypeFactory StructureTypeFactory { get; set; }
+        public IStructureSchemaBuilder StructureSchemaBuilder { get; set; }
         
-        public ISchemaBuilder SchemaBuilder { get; set; }
-        
-        public StructureSchemas(IStructureTypeFactory structureTypeFactory, ISchemaBuilder schemaBuilder)
+        public StructureSchemas(IStructureTypeFactory structureTypeFactory, IStructureSchemaBuilder structureSchemaBuilder)
         {
             Ensure.That(structureTypeFactory, "structureTypeFactory").IsNotNull();
-            Ensure.That(schemaBuilder, "schemaBuilder").IsNotNull();
+            Ensure.That(structureSchemaBuilder, "StructureSchemaBuilder").IsNotNull();
 
             StructureTypeFactory = structureTypeFactory;
-            SchemaBuilder = schemaBuilder;
+            StructureSchemaBuilder = structureSchemaBuilder;
             _schemas = new ConcurrentDictionary<Type, IStructureSchema>();
 
-            _schemaFactoryFn = t => SchemaBuilder.CreateSchema(StructureTypeFactory.CreateFor(t));
+            _schemaFactoryFn = t => StructureSchemaBuilder.CreateSchema(StructureTypeFactory.CreateFor(t));
         }
 
         public IStructureSchema GetSchema<T>() where T : class 

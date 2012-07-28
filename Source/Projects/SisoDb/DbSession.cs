@@ -786,7 +786,7 @@ namespace SisoDb
                     structureSchema.Type.Type),
                 CacheConsumeMode);
 
-            return Db.Serializer.Serialize(item, structureSchema);
+            return Db.Serializer.Serialize(item);
         }
 
         public virtual IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class
@@ -817,7 +817,7 @@ namespace SisoDb
                     structureSchema.Type.Type).Where(s => s != null).ToArray(),
                 CacheConsumeMode);
 
-            return Db.Serializer.SerializeMany(items, structureSchema).ToArray();
+            return Db.Serializer.SerializeMany(items).ToArray();
         }
 
         public virtual ISession Insert<T>(T item) where T : class
@@ -866,7 +866,7 @@ namespace SisoDb
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
                 var structureSchema = OnUpsertStructureSchema<T>();
-                var json = Db.Serializer.Serialize(item, structureSchema);
+                var json = Db.Serializer.Serialize(item);
                 var realItem = Db.Serializer.Deserialize<T>(json);
                 
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
@@ -887,7 +887,7 @@ namespace SisoDb
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
                 var structureSchema = OnUpsertStructureSchema(structureType);
-                var json = Db.Serializer.Serialize(item, structureSchema);
+                var json = Db.Serializer.Serialize(item);
                 var realItem = Db.Serializer.Deserialize(json, structureType);
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 

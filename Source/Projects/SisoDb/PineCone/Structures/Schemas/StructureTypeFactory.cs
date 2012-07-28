@@ -11,7 +11,7 @@ namespace SisoDb.PineCone.Structures.Schemas
 
         public StructureTypeFactory(Func<IStructureTypeConfig, IStructureTypeReflecter> reflecterFn = null, IStructureTypeConfigurations configurations = null)
         {
-            ReflecterFn = reflecterFn ?? (cfg => new StructureTypeReflecter(cfg));
+            ReflecterFn = reflecterFn ?? (cfg => new StructureTypeReflecter());
             Configurations = configurations ?? new StructureTypeConfigurations();
         }
 
@@ -20,31 +20,31 @@ namespace SisoDb.PineCone.Structures.Schemas
             return CreateFor(typeof(T));
         }
 
-        public virtual IStructureType CreateFor(Type type)
+        public virtual IStructureType CreateFor(Type structureType)
         {
-            var config = Configurations.GetConfiguration(type);
+            var config = Configurations.GetConfiguration(structureType);
             var reflecter = ReflecterFn(config);
             var shouldIndexAllMembers = config.IndexConfigIsEmpty;
 
             if (shouldIndexAllMembers)
                 return new StructureType(
-                    type,
-                    reflecter.GetIdProperty(),
-                    reflecter.GetConcurrencyTokenProperty(),
-                    reflecter.GetTimeStampProperty(),
-                    reflecter.GetIndexableProperties(),
-                    reflecter.GetContainedStructureProperties());
+                    structureType,
+                    reflecter.GetIdProperty(structureType),
+                    reflecter.GetConcurrencyTokenProperty(structureType),
+                    reflecter.GetTimeStampProperty(structureType),
+                    reflecter.GetIndexableProperties(structureType, config.IncludeContainedStructureMembers),
+                    reflecter.GetContainedStructureProperties(structureType));
 
             var shouldIndexAllMembersExcept = config.MemberPathsNotBeingIndexed.Count > 0;
             return new StructureType(
-                type,
-                reflecter.GetIdProperty(),
-                reflecter.GetConcurrencyTokenProperty(),
-                reflecter.GetTimeStampProperty(),
+                structureType,
+                reflecter.GetIdProperty(structureType),
+                reflecter.GetConcurrencyTokenProperty(structureType),
+                reflecter.GetTimeStampProperty(structureType),
                 (shouldIndexAllMembersExcept
-                    ? reflecter.GetIndexablePropertiesExcept(config.MemberPathsNotBeingIndexed)
-                    : reflecter.GetSpecificIndexableProperties(config.MemberPathsBeingIndexed)),
-                reflecter.GetContainedStructureProperties());
+                    ? reflecter.GetIndexablePropertiesExcept(structureType, config.IncludeContainedStructureMembers, config.MemberPathsNotBeingIndexed)
+                    : reflecter.GetSpecificIndexableProperties(structureType, config.IncludeContainedStructureMembers, config.MemberPathsBeingIndexed)),
+                reflecter.GetContainedStructureProperties(structureType));
         }
     }
 }

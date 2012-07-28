@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
@@ -22,13 +21,13 @@ namespace SisoDb.Serialization
             Options = new SerializerOptions();
         }
 
-        protected virtual void OnConfigForSerialization<T>(IStructureSchema structureSchema, Type itemType) where T : class
+        protected virtual void OnConfigForSerialization<T>(Type itemType) where T : class
         {
             JsConfig.DateHandler = DateHandler;
             JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
             JsConfig.IncludeNullValues = false;
-            ServiceStackTypeConfig<T>.Config(structureSchema, itemType);
+            ServiceStackTypeConfig<T>.Config(itemType);
         }
 
         protected virtual void OnConfigForDeserialization()
@@ -43,7 +42,7 @@ namespace SisoDb.Serialization
 
             var itemType = item.GetType();
             
-            OnConfigForSerialization<T>(structureSchema, itemType);
+            OnConfigForSerialization<T>(itemType);
             
             return JsonSerializer.SerializeToString(item, itemType);
         }
@@ -57,7 +56,7 @@ namespace SisoDb.Serialization
                 {
                     //Yes, it's ok for now to use first item as template.
                     itemType = item.GetType();
-                    OnConfigForSerialization<T>(structureSchema, itemType);
+                    OnConfigForSerialization<T>(itemType);
                 }
 
                 yield return OnSerialize(item, itemType);

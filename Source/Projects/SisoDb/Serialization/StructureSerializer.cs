@@ -14,7 +14,7 @@ namespace SisoDb.Serialization
 
         public string Serialize<T>(T item, IStructureSchema structureSchema) where T : class
         {
-            return _serializer.Serialize(item, structureSchema);
+            return _serializer.Serialize(item);
         }
     }
 }

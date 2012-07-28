@@ -24,7 +24,7 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
 
         public virtual IStructureTypeConfigurator AllowNestedStructures()
         {
-            Config.IncludeNestedStructureMembers = true;
+            Config.IncludeContainedStructureMembers = true;
 
             return this;
         }
@@ -66,7 +66,7 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
 
         public virtual IStructureTypeConfigurator<T> AllowNestedStructures()
         {
-            Config.IncludeNestedStructureMembers = true;
+            Config.IncludeContainedStructureMembers = true;
 
             return this;
         }

@@ -7,7 +7,7 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
     {
         Type Type { get; }
         bool IndexConfigIsEmpty { get; }
-        bool IncludeNestedStructureMembers { get; set; }
+        bool IncludeContainedStructureMembers { get; set; }
         ISet<string> MemberPathsBeingIndexed { get; }
         ISet<string> MemberPathsNotBeingIndexed { get; }
     }

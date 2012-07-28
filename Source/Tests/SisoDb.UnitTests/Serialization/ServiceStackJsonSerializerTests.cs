@@ -12,7 +12,7 @@ namespace SisoDb.UnitTests.Serialization
     {
         private readonly ISisoDbSerializer _sisoDbSerializer = new ServiceStackJsonSerializer();
         private readonly IStructureTypeFactory _structureTypeFactory = new StructureTypeFactory();
-        private readonly ISchemaBuilder _schemaBuilder = new AutoSchemaBuilder();
+        private readonly IStructureSchemaBuilder _schemaBuilder = new AutoStructureSchemaBuilder();
 
         private IStructureSchema GetSchema<T>() where T : class
         {
@@ -22,7 +22,7 @@ namespace SisoDb.UnitTests.Serialization
         [Test]
         public void Serialize_WhenNullEntity_ReturnsEmptyString()
         {
-            var json = _sisoDbSerializer.Serialize<JsonEntity>(null, GetSchema<JsonEntity>());
+            var json = _sisoDbSerializer.Serialize<JsonEntity>(null);
 
             Assert.AreEqual(string.Empty, json);
         }
@@ -32,7 +32,7 @@ namespace SisoDb.UnitTests.Serialization
         {
             var entity = new JsonEntityWithPrivateGetter { Name = "Daniel" };
 
-            var json = _sisoDbSerializer.Serialize(entity, GetSchema<JsonEntityWithPrivateGetter>());
+            var json = _sisoDbSerializer.Serialize(entity);
 
             Assert.AreEqual("{\"StructureId\":0}", json);
         }
@@ -43,7 +43,7 @@ namespace SisoDb.UnitTests.Serialization
             var entity = new JsonEntity();
             entity.SetName("Daniel");
 
-            var json = _sisoDbSerializer.Serialize(entity, GetSchema<JsonEntity>());
+            var json = _sisoDbSerializer.Serialize(entity);
 
             Assert.AreEqual("{\"StructureId\":0,\"Name\":\"Daniel\"}", json);
         }
@@ -63,7 +63,7 @@ namespace SisoDb.UnitTests.Serialization
         {
             var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)).ToArray() };
 
-            var json = _sisoDbSerializer.Serialize<JsonEntityX>(y, GetSchema<JsonEntityX>());
+            var json = _sisoDbSerializer.Serialize<JsonEntityX>(y);
 
 			Assert.AreEqual("{\"Data\":\"TQEAAA==\",\"StructureId\":0,\"String1\":\"The String1\",\"Int1\":42}", json);
         }
@@ -78,7 +78,7 @@ namespace SisoDb.UnitTests.Serialization
                 Item = {String1 = "To be included"}
             };
 
-            var json = _sisoDbSerializer.Serialize(structure, GetSchema<Structure>());
+            var json = _sisoDbSerializer.Serialize(structure);
 
             const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);

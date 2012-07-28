@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Configuration;
 
 namespace SisoDb.UnitTests.TestFactories
 {
@@ -9,17 +8,17 @@ namespace SisoDb.UnitTests.TestFactories
     {
         internal static IStructureProperty GetIdProperty(Type structureType)
         {
-            return ReflecterFor(structureType).GetIdProperty();
+            return ReflecterFor().GetIdProperty(structureType);
         }
 
         internal static IStructureProperty GetPropertyByPath(Type structureType, string path)
         {
-            return ReflecterFor(structureType).GetIndexableProperties().Single(i => i.Path == path);
+            return ReflecterFor().GetIndexableProperties(structureType, false).Single(i => i.Path == path);
         }
 
-        private static IStructureTypeReflecter ReflecterFor(Type structureType)
+        private static IStructureTypeReflecter ReflecterFor()
         {
-            return new StructureTypeReflecter(new StructureTypeConfig(structureType));
+            return new StructureTypeReflecter();
         }
     }
 }

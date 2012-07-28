@@ -15,7 +15,7 @@ namespace SisoDb.UnitTests.Diagnostics
         [Test]
         public void Build()
         {
-            var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoSchemaBuilder());
+            var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
             structureSchemas.GetSchema<MyDummy>();
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Name).Returns("UnitTestDb");

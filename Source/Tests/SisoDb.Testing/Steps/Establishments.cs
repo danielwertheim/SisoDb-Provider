@@ -11,7 +11,6 @@ namespace SisoDb.Testing.Steps
         {
             var itemsAsJson = new List<string>(numOfItems);
             var serializer = db.Serializer;
-            var structureSchema = db.StructureSchemas.GetSchema<T>();
 
             for (var c = 0; c < numOfItems; c++)
             {
@@ -22,7 +21,7 @@ namespace SisoDb.Testing.Steps
                     Decimal1 = (decimal)(c + 1) / (numOfItems * 10),
                     DateTime1 = new DateTime(2000 + c, 1, 1),
                     Ints = Enumerable.Range(1, c + 1).ToArray()
-                }, structureSchema));
+                }));
             }
 
             db.UseOnceTo().InsertManyJson<T>(itemsAsJson);
