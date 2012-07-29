@@ -10,13 +10,14 @@ namespace SisoDb.UnitTests.Serialization
     [TestFixture]
     public class ServiceStackJsonSerializerTests : UnitTestBase
     {
-        private readonly ISisoDbSerializer _sisoDbSerializer = new ServiceStackJsonSerializer();
-        private readonly IStructureTypeFactory _structureTypeFactory = new StructureTypeFactory();
-        private readonly IStructureSchemaBuilder _schemaBuilder = new AutoStructureSchemaBuilder();
+        private ISisoDbSerializer _sisoDbSerializer;
 
-        private IStructureSchema GetSchema<T>() where T : class
+        protected override void OnFixtureInitialize()
         {
-            return _schemaBuilder.CreateSchema(_structureTypeFactory.CreateFor<T>());
+            base.OnFixtureInitialize();
+
+            var structureTypeFactory = new StructureTypeFactory();
+            _sisoDbSerializer = new ServiceStackJsonSerializer(structureTypeFactory.Configurations.GetConfiguration);
         }
 
         [Test]

@@ -15,13 +15,14 @@ namespace SisoDb.UnitTests.Diagnostics
         [Test]
         public void Build()
         {
+            var structureTypeFactory = new StructureTypeFactory();
             var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
             structureSchemas.GetSchema<MyDummy>();
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Name).Returns("UnitTestDb");
             dbFake.Setup(f => f.ConnectionInfo).Returns(new Sql2012ConnectionInfo("data source=.;initial catalog=foo;integrated security=true;"));
             dbFake.Setup(f => f.Settings).Returns(DbSettings.CreateDefault());
-            dbFake.Setup(f => f.Serializer).Returns(new ServiceStackJsonSerializer());
+            dbFake.Setup(f => f.Serializer).Returns(new ServiceStackJsonSerializer(structureTypeFactory.Configurations.GetConfiguration));
             dbFake.Setup(f => f.StructureSchemas).Returns(structureSchemas);
 
             var dbDiagnostics = new DbDiagnosticsBuilder(dbFake.Object);

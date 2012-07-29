@@ -110,9 +110,9 @@ namespace SisoDb
             _providerFactory = dbProviderFactory;
             Settings = ProviderFactory.GetSettings();
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
-            Serializer = new ServiceStackJsonSerializer();
             StructureBuilders = new StructureBuilders(() => Serializer);
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
+            Serializer = new ServiceStackJsonSerializer(StructureSchemas.StructureTypeFactory.Configurations.GetConfiguration);
             Maintenance = new SisoDatabaseMaintenance(this);
             _dbSchemaManager = ProviderFactory.GetDbSchemaManagerFor(this);
         }

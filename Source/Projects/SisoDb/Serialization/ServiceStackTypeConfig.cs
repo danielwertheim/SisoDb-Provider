@@ -7,7 +7,7 @@ using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
-    internal static class ServiceStackTypeConfig<T>
+    internal static class ServiceStackTypeConfig<T> where T : class
     {
         private static readonly Type StructureContractType;
         private static readonly Type TypeConfigType;
@@ -23,7 +23,7 @@ namespace SisoDb.Serialization
             TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 
-        internal static void Config(Type itemType)
+        internal static void ExcludeReferencedStructuresFor(Type itemType)
         {
             var propertiesAllreadyExcludedInStaticCtor = itemType == StructureContractType;
             if (propertiesAllreadyExcludedInStaticCtor)
