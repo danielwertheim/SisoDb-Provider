@@ -224,6 +224,7 @@ namespace SisoDb.Specifications.Session
             public static IList<T> CreateItems<T, TId>(int numOfItems) where T : Entity<TId>, new()
             {
                 var items = new List<T>(numOfItems);
+                var date = new DateTime(2012, 5, 3, 8, 17, 32);
 
                 for (var c = 0; c < numOfItems; c++)
                 {
@@ -239,7 +240,10 @@ namespace SisoDb.Specifications.Session
                             Int = 42,
                             Long = 142,
                             String = "String in nullvaluescontainer with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>.",
-                            Text = "Text with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>."
+                            Text = "Text with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>.",
+                            Date = date,
+                            LocalDate = date.ToLocalTime(),
+                            UtcDate = date.ToUniversalTime()
                         },
                         NullValuesContainerWithNulls = new NullValuesContainer(),
                         Values = new ValuesContainer
@@ -252,7 +256,10 @@ namespace SisoDb.Specifications.Session
                             Int = 42,
                             Long = 142,
                             String = "String in valuescontainer with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>.",
-							Text = "Some text with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>."
+							Text = "Some text with HTML in it <a href=\"http://sisodb.com\">SisoDb</a>.",
+                            Date = date,
+                            LocalDate = date.ToLocalTime(),
+                            UtcDate = date.ToUniversalTime()
                         },
                         ValuesInArray = new[] { new Value { Is = 1 }, new Value { Is = 2 }, new Value { Is = 3 } },
                         //ValuesInISet = new HashSet<Value> { new Value { Is = 11 }, new Value { Is = 12 }, new Value { Is = 13 } },
@@ -355,6 +362,12 @@ namespace SisoDb.Specifications.Session
             public decimal Decimal { get; set; }
 
             public bool Bool { get; set; }
+
+            public DateTime Date { get; set; }
+
+            public DateTime LocalDate { get; set; }
+
+            public DateTime UtcDate { get; set; }
         }
 
         [Serializable]
@@ -375,6 +388,12 @@ namespace SisoDb.Specifications.Session
             public decimal? Decimal { get; set; }
 
             public bool? Bool { get; set; }
+
+            public DateTime? Date { get; set; }
+
+            public DateTime? LocalDate { get; set; }
+
+            public DateTime? UtcDate { get; set; }
         }
 
         [Serializable]

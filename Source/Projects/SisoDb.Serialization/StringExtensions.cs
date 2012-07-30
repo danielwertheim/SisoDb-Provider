@@ -13,6 +13,8 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -267,7 +269,7 @@ namespace SisoDb.Serialization
 
         public static string AppendPath(this string uri, params string[] uriComponents)
         {
-        	return AppendUrlPaths(uri, uriComponents);
+            return AppendUrlPaths(uri, uriComponents);
         }
 
         public static string AppendUrlPaths(this string uri, params string[] uriComponents)
@@ -410,17 +412,17 @@ namespace SisoDb.Serialization
         }
 
 #if !XBOX && !SILVERLIGHT && !MONOTOUCH
-		public static string ToXml<T>(this T obj)
-		{
-			return XmlSerializer.SerializeToString<T>(obj);
-		}
+        public static string ToXml<T>(this T obj)
+        {
+            return XmlSerializer.SerializeToString<T>(obj);
+        }
 #endif
 
 #if !XBOX && !SILVERLIGHT && !MONOTOUCH
         public static T FromXml<T>(this string json)
-		{
-			return XmlSerializer.DeserializeFromString<T>(json);
-		}
+        {
+            return XmlSerializer.DeserializeFromString<T>(json);
+        }
 #endif
         public static string FormatWith(this string text, params object[] args)
         {
@@ -553,8 +555,8 @@ namespace SisoDb.Serialization
 
         public static string SafeSubstring(this string value, int length)
         {
-            return string.IsNullOrEmpty(value) 
-                ? string.Empty 
+            return string.IsNullOrEmpty(value)
+                ? string.Empty
                 : value.Substring(Math.Min(length, value.Length));
         }
 
@@ -565,6 +567,18 @@ namespace SisoDb.Serialization
                 return value.Substring(startIndex, length);
 
             return value.Length > startIndex ? value.Substring(startIndex) : string.Empty;
+        }
+
+        public static bool IsAnonymousType(this Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException("type");
+
+            // HACK: The only way to detect anonymous types right now.
+            return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
+                && type.IsGenericType && type.Name.Contains("AnonymousType")
+                && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
+                && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
     }
 }
