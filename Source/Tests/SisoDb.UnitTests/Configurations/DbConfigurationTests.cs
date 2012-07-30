@@ -3,9 +3,11 @@ using Moq;
 using NUnit.Framework;
 using SisoDb.PineCone.Structures.IdGenerators;
 using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.UnitTests.TestFactories;
+using System.Linq;
 
 namespace SisoDb.UnitTests.Configurations
 {
@@ -92,9 +94,45 @@ namespace SisoDb.UnitTests.Configurations
             dbFake.VerifySet(f => f.Serializer = serializerFake, Times.Once());
         }
 
+        [Test]
+        public void StructureType_Should_forward_call_to_structure_type_configurations()
+        {
+            var structureType = typeof (StructureForConfigTests);
+            var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureSchemas).Returns(structureSchemas);
+
+            dbFake.Object.Configure().StructureType(structureType, cfg => cfg.DoNotIndexThis("IntValue"));
+
+            var config = structureSchemas.StructureTypeFactory.Configurations.GetConfiguration(structureType);
+            Assert.IsNotNull(config);
+            Assert.AreEqual("IntValue", config.MemberPathsNotBeingIndexed.SingleOrDefault());
+        }
+
+        [Test]
+        public void StructureType_using_generics_Should_forward_call_to_structure_type_configurations()
+        {
+            var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureSchemas).Returns(structureSchemas);
+
+            dbFake.Object.Configure().StructureType<StructureForConfigTests>(cfg => cfg.DoNotIndexThis(x => x.StringValue));
+
+            var config = structureSchemas.StructureTypeFactory.Configurations.GetConfiguration<StructureForConfigTests>();
+            Assert.IsNotNull(config);
+            Assert.AreEqual("StringValue", config.MemberPathsNotBeingIndexed.SingleOrDefault());
+        }
+
         private class MyClassWithGuidId
         {
             public Guid StructureId { get; set; }
+        }
+
+        private class StructureForConfigTests
+        {
+            public Guid StructureId { get; set; }
+            public int IntValue { get; set; }
+            public string StringValue { get; set; }
         }
     }
 }
