@@ -268,8 +268,8 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root>();
-                _structure = new Root
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root1>();
+                _structure = new Root1
                 {
                     RootInt = 10,
                     RootString = "The Root string",
@@ -289,15 +289,15 @@ namespace SisoDb.Specifications.Session
             };
 
             It should_not_have_stored_nested_item_in_json = () => 
-                TestContext.Database.should_have_one_structure_with_json_not_containing<Root, Nested>(r => r.NestedId, r => r.NestedInt, r => r.NestedString);
+                TestContext.Database.should_have_one_structure_with_json_not_containing<Root1, Nested>(r => r.NestedId, r => r.NestedInt, r => r.NestedString);
 
-            It should_not_have_stored_nested_int = () => 
-                TestContext.DbHelper.AnyIndexesTableHasMember<Root>(_structureSchema, _structure.RootId, r => r.Nested.NestedInt).ShouldBeFalse();
+            It should_not_have_stored_nested_int = () =>
+                TestContext.DbHelper.AnyIndexesTableHasMember<Root1>(_structureSchema, _structure.Id, r => r.Nested.NestedInt).ShouldBeFalse();
 
             It should_not_have_stored_nested_string = () =>
-                TestContext.DbHelper.AnyIndexesTableHasMember<Root>(_structureSchema, _structure.RootId, r => r.Nested.NestedString).ShouldBeFalse();
+                TestContext.DbHelper.AnyIndexesTableHasMember<Root1>(_structureSchema, _structure.Id, r => r.Nested.NestedString).ShouldBeFalse();
 
-            private static Root _structure;
+            private static Root1 _structure;
             private static IStructureSchema _structureSchema;
         }
 
@@ -307,9 +307,9 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations.Configure<Root>(cfg => cfg.AllowNestedStructures());
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root>();
-                _structure = new Root
+                TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations.Configure<Root2>(cfg => cfg.AllowNestedStructures());
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root2>();
+                _structure = new Root2
                 {
                     RootInt = 10,
                     RootString = "The Root string",
@@ -329,15 +329,15 @@ namespace SisoDb.Specifications.Session
             };
 
             It should_have_stored_nested_item_in_json = () =>
-                TestContext.Database.should_have_one_structure_with_json_containing<Root, Nested>(r => r.NestedId, r => r.NestedInt, r => r.NestedString);
+                TestContext.Database.should_have_one_structure_with_json_containing<Root2, Nested>(r => r.NestedId, r => r.NestedInt, r => r.NestedString);
 
             It should_have_stored_nested_int = () =>
-                TestContext.DbHelper.AnyIndexesTableHasMember<Root>(_structureSchema, _structure.RootId, r => r.Nested.NestedInt).ShouldBeTrue();
+                TestContext.DbHelper.AnyIndexesTableHasMember<Root2>(_structureSchema, _structure.Id, r => r.Nested.NestedInt).ShouldBeTrue();
 
             It should_have_stored_nested_string = () =>
-                TestContext.DbHelper.AnyIndexesTableHasMember<Root>(_structureSchema, _structure.RootId, r => r.Nested.NestedString).ShouldBeTrue();
+                TestContext.DbHelper.AnyIndexesTableHasMember<Root2>(_structureSchema, _structure.Id, r => r.Nested.NestedString).ShouldBeTrue();
 
-            private static Root _structure;
+            private static Root2 _structure;
             private static IStructureSchema _structureSchema;
         }
 
@@ -373,9 +373,17 @@ namespace SisoDb.Specifications.Session
             public ulong ULong { get; set; }
         }
 
-        private class Root
+        private class Root1
         {
-            public Guid RootId { get; set; }
+            public Guid Id { get; set; }
+            public Nested Nested { get; set; }
+            public int? RootInt { get; set; }
+            public string RootString { get; set; }
+        }
+
+        private class Root2
+        {
+            public Guid Id { get; set; }
             public Nested Nested { get; set; }
             public int? RootInt { get; set; }
             public string RootString { get; set; }
