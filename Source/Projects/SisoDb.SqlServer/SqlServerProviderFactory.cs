@@ -107,12 +107,12 @@ namespace SisoDb.SqlServer
 
 	    public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
         {
-            return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers(structureSchemas.SchemaBuilder.DataTypeConverter));
+            return new QueryBuilder(structureType, structureSchemas, new ExpressionParsers(structureSchemas.StructureSchemaBuilder.DataTypeConverter));
         }
 
 	    public virtual IQueryBuilder<T> GetQueryBuilder<T>(IStructureSchemas structureSchemas) where T : class
         {
-            return new QueryBuilder<T>(structureSchemas, new ExpressionParsers(structureSchemas.SchemaBuilder.DataTypeConverter));
+            return new QueryBuilder<T>(structureSchemas, new ExpressionParsers(structureSchemas.StructureSchemaBuilder.DataTypeConverter));
         }
 
 	    public virtual ISqlExpressionBuilder GetSqlExpressionBuilder()

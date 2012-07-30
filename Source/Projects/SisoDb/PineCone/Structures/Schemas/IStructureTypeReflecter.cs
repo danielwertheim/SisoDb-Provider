@@ -5,28 +5,24 @@ namespace SisoDb.PineCone.Structures.Schemas
 {
     /// <summary>
     /// Responsible for identifying the Properties that should be used as
-    /// StructureId, TimeStamp, ConcurrencyToken and plain indexes.
+    /// StructureId, TimeStamp, ConcurrencyToken and plain indexes for a
+    /// certain structure type.
     /// </summary>
     public interface IStructureTypeReflecter
     {
-        IStructurePropertyFactory PropertyFactory { get; set; }
+        IStructurePropertyFactory PropertyFactory { set; }
 
-        bool HasIdProperty(Type type);
+        bool HasIdProperty(Type structureType);
+        bool HasConcurrencyTokenProperty(Type structureType);
+        bool HasTimeStampProperty(Type structureType);
 
-        bool HasConcurrencyTokenProperty(Type type);
+        IStructureProperty GetIdProperty(Type structureType);
+        IStructureProperty GetConcurrencyTokenProperty(Type structureType);
+        IStructureProperty GetTimeStampProperty(Type structureType);
 
-        bool HasTimeStampProperty(Type type);
-
-        IStructureProperty GetIdProperty(Type type);
-
-        IStructureProperty GetConcurrencyTokenProperty(Type type);
-
-        IStructureProperty GetTimeStampProperty(Type type);
-
-		IStructureProperty[] GetIndexableProperties(Type type);
-						  
-		IStructureProperty[] GetIndexablePropertiesExcept(Type type, ICollection<string> nonIndexablePaths);
-						  
-		IStructureProperty[] GetSpecificIndexableProperties(Type type, ICollection<string> indexablePaths);
+        IStructureProperty[] GetIndexableProperties(Type structureType, bool includeContainedStructureMembers);
+		IStructureProperty[] GetIndexablePropertiesExcept(Type structureType, bool includeContainedStructureMembers, ICollection<string> nonIndexablePaths);
+        IStructureProperty[] GetSpecificIndexableProperties(Type structureType, bool includeContainedStructureMembers, ICollection<string> indexablePaths);
+        IStructureProperty[] GetContainedStructureProperties(Type structureType);
     }
 }

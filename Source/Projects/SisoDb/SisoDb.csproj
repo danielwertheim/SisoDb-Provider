@@ -188,12 +188,14 @@
     <Compile Include="PineCone\Structures\IStructureIdGenerator.cs" />
     <Compile Include="PineCone\Structures\IStructureIndex.cs" />
     <Compile Include="PineCone\Structures\IStructureIndexesFactory.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Builders\AutoSchemaBuilder.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Builders\ISchemaBuilder.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Builders\AutoStructureSchemaBuilder.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Builders\IStructureSchemaBuilder.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfig.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfigurations.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfigurator.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfig.cs" />
     <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfigurations.cs" />
+    <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfigurator.cs" />
     <Compile Include="PineCone\Structures\Schemas\DataTypeConverter.cs" />
     <Compile Include="PineCone\Structures\Schemas\DynamicGetter.cs" />
     <Compile Include="PineCone\Structures\Schemas\DynamicPropertyFactory.cs" />

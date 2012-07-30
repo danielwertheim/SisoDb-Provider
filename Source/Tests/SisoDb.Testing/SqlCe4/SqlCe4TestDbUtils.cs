@@ -28,7 +28,7 @@ namespace SisoDb.Testing.SqlCe4
         {
             var sql = "select 1 from information_schema.tables where table_name = '{0}';".Inject(name);
 
-            return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
+            return ExecuteNullableScalar<int>(sql).HasValue;
         }
 
         public override bool TablesExists(string[] names)
@@ -47,7 +47,7 @@ namespace SisoDb.Testing.SqlCe4
         {
             var sql = "select 1 from INFORMATION_SCHEMA.PROVIDER_TYPES where TYPE_NAME = '{0}';".Inject(name);
 
-            return ExecuteNullableScalar<int>(CommandType.Text, sql).HasValue;
+            return ExecuteNullableScalar<int>(sql).HasValue;
         }
 
         public override IList<DbColumn> GetColumns(string tableName, params string[] namesToSkip)

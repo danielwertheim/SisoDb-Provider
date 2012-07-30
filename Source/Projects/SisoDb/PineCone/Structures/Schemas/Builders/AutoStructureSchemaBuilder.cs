@@ -5,11 +5,11 @@ using SisoDb.PineCone.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.PineCone.Structures.Schemas.Builders
 {
-    public class AutoSchemaBuilder : ISchemaBuilder
+    public class AutoStructureSchemaBuilder : IStructureSchemaBuilder
     {
         public IDataTypeConverter DataTypeConverter { get; set; }
 
-        public AutoSchemaBuilder()
+        public AutoStructureSchemaBuilder()
         {
             DataTypeConverter = new DataTypeConverter();
         }

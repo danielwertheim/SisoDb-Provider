@@ -36,7 +36,7 @@ namespace SisoDb.PineCone
         public PineConizer()
         {
             var structureTypeFactory = new StructureTypeFactory();
-            var schemaBuilder = new AutoSchemaBuilder();
+            var schemaBuilder = new AutoStructureSchemaBuilder();
 
             Schemas = new StructureSchemas(structureTypeFactory, schemaBuilder);
             Builder = new StructureBuilder();

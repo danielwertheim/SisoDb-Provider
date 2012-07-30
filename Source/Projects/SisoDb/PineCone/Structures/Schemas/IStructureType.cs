@@ -10,5 +10,6 @@ namespace SisoDb.PineCone.Structures.Schemas
         IStructureProperty TimeStampProperty { get; }
         IStructureProperty ConcurrencyTokenProperty { get; }
 		IStructureProperty[] IndexableProperties { get; }
+        IStructureProperty[] ContainedStructureProperties { get; }
     }
 }

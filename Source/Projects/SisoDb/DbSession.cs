@@ -865,11 +865,11 @@ namespace SisoDb
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
+                var structureSchema = OnUpsertStructureSchema<T>();
                 var json = Db.Serializer.Serialize(item);
                 var realItem = Db.Serializer.Deserialize<T>(json);
-                var structureSchema = OnUpsertStructureSchema<T>();
+                
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
-
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
@@ -886,9 +886,9 @@ namespace SisoDb
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
+                var structureSchema = OnUpsertStructureSchema(structureType);
                 var json = Db.Serializer.Serialize(item);
                 var realItem = Db.Serializer.Deserialize(json, structureType);
-                var structureSchema = OnUpsertStructureSchema(structureType);
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
 
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);

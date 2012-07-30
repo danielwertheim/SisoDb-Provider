@@ -1,4 +1,5 @@
 using SisoDb.PineCone.Serializers;
+using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
@@ -11,7 +12,7 @@ namespace SisoDb.Serialization
             _serializer = serializer;
         }
 
-        public string Serialize<T>(T item) where T : class
+        public string Serialize<T>(T item, IStructureSchema structureSchema) where T : class
         {
             return _serializer.Serialize(item);
         }
