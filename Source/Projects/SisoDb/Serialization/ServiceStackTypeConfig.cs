@@ -10,17 +10,13 @@ namespace SisoDb.Serialization
     internal static class ServiceStackTypeConfig<T> where T : class
     {
         private static readonly Type StructureContractType;
-        private static readonly Type TypeConfigType;
-        private static readonly IStructureTypeReflecter StructureTypeReflecter;
         private static readonly ConcurrentDictionary<Type, bool> PreviousConfigurations;
 
         static ServiceStackTypeConfig()
         {
             StructureContractType = typeof(T);
-            TypeConfigType = typeof(TypeConfig<>);
-            StructureTypeReflecter = new StructureTypeReflecter();
             PreviousConfigurations = new ConcurrentDictionary<Type, bool>();
-            TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
+            TypeConfig<T>.Properties = TypePropertiesFilter.ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 
         internal static void ExcludeReferencedStructuresFor(Type itemType)
@@ -42,17 +38,43 @@ namespace SisoDb.Serialization
             if (propertiesAllreadyExcludedInStaticCtor)
                 return;
 
+            var cfg = new ServiceStackTypeConfig(itemType);
+            cfg.SetProperties(TypePropertiesFilter.ExcludePropertiesThatHoldStructures(cfg.GetProperties()));
+        }
+    }
+
+    internal static class TypePropertiesFilter
+    {
+        private static readonly IStructureTypeReflecter StructureTypeReflecter = new StructureTypeReflecter();
+
+        internal static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
+        {
+            return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+        }
+    }
+
+    internal class ServiceStackTypeConfig
+    {
+        private static readonly Type TypeConfigType = typeof(TypeConfig<>);
+        private readonly PropertyInfo _propertiesProperty;
+
+        internal ServiceStackTypeConfig(Type itemType)
+        {
             var cfg = TypeConfigType.MakeGenericType(itemType);
-            var propertiesProperty = cfg.GetProperty("Properties", BindingFlags.Static | BindingFlags.Public);
-            propertiesProperty.SetValue(
+            _propertiesProperty = cfg.GetProperty("Properties", BindingFlags.Static | BindingFlags.Public);
+        }
+
+        internal void SetProperties(PropertyInfo[] properties)
+        {
+            _propertiesProperty.SetValue(
                 null,
-                ExcludePropertiesThatHoldStructures((PropertyInfo[])propertiesProperty.GetValue(null, new object[] { })),
+                properties,
                 new object[] { });
         }
 
-        private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
+        internal PropertyInfo[] GetProperties()
         {
-            return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+            return _propertiesProperty.GetValue(null, new object[] { }) as PropertyInfo[];
         }
     }
 }
