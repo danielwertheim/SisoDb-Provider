@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using SisoDb.PineCone.Annotations;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -277,6 +278,27 @@ namespace SisoDb.Specifications.Session
             It should_have_inserted_first = () => TestContext.Database.should_have_identical_structures<VehicleWithBigIdentityId>(new[] { _orgStructure });
 
             private static VehicleWithBigIdentityId _orgStructure;
+        }
+
+        [Subject(typeof(ISession), "Insert (unique per type)")]
+        public class when_member_with_unique_constraint_is_null : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithGuidId>();
+                _orgStructure = new VehicleWithGuidId { VehRegNo = null };
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_orgStructure);
+
+            It should_have_stored_item_with_null_values = () => TestContext.Database.should_have_identical_structures(new[] { _orgStructure });
+
+            It should_stored_unique_member_wiht_null_value_in_uniques_table =
+                () => TestContext.DbHelper.UniquesTableHasMember<VehicleWithGuidId>(_structureSchema, _orgStructure.StructureId, x => x.VehRegNo).ShouldBeTrue();
+
+            private static VehicleWithGuidId _orgStructure;
+            private static IStructureSchema _structureSchema;
         }
 
         public class VehicleWithGuidId : VehicleBase<Guid>
