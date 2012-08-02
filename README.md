@@ -39,9 +39,5 @@ License: [The MIT License (MIT)](http://www.opensource.org/licenses/mit-license.
 ## SemVer for versioning
 SisoDb uses [SemVer](http://semver.org) for versioning.
 
-## Contribute
-Line feeds setting should be `core.autocrlf=false`.
-
-Unit-tests are written using `NUnit` and integration tests are written using [Machine Specifications](https://github.com/machine/machine.specifications). To get the integration tests to work you need to change the connection strings in respective projects `App.config`
-
-Pull request should be against the **Develop branch** and you should have done your work in a feature branch, merged to the develop branch via `git merge --no-ff my-feature-branch`.
+## How-to Contribute
+[Read instructions](https://github.com/danielwertheim/SisoDb-Provider/wiki/contribute) in the wiki.
