@@ -322,6 +322,27 @@ namespace SisoDb.Specifications.Session
             private static IStructureSchema _structureSchema;
         }
 
+        [Subject(typeof(ISession), "Insert (unique per type)")]
+        public class when_empty_collection_with_items_having_member_with_unique_constraint : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<WithCollectionOfUnqies>();
+                _orgStructure = new WithCollectionOfUnqies { Items = new List<WithUniqueStringPerType>() };
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_orgStructure);
+
+            It should_have_stored_structure_with_null_values = () => TestContext.Database.should_have_identical_structures(new[] { _orgStructure });
+
+            It should_not_have_stored_unique_member_wiht_null_value_in_uniques_table = () =>
+                TestContext.DbHelper.RowCount(_structureSchema.GetUniquesTableName()).ShouldEqual(0);
+
+            private static WithCollectionOfUnqies _orgStructure;
+            private static IStructureSchema _structureSchema;
+        }
+
         public class WithCollectionOfUnqies
         {
             public Guid StructureId { get; set; }
