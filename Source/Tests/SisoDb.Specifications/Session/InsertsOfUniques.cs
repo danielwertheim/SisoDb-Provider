@@ -69,7 +69,11 @@ namespace SisoDb.Specifications.Session
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
+#if SqlCe4Provider
+                CaughtException.Message.ShouldStartWith("A duplicate value cannot be inserted into a unique index. [ Table name = VehicleWithGuidIdUniques,Constraint name = UQ_VehicleWithGuidIdUniques ]");
+#else
                 CaughtException.Message.ShouldStartWith("Cannot insert duplicate key row in object 'dbo.VehicleWithGuidIdUniques' with unique index 'UQ_VehicleWithGuidIdUniques'.");
+#endif
             };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
@@ -136,7 +140,11 @@ namespace SisoDb.Specifications.Session
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
+#if SqlCe4Provider
+                CaughtException.Message.ShouldStartWith("A duplicate value cannot be inserted into a unique index. [ Table name = VehicleWithStringIdUniques,Constraint name = UQ_VehicleWithStringIdUniques ]");
+#else
                 CaughtException.Message.ShouldStartWith("Cannot insert duplicate key row in object 'dbo.VehicleWithStringIdUniques' with unique index 'UQ_VehicleWithStringIdUniques'.");
+#endif
             };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(1);
@@ -203,7 +211,11 @@ namespace SisoDb.Specifications.Session
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
+#if SqlCe4Provider
+                CaughtException.Message.ShouldStartWith("A duplicate value cannot be inserted into a unique index. [ Table name = VehicleWithIdentityIdUniques,Constraint name = UQ_VehicleWithIdentityIdUniques ]");
+#else
                 CaughtException.Message.ShouldStartWith("Cannot insert duplicate key row in object 'dbo.VehicleWithIdentityIdUniques' with unique index 'UQ_VehicleWithIdentityIdUniques'.");
+#endif
             };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
@@ -271,7 +283,11 @@ namespace SisoDb.Specifications.Session
             It should_have_failed = () =>
             {
                 CaughtException.ShouldNotBeNull();
+#if SqlCe4Provider
+                CaughtException.Message.ShouldStartWith("A duplicate value cannot be inserted into a unique index. [ Table name = VehicleWithBigIdentityIdUniques,Constraint name = UQ_VehicleWithBigIdentityIdUniques ]");
+#else
                 CaughtException.Message.ShouldStartWith("Cannot insert duplicate key row in object 'dbo.VehicleWithBigIdentityIdUniques' with unique index 'UQ_VehicleWithBigIdentityIdUniques'.");
+#endif
             };
 
             It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
