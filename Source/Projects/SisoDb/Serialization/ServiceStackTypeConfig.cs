@@ -7,57 +7,74 @@ using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.Serialization
 {
-    internal static class ServiceStackTypeConfig<T>
+    internal static class ServiceStackTypeConfig<T> where T : class
     {
-        private static readonly IStructureTypeReflecter StructureTypeReflecter;
-
-        private static readonly Type ItemType;
-
-        private static readonly Type TypeConfigType;
-
-        private static readonly ConcurrentDictionary<Type, bool> ChildConfig;
+        private static readonly Type StructureContractType;
+        private static readonly ConcurrentDictionary<Type, bool> PreviousConfigurations;
 
         static ServiceStackTypeConfig()
         {
-            ChildConfig = new ConcurrentDictionary<Type, bool>();
-
-            StructureTypeReflecter = new StructureTypeReflecter();
-            ItemType = typeof(T);
-            TypeConfigType = typeof(TypeConfig<>);
-
-            TypeConfig<T>.Properties = ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
+            StructureContractType = typeof(T);
+            PreviousConfigurations = new ConcurrentDictionary<Type, bool>();
+            TypeConfig<T>.Properties = TypePropertiesFilter.ExcludePropertiesThatHoldStructures(TypeConfig<T>.Properties);
         }
 
-        internal static void Config(Type type)
+        internal static void ExcludeReferencedStructuresFor(Type itemType)
         {
-            var propertiesAllreadyExcludedInStaticCtor = type == ItemType;
+            var propertiesAllreadyExcludedInStaticCtor = itemType == StructureContractType;
             if (propertiesAllreadyExcludedInStaticCtor)
                 return;
 
-            if (ChildConfig.ContainsKey(type))
+            if (PreviousConfigurations.ContainsKey(itemType))
                 return;
 
-            if (ChildConfig.TryAdd(type, true))
-                ConfigureTypeConfigToExcludeReferencedStructures(type);
+            if (PreviousConfigurations.TryAdd(itemType, true))
+                ConfigureTypeConfigToExcludeReferencedStructures(itemType);
         }
 
-        private static void ConfigureTypeConfigToExcludeReferencedStructures(Type type)
+        private static void ConfigureTypeConfigToExcludeReferencedStructures(Type itemType)
         {
-            var propertiesAllreadyExcludedInStaticCtor = type == ItemType;
+            var propertiesAllreadyExcludedInStaticCtor = itemType == StructureContractType;
             if (propertiesAllreadyExcludedInStaticCtor)
                 return;
 
-            var cfg = TypeConfigType.MakeGenericType(type);
-            var propertiesProperty = cfg.GetProperty("Properties", BindingFlags.Static | BindingFlags.Public);
-            propertiesProperty.SetValue(
+            var cfg = new ServiceStackTypeConfig(itemType);
+            cfg.SetProperties(TypePropertiesFilter.ExcludePropertiesThatHoldStructures(cfg.GetProperties()));
+        }
+    }
+
+    internal static class TypePropertiesFilter
+    {
+        private static readonly IStructureTypeReflecter StructureTypeReflecter = new StructureTypeReflecter();
+
+        internal static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
+        {
+            return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+        }
+    }
+
+    internal class ServiceStackTypeConfig
+    {
+        private static readonly Type TypeConfigType = typeof(TypeConfig<>);
+        private readonly PropertyInfo _propertiesProperty;
+
+        internal ServiceStackTypeConfig(Type itemType)
+        {
+            var cfg = TypeConfigType.MakeGenericType(itemType);
+            _propertiesProperty = cfg.GetProperty("Properties", BindingFlags.Static | BindingFlags.Public);
+        }
+
+        internal void SetProperties(PropertyInfo[] properties)
+        {
+            _propertiesProperty.SetValue(
                 null,
-                ExcludePropertiesThatHoldStructures((PropertyInfo[])propertiesProperty.GetValue(null, new object[] { })),
+                properties,
                 new object[] { });
         }
 
-        private static PropertyInfo[] ExcludePropertiesThatHoldStructures(IEnumerable<PropertyInfo> properties)
+        internal PropertyInfo[] GetProperties()
         {
-            return properties.Where(p => !StructureTypeReflecter.HasIdProperty(p.PropertyType)).ToArray();
+            return _propertiesProperty.GetValue(null, new object[] { }) as PropertyInfo[];
         }
     }
 }

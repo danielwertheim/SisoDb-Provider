@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SisoDb.Serialization.Json;
 
 namespace SisoDb.Serialization
 {
@@ -10,16 +11,22 @@ namespace SisoDb.Serialization
 			return Get<T>(map, key);
 		}
 
-		public static T Get<T>(this Dictionary<string, string> map, string key)
+        /// <summary>
+        /// Get JSON string value converted to T
+        /// </summary>
+        public static T Get<T>(this Dictionary<string, string> map, string key)
 		{
 			string strVal;
 			return map.TryGetValue(key, out strVal) ? JsonSerializer.DeserializeFromString<T>(strVal) : default(T);
 		}
 
-		public static string Get(this Dictionary<string, string> map, string key)
+        /// <summary>
+        /// Get JSON string value
+        /// </summary>
+        public static string Get(this Dictionary<string, string> map, string key)
 		{
 			string strVal;
-			return map.TryGetValue(key, out strVal) ? strVal : null;
+            return map.TryGetValue(key, out strVal) ? JsonTypeSerializer.Instance.UnescapeString(strVal) : null;
 		}
 
 		public static JsonArrayObjects ArrayObjects(this string json, string propertyName)
@@ -56,6 +63,15 @@ namespace SisoDb.Serialization
 
 	public class JsonObject : Dictionary<string, string>
 	{
+        /// <summary>
+        /// Get JSON string value
+        /// </summary>
+        public string this[string key]
+        {
+            get { return this.Get(key); }
+            set { base[key] = value; }
+        }
+
 		public static JsonObject Parse(string json)
 		{
 			return JsonSerializer.DeserializeFromString<JsonObject>(json);
@@ -76,7 +92,23 @@ namespace SisoDb.Serialization
 				? Parse(strValue)
 				: null;
 		}
-	}
+
+        /// <summary>
+        /// Get unescaped string value
+        /// </summary>
+        public string GetUnescaped(string key)
+        {
+            return base[key];
+        }
+
+        /// <summary>
+        /// Get unescaped string value
+        /// </summary>
+        public string Child(string key)
+        {
+            return base[key];
+        }
+    }
 
 	public class JsonArrayObjects : List<JsonObject>
 	{

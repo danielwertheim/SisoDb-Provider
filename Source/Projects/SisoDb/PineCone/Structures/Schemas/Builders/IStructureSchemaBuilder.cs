@@ -1,9 +1,8 @@
 ﻿namespace SisoDb.PineCone.Structures.Schemas.Builders
 {
-    public interface ISchemaBuilder
+    public interface IStructureSchemaBuilder
     {
         IDataTypeConverter DataTypeConverter { get; set; }
-
         IStructureSchema CreateSchema(IStructureType structureType);
     }
 }

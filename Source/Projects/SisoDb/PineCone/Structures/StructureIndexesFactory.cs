@@ -22,7 +22,7 @@ namespace SisoDb.PineCone.Structures
 
                 if (!valuesExists)
                 {
-                    if (indexAccessor.IsUnique)
+                    if (!isCollectionOfValues && indexAccessor.IsUnique)
                         throw new PineConeException(ExceptionMessages.StructureIndexesFactory_UniqueIndex_IsNull.Inject(structureSchema.Name, indexAccessor.Path));
 
                     return;

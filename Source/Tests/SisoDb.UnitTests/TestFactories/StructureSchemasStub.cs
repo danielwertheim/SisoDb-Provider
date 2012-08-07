@@ -43,7 +43,7 @@ namespace SisoDb.UnitTests.TestFactories
             set { throw new NotImplementedException(); }
         }
 
-        public ISchemaBuilder SchemaBuilder
+        public IStructureSchemaBuilder StructureSchemaBuilder
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }

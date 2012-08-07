@@ -66,7 +66,7 @@ namespace SisoDb.PineCone.Structures
                 structureSchema.Name,
                 structureId,
                 IndexesFactory.CreateIndexes(structureSchema, item, structureId),
-                StructureSerializer.Serialize(item));
+                StructureSerializer.Serialize(item, structureSchema));
         }
 
 		public virtual IStructure[] CreateStructures<T>(T[] items, IStructureSchema structureSchema) where T : class
@@ -96,7 +96,7 @@ namespace SisoDb.PineCone.Structures
 					structureSchema.Name,
 					id,
 					IndexesFactory.CreateIndexes(structureSchema, itm, id),
-					StructureSerializer.Serialize(itm));
+					StructureSerializer.Serialize(itm, structureSchema));
 			});
 
 			return structures;
@@ -121,7 +121,7 @@ namespace SisoDb.PineCone.Structures
 					structureSchema.Name,
 					id,
 					IndexesFactory.CreateIndexes(structureSchema, itm, id),
-					StructureSerializer.Serialize(itm));
+					StructureSerializer.Serialize(itm, structureSchema));
 			}
 
 			return structures;

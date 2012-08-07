@@ -3,9 +3,11 @@ using Moq;
 using NUnit.Framework;
 using SisoDb.PineCone.Structures.IdGenerators;
 using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.UnitTests.TestFactories;
+using System.Linq;
 
 namespace SisoDb.UnitTests.Configurations
 {
@@ -41,17 +43,20 @@ namespace SisoDb.UnitTests.Configurations
         }
 
         [Test]
-        public void Serializer_Should_assign_new_serialzer_on_Db()
+        public void Serializer_It_should_assign_new_options_on_serializer_assigned_to_db()
         {
             var dbFake = new Mock<ISisoDatabase>();
+            var options = new SerializerOptions();
+            var orgDateSerializationMode = options.DateSerializationMode;
             var serializerFake = new Mock<ISisoDbSerializer>();
-            var optionsFake = new Mock<SerializerOptions>();
-            serializerFake.Setup(f => f.Options).Returns(optionsFake.Object);
+            serializerFake.Setup(f => f.Options).Returns(options);
             dbFake.Setup(f => f.Serializer).Returns(serializerFake.Object);
 
             dbFake.Object.Configure().Serializer(o => o.DateSerializationMode = DateSerializationModes.TimestampOffset);
 
-            optionsFake.VerifySet(f => f.DateSerializationMode = DateSerializationModes.TimestampOffset, Times.Once());
+            dbFake.VerifySet(f => f.Serializer = serializerFake.Object, Times.Never());
+            Assert.AreNotEqual(orgDateSerializationMode, options.DateSerializationMode);
+            Assert.AreEqual(DateSerializationModes.TimestampOffset, options.DateSerializationMode);
         }
 
         [Test]
@@ -89,9 +94,45 @@ namespace SisoDb.UnitTests.Configurations
             dbFake.VerifySet(f => f.Serializer = serializerFake, Times.Once());
         }
 
+        [Test]
+        public void StructureType_Should_forward_call_to_structure_type_configurations()
+        {
+            var structureType = typeof (StructureForConfigTests);
+            var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureSchemas).Returns(structureSchemas);
+
+            dbFake.Object.Configure().StructureType(structureType, cfg => cfg.DoNotIndexThis("IntValue"));
+
+            var config = structureSchemas.StructureTypeFactory.Configurations.GetConfiguration(structureType);
+            Assert.IsNotNull(config);
+            Assert.AreEqual("IntValue", config.MemberPathsNotBeingIndexed.SingleOrDefault());
+        }
+
+        [Test]
+        public void StructureType_using_generics_Should_forward_call_to_structure_type_configurations()
+        {
+            var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureSchemas).Returns(structureSchemas);
+
+            dbFake.Object.Configure().StructureType<StructureForConfigTests>(cfg => cfg.DoNotIndexThis(x => x.StringValue));
+
+            var config = structureSchemas.StructureTypeFactory.Configurations.GetConfiguration<StructureForConfigTests>();
+            Assert.IsNotNull(config);
+            Assert.AreEqual("StringValue", config.MemberPathsNotBeingIndexed.SingleOrDefault());
+        }
+
         private class MyClassWithGuidId
         {
             public Guid StructureId { get; set; }
+        }
+
+        private class StructureForConfigTests
+        {
+            public Guid StructureId { get; set; }
+            public int IntValue { get; set; }
+            public string StringValue { get; set; }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SisoDb.EnsureThat;
 
 namespace SisoDb.PineCone.Structures.Schemas.Configuration
 {
@@ -23,39 +24,44 @@ namespace SisoDb.PineCone.Structures.Schemas.Configuration
             _configurations = new Dictionary<Type, IStructureTypeConfig>();
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             _configurations.Clear();
         }
 
-        public IStructureTypeConfig GetConfiguration(Type type)
+        public virtual IStructureTypeConfig GetConfiguration(Type type)
         {
             return _configurations.ContainsKey(type)
-                       ? _configurations[type]
-                       : null;
+                ? _configurations[type]
+                : new StructureTypeConfig(type);
         }
 
-        public IStructureTypeConfig GetConfiguration<T>() where T : class
+        public virtual IStructureTypeConfig GetConfiguration<T>() where T : class
         {
-            return GetConfiguration(StructureTypeConfig<T>.TypeOfT);
+            return GetConfiguration(typeof(T));
         }
 
-        public IStructureTypeConfig NewForType(Type type)
+        public virtual void Configure(Type type, Action<IStructureTypeConfigurator> configure)
         {
-            var config = new StructureTypeConfig(type);
-            
-            _configurations.Add(config.Type, config);
+            Ensure.That(type, "type").IsNotNull();
+            Ensure.That(configure, "configure").IsNotNull();
 
-            return config;
+            var config = GetConfiguration(type);
+            var configurator = new StructureTypeConfigurator(config);
+            configure(configurator);
+
+            _configurations[configurator.Config.Type] = configurator.Config;
         }
 
-        public IStructureTypeConfig<T> NewForType<T>() where T:class 
+        public virtual void Configure<T>(Action<IStructureTypeConfigurator<T>> configure) where T : class 
         {
-            var config = new StructureTypeConfig<T>();
+            Ensure.That(configure, "configure").IsNotNull();
 
-            _configurations.Add(config.Type, config);
+            var config = GetConfiguration<T>();
+            var configurator = new StructureTypeConfigurator<T>(config);
+            configure(configurator);
 
-            return config;
+            _configurations[configurator.Config.Type] = configurator.Config;
         }
     }
 }

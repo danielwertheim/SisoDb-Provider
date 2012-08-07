@@ -436,8 +436,7 @@ namespace SisoDb.Serialization.Json
                 }
             }
 
-            var strValue = sb.ToString();
-            return strValue == JsonUtils.Null ? null : strValue;
+            return sb.ToString();
         }
 
         /// <summary>

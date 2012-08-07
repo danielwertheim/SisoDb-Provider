@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SisoDb.EnsureThat;
+using SisoDb.PineCone.Structures.Schemas.Configuration;
 
 namespace SisoDb.Serialization
 {
     public class ServiceStackJsonSerializer : ISisoDbSerializer
     {
+        protected readonly Func<Type, IStructureTypeConfig> StructureTypeConfigResolver;
+
         public SerializerOptions Options { get; set; }
 
         protected JsonDateHandler DateHandler
@@ -16,8 +19,9 @@ namespace SisoDb.Serialization
             get { return Options.DateSerializationMode.ToServiceStackValue(); }
         }
 
-        public ServiceStackJsonSerializer()
+        public ServiceStackJsonSerializer(Func<Type, IStructureTypeConfig> structureTypeConfigResolver)
         {
+            StructureTypeConfigResolver = structureTypeConfigResolver;
             Options = new SerializerOptions();
         }
 
@@ -27,7 +31,11 @@ namespace SisoDb.Serialization
             JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
             JsConfig.IncludeNullValues = false;
-            ServiceStackTypeConfig<T>.Config(itemType);
+            
+            if(StructureTypeConfigResolver(typeof(T)).IncludeContainedStructureMembers)
+                return;
+            
+            ServiceStackTypeConfig<T>.ExcludeReferencedStructuresFor(itemType);
         }
 
         protected virtual void OnConfigForDeserialization()
@@ -88,12 +96,7 @@ namespace SisoDb.Serialization
 
         public virtual TTemplate DeserializeUsingTemplate<TTemplate>(string json) where TTemplate : class
         {
-            return DeserializeUsingTemplate<TTemplate>(json, typeof(TTemplate));
-        }
-
-        public virtual TTemplate DeserializeUsingTemplate<TTemplate>(string json, Type templateType) where TTemplate : class
-        {
-            Ensure.That(templateType, "templateType").IsNotNull();
+            var templateType = typeof (TTemplate);
 
             OnConfigForDeserialization();
             TypeConfig<TTemplate>.EnableAnonymousFieldSetters = true;
@@ -119,15 +122,6 @@ namespace SisoDb.Serialization
             return Options.DeserializeManyInParallel
                     ? OnDeserializeManyInParallel(sourceData, json => OnDeserialize(json, structureType))
                     : OnDeserializeManyInSequential(sourceData, json => OnDeserialize(json, structureType));
-        }
-
-        public virtual IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, TTemplate template) where TTemplate : class
-        {
-            Ensure.That(template, "template").IsNotNull();
-
-            OnConfigForDeserialization();
-
-            return DeserializeManyUsingTemplate<TTemplate>(sourceData, template.GetType());
         }
 
         public virtual IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, Type templateType) where TTemplate : class
