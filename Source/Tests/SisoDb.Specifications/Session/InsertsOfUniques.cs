@@ -19,14 +19,22 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithGuidId>();
                 _structure = new VehicleWithGuidId { VehRegNo = "ABC123" };
                 TestContext.Database.UseOnceTo().Insert(_structure);
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures(_structure);
+            It should_have_inserted_structure_correctly = () => TestContext.Database.should_have_identical_structures(_structure);
 
+            It should_have_inserted_value_in_unique_table = () => TestContext.DbHelper
+                .UniquesTableHasMember<VehicleWithGuidId>(_structureSchema, _structure.StructureId, s => s.VehRegNo);
+
+            It should_have_inserted_value_in_indexes_table = () => TestContext.DbHelper
+                .should_have_stored_member_in_indexes_table<VehicleWithGuidId>(_structureSchema, _structure.StructureId, s => s.VehRegNo, typeof(string));
+
+            private static IStructureSchema _structureSchema;
             private static VehicleWithGuidId _structure;
         }
 
@@ -37,6 +45,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithGuidId>();
                 _structures = new[]
                 {
                     new VehicleWithGuidId { VehRegNo = "ABC123" },
@@ -45,10 +54,23 @@ namespace SisoDb.Specifications.Session
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(2);
+            It should_have_two_items_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(2);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures<VehicleWithGuidId>(_structures.ToArray());
+            It should_have_inserted_structures_correctly = () => TestContext.Database.should_have_identical_structures<VehicleWithGuidId>(_structures.ToArray());
 
+            It should_have_inserted_values_in_unique_table = () =>
+            {
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithGuidId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo);
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithGuidId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo);
+            };
+
+            It should_have_inserted_values_in_indexes_table = () =>
+            {
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithGuidId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo, typeof(string));
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithGuidId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo, typeof(string));
+            };
+
+            private static IStructureSchema _structureSchema;
             private static IList<VehicleWithGuidId> _structures;
         }
 
@@ -76,9 +98,9 @@ namespace SisoDb.Specifications.Session
 #endif
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithGuidId>(1);
 
-            It should_have_inserted_first = () => TestContext.Database.should_have_identical_structures<VehicleWithGuidId>(new[] { _orgStructure });
+            It should_still_have_inserted_the_first_item = () => TestContext.Database.should_have_identical_structures<VehicleWithGuidId>(new[] { _orgStructure });
 
             private static VehicleWithGuidId _orgStructure;
         }
@@ -90,14 +112,22 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithStringId>();
                 _structure = new VehicleWithStringId { StructureId = "A123", VehRegNo = "ABC123" };
                 TestContext.Database.UseOnceTo().Insert(_structure);
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(1);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures(_structure);
+            It should_have_inserted_structure_correctly = () => TestContext.Database.should_have_identical_structures(_structure);
 
+            It should_have_inserted_value_in_unique_table = () => TestContext.DbHelper
+                .UniquesTableHasMember<VehicleWithStringId>(_structureSchema, _structure.StructureId, s => s.VehRegNo);
+
+            It should_have_inserted_value_in_indexes_table = () => TestContext.DbHelper
+                .should_have_stored_member_in_indexes_table<VehicleWithStringId>(_structureSchema, _structure.StructureId, s => s.VehRegNo, typeof(string));
+
+            private static IStructureSchema _structureSchema;
             private static VehicleWithStringId _structure;
         }
 
@@ -108,6 +138,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithStringId>();
                 _structures = new[]
                 {
                     new VehicleWithStringId { StructureId = "A1", VehRegNo = "ABC123" },
@@ -116,10 +147,23 @@ namespace SisoDb.Specifications.Session
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(2);
+            It should_have_two_items_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(2);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures<VehicleWithStringId>(_structures.ToArray());
+            It should_have_inserted_structures_correctly = () => TestContext.Database.should_have_identical_structures<VehicleWithStringId>(_structures.ToArray());
 
+            It should_have_inserted_values_in_unique_table = () =>
+            {
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithStringId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo);
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithStringId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo);
+            };
+
+            It should_have_inserted_values_in_indexes_table = () =>
+            {
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithStringId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo, typeof(string));
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithStringId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo, typeof(string));
+            };
+
+            private static IStructureSchema _structureSchema;
             private static IList<VehicleWithStringId> _structures;
         }
 
@@ -147,9 +191,9 @@ namespace SisoDb.Specifications.Session
 #endif
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithStringId>(1);
 
-            It should_have_inserted_first = () => TestContext.Database.should_have_identical_structures<VehicleWithStringId>(new[] { _orgStructure });
+            It should_still_have_inserted_the_first_item = () => TestContext.Database.should_have_identical_structures<VehicleWithStringId>(new[] { _orgStructure });
 
             private static VehicleWithStringId _orgStructure;
         }
@@ -161,14 +205,22 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithIdentityId>();
                 _structure = new VehicleWithIdentityId { VehRegNo = "ABC123" };
                 TestContext.Database.UseOnceTo().Insert(_structure);
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures(_structure);
+            It should_have_inserted_structure_correctly = () => TestContext.Database.should_have_identical_structures(_structure);
 
+            It should_have_inserted_value_in_unique_table = () => TestContext.DbHelper
+                .UniquesTableHasMember<VehicleWithIdentityId>(_structureSchema, _structure.StructureId, s => s.VehRegNo);
+
+            It should_have_inserted_value_in_indexes_table = () => TestContext.DbHelper
+                .should_have_stored_member_in_indexes_table<VehicleWithIdentityId>(_structureSchema, _structure.StructureId, s => s.VehRegNo, typeof(string));
+
+            private static IStructureSchema _structureSchema;
             private static VehicleWithIdentityId _structure;
         }
 
@@ -179,6 +231,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithIdentityId>();
                 _structures = new[]
                 {
                     new VehicleWithIdentityId { VehRegNo = "ABC123" },
@@ -187,10 +240,23 @@ namespace SisoDb.Specifications.Session
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(2);
+            It should_have_two_items_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(2);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures<VehicleWithIdentityId>(_structures.ToArray());
+            It should_have_inserted_structures_correctly = () => TestContext.Database.should_have_identical_structures<VehicleWithIdentityId>(_structures.ToArray());
 
+            It should_have_inserted_values_in_unique_table = () =>
+            {
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithIdentityId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo);
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithIdentityId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo);
+            };
+
+            It should_have_inserted_values_in_indexes_table = () =>
+            {
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithIdentityId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo, typeof(string));
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithIdentityId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo, typeof(string));
+            };
+
+            private static IStructureSchema _structureSchema;
             private static IList<VehicleWithIdentityId> _structures;
         }
 
@@ -218,9 +284,9 @@ namespace SisoDb.Specifications.Session
 #endif
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithIdentityId>(1);
 
-            It should_have_inserted_first = () => TestContext.Database.should_have_identical_structures<VehicleWithIdentityId>(new[] { _orgStructure });
+            It should_still_have_inserted_the_first_item = () => TestContext.Database.should_have_identical_structures<VehicleWithIdentityId>(new[] { _orgStructure });
 
             private static VehicleWithIdentityId _orgStructure;
         }
@@ -232,14 +298,22 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithBigIdentityId>();
                 _structure = new VehicleWithBigIdentityId {VehRegNo = "ABC123"};
                 TestContext.Database.UseOnceTo().Insert(_structure);
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures(_structure);
+            It should_have_inserted_structure_correctly = () => TestContext.Database.should_have_identical_structures(_structure);
 
+            It should_have_inserted_value_in_unique_table = () => TestContext.DbHelper
+                .UniquesTableHasMember<VehicleWithBigIdentityId>(_structureSchema, _structure.StructureId, s => s.VehRegNo);
+
+            It should_have_inserted_value_in_indexes_table = () => TestContext.DbHelper
+                .should_have_stored_member_in_indexes_table<VehicleWithBigIdentityId>(_structureSchema, _structure.StructureId, s => s.VehRegNo, typeof(string));
+
+            private static IStructureSchema _structureSchema;
             private static VehicleWithBigIdentityId _structure;
         }
 
@@ -250,6 +324,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<VehicleWithBigIdentityId>();
                 _structures = new[]
                 {
                     new VehicleWithBigIdentityId { VehRegNo = "ABC123" },
@@ -258,10 +333,23 @@ namespace SisoDb.Specifications.Session
                 TestContext.Database.UseOnceTo().InsertMany(_structures);
             };
 
-            It should_have_two_inserted_vehicles = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(2);
+            It should_have_two_items_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(2);
 
-            It should_get_inserted = () => TestContext.Database.should_have_identical_structures<VehicleWithBigIdentityId>(_structures.ToArray());
+            It should_have_inserted_structures_correctly = () => TestContext.Database.should_have_identical_structures<VehicleWithBigIdentityId>(_structures.ToArray());
 
+            It should_have_inserted_values_in_unique_table = () =>
+            {
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithBigIdentityId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo);
+                TestContext.DbHelper.UniquesTableHasMember<VehicleWithBigIdentityId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo);
+            };
+
+            It should_have_inserted_values_in_indexes_table = () =>
+            {
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithBigIdentityId>(_structureSchema, _structures[0].StructureId, s => s.VehRegNo, typeof(string));
+                TestContext.DbHelper.should_have_stored_member_in_indexes_table<VehicleWithBigIdentityId>(_structureSchema, _structures[1].StructureId, s => s.VehRegNo, typeof(string));
+            };
+
+            private static IStructureSchema _structureSchema;
             private static IList<VehicleWithBigIdentityId> _structures;
         }
 
@@ -290,9 +378,9 @@ namespace SisoDb.Specifications.Session
 #endif
             };
 
-            It should_have_one_inserted_vehicle = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
+            It should_have_one_item_inserted = () => TestContext.Database.should_have_X_num_of_items<VehicleWithBigIdentityId>(1);
 
-            It should_have_inserted_first = () => TestContext.Database.should_have_identical_structures<VehicleWithBigIdentityId>(new[] { _orgStructure });
+            It should_still_have_inserted_the_first_item = () => TestContext.Database.should_have_identical_structures<VehicleWithBigIdentityId>(new[] { _orgStructure });
 
             private static VehicleWithBigIdentityId _orgStructure;
         }
