@@ -206,8 +206,10 @@ namespace SisoDb.Dac.BulkInserts
             if (mergeStringsAndEnums)
             {
                 var strings = insertActions[DataTypeCode.String];
-                strings.Data = insertActions[DataTypeCode.Enum].Data.MergeWith(strings.Data).ToArray();
+                var enums = insertActions[DataTypeCode.Enum];
                 insertActions.Remove(DataTypeCode.Enum);
+
+                insertActions[DataTypeCode.String] = CreateIndexInsertActionGroup(structureSchema, indexesTableNames, DataTypeCode.String, strings.Data.MergeWith(enums.Data).ToArray());
             }
 
             return insertActions.Values.ToArray();
@@ -250,6 +252,11 @@ namespace SisoDb.Dac.BulkInserts
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.GuidsTableName);
                     break;
                 case DataTypeCode.String:
+                    if (container.Data.Length > 1)
+                        container.Action = (data, dbClient) => BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data));
+                    if (container.Data.Length == 1)
+                        container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.StringsTableName);
+                    break;
                 case DataTypeCode.Enum:
                     if (container.Data.Length > 1)
                         container.Action = (data, dbClient) => BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data));
