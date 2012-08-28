@@ -1041,6 +1041,13 @@ namespace SisoDb
 
         public virtual ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
         {
+            return Update<T, T>(id, modifier, proceed);
+        }
+
+        public virtual ISession Update<T, TImpl>(object id, Action<TImpl> modifier, Func<TImpl, bool> proceed = null)
+            where T : class
+            where TImpl : class
+        {
             Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
@@ -1053,14 +1060,14 @@ namespace SisoDb
 
                 if (string.IsNullOrWhiteSpace(existingJson))
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
-                var item = Db.Serializer.Deserialize<T>(existingJson);
+                var item = Db.Serializer.Deserialize<TImpl>(existingJson);
 
                 modifier.Invoke(item);
                 if (proceed != null && !proceed.Invoke(item))
                     return;
 
                 if (structureSchema.HasConcurrencyToken)
-                    OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
+                    OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item, typeof(TImpl));
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
@@ -1078,12 +1085,17 @@ namespace SisoDb
 
         protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
         {
+            OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, newItem, structureSchema.Type.Type);
+        }
+
+        protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem, Type typeToSerializeTo)
+        {
             var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
 
             if (string.IsNullOrWhiteSpace(existingJson))
                 throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
 
-            var existingItem = Db.Serializer.Deserialize(existingJson, structureSchema.Type.Type);
+            var existingItem = Db.Serializer.Deserialize(existingJson, typeToSerializeTo);
             var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
             var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
 

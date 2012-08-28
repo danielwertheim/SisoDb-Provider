@@ -315,6 +315,19 @@ namespace SisoDb
         ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
 
         /// <summary>
+        /// Uses sent id to locate a structure and then calls sent <paramref name="modifier"/>
+        /// to apply the changes. Will also place an rowlock, which makes it highly
+        /// useful in a concurrent environment like in an event denormalizer.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="modifier"></param>
+        /// <param name="proceed">True to continue with update;False to abort</param>
+        /// <returns></returns>
+        ISession Update<T, TImpl>(object id, Action<TImpl> modifier, Func<TImpl, bool> proceed = null) where T : class
+            where TImpl : class;
+
+        /// <summary>
         /// Clears all stored structures of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>

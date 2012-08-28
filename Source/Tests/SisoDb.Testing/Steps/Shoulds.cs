@@ -89,6 +89,18 @@ namespace SisoDb.Testing.Steps
 			}
 		}
 
+        public static void should_have_ids<T, TImpl>(this ISisoDatabase db, params object[] ids) where T : class
+            where TImpl : class
+        {
+            Ensure.That(ids, "ids").HasItems();
+
+            using (var session = db.BeginSession())
+            {
+                foreach (var id in ids)
+                    session.GetByIdAs<T, TImpl>(id).ShouldNotBeNull();
+            }
+        }
+
 		public static void should_not_have_ids<T>(this ISisoDatabase db, params object[] ids) where T : class
 		{
 			Ensure.That(ids, "ids").HasItems();
