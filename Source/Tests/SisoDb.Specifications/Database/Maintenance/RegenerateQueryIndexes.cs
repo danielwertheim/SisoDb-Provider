@@ -69,7 +69,40 @@ namespace SisoDb.Specifications.Database.Maintenance
             private static MyStructure[] _structures;
         }
 
-        private class MyStructure
+        [Subject(typeof(ISisoDatabaseMaintenance), "RegenerateQueryIndexes")]
+        public class when_manually_dropped_query_indexes_and_regenerating_for_interface : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _structures = new IMyStructure[] { MyStructure.Create(), MyStructure.Create() };
+                TestContext.Database.UseOnceTo().InsertMany<IMyStructure>(_structures);
+
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<IMyStructure>();
+                TestContext.DbHelper.DeleteQueryIndexesFor(_structureSchema, new[] { _structures[0].StructureId });
+            };
+
+            Because of = () => TestContext.Database.Maintenance.RegenerateQueryIndexesFor<IMyStructure, MyStructure>();
+
+            It should_have_one_integer_value_for_structure_one = () =>
+                TestContext.DbHelper.AnyIndexesTableHasMember<IMyStructure>(_structureSchema, _structures[0].StructureId, m => m.IntValue);
+
+            It should_have_one_integer_value_for_structure_two = () =>
+                TestContext.DbHelper.AnyIndexesTableHasMember<IMyStructure>(_structureSchema, _structures[1].StructureId, m => m.IntValue);
+
+
+            private static IStructureSchema _structureSchema;
+            private static IMyStructure[] _structures;
+        }
+
+        private interface IMyStructure
+        {
+            Guid StructureId { get; set; }
+            int IntValue { get; set; }
+        }
+
+        private class MyStructure : IMyStructure
         {
             public Guid StructureId { get; set; }
             public int IntValue { get; set; }

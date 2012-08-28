@@ -23,14 +23,23 @@ namespace SisoDb
         void RegenerateQueryIndexesFor<T>() where T : class;
 
         /// <summary>
+        /// Regenerates key-values used for querying.
+        /// </summary>
+        /// <typeparam name="TContract"></typeparam>
+        /// <typeparam name="TImpl"></typeparam>
+        void RegenerateQueryIndexesFor<TContract, TImpl>()
+            where TContract : class
+            where TImpl : class;
+
+        /// <summary>
         /// Lets you migrate all structures from <typeparamref name="TFrom"/> to <typeparamref name="TTo"/>.
         /// You can also control if a certain structure should be dumped by returning <see cref="MigrationStatuses.Trash"/>.
         /// </summary>
         /// <typeparam name="TFrom"></typeparam>
         /// <typeparam name="TTo"></typeparam>
         /// <param name="modifier"></param>
-        void Migrate<TFrom, TTo>(Func<TFrom, TTo, MigrationStatuses> modifier) 
-            where TFrom : class 
+        void Migrate<TFrom, TTo>(Func<TFrom, TTo, MigrationStatuses> modifier)
+            where TFrom : class
             where TTo : class;
 
         /// <summary>
