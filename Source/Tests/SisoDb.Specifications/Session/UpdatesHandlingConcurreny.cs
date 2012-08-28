@@ -323,6 +323,45 @@ namespace SisoDb.Specifications.Session
         }
 
         [Subject(typeof(ISession), "Update inline (concurrencies)")]
+        public class when_updating_interface_using_inline_modifier_and_item_has_enabled_concurrency_check_and_update_is_latest : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
+                TestContext.Database.UseOnceTo().Insert<IModelWithGuidToken>(_orgItem);
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    session.Update<IModelWithGuidToken, ModelWithGuidToken>(_orgItem.Id, x =>
+                    {
+                        x.StringValue = "From first update";
+                        x.IntValue = 142;
+                    });
+                    session.Update<IModelWithGuidToken, ModelWithGuidToken>(_orgItem.Id, x => x.StringValue = "From second update");
+                }
+            };
+
+            It should_only_have_one_item_stored =
+                () => TestContext.Database.should_have_X_num_of_items<IModelWithGuidToken>(1);
+
+            It should_not_have_changed_ids_of_the_structure_in_database =
+                () => TestContext.Database.should_have_ids<IModelWithGuidToken, ModelWithGuidToken>(_orgItem.Id);
+
+            It should_have_updated_values_from_both_updates = () =>
+            {
+                var refetched = TestContext.Database.UseOnceTo().GetByIdAs<IModelWithGuidToken, ModelWithGuidToken>(_orgItem.Id);
+                refetched.IntValue.ShouldEqual(142);
+                refetched.StringValue.ShouldEqual("From second update");
+            };
+
+            private static ModelWithGuidToken _orgItem;
+        }
+
+        [Subject(typeof(ISession), "Update inline (concurrencies)")]
         public class when_updating_using_inline_modifier_and_item_has_enabled_concurrency_check_and_update_is_latest_but_process_is_manually_aborted : SpecificationBase
         {
             Establish context = () =>
@@ -538,7 +577,15 @@ namespace SisoDb.Specifications.Session
             private static ModelWithGuidToken _orgItem;
         }
 
-        private class ModelWithGuidToken
+        private interface IModelWithGuidToken
+        {
+            Guid Id { get; set; }
+            Guid ConcurrencyToken { get; set; }
+            string StringValue { get; set; }
+            int IntValue { get; set; }
+        }
+
+        private class ModelWithGuidToken : IModelWithGuidToken
         {
             public Guid Id { get; set; }
 
