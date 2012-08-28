@@ -436,21 +436,12 @@ namespace SisoDb.Dac
 
         public virtual bool Any(IStructureSchema structureSchema)
         {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-
-            var sql = SqlStatements.GetSql("RowCount").Inject(structureSchema.GetStructureTableName());
-
-            return ExecuteScalar<int>(sql) > 0;
+            return RowCount(structureSchema) > 0;
         }
 
         public virtual bool Any(IStructureSchema structureSchema, IDbQuery query)
         {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-            Ensure.That(query, "query").IsNotNull();
-
-            var sql = SqlStatements.GetSql("RowCountByQuery").Inject(structureSchema.GetStructureTableName(), query.Sql);
-
-            return ExecuteScalar<int>(sql, query.Parameters.ToArray()) > 0;
+            return RowCountByQuery(structureSchema, query) > 0;
         }
 
         public virtual bool Exists(IStructureSchema structureSchema, IStructureId structureId)
