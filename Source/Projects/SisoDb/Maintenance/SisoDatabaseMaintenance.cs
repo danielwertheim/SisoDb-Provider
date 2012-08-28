@@ -47,11 +47,16 @@ namespace SisoDb.Maintenance
 
         public virtual void RegenerateQueryIndexesFor<T>() where T : class
         {
+            RegenerateQueryIndexesFor<T, T>();
+        }
+
+        public virtual void RegenerateQueryIndexesFor<TContract, TImpl>() where TContract : class where TImpl : class
+        {
             lock (_db.LockObject)
             {
                 using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
                 {
-                    var structureSchema = _db.StructureSchemas.GetSchema<T>();
+                    var structureSchema = _db.StructureSchemas.GetSchema<TContract>();
                     _db.SchemaManager.UpsertStructureSet(structureSchema, dbClient);
 
                     dbClient.ClearQueryIndexes(structureSchema);
@@ -61,7 +66,7 @@ namespace SisoDb.Maintenance
 
                     var structureInserter = _db.ProviderFactory.GetStructureInserter(dbClient);
 
-                    foreach (var structuresBatch in _db.Serializer.DeserializeMany<T>(
+                    foreach (var structuresBatch in _db.Serializer.DeserializeMany<TImpl>(
                         dbClient.GetJsonOrderedByStructureId(structureSchema)).Batch(_db.Settings.MaxUpdateManyBatchSize))
                     {
                         structureInserter.InsertIndexesOnly(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
