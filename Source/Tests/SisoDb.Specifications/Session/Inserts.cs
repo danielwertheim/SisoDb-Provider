@@ -3,6 +3,7 @@ using System.Linq;
 using Machine.Specifications;
 using SisoDb.DbSchema;
 using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.PineCone.Structures.Schemas.Configuration;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -307,6 +308,47 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations.Configure<Root2>(cfg => cfg.AllowNestedStructures());
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root2>();
+                _structure = new Root2
+                {
+                    RootInt = 10,
+                    RootString = "The Root string",
+                    Nested = new Nested { NestedInt = 20, NestedString = "The Nested string" }
+                };
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_structure);
+
+            It should_not_have_stored_nested_item_as_separate_structure = () =>
+            {
+                TestContext.Database.StructureSchemas.GetRegistrations().Any(r => r.Key == typeof(Nested)).ShouldBeFalse();
+
+                var nestesStructureSchema = TestContext.Database.StructureSchemas.GetSchema<Nested>();
+                TestContext.DbHelper.TableExists(nestesStructureSchema.GetStructureTableName()).ShouldBeFalse();
+                TestContext.DbHelper.TablesExists(nestesStructureSchema.GetIndexesTableNames().All).ShouldBeFalse();
+            };
+
+            It should_have_stored_nested_item_in_json = () =>
+                TestContext.Database.should_have_one_structure_with_json_containing<Root2, Nested>(r => r.NestedId, r => r.NestedInt, r => r.NestedString);
+
+            It should_have_stored_nested_int = () =>
+                TestContext.DbHelper.AnyIndexesTableHasMember<Root2>(_structureSchema, _structure.Id, r => r.Nested.NestedInt).ShouldBeTrue();
+
+            It should_have_stored_nested_string = () =>
+                TestContext.DbHelper.AnyIndexesTableHasMember<Root2>(_structureSchema, _structure.Id, r => r.Nested.NestedString).ShouldBeTrue();
+
+            private static Root2 _structure;
+            private static IStructureSchema _structureSchema;
+        }
+
+        [Subject(typeof(ISession), "Insert")]
+        public class when_inserting_structure_with_nested_structre_and_nested_structures_are_allowed_and_new_configcollection_has_been_provided : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations = new StructureTypeConfigurations();
                 TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations.Configure<Root2>(cfg => cfg.AllowNestedStructures());
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root2>();
                 _structure = new Root2
