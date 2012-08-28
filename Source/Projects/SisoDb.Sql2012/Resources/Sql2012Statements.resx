@@ -512,10 +512,6 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
     <value>set nocount on;
 select count(1) from [{0}];</value>
   </data>
-  <data name="RowCountByQuery" xml:space="preserve">
-    <value>set nocount on;
-select count(1) from [{0}] s where s.StructureId in({1});</value>
-  </data>
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
     <value>set nocount on;
 insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
@@ -686,5 +682,11 @@ delete from [{0}] where StructureId not in (select Id from @ids);</value>
   <data name="DeleteAll" xml:space="preserve">
     <value>set nocount on;
 delete from [{0}];</value>
+  </data>
+  <data name="QueryReturningCountOfStructureIds" xml:space="preserve">
+    <value>set nocount on;
+[%Start%]
+select count(distinct s.[StructureId]) from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]
+[%End%]</value>
   </data>
 </root>

@@ -492,9 +492,6 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
   <data name="RowCount" xml:space="preserve">
     <value>select count(1) from [{0}];</value>
   </data>
-  <data name="RowCountByQuery" xml:space="preserve">
-    <value>select count(1) from [{0}] s where s.StructureId in({1});</value>
-  </data>
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
     <value>insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
   </data>
@@ -595,5 +592,10 @@ order by groupId</value>
   </data>
   <data name="DeleteAll" xml:space="preserve">
     <value>delete from [{0}];</value>
+  </data>
+  <data name="QueryReturningCountOfStructureIds" xml:space="preserve">
+    <value>[%Start%]
+select count(1) from [[%MainStructureTable%]] s2 where s2.StructureId in((select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]))
+[%End%]</value>
   </data>
 </root>
