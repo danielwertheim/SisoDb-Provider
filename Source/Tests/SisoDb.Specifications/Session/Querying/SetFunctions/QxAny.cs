@@ -55,7 +55,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.Strings.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.Strings.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -86,7 +86,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 1)).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 1)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -118,7 +118,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 0 || e == 2)).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.Integers.QxAny(e => e == 0 || e == 2)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -149,7 +149,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Alpha")).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Alpha")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -181,7 +181,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.StringList.QxAny(e => e == "Foo" || e == "Bravo")).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -212,7 +212,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 1.11m)).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 1.11m)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -244,7 +244,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 0m || e == 2.12m)).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.DecimalList.QxAny(e => e == 0m || e == 2.12m)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -293,7 +293,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-			   .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == -10)).ToList();
+               .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == -10)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -342,7 +342,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == 0 || e.Int == 5)).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.Int == 0 || e.Int == 5)).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -391,7 +391,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == -10))).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == -10))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -440,7 +440,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == 0 || il == 5))).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.IntegerList.QxAny(il => il == 0 || il == 5))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -489,7 +489,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == -10))).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == -10))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -538,7 +538,7 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-				.Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == 0 || gcl.Int == 5))).ToList();
+                .Query<QueryItemForQxAnyQueries>().Where(i => i.ChildItemList.QxAny(e => e.GrandChildItemList.QxAny(gcl => gcl.Int == 0 || gcl.Int == 5))).ToList();
 
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
@@ -547,6 +547,37 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             {
                 _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
                 _fetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
+            };
+
+            private static IList<QueryItemForQxAnyQueries> _structures;
+            private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISession), "QxAny")]
+        public class when_qxany_combined_with_qxin_on_simplevaluetype_targetting_two_of_three_structures : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{IntList = new List<int>{1,2,3}},
+                    new QueryItemForQxAnyQueries{IntList = new List<int>{4,5,6}}
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryItemForQxAnyQueries>().Where(x => x.IntList.QxAny(y => y.QxIn(1, 6))).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_last_structures = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
             };
 
             private static IList<QueryItemForQxAnyQueries> _structures;

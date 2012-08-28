@@ -17,6 +17,17 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
     public class WhereParser : ExpressionVisitor, IWhereParser
     {
+        private class Graph : List<MemberExpression>
+        {
+            public void AddIfNotNull(MemberExpression e)
+            {
+                if (e == null)
+                    return;
+
+                Add(e);
+            }
+        }
+
         protected static readonly HashSet<ExpressionType> SupportedEnumerableQxOperators;
         private readonly object _lock;
         protected readonly List<MemberExpression> VirtualPrefixMembers;
@@ -194,23 +205,23 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected virtual MemberNode CreateNewMemberNode(MemberExpression e)
         {
-            var graphLine = new List<MemberExpression>();
+            var graph = new Graph();
 
             if (IsFlatteningMembers)
             {
-                graphLine.AddRange(VirtualPrefixMembers);
+                graph.AddRange(VirtualPrefixMembers);
 
-                if (!graphLine.Last().Equals(e))
-                    graphLine.Add(e);
+                if (!graph.Last().Equals(e))
+                    graph.AddIfNotNull(e);
             }
             else
-                graphLine.Add(e);
+                graph.AddIfNotNull(e);
 
             MemberNode previousNode = null;
-            for (var c = 0; c < graphLine.Count; c++)
+            for (var c = 0; c < graph.Count; c++)
             {
-                var memberExpression = graphLine[c];
-                var isLast = c == (graphLine.Count - 1);
+                var memberExpression = graph[c];
+                var isLast = c == (graph.Count - 1);
                 var path = previousNode == null ? memberExpression.ToPath() : string.Format("{0}.{1}", previousNode.Path, memberExpression.ToPath());
 
                 if (isLast && memberExpression.Type.IsEnumerableType())
@@ -222,7 +233,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     previousNode = new MemberNode(path, memberExpression.Type, DataTypeConverter.Convert(memberExpression.Type, path));
             }
 
-            if (previousNode != null)
+            if (e != null && previousNode != null)
             {
                 if (e.Type.IsNullablePrimitiveType())
                     return new NullableMemberNode(previousNode.Path, e.Type, DataTypeConverter.Convert(e.Type, previousNode.Path));
