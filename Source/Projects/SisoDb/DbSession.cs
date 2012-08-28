@@ -478,7 +478,7 @@ namespace SisoDb
             if (!query.HasWhere)
                 return TransactionalDbClient.RowCount(structureSchema);
 
-            var whereSql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
+            var whereSql = QueryGenerator.GenerateQueryReturningCountOfStrutureIds(query);
             return TransactionalDbClient.RowCountByQuery(structureSchema, whereSql);
         }
 

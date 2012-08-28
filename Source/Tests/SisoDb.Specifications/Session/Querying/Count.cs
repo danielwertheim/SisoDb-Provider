@@ -102,6 +102,29 @@ namespace SisoDb.Specifications.Session.Querying
         }
 
         [Subject(typeof(ISisoQueryable<>), "Count")]
+        public class when_expression_with_multiple_params_is_specified_and_it_matches_one_of_three_existing_items : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.UseOnceTo().InsertMany(new[]
+                {
+                    new QueryGuidItem{SortOrder = 1, StringValue = "A"},
+                    new QueryGuidItem{SortOrder = 2, StringValue = "B"},
+                    new QueryGuidItem{SortOrder = 3, StringValue = "C"}
+                });
+            };
+
+            Because of = () =>
+                _itemsCount = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().Count(x => x.SortOrder > 1 && x.StringValue == "B");
+
+            It should_be_1 = () =>
+                _itemsCount.ShouldEqual(1);
+
+            private static int _itemsCount;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Count")]
         public class when_expression_is_specified_and_it_matches_none_of_three_existing_items : SpecificationBase
         {
             Establish context = () =>

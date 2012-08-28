@@ -187,9 +187,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="GetCommand_SortingsAllreadyInitialized" xml:space="preserve">
     <value>The Sortings has allready been initialized.</value>
   </data>
-  <data name="DbQueryGenerator_GenerateQueryReturningStrutureIds" xml:space="preserve">
-    <value>The query should only return StructureIds and then onle Where expressions are allowed. Take, Paging and Sorting etc is not allowed.</value>
-  </data>
   <data name="LambdaParser_VisitUnary_InvalidConvert" xml:space="preserve">
     <value>Conversion of values in expression is only allowed for nullable valuetypes.</value>
   </data>
@@ -312,5 +309,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="QxIsExactly_NotSupportedForTexts" xml:space="preserve">
     <value>Member node: '{0}'; Exact match of strings is only supported for String members and NOT Text members.</value>
+  </data>
+  <data name="DbQueryGenerator_OnlyWhereExpressionsAreAllowed" xml:space="preserve">
+    <value>The query should only return StructureIds which alows onle WHERE expressions. Take, Paging and Sorting etc is not allowed.</value>
   </data>
 </root>
