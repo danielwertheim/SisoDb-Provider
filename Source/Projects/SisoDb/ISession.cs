@@ -323,7 +323,7 @@ namespace SisoDb
         /// to apply the changes. Will also place an rowlock, which makes it highly
         /// useful in a concurrent environment like in an event denormalizer.
         /// </summary>
-        /// <typeparam name="TContract"></typeparam>
+        /// <typeparam name="TContract">Structure type, used as a contract defining the scheme.</typeparam>
         /// <typeparam name="TImpl"></typeparam>
         /// <param name="id"></param>
         /// <param name="modifier"></param>

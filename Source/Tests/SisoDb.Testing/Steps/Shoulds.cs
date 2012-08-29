@@ -130,6 +130,25 @@ namespace SisoDb.Testing.Steps
             }
         }
 
+        public static void should_have_identical_structures<TContract, TImpl>(this ISisoDatabase db, params TImpl[] structures)
+            where TContract : class
+            where TImpl : class
+        {
+            Ensure.That(structures, "structures").HasItems();
+
+            var structureSchema = db.StructureSchemas.GetSchema(typeof(TContract));
+
+            using (var session = db.BeginSession())
+            {
+                foreach (var structure in structures)
+                {
+                    var id = structureSchema.IdAccessor.GetValue(structure);
+                    var refetched = session.GetByIdAs<TContract, TImpl>(id.Value);
+                    refetched.ShouldBeValueEqualTo(structure);
+                }
+            }
+        }
+
         public static void should_have_valid_structures<T>(this ISisoDatabase db, Action<T> validationRule) where T : class
         {
             using (var rs = db.BeginSession())

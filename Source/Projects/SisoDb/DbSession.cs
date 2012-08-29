@@ -710,7 +710,7 @@ namespace SisoDb
                     structureSchema,
                     structureIds,
                     sids => Db.Serializer.DeserializeMany(TransactionalDbClient.GetJsonByIds(sids, structureSchema).Where(s => s != null).ToArray(), structureType),
-                    CacheConsumeMode).ToArray();               
+                    CacheConsumeMode).ToArray();
             });
         }
 
@@ -868,7 +868,7 @@ namespace SisoDb
                 var structureSchema = OnUpsertStructureSchema<T>();
                 var json = Db.Serializer.Serialize(item);
                 var realItem = Db.Serializer.Deserialize<T>(json);
-                
+
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
@@ -1016,6 +1016,7 @@ namespace SisoDb
         {
             Ensure.That(item, "item").IsNotNull();
 
+            var implType = item.GetType();
             var structureSchema = OnUpsertStructureSchema(structureType);
             var structureId = structureSchema.IdAccessor.GetValue(item);
 
@@ -1026,7 +1027,7 @@ namespace SisoDb
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
             }
             else
-                OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
+                OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item, implType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
@@ -1093,11 +1094,6 @@ namespace SisoDb
             });
 
             return this;
-        }
-
-        protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
-        {
-            OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, newItem, structureSchema.Type.Type);
         }
 
         protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem, Type typeForDeserialization)

@@ -577,6 +577,48 @@ namespace SisoDb.Specifications.Session
             private static ModelWithGuidToken _orgItem;
         }
 
+        [Subject(typeof(ISession), "Update (concurrencies)")]
+        public class when_item_is_interface_and_has_enabled_concurrency_check_and_update_is_latest : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<IModelWithGuidToken>();
+                _orgItem = new ModelWithGuidToken { StringValue = "Org string", IntValue = 42 };
+                TestContext.Database.UseOnceTo().Insert<IModelWithGuidToken>(_orgItem);
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _copy1 = session.GetByIdAs<IModelWithGuidToken, ModelWithGuidToken>(_orgItem.Id);
+                    _copy1.StringValue = "From copy 1";
+                    session.Update<IModelWithGuidToken>(_copy1);
+
+                    _copy2 = session.GetByIdAs<IModelWithGuidToken, ModelWithGuidToken>(_orgItem.Id);
+                    _copy2.StringValue = "From copy 2";
+                    session.Update<IModelWithGuidToken>(_copy2);
+                }
+            };
+
+            It should_only_have_one_item_stored =
+                () => TestContext.Database.should_have_X_num_of_items<IModelWithGuidToken>(1);
+
+            It should_not_have_changed_ids_of_the_structure_in_database =
+                () => TestContext.Database.should_have_ids<IModelWithGuidToken, ModelWithGuidToken>(_orgItem.Id);
+
+            It should_have_updated_values_in_database =
+                () => TestContext.Database.should_have_identical_structures<IModelWithGuidToken, ModelWithGuidToken>(new[] { _copy2 });
+
+            It should_have_stored_the_concurrency_token_in_the_index_table =
+                () => TestContext.DbHelper.should_have_stored_member_in_indexes_table<IModelWithGuidToken>(_structureSchema, _orgItem.Id, m => m.ConcurrencyToken, typeof(Guid));
+
+            private static IStructureSchema _structureSchema;
+            private static ModelWithGuidToken _orgItem;
+            private static ModelWithGuidToken _copy1, _copy2;
+        }
+
         private interface IModelWithGuidToken
         {
             Guid Id { get; set; }
@@ -588,33 +630,24 @@ namespace SisoDb.Specifications.Session
         private class ModelWithGuidToken : IModelWithGuidToken
         {
             public Guid Id { get; set; }
-
             public Guid ConcurrencyToken { get; set; }
-
             public string StringValue { get; set; }
-
             public int IntValue { get; set; }
         }
 
         private class ModelWithIntToken
         {
             public Guid Id { get; set; }
-
             public int ConcurrencyToken { get; set; }
-
             public string StringValue { get; set; }
-
             public int IntValue { get; set; }
         }
 
         private class ModelWithLongToken
         {
             public Guid Id { get; set; }
-
             public long ConcurrencyToken { get; set; }
-
             public string StringValue { get; set; }
-
             public int IntValue { get; set; }
         }
     }
