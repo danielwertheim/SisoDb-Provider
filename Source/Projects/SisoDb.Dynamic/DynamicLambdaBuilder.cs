@@ -52,7 +52,7 @@ namespace SisoDb.Dynamic
 
         public virtual Expression<Func<T, bool>>  BuildPredicate<T>(string expression, params object[] formattingArgs) where T : class
         {
-            return (Expression<Func<T, bool>>) BuildPredicate(TypeFor<T>.Type, expression, formattingArgs);
+            return (Expression<Func<T, bool>>) BuildPredicate(typeof(T), expression, formattingArgs);
         }
 
         public virtual System.Linq.Expressions.LambdaExpression BuildPredicate(Type type, string expression, params object[] formattingArgs)
@@ -74,7 +74,7 @@ namespace SisoDb.Dynamic
 
         public virtual Expression<Func<T, bool>> BuildMember<T>(string expression, params object[] formattingArgs) where T : class
         {
-            return (Expression<Func<T, bool>>)BuildMember(TypeFor<T>.Type, expression, formattingArgs);
+            return (Expression<Func<T, bool>>)BuildMember(typeof(T), expression, formattingArgs);
         }
 
         public System.Linq.Expressions.LambdaExpression BuildMember(Type type, string expression, params object[] formattingArgs)

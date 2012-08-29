@@ -115,7 +115,7 @@ namespace SisoDb
 
         protected virtual IStructureSchema OnUpsertStructureSchema<T>() where T : class
         {
-            return OnUpsertStructureSchema(TypeFor<T>.Type);
+            return OnUpsertStructureSchema(typeof(T));
         }
 
         protected virtual IStructureSchema OnUpsertStructureSchema(Type structuretype)
@@ -143,7 +143,7 @@ namespace SisoDb
 
         public virtual IStructureSchema GetStructureSchema<T>() where T : class
         {
-            return Try(() => OnGetStructureSchema(TypeFor<T>.Type));
+            return Try(() => OnGetStructureSchema(typeof(T)));
         }
 
         public virtual IStructureSchema GetStructureSchema(Type structureType)
@@ -398,7 +398,7 @@ namespace SisoDb
 
         bool IQueryEngine.Any<T>()
         {
-            return Try(() => OnAny(TypeFor<T>.Type));
+            return Try(() => OnAny(typeof(T)));
         }
 
         bool IQueryEngine.Any(Type structureType)
@@ -417,7 +417,7 @@ namespace SisoDb
 
         bool IQueryEngine.Any<T>(IQuery query)
         {
-            return Try(() => OnAny(TypeFor<T>.Type, query));
+            return Try(() => OnAny(typeof(T), query));
         }
 
         bool IQueryEngine.Any(Type structureType, IQuery query)
@@ -441,7 +441,7 @@ namespace SisoDb
 
         int IQueryEngine.Count<T>()
         {
-            return Try(() => OnCount(TypeFor<T>.Type));
+            return Try(() => OnCount(typeof(T)));
         }
 
         int IQueryEngine.Count(Type structureType)
@@ -460,7 +460,7 @@ namespace SisoDb
 
         int IQueryEngine.Count<T>(IQuery query)
         {
-            return Try(() => OnCount(TypeFor<T>.Type, query));
+            return Try(() => OnCount(typeof(T), query));
         }
 
         int IQueryEngine.Count(Type structureType, IQuery query)
@@ -484,7 +484,7 @@ namespace SisoDb
 
         public virtual bool Exists<T>(object id) where T : class
         {
-            return Try(() => OnExists(TypeFor<T>.Type, id));
+            return Try(() => OnExists(typeof(T), id));
         }
 
         public virtual bool Exists(Type structureType, object id)
@@ -612,7 +612,7 @@ namespace SisoDb
 
         IEnumerable<string> IQueryEngine.QueryAsJson<T>(IQuery query)
         {
-            return Try(() => OnQueryAsJson(TypeFor<T>.Type, query));
+            return Try(() => OnQueryAsJson(typeof(T), query));
         }
 
         IEnumerable<string> IQueryEngine.QueryAsJson(IQuery query, Type structuretype)
@@ -760,7 +760,7 @@ namespace SisoDb
 
         public virtual string GetByIdAsJson<T>(object id) where T : class
         {
-            return Try(() => OnGetByIdAsJson(TypeFor<T>.Type, id));
+            return Try(() => OnGetByIdAsJson(typeof(T), id));
         }
 
         public virtual string GetByIdAsJson(Type structureType, object id)
@@ -791,7 +791,7 @@ namespace SisoDb
 
         public virtual IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class
         {
-            return Try(() => OnGetByIdsAsJson(TypeFor<T>.Type, ids));
+            return Try(() => OnGetByIdsAsJson(typeof(T), ids));
         }
 
         public virtual IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids)
@@ -900,7 +900,7 @@ namespace SisoDb
 
         public virtual string InsertJson<T>(string json) where T : class
         {
-            return Try(() => OnInsertJson(TypeFor<T>.Type, json));
+            return Try(() => OnInsertJson(typeof(T), json));
         }
 
         public virtual string InsertJson(Type structureType, string json)
@@ -969,7 +969,7 @@ namespace SisoDb
 
         public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
         {
-            Try(() => OnInsertManyJson(TypeFor<T>.Type, json, onBatchInserted));
+            Try(() => OnInsertManyJson(typeof(T), json, onBatchInserted));
         }
 
         public virtual void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null)
@@ -1000,7 +1000,7 @@ namespace SisoDb
 
         public virtual ISession Update<T>(T item) where T : class
         {
-            Try(() => OnUpdate(TypeFor<T>.Type, item));
+            Try(() => OnUpdate(typeof(T), item));
 
             return this;
         }
@@ -1139,7 +1139,7 @@ namespace SisoDb
 
         public virtual ISession Clear<T>() where T : class
         {
-            Try(() => OnClear(TypeFor<T>.Type));
+            Try(() => OnClear(typeof(T)));
 
             return this;
         }
@@ -1165,7 +1165,7 @@ namespace SisoDb
 
         public virtual ISession DeleteAllExceptIds<T>(params object[] ids) where T : class
         {
-            Try(() => OnDeleteAllExceptIds(TypeFor<T>.Type, ids));
+            Try(() => OnDeleteAllExceptIds(typeof(T), ids));
 
             return this;
         }
@@ -1193,7 +1193,7 @@ namespace SisoDb
 
         public virtual ISession DeleteById<T>(object id) where T : class
         {
-            Try(() => OnDeleteById(TypeFor<T>.Type, id));
+            Try(() => OnDeleteById(typeof(T), id));
 
             return this;
         }
@@ -1220,7 +1220,7 @@ namespace SisoDb
 
         public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
         {
-            Try(() => OnDeleteByIds(TypeFor<T>.Type, ids));
+            Try(() => OnDeleteByIds(typeof(T), ids));
 
             return this;
         }

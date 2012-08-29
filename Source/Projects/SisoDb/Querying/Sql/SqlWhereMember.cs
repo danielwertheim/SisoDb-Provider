@@ -64,7 +64,7 @@ namespace SisoDb.Querying.Sql
             _index = -1;
             _memberPath = string.Empty;
             _alias = string.Empty;
-        	_dataType = TypeFor<object>.Type;
+        	_dataType = typeof(object);
             _dataTypeCode = DataTypeCode.Unknown;
         }
 

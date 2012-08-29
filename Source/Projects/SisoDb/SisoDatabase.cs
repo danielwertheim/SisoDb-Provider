@@ -177,7 +177,7 @@ namespace SisoDb
 
         public virtual ISisoDatabase DropStructureSet<T>() where T : class
         {
-            DropStructureSet(TypeFor<T>.Type);
+            DropStructureSet(typeof(T));
 
             return this;
         }
@@ -215,7 +215,7 @@ namespace SisoDb
 
         public virtual ISisoDatabase UpsertStructureSet<T>() where T : class
         {
-            UpsertStructureSet(TypeFor<T>.Type);
+            UpsertStructureSet(typeof(T));
 
             return this;
         }

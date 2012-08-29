@@ -388,7 +388,6 @@
     <Compile Include="Querying\Sql\SqlWhereMember.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
-    <Compile Include="TypeFor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
