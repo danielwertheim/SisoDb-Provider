@@ -12,5 +12,6 @@ namespace SisoDb.Specifications.Model
         public IList<int> IntList { get; set; }
         public IList<decimal> DecimalList { get; set; }
         public IList<ChildItem> ChildItemList { get; set; }
+        public IList<int?> NullableIntsList { get; set; }
     }
 }

@@ -5,6 +5,21 @@ namespace SisoDb
 {
     public static class EnumerableQueryExtensions
     {
+        public static bool QxAny(this IEnumerable<string> m)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxAny<T>(this IEnumerable<T> m) where T : struct 
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxAny<T>(this IEnumerable<T?> m) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
         public static bool QxAny<T>(this IEnumerable<T> m, Func<T, bool> e)
         {
             throw new NotImplementedException();

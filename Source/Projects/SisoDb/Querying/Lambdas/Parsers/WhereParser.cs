@@ -368,9 +368,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
             switch (methodName)
             {
                 case "QxAny":
-                    VirtualPrefixMembers.Add(member);
-                    Visit(e.Arguments[1] as LambdaExpression);
-                    VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
+                    HandleEnumerableQxAnyMethodCall(member, e.Arguments);
                     break;
                 case "QxIn":
                     VirtualPrefixMembers.Add(member);
@@ -382,6 +380,21 @@ namespace SisoDb.Querying.Lambdas.Parsers
             }
 
             return e;
+        }
+
+        protected virtual void HandleEnumerableQxAnyMethodCall(MemberExpression member, IList<Expression> arguments)
+        {
+            var isMissingWhereExpression = arguments.Count == 1;
+            if(isMissingWhereExpression)
+            {
+                var memberIsNotNullExpression = Expression.Lambda(Expression.NotEqual(member, Expression.Constant(null)));
+                Visit(memberIsNotNullExpression);
+                return;
+            }
+
+            VirtualPrefixMembers.Add(member);
+            Visit(arguments[1]);
+            VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
         }
     }
 }

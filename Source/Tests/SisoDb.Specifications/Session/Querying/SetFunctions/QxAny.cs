@@ -583,5 +583,133 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             private static IList<QueryItemForQxAnyQueries> _structures;
             private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
         }
+
+        [Subject(typeof(ISession), "QxAny")]
+        public class when_qxany_without_expression_and_two_empty_and_two_non_empty_int_collections_exist : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{IntList = new List<int>{1,2,3}},
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{IntList = new List<int>{4,5,6}}
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryItemForQxAnyQueries>().Where(x => x.IntList.QxAny()).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_structures_with_non_empty_collections = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[3]);
+            };
+
+            private static IList<QueryItemForQxAnyQueries> _structures;
+            private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISession), "QxAny")]
+        public class when_qxany_without_expression_and_two_empty_and_two_non_empty_nullableint_collections_exist : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{NullableIntsList = new List<int?>{1,2,3}},
+                    new QueryItemForQxAnyQueries{NullableIntsList = new List<int?>{null,null,null}},
+                    new QueryItemForQxAnyQueries{NullableIntsList = new List<int?>{4,5,6}}
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryItemForQxAnyQueries>().Where(x => x.NullableIntsList.QxAny()).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_structures_with_non_empty_collections = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[3]);
+            };
+
+            private static IList<QueryItemForQxAnyQueries> _structures;
+            private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISession), "QxAny")]
+        public class when_qxany_without_expression_and_two_empty_and_two_non_empty_string_collections_exist : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{StringList = new List<string>{"A", "B", "C"}},
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{StringList = new List<string>{"D", "E", "F"}}
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryItemForQxAnyQueries>().Where(x => x.StringList.QxAny()).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_structures_with_non_empty_collections = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[3]);
+            };
+
+            private static IList<QueryItemForQxAnyQueries> _structures;
+            private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISession), "QxAny")]
+        public class when_negated_qxany_without_expression_and_two_empty_and_two_non_empty_string_collections_exist : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{StringList = new List<string>{"A", "B", "C"}},
+                    new QueryItemForQxAnyQueries(),
+                    new QueryItemForQxAnyQueries{StringList = new List<string>{"D", "E", "F"}}
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryItemForQxAnyQueries>().Where(x => !x.StringList.QxAny()).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_two_structures_with_empty_collections = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+            };
+
+            private static IList<QueryItemForQxAnyQueries> _structures;
+            private static IList<QueryItemForQxAnyQueries> _fetchedStructures;
+        }
     }
 }
