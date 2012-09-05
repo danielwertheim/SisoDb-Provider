@@ -112,7 +112,7 @@ namespace SisoDb
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
             StructureBuilders = new StructureBuilders(() => Serializer);
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
-            Serializer = new ServiceStackJsonSerializer(StructureSchemas.StructureTypeFactory.Configurations.GetConfiguration);
+            Serializer = new ServiceStackJsonSerializer(t => StructureSchemas.StructureTypeFactory.Configurations.GetConfiguration(t));
             Maintenance = new SisoDatabaseMaintenance(this);
             _dbSchemaManager = ProviderFactory.GetDbSchemaManagerFor(this);
         }
@@ -177,7 +177,7 @@ namespace SisoDb
 
         public virtual ISisoDatabase DropStructureSet<T>() where T : class
         {
-            DropStructureSet(TypeFor<T>.Type);
+            DropStructureSet(typeof(T));
 
             return this;
         }
@@ -215,7 +215,7 @@ namespace SisoDb
 
         public virtual ISisoDatabase UpsertStructureSet<T>() where T : class
         {
-            UpsertStructureSet(TypeFor<T>.Type);
+            UpsertStructureSet(typeof(T));
 
             return this;
         }

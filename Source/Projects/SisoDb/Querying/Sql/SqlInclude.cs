@@ -91,7 +91,7 @@ namespace SisoDb.Querying.Sql
             _index = -1;
             _memberPathReference = string.Empty;
             _objectReferencePath = string.Empty;
-        	_dataType = TypeFor<object>.Type;
+            _dataType = typeof (object);
         }
 
         public static SqlInclude Empty()

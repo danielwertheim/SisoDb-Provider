@@ -41,12 +41,24 @@ namespace SisoDb.Querying
 
         public virtual IDbQuery GenerateQueryReturningStrutureIds(IQuery query)
         {
+            EnsureQueryContainsOnlyWhereExpression(query);
+
+            return CreateSqlQueryReturningStructureIds(query);
+        }
+
+        public virtual IDbQuery GenerateQueryReturningCountOfStrutureIds(IQuery query)
+        {
+            EnsureQueryContainsOnlyWhereExpression(query);
+
+            return CreateSqlQueryReturningCountOfStructureIds(query);
+        }
+
+        protected virtual void EnsureQueryContainsOnlyWhereExpression(IQuery query)
+        {
             Ensure.That(query, "query").IsNotNull();
 
             if (!query.HasWhere || (query.HasTakeNumOfStructures || query.HasIncludes || query.HasSortings || query.HasPaging))
-                throw new ArgumentException(ExceptionMessages.DbQueryGenerator_GenerateQueryReturningStrutureIds);
-
-            return CreateSqlQueryReturningStructureIds(query);
+                throw new ArgumentException(ExceptionMessages.DbQueryGenerator_OnlyWhereExpressionsAreAllowed);
         }
 
         protected virtual IDbQuery CreateSqlQueryReturningStructureIds(IQuery query)
@@ -61,6 +73,20 @@ namespace SisoDb.Querying
             var parameters = GenerateParameters(query, sqlExpression);
 
             return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), parameters);
+        }
+
+        protected virtual IDbQuery CreateSqlQueryReturningCountOfStructureIds(IQuery query)
+        {
+            var sqlExpression = SqlExpressionBuilder.Process(query);
+            var formatter = new SqlQueryFormatter
+            {
+                MainStructureTable = query.StructureSchema.GetStructureTableName(),
+                WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
+                WhereCriteria = GenerateWhereCriteriaString(sqlExpression)
+            };
+            var parameters = GenerateParameters(query, sqlExpression);
+
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningCountOfStructureIds")), parameters);
         }
 
         protected virtual SqlQueryFormatter CreateSqlQueryFormatter(IQuery query, ISqlExpression sqlExpression)

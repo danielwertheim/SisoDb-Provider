@@ -115,7 +115,7 @@ namespace SisoDb
 
         protected virtual IStructureSchema OnUpsertStructureSchema<T>() where T : class
         {
-            return OnUpsertStructureSchema(TypeFor<T>.Type);
+            return OnUpsertStructureSchema(typeof(T));
         }
 
         protected virtual IStructureSchema OnUpsertStructureSchema(Type structuretype)
@@ -143,7 +143,7 @@ namespace SisoDb
 
         public virtual IStructureSchema GetStructureSchema<T>() where T : class
         {
-            return Try(() => OnGetStructureSchema(TypeFor<T>.Type));
+            return Try(() => OnGetStructureSchema(typeof(T)));
         }
 
         public virtual IStructureSchema GetStructureSchema(Type structureType)
@@ -398,7 +398,7 @@ namespace SisoDb
 
         bool IQueryEngine.Any<T>()
         {
-            return Try(() => OnAny(TypeFor<T>.Type));
+            return Try(() => OnAny(typeof(T)));
         }
 
         bool IQueryEngine.Any(Type structureType)
@@ -417,7 +417,7 @@ namespace SisoDb
 
         bool IQueryEngine.Any<T>(IQuery query)
         {
-            return Try(() => OnAny(TypeFor<T>.Type, query));
+            return Try(() => OnAny(typeof(T), query));
         }
 
         bool IQueryEngine.Any(Type structureType, IQuery query)
@@ -435,13 +435,13 @@ namespace SisoDb
             if (!query.HasWhere)
                 return TransactionalDbClient.Any(structureSchema);
 
-            var whereSql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
+            var whereSql = QueryGenerator.GenerateQueryReturningCountOfStrutureIds(query);
             return TransactionalDbClient.Any(structureSchema, whereSql);
         }
 
         int IQueryEngine.Count<T>()
         {
-            return Try(() => OnCount(TypeFor<T>.Type));
+            return Try(() => OnCount(typeof(T)));
         }
 
         int IQueryEngine.Count(Type structureType)
@@ -460,7 +460,7 @@ namespace SisoDb
 
         int IQueryEngine.Count<T>(IQuery query)
         {
-            return Try(() => OnCount(TypeFor<T>.Type, query));
+            return Try(() => OnCount(typeof(T), query));
         }
 
         int IQueryEngine.Count(Type structureType, IQuery query)
@@ -478,13 +478,13 @@ namespace SisoDb
             if (!query.HasWhere)
                 return TransactionalDbClient.RowCount(structureSchema);
 
-            var whereSql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
+            var whereSql = QueryGenerator.GenerateQueryReturningCountOfStrutureIds(query);
             return TransactionalDbClient.RowCountByQuery(structureSchema, whereSql);
         }
 
         public virtual bool Exists<T>(object id) where T : class
         {
-            return Try(() => OnExists(TypeFor<T>.Type, id));
+            return Try(() => OnExists(typeof(T), id));
         }
 
         public virtual bool Exists(Type structureType, object id)
@@ -612,7 +612,7 @@ namespace SisoDb
 
         IEnumerable<string> IQueryEngine.QueryAsJson<T>(IQuery query)
         {
-            return Try(() => OnQueryAsJson(TypeFor<T>.Type, query));
+            return Try(() => OnQueryAsJson(typeof(T), query));
         }
 
         IEnumerable<string> IQueryEngine.QueryAsJson(IQuery query, Type structuretype)
@@ -710,7 +710,7 @@ namespace SisoDb
                     structureSchema,
                     structureIds,
                     sids => Db.Serializer.DeserializeMany(TransactionalDbClient.GetJsonByIds(sids, structureSchema).Where(s => s != null).ToArray(), structureType),
-                    CacheConsumeMode).ToArray();               
+                    CacheConsumeMode).ToArray();
             });
         }
 
@@ -760,7 +760,7 @@ namespace SisoDb
 
         public virtual string GetByIdAsJson<T>(object id) where T : class
         {
-            return Try(() => OnGetByIdAsJson(TypeFor<T>.Type, id));
+            return Try(() => OnGetByIdAsJson(typeof(T), id));
         }
 
         public virtual string GetByIdAsJson(Type structureType, object id)
@@ -791,7 +791,7 @@ namespace SisoDb
 
         public virtual IEnumerable<string> GetByIdsAsJson<T>(params object[] ids) where T : class
         {
-            return Try(() => OnGetByIdsAsJson(TypeFor<T>.Type, ids));
+            return Try(() => OnGetByIdsAsJson(typeof(T), ids));
         }
 
         public virtual IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids)
@@ -868,7 +868,7 @@ namespace SisoDb
                 var structureSchema = OnUpsertStructureSchema<T>();
                 var json = Db.Serializer.Serialize(item);
                 var realItem = Db.Serializer.Deserialize<T>(json);
-                
+
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, Db.ProviderFactory.GetIdentityStructureIdGenerator(OnCheckOutAndGetNextIdentity));
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
@@ -900,7 +900,7 @@ namespace SisoDb
 
         public virtual string InsertJson<T>(string json) where T : class
         {
-            return Try(() => OnInsertJson(TypeFor<T>.Type, json));
+            return Try(() => OnInsertJson(typeof(T), json));
         }
 
         public virtual string InsertJson(Type structureType, string json)
@@ -969,7 +969,7 @@ namespace SisoDb
 
         public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
         {
-            Try(() => OnInsertManyJson(TypeFor<T>.Type, json, onBatchInserted));
+            Try(() => OnInsertManyJson(typeof(T), json, onBatchInserted));
         }
 
         public virtual void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null)
@@ -1000,7 +1000,7 @@ namespace SisoDb
 
         public virtual ISession Update<T>(T item) where T : class
         {
-            Try(() => OnUpdate(TypeFor<T>.Type, item));
+            Try(() => OnUpdate(typeof(T), item));
 
             return this;
         }
@@ -1016,6 +1016,7 @@ namespace SisoDb
         {
             Ensure.That(item, "item").IsNotNull();
 
+            var implType = item.GetType();
             var structureSchema = OnUpsertStructureSchema(structureType);
             var structureId = structureSchema.IdAccessor.GetValue(item);
 
@@ -1026,7 +1027,7 @@ namespace SisoDb
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
             }
             else
-                OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
+                OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item, implType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
@@ -1041,26 +1042,45 @@ namespace SisoDb
 
         public virtual ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
         {
+            Try(() => OnUpdate<T, T>(id, modifier, proceed));
+
+            return this;
+        }
+
+        public virtual ISession Update<TContract, TImpl>(object id, Action<TImpl> modifier, Func<TImpl, bool> proceed = null)
+            where TContract : class
+            where TImpl : class
+        {
+            Try(() => OnUpdate<TContract, TImpl>(id, modifier, proceed));
+
+            return this;
+        }
+
+        protected virtual ISession OnUpdate<TContract, TImpl>(object id, Action<TImpl> modifier, Func<TImpl, bool> proceed = null)
+            where TContract : class
+            where TImpl : class
+        {
             Try(() =>
             {
                 Ensure.That(id, "id").IsNotNull();
                 Ensure.That(modifier, "modifier").IsNotNull();
 
-                var structureSchema = OnUpsertStructureSchema<T>();
+                var structureSchema = OnUpsertStructureSchema<TContract>();
                 var structureId = StructureId.ConvertFrom(id);
 
                 var existingJson = TransactionalDbClient.GetJsonByIdWithLock(structureId, structureSchema);
 
                 if (string.IsNullOrWhiteSpace(existingJson))
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
-                var item = Db.Serializer.Deserialize<T>(existingJson);
+
+                var item = Db.Serializer.Deserialize<TImpl>(existingJson);
 
                 modifier.Invoke(item);
                 if (proceed != null && !proceed.Invoke(item))
                     return;
 
                 if (structureSchema.HasConcurrencyToken)
-                    OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item);
+                    OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item, typeof(TImpl));
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
@@ -1076,14 +1096,14 @@ namespace SisoDb
             return this;
         }
 
-        protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem)
+        protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem, Type typeForDeserialization)
         {
             var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
 
             if (string.IsNullOrWhiteSpace(existingJson))
                 throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
 
-            var existingItem = Db.Serializer.Deserialize(existingJson, structureSchema.Type.Type);
+            var existingItem = Db.Serializer.Deserialize(existingJson, typeForDeserialization);
             var existingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(existingItem);
             var updatingToken = structureSchema.ConcurrencyTokenAccessor.GetValue(newItem);
 
@@ -1115,7 +1135,7 @@ namespace SisoDb
 
         public virtual ISession Clear<T>() where T : class
         {
-            Try(() => OnClear(TypeFor<T>.Type));
+            Try(() => OnClear(typeof(T)));
 
             return this;
         }
@@ -1141,7 +1161,7 @@ namespace SisoDb
 
         public virtual ISession DeleteAllExceptIds<T>(params object[] ids) where T : class
         {
-            Try(() => OnDeleteAllExceptIds(TypeFor<T>.Type, ids));
+            Try(() => OnDeleteAllExceptIds(typeof(T), ids));
 
             return this;
         }
@@ -1169,7 +1189,7 @@ namespace SisoDb
 
         public virtual ISession DeleteById<T>(object id) where T : class
         {
-            Try(() => OnDeleteById(TypeFor<T>.Type, id));
+            Try(() => OnDeleteById(typeof(T), id));
 
             return this;
         }
@@ -1196,7 +1216,7 @@ namespace SisoDb
 
         public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
         {
-            Try(() => OnDeleteByIds(TypeFor<T>.Type, ids));
+            Try(() => OnDeleteByIds(typeof(T), ids));
 
             return this;
         }

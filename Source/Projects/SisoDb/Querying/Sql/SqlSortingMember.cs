@@ -82,7 +82,7 @@ namespace SisoDb.Querying.Sql
             _memberPath = string.Empty;
             _indexStorageColumnName = string.Empty;
             _direction = string.Empty;
-        	_dataType = TypeFor<object>.Type;
+        	_dataType = typeof(object);
             _dataTypeCode = DataTypeCode.Unknown;
         }
 

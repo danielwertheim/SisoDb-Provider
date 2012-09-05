@@ -40,7 +40,7 @@ namespace SisoDb.Configurations
 
         public virtual DbConfiguration UseCacheProviderResolvedBy(Func<ICacheProvider> fn)
         {
-            Database.CacheProvider = fn.Invoke();
+            Database.CacheProvider = fn();
 
             return this;
         }
