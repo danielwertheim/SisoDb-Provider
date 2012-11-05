@@ -28,15 +28,15 @@ namespace SisoDb
             }
         }
 
-        public bool SynchronizeSchemaChanges { get; set; }
-        public bool AllowUpsertsOfSchemas { get; set; }
+        public bool AllowDynamicSchemaUpdates { get; set; }
+        public bool AllowDynamicSchemaCreation { get; set; }
 
         protected DbSettings()
         {
             MaxInsertManyBatchSize = 500;
             MaxUpdateManyBatchSize = 500;
-            SynchronizeSchemaChanges = true;
-            AllowUpsertsOfSchemas = true;
+            AllowDynamicSchemaUpdates = true;
+            AllowDynamicSchemaCreation = true;
         }
 
         public static IDbSettings CreateDefault()

@@ -4,6 +4,8 @@ using System.Threading;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
+using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.IdGenerators;
 using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
@@ -92,7 +94,7 @@ namespace SisoDb.SqlServer
 
         public virtual IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db)
         {
-            return new DbSchemaManager(new SqlDbSchemaUpserter(db, SqlStatements));
+            return new DbSchemaManager(db, new SqlDbSchemaUpserter(SqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
@@ -100,9 +102,14 @@ namespace SisoDb.SqlServer
             return new DbStructureInserter(dbClient);
         }
 
-        public virtual IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
+        public virtual IStructureIdGenerator GetGuidStructureIdGenerator()
+        {
+            return new SequentialGuidStructureIdGenerator();
+        }
+
+        public virtual IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
     	{
-    		return new DbIdentityStructureIdGenerator(action);
+            return new DbIdentityStructureIdGenerator(dbClient);
     	}
 
 	    public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)

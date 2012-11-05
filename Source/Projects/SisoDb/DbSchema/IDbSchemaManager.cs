@@ -1,5 +1,4 @@
-﻿using System;
-using SisoDb.Dac;
+﻿using SisoDb.Dac;
 using SisoDb.PineCone.Structures.Schemas;
 
 namespace SisoDb.DbSchema
@@ -12,6 +11,5 @@ namespace SisoDb.DbSchema
 
         void DropStructureSet(IStructureSchema structureSchema, IDbClient dbClient);
         void UpsertStructureSet(IStructureSchema structureSchema, IDbClient dbClient);
-        void UpsertStructureSet(IStructureSchema structureSchema, Func<IDbClient> dbClientFn);
     }
 }

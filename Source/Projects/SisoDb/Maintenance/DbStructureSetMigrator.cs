@@ -35,9 +35,9 @@ namespace SisoDb.Maintenance
         {
             Ensure.That(migration, "migration").IsNotNull();
 
-            var structuresHasSameType = migration.From.Equals(migration.To);
+            var structuresHasSameType = migration.From == migration.To;
             var isMigratingSameStructureSet = structuresHasSameType || string.Equals(migration.From.Name, migration.To.Name, StringComparison.OrdinalIgnoreCase);
-            var fromTypeAndFromTemplateHasSameType = migration.From.Equals(migration.FromTemplate);
+            var fromTypeAndFromTemplateHasSameType = migration.From == migration.FromTemplate;
             IStructureSchema structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo;
 
             if (structuresHasSameType)
@@ -102,7 +102,7 @@ namespace SisoDb.Maintenance
             var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaTo);
 
             Func<string, TFromTemplate> fromDeserializer;
-            if (structureSchemaFrom.Type.Type.Equals(structureSchemaFromTemplate.Type.Type))
+            if (structureSchemaFrom.Type.Type == structureSchemaFromTemplate.Type.Type)
                 fromDeserializer = serializer.Deserialize<TFromTemplate>;
             else
                 fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;

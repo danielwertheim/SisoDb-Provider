@@ -64,11 +64,11 @@
 						""
 					],
 					[
-						"AllowUpsertsOfSchemas",
+						"AllowDynamicSchemaCreation",
 						"True"
 					],
 					[
-						"SynchronizeSchemaChanges",
+						"AllowDynamicSchemaUpdates",
 						"True"
 					],
 					[

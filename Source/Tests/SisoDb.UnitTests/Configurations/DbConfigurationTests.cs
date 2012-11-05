@@ -1,6 +1,8 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using SisoDb.Dac;
+using SisoDb.PineCone.Structures;
 using SisoDb.PineCone.Structures.IdGenerators;
 using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.PineCone.Structures.Schemas.Builders;
@@ -18,12 +20,15 @@ namespace SisoDb.UnitTests.Configurations
         public void UseManualStructureIdAssignment_Should_make_ForInserts_to_return_builder_with_EmptyStructureIdGenerator()
         {
             var serializerFake = new Mock<ISisoDbSerializer>();
-            var structureBuilders = new StructureBuilders(() => serializerFake.Object);
+            var structureBuilders = new StructureBuilders(
+                () => serializerFake.Object, 
+                s => Mock.Of<IStructureIdGenerator>(), 
+                (s, d) => Mock.Of<IIdentityStructureIdGenerator>());
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
 
             dbFake.Object.Configure().UseManualStructureIdAssignment();
-            var builder = structureBuilders.ForInserts(Mock.Of<IStructureSchema>(), Mock.Of<IIdentityStructureIdGenerator>());
+            var builder = structureBuilders.ForInserts(Mock.Of<IStructureSchema>(), Mock.Of<IDbClient>());
 
             Assert.AreEqual(typeof(EmptyStructureIdGenerator), builder.StructureIdGenerator.GetType());
         }
@@ -32,12 +37,15 @@ namespace SisoDb.UnitTests.Configurations
         public void UseGuidStructureIdGeneratorResolvedBy_Should_make_ForInserts_to_return_builder_with_configured_id_generator()
         {
             var serializerFake = new Mock<ISisoDbSerializer>();
-            var structureBuilders = new StructureBuilders(() => serializerFake.Object);
+            var structureBuilders = new StructureBuilders(
+                () => serializerFake.Object,
+                s => Mock.Of<IStructureIdGenerator>(),
+                (s, d) => Mock.Of<IIdentityStructureIdGenerator>());
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
 
-            dbFake.Object.Configure().UseGuidStructureIdGeneratorResolvedBy(() => new EmptyStructureIdGenerator());
-            var builder = structureBuilders.ForInserts(StructureSchemaTestFactory.Stub<MyClassWithGuidId>(generateIdAccessor: true), Mock.Of<IIdentityStructureIdGenerator>());
+            dbFake.Object.Configure().UseGuidStructureIdGeneratorResolvedBy(s => new EmptyStructureIdGenerator());
+            var builder = structureBuilders.ForInserts(StructureSchemaTestFactory.Stub<MyClassWithGuidId>(generateIdAccessor: true), Mock.Of<IDbClient>());
 
             Assert.AreEqual(typeof(EmptyStructureIdGenerator), builder.StructureIdGenerator.GetType());
         }
@@ -79,8 +87,8 @@ namespace SisoDb.UnitTests.Configurations
 
             dbFake.Object.Configure().ForProduction();
 
-            settingsFake.VerifySet(f => f.AllowUpsertsOfSchemas = false);
-            settingsFake.VerifySet(f => f.SynchronizeSchemaChanges = false);
+            settingsFake.VerifySet(f => f.AllowDynamicSchemaCreation = false);
+            settingsFake.VerifySet(f => f.AllowDynamicSchemaUpdates = false);
         }
 
         [Test]

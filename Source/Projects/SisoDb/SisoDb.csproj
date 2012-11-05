@@ -93,6 +93,7 @@
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
+    <Compile Include="DbSettingsExtensions.cs" />
     <Compile Include="Diagnostics\Appenders\ConnectionInfoDiagnosticsAppender.cs" />
     <Compile Include="Diagnostics\Appenders\DbSettingsDiagnosticsAppender.cs" />
     <Compile Include="Diagnostics\Appenders\SerializerDiagnosticsAppender.cs" />
@@ -277,7 +278,6 @@
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="SisoDbNotSupportedException.cs" />
-    <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
@@ -332,8 +332,6 @@
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
-    <Compile Include="Structures\StructureBuilderFactoryForInserts.cs" />
-    <Compile Include="Structures\StructureBuilderFactoryForUpdates.cs" />
     <Compile Include="Structures\StructureBuilders.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />

@@ -161,6 +161,6 @@ namespace SisoDb
         /// <param name="predicate"></param>
         /// <param name="modifier"></param>
         /// <remarks>Does not support Concurrency tokens</remarks>
-        void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class;
+        void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class; //TODO: Move
     }
 }
