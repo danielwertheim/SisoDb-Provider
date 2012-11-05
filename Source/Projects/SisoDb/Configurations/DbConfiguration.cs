@@ -1,9 +1,10 @@
 using System;
 using SisoDb.EnsureThat;
 using SisoDb.PineCone.Structures;
+using SisoDb.PineCone.Structures.IdGenerators;
+using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.PineCone.Structures.Schemas.Configuration;
 using SisoDb.Serialization;
-using SisoDb.Structures;
 
 namespace SisoDb.Configurations
 {
@@ -19,12 +20,16 @@ namespace SisoDb.Configurations
 
         public virtual DbConfiguration UseManualStructureIdAssignment()
         {
-            Database.StructureBuilders.ForInserts = (schema, generator) => StructureBuilders.ForPreservingStructureIds(Database.Serializer);
+            Database.StructureBuilders.ForInserts = (schema, generator) => new StructureBuilderPreservingId
+            {
+                StructureIdGenerator = new EmptyStructureIdGenerator(),
+                StructureSerializer = new StructureSerializer(Database.Serializer) //TODO: This could fail if someone changes serializer
+            };
 
             return this;
         }
 
-        public virtual DbConfiguration UseGuidStructureIdGeneratorResolvedBy(Func<IStructureIdGenerator> fn)
+        public virtual DbConfiguration UseGuidStructureIdGeneratorResolvedBy(Func<IStructureSchema, IStructureIdGenerator> fn)
         {
             Database.StructureBuilders.GuidStructureIdGeneratorFn = fn;
 
@@ -47,8 +52,8 @@ namespace SisoDb.Configurations
 
         public virtual DbConfiguration ForProduction()
         {
-            Database.Settings.AllowUpsertsOfSchemas = false;
-            Database.Settings.SynchronizeSchemaChanges = false;
+            Database.Settings.AllowDynamicSchemaCreation = false;
+            Database.Settings.AllowDynamicSchemaUpdates = false;
 
             return this;
         }

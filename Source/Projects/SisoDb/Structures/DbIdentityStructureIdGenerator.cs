@@ -1,3 +1,4 @@
+using SisoDb.Dac;
 using SisoDb.EnsureThat;
 using SisoDb.PineCone.Structures;
 using SisoDb.PineCone.Structures.Schemas;
@@ -6,18 +7,18 @@ namespace SisoDb.Structures
 {
 	public class DbIdentityStructureIdGenerator : IIdentityStructureIdGenerator
 	{
-        private readonly CheckOutAngGetNextIdentity _checkOutAndGetNextIdentity;
+	    protected readonly IDbClient DbClient;
 
-        public DbIdentityStructureIdGenerator(CheckOutAngGetNextIdentity checkOutAndGetNextIdentity)
+        public DbIdentityStructureIdGenerator(IDbClient dbClient)
         {
-            Ensure.That(checkOutAndGetNextIdentity, "checkOutAndGetNextIdentity").IsNotNull();
+            Ensure.That(dbClient, "dbClient").IsNotNull();
             
-            _checkOutAndGetNextIdentity = checkOutAndGetNextIdentity;
+            DbClient = dbClient;
         }
 
-	    public IStructureId Generate(IStructureSchema structureSchema)
+	    public virtual IStructureId Generate(IStructureSchema structureSchema)
     	{
-    		var nextId = _checkOutAndGetNextIdentity(structureSchema, 1);
+    		var nextId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, 1);
 
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.Identity)
                 return StructureId.Create((int)nextId);
@@ -25,7 +26,7 @@ namespace SisoDb.Structures
             return StructureId.Create(nextId);
         }
 
-        public IStructureId[] Generate(IStructureSchema structureSchema, int numOfIds)
+        public virtual IStructureId[] Generate(IStructureSchema structureSchema, int numOfIds)
         {
             if (structureSchema.IdAccessor.IdType == StructureIdTypes.Identity)
                 return GenerateIdentityStructureId(structureSchema, numOfIds);
@@ -33,10 +34,10 @@ namespace SisoDb.Structures
             return GenerateBigIdentityStructureId(structureSchema, numOfIds);
         }
 
-        private IStructureId[] GenerateIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
+	    protected virtual IStructureId[] GenerateIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
             var structureIds = new IStructureId[numOfIds];
-        	var startId = (int) _checkOutAndGetNextIdentity(structureSchema, numOfIds);
+        	var startId = (int) DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
 
             for (var c = 0; c < numOfIds; c++)
                 structureIds[c] = StructureId.Create(startId++);
@@ -44,10 +45,10 @@ namespace SisoDb.Structures
             return structureIds;
         }
 
-        private IStructureId[] GenerateBigIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
+	    protected virtual IStructureId[] GenerateBigIdentityStructureId(IStructureSchema structureSchema, int numOfIds)
         {
             var structureIds = new IStructureId[numOfIds];
-			var startId = _checkOutAndGetNextIdentity(structureSchema, numOfIds);
+			var startId = DbClient.CheckOutAndGetNextIdentity(structureSchema.Name, numOfIds);
 
             for (var c = 0; c < numOfIds; c++)
                 structureIds[c] = StructureId.Create(startId++);

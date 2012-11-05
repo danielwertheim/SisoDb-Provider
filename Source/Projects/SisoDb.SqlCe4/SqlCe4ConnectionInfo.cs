@@ -24,48 +24,38 @@ namespace SisoDb.SqlCe4
         }
 
         public SqlCe4ConnectionInfo(string connectionStringOrName)
-            : this(ConnectionString.Get(connectionStringOrName))
-        { }
-
-        public SqlCe4ConnectionInfo(IConnectionString connectionString)
-            : base(StorageProviders.SqlCe4, connectionString)
+            : base(StorageProviders.SqlCe4, connectionStringOrName)
         {
             _filePath = ExtractFilePath(ClientConnectionString);
             _serverPath = Path.GetDirectoryName(FilePath);
-
-            if (string.IsNullOrWhiteSpace(DbName))
-                throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
         }
 
-        protected override IConnectionString OnFormatConnectionString(IConnectionString connectionString)
+        protected override string OnFormatClientConnectionString(string connectionString)
         {
-            var cnString = base.OnFormatConnectionString(connectionString);
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString) { Enlist = false };
+            var cnString = base.OnFormatClientConnectionString(connectionString);
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString) { Enlist = false };
 
-            return connectionString.ReplacePlain(cnStringBuilder.ConnectionString);
+            return cnStringBuilder.ConnectionString;
         }
 
-        protected override IConnectionString OnFormatServerConnectionString(IConnectionString connectionString)
+        protected override string OnFormatServerConnectionString(string connectionString)
         {
             var cnString = base.OnFormatServerConnectionString(connectionString);
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString.PlainString);
-            cnStringBuilder.Enlist = false;
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString) { Enlist = false };
 
-            return cnString.ReplacePlain(cnStringBuilder.ConnectionString);
+            return cnStringBuilder.ConnectionString;
         }
 
-        protected override string OnExtractDbName(IConnectionString connectionString)
+        protected override string OnExtractDbName(string connectionString)
         {
             var filePath = ExtractFilePath(ClientConnectionString);
 
-            return filePath.Contains(Path.DirectorySeparatorChar.ToString())
-                ? Path.GetFileNameWithoutExtension(filePath)
-                : filePath;
+            return Path.GetFileNameWithoutExtension(filePath);
         }
 
-        private static string ExtractFilePath(IConnectionString connectionString)
+        protected string ExtractFilePath(string connectionString)
         {
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString.PlainString);
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString);
 
             var filePath = cnStringBuilder.DataSource;
 

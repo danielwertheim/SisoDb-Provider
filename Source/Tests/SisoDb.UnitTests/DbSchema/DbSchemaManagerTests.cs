@@ -22,26 +22,87 @@ namespace SisoDb.UnitTests.DbSchema
         [Test]
         public void UpsertStructureSet_WhenNeverCalled_UpserterIsCalledOnce()
         {
+            var settings = new Mock<IDbSettings>();
+            settings.SetupGet(f => f.AllowDynamicSchemaCreation).Returns(true);
+            settings.SetupGet(f => f.AllowDynamicSchemaUpdates).Returns(true);
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
             var upserterFake = new Mock<IDbSchemaUpserter>();
 			var dbClientFake = new Mock<IDbClient>();
 
-            var manager = new DbSchemaManager(upserterFake.Object);
+            var manager = new DbSchemaManager(dbFake.Object, upserterFake.Object);
             manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 
-            upserterFake.Verify(f => f.Upsert(_structureSchema, It.IsAny<Func<IDbClient>>()), Times.Once());
+            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object, true, true), Times.Once());
         }
 
         [Test]
         public void UpsertStructureSet_WhenCalledTwice_UpserterIsCalledOnceNotTwice()
         {
+            var settings = new Mock<IDbSettings>();
+            settings.SetupGet(f => f.AllowDynamicSchemaCreation).Returns(true);
+            settings.SetupGet(f => f.AllowDynamicSchemaUpdates).Returns(true);
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
             var upserterFake = new Mock<IDbSchemaUpserter>();
 			var dbClientFake = new Mock<IDbClient>();
 
-            var manager = new DbSchemaManager(upserterFake.Object);
+            var manager = new DbSchemaManager(dbFake.Object, upserterFake.Object);
             manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 			manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
 
-            upserterFake.Verify(f => f.Upsert(_structureSchema, It.IsAny<Func<IDbClient>>()), Times.Once());
+            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object, true, true), Times.Once());
+        }
+
+        [Test]
+        public void UpsertStructureSet_WhenDbSettingsDoesNotAllowAnyChanges_UpserterIsNeverCalled()
+        {
+            var settings = new Mock<IDbSettings>();
+            settings.SetupGet(f => f.AllowDynamicSchemaCreation).Returns(false);
+            settings.SetupGet(f => f.AllowDynamicSchemaUpdates).Returns(false);
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
+            var upserterFake = new Mock<IDbSchemaUpserter>();
+            var dbClientFake = new Mock<IDbClient>();
+
+            var manager = new DbSchemaManager(dbFake.Object, upserterFake.Object);
+            manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
+
+            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object, false, false), Times.Never());
+        }
+
+        [Test]
+        public void UpsertStructureSet_WhenDbSettingsAllowsCreationButNotUpdate_UpserterIsCalledOnce()
+        {
+            var settings = new Mock<IDbSettings>();
+            settings.SetupGet(f => f.AllowDynamicSchemaCreation).Returns(true);
+            settings.SetupGet(f => f.AllowDynamicSchemaUpdates).Returns(false);
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
+            var upserterFake = new Mock<IDbSchemaUpserter>();
+            var dbClientFake = new Mock<IDbClient>();
+
+            var manager = new DbSchemaManager(dbFake.Object, upserterFake.Object);
+            manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
+
+            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object, true, false), Times.Once());
+        }
+
+        [Test]
+        public void UpsertStructureSet_WhenDbSettingsAllowsUpdateButNotCreation_UpserterIsCalledOnce()
+        {
+            var settings = new Mock<IDbSettings>();
+            settings.SetupGet(f => f.AllowDynamicSchemaCreation).Returns(false);
+            settings.SetupGet(f => f.AllowDynamicSchemaUpdates).Returns(true);
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
+            var upserterFake = new Mock<IDbSchemaUpserter>();
+            var dbClientFake = new Mock<IDbClient>();
+
+            var manager = new DbSchemaManager(dbFake.Object, upserterFake.Object);
+            manager.UpsertStructureSet(_structureSchema, dbClientFake.Object);
+
+            upserterFake.Verify(f => f.Upsert(_structureSchema, dbClientFake.Object, false, true), Times.Once());
         }
 
         [Test]
@@ -50,7 +111,7 @@ namespace SisoDb.UnitTests.DbSchema
 			var upserterFake = new Mock<IDbSchemaUpserter>();
             var dbClientFake = new Mock<IDbClient>();
 
-            var manager = new DbSchemaManager(upserterFake.Object);
+            var manager = new DbSchemaManager(Mock.Of<ISisoDatabase>(), upserterFake.Object);
             manager.DropStructureSet(_structureSchema, dbClientFake.Object);
             manager.DropStructureSet(_structureSchema, dbClientFake.Object);
 

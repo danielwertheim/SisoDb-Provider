@@ -33,8 +33,8 @@ namespace SisoDb.SampleApp
             //db.EnsureNewDatabase();
             
             //Some tweaks
-            //db.Settings.AllowUpsertsOfSchemas = false;
-            //db.Settings.SynchronizeSchemaChanges = false;
+            //db.Settings.AllowDynamicSchemaCreation = false;
+            //db.Settings.AllowDynamicSchemaUpdates = false;
 
             //To get rid of warm up in tests as it first syncs schemas etc
             //db.UpsertStructureSet<Customer>();

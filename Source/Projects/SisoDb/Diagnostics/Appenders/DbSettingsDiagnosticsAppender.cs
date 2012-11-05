@@ -12,8 +12,8 @@ namespace SisoDb.Diagnostics.Appenders
         public void Append(IDbSettings settings)
         {
             Info.AddGroup("Settings")
-                .AddNode("AllowUpsertsOfSchemas", settings.AllowUpsertsOfSchemas)
-                .AddNode("SynchronizeSchemaChanges", settings.SynchronizeSchemaChanges)
+                .AddNode("AllowDynamicSchemaCreation", settings.AllowDynamicSchemaCreation)
+                .AddNode("AllowDynamicSchemaUpdates", settings.AllowDynamicSchemaUpdates)
                 .AddNode("MaxInsertManyBatchSize", settings.MaxInsertManyBatchSize)
                 .AddNode("MaxUpdateManyBatchSize", settings.MaxUpdateManyBatchSize);
         }

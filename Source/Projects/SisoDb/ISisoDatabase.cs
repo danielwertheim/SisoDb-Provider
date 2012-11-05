@@ -126,20 +126,25 @@ namespace SisoDb
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
-        /// the structure type will be created.
+        /// the structure type <typeparamref name="T"/> will be created.
         /// </summary>
-        /// <remarks>
-        /// This is normally something you do not need to do.
-        /// This is done automatically.</remarks>
         /// <typeparam name="T"></typeparam>
         ISisoDatabase UpsertStructureSet<T>() where T : class;
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
-        /// the structure type will be created.
+        /// the structure type <see cref="type"/> will be created.
         /// </summary>
         /// <param name="type"></param>
         ISisoDatabase UpsertStructureSet(Type type);
+
+        /// <summary>
+        /// Manually upserts structre sets, meaning all tables for
+        /// sent stucture types <see cref="types"/> will be created.
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        ISisoDatabase UpsertStructureSet(Type[] types);
 
         /// <summary>
 		/// Creates an <see cref="ISession"/>, used for inserts, updates, deletes and searching.

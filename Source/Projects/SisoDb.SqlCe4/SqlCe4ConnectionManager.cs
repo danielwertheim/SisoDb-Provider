@@ -80,7 +80,7 @@ namespace SisoDb.SqlCe4
             if(_warmupConnections.ContainsKey(connectionInfo.FilePath))
                 return;
 
-            var cn = new SqlCeConnection(connectionInfo.ServerConnectionString.PlainString);
+            var cn = new SqlCeConnection(connectionInfo.ServerConnectionString);
             if(!_warmupConnections.TryAdd(connectionInfo.FilePath, cn))
             {
                 cn.Close();
