@@ -67,7 +67,6 @@ namespace SisoDb.Querying.Sql
                 return;
             }
 
-            //TODO: Perhaps AddMemberAsValue
             if (!HasWrittenValue) //When using member as value, eg. Where Name = SecondName
             {
                 State = State.Replace(ValueMarker, memberPart);

@@ -76,7 +76,7 @@ namespace SisoDb.Querying.Lambdas.Parsers
 
         protected virtual IParsedLambda CreateParsedLambda()
         {
-            //PERF: This ugly processing of nodes for boht transformers in one loop is for performance. Perhaps move bach to older cleaner solution
+            //PERF: This ugly processing of nodes for both transformers in one loop is for performance. Perhaps move bach to older cleaner solution
             var nullableNodeTransformer = new NullableNodeTransformer();
             var boolNodeTransformer = new BoolNodeTransformer();
 

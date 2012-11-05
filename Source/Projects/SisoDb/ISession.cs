@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb
@@ -332,6 +333,15 @@ namespace SisoDb
         ISession Update<TContract, TImpl>(object id, Action<TImpl> modifier, Func<TImpl, bool> proceed = null)
             where TContract : class
             where TImpl : class;
+
+        /// <summary>
+        /// Traverses every structure in the set and lets you apply changes to each yielded structure.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="modifier"></param>
+        /// <remarks>Does not support Concurrency tokens</remarks>
+        void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class;
 
         /// <summary>
         /// Clears all stored structures of type <typeparamref name="T"/>.
