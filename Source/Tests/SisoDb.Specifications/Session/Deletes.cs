@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Machine.Specifications;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 using SisoDb.Testing.TestModel;

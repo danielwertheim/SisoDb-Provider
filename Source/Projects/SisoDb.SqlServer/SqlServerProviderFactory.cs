@@ -4,13 +4,12 @@ using System.Threading;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.IdGenerators;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
+using SisoDb.Structures.IdGenerators;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.SqlServer
 {

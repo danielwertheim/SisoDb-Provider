@@ -1,8 +1,8 @@
 using System;
 using NUnit.Framework;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.UnitTests.DbSchema
 {

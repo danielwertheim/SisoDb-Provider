@@ -3,7 +3,7 @@ using System.Linq;
 using Machine.Specifications;
 using SisoDb.DbSchema;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 

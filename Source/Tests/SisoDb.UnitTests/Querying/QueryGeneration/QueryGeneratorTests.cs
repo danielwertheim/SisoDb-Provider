@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;
+using SisoDb.Structures.Schemas;
 using SisoDb.UnitTests.TestFactories;
 
 namespace SisoDb.UnitTests.Querying.QueryGeneration

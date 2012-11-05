@@ -1,6 +1,4 @@
-﻿using SisoDb.PineCone.Structures;
-
-namespace SisoDb.Structures
+﻿namespace SisoDb.Structures
 {
     public static class DataTypeCodeExtensions
     {

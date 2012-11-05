@@ -5,9 +5,9 @@ using SisoDb.Caching;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Resources;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Maintenance
 {

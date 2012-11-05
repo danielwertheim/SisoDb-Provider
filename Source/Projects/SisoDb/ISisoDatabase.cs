@@ -1,8 +1,8 @@
 using System;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Serialization;
 using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {

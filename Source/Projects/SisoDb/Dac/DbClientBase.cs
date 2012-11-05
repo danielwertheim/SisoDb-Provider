@@ -6,9 +6,9 @@ using System.Text;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Sql;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Dac
 {

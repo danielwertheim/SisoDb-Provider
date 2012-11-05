@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {

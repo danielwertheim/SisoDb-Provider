@@ -2,8 +2,8 @@
 using System.Linq;
 using Machine.Specifications;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Configuration;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Configuration;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 

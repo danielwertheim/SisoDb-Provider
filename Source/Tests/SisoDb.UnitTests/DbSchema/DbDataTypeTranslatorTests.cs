@@ -3,9 +3,9 @@ using Moq;
 using NUnit.Framework;
 using SisoDb.DbSchema;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.MemberAccessors;
 using SisoDb.Resources;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.UnitTests.DbSchema
 {

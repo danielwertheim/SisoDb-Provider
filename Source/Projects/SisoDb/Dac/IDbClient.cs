@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Sql;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Dac
 {

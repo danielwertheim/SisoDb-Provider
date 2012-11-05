@@ -2,10 +2,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Resources;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 {

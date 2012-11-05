@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Expressions;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Resources;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {

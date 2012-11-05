@@ -2,10 +2,10 @@
 using System.Data;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.SqlServer;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.SqlCe4
 {

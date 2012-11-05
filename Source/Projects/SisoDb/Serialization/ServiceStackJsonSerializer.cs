@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures.Schemas.Configuration;
+using SisoDb.Structures.Schemas.Configuration;
 
 namespace SisoDb.Serialization
 {

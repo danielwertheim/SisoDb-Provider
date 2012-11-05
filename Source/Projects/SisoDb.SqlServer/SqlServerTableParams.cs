@@ -7,8 +7,8 @@ using Microsoft.SqlServer.Server;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Reflections;
-using SisoDb.PineCone.Structures;
 using SisoDb.Resources;
+using SisoDb.Structures;
 
 namespace SisoDb.SqlServer
 {

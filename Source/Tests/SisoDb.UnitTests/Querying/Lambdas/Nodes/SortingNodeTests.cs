@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.UnitTests.Querying.Lambdas.Nodes
 {

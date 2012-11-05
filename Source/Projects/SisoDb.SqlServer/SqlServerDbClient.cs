@@ -5,8 +5,8 @@ using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Collections;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.SqlServer
 {

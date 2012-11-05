@@ -2,12 +2,10 @@ using System;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
-using SisoDb.PineCone.Serializers;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.IdGenerators;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Resources;
 using SisoDb.Serialization;
+using SisoDb.Structures.IdGenerators;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures
 {

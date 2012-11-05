@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using SisoDb.Dac;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Testing
 {

@@ -4,12 +4,11 @@ using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.Maintenance;
-using SisoDb.PineCone.Structures.IdGenerators;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.Caching;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
 
 namespace SisoDb
 {
