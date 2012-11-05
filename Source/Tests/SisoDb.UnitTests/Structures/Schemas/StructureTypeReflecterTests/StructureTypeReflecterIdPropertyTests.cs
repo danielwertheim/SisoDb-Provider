@@ -139,7 +139,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenGuidIdExists_IdMemberIsReturned()
         {
-            var property = ReflecterFor().GetIndexableProperties(typeof(WithGuidId), false)
+            var property = ReflecterFor().GetIndexableProperties(typeof(WithGuidId))
                 .SingleOrDefault(p => p.Path == "StructureId");
 
             Assert.IsNotNull(property);
@@ -148,7 +148,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenIntIdExists_IdMemberIsReturned()
         {
-            var property = ReflecterFor().GetIndexableProperties(typeof(WithIntId), false)
+            var property = ReflecterFor().GetIndexableProperties(typeof(WithIntId))
                 .SingleOrDefault(p => p.Path == "StructureId");
 
             Assert.IsNotNull(property);
@@ -157,7 +157,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenLongIdExists_IdMemberIsReturned()
         {
-            var property = ReflecterFor().GetIndexableProperties(typeof(WithLongId), false)
+            var property = ReflecterFor().GetIndexableProperties(typeof(WithLongId))
                 .SingleOrDefault(p => p.Path == "StructureId");
 
             Assert.IsNotNull(property);
@@ -166,7 +166,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenNulledNullableGuidIdExists_IdMemberIsReturned()
         {
-            var property = ReflecterFor().GetIndexableProperties(typeof(WithNullableGuidId), false)
+            var property = ReflecterFor().GetIndexableProperties(typeof(WithNullableGuidId))
                 .SingleOrDefault(p => p.Path == "StructureId");
 
             Assert.IsNotNull(property);
@@ -175,7 +175,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenNullableIntExists_IdMemberIsReturned()
         {
-            var property = ReflecterFor().GetIndexableProperties(typeof(WithNullableIntId), false)
+            var property = ReflecterFor().GetIndexableProperties(typeof(WithNullableIntId))
                 .SingleOrDefault(p => p.Path == "StructureId");
 
             Assert.IsNotNull(property);
@@ -184,7 +184,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenNullableLongExists_IdMemberIsReturned()
         {
-            var property = ReflecterFor().GetIndexableProperties(typeof(WithNullableLongId), false)
+            var property = ReflecterFor().GetIndexableProperties(typeof(WithNullableLongId))
                 .SingleOrDefault(p => p.Path == "StructureId");
 
             Assert.IsNotNull(property);

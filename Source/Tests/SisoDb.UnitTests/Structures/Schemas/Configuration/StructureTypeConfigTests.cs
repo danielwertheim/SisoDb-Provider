@@ -50,14 +50,6 @@ namespace SisoDb.UnitTests.Structures.Schemas.Configuration
             Assert.IsFalse(config.IndexConfigIsEmpty);
         }
 
-        [Test]
-        public void IncludeContainedStructureMembers_WhenDefault_Ctor_IsFalse()
-        {
-            var config = new StructureTypeConfig(typeof(Dummy));
-
-            Assert.IsFalse(config.IncludeContainedStructureMembers);
-        }
-
         private class Dummy {}
     }
 }

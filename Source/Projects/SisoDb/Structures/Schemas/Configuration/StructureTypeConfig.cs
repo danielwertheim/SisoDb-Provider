@@ -15,7 +15,6 @@ namespace SisoDb.Structures.Schemas.Configuration
         {
             get { return MemberPathsBeingIndexed.Count < 1 && MemberPathsNotBeingIndexed.Count < 1; }
         }
-        public bool IncludeContainedStructureMembers { get; set; }
         public ISet<string> MemberPathsBeingIndexed
         {
             get { return _memberPathsBeingIndexed; }
@@ -33,7 +32,6 @@ namespace SisoDb.Structures.Schemas.Configuration
 
             _memberPathsBeingIndexed = new HashSet<string>();
             _memberPathsNotBeingIndexed = new HashSet<string>();
-            IncludeContainedStructureMembers = false;
         }
     }
 }

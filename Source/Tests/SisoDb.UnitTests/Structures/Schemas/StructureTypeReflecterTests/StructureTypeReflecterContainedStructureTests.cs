@@ -26,15 +26,17 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_When_contained_structure_Contained_members_are_not_extracted()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithContainedStructure), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithContainedStructure));
 
-            Assert.IsFalse(properties.Any());
+            Assert.AreEqual(2, properties.Length);
+            Assert.AreEqual(1, properties.Count(p => p.Path == "Contained.StructureId"));
+            Assert.AreEqual(1, properties.Count(p => p.Path == "Contained.NestedValue"));
         }
 
         [Test]
         public void GetIndexableProperties_When_contained_structure_and_contained_structures_are_allowed_Contained_members_are_extracted()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithContainedStructure), true);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithContainedStructure));
 
             Assert.AreEqual(2, properties.Count());
             Assert.IsNotNull(properties.SingleOrDefault(p => p.Path == "Contained.StructureId"));

@@ -7,7 +7,6 @@ namespace SisoDb.Structures.Schemas.Configuration
     {
         IStructureTypeConfig Config { get; }
 
-        IStructureTypeConfigurator AllowNestedStructures();
         IStructureTypeConfigurator OnlyIndexThis(params string[] memberPaths);
         IStructureTypeConfigurator DoNotIndexThis(params string[] memberPaths);
     }
@@ -16,7 +15,6 @@ namespace SisoDb.Structures.Schemas.Configuration
     {
         IStructureTypeConfig Config { get; }
 
-        IStructureTypeConfigurator<T> AllowNestedStructures();
         IStructureTypeConfigurator<T> OnlyIndexThis(params string[] memberPaths);
         IStructureTypeConfigurator<T> OnlyIndexThis(params Expression<Func<T, object>>[] members);
         IStructureTypeConfigurator<T> DoNotIndexThis(params string[] memberPaths);

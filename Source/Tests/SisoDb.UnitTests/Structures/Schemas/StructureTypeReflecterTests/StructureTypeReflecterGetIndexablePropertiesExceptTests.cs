@@ -10,7 +10,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexablePropertiesExcept_WhenCalledWithNullExlcudes_ThrowsArgumentException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), false, null));
+            var ex = Assert.Throws<ArgumentException>(() => ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), null));
 
             Assert.AreEqual("nonIndexablePaths", ex.ParamName);
         }
@@ -18,7 +18,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexablePropertiesExcept_WhenCalledWithNoExlcudes_ThrowsArgumentNullException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), false, new string[] { }));
+            var ex = Assert.Throws<ArgumentException>(() => ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), new string[] { }));
 
             Assert.AreEqual("nonIndexablePaths", ex.ParamName);
         }
@@ -26,7 +26,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexablePropertiesExcept_WhenExcludingStructureId_PropertyIsNotReturned()
         {
-            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), false, new[] { "StructureId" });
+            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), new[] { "StructureId" });
 
             Assert.IsNull(properties.SingleOrDefault(p => p.Path == "StructureId"));
         }
@@ -34,7 +34,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexablePropertiesExcept_WhenBytesArrayExists_PropertyIsNotReturned()
         {
-            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), false, new[] { "" });
+            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), new[] { "" });
 
             Assert.IsNull(properties.SingleOrDefault(p => p.Path == "Bytes1"));
         }
@@ -42,7 +42,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexablePropertiesExcept_WhenExcludingAllProperties_NoPropertiesAreReturned()
         {
-            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), false, new[] { "StructureId", "Bool1", "DateTime1", "String1", "Nested", "Nested.Int1OnNested", "Nested.String1OnNested" });
+            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), new[] { "StructureId", "Bool1", "DateTime1", "String1", "Nested", "Nested.Int1OnNested", "Nested.String1OnNested" });
 
             Assert.AreEqual(0, properties.Count());
         }
@@ -50,7 +50,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexablePropertiesExcept_WhenExcludingComplexNested_NoNestedPropertiesAreReturned()
         {
-            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), false, new[] { "Nested" });
+            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), new[] { "Nested" });
 
             Assert.AreEqual(0, properties.Count(p => p.Path.StartsWith("Nested")));
         }
@@ -58,7 +58,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexablePropertiesExcept_WhenExcludingNestedSimple_OtherSimpleNestedPropertiesAreReturned()
         {
-            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), false, new[] { "Nested.String1OnNested" });
+            var properties = ReflecterFor().GetIndexablePropertiesExcept(typeof(WithStructureId), new[] { "Nested.String1OnNested" });
 
             Assert.AreEqual(1, properties.Count(p => p.Path.StartsWith("Nested")));
             Assert.AreEqual(1, properties.Count(p => p.Path == "Nested.Int1OnNested"));

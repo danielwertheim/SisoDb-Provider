@@ -22,13 +22,6 @@ namespace SisoDb.Structures.Schemas.Configuration
             _config = config;
         }
 
-        public virtual IStructureTypeConfigurator AllowNestedStructures()
-        {
-            Config.IncludeContainedStructureMembers = true;
-
-            return this;
-        }
-
         public virtual IStructureTypeConfigurator OnlyIndexThis(params string[] memberPaths)
         {
             Config.MemberPathsNotBeingIndexed.Clear();
@@ -62,13 +55,6 @@ namespace SisoDb.Structures.Schemas.Configuration
         public StructureTypeConfigurator(IStructureTypeConfig config)
         {
             InternalConfigurator = new StructureTypeConfigurator(config);
-        }
-
-        public virtual IStructureTypeConfigurator<T> AllowNestedStructures()
-        {
-            Config.IncludeContainedStructureMembers = true;
-
-            return this;
         }
 
         public virtual IStructureTypeConfigurator<T> OnlyIndexThis(params string[] memberPaths)

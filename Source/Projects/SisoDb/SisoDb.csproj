@@ -319,7 +319,6 @@
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
-    <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
     <Compile Include="SisoDatabase.cs" />
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />

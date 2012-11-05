@@ -31,11 +31,6 @@ namespace SisoDb.Serialization
             JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
             JsConfig.IncludeNullValues = false;
-            
-            if(StructureTypeConfigResolver(typeof(T)).IncludeContainedStructureMembers)
-                return;
-            
-            ServiceStackTypeConfig<T>.ExcludeReferencedStructuresFor(itemType);
         }
 
         protected virtual void OnConfigForDeserialization()

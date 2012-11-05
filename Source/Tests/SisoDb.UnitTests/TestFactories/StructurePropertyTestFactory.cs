@@ -13,7 +13,7 @@ namespace SisoDb.UnitTests.TestFactories
 
         internal static IStructureProperty GetPropertyByPath(Type structureType, string path)
         {
-            return ReflecterFor().GetIndexableProperties(structureType, false).Single(i => i.Path == path);
+            return ReflecterFor().GetIndexableProperties(structureType).Single(i => i.Path == path);
         }
 
         private static IStructureTypeReflecter ReflecterFor()

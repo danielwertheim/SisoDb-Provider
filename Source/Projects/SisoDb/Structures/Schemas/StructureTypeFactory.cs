@@ -32,7 +32,7 @@ namespace SisoDb.Structures.Schemas
                     reflecter.GetIdProperty(structureType),
                     reflecter.GetConcurrencyTokenProperty(structureType),
                     reflecter.GetTimeStampProperty(structureType),
-                    reflecter.GetIndexableProperties(structureType, config.IncludeContainedStructureMembers),
+                    reflecter.GetIndexableProperties(structureType),
                     reflecter.GetContainedStructureProperties(structureType));
 
             var shouldIndexAllMembersExcept = config.MemberPathsNotBeingIndexed.Count > 0;
@@ -42,8 +42,8 @@ namespace SisoDb.Structures.Schemas
                 reflecter.GetConcurrencyTokenProperty(structureType),
                 reflecter.GetTimeStampProperty(structureType),
                 (shouldIndexAllMembersExcept
-                    ? reflecter.GetIndexablePropertiesExcept(structureType, config.IncludeContainedStructureMembers, config.MemberPathsNotBeingIndexed)
-                    : reflecter.GetSpecificIndexableProperties(structureType, config.IncludeContainedStructureMembers, config.MemberPathsBeingIndexed)),
+                    ? reflecter.GetIndexablePropertiesExcept(structureType, config.MemberPathsNotBeingIndexed)
+                    : reflecter.GetSpecificIndexableProperties(structureType, config.MemberPathsBeingIndexed)),
                 reflecter.GetContainedStructureProperties(structureType));
         }
     }
