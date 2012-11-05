@@ -3,9 +3,6 @@
 #if DEBUG
 [assembly: AssemblyProduct("SisoDb (Debug)")]
 [assembly: AssemblyConfiguration("Debug")]
-#elif SIGNED
-[assembly: AssemblyProduct("SisoDb (Signed)")]
-[assembly: AssemblyConfiguration("Signed")]
 #else
 [assembly: AssemblyProduct("SisoDb (Release)")]
 [assembly: AssemblyConfiguration("Release")]

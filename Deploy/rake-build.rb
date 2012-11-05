@@ -61,8 +61,6 @@ sharedAssemblyInfoPath = "#{@env_solutionfolderpath}/SharedAssemblyInfo.cs"
 task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
 task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
-
-task :local_signed => [:installNuGets, :cleanIt, :versionIt, :signIt, :buildItSigned, :copyIt, :zipIt]
 #--------------------------------------
 task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler]
 
@@ -92,20 +90,8 @@ assemblyinfo :versionIt do |asm|
     asm.file_version = @env_buildversion
 end
 
-assemblyinfo :signIt do |asm|
-	asm.input_file = sharedAssemblyInfoPath
-	asm.output_file = sharedAssemblyInfoPath
-	asm.custom_attributes :AssemblyKeyFileAttribute => "..\\..\\#{@env_projectnameCore}.snk"
-end
-
 msbuild :buildIt do |msb|
     msb.properties :configuration => @env_buildconfigname
-    msb.targets :Clean, :Build
-    msb.solution = "#{@env_solutionfolderpath}/#{@env_solutionname}.sln"
-end
-
-msbuild :buildItSigned do |msb|
-    msb.properties :configuration => @env_buildconfigname, :DefineConstants => "SIGNED"
     msb.targets :Clean, :Build
     msb.solution = "#{@env_solutionfolderpath}/#{@env_solutionname}.sln"
 end
