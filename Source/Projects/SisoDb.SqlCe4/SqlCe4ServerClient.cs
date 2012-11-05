@@ -30,7 +30,7 @@ namespace SisoDb.SqlCe4
 
             ConnectionManager.ReleaseAllConnections();
 
-            using (var engine = new SqlCeEngine(_connectionInfo.ClientConnectionString.PlainString))
+            using (var engine = new SqlCeEngine(_connectionInfo.ClientConnectionString))
             {
                 engine.CreateDatabase();
             }

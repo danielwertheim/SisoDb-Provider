@@ -21,7 +21,7 @@
 				},
 				{
 					"Name": "ClientConnectionString",
-					"Value": "data source=.;initial catalog=foo;integrated security=true;"
+					"Value": "Data Source=.;Initial Catalog=foo;Integrated Security=True"
 				},
 				{
 					"Name": "ServerConnectionString",

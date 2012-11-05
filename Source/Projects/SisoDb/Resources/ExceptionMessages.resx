@@ -214,23 +214,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="WhereParser_QxEnumerables_OperatorNotSupported" xml:space="preserve">
     <value>The operator '{0}' is not supported for Qx-methods on enumerables.</value>
   </data>
-  <data name="ConnectionString_MissingParts" xml:space="preserve">
-    <value>The connectionstring should have exactly two parts ('{0}' and '{1}'). Example: '{2}'.</value>
-  </data>
-  <data name="ConnectionString_MissingPlainPart" xml:space="preserve">
-    <value>The connectionstring is missing the Plain-part, indicated by '{0}'. Example: '{1}'.</value>
-  </data>
-  <data name="ConnectionString_MissingProviderKey" xml:space="preserve">
-    <value>The SisoDb-part is missing required key: 'provider'.</value>
-  </data>
-  <data name="ConnectionString_MissingSisoDbPart" xml:space="preserve">
-    <value>The connectionstring is missing the SisoDb-part, indicated by '{0}'. Example: '{1}'.</value>
-  </data>
   <data name="StructureSetMigrator_MissmatchInIdTypes" xml:space="preserve">
     <value>Can not migrate structure set when Id type has changed.</value>
-  </data>
-  <data name="ConnectionInfo_UnsupportedProviderSpecified" xml:space="preserve">
-    <value>Storageprovider '{0}' is unsupported. The storageprovider should be: '{1}'.</value>
   </data>
   <data name="ConnectionInfo_MissingName" xml:space="preserve">
     <value>The name of the database could not be extracted from the connection-info.</value>
@@ -264,12 +249,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="ConcurrencyTokenIsOfWrongType" xml:space="preserve">
     <value>The ConcurrencyToken member should be either: Guid, Int or Long.</value>
-  </data>
-  <data name="ConnectionInfo_BackgroundIndexingNotSupported" xml:space="preserve">
-    <value>Background indexing is not yet supported by provider '{0}'.</value>
-  </data>
-  <data name="ConnectionString_ShouldBePureIfNoPartsDividerExists" xml:space="preserve">
-    <value>The connection string has no parts divider '{0}' and if that is missing, the SisoDb-marker '{1}' and Plain-marker '{2} is not supported.</value>
   </data>
   <data name="SqlCe4ConnectionManager_ReleaseAllDbConnections" xml:space="preserve">
     <value>Exceptions occured while releasing SqlCe4Connections from the pool.</value>
@@ -312,5 +291,14 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="DbQueryGenerator_OnlyWhereExpressionsAreAllowed" xml:space="preserve">
     <value>The query should only return StructureIds which alows onle WHERE expressions. Take, Paging and Sorting etc is not allowed.</value>
+  </data>
+  <data name="ConnectionInfo_CouldNotFormatDbConnectionString" xml:space="preserve">
+    <value>Could not parse sent connection string. If connection string name is passed. Ensure it has match in config-file. Inspect inner exception for more details.</value>
+  </data>
+  <data name="ConnectionInfo_CouldNotFormatServerConnectionString" xml:space="preserve">
+    <value>Could not parse sent server connection string. If connection string name is passed. Ensure it has match in config-file. Inspect inner exception for more details.</value>
+  </data>
+  <data name="ConnectionInfo_CouldNotLocateConnectionString" xml:space="preserve">
+    <value>Could not locate a connection string. If connection string name is passed. Ensure it has match in config-file.</value>
   </data>
 </root>

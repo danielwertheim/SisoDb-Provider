@@ -8,6 +8,10 @@ using SisoDb.Querying.Sql;
 
 namespace SisoDb.Dac
 {
+    /// <summary>
+    /// Defines operations that Siso needs to perform on a db-level. For server-level
+    /// operations, see <see cref="IServerClient"/>.
+    /// </summary>
     public interface IDbClient : IDisposable
     {
         IAdoDriver Driver { get; }

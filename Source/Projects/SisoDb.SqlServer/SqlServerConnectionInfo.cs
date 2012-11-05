@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Data.SqlClient;
-using SisoDb.Resources;
 
 namespace SisoDb.SqlServer
 {
     [Serializable]
     public abstract class SqlServerConnectionInfo : SisoConnectionInfo
     {
-        protected SqlServerConnectionInfo(StorageProviders providerType, IConnectionString connectionString)
-            : base(providerType, connectionString)
+        protected SqlServerConnectionInfo(StorageProviders providerType, string connectionStringOrName)
+            : base(providerType, connectionStringOrName)
         {
-            if (string.IsNullOrWhiteSpace(DbName))
-                throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
         }
 
-        protected override IConnectionString OnFormatServerConnectionString(IConnectionString connectionString)
+        protected override string OnFormatClientConnectionString(string connectionString)
         {
-            var cnString = base.OnFormatServerConnectionString(connectionString);
-            var cnStringBuilder = new SqlConnectionStringBuilder(cnString.PlainString) { InitialCatalog = string.Empty };
-
-            return cnString.ReplacePlain(cnStringBuilder.ConnectionString);
+            connectionString = base.OnFormatClientConnectionString(connectionString);
+            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString);
+            return cnStringBuilder.ConnectionString;
         }
 
-        protected override string OnExtractDbName(IConnectionString connectionString)
+        protected override string OnFormatServerConnectionString(string connectionString)
         {
-            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString.PlainString);
+            connectionString = base.OnFormatServerConnectionString(connectionString);
+            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = string.Empty };
+            return cnStringBuilder.ConnectionString;
+        }
+
+        protected override string OnExtractDbName(string connectionString)
+        {
+            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString);
             return cnStringBuilder.InitialCatalog;
         }
     }

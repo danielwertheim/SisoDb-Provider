@@ -70,7 +70,7 @@
     <Compile Include="Caching\CacheProviderExtensions.cs" />
     <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="Configurations\DbConfiguration.cs" />
-    <Compile Include="ConnectionString.cs" />
+    <Compile Include="Configurations\ConnectionString.cs" />
     <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
@@ -316,7 +316,6 @@
     <Compile Include="Querying\Sql\SqlQueryFormatter.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\DbQuery.cs" />
-    <Compile Include="IConnectionString.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="Dac\BulkInserts\IndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\SingleResultReaderBase.cs" />

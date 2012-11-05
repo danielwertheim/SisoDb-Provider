@@ -27,7 +27,7 @@
 					],
 					[
 						"ClientConnectionString",
-						"data source=.;initial catalog=foo;integrated security=true;"
+						"Data Source=.;Initial Catalog=foo;Integrated Security=True"
 					],
 					[
 						"ServerConnectionString",

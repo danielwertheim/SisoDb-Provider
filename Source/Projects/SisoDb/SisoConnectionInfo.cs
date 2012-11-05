@@ -1,6 +1,6 @@
 using System;
+using SisoDb.Configurations;
 using SisoDb.EnsureThat;
-using SisoDb.NCore;
 using SisoDb.Resources;
 
 namespace SisoDb
@@ -9,54 +9,44 @@ namespace SisoDb
     public abstract class SisoConnectionInfo : ISisoConnectionInfo
     {
         public StorageProviders ProviderType { get; private set; }
-
         public string DbName { get; private set; }
+        public string ClientConnectionString { get; private set; }
+        public string ServerConnectionString { get; private set; }
 
-        public BackgroundIndexing BackgroundIndexing { get; private set; }
-
-        public IConnectionString ClientConnectionString { get; private set; }
-
-        public IConnectionString ServerConnectionString { get; private set; }
-
-        protected SisoConnectionInfo(StorageProviders providerType, IConnectionString connectionString)
+        protected SisoConnectionInfo(StorageProviders providerType, string connectionStringOrName)
         {
-            Ensure.That(connectionString, "connectionString").IsNotNull();
+            Ensure.That(connectionStringOrName, "connectionStringOrName").IsNotNull();
 
             ProviderType = providerType;
-            EnsureCorrectProviderIfItExists(connectionString);
+            var connectionString = GetConnectionString(connectionStringOrName);
 
-            ClientConnectionString = FormatConnectionString(connectionString);
+            ClientConnectionString = FormatDbConnectionString(connectionString);
             ServerConnectionString = FormatServerConnectionString(connectionString);
-            BackgroundIndexing = ExtractBackgroundIndexing(ClientConnectionString);
             DbName = ExtractDbName(ClientConnectionString);
-
-            if (BackgroundIndexing != BackgroundIndexing.Off)
-                throw new SisoDbException(ExceptionMessages.ConnectionInfo_BackgroundIndexingNotSupported.Inject(ProviderType));
         }
 
-        private void EnsureCorrectProviderIfItExists(IConnectionString connectionString)
+        private string GetConnectionString(string connectionStringOrName)
         {
-            var providerType = ExtractProviderType(connectionString);
-            if (providerType == null)
-                return;
+            var value = OnGetConnectionString(connectionStringOrName);
+            if(string.IsNullOrWhiteSpace(value))
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_CouldNotLocateConnectionString);
 
-            if (providerType != ProviderType)
-                throw new SisoDbException(ExceptionMessages.ConnectionInfo_UnsupportedProviderSpecified.Inject(providerType, ProviderType));
+            return value;
         }
 
-        private IConnectionString FormatConnectionString(IConnectionString connectionString)
+        private string FormatDbConnectionString(string connectionString)
         {
             try
             {
-                return OnFormatConnectionString(connectionString);
+                return OnFormatClientConnectionString(connectionString);
             }
             catch (Exception ex)
             {
-                throw new SisoDbException("Could not parse sent connection string. If connection string name is passed. Ensure it has match in config-file. Inspect inner exception for more details.", new[] { ex });
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_CouldNotFormatDbConnectionString, new[] { ex });
             }
         }
 
-        private IConnectionString FormatServerConnectionString(IConnectionString connectionString)
+        private string FormatServerConnectionString(string connectionString)
         {
             try
             {
@@ -64,50 +54,34 @@ namespace SisoDb
             }
             catch (Exception ex)
             {
-                throw new SisoDbException("Could not parse sent server connection string. If connection string name is passed. Ensure it has match in config-file. Inspect inner exception for more details.", new[] { ex });
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_CouldNotFormatServerConnectionString, new[] { ex });
             }
         }
 
-        private StorageProviders? ExtractProviderType(IConnectionString connectionString)
+        private string ExtractDbName(string connectionString)
         {
-            return OnExtractProviderType(connectionString);
+            var dbName = OnExtractDbName(connectionString);
+            if (string.IsNullOrWhiteSpace(dbName))
+                throw new SisoDbException(ExceptionMessages.ConnectionInfo_MissingName);
+
+            return dbName;
         }
 
-        private BackgroundIndexing ExtractBackgroundIndexing(IConnectionString connectionString)
+        protected virtual string OnGetConnectionString(string connectionStringOrName)
         {
-            return OnExtractBackgroundIndexing(connectionString);
+            return ConnectionString.Get(connectionStringOrName);
         }
 
-        protected string ExtractDbName(IConnectionString connectionString)
-        {
-            return OnExtractDbName(connectionString);
-        }
-
-        protected virtual IConnectionString OnFormatConnectionString(IConnectionString connectionString)
-        {
-            return connectionString;
-        }
-
-        protected virtual IConnectionString OnFormatServerConnectionString(IConnectionString connectionString)
+        protected virtual string OnFormatClientConnectionString(string connectionString)
         {
             return connectionString;
         }
 
-        protected virtual StorageProviders? OnExtractProviderType(IConnectionString connectionString)
+        protected virtual string OnFormatServerConnectionString(string connectionString)
         {
-            if (string.IsNullOrWhiteSpace(connectionString.Provider))
-                return null;
-
-            return (StorageProviders)Enum.Parse(typeof(StorageProviders), connectionString.Provider, true);
+            return connectionString;
         }
 
-        protected virtual BackgroundIndexing OnExtractBackgroundIndexing(IConnectionString connectionString)
-        {
-            return (string.IsNullOrWhiteSpace(ClientConnectionString.BackgroundIndexing))
-                ? BackgroundIndexing.Off
-                : (BackgroundIndexing)Enum.Parse(typeof(BackgroundIndexing), ClientConnectionString.BackgroundIndexing, true);
-        }
-
-        protected abstract string OnExtractDbName(IConnectionString connectionString);
+        protected abstract string OnExtractDbName(string connectionString);
     }
 }

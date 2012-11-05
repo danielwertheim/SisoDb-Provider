@@ -87,7 +87,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configurations\DbConfigurationTests.cs" />
-    <Compile Include="Connections\ConnectionStringTests.cs" />
     <Compile Include="CustomAssert.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslatorTests.cs" />
     <Compile Include="DbSchema\DbObjectNameValidatorTests.cs" />
@@ -136,7 +135,6 @@
     <Compile Include="Querying\PagingTests.cs" />
     <Compile Include="Querying\QueryTests.cs" />
     <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
-    <Compile Include="Connections\SisoConnectionInfoTests.cs" />
     <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\StructureSchemaExtensionsTests.cs" />
