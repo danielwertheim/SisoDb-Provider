@@ -2,8 +2,8 @@
 using SisoDb.Caching;
 using SisoDb.EnsureThat;
 using SisoDb.NCore.Collections;
-using SisoDb.PineCone.Serializers;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Serialization;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Maintenance
 {

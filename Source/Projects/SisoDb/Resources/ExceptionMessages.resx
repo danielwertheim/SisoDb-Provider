@@ -301,4 +301,67 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="ConnectionInfo_CouldNotLocateConnectionString" xml:space="preserve">
     <value>Could not locate a connection string. If connection string name is passed. Ensure it has match in config-file.</value>
   </data>
+  <data name="AutoSchemaBuilder_MissingIdMember1" xml:space="preserve">
+    <value>The Item of type '{0}' has no Id member specified. A Guid or Int property named 'Id' was expected.</value>
+  </data>
+  <data name="AutoSchemaBuilder_MissingIndexableMembers1" xml:space="preserve">
+    <value>The Item of type '{0}' has no members that are indexable. There's no point in treating items that has nothing to index.</value>
+  </data>
+  <data name="ConcurrencyTokenAccessor_InvalidLevel" xml:space="preserve">
+    <value>Concurrency token member '{0}' must lie on the root object.</value>
+  </data>
+  <data name="ConcurrencyTokenAccessor_Invalid_Type" xml:space="preserve">
+    <value>The type of the Concurrency token member '{0}' should be a Guid, Int, or Long.</value>
+  </data>
+  <data name="Getter_Unsupported_type" xml:space="preserve">
+    <value>The type '{0}' is unsupported and a getter for the StructureId accessor can not be created.</value>
+  </data>
+  <data name="IdAccessor_InvalidLevel" xml:space="preserve">
+    <value>Id members must lie on the root object.</value>
+  </data>
+  <data name="IdAccessor_UnsupportedPropertyType1" xml:space="preserve">
+    <value>The Property.PropertyType '{0}' is not supported by the IdAccessor. Supported types are: Guid, Nullable-Guid, Int32, Nullable-Int32, Int64 and Nullable-Int64.</value>
+  </data>
+  <data name="Setter_Unsupported_type" xml:space="preserve">
+    <value>The type '{0}' is unsupported and a setter for the StructureId accessor can not be created.</value>
+  </data>
+  <data name="StructureId_CompareTo_DifferentIdTypes" xml:space="preserve">
+    <value>Can not compare StructureId's of different IdTypes.</value>
+  </data>
+  <data name="StructureId_ConvertFrom" xml:space="preserve">
+    <value>Can not convert type '{0}' to a StructureId.</value>
+  </data>
+  <data name="StructureId_CreateByIdType" xml:space="preserve">
+    <value>The value with type '{0}' can not be used to create a StructureId of type '{1}'.</value>
+  </data>
+  <data name="StructureId_Create_FromString_WithSpecificId" xml:space="preserve">
+    <value>The sent string value '{0}' can not be converted to Id-type '{1}'.</value>
+  </data>
+  <data name="StructureId_InvalidType" xml:space="preserve">
+    <value>The type '{0}' is not supported for StructureId. Supported types are: Guid, Nullable-Guid, Int32, Nullable-Int32, Int64 and Nullable-Int64.</value>
+  </data>
+  <data name="StructureIndexesFactory_UniqueIndex_IsNull1" xml:space="preserve">
+    <value>The Unique index '{0}':'{1}' is evaluated to Null. This is not alowed.</value>
+  </data>
+  <data name="StructureIndex_ValueArgument_IncorrectType1" xml:space="preserve">
+    <value>Only strings and valuetypes can be stored as indexes.</value>
+  </data>
+  <data name="StructureProperty_Ctor_UniqueOnNonSimpleType" xml:space="preserve">
+    <value>You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc.</value>
+  </data>
+  <data name="StructureProperty_Setter_IsReadOnly" xml:space="preserve">
+    <value>Property '{0}' is read-only.</value>
+  </data>
+  <data name="Structure_DuplicateUniques1" xml:space="preserve">
+    <value>Duplicate Unique-index found for '{0}'.\r\nStructureId: '{1}';Name: '{2}';Value: '{3}';</value>
+  </data>
+  <data name="TimeStampAccessor_InvalidLevel" xml:space="preserve">
+    <value>Time stamp member '{0}' must lie on the root object.</value>
+  </data>
+  <data name="TimeStampAccessor_Invalid_Type" xml:space="preserve">
+    <value>The type of the Time stamp member '{0}' should be a Date.</value>
+  </data>
+  <data name="UniqueModesCantBeMapped1" xml:space="preserve">
+    <value>The UniqueModes '{0}' is unknow and cant be mapped.</value>
+  </data>
 </root>

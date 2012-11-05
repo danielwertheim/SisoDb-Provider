@@ -1,7 +1,6 @@
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures
 {

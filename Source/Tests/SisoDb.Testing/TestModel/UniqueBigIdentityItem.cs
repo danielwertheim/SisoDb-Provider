@@ -1,5 +1,5 @@
 using System;
-using SisoDb.PineCone.Annotations;
+using SisoDb.Annotations;
 
 namespace SisoDb.Testing.TestModel
 {

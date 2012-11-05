@@ -2,12 +2,11 @@
 using Moq;
 using NUnit.Framework;
 using SisoDb.Dac;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.IdGenerators;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
 using SisoDb.Structures;
+using SisoDb.Structures.IdGenerators;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
 using SisoDb.UnitTests.TestFactories;
 using System.Linq;
 

@@ -8,10 +8,10 @@ using SisoDb.NCore;
 using SisoDb.NCore.Collections;
 using SisoDb.NCore.Expressions;
 using SisoDb.NCore.Reflections;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Resources;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {

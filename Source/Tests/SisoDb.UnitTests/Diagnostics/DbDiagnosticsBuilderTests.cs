@@ -2,10 +2,10 @@
 using Moq;
 using NUnit.Framework;
 using SisoDb.Diagnostics.Builders;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
 using SisoDb.Sql2012;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
 
 namespace SisoDb.UnitTests.Diagnostics
 {

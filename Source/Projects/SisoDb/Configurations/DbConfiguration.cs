@@ -1,10 +1,10 @@
 using System;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.IdGenerators;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Configuration;
 using SisoDb.Serialization;
+using SisoDb.Structures;
+using SisoDb.Structures.IdGenerators;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Configuration;
 
 namespace SisoDb.Configurations
 {

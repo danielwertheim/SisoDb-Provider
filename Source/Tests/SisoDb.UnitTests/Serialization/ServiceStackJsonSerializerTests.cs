@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.UnitTests.Serialization
 {

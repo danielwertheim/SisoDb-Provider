@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {

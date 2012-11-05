@@ -7,11 +7,11 @@ using SisoDb.Dac;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Collections;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.Resources;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {
