@@ -11,7 +11,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenIListOfTIndexesExists_ReturnsTheElementMembers()
         {
-            var props = ReflecterFor().GetIndexableProperties(typeof(WithCollectionIndexes), false);
+            var props = ReflecterFor().GetIndexableProperties(typeof(WithCollectionIndexes));
 
             Assert.IsTrue(props.Any(p => p.Path == "IList1.ElementInt1"));
         }
@@ -19,7 +19,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenIEnumerableOfTIndexesExists_ReturnsTheElementMembers()
         {
-            var props = ReflecterFor().GetIndexableProperties(typeof(WithCollectionIndexes), false);
+            var props = ReflecterFor().GetIndexableProperties(typeof(WithCollectionIndexes));
 
             Assert.IsTrue(props.Any(p => p.Path == "IEnumerable1.ElementInt1"));
         }
@@ -27,7 +27,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenEnumerableOfBytes_NoPropertiesAreReturned()
         {
-            var props = ReflecterFor().GetIndexableProperties(typeof(WithEnumerableBytes), false);
+            var props = ReflecterFor().GetIndexableProperties(typeof(WithEnumerableBytes));
 
             Assert.IsFalse(props.Any());
         }
@@ -35,7 +35,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenArrayOfStrings_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithArrayOfStrings), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithArrayOfStrings));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Values");
 
             Assert.AreEqual(1, properties.Count());
@@ -45,7 +45,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenArrayOfIntegers_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithArrayOfIntegers), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithArrayOfIntegers));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Values");
 
             Assert.AreEqual(1, properties.Count());
@@ -55,7 +55,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenWithNestedArrayOfStrings_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithNestedArrayOfStrings), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithNestedArrayOfStrings));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Item.Values");
 
             Assert.AreEqual(1, properties.Count());
@@ -65,7 +65,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenWithArrayOfNestedArrayOfStrings_OnlyReturnsPropertyForAccessingTheStringArray()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithArrayOfNestedArrayOfStrings), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithArrayOfNestedArrayOfStrings));
             var arrayIndex = properties.SingleOrDefault(p => p.Path == "Items.Values");
 
             Assert.AreEqual(1, properties.Count());

@@ -83,13 +83,12 @@ namespace SisoDb.Specifications.Session.Querying
             It should_have_fetched_album =
                 () => _fetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
 
-            It should_not_have_stored_genere_and_artists_in_the_json = () =>
+            It should_have_stored_genere_and_artists_in_the_json = () =>
             {
                 var json = TestContext.Database.UseOnceTo().GetByIdAsJson<IAlbumData>(_structures[0].StructureId);
-                json.Length.ShouldEqual(214);
-                json.ShouldNotContain("\"Genre\"");
-                json.ShouldNotContain("\"Artist\"");
-                json.ShouldNotContain("\"SecondArtist\"");
+                json.ShouldContain("\"Genre\"");
+                json.ShouldContain("\"Artist\"");
+                json.ShouldContain("\"SecondArtist\"");
             };
 
 			private static IList<Album> _structures;

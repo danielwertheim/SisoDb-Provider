@@ -14,12 +14,12 @@ namespace SisoDb.UnitTests.Structures.Schemas
 
         internal static IStructureProperty GetPropertyByPath<T>(string path) where T : class 
         {
-            return ReflecterFor().GetIndexableProperties(typeof(T), false).Single(i => i.Path == path);
+            return ReflecterFor().GetIndexableProperties(typeof(T)).Single(i => i.Path == path);
         }
 
         internal static IStructureProperty GetPropertyByName<T>(string name) where T : class 
         {
-            return ReflecterFor().GetIndexableProperties(typeof(T), false).Single(i => i.Name == name);
+            return ReflecterFor().GetIndexableProperties(typeof(T)).Single(i => i.Name == name);
         }
 
         internal static IStructureProperty GetRawProperty<T>(string name) where T : class 

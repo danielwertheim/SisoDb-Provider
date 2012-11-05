@@ -10,7 +10,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenMultiplePublicSimplePropertiesExistsAndNoExclusions_ReturnsAllPublicSimpleProperties()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithSimpleProperties), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithSimpleProperties));
 
             var paths = properties.Select(p => p.Path).ToArray();
             Assert.AreEqual(9, properties.Count());
@@ -28,7 +28,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenMultiplePublicSimpleNullablePropertiesExistsAndNoExclusions_ReturnsAllPublicSimpleProperties()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithSimpleNullableProperties), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithSimpleNullableProperties));
 
             var paths = properties.Select(p => p.Path).ToArray();
             Assert.AreEqual(8, properties.Count());
@@ -45,7 +45,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenSimplePrivatePropertyExists_PrivatePropertyIsNotReturned()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithPrivateProperty), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithPrivateProperty));
 
             Assert.AreEqual(0, properties.Count());
         }

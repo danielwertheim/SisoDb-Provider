@@ -19,7 +19,7 @@ namespace SisoDb.UnitTests.Structures.Schemas
 
                 return idProperty.Object;
             });
-            reflecterMock.Setup(m => m.GetIndexableProperties(type, false)).Returns(() =>
+            reflecterMock.Setup(m => m.GetIndexableProperties(type)).Returns(() =>
             {
                 var indexProperty = new Mock<IStructureProperty>();
 
@@ -29,7 +29,7 @@ namespace SisoDb.UnitTests.Structures.Schemas
             var factory = new StructureTypeFactory(t => reflecterMock.Object);
             factory.CreateFor(type);
 
-            reflecterMock.Verify(m => m.GetIndexableProperties(type, false));
+            reflecterMock.Verify(m => m.GetIndexableProperties(type));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace SisoDb.UnitTests.Structures.Schemas
 
                 return idProperty.Object;
             });
-            reflecterMock.Setup(m => m.GetIndexablePropertiesExcept(type, false, new[] { "ExcludeTEMP" })).Returns(() =>
+            reflecterMock.Setup(m => m.GetIndexablePropertiesExcept(type, new[] { "ExcludeTEMP" })).Returns(() =>
             {
                 var indexProperty = new Mock<IStructureProperty>();
 
@@ -54,7 +54,7 @@ namespace SisoDb.UnitTests.Structures.Schemas
             factory.Configurations.Configure(type, cfg => cfg.DoNotIndexThis("ExcludeTEMP"));
             factory.CreateFor(type);
 
-            reflecterMock.Verify(m => m.GetIndexablePropertiesExcept(type, false, new[] { "ExcludeTEMP" }));
+            reflecterMock.Verify(m => m.GetIndexablePropertiesExcept(type, new[] { "ExcludeTEMP" }));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace SisoDb.UnitTests.Structures.Schemas
 
                 return idProperty.Object;
             });
-            reflecterMock.Setup(m => m.GetSpecificIndexableProperties(type, false, new[] { "IncludeTEMP" })).Returns(() =>
+            reflecterMock.Setup(m => m.GetSpecificIndexableProperties(type, new[] { "IncludeTEMP" })).Returns(() =>
             {
                 var indexProperty = new Mock<IStructureProperty>();
 
@@ -79,26 +79,13 @@ namespace SisoDb.UnitTests.Structures.Schemas
             factory.Configurations.Configure(type, cfg => cfg.OnlyIndexThis("IncludeTEMP"));
             factory.CreateFor(type);
 
-            reflecterMock.Verify(m => m.GetSpecificIndexableProperties(type, false, new[] { "IncludeTEMP" }));
+            reflecterMock.Verify(m => m.GetSpecificIndexableProperties(type, new[] { "IncludeTEMP" }));
         }
 
         [Test]
-        public void CreateFor_When_no_config_for_allowing_nested_structures_exists_It_should_not_include_nested_members()
+        public void CreateFor_When_no_config_for_allowing_nested_structures_exists_It_should_include_nested_members()
         {
             var factory = new StructureTypeFactory();
-
-            var structureType = factory.CreateFor<WithContainedStructure>();
-
-            Assert.AreEqual(0, structureType.IndexableProperties.Length);
-            Assert.IsFalse(structureType.IndexableProperties.Any(p => p.Path == "Contained.StructureId"));
-            Assert.IsFalse(structureType.IndexableProperties.Any(p => p.Path == "Contained.NestedValue"));
-        }
-
-        [Test]
-        public void CreateFor_When_config_for_allowing_nested_structures_exists_It_should_include_nested_members()
-        {
-            var factory = new StructureTypeFactory();
-            factory.Configurations.Configure<WithContainedStructure>(cfg => cfg.AllowNestedStructures());
 
             var structureType = factory.CreateFor<WithContainedStructure>();
 

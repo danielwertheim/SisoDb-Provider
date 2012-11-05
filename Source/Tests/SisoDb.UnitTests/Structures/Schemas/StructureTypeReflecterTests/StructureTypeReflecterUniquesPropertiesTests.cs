@@ -11,7 +11,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenSimpleUniquesExistsOnRoot_ReturnsSimpleUniques()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithSimpleUniques), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithSimpleUniques));
 
             Assert.AreEqual(2, properties.Count());
 
@@ -23,20 +23,20 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         public void GetIndexableProperties_WhenRootWithExplicitUniqueOnChildWithNoUniques_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => ReflecterFor().GetIndexableProperties(typeof(WithExplicitUniqueOnChildWithoutUniques), false));
+                () => ReflecterFor().GetIndexableProperties(typeof(WithExplicitUniqueOnChildWithoutUniques)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithExplicitUniqueOnChildWithUniques_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => ReflecterFor().GetIndexableProperties(typeof(WithExplicitUniqueOnChildWithUniques), false));
+                () => ReflecterFor().GetIndexableProperties(typeof(WithExplicitUniqueOnChildWithUniques)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithImplicitUniqueOnChildWithUniques_ChildUniquesAreExtracted()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithImplicitUniqueOnChildWithUniques), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithImplicitUniqueOnChildWithUniques));
 
             var uniques = properties.Where(p => p.IsUnique).ToList();
             Assert.AreEqual(1, uniques.Count);
@@ -47,20 +47,20 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         public void GetIndexableProperties_WhenRootWithUniqueEnumerableOfSimple_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => ReflecterFor().GetIndexableProperties(typeof(WithUniqueEnumerableOfSimple), false));
+                () => ReflecterFor().GetIndexableProperties(typeof(WithUniqueEnumerableOfSimple)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithUniqueEnumerableOfComplexWithUnique_ThrowsSisoDbException()
         {
             Assert.Throws<SisoDbException>(
-                () => ReflecterFor().GetIndexableProperties(typeof(WithUniqueEnumerableOfComplexWithUnique), false));
+                () => ReflecterFor().GetIndexableProperties(typeof(WithUniqueEnumerableOfComplexWithUnique)));
         }
 
         [Test]
         public void GetIndexableProperties_WhenRootWithEnumerableOfComplexWithUnique_UniqueIsExtracted()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithEnumerableOfComplexWithUnique), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithEnumerableOfComplexWithUnique));
 
             var uniques = properties.Where(p => p.IsUnique).ToList();
             Assert.AreEqual(1, uniques.Count);

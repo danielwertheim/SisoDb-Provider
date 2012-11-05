@@ -7,7 +7,6 @@ namespace SisoDb.Structures.Schemas.Configuration
     {
         Type Type { get; }
         bool IndexConfigIsEmpty { get; }
-        bool IncludeContainedStructureMembers { get; set; }
         ISet<string> MemberPathsBeingIndexed { get; }
         ISet<string> MemberPathsNotBeingIndexed { get; }
     }

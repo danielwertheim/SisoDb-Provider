@@ -852,7 +852,7 @@ namespace SisoDb
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
                 var structureSchema = OnUpsertStructureSchema<T>();
-                var json = Db.Serializer.Serialize(item);
+                var json = Db.Serializer.Serialize(item); //TODO: Unnecessary
                 var realItem = Db.Serializer.Deserialize<T>(json);
 
                 var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);

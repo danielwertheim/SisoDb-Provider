@@ -29,22 +29,6 @@ namespace SisoDb.UnitTests.Structures.Schemas.Configuration
         }
 
         [Test]
-        public void AllowNestedStructures_WhenCalled_IncludeContainedStructureMembersBecomesTrue()
-        {
-            var config = UseNonGenericConfiguratorFor<Dummy>(cfg => cfg.AllowNestedStructures());
-
-            Assert.IsTrue(config.IncludeContainedStructureMembers);
-        }
-
-        [Test]
-        public void Generic_AllowNestedStructures_WhenCalled_IncludeContainedStructureMembersBecomesTrue()
-        {
-            var config = UseGenericConfiguratorFor<Dummy>(cfg => cfg.AllowNestedStructures());
-
-            Assert.IsTrue(config.IncludeContainedStructureMembers);
-        }
-
-        [Test]
         public void OnlyIndexThis_WhenFirstTimeCalled_MemberPathsIsStoredIn_MemberPathsBeingIndexedCollection()
         {
             var config = UseNonGenericConfiguratorFor<Dummy>(cfg => cfg.OnlyIndexThis("Int1", "String1", "Nested.Int1", "Nested.String1"));

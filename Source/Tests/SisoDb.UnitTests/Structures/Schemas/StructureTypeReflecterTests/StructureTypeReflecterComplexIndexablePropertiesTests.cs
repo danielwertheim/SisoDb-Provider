@@ -11,7 +11,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenItemWithComplexProperty_ReturnsComplexProperties()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithComplexProperty), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithComplexProperty));
 
             Assert.AreEqual(2, properties.Count());
             Assert.IsTrue(properties.Any(p => p.Path == "Complex.IntValue"));
@@ -21,7 +21,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenRootWithUniqeAndNonUniqueComplexProperties_ReturnsBothComplexUniqueAndNonUniqueProperties()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithUniqueAndNonUniqueComplexProperties), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithUniqueAndNonUniqueComplexProperties));
 
             Assert.AreEqual(4, properties.Count());
             Assert.IsTrue(properties.Any(p => p.Path == "UqComplex.IntValue"));
@@ -33,7 +33,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.StructureTypeReflecterTests
         [Test]
         public void GetIndexableProperties_WhenRootWithEnumerable_EnumerableMemberIsNotReturnedAsComplex()
         {
-            var properties = ReflecterFor().GetIndexableProperties(typeof(WithEnumerableOfComplex), false);
+            var properties = ReflecterFor().GetIndexableProperties(typeof(WithEnumerableOfComplex));
 
             Assert.AreEqual(2, properties.Count());
             Assert.IsTrue(properties.Any(p => p.Path == "Items.IntValue"));

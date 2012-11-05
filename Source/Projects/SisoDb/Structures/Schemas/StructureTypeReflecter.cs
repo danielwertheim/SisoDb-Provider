@@ -140,28 +140,28 @@ namespace SisoDb.Structures.Schemas
                 : PropertyFactory.CreateRootPropertyFrom(propertyInfo);
         }
 
-        public virtual IStructureProperty[] GetIndexableProperties(Type structureType, bool includeContainedStructureMembers)
+        public virtual IStructureProperty[] GetIndexableProperties(Type structureType)
         {
-            return GetIndexableProperties(structureType, null, includeContainedStructureMembers, NonIndexableSystemMembers, null);
+            return GetIndexableProperties(structureType, null, NonIndexableSystemMembers, null);
         }
 
-        public virtual IStructureProperty[] GetIndexablePropertiesExcept(Type structureType, bool includeContainedStructureMembers, ICollection<string> nonIndexablePaths)
+        public virtual IStructureProperty[] GetIndexablePropertiesExcept(Type structureType, ICollection<string> nonIndexablePaths)
         {
             Ensure.That(nonIndexablePaths, "nonIndexablePaths").HasItems();
 
-            return GetIndexableProperties(structureType, null, includeContainedStructureMembers, NonIndexableSystemMembers.MergeWith(nonIndexablePaths).ToArray(), null);
+            return GetIndexableProperties(structureType, null, NonIndexableSystemMembers.MergeWith(nonIndexablePaths).ToArray(), null);
         }
 
-        public virtual IStructureProperty[] GetSpecificIndexableProperties(Type structureType, bool includeContainedStructureMembers, ICollection<string> indexablePaths)
+        public virtual IStructureProperty[] GetSpecificIndexableProperties(Type structureType, ICollection<string> indexablePaths)
         {
             Ensure.That(indexablePaths, "indexablePaths").HasItems();
 
-            return GetIndexableProperties(structureType, null, includeContainedStructureMembers, NonIndexableSystemMembers, indexablePaths);
+            return GetIndexableProperties(structureType, null, NonIndexableSystemMembers, indexablePaths);
         }
 
         public virtual IStructureProperty[] GetContainedStructureProperties(Type structureType)
         {
-            var propertyInfos = GetIndexablePropertyInfos(structureType, true);
+            var propertyInfos = GetIndexablePropertyInfos(structureType);
             var complexPropertyInfos = GetComplexIndexablePropertyInfos(propertyInfos);
 
             return complexPropertyInfos
@@ -172,11 +172,10 @@ namespace SisoDb.Structures.Schemas
         protected virtual IStructureProperty[] GetIndexableProperties(
             IReflect type,
             IStructureProperty parent,
-            bool includeContainedStructureMembers,
             ICollection<string> nonIndexablePaths,
             ICollection<string> indexablePaths)
         {
-            var initialPropertyInfos = GetIndexablePropertyInfos(type, includeContainedStructureMembers);
+            var initialPropertyInfos = GetIndexablePropertyInfos(type);
             if (initialPropertyInfos.Length == 0)
                 return new IStructureProperty[] { };
 
@@ -191,7 +190,7 @@ namespace SisoDb.Structures.Schemas
             {
                 var complexProperty = PropertyFactory.CreateChildPropertyFrom(parent, complexPropertyInfo);
                 var simpleComplexProps = GetIndexableProperties(
-                    complexProperty.DataType, complexProperty, includeContainedStructureMembers, nonIndexablePaths, indexablePaths);
+                    complexProperty.DataType, complexProperty, nonIndexablePaths, indexablePaths);
 
                 var beforeCount = properties.Count;
                 properties.AddRange(simpleComplexProps);
@@ -212,7 +211,6 @@ namespace SisoDb.Structures.Schemas
                 var elementProperties = GetIndexableProperties(
                     enumerableProperty.ElementDataType,
                     enumerableProperty,
-                    includeContainedStructureMembers,
                     nonIndexablePaths,
                     indexablePaths);
 
@@ -222,11 +220,9 @@ namespace SisoDb.Structures.Schemas
             return properties.ToArray();
         }
 
-        private PropertyInfo[] GetIndexablePropertyInfos(IReflect type, bool includeContainedStructureMembers)
+        private PropertyInfo[] GetIndexablePropertyInfos(IReflect type)
         {
-            return includeContainedStructureMembers
-                ? type.GetProperties(PropertyBindingFlags)
-                : type.GetProperties(PropertyBindingFlags).Where(p => HasIdProperty(p.PropertyType) == false).ToArray();
+            return type.GetProperties(PropertyBindingFlags);
         }
 
         protected virtual PropertyInfo[] GetSimpleIndexablePropertyInfos(PropertyInfo[] properties, IStructureProperty parent = null, ICollection<string> nonIndexablePaths = null, ICollection<string> indexablePaths = null)
@@ -255,9 +251,6 @@ namespace SisoDb.Structures.Schemas
             var filteredProperties = properties.Where(p =>
                 !p.PropertyType.IsSimpleType() &&
                 !p.PropertyType.IsEnumerableType());
-
-            //if (!includeContainedStructureMembers)
-            //    filteredProperties = filteredProperties.Where(p => GetIdProperty(p.PropertyType) == null);
 
             if (nonIndexablePaths != null && nonIndexablePaths.Any())
                 filteredProperties = filteredProperties.Where(p => !nonIndexablePaths.Contains(

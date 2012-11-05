@@ -69,7 +69,7 @@ namespace SisoDb.UnitTests.Serialization
         }
 
         [Test]
-        public void Serialize_WhenReferencingOtherStructure_ReferencedStructureIsNotRepresentedInJson()
+        public void Serialize_WhenReferencingOtherStructure_ReferencedStructureIsRepresentedInJson()
         {
             var structure = new Structure
             {
@@ -80,7 +80,7 @@ namespace SisoDb.UnitTests.Serialization
 
             var json = _sisoDbSerializer.Serialize(structure);
 
-            const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
+            const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"ReferencedStructure\":{\"StructureId\":999,\"OtherStructureString\":\"Not to be included\"},\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);
         }
 

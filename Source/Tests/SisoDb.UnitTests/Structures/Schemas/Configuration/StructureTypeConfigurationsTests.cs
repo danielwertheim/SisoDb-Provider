@@ -127,7 +127,6 @@ namespace SisoDb.UnitTests.Structures.Schemas.Configuration
 
             var config = configs.GetConfiguration<Dummy>();
 
-            Assert.IsFalse(config.IncludeContainedStructureMembers);
             Assert.IsTrue(config.IndexConfigIsEmpty);
             Assert.IsFalse(config.MemberPathsBeingIndexed.Any());
             Assert.IsFalse(config.MemberPathsNotBeingIndexed.Any());
@@ -140,7 +139,6 @@ namespace SisoDb.UnitTests.Structures.Schemas.Configuration
 
             var config = configs.GetConfiguration<Dummy>();
 
-            Assert.IsFalse(config.IncludeContainedStructureMembers);
             Assert.IsTrue(config.IndexConfigIsEmpty);
             Assert.IsFalse(config.MemberPathsBeingIndexed.Any());
             Assert.IsFalse(config.MemberPathsNotBeingIndexed.Any());
