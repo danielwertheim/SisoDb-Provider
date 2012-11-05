@@ -26,17 +26,16 @@ namespace SisoDb.DbSchema
             UniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(sqlStatements);
         }
 
-        public virtual void Upsert(IStructureSchema structureSchema, IDbClient dbClient, bool allowDynamicSchemaCreation, bool synchronizeSchemaChanges)
+        public virtual void Upsert(IStructureSchema structureSchema, IDbClient dbClient, bool allowDynamicSchemaCreation, bool allowDynamicSchemaUpdates)
         {
-            if(!allowDynamicSchemaCreation && !synchronizeSchemaChanges)
+            if (!allowDynamicSchemaCreation && !allowDynamicSchemaUpdates)
                 return;
 
             var modelInfo = dbClient.GetModelTablesInfo(structureSchema);
 
-            if (synchronizeSchemaChanges)
+            if (allowDynamicSchemaUpdates)
             {
-                if(!modelInfo.Statuses.IndexesTableStatuses.AllExists)
-                    IndexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
+                IndexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
 
                 if (modelInfo.Statuses.UniquesTableExists)
                     UniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
