@@ -15,20 +15,22 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {
-    public abstract class DbSession : ITransactionalSession, IQueryEngine, IAdvanced
+    public abstract class DbSession : ITransactionalSession, IAdvanced
     {
         private readonly Guid _id;
         private readonly ISisoDatabase _db;
+        private readonly IQueryEngine _queryEngine;
         protected ITransactionalDbClient TransactionalDbClient;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
+        protected readonly SessionExecutionContext ExecutionContext;
         protected CacheConsumeModes CacheConsumeMode;
 
         public Guid Id { get { return _id; } }
         public ISisoDatabase Db { get { return _db; } }
         public SessionStatus Status { get; private set; }
-        public IQueryEngine QueryEngine { get { return this; } }
+        public IQueryEngine QueryEngine { get { return _queryEngine; } }
         public IAdvanced Advanced { get { return this; } }
         public bool Failed { get { return Status.IsFailed(); } }
 
@@ -43,6 +45,8 @@ namespace SisoDb
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
             SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
             TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
+            _queryEngine = new DbQueryEngine(Db, TransactionalDbClient, QueryGenerator, null);
+            ExecutionContext = new SessionExecutionContext(this);
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
         }
 
@@ -73,38 +77,12 @@ namespace SisoDb
 
         protected virtual void Try(Action action)
         {
-            EnsureNotAlreadyFailed();
-
-            try
-            {
-                action.Invoke();
-            }
-            catch
-            {
-                MarkAsFailed();
-                throw;
-            }
+            ExecutionContext.Try(action);
         }
 
         protected virtual T Try<T>(Func<T> action)
         {
-            EnsureNotAlreadyFailed();
-
-            try
-            {
-                return action.Invoke();
-            }
-            catch
-            {
-                MarkAsFailed();
-                throw;
-            }
-        }
-
-        protected virtual void EnsureNotAlreadyFailed()
-        {
-            if (Status.IsFailed())
-                throw new SisoDbException(ExceptionMessages.Session_AlreadyFailed.Inject(Id, Db.Name));
+            return ExecutionContext.Try(action);
         }
 
         protected virtual IStructureSchema OnUpsertStructureSchema<T>() where T : class
@@ -303,232 +281,14 @@ namespace SisoDb
             return Try(() => new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas), QueryEngine));
         }
 
-        bool IQueryEngine.Any<T>()
-        {
-            return Try(() => OnAny(typeof(T)));
-        }
-
-        bool IQueryEngine.Any(Type structureType)
-        {
-            return Try(() => OnAny(structureType));
-        }
-
-        protected virtual bool OnAny(Type structureType)
-        {
-            Ensure.That(structureType, "structureType").IsNotNull();
-
-            var structureSchema = OnUpsertStructureSchema(structureType);
-
-            return TransactionalDbClient.Any(structureSchema);
-        }
-
-        bool IQueryEngine.Any<T>(IQuery query)
-        {
-            return Try(() => OnAny(typeof(T), query));
-        }
-
-        bool IQueryEngine.Any(Type structureType, IQuery query)
-        {
-            return Try(() => OnAny(structureType, query));
-        }
-
-        protected virtual bool OnAny(Type structureType, IQuery query)
-        {
-            Ensure.That(structureType, "structureType").IsNotNull();
-            Ensure.That(query, "query").IsNotNull();
-
-            var structureSchema = OnUpsertStructureSchema(structureType);
-
-            if (!query.HasWhere)
-                return TransactionalDbClient.Any(structureSchema);
-
-            var whereSql = QueryGenerator.GenerateQueryReturningCountOfStrutureIds(query);
-            return TransactionalDbClient.Any(structureSchema, whereSql);
-        }
-
-        int IQueryEngine.Count<T>()
-        {
-            return Try(() => OnCount(typeof(T)));
-        }
-
-        int IQueryEngine.Count(Type structureType)
-        {
-            return Try(() => OnCount(structureType));
-        }
-
-        protected virtual int OnCount(Type structureType)
-        {
-            Ensure.That(structureType, "structureType").IsNotNull();
-
-            var structureSchema = OnUpsertStructureSchema(structureType);
-
-            return TransactionalDbClient.RowCount(structureSchema);
-        }
-
-        int IQueryEngine.Count<T>(IQuery query)
-        {
-            return Try(() => OnCount(typeof(T), query));
-        }
-
-        int IQueryEngine.Count(Type structureType, IQuery query)
-        {
-            return Try(() => OnCount(structureType, query));
-        }
-
-        protected virtual int OnCount(Type structureType, IQuery query)
-        {
-            Ensure.That(structureType, "structureType").IsNotNull();
-            Ensure.That(query, "query").IsNotNull();
-
-            var structureSchema = OnUpsertStructureSchema(structureType);
-
-            if (!query.HasWhere)
-                return TransactionalDbClient.RowCount(structureSchema);
-
-            var whereSql = QueryGenerator.GenerateQueryReturningCountOfStrutureIds(query);
-            return TransactionalDbClient.RowCountByQuery(structureSchema, whereSql);
-        }
-
         public virtual bool Exists<T>(object id) where T : class
         {
-            return Try(() => OnExists(typeof(T), id));
+            return QueryEngine.Exists<T>(id);
         }
 
         public virtual bool Exists(Type structureType, object id)
         {
-            return Try(() => OnExists(structureType, id));
-        }
-
-        protected bool OnExists(Type structureType, object id)
-        {
-            return Try(() =>
-            {
-                Ensure.That(structureType, "structureType").IsNotNull();
-                Ensure.That(id, "id").IsNotNull();
-
-                var structureId = StructureId.ConvertFrom(id);
-                var structureSchema = OnUpsertStructureSchema(structureType);
-
-                if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                    return TransactionalDbClient.Exists(structureSchema, structureId);
-
-                return Db.CacheProvider.Exists(
-                    structureSchema,
-                    structureId,
-                    sid => TransactionalDbClient.Exists(structureSchema, sid));
-            });
-        }
-
-        IEnumerable<T> IQueryEngine.Query<T>(IQuery query)
-        {
-            return Try(() => OnQueryAs<T, T>(query));
-        }
-
-        IEnumerable<object> IQueryEngine.Query(IQuery query, Type structureType)
-        {
-            return Try(() => OnQuery(query, structureType));
-        }
-
-        protected virtual IEnumerable<object> OnQuery(IQuery query, Type structureType)
-        {
-            Ensure.That(structureType, "structureType").IsNotNull();
-            Ensure.That(query, "query").IsNotNull();
-
-            var structureSchema = OnUpsertStructureSchema(structureType);
-
-            IEnumerable<string> sourceData;
-
-            if (query.IsEmpty)
-                sourceData = TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema);
-            else
-            {
-                var sqlQuery = QueryGenerator.GenerateQuery(query);
-                sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-            }
-
-            return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
-        }
-
-        IEnumerable<TResult> IQueryEngine.QueryAs<T, TResult>(IQuery query)
-        {
-            return Try(() => OnQueryAs<T, TResult>(query));
-        }
-
-        protected virtual IEnumerable<TResult> OnQueryAs<T, TResult>(IQuery query) where T : class where TResult : class
-        {
-            return Try(() =>
-            {
-                Ensure.That(query, "query").IsNotNull();
-
-                var structureSchema = OnUpsertStructureSchema<T>();
-
-                IEnumerable<string> sourceData;
-
-                if (query.IsEmpty)
-                    sourceData = TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema);
-                else
-                {
-                    var sqlQuery = QueryGenerator.GenerateQuery(query);
-                    sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-                }
-
-                return Db.Serializer.DeserializeMany<TResult>(sourceData.ToArray());
-            });
-        }
-
-        IEnumerable<TResult> IQueryEngine.QueryAsAnonymous<T, TResult>(IQuery query, TResult template)
-        {
-            return Try(() => OnQueryAsAnonymous<T, TResult>(query, typeof(TResult)));
-        }
-
-        IEnumerable<TResult> IQueryEngine.QueryAsAnonymous<T, TResult>(IQuery query, Type templateType)
-        {
-            return Try(() => OnQueryAsAnonymous<T, TResult>(query, templateType));
-        }
-
-        protected virtual IEnumerable<TResult> OnQueryAsAnonymous<T, TResult>(IQuery query, Type templateType)
-            where T : class
-            where TResult : class
-        {
-            Ensure.That(query, "query").IsNotNull();
-
-            var structureSchema = OnUpsertStructureSchema<T>();
-
-            IEnumerable<string> sourceData;
-
-            if (query.IsEmpty)
-                sourceData = TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema);
-            else
-            {
-                var sqlQuery = QueryGenerator.GenerateQuery(query);
-                sourceData = TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-            }
-
-            return Db.Serializer.DeserializeManyUsingTemplate<TResult>(sourceData.ToArray(), templateType);
-        }
-
-        IEnumerable<string> IQueryEngine.QueryAsJson<T>(IQuery query)
-        {
-            return Try(() => OnQueryAsJson(typeof(T), query));
-        }
-
-        IEnumerable<string> IQueryEngine.QueryAsJson(IQuery query, Type structuretype)
-        {
-            return Try(() => OnQueryAsJson(structuretype, query));
-        }
-
-        protected virtual IEnumerable<string> OnQueryAsJson(Type structuretype, IQuery query)
-        {
-            Ensure.That(query, "query").IsNotNull();
-
-            var structureSchema = OnUpsertStructureSchema(structuretype);
-
-            if (query.IsEmpty)
-                return TransactionalDbClient.GetJsonOrderedByStructureId(structureSchema).ToArray();
-
-            var sqlQuery = QueryGenerator.GenerateQuery(query);
-
-            return TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray()).ToArray();
+            return QueryEngine.Exists(structureType, id);
         }
 
         public virtual T GetById<T>(object id) where T : class

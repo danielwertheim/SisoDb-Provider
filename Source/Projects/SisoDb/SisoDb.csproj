@@ -78,6 +78,7 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="DbQueryEngine.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\INamedQueryGenerator.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Lists.cs" />
     <Compile Include="Serialization\EmptyStructureSerializer.cs" />
     <Compile Include="Serialization\IStructureSerializer.cs" />
+    <Compile Include="SessionExecutionContext.cs" />
     <Compile Include="Structures\DataTypeCode.cs" />
     <Compile Include="Structures\IdGenerators\EmptyStructureIdGenerator.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGenerator.cs" />
