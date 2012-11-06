@@ -99,11 +99,8 @@ namespace SisoDb
             if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
                 return structureSchema;
 
-            using(var dbClient = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
-            {
-                Db.SchemaManager.UpsertStructureSet(structureSchema, dbClient);
-                return structureSchema;
-            }
+            Db.SchemaManager.UpsertStructureSet(structureSchema, TransactionalDbClient);
+            return structureSchema;
         }
 
         public virtual IStructureSchema GetStructureSchema<T>() where T : class
