@@ -31,7 +31,7 @@ namespace SisoDb.Specifications.Session
 			{
 				using (var session = TestContext.Database.BeginSession())
 				{
-					session.Advanced.UpdateMany<ItemForPropChange>(
+					session.UpdateMany<ItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
 						item =>
 						{
@@ -97,7 +97,7 @@ namespace SisoDb.Specifications.Session
 			{
 				using (var session = TestContext.Database.BeginSession())
 				{
-					session.Advanced.UpdateMany<GuidItemForPropChange>(
+					session.UpdateMany<GuidItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
 						item =>
 						{
@@ -164,7 +164,7 @@ namespace SisoDb.Specifications.Session
 			{
 				using (var session = TestContext.Database.BeginSession())
 				{
-					session.Advanced.UpdateMany<ItemForPropChange>(
+					session.UpdateMany<ItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
 						item =>
 						{
@@ -232,7 +232,7 @@ namespace SisoDb.Specifications.Session
 			{
 				using (var session = TestContext.Database.BeginSession())
 				{
-					session.Advanced.UpdateMany<GuidItemForPropChange>(
+					session.UpdateMany<GuidItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
 						item =>
 						{
@@ -300,7 +300,7 @@ namespace SisoDb.Specifications.Session
 			{
 				using (var session = TestContext.Database.BeginSession())
 				{
-					session.Advanced.UpdateMany<ItemForPropChange>(
+					session.UpdateMany<ItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
 						item =>
 						{
@@ -359,7 +359,7 @@ namespace SisoDb.Specifications.Session
 			{
 				using (var session = TestContext.Database.BeginSession())
 				{
-					session.Advanced.UpdateMany<GuidItemForPropChange>(
+					session.UpdateMany<GuidItemForPropChange>(
 						i => i.StructureId == _orgItem1Id || i.StructureId == _orgItem2Id,
 						item =>
 						{

@@ -65,7 +65,7 @@ namespace SisoDb.SampleApp
             stopWatch.Start();
             using (var session = database.BeginSession())
             {
-                session.Advanced.UpdateMany<Customer>(
+                session.UpdateMany<Customer>(
                     c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo,
                     customer => { customer.Firstname += "Udated"; });
             }
