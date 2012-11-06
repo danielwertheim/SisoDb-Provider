@@ -15,11 +15,12 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {
-    public abstract class DbSession : ITransactionalSession, IAdvanced
+    public abstract class DbSession : ITransactionalSession
     {
         private readonly Guid _id;
         private readonly ISisoDatabase _db;
         private readonly IQueryEngine _queryEngine;
+        private readonly IAdvanced _advanced;
         protected ITransactionalDbClient TransactionalDbClient;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
@@ -31,7 +32,7 @@ namespace SisoDb
         public ISisoDatabase Db { get { return _db; } }
         public SessionStatus Status { get; private set; }
         public IQueryEngine QueryEngine { get { return _queryEngine; } }
-        public IAdvanced Advanced { get { return this; } }
+        public IAdvanced Advanced { get { return _advanced; } }
         public bool Failed { get { return Status.IsFailed(); } }
 
         protected DbSession(ISisoDatabase db)
@@ -45,7 +46,8 @@ namespace SisoDb
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
             SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
             TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
-            _queryEngine = new DbQueryEngine(Db, TransactionalDbClient, QueryGenerator, null);
+            _queryEngine = new DbQueryEngine(Db, TransactionalDbClient, QueryGenerator, ExecutionContext);
+            _advanced = new DbSessionAdvanced(Db, TransactionalDbClient, QueryGenerator, SqlExpressionBuilder, ExecutionContext);
             ExecutionContext = new SessionExecutionContext(this);
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
         }
@@ -117,163 +119,6 @@ namespace SisoDb
         protected virtual IStructureSchema OnGetStructureSchema(Type structureType)
         {
             return Db.StructureSchemas.GetSchema(structureType);
-        }
-
-        void IAdvanced.DeleteByQuery<T>(Expression<Func<T, bool>> predicate)
-        {
-            Try(() =>
-            {
-                Ensure.That(predicate, "predicate").IsNotNull();
-
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-
-                var structureSchema = OnUpsertStructureSchema<T>();
-                Db.CacheProvider.NotifyOfPurge(structureSchema);
-
-                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
-                queryBuilder.Where(predicate);
-
-                var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
-                TransactionalDbClient.DeleteByQuery(sql, structureSchema);
-            });
-        }
-
-        void IAdvanced.NonQuery(string sql, params IDacParameter[] parameters)
-        {
-            Try(() =>
-            {
-                Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
-                TransactionalDbClient.ExecuteNonQuery(sql, parameters);
-            });
-        }
-
-        void IAdvanced.UpsertNamedQuery<T>(string name, Action<IQueryBuilder<T>> spec)
-        {
-            Try(() =>
-            {
-                Ensure.That(name, "name").IsNotNullOrWhiteSpace();
-                Ensure.That(spec, "spec").IsNotNull();
-
-                var generator = Db.ProviderFactory.GetNamedQueryGenerator<T>(Db.StructureSchemas);
-                TransactionalDbClient.UpsertSp(name, generator.Generate(name, spec));
-            });
-        }
-
-        IEnumerable<T> IAdvanced.NamedQuery<T>(INamedQuery query)
-        {
-            return Try(() => OnNamedQueryAs<T, T>(query));
-        }
-
-        IEnumerable<T> IAdvanced.NamedQuery<T>(string name, Expression<Func<T, bool>> predicate)
-        {
-            return Try(() =>
-            {
-                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
-                queryBuilder.Where(predicate);
-                var query = queryBuilder.Build();
-                var sqlExpression = SqlExpressionBuilder.Process(query);
-
-                var namedQuery = new NamedQuery(name);
-                namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
-
-                return OnNamedQueryAs<T, T>(namedQuery);
-            });
-        }
-
-        IEnumerable<TOut> IAdvanced.NamedQueryAs<TContract, TOut>(INamedQuery query)
-        {
-            return Try(() => OnNamedQueryAs<TContract, TOut>(query));
-        }
-
-        IEnumerable<TOut> IAdvanced.NamedQueryAs<TContract, TOut>(string name, Expression<Func<TContract, bool>> predicate)
-        {
-            return Try(() =>
-            {
-                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<TContract>(Db.StructureSchemas);
-                queryBuilder.Where(predicate);
-                var query = queryBuilder.Build();
-                var sqlExpression = SqlExpressionBuilder.Process(query);
-
-                var namedQuery = new NamedQuery(name);
-                namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
-
-                return OnNamedQueryAs<TContract, TOut>(namedQuery);
-            });
-        }
-
-        protected virtual IEnumerable<TOut> OnNamedQueryAs<TContract, TOut>(INamedQuery query)
-            where TContract : class
-            where TOut : class
-        {
-            Ensure.That(query, "query").IsNotNull();
-
-            OnUpsertStructureSchema<TContract>();
-
-            var sourceData = TransactionalDbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray());
-
-            return Db.Serializer.DeserializeMany<TOut>(sourceData.ToArray());
-        }
-
-        IEnumerable<string> IAdvanced.NamedQueryAsJson<T>(INamedQuery query)
-        {
-            return Try(() => OnNamedQueryAsJson<T>(query));
-        }
-
-        IEnumerable<string> IAdvanced.NamedQueryAsJson<T>(string name, Expression<Func<T, bool>> predicate)
-        {
-            return Try(() =>
-            {
-                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
-                queryBuilder.Where(predicate);
-                var query = queryBuilder.Build();
-                var sqlExpression = SqlExpressionBuilder.Process(query);
-
-                var namedQuery = new NamedQuery(name);
-                namedQuery.Add(sqlExpression.WhereCriteria.Parameters);
-
-                return OnNamedQueryAsJson<T>(namedQuery);
-            });
-        }
-
-        protected virtual IEnumerable<string> OnNamedQueryAsJson<T>(INamedQuery query) where T : class
-        {
-            Ensure.That(query, "query").IsNotNull();
-
-            OnUpsertStructureSchema<T>();
-
-            return TransactionalDbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray()).ToArray();
-        }
-
-        IEnumerable<T> IAdvanced.RawQuery<T>(IRawQuery query)
-        {
-            return Try(() => OnRawQueryAs<T, T>(query));
-        }
-
-        IEnumerable<TOut> IAdvanced.RawQueryAs<TContract, TOut>(IRawQuery query)
-        {
-            return Try(() => OnRawQueryAs<TContract, TOut>(query));
-        }
-
-        protected virtual IEnumerable<TOut> OnRawQueryAs<TContract, TOut>(IRawQuery query) where TContract : class where TOut : class
-        {
-            Ensure.That(query, "query").IsNotNull();
-
-            OnUpsertStructureSchema<TContract>();
-
-            var sourceData = TransactionalDbClient.YieldJson(query.QueryString, query.Parameters.ToArray());
-            return Db.Serializer.DeserializeMany<TOut>(sourceData.ToArray());
-        }
-
-        IEnumerable<string> IAdvanced.RawQueryAsJson<T>(IRawQuery query)
-        {
-            return Try(() =>
-            {
-                Ensure.That(query, "query").IsNotNull();
-
-                OnUpsertStructureSchema<T>();
-
-                return TransactionalDbClient.YieldJson(query.QueryString, query.Parameters.ToArray()).ToArray();
-            });
         }
 
         public virtual ISisoQueryable<T> Query<T>() where T : class
@@ -757,7 +602,7 @@ namespace SisoDb
             throw new SisoDbException(ExceptionMessages.ConcurrencyTokenIsOfWrongType);
         }
 
-        public virtual void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class
+        public virtual ISession UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class
         {
             Try(() =>
             {
@@ -813,6 +658,8 @@ namespace SisoDb
                     keepQueue.Clear();
                 }
             });
+
+            return this;
         }
 
         public virtual ISession Clear<T>() where T : class
@@ -922,6 +769,27 @@ namespace SisoDb
             Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
 
             TransactionalDbClient.DeleteByIds(structureIds, structureSchema);
+        }
+
+        public virtual ISession DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Try(() =>
+            {
+                Ensure.That(predicate, "predicate").IsNotNull();
+
+                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+                var structureSchema = OnUpsertStructureSchema<T>();
+                Db.CacheProvider.NotifyOfPurge(structureSchema);
+
+                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
+                queryBuilder.Where(predicate);
+
+                var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
+                TransactionalDbClient.DeleteByQuery(sql, structureSchema);
+            });
+
+            return this;
         }
     }
 }

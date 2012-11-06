@@ -28,15 +28,6 @@ namespace SisoDb
         void UpsertNamedQuery<T>(string name, Action<IQueryBuilder<T>> spec) where T : class;
 
         /// <summary>
-        /// Deletes one or more structures matchings the sent
-        /// predicate.
-        /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <param name="predicate"></param>
-        void DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class;
-
-        /// <summary>
         /// Lets you invoke a stored procedures that returns Json,
         /// which will get deserialized to <typeparamref name="T"/>.
         /// </summary>

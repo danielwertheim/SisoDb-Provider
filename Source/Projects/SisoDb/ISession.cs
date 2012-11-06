@@ -341,7 +341,8 @@ namespace SisoDb
         /// <param name="predicate"></param>
         /// <param name="modifier"></param>
         /// <remarks>Does not support Concurrency tokens</remarks>
-        void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class;
+        /// <returns></returns>
+        ISession UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class;
 
         /// <summary>
         /// Clears all stored structures of type <typeparamref name="T"/>.
@@ -404,5 +405,14 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</param>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
         ISession DeleteByIds(Type structureType, params object[] ids);
+
+        /// <summary>
+        /// Deletes one or more structures matchings the sent
+        /// predicate.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="predicate"></param>
+        ISession DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class;
     }
 }

@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.Session
             {
                 using(var session = TestContext.Database.BeginSession())
                 {
-                    session.Advanced.DeleteByQuery<GuidItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.DeleteByQuery<GuidItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -76,7 +76,7 @@ namespace SisoDb.Specifications.Session
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.Advanced.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.DeleteByQuery<StringItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -128,7 +128,7 @@ namespace SisoDb.Specifications.Session
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.Advanced.DeleteByQuery<IdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.DeleteByQuery<IdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -180,7 +180,7 @@ namespace SisoDb.Specifications.Session
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.Advanced.DeleteByQuery<BigIdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
+                    session.DeleteByQuery<BigIdentityItem>(i => i.Value >= _structures[1].Value && i.Value <= _structures[2].Value);
                 }
             };
 
@@ -1149,7 +1149,7 @@ namespace SisoDb.Specifications.Session
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.Advanced.DeleteByQuery<GuidItem>(i => i.Value.QxIn(_structures[1].Value, _structures[2].Value));
+                    session.DeleteByQuery<GuidItem>(i => i.Value.QxIn(_structures[1].Value, _structures[2].Value));
                 }
             };
 
@@ -1201,7 +1201,7 @@ namespace SisoDb.Specifications.Session
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    session.Advanced.DeleteByQuery<GuidItem>(i => i.GuidValue.QxIn(_structures[1].GuidValue, _structures[2].GuidValue));
+                    session.DeleteByQuery<GuidItem>(i => i.GuidValue.QxIn(_structures[1].GuidValue, _structures[2].GuidValue));
                 }
             };
 
@@ -1254,7 +1254,7 @@ namespace SisoDb.Specifications.Session
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var values = new[] { _structures[1].GuidValue, _structures[2].GuidValue };
-                    session.Advanced.DeleteByQuery<GuidItem>(i => i.GuidValue.QxIn(values));
+                    session.DeleteByQuery<GuidItem>(i => i.GuidValue.QxIn(values));
                 }
             };
 
