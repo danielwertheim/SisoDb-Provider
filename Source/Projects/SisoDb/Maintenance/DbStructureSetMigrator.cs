@@ -107,10 +107,10 @@ namespace SisoDb.Maintenance
             else
                 fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;
 
+            Db.SchemaManager.UpsertStructureSet(structureSchemaTo, dbClientTransactional);
+
             using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
             {
-                Db.SchemaManager.UpsertStructureSet(structureSchemaTo, dbClientNonTransactional);
-
                 foreach (var json in dbClientNonTransactional.GetJsonOrderedByStructureId(structureSchemaFrom))
                 {
                     var oldItem = fromDeserializer(json);
