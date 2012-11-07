@@ -7,7 +7,7 @@ using SisoDb.Structures.Schemas;
 namespace SisoDb.UnitTests.Serialization
 {
     [TestFixture]
-    public class ServiceStackJsonSerializerTests : UnitTestBase
+    public class InternalJsonSerializerTests : UnitTestBase
     {
         private ISisoDbSerializer _sisoDbSerializer;
 
@@ -16,7 +16,7 @@ namespace SisoDb.UnitTests.Serialization
             base.OnFixtureInitialize();
 
             var structureTypeFactory = new StructureTypeFactory();
-            _sisoDbSerializer = new ServiceStackJsonSerializer(structureTypeFactory.Configurations.GetConfiguration);
+            _sisoDbSerializer = new InternalJsonSerializer(structureTypeFactory.Configurations.GetConfiguration);
         }
 
         [Test]

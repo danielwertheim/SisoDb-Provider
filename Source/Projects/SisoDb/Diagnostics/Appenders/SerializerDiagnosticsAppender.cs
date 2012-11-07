@@ -15,7 +15,6 @@ namespace SisoDb.Diagnostics.Appenders
         {
             Info.AddGroup("Serializer")
                 .AddNode("Type", serializer.GetType().Name)
-                .AddNode("DeserializeManyInParallel", serializer.Options.DeserializeManyInParallel)
                 .AddNode("DateSerializationMode", serializer.Options.DateSerializationMode.ToString());
         }
     }

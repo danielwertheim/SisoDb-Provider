@@ -135,7 +135,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querying\PagingTests.cs" />
     <Compile Include="Querying\QueryTests.cs" />
-    <Compile Include="Serialization\ServiceStackJsonSerializerTests.cs" />
+    <Compile Include="Serialization\InternalJsonSerializerTests.cs" />
     <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGeneratorTests.cs" />
