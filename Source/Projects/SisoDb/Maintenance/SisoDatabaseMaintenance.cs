@@ -36,7 +36,7 @@ namespace SisoDb.Maintenance
 
             lock (_db.LockObject)
             {
-                _db.SchemaManager.RemoveFromCache(@from);
+                _db.DbSchemas.RemoveFromCache(@from);
 
                 using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
                 {
@@ -57,7 +57,7 @@ namespace SisoDb.Maintenance
                 using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
                 {
                     var structureSchema = _db.StructureSchemas.GetSchema<TContract>();
-                    _db.SchemaManager.UpsertStructureSet(structureSchema, dbClient);
+                    _db.DbSchemas.Upsert(structureSchema, dbClient);
 
                     dbClient.ClearQueryIndexes(structureSchema);
 
@@ -114,13 +114,13 @@ namespace SisoDb.Maintenance
         protected virtual void OnClearCache()
         {
             _db.CacheProvider.NotifyOfPurgeAll();
-            _db.SchemaManager.ClearCache();
+            _db.DbSchemas.ClearCache();
         }
 
         protected virtual void OnClearCache(IStructureSchema structureSchema)
         {
             _db.CacheProvider.NotifyOfPurge(structureSchema);
-            _db.SchemaManager.RemoveFromCache(structureSchema);
+            _db.DbSchemas.RemoveFromCache(structureSchema);
         }
     }
 }

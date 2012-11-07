@@ -91,9 +91,9 @@ namespace SisoDb.SqlServer
                 SqlStatements);
 	    }
 
-        public virtual IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db)
+        public virtual IDbSchemas GetDbSchemaManagerFor(ISisoDatabase db)
         {
-            return new DbSchemaManager(db, new SqlDbSchemaUpserter(SqlStatements));
+            return new DbSchemas(db, new SqlDbSchemaUpserter(SqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)

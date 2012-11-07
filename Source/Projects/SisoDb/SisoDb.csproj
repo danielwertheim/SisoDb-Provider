@@ -91,7 +91,7 @@
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />
     <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
-    <Compile Include="DbSchema\DbSchemas.cs" />
+    <Compile Include="DbSchema\DbSchemaInfo.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
@@ -367,14 +367,14 @@
     <Compile Include="INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
-    <Compile Include="DbSchema\IDbSchemaManager.cs" />
+    <Compile Include="DbSchema\IDbSchemas.cs" />
     <Compile Include="Querying\IDbQueryGenerator.cs" />
     <Compile Include="Dac\ISqlStatements.cs" />
     <Compile Include="Dac\SqlStatementsBase.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
     <Compile Include="Serialization\ISisoDbSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
-    <Compile Include="DbSchema\DbSchemaManager.cs" />
+    <Compile Include="DbSchema\DbSchemas.cs" />
     <Compile Include="Dac\DacParameter.cs" />
     <Compile Include="Querying\Sql\SqlWhereMember.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />

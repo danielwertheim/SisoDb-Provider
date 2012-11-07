@@ -30,8 +30,8 @@ namespace SisoDb.DbSchema
 
         private void OnInitialize(string structureName)
         {
-            StructureTableName = DbSchemas.GenerateStructureTableName(structureName);
-            UniquesTableName = DbSchemas.GenerateUniquesTableName(structureName);
+            StructureTableName = DbSchemaInfo.GenerateStructureTableName(structureName);
+            UniquesTableName = DbSchemaInfo.GenerateUniquesTableName(structureName);
             IndexesTableNames = new IndexesTableNames(structureName);
 
             AllTableNames = new[]

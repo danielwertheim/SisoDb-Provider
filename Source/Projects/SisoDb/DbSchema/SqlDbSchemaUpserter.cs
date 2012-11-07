@@ -45,7 +45,7 @@ namespace SisoDb.DbSchema
                 return;
 
             foreach (var sql in GenerateSql(structureSchema, modelInfo))
-                dbClient.ExecuteNonQuery(sql, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name));
+                dbClient.ExecuteNonQuery(sql, new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, structureSchema.Name));
         }
 
         protected virtual IEnumerable<string> GenerateSql(IStructureSchema structureSchema, ModelTablesInfo modelInfo)

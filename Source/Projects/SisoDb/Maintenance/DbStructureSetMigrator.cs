@@ -107,7 +107,7 @@ namespace SisoDb.Maintenance
             else
                 fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;
 
-            Db.SchemaManager.UpsertStructureSet(structureSchemaTo, dbClientTransactional);
+            Db.DbSchemas.Upsert(structureSchemaTo, dbClientTransactional);
 
             using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
             {

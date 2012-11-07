@@ -99,7 +99,7 @@ namespace SisoDb
             if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
                 return structureSchema;
 
-            Db.SchemaManager.UpsertStructureSet(structureSchema, TransactionalDbClient);
+            Db.DbSchemas.Upsert(structureSchema, TransactionalDbClient);
             return structureSchema;
         }
 

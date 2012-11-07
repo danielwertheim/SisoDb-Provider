@@ -1,110 +1,74 @@
-using System;
-using System.Linq;
+﻿using System.Collections.Generic;
 using SisoDb.Dac;
-using SisoDb.NCore.Collections;
+using SisoDb.EnsureThat;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {
-    public static class DbSchemas
+    public class DbSchemas : IDbSchemas
     {
-        public static class Suffixes
+        private readonly ISisoDatabase _db;
+    	private readonly IDbSchemaUpserter _dbSchemaUpserter;
+    	private readonly ISet<string> _upsertedSchemas;
+        
+        public DbSchemas(ISisoDatabase db, IDbSchemaUpserter dbSchemaUpserter)
         {
-            public static readonly string[] AllSuffixes;
-            public const string StructureTableNameSuffix = "Structure";
-            public const string UniquesTableNameSuffix = "Uniques";
-            public static readonly string[] IndexesTableNameSuffixes;
+            Ensure.That(db, "db").IsNotNull();
+        	Ensure.That(dbSchemaUpserter, "dbSchemaUpserter").IsNotNull();
 
-            static Suffixes()
+            _db = db;
+			_dbSchemaUpserter = dbSchemaUpserter;
+            _upsertedSchemas = new HashSet<string>();
+        }
+
+        public virtual void ClearCache()
+        {
+            lock (_upsertedSchemas)
             {
-                IndexesTableNameSuffixes = Enum.GetNames(typeof(IndexesTypes));
-                AllSuffixes = new[] { StructureTableNameSuffix, UniquesTableNameSuffix }.MergeWith(IndexesTableNameSuffixes).ToArray();
+                _upsertedSchemas.Clear();
             }
         }
 
-        public static class SysTables
+        public virtual void RemoveFromCache(string structureSchemaName)
         {
-            public const string IdentitiesTable = "SisoDbIdentities";
-        }
-
-        public static class Parameters
-        {
-            public const string DbNameParamPrefix = "@dbName";
-            public const string TableNameParamPrefix = "@tableName";
-            public const string EntityNameParamPrefix = "@entityName";
-            public static readonly string JsonParam;
-            public static readonly string StringValueForValueTypeIndexParamName;
-            
-            static Parameters()
+            lock (_upsertedSchemas)
             {
-                JsonParam = string.Concat("@", StructureStorageSchema.Fields.Json.Name);
-                StringValueForValueTypeIndexParamName = string.Concat("@", IndexStorageSchema.Fields.StringValue.Name);
-            }
-
-            public static bool ShouldBeMultivalue(IDacParameter param)
-            {
-                return param is ArrayDacParameter;
-            }
-
-            public static bool ShouldBeDateTime(IDacParameter param)
-            {
-                return param.Value is DateTime;
-            }
-
-            public static bool ShouldBeNonUnicodeString(IDacParameter param)
-            {
-                const StringComparison c = StringComparison.OrdinalIgnoreCase;
-
-                return param.Name.StartsWith(DbNameParamPrefix, c)
-                    || param.Name.StartsWith(TableNameParamPrefix, c)
-                    || param.Name.StartsWith(EntityNameParamPrefix, c)
-                    || param.Name.Equals(StringValueForValueTypeIndexParamName);
-            }
-
-            public static bool ShouldBeUnicodeString(IDacParameter param)
-            {
-                return param.Value is string;
-            }
-
-            public static bool ShouldBeJson(IDacParameter param)
-            {
-                return param.Name.Equals(JsonParam, StringComparison.OrdinalIgnoreCase);
+                _upsertedSchemas.Remove(structureSchemaName);
             }
         }
 
-        public static string GetStructureTableName(this IStructureSchema structureSchema)
+        public virtual void RemoveFromCache(IStructureSchema structureSchema)
+		{
+			lock (_upsertedSchemas)
+			{
+				_upsertedSchemas.Remove(structureSchema.Name);
+			}
+		}
+
+        public virtual void Drop(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            return GenerateStructureTableName(structureSchema.Name);
+            lock (_upsertedSchemas)
+            {
+                _upsertedSchemas.Remove(structureSchema.Name);
+
+                dbClient.Drop(structureSchema);
+            }
         }
 
-        public static string GenerateStructureTableName(string structureName)
+        public virtual void Upsert(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.StructureTableNameSuffix);
-        }
+            if (!_db.Settings.AllowsAnyDynamicSchemaChanges())
+                return;
 
-        public static IndexesTableNames GetIndexesTableNames(this IStructureSchema structureSchema)
-        {
-            return new IndexesTableNames(structureSchema);
-        }
+            lock (_upsertedSchemas)
+            {
+                if (_upsertedSchemas.Contains(structureSchema.Name))
+                    return;
 
-        public static string GenerateIndexesTableNameFor(string structureName, IndexesTypes type)
-        {
-            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), type.ToString());
-        }
+                _dbSchemaUpserter.Upsert(structureSchema, dbClient, _db.Settings.AllowDynamicSchemaCreation, _db.Settings.AllowDynamicSchemaUpdates);
 
-        public static string GetIndexesTableNameFor(this IStructureSchema structureSchema, IndexesTypes type)
-        {
-            return GenerateIndexesTableNameFor(structureSchema.Name, type);
-        }
-
-        public static string GetUniquesTableName(this IStructureSchema structureSchema)
-        {
-            return GenerateUniquesTableName(structureSchema.Name);
-        }
-
-        public static string GenerateUniquesTableName(string structureName)
-        {
-            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.UniquesTableNameSuffix);
+                _upsertedSchemas.Add(structureSchema.Name);
+            }
         }
     }
 }

@@ -58,9 +58,9 @@ namespace SisoDb
         IStructureSchemas StructureSchemas { get; set; }
 
         /// <summary>
-        /// Manager used to control Db-Schemas.
+        /// Caches and controls state of Db-Schemas.
         /// </summary>
-        IDbSchemaManager SchemaManager { get; }
+        IDbSchemas DbSchemas { get; }
 
         /// <summary>
         /// Structure builders collection used to resolve a Structure builder to use when building structures for insert and updates.

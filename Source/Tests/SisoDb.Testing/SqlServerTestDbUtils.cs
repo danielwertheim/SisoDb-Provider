@@ -66,7 +66,7 @@ namespace SisoDb.Testing
                     if (!tmpNamesToSkip.Contains(name))
                         dbColumns.Add(new DbColumn(name, dr.GetString(1)));
                 },
-                new DacParameter(DbSchemas.Parameters.TableNameParamPrefix, tableName));
+                new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix, tableName));
 
             return dbColumns;
         }

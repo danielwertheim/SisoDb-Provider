@@ -38,13 +38,13 @@ namespace SisoDb.DbSchema
 
         private void OnInitialize(string structureName)
         {
-            IntegersTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Integers);
-            FractalsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Fractals);
-            BooleansTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Booleans);
-            DatesTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Dates);
-            GuidsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Guids);
-            StringsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Strings);
-            TextsTableName = DbSchemas.GenerateIndexesTableNameFor(structureName, IndexesTypes.Texts);
+            IntegersTableName = DbSchemaInfo.GenerateIndexesTableNameFor(structureName, IndexesTypes.Integers);
+            FractalsTableName = DbSchemaInfo.GenerateIndexesTableNameFor(structureName, IndexesTypes.Fractals);
+            BooleansTableName = DbSchemaInfo.GenerateIndexesTableNameFor(structureName, IndexesTypes.Booleans);
+            DatesTableName = DbSchemaInfo.GenerateIndexesTableNameFor(structureName, IndexesTypes.Dates);
+            GuidsTableName = DbSchemaInfo.GenerateIndexesTableNameFor(structureName, IndexesTypes.Guids);
+            StringsTableName = DbSchemaInfo.GenerateIndexesTableNameFor(structureName, IndexesTypes.Strings);
+            TextsTableName = DbSchemaInfo.GenerateIndexesTableNameFor(structureName, IndexesTypes.Texts);
 
             All = new[]
 	        {

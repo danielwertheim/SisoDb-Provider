@@ -41,10 +41,10 @@ namespace SisoDb.SqlCe4
         {
             Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
-            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName));
+            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, entityName));
 
             ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
-                new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName),
+                new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, entityName),
                 new DacParameter("numOfIds", numOfIds));
 
             return nextId;
@@ -119,7 +119,7 @@ namespace SisoDb.SqlCe4
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-            using (var cmd = CreateCommand(string.Empty, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name)))
+            using (var cmd = CreateCommand(string.Empty, new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, structureSchema.Name)))
             {
                 DropIndexesTables(cmd, modelInfo.Statuses.IndexesTableStatuses, modelInfo.Names.IndexesTableNames);
 

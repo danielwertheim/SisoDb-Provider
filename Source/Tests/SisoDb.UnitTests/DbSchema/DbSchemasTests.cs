@@ -12,19 +12,19 @@ namespace SisoDb.UnitTests.DbSchema
         [Test]
         public void SysTables_value_of_Identities()
         {
-            Assert.AreEqual("SisoDbIdentities", DbSchemas.SysTables.IdentitiesTable);
+            Assert.AreEqual("SisoDbIdentities", DbSchemaInfo.SysTables.IdentitiesTable);
         }
 
         [Test]
         public void Suffixes_value_of_StructureTableNameSuffix()
         {
-            Assert.AreEqual("Structure", DbSchemas.Suffixes.StructureTableNameSuffix);
+            Assert.AreEqual("Structure", DbSchemaInfo.Suffixes.StructureTableNameSuffix);
         }
 
         [Test]
         public void Suffixes_value_of_UniquesTableNameSuffix()
         {
-            Assert.AreEqual("Uniques", DbSchemas.Suffixes.UniquesTableNameSuffix);
+            Assert.AreEqual("Uniques", DbSchemaInfo.Suffixes.UniquesTableNameSuffix);
         }
 
         [Test]
@@ -32,33 +32,33 @@ namespace SisoDb.UnitTests.DbSchema
         {
             var expected = Enum.GetNames(typeof(IndexesTypes));
 
-            Assert.AreEqual(expected, DbSchemas.Suffixes.IndexesTableNameSuffixes);
+            Assert.AreEqual(expected, DbSchemaInfo.Suffixes.IndexesTableNameSuffixes);
         }
 
         [Test]
         public void Suffixes_AllSuffixes_Should_contain_all_suffixes()
         {
-            var expected = new[] { DbSchemas.Suffixes.StructureTableNameSuffix, DbSchemas.Suffixes.UniquesTableNameSuffix }.MergeWith(Enum.GetNames(typeof(IndexesTypes)));
+            var expected = new[] { DbSchemaInfo.Suffixes.StructureTableNameSuffix, DbSchemaInfo.Suffixes.UniquesTableNameSuffix }.MergeWith(Enum.GetNames(typeof(IndexesTypes)));
 
-            Assert.AreEqual(expected, DbSchemas.Suffixes.AllSuffixes);
+            Assert.AreEqual(expected, DbSchemaInfo.Suffixes.AllSuffixes);
         }
 
         [Test]
         public void Parameters_value_of_DbNameParamPrefix()
         {
-            Assert.AreEqual("@dbName", DbSchemas.Parameters.DbNameParamPrefix);
+            Assert.AreEqual("@dbName", DbSchemaInfo.Parameters.DbNameParamPrefix);
         }
 
         [Test]
         public void Parameters_value_of_TableNameParamPrefix()
         {
-            Assert.AreEqual("@tableName", DbSchemas.Parameters.TableNameParamPrefix);
+            Assert.AreEqual("@tableName", DbSchemaInfo.Parameters.TableNameParamPrefix);
         }
 
         [Test]
         public void Parameters_value_of_EntityNameParamPrefix()
         {
-            Assert.AreEqual("@entityName", DbSchemas.Parameters.EntityNameParamPrefix);
+            Assert.AreEqual("@entityName", DbSchemaInfo.Parameters.EntityNameParamPrefix);
         }
     }
 }

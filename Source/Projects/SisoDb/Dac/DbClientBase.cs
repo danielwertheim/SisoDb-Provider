@@ -130,7 +130,7 @@ namespace SisoDb.Dac
 
             return ExecuteScalar<long>(
                 sql,
-                new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName),
+                new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, entityName),
                 new DacParameter("numOfIds", numOfIds));
         }
 
@@ -139,11 +139,11 @@ namespace SisoDb.Dac
             EnsureValidDbObjectName(oldStructureName);
             EnsureValidDbObjectName(newStructureName);
 
-            var oldStructureTableName = DbSchemas.GenerateStructureTableName(oldStructureName);
-            var newStructureTableName = DbSchemas.GenerateStructureTableName(newStructureName);
+            var oldStructureTableName = DbSchemaInfo.GenerateStructureTableName(oldStructureName);
+            var newStructureTableName = DbSchemaInfo.GenerateStructureTableName(newStructureName);
 
-            var oldUniquesTableName = DbSchemas.GenerateUniquesTableName(oldStructureName);
-            var newUniquesTableName = DbSchemas.GenerateUniquesTableName(newStructureName);
+            var oldUniquesTableName = DbSchemaInfo.GenerateUniquesTableName(oldStructureName);
+            var newUniquesTableName = DbSchemaInfo.GenerateUniquesTableName(newStructureName);
 
             var oldIndexesTableNames = new IndexesTableNames(oldStructureName);
             var newIndexesTableNames = new IndexesTableNames(newStructureName);
@@ -258,7 +258,7 @@ namespace SisoDb.Dac
                 names.UniquesTableName,
                 names.StructureTableName);
 
-            using (var cmd = CreateCommand(sql, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name)))
+            using (var cmd = CreateCommand(sql, new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, structureSchema.Name)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -381,7 +381,7 @@ namespace SisoDb.Dac
             EnsureValidDbObjectName(name);
 
             var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<int>(sql, new DacParameter(DbSchemas.Parameters.TableNameParamPrefix, name));
+            var value = ExecuteScalar<int>(sql, new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix, name));
 
             return value > 0;
         }
@@ -397,7 +397,7 @@ namespace SisoDb.Dac
         public virtual ModelTableStatuses GetModelTableStatuses(ModelTableNames names)
         {
             var sql = SqlStatements.GetSql("GetModelTableStatuses");
-            var parameters = names.AllTableNames.Select((n, i) => new DacParameter(DbSchemas.Parameters.TableNameParamPrefix + i, n)).ToArray();
+            var parameters = names.AllTableNames.Select((n, i) => new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix + i, n)).ToArray();
             var matchingNames = new HashSet<string>();
             SingleResultSequentialReader(
                 sql,

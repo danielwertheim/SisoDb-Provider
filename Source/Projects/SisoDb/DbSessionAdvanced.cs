@@ -56,7 +56,7 @@ namespace SisoDb
             if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
                 return structureSchema;
 
-            Db.SchemaManager.UpsertStructureSet(structureSchema, DbClient);
+            Db.DbSchemas.Upsert(structureSchema, DbClient);
             return structureSchema;
         }
 
