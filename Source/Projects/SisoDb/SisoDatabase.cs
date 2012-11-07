@@ -61,6 +61,7 @@ namespace SisoDb
         {
             get { return _dbSchemaManager; }
         }
+
         public bool CachingIsEnabled
         {
             get { return CacheProvider != null; }
