@@ -27,11 +27,11 @@
 					],
 					[
 						"ClientConnectionString",
-						"Data Source=.;Initial Catalog=foo;Integrated Security=True"
+						"Data Source=.;Initial Catalog=foo;Integrated Security=True;MultipleActiveResultSets=True"
 					],
 					[
 						"ServerConnectionString",
-						"Data Source=.;Initial Catalog=;Integrated Security=True"
+						"Data Source=.;Initial Catalog=;Integrated Security=True;MultipleActiveResultSets=True"
 					]
 				]
 			],

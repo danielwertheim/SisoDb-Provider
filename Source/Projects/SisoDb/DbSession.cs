@@ -158,7 +158,7 @@ namespace SisoDb
 
         public virtual T GetById<T>(object id) where T : class
         {
-            return Try(() => OnGetByIdAs<T, T>(id));
+            return Try(() => OnGetByIdAs<T>(typeof(T), id));
         }
 
         public virtual object GetById(Type structureType, object id)
@@ -168,6 +168,7 @@ namespace SisoDb
 
         protected virtual object OnGetById(Type structureType, object id)
         {
+            Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(id, "id").IsNotNull();
 
             var structureId = StructureId.ConvertFrom(id);
@@ -183,9 +184,40 @@ namespace SisoDb
                 CacheConsumeMode);
         }
 
+        public virtual TOut GetByIdAs<TContract, TOut>(object id)
+            where TContract : class
+            where TOut : class
+        {
+            return Try(() => OnGetByIdAs<TOut>(typeof(TContract), id));
+        }
+
+        public TOut GetByIdAs<TOut>(Type structureType, object id) where TOut : class
+        {
+            return Try(() => OnGetByIdAs<TOut>(structureType, id));
+        }
+
+        protected virtual TOut OnGetByIdAs<TOut>(Type structureType, object id)
+            where TOut : class
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(id, "id").IsNotNull();
+
+            var structureId = StructureId.ConvertFrom(id);
+            var structureSchema = OnUpsertStructureSchema(structureType);
+
+            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
+                return Db.Serializer.Deserialize<TOut>(DbClient.GetJsonById(structureId, structureSchema));
+
+            return Db.CacheProvider.Consume(
+                structureSchema,
+                structureId,
+                sid => Db.Serializer.Deserialize<TOut>(DbClient.GetJsonById(sid, structureSchema)),
+                CacheConsumeMode);
+        }
+
         public virtual IEnumerable<T> GetByIds<T>(params object[] ids) where T : class
         {
-            return Try(() => OnGetByIdsAs<T, T>(ids));
+            return Try(() => OnGetByIdsAs<T>(typeof(T), ids));
         }
 
         public virtual object[] GetByIds(Type structureType, params object[] ids)
@@ -210,47 +242,27 @@ namespace SisoDb
                 CacheConsumeMode).ToArray();
         }
 
-        public virtual TOut GetByIdAs<TContract, TOut>(object id)
-            where TContract : class
-            where TOut : class
-        {
-            return Try(() => OnGetByIdAs<TContract, TOut>(id));
-        }
-
-        protected virtual TOut OnGetByIdAs<TContract, TOut>(object id)
-            where TContract : class
-            where TOut : class
-        {
-            Ensure.That(id, "id").IsNotNull();
-
-            var structureId = StructureId.ConvertFrom(id);
-            var structureSchema = OnUpsertStructureSchema<TContract>();
-
-            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.Deserialize<TOut>(DbClient.GetJsonById(structureId, structureSchema));
-
-            return Db.CacheProvider.Consume(
-                structureSchema,
-                structureId,
-                sid => Db.Serializer.Deserialize<TOut>(DbClient.GetJsonById(sid, structureSchema)),
-                CacheConsumeMode);
-        }
-
         public virtual IEnumerable<TOut> GetByIdsAs<TContract, TOut>(params object[] ids)
             where TContract : class
             where TOut : class
         {
-            return Try(() => OnGetByIdsAs<TContract, TOut>(ids));
+            return Try(() => OnGetByIdsAs<TOut>(typeof(TContract), ids));
         }
 
-        protected virtual IEnumerable<TOut> OnGetByIdsAs<TContract, TOut>(params object[] ids)
-            where TContract : class
+        public virtual IEnumerable<TOut> GetByIdsAs<TOut>(Type structureType, params object[] ids)
             where TOut : class
         {
+            return Try(() => OnGetByIdsAs<TOut>(structureType, ids));
+        }
+
+        protected virtual IEnumerable<TOut> OnGetByIdsAs<TOut>(Type structureType, params object[] ids)
+            where TOut : class
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(ids, "ids").HasItems();
 
             var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
-            var structureSchema = OnUpsertStructureSchema<TContract>();
+            var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (!Db.CacheProvider.IsEnabledFor(structureSchema))
                 return Db.Serializer.DeserializeMany<TOut>(DbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray());
@@ -274,6 +286,7 @@ namespace SisoDb
 
         protected virtual string OnGetByIdAsJson(Type structureType, object id)
         {
+            Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(id, "id").IsNotNull();
 
             var structureId = StructureId.ConvertFrom(id);
@@ -354,43 +367,32 @@ namespace SisoDb
 
         public virtual ISession InsertAs<T>(object item) where T : class
         {
-            Try(() =>
-            {
-                Ensure.That(item, "item").IsNotNull();
-
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-
-                var structureSchema = OnUpsertStructureSchema<T>();
-                var json = Db.Serializer.Serialize(item); //TODO: Unnecessary
-                var realItem = Db.Serializer.Deserialize<T>(json);
-
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
-            });
+            Try(() => OnInsertAs(typeof(T), item));
 
             return this;
         }
 
         public virtual ISession InsertAs(Type structureType, object item)
         {
-            Try(() =>
-            {
-                Ensure.That(structureType, "structureType").IsNotNull();
-                Ensure.That(item, "item").IsNotNull();
-
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-
-                var structureSchema = OnUpsertStructureSchema(structureType);
-                var json = Db.Serializer.Serialize(item);
-                var realItem = Db.Serializer.Deserialize(json, structureType);
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
-
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-                structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
-            });
+            Try(() => OnInsertAs(structureType, item));
 
             return this;
+        }
+
+        protected virtual void OnInsertAs(Type structureType, object item)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(item, "item").IsNotNull();
+
+            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+            var structureSchema = OnUpsertStructureSchema(structureType);
+            var json = Db.Serializer.Serialize(item);
+            var realItem = Db.Serializer.Deserialize(json, structureType);
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
+
+            structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
         }
 
         public virtual string InsertJson<T>(string json) where T : class
@@ -422,40 +424,29 @@ namespace SisoDb
 
         public virtual ISession InsertMany<T>(IEnumerable<T> items) where T : class
         {
-            Try(() =>
-            {
-                Ensure.That(items, "items").IsNotNull();
-
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-
-                var structureSchema = OnUpsertStructureSchema<T>();
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-
-                foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
-                    structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
-            });
-
+            Try(() => OnInsertMany(typeof(T), items));
             return this;
         }
 
         public virtual ISession InsertMany(Type structureType, IEnumerable<object> items)
         {
-            Try(() =>
-            {
-                Ensure.That(structureType, "structureType").IsNotNull();
-                Ensure.That(items, "items").IsNotNull();
-
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-
-                var structureSchema = OnUpsertStructureSchema(structureType);
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-
-                foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
-                    structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
-            });
+            Try(() => OnInsertMany(structureType, items));
             return this;
+        }
+
+        protected virtual void OnInsertMany(Type structureType, IEnumerable<object> items)
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(items, "items").IsNotNull();
+
+            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+            var structureSchema = OnUpsertStructureSchema(structureType);
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
+
+            foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
+                structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
         }
 
         public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class

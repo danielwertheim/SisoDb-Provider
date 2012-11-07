@@ -144,6 +144,18 @@ namespace SisoDb
 
         /// <summary>
         /// Returns one single structure identified
+        /// by an id. 
+        /// </summary>
+        /// <typeparam name="TOut">
+        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <param name="structureType"></param>
+        /// <param name="id"></param>
+        /// <returns>Structure for (<paramref name="structureType"/>) as (<typeparamref name="TOut"/>) or null.</returns>
+        TOut GetByIdAs<TOut>(Type structureType, object id)
+            where TOut : class;
+
+        /// <summary>
+        /// Returns one single structure identified
         /// by an id, as Json. This is the most
         /// effective return type, since the Json
         /// is stored in the database, no deserialization
@@ -195,9 +207,21 @@ namespace SisoDb
         /// <typeparam name="TOut">
         /// Determines the type you want your structure deserialized to and returned as.</typeparam>
         /// <param name="ids">Ids used for matching the structures to return.</param>
-        /// <returns>IEnumerable of <typeparamref name="TOut"/>.</returns>
+        /// <returns>Structures for (<typeparamref name="TContract"/>) as (Enumerable of <typeparamref name="TOut"/>).</returns>
         IEnumerable<TOut> GetByIdsAs<TContract, TOut>(params object[] ids)
             where TContract : class
+            where TOut : class;
+
+        /// <summary>
+        /// Returns all structures for the defined structure <paramref name="structureType"/>
+        /// matching passed ids.
+        /// </summary>
+        /// <typeparam name="TOut">
+        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <param name="structureType"></param>
+        /// <param name="ids">Ids used for matching the structures to return.</param>
+        /// <returns>Structures for (<paramref name="structureType"/>) as (Enumerable of <typeparamref name="TOut"/>).</returns>
+        IEnumerable<TOut> GetByIdsAs<TOut>(Type structureType, params object[] ids)
             where TOut : class;
 
         /// <summary>

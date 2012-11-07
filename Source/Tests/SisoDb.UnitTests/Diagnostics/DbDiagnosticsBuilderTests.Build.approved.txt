@@ -21,11 +21,11 @@
 				},
 				{
 					"Name": "ClientConnectionString",
-					"Value": "Data Source=.;Initial Catalog=foo;Integrated Security=True"
+					"Value": "Data Source=.;Initial Catalog=foo;Integrated Security=True;MultipleActiveResultSets=True"
 				},
 				{
 					"Name": "ServerConnectionString",
-					"Value": "Data Source=.;Initial Catalog=;Integrated Security=True"
+					"Value": "Data Source=.;Initial Catalog=;Integrated Security=True;MultipleActiveResultSets=True"
 				}
 			]
 		},

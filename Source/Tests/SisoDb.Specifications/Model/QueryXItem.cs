@@ -5,7 +5,7 @@ namespace SisoDb.Specifications.Model
 {
     public abstract class QueryXItem<T>
     {
-        protected const string JsonFormat = "{{\"StructureId\":{0},\"SortOrder\":{1},\"IntegerValue\":{2},\"NullableIntegerValue\":{3},\"StringValue\":\"{4}\", \"GuidValue\":\"{5}\",\"BoolValue\":{6}}}";
+        protected const string JsonFormat = "{{\"StructureId\":{0},\"SortOrder\":{1},\"IntegerValue\":{2},\"NullableIntegerValue\":{3},\"StringValue\":\"{4}\",\"GuidValue\":\"{5}\",\"BoolValue\":{6}}}";
 
         public T StructureId { get; set; }
         public int SortOrder { get; set; }
