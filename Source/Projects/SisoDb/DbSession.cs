@@ -41,6 +41,7 @@ namespace SisoDb
 
             _id = Guid.NewGuid();
             _db = db;
+            ExecutionContext = new SessionExecutionContext(this);
             Status = SessionStatus.Active;
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
@@ -48,7 +49,6 @@ namespace SisoDb
             TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
             _queryEngine = new DbQueryEngine(Db, TransactionalDbClient, QueryGenerator, ExecutionContext);
             _advanced = new DbSessionAdvanced(Db, TransactionalDbClient, QueryGenerator, SqlExpressionBuilder, ExecutionContext);
-            ExecutionContext = new SessionExecutionContext(this);
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
         }
 
