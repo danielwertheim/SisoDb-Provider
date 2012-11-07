@@ -7,6 +7,7 @@ using SisoDb.NCore.Reflections;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
+using SisoDb.Structures;
 
 namespace SisoDb.Querying.Sql
 {
@@ -238,12 +239,13 @@ namespace SisoDb.Querying.Sql
 
             foreach (var sortingNode in sortingsLambda.Nodes.OfType<SortingNode>())
             {
-                var valueField = IndexStorageSchema.Fields.Value;
-
                 if(expression.ContainsSortingMemberFor(sortingNode.MemberPath))
                     continue;
 
                 var memberIndex = expression.GetExistingOrNewMemberIndexFor(sortingNode.MemberPath);
+                var valueField = IndexStorageSchema.Fields.Value;
+                if (sortingNode.DataTypeCode == DataTypeCode.Bool)
+                    valueField = IndexStorageSchema.Fields.StringValue;
 
                 expression.AddSortingMember(new SqlSortingMember(
                     memberIndex,
