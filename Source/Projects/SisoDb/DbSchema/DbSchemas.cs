@@ -10,17 +10,18 @@ namespace SisoDb.DbSchema
     {
         protected readonly object Lock = new object();
         protected readonly ISisoDatabase Db;
-    	protected readonly IDbSchemaUpserter DbSchemaUpserter;
-    	protected readonly ISet<string> UpsertedSchemas = new HashSet<string>();
-        protected readonly IDictionary<Guid, ISet<string>> UpsertedSchemasByDbClient = new Dictionary<Guid, ISet<string>>(); 
-        
+        protected readonly IDbSchemaUpserter DbSchemaUpserter;
+        protected readonly ISet<string> UpsertedSchemas = new HashSet<string>();
+        protected readonly ISet<string> TransientSchemas = new HashSet<string>();
+        protected readonly IDictionary<Guid, ISet<string>> UpsertedSchemasByDbClient = new Dictionary<Guid, ISet<string>>();
+
         public DbSchemas(ISisoDatabase db, IDbSchemaUpserter dbSchemaUpserter)
         {
             Ensure.That(db, "db").IsNotNull();
-        	Ensure.That(dbSchemaUpserter, "dbSchemaUpserter").IsNotNull();
+            Ensure.That(dbSchemaUpserter, "dbSchemaUpserter").IsNotNull();
 
             Db = db;
-			DbSchemaUpserter = dbSchemaUpserter;
+            DbSchemaUpserter = dbSchemaUpserter;
         }
 
         public virtual void ClearCache()
@@ -28,6 +29,7 @@ namespace SisoDb.DbSchema
             lock (Lock)
             {
                 UpsertedSchemas.Clear();
+                TransientSchemas.Clear();
             }
         }
 
@@ -36,23 +38,25 @@ namespace SisoDb.DbSchema
             lock (Lock)
             {
                 UpsertedSchemas.Remove(structureSchemaName);
+                TransientSchemas.Remove(structureSchemaName);
             }
         }
 
         public virtual void RemoveFromCache(IStructureSchema structureSchema)
-		{
+        {
             lock (Lock)
-			{
-				UpsertedSchemas.Remove(structureSchema.Name);
-			}
-		}
+            {
+                UpsertedSchemas.Remove(structureSchema.Name);
+                TransientSchemas.Remove(structureSchema.Name);
+            }
+        }
 
         public virtual void Drop(IStructureSchema structureSchema, IDbClient dbClient)
         {
             lock (Lock)
             {
                 UpsertedSchemas.Remove(structureSchema.Name);
-
+                TransientSchemas.Remove(structureSchema.Name);
                 dbClient.Drop(structureSchema);
             }
         }
@@ -64,42 +68,46 @@ namespace SisoDb.DbSchema
 
             lock (Lock)
             {
-                if (UpsertedSchemas.Contains(structureSchema.Name))
+                if (UpsertedSchemas.Contains(structureSchema.Name) || TransientSchemas.Contains(structureSchema.Name))
                     return;
 
-                if (dbClient is ITransactionalDbClient)
-                    RegisterDbClient((ITransactionalDbClient)dbClient);
+                RegisterDbClient(dbClient);
+                if(UpsertedSchemasByDbClient[dbClient.Id].Contains(structureSchema.Name))
+                    return;
 
                 DbSchemaUpserter.Upsert(structureSchema, dbClient, Db.Settings.AllowDynamicSchemaCreation, Db.Settings.AllowDynamicSchemaUpdates);
-
-                UpsertedSchemas.Add(structureSchema.Name);
                 UpsertedSchemasByDbClient[dbClient.Id].Add(structureSchema.Name);
+                TransientSchemas.Add(structureSchema.Name);
             }
         }
 
-        private void RegisterDbClient(ITransactionalDbClient dbClient)
+        protected virtual void RegisterDbClient(IDbClient dbClient)
         {
-            if(UpsertedSchemasByDbClient.ContainsKey(dbClient.Id)) return;
-            
-            UpsertedSchemasByDbClient.Add(dbClient.Id, new HashSet<string>());
+            if (UpsertedSchemasByDbClient.ContainsKey(dbClient.Id))
+                return;
 
-            dbClient.AfterRollback = () =>
+            dbClient.AfterCommit = () => CleanupAfterDbClient(dbClient, s =>
             {
-                lock (Lock)
-                {
-                    var schemasForClient = UpsertedSchemasByDbClient[dbClient.Id];
-                    if (schemasForClient == null) return;
-                    foreach (var schema in schemasForClient)
-                        UpsertedSchemas.Remove(schema);
-                }
-            };
-            dbClient.OnCompleted = () =>
+                UpsertedSchemas.Add(s);
+                TransientSchemas.Remove(s);
+            });
+            dbClient.OnCompleted = () => CleanupAfterDbClient(dbClient, s => TransientSchemas.Remove(s));
+            UpsertedSchemasByDbClient.Add(dbClient.Id, new HashSet<string>());
+        }
+
+        protected virtual void CleanupAfterDbClient(IDbClient dbClient, Action<string> schemaCallback)
+        {
+            lock (Lock)
             {
-                lock(Lock)
-                {
-                    UpsertedSchemasByDbClient.Remove(dbClient.Id);
-                }
-            };
+                if (!UpsertedSchemasByDbClient.ContainsKey(dbClient.Id))
+                    return;
+
+                var schemasForClient = UpsertedSchemasByDbClient[dbClient.Id];
+                foreach (var schema in schemasForClient)
+                    schemaCallback(schema);
+
+                UpsertedSchemasByDbClient.Remove(dbClient.Id);   
+            }
         }
     }
 }

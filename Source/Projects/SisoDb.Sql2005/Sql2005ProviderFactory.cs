@@ -16,14 +16,13 @@ namespace SisoDb.Sql2005
             return new Sql2005ServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
         }
 
-        public override ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public override IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = ConnectionManager.OpenClientConnection(connectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new Sql2005DbClient(
                 GetAdoDriver(),
-                connectionInfo,
                 connection,
                 transaction,
                 ConnectionManager,
@@ -40,7 +39,6 @@ namespace SisoDb.Sql2005
 
             return new Sql2005DbClient(
                 GetAdoDriver(),
-                connectionInfo,
                 connection,
                 null,
                 ConnectionManager,

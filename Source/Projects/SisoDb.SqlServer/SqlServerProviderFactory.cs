@@ -60,14 +60,13 @@ namespace SisoDb.SqlServer
             return new SqlServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
         }
 
-        public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = ConnectionManager.OpenClientConnection(connectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlServerDbClient(
                 GetAdoDriver(),
-                connectionInfo,
                 connection,
                 transaction,
                 ConnectionManager,
@@ -84,9 +83,7 @@ namespace SisoDb.SqlServer
 
             return new SqlServerDbClient(
                 GetAdoDriver(),
-                connectionInfo,
                 connection,
-                null,
                 ConnectionManager,
                 SqlStatements);
 	    }

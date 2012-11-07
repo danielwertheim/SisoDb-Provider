@@ -12,7 +12,7 @@ namespace SisoDb.SqlServer
         private IDbClient _dbClient;
         private SqlBulkCopy _innerBulkCopy;
 
-        public SqlServerBulkCopy(ITransactionalDbClient dbClient)
+        public SqlServerBulkCopy(IDbClient dbClient)
         {
             Ensure.That(dbClient, "dbClient").IsNotNull();
 

@@ -21,7 +21,7 @@ namespace SisoDb
         private readonly ISisoDatabase _db;
         private readonly IQueryEngine _queryEngine;
         private readonly IAdvanced _advanced;
-        protected ITransactionalDbClient DbClient;
+        protected IDbClient DbClient;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;

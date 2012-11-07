@@ -58,7 +58,7 @@ namespace SisoDb.Maintenance
                 EnsureThatSchemasAreCompatible(structureSchemaFrom, structureSchemaTo);
             }
 
-            Func<ITransactionalDbClient, bool> onMigration = dbClient =>
+            Func<IDbClient, bool> onMigration = dbClient =>
                 OnMigrationOfStructureSet<TFrom, TFromTemplate, TTo>(isMigratingSameStructureSet, structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo, dbClient, migration.Modifier);
 
             Action onCleanup;
@@ -74,7 +74,7 @@ namespace SisoDb.Maintenance
             OnMigrate(onMigration, onCleanup);
         }
 
-        protected virtual void OnMigrate(Func<ITransactionalDbClient, bool> migrate, Action cleanup)
+        protected virtual void OnMigrate(Func<IDbClient, bool> migrate, Action cleanup)
         {
             using (var dbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo))
             {
@@ -90,7 +90,7 @@ namespace SisoDb.Maintenance
             }
         }
 
-        protected virtual bool OnMigrationOfStructureSet<TFrom, TFromTemplate, TTo>(bool isMigratingSameStructureSet, IStructureSchema structureSchemaFrom, IStructureSchema structureSchemaFromTemplate, IStructureSchema structureSchemaTo, ITransactionalDbClient dbClientTransactional, Func<TFromTemplate, TTo, MigrationStatuses> modifier)
+        protected virtual bool OnMigrationOfStructureSet<TFrom, TFromTemplate, TTo>(bool isMigratingSameStructureSet, IStructureSchema structureSchemaFrom, IStructureSchema structureSchemaFromTemplate, IStructureSchema structureSchemaTo, IDbClient dbClientTransactional, Func<TFromTemplate, TTo, MigrationStatuses> modifier)
             where TFrom : class
             where TFromTemplate : class
             where TTo : class

@@ -15,10 +15,16 @@ namespace SisoDb.Dac
     public interface IDbClient : IDisposable
     {
         Guid Id { get; }
-        Action OnCompleted { set; }
+        bool IsTransactional { get; }
+        bool IsFailed { get; }
         IAdoDriver Driver { get; }
-        ISisoConnectionInfo ConnectionInfo { get; }
         IDbConnection Connection { get; }
+        IDbTransaction Transaction { get; }
+        Action OnCompleted { set; }
+        Action AfterCommit { set; }
+        Action AfterRollback { set; }
+
+        void MarkAsFailed();
         IDbBulkCopy GetBulkCopy();
 
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);

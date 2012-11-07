@@ -19,6 +19,15 @@ namespace SisoDb.UnitTests.DbSchema
                 indexAccessorsPaths: new[] { "IndexableMember1", "IndexableMember2" });
         }
 
+        private Mock<IDbClient> CreateDbClientFake()
+        {
+            var dbClientFake = new Mock<IDbClient>();
+            var id = Guid.NewGuid();
+            dbClientFake.SetupGet(f => f.Id).Returns(id);
+
+            return dbClientFake;
+        }
+
         [Test]
         public void UpsertStructureSet_WhenNeverCalled_UpserterIsCalledOnce()
         {
@@ -28,7 +37,7 @@ namespace SisoDb.UnitTests.DbSchema
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
             var upserterFake = new Mock<IDbSchemaUpserter>();
-			var dbClientFake = new Mock<IDbClient>();
+            var dbClientFake = CreateDbClientFake();
 
             var manager = new DbSchemas(dbFake.Object, upserterFake.Object);
             manager.Upsert(_structureSchema, dbClientFake.Object);
@@ -45,7 +54,7 @@ namespace SisoDb.UnitTests.DbSchema
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
             var upserterFake = new Mock<IDbSchemaUpserter>();
-			var dbClientFake = new Mock<IDbClient>();
+            var dbClientFake = CreateDbClientFake();
 
             var manager = new DbSchemas(dbFake.Object, upserterFake.Object);
             manager.Upsert(_structureSchema, dbClientFake.Object);
@@ -63,7 +72,7 @@ namespace SisoDb.UnitTests.DbSchema
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
             var upserterFake = new Mock<IDbSchemaUpserter>();
-            var dbClientFake = new Mock<IDbClient>();
+            var dbClientFake = CreateDbClientFake();
 
             var manager = new DbSchemas(dbFake.Object, upserterFake.Object);
             manager.Upsert(_structureSchema, dbClientFake.Object);
@@ -80,7 +89,7 @@ namespace SisoDb.UnitTests.DbSchema
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
             var upserterFake = new Mock<IDbSchemaUpserter>();
-            var dbClientFake = new Mock<IDbClient>();
+            var dbClientFake = CreateDbClientFake();
 
             var manager = new DbSchemas(dbFake.Object, upserterFake.Object);
             manager.Upsert(_structureSchema, dbClientFake.Object);
@@ -97,7 +106,7 @@ namespace SisoDb.UnitTests.DbSchema
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Settings).Returns(settings.Object);
             var upserterFake = new Mock<IDbSchemaUpserter>();
-            var dbClientFake = new Mock<IDbClient>();
+            var dbClientFake = CreateDbClientFake();
 
             var manager = new DbSchemas(dbFake.Object, upserterFake.Object);
             manager.Upsert(_structureSchema, dbClientFake.Object);
@@ -109,7 +118,7 @@ namespace SisoDb.UnitTests.DbSchema
         public void DropStructureSet_WhenCalledTwice_DropperIsCalledTwice()
         {
 			var upserterFake = new Mock<IDbSchemaUpserter>();
-            var dbClientFake = new Mock<IDbClient>();
+            var dbClientFake = CreateDbClientFake();
 
             var manager = new DbSchemas(Mock.Of<ISisoDatabase>(), upserterFake.Object);
             manager.Drop(_structureSchema, dbClientFake.Object);

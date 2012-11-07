@@ -89,7 +89,6 @@
     <Compile Include="DbSessionAdvanced.cs" />
     <Compile Include="DbSettings.cs" />
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />
-    <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
     <Compile Include="DbSchema\DbSchemaInfo.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />

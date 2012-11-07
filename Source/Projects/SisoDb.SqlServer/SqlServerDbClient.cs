@@ -17,8 +17,13 @@ namespace SisoDb.SqlServer
             get { return 100; }
         }
 
-        public SqlServerDbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
+        public SqlServerDbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connection, connectionManager, sqlStatements)
+        {
+        }
+
+        public SqlServerDbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connection, transaction, connectionManager, sqlStatements)
         {
         }
 

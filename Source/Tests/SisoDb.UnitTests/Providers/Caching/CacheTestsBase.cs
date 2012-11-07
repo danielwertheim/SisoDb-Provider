@@ -13,7 +13,7 @@ namespace SisoDb.UnitTests.Providers.Caching
 		protected Mock<IDbProviderFactory> DbProviderFactoryFake;
 		protected Mock<IDbSchemas> DbSchemaManagerFake;
 		protected Mock<IServerClient> ServerClientFake;
-        protected Mock<ITransactionalDbClient> DbClientFake; 
+        protected Mock<IDbClient> DbClientFake; 
 		protected Mock<ICacheProvider> CacheProviderFake;
 		protected Mock<ICache> FooCacheFake;
 		protected Mock<ICache> BarCacheFake;
@@ -25,7 +25,7 @@ namespace SisoDb.UnitTests.Providers.Caching
 			ConnectionInfoFake = new Mock<ISisoConnectionInfo>();
 			DbSchemaManagerFake = new Mock<IDbSchemas>();
 			ServerClientFake = new Mock<IServerClient>();
-			DbClientFake = new Mock<ITransactionalDbClient>();
+			DbClientFake = new Mock<IDbClient>();
 			DbProviderFactoryFake = new Mock<IDbProviderFactory>();
 		    DbProviderFactoryFake.Setup(f => f.GetSettings()).Returns(DbSettings.CreateDefault);
 			DbProviderFactoryFake.Setup(f => f.GetDbSchemaManagerFor(It.IsAny<ISisoDatabase>())).Returns(DbSchemaManagerFake.Object);

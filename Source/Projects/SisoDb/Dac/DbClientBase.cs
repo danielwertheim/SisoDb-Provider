@@ -13,7 +13,7 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Dac
 {
-    public abstract class DbClientBase : ITransactionalDbClient
+    public abstract class DbClientBase : IDbClient
     {
         protected readonly IConnectionManager ConnectionManager;
         protected readonly ISqlStatements SqlStatements;
@@ -22,7 +22,11 @@ namespace SisoDb.Dac
         protected readonly List<Action> AfterRollbackActions = new List<Action>();
 
         public Guid Id { get; private set; }
+        public bool IsTransactional { get; private set; }
         public bool IsFailed { get; protected set; }
+        public IAdoDriver Driver { get; private set; }
+        public IDbConnection Connection { get; private set; }
+        public IDbTransaction Transaction { get; private set; }
         public Action OnCompleted
         {
             set
@@ -33,7 +37,7 @@ namespace SisoDb.Dac
         }
         public Action AfterCommit
         {
-            set 
+            set
             {
                 Ensure.That(value, "AfterCommit").IsNotNull();
                 AfterCommitActions.Add(value);
@@ -47,25 +51,26 @@ namespace SisoDb.Dac
                 AfterRollbackActions.Add(value);
             }
         }
-        public IAdoDriver Driver { get; private set; }
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
-        public IDbConnection Connection { get; private set; }
-        public IDbTransaction Transaction { get; private set; }
-        
-        protected DbClientBase(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : this(driver, connection, connectionManager, sqlStatements, false, null) { }
+
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : this(driver, connection, connectionManager, sqlStatements, true, transaction) { }
+
+        private DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, bool isTransactional, IDbTransaction transaction)
         {
             Ensure.That(driver, "driver").IsNotNull();
-            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(connection, "connection").IsNotNull();
             Ensure.That(connectionManager, "connectionManager").IsNotNull();
             Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
             Id = Guid.NewGuid();
             Driver = driver;
-            ConnectionInfo = connectionInfo;
             ConnectionManager = connectionManager;
             Connection = connection;
             SqlStatements = sqlStatements;
+            IsTransactional = isTransactional || transaction != null;
             Transaction = transaction;
         }
         
