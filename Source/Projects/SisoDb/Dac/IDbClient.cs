@@ -14,10 +14,11 @@ namespace SisoDb.Dac
     /// </summary>
     public interface IDbClient : IDisposable
     {
+        Guid Id { get; }
+        Action OnCompleted { set; }
         IAdoDriver Driver { get; }
         ISisoConnectionInfo ConnectionInfo { get; }
         IDbConnection Connection { get; }
-
         IDbBulkCopy GetBulkCopy();
 
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);

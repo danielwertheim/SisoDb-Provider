@@ -21,7 +21,7 @@ namespace SisoDb
         private readonly ISisoDatabase _db;
         private readonly IQueryEngine _queryEngine;
         private readonly IAdvanced _advanced;
-        protected ITransactionalDbClient TransactionalDbClient;
+        protected ITransactionalDbClient DbClient;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
@@ -46,27 +46,27 @@ namespace SisoDb
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
             SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
-            TransactionalDbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
-            _queryEngine = new DbQueryEngine(Db, TransactionalDbClient, QueryGenerator, ExecutionContext);
-            _advanced = new DbSessionAdvanced(Db, TransactionalDbClient, QueryGenerator, SqlExpressionBuilder, ExecutionContext);
+            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
+            _queryEngine = new DbQueryEngine(Db, DbClient, QueryGenerator, ExecutionContext);
+            _advanced = new DbSessionAdvanced(Db, DbClient, QueryGenerator, SqlExpressionBuilder, ExecutionContext);
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
         }
 
         public virtual void Dispose()
         {
+            GC.SuppressFinalize(this);
+
             if (Status.IsDisposed())
                 throw new ObjectDisposedException(typeof(DbSession).Name, ExceptionMessages.Session_AllreadyDisposed.Inject(Id, Db.Name));
 
-            Status = TransactionalDbClient.Failed
+            Status = DbClient.IsFailed
                 ? SessionStatus.DisposedWithFailure
                 : SessionStatus.Disposed;
 
-            GC.SuppressFinalize(this);
-
-            if (TransactionalDbClient != null)
+            if (DbClient != null)
             {
-                TransactionalDbClient.Dispose();
-                TransactionalDbClient = null;
+                DbClient.Dispose();
+                DbClient = null;
             }
         }
 
@@ -74,7 +74,7 @@ namespace SisoDb
         {
             //This method is allowed to not be wrapped in Try, since try makes use of it.
             Status = SessionStatus.Failed;
-            TransactionalDbClient.MarkAsFailed();
+            DbClient.MarkAsFailed();
         }
 
         protected virtual void Try(Action action)
@@ -95,11 +95,8 @@ namespace SisoDb
         protected virtual IStructureSchema OnUpsertStructureSchema(Type structuretype)
         {
             var structureSchema = Db.StructureSchemas.GetSchema(structuretype);
+            Db.DbSchemas.Upsert(structureSchema, DbClient);
 
-            if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
-                return structureSchema;
-
-            Db.DbSchemas.Upsert(structureSchema, TransactionalDbClient);
             return structureSchema;
         }
 
@@ -151,12 +148,12 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.Deserialize(TransactionalDbClient.GetJsonById(structureId, structureSchema), structureType);
+                return Db.Serializer.Deserialize(DbClient.GetJsonById(structureId, structureSchema), structureType);
 
             return Db.CacheProvider.Consume(
                 structureSchema,
                 structureId,
-                sid => Db.Serializer.Deserialize(TransactionalDbClient.GetJsonById(sid, structureSchema), structureType),
+                sid => Db.Serializer.Deserialize(DbClient.GetJsonById(sid, structureSchema), structureType),
                 CacheConsumeMode);
         }
 
@@ -178,12 +175,12 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.DeserializeMany(TransactionalDbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray(), structureType).ToArray();
+                return Db.Serializer.DeserializeMany(DbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray(), structureType).ToArray();
 
             return Db.CacheProvider.Consume(
                 structureSchema,
                 structureIds,
-                sids => Db.Serializer.DeserializeMany(TransactionalDbClient.GetJsonByIds(sids, structureSchema).Where(s => s != null).ToArray(), structureType),
+                sids => Db.Serializer.DeserializeMany(DbClient.GetJsonByIds(sids, structureSchema).Where(s => s != null).ToArray(), structureType),
                 CacheConsumeMode).ToArray();
         }
 
@@ -204,12 +201,12 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema<TContract>();
 
             if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.Deserialize<TOut>(TransactionalDbClient.GetJsonById(structureId, structureSchema));
+                return Db.Serializer.Deserialize<TOut>(DbClient.GetJsonById(structureId, structureSchema));
 
             return Db.CacheProvider.Consume(
                 structureSchema,
                 structureId,
-                sid => Db.Serializer.Deserialize<TOut>(TransactionalDbClient.GetJsonById(sid, structureSchema)),
+                sid => Db.Serializer.Deserialize<TOut>(DbClient.GetJsonById(sid, structureSchema)),
                 CacheConsumeMode);
         }
 
@@ -230,12 +227,12 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema<TContract>();
 
             if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.DeserializeMany<TOut>(TransactionalDbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray());
+                return Db.Serializer.DeserializeMany<TOut>(DbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray());
 
             return Db.CacheProvider.Consume(
                 structureSchema,
                 structureIds,
-                sids => Db.Serializer.DeserializeMany<TOut>(TransactionalDbClient.GetJsonByIds(sids, structureSchema).Where(s => s != null).ToArray()),
+                sids => Db.Serializer.DeserializeMany<TOut>(DbClient.GetJsonByIds(sids, structureSchema).Where(s => s != null).ToArray()),
                 CacheConsumeMode);
         }
 
@@ -257,13 +254,13 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return TransactionalDbClient.GetJsonById(structureId, structureSchema);
+                return DbClient.GetJsonById(structureId, structureSchema);
 
             var item = Db.CacheProvider.Consume(
                 structureSchema,
                 structureId,
                 sid => Db.Serializer.Deserialize(
-                    TransactionalDbClient.GetJsonById(sid, structureSchema),
+                    DbClient.GetJsonById(sid, structureSchema),
                     structureSchema.Type.Type),
                 CacheConsumeMode);
 
@@ -288,13 +285,13 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return TransactionalDbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray();
+                return DbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray();
 
             var items = Db.CacheProvider.Consume(
                 structureSchema,
                 structureIds,
                 sids => Db.Serializer.DeserializeMany(
-                    TransactionalDbClient.GetJsonByIds(sids, structureSchema),
+                    DbClient.GetJsonByIds(sids, structureSchema),
                     structureSchema.Type.Type).Where(s => s != null).ToArray(),
                 CacheConsumeMode);
 
@@ -323,9 +320,9 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
 
-            var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+            var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
         }
 
@@ -341,8 +338,8 @@ namespace SisoDb
                 var json = Db.Serializer.Serialize(item); //TODO: Unnecessary
                 var realItem = Db.Serializer.Deserialize<T>(json);
 
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
 
@@ -361,9 +358,9 @@ namespace SisoDb
                 var structureSchema = OnUpsertStructureSchema(structureType);
                 var json = Db.Serializer.Serialize(item);
                 var realItem = Db.Serializer.Deserialize(json, structureType);
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);
+                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
 
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
             });
 
@@ -388,10 +385,10 @@ namespace SisoDb
 
             var item = Db.Serializer.Deserialize(json, structureType);
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
             var structure = structureBuilder.CreateStructure(item, structureSchema);
 
-            var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+            var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
 
             return structure.Data;
@@ -406,8 +403,8 @@ namespace SisoDb
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
                 var structureSchema = OnUpsertStructureSchema<T>();
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
                 foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
@@ -426,8 +423,8 @@ namespace SisoDb
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
                 var structureSchema = OnUpsertStructureSchema(structureType);
-                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
                 foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
                     structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
@@ -452,8 +449,8 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, TransactionalDbClient);
-            var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
             foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(json, structureSchema.Type.Type).Batch(Db.Settings.MaxInsertManyBatchSize))
             {
@@ -488,7 +485,7 @@ namespace SisoDb
 
             if (!structureSchema.HasConcurrencyToken)
             {
-                var exists = TransactionalDbClient.Exists(structureSchema, structureId);
+                var exists = DbClient.Exists(structureSchema, structureId);
                 if (!exists)
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
             }
@@ -497,12 +494,12 @@ namespace SisoDb
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
-            TransactionalDbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
+            DbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
             var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
             var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
-            var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+            var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             bulkInserter.Replace(structureSchema, updatedStructure);
         }
 
@@ -534,7 +531,7 @@ namespace SisoDb
                 var structureSchema = OnUpsertStructureSchema<TContract>();
                 var structureId = StructureId.ConvertFrom(id);
 
-                var existingJson = TransactionalDbClient.GetJsonByIdWithLock(structureId, structureSchema);
+                var existingJson = DbClient.GetJsonByIdWithLock(structureId, structureSchema);
 
                 if (string.IsNullOrWhiteSpace(existingJson))
                     throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
@@ -550,12 +547,12 @@ namespace SisoDb
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
-                TransactionalDbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
+                DbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
                 var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
                 var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
-                var bulkInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 bulkInserter.Replace(structureSchema, updatedStructure);
             });
 
@@ -564,7 +561,7 @@ namespace SisoDb
 
         protected virtual void OnEnsureConcurrencyTokenIsValid(IStructureSchema structureSchema, IStructureId structureId, object newItem, Type typeForDeserialization)
         {
-            var existingJson = TransactionalDbClient.GetJsonById(structureId, structureSchema);
+            var existingJson = DbClient.GetJsonById(structureId, structureSchema);
 
             if (string.IsNullOrWhiteSpace(existingJson))
                 throw new SisoDbException(ExceptionMessages.WriteSession_NoItemExistsForUpdate.Inject(structureSchema.Name, structureId.Value));
@@ -613,13 +610,13 @@ namespace SisoDb
                 var deleteIds = new List<IStructureId>(Db.Settings.MaxUpdateManyBatchSize);
                 var keepQueue = new List<T>(Db.Settings.MaxUpdateManyBatchSize);
                 var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
-                var structureInserter = Db.ProviderFactory.GetStructureInserter(TransactionalDbClient);
+                var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
                 var query = queryBuilder.Where(predicate).Build();
                 var sqlQuery = QueryGenerator.GenerateQuery(query);
 
                 foreach (var structure in Db.Serializer.DeserializeMany<T>(
-                    TransactionalDbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray())))
+                    DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray())))
                 {
                     var structureIdBefore = structureSchema.IdAccessor.GetValue(structure);
                     modifier.Invoke(structure);
@@ -636,7 +633,7 @@ namespace SisoDb
                         continue;
 
                     Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
-                    TransactionalDbClient.DeleteByIds(deleteIds, structureSchema);
+                    DbClient.DeleteByIds(deleteIds, structureSchema);
                     deleteIds.Clear();
 
                     structureInserter.Insert(structureSchema,
@@ -647,7 +644,7 @@ namespace SisoDb
                 if (keepQueue.Count > 0)
                 {
                     Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
-                    TransactionalDbClient.DeleteByIds(deleteIds, structureSchema);
+                    DbClient.DeleteByIds(deleteIds, structureSchema);
                     deleteIds.Clear();
 
                     structureInserter.Insert(structureSchema,
@@ -682,7 +679,7 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.NotifyOfPurge(structureType);
 
-            TransactionalDbClient.DeleteAll(structureSchema);
+            DbClient.DeleteAll(structureSchema);
         }
 
         public virtual ISession DeleteAllExceptIds<T>(params object[] ids) where T : class
@@ -710,7 +707,7 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.NotifyOfPurge(structureType);
 
-            TransactionalDbClient.DeleteAllExceptIds(structureIds, structureSchema);
+            DbClient.DeleteAllExceptIds(structureIds, structureSchema);
         }
 
         public virtual ISession DeleteById<T>(object id) where T : class
@@ -737,7 +734,7 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
 
-            TransactionalDbClient.DeleteById(structureId, structureSchema);
+            DbClient.DeleteById(structureId, structureSchema);
         }
 
         public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
@@ -765,7 +762,7 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
 
-            TransactionalDbClient.DeleteByIds(structureIds, structureSchema);
+            DbClient.DeleteByIds(structureIds, structureSchema);
         }
 
         public virtual ISession DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
@@ -783,7 +780,7 @@ namespace SisoDb
                 queryBuilder.Where(predicate);
 
                 var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
-                TransactionalDbClient.DeleteByQuery(sql, structureSchema);
+                DbClient.DeleteByQuery(sql, structureSchema);
             });
 
             return this;

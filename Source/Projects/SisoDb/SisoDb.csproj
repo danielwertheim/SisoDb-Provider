@@ -385,6 +385,7 @@
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
     <Compile Include="SisoEnvironment.cs" />
+    <Compile Include="Try.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EnsureThat\Resources\ExceptionMessages.resx">

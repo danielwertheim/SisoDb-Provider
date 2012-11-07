@@ -43,11 +43,8 @@ namespace SisoDb
         protected virtual IStructureSchema OnUpsertStructureSchema(Type structuretype)
         {
             var structureSchema = Db.StructureSchemas.GetSchema(structuretype);
-
-            if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
-                return structureSchema;
-
             Db.DbSchemas.Upsert(structureSchema, DbClient);
+
             return structureSchema;
         }
 

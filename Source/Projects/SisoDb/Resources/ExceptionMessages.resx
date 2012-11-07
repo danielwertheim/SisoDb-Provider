@@ -190,9 +190,6 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="LambdaParser_VisitUnary_InvalidConvert" xml:space="preserve">
     <value>Conversion of values in expression is only allowed for nullable valuetypes.</value>
   </data>
-  <data name="DbClient_Commit_NonTransactional" xml:space="preserve">
-    <value>You can not commit/flush a non transational DbClient.</value>
-  </data>
   <data name="StructureSetMigrator_NewIdDoesNotExist" xml:space="preserve">
     <value>Can not migrate structure set. No Id could be extracted from the new structure.</value>
   </data>
@@ -363,5 +360,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="UniqueModesCantBeMapped1" xml:space="preserve">
     <value>The UniqueModes '{0}' is unknow and cant be mapped.</value>
+  </data>
+  <data name="DbClient_ObjectAllreadyDisposed" xml:space="preserve">
+    <value>The DbClient instance has allready been disposed.</value>
   </data>
 </root>

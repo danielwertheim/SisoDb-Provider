@@ -7,6 +7,7 @@ using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.Querying.Sql;
+using SisoDb.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
@@ -16,14 +17,41 @@ namespace SisoDb.Dac
     {
         protected readonly IConnectionManager ConnectionManager;
         protected readonly ISqlStatements SqlStatements;
+        protected readonly List<Action> OnCompletedActions = new List<Action>();
+        protected readonly List<Action> AfterCommitActions = new List<Action>();
+        protected readonly List<Action> AfterRollbackActions = new List<Action>();
 
+        public Guid Id { get; private set; }
+        public bool IsFailed { get; protected set; }
+        public Action OnCompleted
+        {
+            set
+            {
+                Ensure.That(value, "OnComleted").IsNotNull();
+                OnCompletedActions.Add(value);
+            }
+        }
+        public Action AfterCommit
+        {
+            set 
+            {
+                Ensure.That(value, "AfterCommit").IsNotNull();
+                AfterCommitActions.Add(value);
+            }
+        }
+        public Action AfterRollback
+        {
+            set
+            {
+                Ensure.That(value, "AfterRollback").IsNotNull();
+                AfterRollbackActions.Add(value);
+            }
+        }
         public IAdoDriver Driver { get; private set; }
         public ISisoConnectionInfo ConnectionInfo { get; private set; }
         public IDbConnection Connection { get; private set; }
-
         public IDbTransaction Transaction { get; private set; }
-        public bool Failed { get; protected set; }
-
+        
         protected DbClientBase(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
         {
             Ensure.That(driver, "driver").IsNotNull();
@@ -32,6 +60,7 @@ namespace SisoDb.Dac
             Ensure.That(connectionManager, "connectionManager").IsNotNull();
             Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
+            Id = Guid.NewGuid();
             Driver = driver;
             ConnectionInfo = connectionInfo;
             ConnectionManager = connectionManager;
@@ -39,37 +68,100 @@ namespace SisoDb.Dac
             SqlStatements = sqlStatements;
             Transaction = transaction;
         }
-
+        
         public virtual void Dispose()
         {
+            if(Connection == null) 
+                throw new ObjectDisposedException(typeof(DbClientBase).Name, ExceptionMessages.DbClient_ObjectAllreadyDisposed);
             GC.SuppressFinalize(this);
 
-            Exception ex = null;
-
-            if (Transaction != null)
-            {
-                if (Failed)
-                    Transaction.Rollback();
-                else
-                    Transaction.Commit();
-
-                ex = Disposer.TryDispose(Transaction);
-                Transaction = null;
-            }
-
-            if (Connection != null)
-            {
-                ConnectionManager.ReleaseClientConnection(Connection);
-                Connection = null;
-            }
+            var ex = Try.This(TryEndTransaction, TryEndConnection);
+            
+            InvokeOnCompletedCallbacks();
 
             if (ex != null)
                 throw ex;
         }
 
+        protected virtual void TryEndTransaction()
+        {
+            if (Transaction == null) return;
+
+            if (IsFailed)
+            {
+                Transaction.Rollback();
+                InvokeAfterRollbackCallbacks();
+            }
+            else
+            {
+                Transaction.Commit();
+                InvokeAfterCommitCallbacks();
+            }
+
+            try
+            {
+                Transaction.Dispose();
+            }
+            finally
+            {
+                Transaction = null;
+            }
+        }
+
+        protected virtual void InvokeAfterCommitCallbacks()
+        {
+            try
+            {
+                AfterCommitActions.ForEach(a => a.Invoke());
+            }
+            catch {}
+            finally
+            {
+                AfterCommitActions.Clear();
+            }
+        }
+
+        protected virtual void InvokeAfterRollbackCallbacks()
+        {
+            try
+            {
+                AfterRollbackActions.ForEach(a => a.Invoke());
+            }
+            catch {}
+            finally
+            {
+                AfterRollbackActions.Clear();
+            }
+        }
+
+        protected virtual void TryEndConnection()
+        {
+            try
+            {
+                ConnectionManager.ReleaseClientConnection(Connection);
+            }
+            finally
+            {
+                Connection = null;
+            }
+        }
+
+        protected virtual void InvokeOnCompletedCallbacks()
+        {
+            try
+            {
+                OnCompletedActions.ForEach(a => a.Invoke());
+            }
+            catch { }
+            finally
+            {
+                OnCompletedActions.Clear();
+            }
+        }
+
         public virtual void MarkAsFailed()
         {
-            Failed = true;
+            IsFailed = true;
         }
 
         public abstract IDbBulkCopy GetBulkCopy();

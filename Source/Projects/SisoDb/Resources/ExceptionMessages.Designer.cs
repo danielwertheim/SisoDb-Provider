@@ -187,11 +187,11 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can not commit/flush a non transational DbClient..
+        ///   Looks up a localized string similar to The DbClient instance has allready been disposed..
         /// </summary>
-        public static string DbClient_Commit_NonTransactional {
+        public static string DbClient_ObjectAllreadyDisposed {
             get {
-                return ResourceManager.GetString("DbClient_Commit_NonTransactional", resourceCulture);
+                return ResourceManager.GetString("DbClient_ObjectAllreadyDisposed", resourceCulture);
             }
         }
         
