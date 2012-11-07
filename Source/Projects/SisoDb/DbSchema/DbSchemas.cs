@@ -19,7 +19,7 @@ namespace SisoDb.DbSchema
         {
             Ensure.That(db, "db").IsNotNull();
             Ensure.That(dbSchemaUpserter, "dbSchemaUpserter").IsNotNull();
-
+            
             Db = db;
             DbSchemaUpserter = dbSchemaUpserter;
         }
@@ -66,15 +66,15 @@ namespace SisoDb.DbSchema
             if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
                 return;
 
+            if (UpsertedSchemas.Contains(structureSchema.Name) || TransientSchemas.Contains(structureSchema.Name))
+                return;
+
+            if (UpsertedSchemasByDbClient.ContainsKey(dbClient.Id) && UpsertedSchemasByDbClient[dbClient.Id].Contains(structureSchema.Name))
+                return;
+
             lock (Lock)
             {
-                if (UpsertedSchemas.Contains(structureSchema.Name) || TransientSchemas.Contains(structureSchema.Name))
-                    return;
-
                 RegisterDbClient(dbClient);
-                if(UpsertedSchemasByDbClient[dbClient.Id].Contains(structureSchema.Name))
-                    return;
-
                 DbSchemaUpserter.Upsert(structureSchema, dbClient, Db.Settings.AllowDynamicSchemaCreation, Db.Settings.AllowDynamicSchemaUpdates);
                 UpsertedSchemasByDbClient[dbClient.Id].Add(structureSchema.Name);
                 TransientSchemas.Add(structureSchema.Name);
