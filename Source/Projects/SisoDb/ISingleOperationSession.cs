@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SisoDb
 {
@@ -257,6 +258,15 @@ namespace SisoDb
         void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
 
         /// <summary>
+        /// Traverses every structure in the set and lets you apply changes to each yielded structure.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="modifier"></param>
+        /// <remarks>Does not support Concurrency tokens</remarks>
+        void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class;
+
+        /// <summary>
         /// Clears all stored structures of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -314,5 +324,14 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</param>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
         void DeleteByIds(Type structureType, params object[] ids);
+
+        /// <summary>
+        /// Deletes one or more structures matchings the sent
+        /// predicate.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="predicate"></param>
+        void DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class;
 	}
 }

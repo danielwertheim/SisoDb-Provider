@@ -120,13 +120,39 @@ namespace SisoDb
             return Try(() => new SisoQueryable<T>(Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas), QueryEngine));
         }
 
+        public virtual bool Any<T>() where T : class
+        {
+            //OK, to not be wrapped in Try, since QueryEngine does this
+            return QueryEngine.Any<T>();
+        }
+
+        public virtual bool Any(Type structureType)
+        {
+            //OK, to not be wrapped in Try, since QueryEngine does this
+            return QueryEngine.Any(structureType);
+        }
+
+        public virtual int Count<T>() where T : class
+        {
+            //OK, to not be wrapped in Try, since QueryEngine does this
+            return QueryEngine.Count<T>();
+        }
+
+        public virtual int Count(Type structureType)
+        {
+            //OK, to not be wrapped in Try, since QueryEngine does this
+            return QueryEngine.Count(structureType);
+        }
+
         public virtual bool Exists<T>(object id) where T : class
         {
+            //OK, to not be wrapped in Try, since QueryEngine does this
             return QueryEngine.Exists<T>(id);
         }
 
         public virtual bool Exists(Type structureType, object id)
         {
+            //OK, to not be wrapped in Try, since QueryEngine does this
             return QueryEngine.Exists(structureType, id);
         }
 

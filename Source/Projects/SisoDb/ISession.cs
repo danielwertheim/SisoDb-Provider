@@ -63,6 +63,38 @@ namespace SisoDb
         ISisoQueryable<T> Query<T>() where T : class;
 
         /// <summary>
+        /// Returns bool indicating if the specified structure <typeparamref name="T"/>,
+        /// has any items at all.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <returns>Number of structures.</returns>
+        bool Any<T>() where T : class;
+
+        /// <summary>
+        /// Returns bool indicating if the specified structure <paramref name="structureType" />,
+        /// has any items at all.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <returns>Number of structures.</returns>
+        bool Any(Type structureType);
+
+        /// <summary>
+        /// Issues a simple count for how many structures there
+        /// are in the specified structure <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
+        /// <returns></returns>
+        int Count<T>() where T : class;
+
+        /// <summary>
+        /// Issues a simple count for how many structures there
+        /// are in the specified structure <paramref name="structureType"/>.
+        /// </summary>
+        /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <returns></returns>
+        int Count(Type structureType);
+
+        /// <summary>
         /// Returns (true) if there is a structure matching the sent <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>

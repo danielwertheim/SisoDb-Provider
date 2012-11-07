@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using SisoDb.EnsureThat;
 using SisoDb.Querying;
 
@@ -268,6 +269,17 @@ namespace SisoDb
             }
         }
 
+        public virtual void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+            Ensure.That(modifier, "modifier").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.UpdateMany(predicate, modifier);
+            }
+        }
+
         public virtual void Clear<T>() where T : class
         {
             using (var session = Db.BeginSession())
@@ -346,6 +358,16 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.DeleteByIds(structureType, ids);
+            }
+        }
+
+        public virtual void DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.DeleteByQuery(predicate);
             }
         }
     }
