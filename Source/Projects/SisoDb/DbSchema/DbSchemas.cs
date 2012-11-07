@@ -66,10 +66,7 @@ namespace SisoDb.DbSchema
             if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
                 return;
 
-            if (UpsertedSchemas.Contains(structureSchema.Name) || TransientSchemas.Contains(structureSchema.Name))
-                return;
-
-            if (UpsertedSchemasByDbClient.ContainsKey(dbClient.Id) && UpsertedSchemasByDbClient[dbClient.Id].Contains(structureSchema.Name))
+            if (SchemaIsAllreadyUpserted(structureSchema, dbClient)) 
                 return;
 
             lock (Lock)
@@ -79,6 +76,14 @@ namespace SisoDb.DbSchema
                 UpsertedSchemasByDbClient[dbClient.Id].Add(structureSchema.Name);
                 TransientSchemas.Add(structureSchema.Name);
             }
+        }
+
+        private bool SchemaIsAllreadyUpserted(IStructureSchema structureSchema, IDbClient dbClient)
+        {
+            if (UpsertedSchemas.Contains(structureSchema.Name) || TransientSchemas.Contains(structureSchema.Name))
+                return true;
+
+            return (UpsertedSchemasByDbClient.ContainsKey(dbClient.Id) && UpsertedSchemasByDbClient[dbClient.Id].Contains(structureSchema.Name));
         }
 
         protected virtual void RegisterDbClient(IDbClient dbClient)
