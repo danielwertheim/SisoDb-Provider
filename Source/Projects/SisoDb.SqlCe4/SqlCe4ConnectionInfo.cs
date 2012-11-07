@@ -2,7 +2,6 @@
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Web;
-using SisoDb.Resources;
 using SisoDb.SqlServer;
 
 namespace SisoDb.SqlCe4
@@ -32,16 +31,14 @@ namespace SisoDb.SqlCe4
 
         protected override string OnFormatClientConnectionString(string connectionString)
         {
-            var cnString = base.OnFormatClientConnectionString(connectionString);
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString) { Enlist = false };
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString) { Enlist = false };
 
             return cnStringBuilder.ConnectionString;
         }
 
         protected override string OnFormatServerConnectionString(string connectionString)
         {
-            var cnString = base.OnFormatServerConnectionString(connectionString);
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(cnString) { Enlist = false };
+            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString) { Enlist = false };
 
             return cnStringBuilder.ConnectionString;
         }

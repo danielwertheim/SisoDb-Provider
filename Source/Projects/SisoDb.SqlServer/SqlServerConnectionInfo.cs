@@ -14,14 +14,14 @@ namespace SisoDb.SqlServer
         protected override string OnFormatClientConnectionString(string connectionString)
         {
             connectionString = base.OnFormatClientConnectionString(connectionString);
-            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString);
+            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString) { MultipleActiveResultSets = true };
             return cnStringBuilder.ConnectionString;
         }
 
         protected override string OnFormatServerConnectionString(string connectionString)
         {
             connectionString = base.OnFormatServerConnectionString(connectionString);
-            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = string.Empty };
+            var cnStringBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = string.Empty, MultipleActiveResultSets = true };
             return cnStringBuilder.ConnectionString;
         }
 

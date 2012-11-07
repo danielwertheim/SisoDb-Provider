@@ -7,7 +7,7 @@ namespace SisoDb.UnitTests.Providers.Connections
     public class SqlCe4ConnectionInfoTests : UnitTestBase
     {
         [Test]
-        public void Ctor_WhenPassingNormalCnString_ItRocks()
+        public void WhenPassingNormalCnString_ItRocks()
         {
             var cnInfo = new SqlCe4ConnectionInfo(@"data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;");
 
@@ -19,7 +19,7 @@ namespace SisoDb.UnitTests.Providers.Connections
         }
 
         [Test]
-        public void Ctor_WhenPassingEnlistTrue_EnlistBecomesFalse()
+        public void WhenPassingEnlistTrue_EnlistBecomesFalse()
         {
             var cnInfo = new SqlCe4ConnectionInfo(@"data source=d:\#Temp\SisoDb\SisoDbTestsTemp.sdf;Enlist=True");
 
@@ -28,7 +28,7 @@ namespace SisoDb.UnitTests.Providers.Connections
         }
 
         [Test]
-        public void Ctor_WhenPassingDataSourceWithDataDirectory_ItRocks()
+        public void WhenPassingDataSourceWithDataDirectory_ItRocks()
         {
             var cnInfo = new SqlCe4ConnectionInfo(@"data source=|DataDirectory|SisoDbTestsTemp.sdf;");
 
