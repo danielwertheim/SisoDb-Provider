@@ -359,7 +359,7 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
@@ -389,7 +389,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
             var json = Db.Serializer.Serialize(item);
             var realItem = Db.Serializer.Deserialize(json, structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
             structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
@@ -413,7 +413,7 @@ namespace SisoDb
 
             var item = Db.Serializer.Deserialize(json, structureType);
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structure = structureBuilder.CreateStructure(item, structureSchema);
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
@@ -442,7 +442,7 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
             foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
@@ -466,7 +466,7 @@ namespace SisoDb
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var structureBuilder = Db.StructureBuilders.ForInserts(structureSchema, DbClient);
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
             foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(json, structureSchema.Type.Type).Batch(Db.Settings.MaxInsertManyBatchSize))
@@ -513,7 +513,7 @@ namespace SisoDb
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
             DbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
-            var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchema);
             var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
             var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
@@ -566,7 +566,7 @@ namespace SisoDb
                 Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
                 DbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
-                var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
+                var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchema);
                 var updatedStructure = structureBuilder.CreateStructure(item, structureSchema);
 
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
@@ -626,7 +626,7 @@ namespace SisoDb
 
                 var deleteIds = new List<IStructureId>(Db.Settings.MaxUpdateManyBatchSize);
                 var keepQueue = new List<T>(Db.Settings.MaxUpdateManyBatchSize);
-                var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchema);
+                var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchema);
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
                 var query = queryBuilder.Where(predicate).Build();

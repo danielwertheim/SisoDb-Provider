@@ -251,7 +251,7 @@ namespace SisoDb
                 sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
             }
 
-            return Db.Serializer.DeserializeManyUsingTemplate<TResult>(sourceData.ToArray(), templateType);
+            return Db.Serializer.DeserializeMany(sourceData.ToArray(), templateType).Select(i => i as TResult);
         }
 
         public virtual IEnumerable<string> QueryAsJson<T>(IQuery query) where T : class

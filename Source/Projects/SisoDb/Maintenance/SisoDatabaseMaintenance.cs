@@ -61,7 +61,7 @@ namespace SisoDb.Maintenance
 
                     dbClient.ClearQueryIndexes(structureSchema);
 
-                    var structureBuilder = _db.StructureBuilders.ForUpdates(structureSchema);
+                    var structureBuilder = _db.StructureBuilders.ResolveBuilderForUpdate(structureSchema);
                     structureBuilder.StructureSerializer = new EmptyStructureSerializer(); //We don't need Json to regenerate Query indexes.
 
                     var structureInserter = _db.ProviderFactory.GetStructureInserter(dbClient);

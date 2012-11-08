@@ -2,7 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using SisoDb.Diagnostics.Builders;
-using SisoDb.Serialization;
+using SisoDb.ServiceStack;
 using SisoDb.Sql2012;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.Builders;
@@ -15,14 +15,13 @@ namespace SisoDb.UnitTests.Diagnostics
         [Test]
         public void Build()
         {
-            var structureTypeFactory = new StructureTypeFactory();
             var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
             structureSchemas.GetSchema<MyDummy>();
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.Name).Returns("UnitTestDb");
             dbFake.Setup(f => f.ConnectionInfo).Returns(new Sql2012ConnectionInfo("data source=.;initial catalog=foo;integrated security=true;"));
             dbFake.Setup(f => f.Settings).Returns(DbSettings.CreateDefault());
-            dbFake.Setup(f => f.Serializer).Returns(new InternalJsonSerializer(structureTypeFactory.Configurations.GetConfiguration));
+            dbFake.Setup(f => f.Serializer).Returns(new ServiceStackSisoSerializer());
             dbFake.Setup(f => f.StructureSchemas).Returns(structureSchemas);
 
             var dbDiagnostics = new DbDiagnosticsBuilder(dbFake.Object);

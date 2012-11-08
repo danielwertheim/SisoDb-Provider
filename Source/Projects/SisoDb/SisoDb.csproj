@@ -231,6 +231,7 @@
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Structures\StructureBuilder.cs" />
     <Compile Include="Structures\StructureBuilderPreservingId.cs" />
+    <Compile Include="Structures\StructureBuildersFn.cs" />
     <Compile Include="Structures\StructureId.cs" />
     <Compile Include="Structures\StructureIdInterval.cs" />
     <Compile Include="Structures\StructureIdTypes.cs" />
@@ -265,9 +266,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\DateSerializationModes.cs" />
-    <Compile Include="Serialization\DateSerializationModesExtension.cs" />
-    <Compile Include="Serialization\SerializerOptions.cs" />
     <Compile Include="SessionStatus.cs" />
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
@@ -371,7 +369,7 @@
     <Compile Include="Dac\ISqlStatements.cs" />
     <Compile Include="Dac\SqlStatementsBase.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
-    <Compile Include="Serialization\ISisoDbSerializer.cs" />
+    <Compile Include="Serialization\ISisoSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
     <Compile Include="DbSchema\DbSchemas.cs" />
     <Compile Include="Dac\DacParameter.cs" />
@@ -379,7 +377,6 @@
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\InternalJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
@@ -410,12 +407,6 @@
       <Link>License-SisoDb.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SisoDb.Serialization\SisoDb.Serialization.csproj">
-      <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
-      <Name>SisoDb.Serialization</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -3,13 +3,8 @@ using System.Collections.Generic;
 
 namespace SisoDb.Serialization
 {
-    public interface ISisoDbSerializer
+    public interface ISisoSerializer
     {
-        /// <summary>
-        /// Configuration options.
-        /// </summary>
-        SerializerOptions Options { get; set; }
-
         /// <summary>
         /// Serializes sent <typeparamref name="T"/> to JSON.
         /// </summary>
@@ -43,18 +38,7 @@ namespace SisoDb.Serialization
         object Deserialize(string json, Type structureType);
 
         /// <summary>
-        /// Deserializes sent JSON as <typeparamref name="TTemplate"/> and
-        /// enables support for Anonymous types, hence <typeparamref name="TTemplate"/>
-        /// could be an anonymous type.
-        /// </summary>
-        /// <typeparam name="TTemplate"></typeparam>
-        /// <param name="json"></param>
-        /// <returns></returns>
-        TTemplate DeserializeUsingTemplate<TTemplate>(string json) where TTemplate : class;
-
-        /// <summary>
         /// Deserializes sent JSON to yielded stream of <typeparamref name="T"/>.
-        /// Either done sequentially or in parallel. It is controlled by <see cref="Options"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sourceData"></param>
@@ -63,22 +47,10 @@ namespace SisoDb.Serialization
 
         /// <summary>
         /// Deserializes sent JSON to yielded stream of <paramref name="structureType"/>.
-        /// Either done sequentially or in parallel. It is controlled by <see cref="Options"/>
         /// </summary>
         /// <param name="sourceData"></param>
         /// <param name="structureType"></param>
         /// <returns></returns>
         IEnumerable<object> DeserializeMany(IEnumerable<string> sourceData, Type structureType);
-
-        /// <summary>
-        /// Deserializes sent JSON to yielded stream of <typeparamref name="TTemplate"/> using <paramref name="templateType"/>.
-        /// Enables support for Anonymous types, hence <paramref name="templateType"/> could be an anonymous type.
-        /// Either done sequentially or in parallel. It is controlled by <see cref="Options"/>
-        /// </summary>
-        /// <typeparam name="TTemplate"></typeparam>
-        /// <param name="sourceData"></param>
-        /// <param name="templateType"></param>
-        /// <returns></returns>
-        IEnumerable<TTemplate> DeserializeManyUsingTemplate<TTemplate>(IEnumerable<string> sourceData, Type templateType) where TTemplate : class;
     }
 }

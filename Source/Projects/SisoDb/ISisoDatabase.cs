@@ -70,7 +70,7 @@ namespace SisoDb
         /// <summary>
         /// The serializer used to handle Json.
         /// </summary>
-        ISisoDbSerializer Serializer { get; set; }
+        ISisoSerializer Serializer { get; set; }
 
         /// <summary>
         /// Used for maintenance tasks of the database.
@@ -133,14 +133,14 @@ namespace SisoDb
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
-        /// the structure type <see cref="type"/> will be created.
+        /// the structure type <paramref name="type"/> will be created.
         /// </summary>
         /// <param name="type"></param>
         ISisoDatabase UpsertStructureSet(Type type);
 
         /// <summary>
         /// Manually upserts structre sets, meaning all tables for
-        /// sent stucture types <see cref="types"/> will be created.
+        /// sent stucture types <paramref name="types"/> will be created.
         /// </summary>
         /// <param name="types"></param>
         /// <returns></returns>

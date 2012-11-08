@@ -22,5 +22,10 @@ namespace SisoDb.Structures
         {
             return structureIdType == StructureIdTypes.Identity || structureIdType == StructureIdTypes.BigIdentity;
         }
+
+        public static bool IsString(this StructureIdTypes structureIdType)
+        {
+            return structureIdType == StructureIdTypes.String;
+        }
     }
 }

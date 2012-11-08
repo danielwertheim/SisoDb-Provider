@@ -99,13 +99,7 @@ namespace SisoDb.Maintenance
             var serializer = Db.Serializer;
             var keepQueue = new List<TTo>(maxKeepQueueSize);
             var trashQueue = new List<IStructureId>(maxKeepQueueSize);
-            var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaTo);
-
-            Func<string, TFromTemplate> fromDeserializer;
-            if (structureSchemaFrom.Type.Type == structureSchemaFromTemplate.Type.Type)
-                fromDeserializer = serializer.Deserialize<TFromTemplate>;
-            else
-                fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchemaTo);
 
             Db.DbSchemas.Upsert(structureSchemaTo, dbClientTransactional);
 
@@ -113,7 +107,7 @@ namespace SisoDb.Maintenance
             {
                 foreach (var json in dbClientNonTransactional.GetJsonOrderedByStructureId(structureSchemaFrom))
                 {
-                    var oldItem = fromDeserializer(json);
+                    var oldItem = serializer.Deserialize<TFromTemplate>(json);
                     var oldId = GetOldStructureId(structureSchemaFromTemplate, oldItem);
                     var newItem = serializer.Deserialize<TTo>(json);
 

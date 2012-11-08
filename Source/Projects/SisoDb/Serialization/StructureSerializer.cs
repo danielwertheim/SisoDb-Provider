@@ -4,9 +4,9 @@ namespace SisoDb.Serialization
 {
     public class StructureSerializer : IStructureSerializer
     {
-        private readonly ISisoDbSerializer _serializer;
+        private readonly ISisoSerializer _serializer;
 
-        public StructureSerializer(ISisoDbSerializer serializer)
+        public StructureSerializer(ISisoSerializer serializer)
         {
             _serializer = serializer;
         }

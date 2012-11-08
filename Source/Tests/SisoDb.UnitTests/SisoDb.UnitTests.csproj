@@ -65,9 +65,15 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\..\packages\ServiceStack.Text.3.9.27\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -135,7 +141,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querying\PagingTests.cs" />
     <Compile Include="Querying\QueryTests.cs" />
-    <Compile Include="Serialization\InternalJsonSerializerTests.cs" />
+    <Compile Include="Serialization\JsonNetSisoSerializerTests.cs" />
+    <Compile Include="Serialization\ServiceStackSisoSerializerTests.cs" />
+    <Compile Include="Serialization\SisoSerializerTests.cs" />
     <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGeneratorTests.cs" />
@@ -211,13 +219,17 @@
       <Project>{35D70540-2CB9-4DE7-9741-2292F275518B}</Project>
       <Name>SisoDb.Glimpse</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.JsonNet\SisoDb.JsonNet.csproj">
+      <Project>{1c63dd91-fc7e-40e0-a546-f206f6923be0}</Project>
+      <Name>SisoDb.JsonNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\SisoDb.Serialization\SisoDb.Serialization.csproj">
-      <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
-      <Name>SisoDb.Serialization</Name>
+    <ProjectReference Include="..\..\Projects\SisoDb.ServiceStack\SisoDb.ServiceStack.csproj">
+      <Project>{d340bbcb-812e-4e48-abce-5a2e64ae8d63}</Project>
+      <Name>SisoDb.ServiceStack</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2005\SisoDb.Sql2005.csproj">
       <Project>{47bf9f27-5794-48b6-9476-2dfacd3ba806}</Project>

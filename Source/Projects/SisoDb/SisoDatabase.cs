@@ -21,7 +21,7 @@ namespace SisoDb
         private IDbSettings _settings;
         private IStructureSchemas _structureSchemas;
         private IStructureBuilders _structureBuilders;
-        private ISisoDbSerializer _serializer;
+        private ISisoSerializer _serializer;
 
         protected readonly IServerClient ServerClient;
 
@@ -88,7 +88,7 @@ namespace SisoDb
             }
         }
 
-        public ISisoDbSerializer Serializer
+        public ISisoSerializer Serializer
         {
             get { return _serializer; }
             set
@@ -112,7 +112,7 @@ namespace SisoDb
             Settings = ProviderFactory.GetSettings();
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
-            Serializer = new InternalJsonSerializer(t => StructureSchemas.StructureTypeFactory.Configurations.GetConfiguration(t));
+            Serializer = null;
             StructureBuilders = new StructureBuilders(() => Serializer, schema => ProviderFactory.GetGuidStructureIdGenerator(), (schema, dbClient) => ProviderFactory.GetIdentityStructureIdGenerator(dbClient));
             Maintenance = new SisoDatabaseMaintenance(this);
             _dbSchemas = ProviderFactory.GetDbSchemaManagerFor(this);

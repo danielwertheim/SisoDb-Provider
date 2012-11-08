@@ -18,13 +18,18 @@ namespace SisoDb.Configurations
             Database = database;
         }
 
+        public virtual DbConfiguration PreserveIds()
+        {
+            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) => 
+                StructureBuildersFn.GetBuilderForInsertsPreservingIds(Database.StructureBuilders, schema, dbClient);
+
+            return this;
+        }
+
         public virtual DbConfiguration UseManualStructureIdAssignment()
         {
-            Database.StructureBuilders.ForInserts = (schema, generator) => new StructureBuilderPreservingId
-            {
-                StructureIdGenerator = new EmptyStructureIdGenerator(),
-                StructureSerializer = new StructureSerializer(Database.Serializer) //TODO: This could fail if someone changes serializer
-            };
+            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) => 
+                StructureBuildersFn.GetBuilderForManualIdAssignment(Database.StructureBuilders, schema, dbClient);
 
             return this;
         }
@@ -36,14 +41,14 @@ namespace SisoDb.Configurations
             return this;
         }
 
-        public virtual DbConfiguration UseSerializerResolvedBy(Func<ISisoDbSerializer> fn)
+        public virtual DbConfiguration UseSerializer(Func<ISisoSerializer> fn)
         {
             Database.Serializer = fn();
 
             return this;
         }
 
-        public virtual DbConfiguration UseCacheProviderResolvedBy(Func<ICacheProvider> fn)
+        public virtual DbConfiguration UseCacheProvider(Func<ICacheProvider> fn)
         {
             Database.CacheProvider = fn();
 
@@ -54,13 +59,6 @@ namespace SisoDb.Configurations
         {
             Database.Settings.AllowDynamicSchemaCreation = false;
             Database.Settings.AllowDynamicSchemaUpdates = false;
-
-            return this;
-        }
-
-        public virtual DbConfiguration Serializer(Action<SerializerOptions> config)
-        {
-            config(Database.Serializer.Options);
 
             return this;
         }
