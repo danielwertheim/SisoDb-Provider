@@ -9,7 +9,7 @@ namespace SisoDb.Structures.Schemas
     {
         private Func<string, bool> _memberNameIsForTextType;
 
-        public static readonly string[] DefaultTextDataTypeConventions = new[] { "Text", "Content", "Description" };
+        public static readonly string[] DefaultTextDataTypeConventions = new[] { "Text", "Content", "Description", "Body" };
         
         public Func<string, bool> MemberNameIsForTextType
         {
