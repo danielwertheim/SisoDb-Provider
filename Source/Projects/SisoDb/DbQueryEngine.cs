@@ -203,40 +203,6 @@ namespace SisoDb
             where T : class
             where TResult : class
         {
-            return Try(() =>
-            {
-                Ensure.That(query, "query").IsNotNull();
-
-                var structureSchema = OnUpsertStructureSchema<T>();
-
-                IEnumerable<string> sourceData;
-
-                if (query.IsEmpty)
-                    sourceData = DbClient.GetJsonOrderedByStructureId(structureSchema);
-                else
-                {
-                    var sqlQuery = QueryGenerator.GenerateQuery(query);
-                    sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-                }
-
-                return Db.Serializer.DeserializeMany<TResult>(sourceData.ToArray());
-            });
-        }
-
-        public virtual IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, TResult template) where T : class where TResult : class
-        {
-            return Try(() => OnQueryAsAnonymous<T, TResult>(query, typeof(TResult)));
-        }
-
-        public virtual IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, Type templateType) where T : class where TResult : class
-        {
-            return Try(() => OnQueryAsAnonymous<T, TResult>(query, templateType));
-        }
-
-        protected virtual IEnumerable<TResult> OnQueryAsAnonymous<T, TResult>(IQuery query, Type templateType)
-            where T : class
-            where TResult : class
-        {
             Ensure.That(query, "query").IsNotNull();
 
             var structureSchema = OnUpsertStructureSchema<T>();
@@ -251,7 +217,7 @@ namespace SisoDb
                 sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
             }
 
-            return Db.Serializer.DeserializeMany(sourceData.ToArray(), templateType).Select(i => i as TResult);
+            return Db.Serializer.DeserializeMany<TResult>(sourceData.ToArray());
         }
 
         public virtual IEnumerable<string> QueryAsJson<T>(IQuery query) where T : class
