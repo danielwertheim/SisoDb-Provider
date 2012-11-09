@@ -57,7 +57,7 @@ namespace SisoDb.SqlCe4
             var filePath = cnStringBuilder.DataSource;
 
             const string dataDirectorySwitch = "|DataDirectory|";
-            if (filePath.StartsWith(dataDirectorySwitch, StringComparison.OrdinalIgnoreCase))
+            if (filePath.StartsWith(dataDirectorySwitch, Sys.StringComparision))
             {
                 filePath = filePath.Substring(dataDirectorySwitch.Length);
                 if (HttpContext.Current != null)

@@ -53,11 +53,9 @@ namespace SisoDb.DbSchema
 
             public static bool ShouldBeNonUnicodeString(IDacParameter param)
             {
-                const StringComparison c = StringComparison.OrdinalIgnoreCase;
-
-                return param.Name.StartsWith(DbNameParamPrefix, c)
-                    || param.Name.StartsWith(TableNameParamPrefix, c)
-                    || param.Name.StartsWith(EntityNameParamPrefix, c)
+                return param.Name.StartsWith(DbNameParamPrefix, Sys.StringComparision)
+                    || param.Name.StartsWith(TableNameParamPrefix, Sys.StringComparision)
+                    || param.Name.StartsWith(EntityNameParamPrefix, Sys.StringComparision)
                     || param.Name.Equals(StringValueForValueTypeIndexParamName);
             }
 
@@ -68,7 +66,7 @@ namespace SisoDb.DbSchema
 
             public static bool ShouldBeJson(IDacParameter param)
             {
-                return param.Name.Equals(JsonParam, StringComparison.OrdinalIgnoreCase);
+                return param.Name.Equals(JsonParam, Sys.StringComparision);
             }
         }
 

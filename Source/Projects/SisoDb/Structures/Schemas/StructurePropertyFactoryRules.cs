@@ -16,7 +16,7 @@ namespace SisoDb.Structures.Schemas
 
         protected virtual bool OnMemberNameIsForTextType(string memberName)
         {
-            return DefaultTextDataTypeConventions.Any(conv => conv.EndsWith(memberName, StringComparison.OrdinalIgnoreCase));
+            return DefaultTextDataTypeConventions.Any(conv => conv.EndsWith(memberName, Sys.StringComparision));
         }
     }
 }

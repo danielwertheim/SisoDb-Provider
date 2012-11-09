@@ -36,7 +36,7 @@ namespace SisoDb.Maintenance
             Ensure.That(migration, "migration").IsNotNull();
 
             var structuresHasSameType = migration.From == migration.To;
-            var isMigratingSameStructureSet = structuresHasSameType || string.Equals(migration.From.Name, migration.To.Name, StringComparison.OrdinalIgnoreCase);
+            var isMigratingSameStructureSet = structuresHasSameType || string.Equals(migration.From.Name, migration.To.Name, Sys.StringComparision);
             var fromTypeAndFromTemplateHasSameType = migration.From == migration.FromTemplate;
             IStructureSchema structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo;
 
