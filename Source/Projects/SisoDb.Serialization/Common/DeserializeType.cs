@@ -14,19 +14,18 @@
 using System.Reflection.Emit;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
+using SisoDb.Serialization.Json;
 #endif
 
 namespace SisoDb.Serialization.Common
 {
-    internal static class DeserializeType<TSerializer>
+	internal static class DeserializeType<TSerializer>
         where TSerializer : ITypeSerializer
     {
         private static readonly ITypeSerializer Serializer = JsWriter.GetTypeSerializer<TSerializer>();
-
-        private static readonly string TypeAttrInObject = Serializer.TypeAttrInObject;
 
         public static ParseStringDelegate GetParseMethod(TypeConfig typeConfig)
         {
@@ -34,33 +33,12 @@ namespace SisoDb.Serialization.Common
 
             if (!type.IsClass || type.IsAbstract || type.IsInterface) return null;
 
-            var propertyInfos = type.GetSerializableProperties();
-            if (propertyInfos.Length == 0)
-            {
-                var emptyCtorFn = ReflectionExtensions.GetConstructorMethodToCache(type);
-                return value => emptyCtorFn();
-            }
+            var map = DeserializeTypeRef.GetTypeAccessorMap(typeConfig, Serializer);
 
-            var map = new Dictionary<string, TypeAccessor>(StringComparer.OrdinalIgnoreCase);
-
-            var isDataContract = type.GetCustomAttributes(typeof(DataContractAttribute), false).Any();
-
-            foreach (var propertyInfo in propertyInfos)
-            {
-                var propertyName = propertyInfo.Name;
-                if (isDataContract)
-                {
-                    var dcsDataMember = propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false).FirstOrDefault() as DataMemberAttribute;
-                    if (dcsDataMember != null && dcsDataMember.Name != null)
-                    {
-                        propertyName = dcsDataMember.Name;
-                    }
-                }
-                map[propertyName] = TypeAccessor.Create(Serializer, typeConfig, propertyInfo);
-            }
-
-            var ctorFn = ReflectionExtensions.GetConstructorMethodToCache(type);
-
+			var ctorFn = JsConfig.ModelFactory(type);
+            if (map == null) 
+                return value => ctorFn();
+            
             return typeof(TSerializer) == typeof(Json.JsonTypeSerializer)
 				? (ParseStringDelegate)(value => DeserializeTypeRefJson.StringToType(type, value, ctorFn, map))
 				: value => DeserializeTypeRefJsv.StringToType(type, value, ctorFn, map);
@@ -76,21 +54,44 @@ namespace SisoDb.Serialization.Common
                 return propertyValue;
             }
 
-            return strType;
+            if (JsConfig.ConvertObjectTypesIntoStringDictionary && !string.IsNullOrEmpty(strType)) {
+                if (strType[0] == JsWriter.MapStartChar) {
+                    var dynamicMatch = DeserializeDictionary<TSerializer>.ParseDictionary<string, object>(strType, null, Serializer.UnescapeString, Serializer.UnescapeString);
+                    if (dynamicMatch != null && dynamicMatch.Count > 0) {
+                        return dynamicMatch;
+                    }
+                }
+
+                if (strType[0] == JsWriter.ListStartChar) {
+                    return DeserializeList<List<object>, TSerializer>.Parse(strType);
+                }
+            }
+
+            return Serializer.UnescapeString(strType);
         }
 
         public static Type ExtractType(string strType)
         {
+            var typeAttrInObject = Serializer.TypeAttrInObject;
             if (strType != null
-				&& strType.Length > TypeAttrInObject.Length
-				&& strType.Substring(0, TypeAttrInObject.Length) == TypeAttrInObject)
+				&& strType.Length > typeAttrInObject.Length
+				&& strType.Substring(0, typeAttrInObject.Length) == typeAttrInObject)
             {
-                var propIndex = TypeAttrInObject.Length;
+                var propIndex = typeAttrInObject.Length;
                 var typeName = Serializer.UnescapeSafeString(Serializer.EatValue(strType, ref propIndex));
-                var type = AssemblyUtils.FindType(typeName);
 
-                if (type == null)
-                    Tracer.Instance.WriteWarning("Could not find type: " + typeName);
+                var type = JsConfig.TypeFinder.Invoke(typeName);
+
+				if (type == null) {
+					Tracer.Instance.WriteWarning("Could not find type: " + typeName);
+					return null;
+				}
+
+#if !SILVERLIGHT && !MONOTOUCH
+				if (type.IsInterface || type.IsAbstract) {
+					return DynamicProxy.GetInstanceFor(type).GetType();
+				}
+#endif
 
                 return type;
             }
@@ -113,24 +114,85 @@ namespace SisoDb.Serialization.Common
             return null;
         }
 
+        public static object ParseQuotedPrimitive(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return null;
+
+#if NET40
+            Guid guidValue;
+            if (Guid.TryParse(value, out guidValue)) return guidValue;
+#endif
+            if (value.StartsWith(DateTimeSerializer.EscapedWcfJsonPrefix) || value.StartsWith(DateTimeSerializer.WcfJsonPrefix)) {
+                return DateTimeSerializer.ParseWcfJsonDate(value);
+            }
+
+            return Serializer.UnescapeString(value);
+        }
+
+        public static object ParsePrimitive(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return null;
+
+            bool boolValue;
+            if (bool.TryParse(value, out boolValue)) return boolValue;
+
+            decimal decimalValue;
+            if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimalValue))
+            {
+                if (decimalValue == decimal.Truncate(decimalValue))
+                {
+                    if (decimalValue <= ulong.MaxValue && decimalValue >= 0) return (ulong)decimalValue;
+                    if (decimalValue <= long.MaxValue && decimalValue >= long.MinValue)
+                    {
+                        var longValue = (long)decimalValue;
+                        if (longValue <= sbyte.MaxValue && longValue >= sbyte.MinValue) return (sbyte)longValue;
+                        if (longValue <= byte.MaxValue && longValue >= byte.MinValue) return (byte)longValue;
+                        if (longValue <= short.MaxValue && longValue >= short.MinValue) return (short)longValue;
+                        if (longValue <= ushort.MaxValue && longValue >= ushort.MinValue) return (ushort)longValue;
+                        if (longValue <= int.MaxValue && longValue >= int.MinValue) return (int)longValue;
+                        if (longValue <= uint.MaxValue && longValue >= uint.MinValue) return (uint)longValue;
+                    }
+                }
+                return decimalValue;
+            }
+
+            float floatValue;
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out floatValue)) return floatValue;
+
+            double doubleValue;
+            if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out doubleValue)) return doubleValue;
+
+            return null;
+        }
+
+        internal static object ParsePrimitive(string value, char firstChar)
+        {
+            if (typeof(TSerializer) == typeof(JsonTypeSerializer)) {
+                return firstChar == JsWriter.QuoteChar
+                           ? ParseQuotedPrimitive(value)
+                           : ParsePrimitive(value);
+            }
+            return (ParsePrimitive(value) ?? ParseQuotedPrimitive(value));
+        }
     }
 
     internal class TypeAccessor
     {
         internal ParseStringDelegate GetProperty;
         internal SetPropertyDelegate SetProperty;
+        internal Type PropertyType;
 
         public static Type ExtractType(ITypeSerializer Serializer, string strType)
         {
-            var TypeAttrInObject = Serializer.TypeAttrInObject;
+            var typeAttrInObject = Serializer.TypeAttrInObject;
 
             if (strType != null
-				&& strType.Length > TypeAttrInObject.Length
-				&& strType.Substring(0, TypeAttrInObject.Length) == TypeAttrInObject)
+				&& strType.Length > typeAttrInObject.Length
+				&& strType.Substring(0, typeAttrInObject.Length) == typeAttrInObject)
             {
-                var propIndex = TypeAttrInObject.Length;
+                var propIndex = typeAttrInObject.Length;
                 var typeName = Serializer.EatValue(strType, ref propIndex);
-                var type = AssemblyUtils.FindType(typeName);
+                var type = JsConfig.TypeFinder.Invoke(typeName);
 
                 if (type == null)
                     Tracer.Instance.WriteWarning("Could not find type: " + typeName);
@@ -144,6 +206,7 @@ namespace SisoDb.Serialization.Common
         {
             return new TypeAccessor
             {
+                PropertyType = propertyInfo.PropertyType,
                 GetProperty = serializer.GetParseFn(propertyInfo.PropertyType),
                 SetProperty = GetSetPropertyMethod(typeConfig, propertyInfo),
             };
@@ -247,7 +310,7 @@ namespace SisoDb.Serialization.Common
 
         internal static SetPropertyDelegate GetSetPropertyMethod(Type type, PropertyInfo propertyInfo)
         {
-            if (!propertyInfo.CanWrite) return null;
+            if (!propertyInfo.CanWrite || propertyInfo.GetIndexParameters().Any()) return null;
 
 #if SILVERLIGHT || MONOTOUCH || XBOX
             var setMethodInfo = propertyInfo.GetSetMethod(true);

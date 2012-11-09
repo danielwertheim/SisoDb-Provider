@@ -23,7 +23,20 @@ namespace SisoDb.Serialization.Jsv
 	{
 		public static ITypeSerializer Instance = new JsvTypeSerializer();
 
-		public string TypeAttrInObject { get { return "{__type:"; } }
+	    public bool IncludeNullValues
+	    {
+            get { return false; } //Doesn't support null values, treated as "null" string literal
+	    }
+
+        public string TypeAttrInObject
+        {
+            get { return JsConfig.JsvTypeAttrInObject; }
+        }
+
+        internal static string GetTypeAttrInObject(string typeAttr)
+        {
+            return string.Format("{{{0}:", typeAttr);
+        }
 
 		public WriteObjectDelegate GetWriteFn<T>()
 		{
@@ -44,7 +57,7 @@ namespace SisoDb.Serialization.Jsv
 
 		public void WriteRawString(TextWriter writer, string value)
 		{
-			writer.Write(value.ToCsvField());
+			writer.Write(value.EncodeJsv());
 		}
 
 		public void WritePropertyName(TextWriter writer, string value)
@@ -61,18 +74,18 @@ namespace SisoDb.Serialization.Jsv
 		{
 			if (value != null)
 			{
-				writer.Write(value.ToString().ToCsvField());
+				writer.Write(value.ToString().EncodeJsv());
 			}
 		}
 
 		public void WriteException(TextWriter writer, object value)
 		{
-			writer.Write(((Exception)value).Message.ToCsvField());
+			writer.Write(((Exception)value).Message.EncodeJsv());
 		}
 
 		public void WriteString(TextWriter writer, string value)
 		{
-			writer.Write(value.ToCsvField());
+			writer.Write(value.EncodeJsv());
 		}
 
 		public void WriteDateTime(TextWriter writer, object oDateTime)
@@ -329,6 +342,10 @@ namespace SisoDb.Serialization.Jsv
 			i++;
 			return success;
 		}
+
+        public void EatWhitespace(string value, ref int i)
+        {
+        }
 
 		public string EatValue(string value, ref int i)
 		{

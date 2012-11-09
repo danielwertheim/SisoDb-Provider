@@ -117,34 +117,47 @@ namespace SisoDb.Serialization.Common
 
 			if (value == string.Empty) return to;
 
+			var tryToParseItemsAsPrimitiveTypes =
+				JsConfig.TryToParsePrimitiveTypeValues && typeof(T) == typeof(object);
+
 			if (!string.IsNullOrEmpty(value))
 			{
-				if (value[0] == JsWriter.MapStartChar)
+				var valueLength = value.Length;
+				var i = 0;
+                Serializer.EatWhitespace(value, ref i);
+				if (i < valueLength && value[i] == JsWriter.MapStartChar)
 				{
-					var i = 0;
 					do
 					{
 						var itemValue = Serializer.EatTypeValue(value, ref i);
 						to.Add((T)parseFn(itemValue));
+                        Serializer.EatWhitespace(value, ref i);
 					} while (++i < value.Length);
 				}
 				else
 				{
-					var valueLength = value.Length;
 
-					var i = 0;
 					while (i < valueLength)
 					{
+                        var startIndex = i;
 						var elementValue = Serializer.EatValue(value, ref i);
 						var listValue = elementValue;
-						to.Add((T)parseFn(listValue));
-                        if (Serializer.EatItemSeperatorOrMapEndChar(value, ref i)
-                        && i == valueLength)
-                        {
-                            // If we ate a separator and we are at the end of the value, 
-                            // it means the last element is empty => add default
-                            to.Add(default(T));
+                        if (listValue != null) {
+                            if (tryToParseItemsAsPrimitiveTypes) {
+                                Serializer.EatWhitespace(value, ref startIndex);
+				                to.Add((T) DeserializeType<TSerializer>.ParsePrimitive(elementValue, value[startIndex]));
+                            } else {
+                                to.Add((T) parseFn(elementValue));
+                            }
                         }
+
+					    if (Serializer.EatItemSeperatorOrMapEndChar(value, ref i)
+					        && i == valueLength)
+					    {
+					        // If we ate a separator and we are at the end of the value, 
+					        // it means the last element is empty => add default
+					        to.Add(default(T));
+					    }
 					}
 
 				}

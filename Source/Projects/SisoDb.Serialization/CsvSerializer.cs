@@ -154,7 +154,7 @@ namespace SisoDb.Serialization
 			}
 
 			//Look for best candidate property if DTO
-			if (typeof(T).IsDto())
+			if (typeof(T).IsDto() || typeof(T).HasAttr<CsvAttribute>())
 			{
 				var properties = TypeConfig<T>.Properties;
 				foreach (var propertyInfo in properties)

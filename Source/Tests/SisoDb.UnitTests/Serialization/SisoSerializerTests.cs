@@ -55,13 +55,13 @@ namespace SisoDb.UnitTests.Serialization
             var structure = new Structure
             {
                 ReferencedStructureId = 999,
-                ReferencedStructure = {OtherStructureString = "Not to be included"},
+                ReferencedStructure = {OtherStructureString = "To be included"},
                 Item = {String1 = "To be included"}
             };
 
             var json = Serializer.Serialize(structure);
 
-            const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"ReferencedStructure\":{\"StructureId\":999,\"OtherStructureString\":\"Not to be included\"},\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
+            const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"ReferencedStructure\":{\"StructureId\":999,\"OtherStructureString\":\"To be included\"},\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
             Assert.AreEqual(expectedJson, json);
         }
 

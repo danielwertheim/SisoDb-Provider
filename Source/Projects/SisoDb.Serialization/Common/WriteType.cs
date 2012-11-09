@@ -12,8 +12,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
 using SisoDb.Serialization.Json;
 using SisoDb.Serialization.Reflection;
 
@@ -26,12 +24,25 @@ namespace SisoDb.Serialization.Common
 
 		private static readonly WriteObjectDelegate CacheFn;
 		internal static TypePropertyWriter[] PropertyWriters;
-		private static WriteObjectDelegate WriteTypeInfo;
+		private static readonly WriteObjectDelegate WriteTypeInfo;
+
+		private static bool IsIncluded
+		{
+			get { return (JsConfig.IncludeTypeInfo || JsConfig<T>.IncludeTypeInfo); }
+		}
+		private static bool IsExcluded
+		{
+			get { return (JsConfig.ExcludeTypeInfo || JsConfig<T>.ExcludeTypeInfo); }
+		}
 
 		static WriteType()
 		{
 			CacheFn = Init() ? GetWriteFn() : WriteEmptyType;
 
+			if (IsIncluded)
+			{
+				WriteTypeInfo = TypeInfoWriter;
+			}
 			if (typeof(T).IsAbstract)
 			{
 				WriteTypeInfo = TypeInfoWriter;
@@ -44,18 +55,27 @@ namespace SisoDb.Serialization.Common
 
 		public static void TypeInfoWriter(TextWriter writer, object obj)
 		{
-			DidWriteTypeInfo(writer, obj);
+			TryWriteTypeInfo(writer, obj);
 		}
 
-		private static bool DidWriteTypeInfo(TextWriter writer, object obj)
-		{
-			if (obj == null
-				|| JsConfig.ExcludeTypeInfo
-				|| JsConfig<T>.ExcludeTypeInfo) return false;
+		private static bool ShouldSkipType() { return IsExcluded && !IsIncluded; }
 
-			Serializer.WriteRawString(writer, JsWriter.TypeAttr);
+		private static bool TryWriteSelfType (TextWriter writer) {
+			if (ShouldSkipType()) return false;
+
+			Serializer.WriteRawString(writer, JsConfig.TypeAttr);
 			writer.Write(JsWriter.MapKeySeperator);
-			Serializer.WriteRawString(writer, obj.GetType().ToTypeString());
+			Serializer.WriteRawString(writer, JsConfig.TypeWriter(typeof(T)));
+			return true;
+		}
+
+		private static bool TryWriteTypeInfo(TextWriter writer, object obj)
+		{
+			if (obj == null || ShouldSkipType()) return false;
+
+			Serializer.WriteRawString(writer, JsConfig.TypeAttr);
+			writer.Write(JsWriter.MapKeySeperator);
+			Serializer.WriteRawString(writer, JsConfig.TypeWriter(obj.GetType()));
 			return true;
 		}
 
@@ -74,48 +94,50 @@ namespace SisoDb.Serialization.Common
 			if (!typeof(T).IsClass && !typeof(T).IsInterface && !JsConfig.TreatAsRefType(typeof(T))) return false;
 
 			var propertyInfos = TypeConfig<T>.Properties;
-			if (propertyInfos.Length == 0 && !JsState.IsWritingDynamic)
+            var propertyNamesLength = propertyInfos.Length;
+            PropertyWriters = new TypePropertyWriter[propertyNamesLength];
+
+            if (propertyNamesLength == 0 && !JsState.IsWritingDynamic)
 			{
 				return typeof(T).IsDto();
 			}
 
-			var propertyNamesLength = propertyInfos.Length;
-
-			PropertyWriters = new TypePropertyWriter[propertyNamesLength];
-
 			// NOTE: very limited support for DataContractSerialization (DCS)
 			//	NOT supporting Serializable
 			//	support for DCS is intended for (re)Name of properties and Ignore by NOT having a DataMember present
-			var isDataContract = typeof(T).GetCustomAttributes(typeof(DataContractAttribute), false).Any();
+		    var isDataContract = typeof(T).IsDto();
 			for (var i = 0; i < propertyNamesLength; i++)
 			{
 				var propertyInfo = propertyInfos[i];
 
-				string propertyName, propertyNameCLSFriendly;
+				string propertyName, propertyNameCLSFriendly, propertyNameLowercaseUnderscore;
 
 				if (isDataContract)
 				{
-					var dcsDataMember = propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false).FirstOrDefault() as DataMemberAttribute;
+				    var dcsDataMember = propertyInfo.GetDataMember();
 					if (dcsDataMember == null) continue;
 
 					propertyName = dcsDataMember.Name ?? propertyInfo.Name;
 					propertyNameCLSFriendly = dcsDataMember.Name ?? propertyName.ToCamelCase();
+				    propertyNameLowercaseUnderscore = dcsDataMember.Name ?? propertyName.ToLowercaseUnderscore();
 				}
 				else
 				{
 					propertyName = propertyInfo.Name;
 					propertyNameCLSFriendly = propertyName.ToCamelCase();
+                    propertyNameLowercaseUnderscore = propertyName.ToLowercaseUnderscore();
 				}
 
 			    var propertyType = propertyInfo.PropertyType;
 			    var suppressDefaultValue = propertyType.IsValueType && JsConfig.HasSerializeFn.Contains(propertyType)
-			        ? ReflectionExtensions.GetDefaultValue(propertyType)
+			        ? propertyType.GetDefaultValue()
 			        : null;
 
 				PropertyWriters[i] = new TypePropertyWriter
 				(
 					propertyName,
 					propertyNameCLSFriendly,
+                    propertyNameLowercaseUnderscore,
 					propertyInfo.GetValueGetter<T>(),
                     Serializer.GetWriteFn(propertyType),
                     suppressDefaultValue
@@ -131,22 +153,26 @@ namespace SisoDb.Serialization.Common
 			{
 				get
 				{
-					return (JsConfig.EmitCamelCaseNames)
-						? propertyNameCLSFriendly
-						: propertyName;
+				    return (JsConfig.EmitCamelCaseNames)
+				               ? propertyNameCLSFriendly
+				               : (JsConfig.EmitLowercaseUnderscoreNames)
+				                     ? propertyNameLowercaseUnderscore
+				                     : propertyName;
 				}
 			}
 			internal readonly string propertyName;
 			internal readonly string propertyNameCLSFriendly;
+            internal readonly string propertyNameLowercaseUnderscore;
 			internal readonly Func<T, object> GetterFn;
             internal readonly WriteObjectDelegate WriteFn;
             internal readonly object DefaultValue;
 
-			public TypePropertyWriter(string propertyName, string propertyNameCLSFriendly,
+			public TypePropertyWriter(string propertyName, string propertyNameCLSFriendly, string propertyNameLowercaseUnderscore,
 				Func<T, object> getterFn, WriteObjectDelegate writeFn, object defaultValue)
 			{
 				this.propertyName = propertyName;
 				this.propertyNameCLSFriendly = propertyNameCLSFriendly;
+			    this.propertyNameLowercaseUnderscore = propertyNameLowercaseUnderscore;
 				this.GetterFn = getterFn;
 				this.WriteFn = writeFn;
 			    this.DefaultValue = defaultValue;
@@ -188,7 +214,8 @@ namespace SisoDb.Serialization.Common
 			var i = 0;
 			if (WriteTypeInfo != null || JsState.IsWritingDynamic)
 			{
-				if (DidWriteTypeInfo(writer, value)) i++;
+				if (JsConfig.PreferInterfaces && TryWriteSelfType(writer)) i++;
+				else if (TryWriteTypeInfo(writer, value)) i++;
 			}
 
 			if (PropertyWriters != null)
@@ -203,7 +230,7 @@ namespace SisoDb.Serialization.Common
 
 					if ((propertyValue == null
 					     || (propertyWriter.DefaultValue != null && propertyWriter.DefaultValue.Equals(propertyValue)))
-					    && !JsConfig.IncludeNullValues) continue;
+                        && !Serializer.IncludeNullValues) continue;
 
 					if (i++ > 0)
 						writer.Write(JsWriter.ItemSeperator);

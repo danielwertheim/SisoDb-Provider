@@ -112,7 +112,7 @@ namespace SisoDb
             Settings = ProviderFactory.GetSettings();
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
-            Serializer = null;
+            Serializer = new DefaultSisoSerializer();
             StructureBuilders = new StructureBuilders(() => Serializer, schema => ProviderFactory.GetGuidStructureIdGenerator(), (schema, dbClient) => ProviderFactory.GetIdentityStructureIdGenerator(dbClient));
             Maintenance = new SisoDatabaseMaintenance(this);
             _dbSchemas = ProviderFactory.GetDbSchemaManagerFor(this);

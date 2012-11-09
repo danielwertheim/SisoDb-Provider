@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("SisoDb.Serialization (based on ServiceStack.Text)")]
+[assembly: AssemblyTitle("SisoDb.Serialization (based on ServiceStack.Text 3.9.27)")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
