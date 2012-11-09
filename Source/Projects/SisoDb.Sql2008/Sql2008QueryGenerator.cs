@@ -19,12 +19,14 @@ namespace SisoDb.Sql2008
                 Start = GenerateStartString(query, sqlExpression),
                 End = GenerateEndString(query, sqlExpression),
                 Take = GenerateTakeString(query),
-                IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
+                //TODO: Rem for v16.0.0 final
+                //IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
                 OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
                 MainStructureTable = query.StructureSchema.GetStructureTableName(),
                 WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
-                IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
+                //TODO: Rem for v16.0.0 final
+                //IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
                 OrderBy = GenerateOrderByString(query, sqlExpression),
                 Paging = GeneratePagingString(query, sqlExpression).PrependWith(", "),
             };

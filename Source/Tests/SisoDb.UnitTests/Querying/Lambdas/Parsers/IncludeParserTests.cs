@@ -1,126 +1,128 @@
-using System;
-using System.Linq.Expressions;
-using NUnit.Framework;
-using SisoDb.NCore;
-using SisoDb.Querying.Lambdas.Nodes;
-using SisoDb.Querying.Lambdas.Parsers;
-using SisoDb.Resources;
-using SisoDb.Structures.Schemas;
+//TODO: Rem for v16.0.0 final
 
-namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
-{
-    [TestFixture]
-    public class IncludeParserTests : UnitTestBase
-    {
-        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
+//using System;
+//using System.Linq.Expressions;
+//using NUnit.Framework;
+//using SisoDb.NCore;
+//using SisoDb.Querying.Lambdas.Nodes;
+//using SisoDb.Querying.Lambdas.Parsers;
+//using SisoDb.Resources;
+//using SisoDb.Structures.Schemas;
 
-        private IncludeParser CreateParser()
-        {
-            return new IncludeParser(_dataTypeConverter);
-        }
+//namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
+//{
+//    [TestFixture]
+//    public class IncludeParserTests : UnitTestBase
+//    {
+//        private readonly DataTypeConverter _dataTypeConverter = new DataTypeConverter();
 
-        [Test]
-        public void Parse_WhenNonMemberExpression_ThrowsSisoDbException()
-        {
-            var parser = CreateParser();
-            var nonMemberExpression = Reflect<Master>.BoolExpressionFrom(m => m.Int1 == 32);
+//        private IncludeParser CreateParser()
+//        {
+//            return new IncludeParser(_dataTypeConverter);
+//        }
 
-            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(StructureTypeNameFor<Child>.Name, new[] { nonMemberExpression }));
+//        [Test]
+//        public void Parse_WhenNonMemberExpression_ThrowsSisoDbException()
+//        {
+//            var parser = CreateParser();
+//            var nonMemberExpression = Reflect<Master>.BoolExpressionFrom(m => m.Int1 == 32);
 
-            Assert.AreEqual(ExceptionMessages.IncludeExpressionDoesNotTargetMember.Inject("m => (m.Int1 == 32)"), ex.Message);
-        }
+//            var ex = Assert.Throws<SisoDbException>(() => parser.Parse(StructureTypeNameFor<Child>.Name, new[] { nonMemberExpression }));
 
-        [Test]
-        public void Parse_WhenNullExpressions_ThrowsArgumentException()
-        {
-            Assert.Throws<ArgumentException>(
-                () => CreateParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, null));
-        }
+//            Assert.AreEqual(ExceptionMessages.IncludeExpressionDoesNotTargetMember.Inject("m => (m.Int1 == 32)"), ex.Message);
+//        }
 
-        [Test]
-        public void Parse_WhenEmptyExpressions_ThrowsArgumentException()
-        {
-            Assert.Throws<ArgumentException>(
-                () => CreateParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new LambdaExpression[0]));
-        }
+//        [Test]
+//        public void Parse_WhenNullExpressions_ThrowsArgumentException()
+//        {
+//            Assert.Throws<ArgumentException>(
+//                () => CreateParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, null));
+//        }
 
-        [Test]
-        public void Parse_WhenMemberExpressionIsPassed_GeneratesExactlyOneIncludeNode()
-        {
-            var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
+//        [Test]
+//        public void Parse_WhenEmptyExpressions_ThrowsArgumentException()
+//        {
+//            Assert.Throws<ArgumentException>(
+//                () => CreateParser().Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new LambdaExpression[0]));
+//        }
 
-            var parser = CreateParser();
-            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
+//        [Test]
+//        public void Parse_WhenMemberExpressionIsPassed_GeneratesExactlyOneIncludeNode()
+//        {
+//            var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
 
-            Assert.AreEqual(1, parsedLambda.Nodes.Length);
-            Assert.IsNotNull(parsedLambda.Nodes[0] as IncludeNode);
-        }
+//            var parser = CreateParser();
+//            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
 
-        [Test]
-        public void Parse_WhenMemberExpressionIsPassed_HasCorrectParentMemberNode()
-        {
-            var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
+//            Assert.AreEqual(1, parsedLambda.Nodes.Length);
+//            Assert.IsNotNull(parsedLambda.Nodes[0] as IncludeNode);
+//        }
 
-            var parser = CreateParser();
-            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
-            var includeNode = (IncludeNode)parsedLambda.Nodes[0];
+//        [Test]
+//        public void Parse_WhenMemberExpressionIsPassed_HasCorrectParentMemberNode()
+//        {
+//            var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
 
-            Assert.AreEqual("ChildId", includeNode.IdReferencePath);
-        }
+//            var parser = CreateParser();
+//            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
+//            var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
-        [Test]
-        public void Parse_WhenNestedMemberExpressionIsPassed_HasCorrectParentMemberNode()
-        {
-            var lambda = Reflect<Master>.LambdaFrom(m => m.Child.GrandChild.StructureId);
+//            Assert.AreEqual("ChildId", includeNode.IdReferencePath);
+//        }
 
-            var parser = CreateParser();
-            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
-            var includeNode = (IncludeNode)parsedLambda.Nodes[0];
+//        [Test]
+//        public void Parse_WhenNestedMemberExpressionIsPassed_HasCorrectParentMemberNode()
+//        {
+//            var lambda = Reflect<Master>.LambdaFrom(m => m.Child.GrandChild.StructureId);
 
-            Assert.AreEqual("Child.GrandChild.StructureId", includeNode.IdReferencePath);
-        }
+//            var parser = CreateParser();
+//            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
+//            var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
-        [Test]
-        public void Parse_WhenMemberExpressionIsPassed_HasCorrectChildStructureName()
-        {
-            var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
+//            Assert.AreEqual("Child.GrandChild.StructureId", includeNode.IdReferencePath);
+//        }
 
-            var parser = CreateParser();
-            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
-            var includeNode = (IncludeNode)parsedLambda.Nodes[0];
+//        [Test]
+//        public void Parse_WhenMemberExpressionIsPassed_HasCorrectChildStructureName()
+//        {
+//            var lambda = Reflect<Master>.LambdaFrom(m => m.ChildId);
 
-            Assert.AreEqual("ChildWithGuidId", includeNode.ReferencedStructureName);
-        }
+//            var parser = CreateParser();
+//            var parsedLambda = parser.Parse(StructureTypeNameFor<ChildWithGuidId>.Name, new[] { lambda });
+//            var includeNode = (IncludeNode)parsedLambda.Nodes[0];
 
-    	private static class StructureTypeNameFor<T> where T : class
-		{
-			public static readonly string Name = typeof(T).Name;
-		}
+//            Assert.AreEqual("ChildWithGuidId", includeNode.ReferencedStructureName);
+//        }
 
-        private class Master
-        {
-            public Guid StructureId { get; set; }
+//        private static class StructureTypeNameFor<T> where T : class
+//        {
+//            public static readonly string Name = typeof(T).Name;
+//        }
 
-            public int Int1 { get; set; }
+//        private class Master
+//        {
+//            public Guid StructureId { get; set; }
 
-            public Guid ChildId { get; set; }
+//            public int Int1 { get; set; }
 
-            public Child Child { get; set; }
-        }
+//            public Guid ChildId { get; set; }
 
-        private class ChildWithGuidId
-        {
-            public Guid StructureId { get; set; }
-        }
+//            public Child Child { get; set; }
+//        }
 
-        private class Child
-        {
-            public GrandChild GrandChild { get; set; }
-        }
+//        private class ChildWithGuidId
+//        {
+//            public Guid StructureId { get; set; }
+//        }
 
-        private class GrandChild
-        {
-            public Guid StructureId { get; set; }
-        }
-    }
-}
+//        private class Child
+//        {
+//            public GrandChild GrandChild { get; set; }
+//        }
+
+//        private class GrandChild
+//        {
+//            public Guid StructureId { get; set; }
+//        }
+//    }
+//}

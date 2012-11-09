@@ -33,30 +33,32 @@ namespace SisoDb.Querying.Sql
             if (query.HasSortings)
                 OnProcessSortings(query.Sortings, expression);
 
-            if (query.HasIncludes)
-            {
-                var mergedIncludeLambda = GetMergedIncludeLambda(query);
-                OnProcessIncludes(mergedIncludeLambda, expression);
-            }
+            //TODO: Rem for v16.0.0 final
+            //if (query.HasIncludes)
+            //{
+            //    var mergedIncludeLambda = GetMergedIncludeLambda(query);
+            //    OnProcessIncludes(mergedIncludeLambda, expression);
+            //}
 
             return expression;
         }
 
-        protected virtual IParsedLambda GetMergedIncludeLambda(IQuery query)
-        {
-            if (!query.HasIncludes)
-                return null;
+        //TODO: Rem for v16.0.0 final
+        //protected virtual IParsedLambda GetMergedIncludeLambda(IQuery query)
+        //{
+        //    if (!query.HasIncludes)
+        //        return null;
 
-            IParsedLambda mergedIncludes = null;
-            foreach (var include in query.Includes)
-            {
-                mergedIncludes = mergedIncludes == null 
-                    ? include 
-                    : mergedIncludes.MergeAsNew(include);
-            }
+        //    IParsedLambda mergedIncludes = null;
+        //    foreach (var include in query.Includes)
+        //    {
+        //        mergedIncludes = mergedIncludes == null 
+        //            ? include 
+        //            : mergedIncludes.MergeAsNew(include);
+        //    }
 
-            return mergedIncludes;
-        }
+        //    return mergedIncludes;
+        //}
 
         protected virtual void OnProcessWheres(IParsedLambda lambda, SqlExpression expression)
         {
@@ -258,25 +260,26 @@ namespace SisoDb.Querying.Sql
             }
         }
 
-        protected virtual void OnProcessIncludes(IParsedLambda includesLambda, SqlExpression expression)
-        {
-            if (includesLambda == null || includesLambda.Nodes.Length == 0)
-                return;
+        //TODO: Rem for v16.0.0 final
+        //protected virtual void OnProcessIncludes(IParsedLambda includesLambda, SqlExpression expression)
+        //{
+        //    if (includesLambda == null || includesLambda.Nodes.Length == 0)
+        //        return;
 
-            foreach (var includeNode in includesLambda.Nodes.OfType<IncludeNode>())
-            {
-                var nextNewIncludeIndex = expression.GetNextNewIncludeIndex();
+        //    foreach (var includeNode in includesLambda.Nodes.OfType<IncludeNode>())
+        //    {
+        //        var nextNewIncludeIndex = expression.GetNextNewIncludeIndex();
 
-                expression.AddInclude(new SqlInclude(
-                    nextNewIncludeIndex,
-                    includeNode.ReferencedStructureName,
-                    string.Concat("inc", nextNewIncludeIndex),
-                    IndexStorageSchema.Fields.Value.Name,
-                    includeNode.IdReferencePath,
-                    includeNode.ObjectReferencePath,
-					includeNode.DataType,
-                    includeNode.DataTypeCode));
-            }
-        }
+        //        expression.AddInclude(new SqlInclude(
+        //            nextNewIncludeIndex,
+        //            includeNode.ReferencedStructureName,
+        //            string.Concat("inc", nextNewIncludeIndex),
+        //            IndexStorageSchema.Fields.Value.Name,
+        //            includeNode.IdReferencePath,
+        //            includeNode.ObjectReferencePath,
+        //            includeNode.DataType,
+        //            includeNode.DataTypeCode));
+        //    }
+        //}
     }
 }

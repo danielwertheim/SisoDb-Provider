@@ -1,34 +1,36 @@
-﻿using System;
-using SisoDb.EnsureThat;
-using SisoDb.Structures;
+﻿//TODO: Rem for v16.0.0 final
 
-namespace SisoDb.Querying.Lambdas.Nodes
-{
-    [Serializable]
-    public class IncludeNode : INode
-    {
-        public string ReferencedStructureName { get; private set; }
+//using System;
+//using SisoDb.EnsureThat;
+//using SisoDb.Structures;
 
-        public string IdReferencePath { get; private set; }
+//namespace SisoDb.Querying.Lambdas.Nodes
+//{
+//    [Serializable]
+//    public class IncludeNode : INode
+//    {
+//        public string ReferencedStructureName { get; private set; }
 
-        public string ObjectReferencePath { get; private set; }
+//        public string IdReferencePath { get; private set; }
 
-        public Type DataType { get; private set; }
+//        public string ObjectReferencePath { get; private set; }
 
-        public DataTypeCode DataTypeCode { get; private set; }
+//        public Type DataType { get; private set; }
 
-        public IncludeNode(string referencedStructureName, string idReferencePath, string objectReferencePath, Type dataType, DataTypeCode dataTypeCode)
-        {
-			Ensure.That(referencedStructureName, "referencedStructureName").IsNotNullOrWhiteSpace();
-            Ensure.That(idReferencePath, "idReferencePath").IsNotNullOrWhiteSpace();
-            Ensure.That(objectReferencePath, "objectReferencePath").IsNotNullOrWhiteSpace();
-            Ensure.That(dataType, "dataType").IsNotNull();
+//        public DataTypeCode DataTypeCode { get; private set; }
 
-            ReferencedStructureName = referencedStructureName;
-            IdReferencePath = idReferencePath;
-            ObjectReferencePath = objectReferencePath;
-            DataType = dataType;
-            DataTypeCode = dataTypeCode;
-        }
-    }
-}
+//        public IncludeNode(string referencedStructureName, string idReferencePath, string objectReferencePath, Type dataType, DataTypeCode dataTypeCode)
+//        {
+//            Ensure.That(referencedStructureName, "referencedStructureName").IsNotNullOrWhiteSpace();
+//            Ensure.That(idReferencePath, "idReferencePath").IsNotNullOrWhiteSpace();
+//            Ensure.That(objectReferencePath, "objectReferencePath").IsNotNullOrWhiteSpace();
+//            Ensure.That(dataType, "dataType").IsNotNull();
+
+//            ReferencedStructureName = referencedStructureName;
+//            IdReferencePath = idReferencePath;
+//            ObjectReferencePath = objectReferencePath;
+//            DataType = dataType;
+//            DataTypeCode = dataTypeCode;
+//        }
+//    }
+//}

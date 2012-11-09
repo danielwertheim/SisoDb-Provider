@@ -1,52 +1,54 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
-using SisoDb.EnsureThat;
-using SisoDb.NCore;
-using SisoDb.NCore.Expressions;
-using SisoDb.Querying.Lambdas.Nodes;
-using SisoDb.Resources;
-using SisoDb.Structures.Schemas;
+﻿//TODO: Rem for v16.0.0 final
 
-namespace SisoDb.Querying.Lambdas.Parsers
-{
-    public class IncludeParser : IIncludeParser
-    {
-        protected readonly IDataTypeConverter DataTypeConverter;
+//using System.Linq;
+//using System.Linq.Expressions;
+//using SisoDb.EnsureThat;
+//using SisoDb.NCore;
+//using SisoDb.NCore.Expressions;
+//using SisoDb.Querying.Lambdas.Nodes;
+//using SisoDb.Resources;
+//using SisoDb.Structures.Schemas;
 
-        public IncludeParser(IDataTypeConverter dataTypeConverter)
-        {
-            Ensure.That(dataTypeConverter, "dataTypeConverter").IsNotNull();
-            DataTypeConverter = dataTypeConverter;
-        }
+//namespace SisoDb.Querying.Lambdas.Parsers
+//{
+//    public class IncludeParser : IIncludeParser
+//    {
+//        protected readonly IDataTypeConverter DataTypeConverter;
 
-        public virtual IParsedLambda Parse(string includedStructureSetName, LambdaExpression[] includeExpressions)
-        {
-			Ensure.That(includedStructureSetName, "includedStructureSetName").IsNotNullOrWhiteSpace();
-            Ensure.That(includeExpressions, "includeExpressions").HasItems();
+//        public IncludeParser(IDataTypeConverter dataTypeConverter)
+//        {
+//            Ensure.That(dataTypeConverter, "dataTypeConverter").IsNotNull();
+//            DataTypeConverter = dataTypeConverter;
+//        }
 
-            var nodes = new NodesCollection();
+//        public virtual IParsedLambda Parse(string includedStructureSetName, LambdaExpression[] includeExpressions)
+//        {
+//            Ensure.That(includedStructureSetName, "includedStructureSetName").IsNotNullOrWhiteSpace();
+//            Ensure.That(includeExpressions, "includeExpressions").HasItems();
 
-            foreach (var includeExpression in includeExpressions)
-            {
-                var memberExpression = includeExpression.GetRightMostMember();
-                if (memberExpression == null)
-                    throw new SisoDbException(ExceptionMessages.IncludeExpressionDoesNotTargetMember.Inject(includeExpression.ToString()));
+//            var nodes = new NodesCollection();
 
-                var idReferencePath = memberExpression.ToPath();
-                var objectReferencePath = BuildObjectReferencePath(idReferencePath);
+//            foreach (var includeExpression in includeExpressions)
+//            {
+//                var memberExpression = includeExpression.GetRightMostMember();
+//                if (memberExpression == null)
+//                    throw new SisoDbException(ExceptionMessages.IncludeExpressionDoesNotTargetMember.Inject(includeExpression.ToString()));
 
-                nodes.AddNode(new IncludeNode(
-                    includedStructureSetName, idReferencePath, objectReferencePath, memberExpression.Type, DataTypeConverter.Convert(memberExpression.Type, idReferencePath)));    
-            }
+//                var idReferencePath = memberExpression.ToPath();
+//                var objectReferencePath = BuildObjectReferencePath(idReferencePath);
 
-            return new ParsedLambda(nodes.ToArray());
-        }
+//                nodes.AddNode(new IncludeNode(
+//                    includedStructureSetName, idReferencePath, objectReferencePath, memberExpression.Type, DataTypeConverter.Convert(memberExpression.Type, idReferencePath)));    
+//            }
 
-        protected virtual string BuildObjectReferencePath(string idReferencePath)
-        {
-            return !idReferencePath.EndsWith("Id") 
-                ? idReferencePath 
-                : idReferencePath.Substring(0, idReferencePath.Length - 2);
-        }
-    }
-}
+//            return new ParsedLambda(nodes.ToArray());
+//        }
+
+//        protected virtual string BuildObjectReferencePath(string idReferencePath)
+//        {
+//            return !idReferencePath.EndsWith("Id") 
+//                ? idReferencePath 
+//                : idReferencePath.Substring(0, idReferencePath.Length - 2);
+//        }
+//    }
+//}
