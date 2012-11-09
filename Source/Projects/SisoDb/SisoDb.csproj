@@ -107,6 +107,7 @@
     <Compile Include="Diagnostics\IDiagnosticsBuilder.cs" />
     <Compile Include="Diagnostics\Appenders\StructureSchemasDiagnosticsAppender.cs" />
     <Compile Include="Diagnostics\Builders\DbDiagnosticsBuilder.cs" />
+    <Compile Include="EnsureThat\CustomMessageExtensions.cs" />
     <Compile Include="EnsureThat\Ensure.cs" />
     <Compile Include="EnsureThat\EnsureBoolExtensions.cs" />
     <Compile Include="EnsureThat\EnsureCollectionExtensions.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Annotations\UniqueAttribute.cs" />
     <Compile Include="Annotations\UniqueModes.cs" />
     <Compile Include="Lists.cs" />
+    <Compile Include="Serialization\DefaultSisoSerializer.cs" />
     <Compile Include="Serialization\EmptyStructureSerializer.cs" />
     <Compile Include="Serialization\IStructureSerializer.cs" />
     <Compile Include="SessionExecutionContext.cs" />
@@ -410,6 +412,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SisoDb.Serialization\SisoDb.Serialization.csproj">
+      <Project>{5df24b31-1222-467d-ad80-fd3b97a2671a}</Project>
+      <Name>SisoDb.Serialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

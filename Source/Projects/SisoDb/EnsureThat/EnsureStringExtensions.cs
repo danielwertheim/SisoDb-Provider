@@ -11,7 +11,7 @@ namespace SisoDb.EnsureThat
         public static Param<string> IsNotNullOrWhiteSpace(this Param<string> param)
         {
             if (string.IsNullOrWhiteSpace(param.Value))
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotNullOrWhiteSpace);
+                throw ExceptionFactory.CreateForParamValidation(param, ExceptionMessages.EnsureExtensions_IsNotNullOrWhiteSpace);
 
             return param;
         }
@@ -20,7 +20,7 @@ namespace SisoDb.EnsureThat
         public static Param<string> IsNotNullOrEmpty(this Param<string> param)
         {
             if (string.IsNullOrEmpty(param.Value))
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotNullOrEmpty);
+                throw ExceptionFactory.CreateForParamValidation(param, ExceptionMessages.EnsureExtensions_IsNotNullOrEmpty);
 
             return param;
         }
@@ -29,15 +29,15 @@ namespace SisoDb.EnsureThat
         public static Param<string> HasLengthBetween(this Param<string> param, int minLength, int maxLength)
         {
             if (string.IsNullOrEmpty(param.Value))
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotNullOrEmpty);
+                throw ExceptionFactory.CreateForParamValidation(param, ExceptionMessages.EnsureExtensions_IsNotNullOrEmpty);
 
             var length = param.Value.Length;
 
             if (length < minLength)
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotInRange_ToShort.Inject(minLength, maxLength, length));
+                throw ExceptionFactory.CreateForParamValidation(param, ExceptionMessages.EnsureExtensions_IsNotInRange_ToShort.Inject(minLength, maxLength, length));
 
             if (length > maxLength)
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotInRange_ToLong.Inject(minLength, maxLength, length));
+                throw ExceptionFactory.CreateForParamValidation(param, ExceptionMessages.EnsureExtensions_IsNotInRange_ToLong.Inject(minLength, maxLength, length));
 
             return param;
         }
@@ -53,7 +53,7 @@ namespace SisoDb.EnsureThat
         {
             if (!match.IsMatch(param.Value))
             {
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_NoMatch.Inject(param.Value, match));
+                throw ExceptionFactory.CreateForParamValidation(param, ExceptionMessages.EnsureExtensions_NoMatch.Inject(param.Value, match));
             }
             return param;
         }
