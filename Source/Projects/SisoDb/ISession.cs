@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using SisoDb.Dac;
 using SisoDb.Structures.Schemas;
 
 namespace SisoDb
@@ -19,6 +20,11 @@ namespace SisoDb
         /// The database that this session is executed against.
         /// </summary>
         ISisoDatabase Db { get; }
+
+        /// <summary>
+        /// Manages all raw querying, inserting etc. against the DB. Be careful.
+        /// </summary>
+        IDbClient DbClient { get; }
 
         /// <summary>
         /// Indicates the current status (<see cref="SessionStatus"/>) of the session.

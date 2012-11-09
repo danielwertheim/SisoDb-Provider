@@ -21,7 +21,6 @@ namespace SisoDb
         private readonly ISisoDatabase _db;
         private readonly IQueryEngine _queryEngine;
         private readonly IAdvanced _advanced;
-        protected IDbClient DbClient;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
@@ -30,6 +29,7 @@ namespace SisoDb
 
         public Guid Id { get { return _id; } }
         public ISisoDatabase Db { get { return _db; } }
+        public IDbClient DbClient { get; private set; }
         public SessionStatus Status { get; private set; }
         public IQueryEngine QueryEngine { get { return _queryEngine; } }
         public IAdvanced Advanced { get { return _advanced; } }

@@ -1,8 +1,6 @@
-using SisoDb.SqlServer;
-
 namespace SisoDb.Sql2005
 {
-    public class Sql2005Database : SqlServerDatabase
+    public class Sql2005Database : SisoDatabase
     {
         public Sql2005Database(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory) 
 			: base(connectionInfo, dbProviderFactory)

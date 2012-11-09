@@ -1,8 +1,6 @@
-using SisoDb.SqlServer;
-
 namespace SisoDb.Sql2008
 {
-    public class Sql2008Database : SqlServerDatabase
+    public class Sql2008Database : SisoDatabase
     {
         public Sql2008Database(ISisoConnectionInfo connectionInfo, IDbProviderFactory dbProviderFactory) 
 			: base(connectionInfo, dbProviderFactory)

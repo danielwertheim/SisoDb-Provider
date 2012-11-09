@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SisoDb.Querying.Sql
 {
-    public abstract class SqlWhereCriteriaBuilder : ISqlWhereCriteriaBuilder
+    public class SqlWhereCriteriaBuilder : ISqlWhereCriteriaBuilder
     {
         private const string OpMarker = "[%OP%]";
         private const string ValueMarker = "[%VALUE%]";
@@ -31,7 +31,7 @@ namespace SisoDb.Querying.Sql
             get { return State.ToString(); }
         }
 
-        protected SqlWhereCriteriaBuilder()
+        public SqlWhereCriteriaBuilder()
         {
             State = new StringBuilder();
             Params = new HashSet<IDacParameter>();
