@@ -214,7 +214,7 @@ namespace SisoDb.Serialization.Common
 
         private static SetPropertyDelegate GetSetPropertyMethod(TypeConfig typeConfig, PropertyInfo propertyInfo)
         {
-            if (!propertyInfo.CanWrite && !typeConfig.EnableAnonymousFieldSetterses) return null;
+            if (!propertyInfo.CanWrite && !typeConfig.EnableAnonymousFieldSetterses && !JsConfig.EnableAnonymousFieldSetters) return null;
 
             FieldInfo fieldInfo = null;
             if (!propertyInfo.CanWrite)

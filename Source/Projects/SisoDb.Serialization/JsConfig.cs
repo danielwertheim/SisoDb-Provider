@@ -39,6 +39,22 @@ namespace SisoDb.Serialization
         }
 
         [ThreadStatic]
+        private static bool? tsEnableAnonymousFieldSetters;
+        private static bool? sEnableAnonymousFieldSetters;
+        public static bool EnableAnonymousFieldSetters
+        {
+            get
+            {
+                return tsEnableAnonymousFieldSetters ?? sEnableAnonymousFieldSetters ?? false;
+            }
+            set
+            {
+                tsEnableAnonymousFieldSetters = value;
+                if (!sEnableAnonymousFieldSetters.HasValue) sEnableAnonymousFieldSetters = value;
+            }
+        }
+
+        [ThreadStatic]
         private static bool? tsTryToParsePrimitiveTypeValues;
         private static bool? sTryToParsePrimitiveTypeValues;
         public static bool TryToParsePrimitiveTypeValues

@@ -29,6 +29,7 @@ namespace SisoDb.Serialization
         protected virtual void OnConfigForDeserialization()
         {
             JsConfig.DateHandler = DefaultDateHandler;
+            //JsConfig.EnableAnonymousFieldSetters = true;
             JsConfig.TryToParsePrimitiveTypeValues = true;
         }
 
@@ -80,7 +81,7 @@ namespace SisoDb.Serialization
 
         public virtual IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
-            OnConfigForDeserialization();
+            OnConfigForDeserialization<T>();
 
             return sourceData.Select(OnDeserialize<T>);
         }
