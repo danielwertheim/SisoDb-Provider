@@ -16,18 +16,22 @@ namespace SisoDb.ServiceStack
             JsConfig.DateHandler = DefaultDateHandler;
             JsConfig.ExcludeTypeInfo = true;
             JsConfig<T>.ExcludeTypeInfo = true;
+            JsConfig.IncludeTypeInfo = false;
+            JsConfig<T>.IncludeTypeInfo = false;
             JsConfig.IncludeNullValues = false;
+            JsConfig.TryToParsePrimitiveTypeValues = true;
         }
 
         protected virtual void OnConfigForDeserialization<T>() where T : class
         {
-            JsConfig.DateHandler = DefaultDateHandler;
+            OnConfigForDeserialization();
             TypeConfig<T>.EnableAnonymousFieldSetters = true;
         }
 
         protected virtual void OnConfigForDeserialization()
         {
             JsConfig.DateHandler = DefaultDateHandler;
+            JsConfig.TryToParsePrimitiveTypeValues = true;
         }
 
         public virtual string Serialize<T>(T item) where T : class
