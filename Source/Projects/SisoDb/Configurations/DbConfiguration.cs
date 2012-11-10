@@ -21,7 +21,7 @@ namespace SisoDb.Configurations
         /// If an Id exists it will be left untouched, otherwise a new ID will be generated.
         /// </summary>
         /// <returns></returns>
-        public virtual DbConfiguration AutoIds()
+        public virtual DbConfiguration UseAutoIds()
         {
             Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) =>
                 StructureBuildersFn.GetBuilderForInsertsAssigningIfMissingId(Database.StructureBuilders, schema, dbClient);
@@ -45,7 +45,7 @@ namespace SisoDb.Configurations
         /// No Ids will be generated. You are responsible for doing it.
         /// </summary>
         /// <returns></returns>
-        public virtual DbConfiguration ManualIds()
+        public virtual DbConfiguration UseManualIds()
         {
             Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) => 
                 StructureBuildersFn.GetBuilderForManualIdAssignment(Database.StructureBuilders, schema, dbClient);
