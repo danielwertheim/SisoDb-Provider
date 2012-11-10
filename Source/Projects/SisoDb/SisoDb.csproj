@@ -232,6 +232,7 @@
     <Compile Include="Structures\SequentialGuid.cs" />
     <Compile Include="Structures\Structure.cs" />
     <Compile Include="Structures\StructureBuilder.cs" />
+    <Compile Include="Structures\StructureBuilderAutoId.cs" />
     <Compile Include="Structures\StructureBuilderPreservingId.cs" />
     <Compile Include="Structures\StructureBuildersFn.cs" />
     <Compile Include="Structures\StructureId.cs" />

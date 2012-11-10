@@ -7,6 +7,6 @@ namespace SisoDb.Structures
         StructureIdTypes IdType { get; }
         object Value { get; }
         Type DataType { get; }
-        bool HasValue { get; }
+        bool IsEmpty { get; }
     }
 }

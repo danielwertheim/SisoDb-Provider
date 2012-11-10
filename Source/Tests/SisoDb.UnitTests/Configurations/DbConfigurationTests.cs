@@ -41,7 +41,31 @@ namespace SisoDb.UnitTests.Configurations
         }
 
         [Test]
-        public void UseManualStructureIdAssignment_Should_make_ResolveBuilderForInsert_to_return_builder_with_EmptyStructureIdGenerator()
+        public void AutoIds_Should_make_ResolveBuilderForInsert_to_return_builder_for_autoIds_but_still_resolve_idgenerators()
+        {
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.SetupGet(f => f.IdAccessor).Returns(() =>
+            {
+                var id = new Mock<IIdAccessor>();
+                id.SetupGet(f => f.IdType).Returns(StructureIdTypes.Guid);
+                return id.Object;
+            });
+            var serializerFake = new Mock<ISisoSerializer>();
+            var structureBuilders = new StructureBuilders(
+                () => serializerFake.Object,
+                s => Mock.Of<IStructureIdGenerator>(),
+                (s, d) => Mock.Of<IIdentityStructureIdGenerator>());
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
+
+            dbFake.Object.Configure().AutoIds();
+            var builder = structureBuilders.ResolveBuilderForInsert(schemaFake.Object, Mock.Of<IDbClient>());
+
+            Assert.AreEqual(typeof(StructureBuilderAutoId), builder.GetType());
+        }
+
+        [Test]
+        public void ManualIds_Should_make_ResolveBuilderForInsert_to_return_builder_with_EmptyStructureIdGenerator()
         {
             var serializerFake = new Mock<ISisoSerializer>();
             var structureBuilders = new StructureBuilders(
@@ -51,7 +75,7 @@ namespace SisoDb.UnitTests.Configurations
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
 
-            dbFake.Object.Configure().UseManualStructureIdAssignment();
+            dbFake.Object.Configure().ManualIds();
             var builder = structureBuilders.ResolveBuilderForInsert(Mock.Of<IStructureSchema>(), Mock.Of<IDbClient>());
 
             Assert.AreEqual(typeof(EmptyStructureIdGenerator), builder.StructureIdGenerator.GetType());

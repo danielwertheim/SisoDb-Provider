@@ -29,13 +29,6 @@ namespace SisoDb.Structures
                 StructureSerializer.Serialize(item, structureSchema));
         }
 
-		public override IStructure[] CreateStructures<T>(T[] items, IStructureSchema structureSchema)
-		{
-			return items.Length < 100
-					? CreateStructuresInSerial(items, structureSchema)
-					: CreateStructuresInParallel(items, structureSchema);
-		}
-
 		protected override IStructure[] CreateStructuresInParallel<T>(T[] items, IStructureSchema structureSchema)
 		{
 			var structures = new IStructure[items.Length];
@@ -44,17 +37,15 @@ namespace SisoDb.Structures
 			Parallel.For(0, items.Length, i =>
 			{
 				var itm = items[i];
-				var id = structureSchema.IdAccessor.GetValue(itm);
-
-				structureSchema.IdAccessor.SetValue(itm, id);
+				var structureId = structureSchema.IdAccessor.GetValue(itm);
 
                 if (structureSchema.HasTimeStamp)
                     structureSchema.TimeStampAccessor.SetValue(itm, timeStamp);
 
 				structures[i] = new Structure(
 					structureSchema.Name,
-					id,
-					IndexesFactory.CreateIndexes(structureSchema, itm, id),
+					structureId,
+					IndexesFactory.CreateIndexes(structureSchema, itm, structureId),
 					StructureSerializer.Serialize(itm, structureSchema));
 			});
 
@@ -69,17 +60,15 @@ namespace SisoDb.Structures
 			for (var i = 0; i < structures.Length; i++)
 			{
 				var itm = items[i];
-				var id = structureSchema.IdAccessor.GetValue(itm);
-
-				structureSchema.IdAccessor.SetValue(itm, id);
+				var structureId = structureSchema.IdAccessor.GetValue(itm);
 
                 if (structureSchema.HasTimeStamp)
                     structureSchema.TimeStampAccessor.SetValue(itm, timeStamp);
 
 				structures[i] = new Structure(
 					structureSchema.Name,
-					id,
-					IndexesFactory.CreateIndexes(structureSchema, itm, id),
+					structureId,
+					IndexesFactory.CreateIndexes(structureSchema, itm, structureId),
 					StructureSerializer.Serialize(itm, structureSchema));
 			}
 

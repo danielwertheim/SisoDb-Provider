@@ -4,12 +4,12 @@ namespace SisoDb.Structures.IdGenerators
 {
     public class SequentialGuidStructureIdGenerator : IStructureIdGenerator
     {
-        public IStructureId Generate(IStructureSchema structureSchema)
+        public virtual IStructureId Generate(IStructureSchema structureSchema)
         {
             return StructureId.Create(SequentialGuid.New());
         }
 
-        public IStructureId[] Generate(IStructureSchema structureSchema, int numOfIds)
+        public virtual IStructureId[] Generate(IStructureSchema structureSchema, int numOfIds)
         {
             var structureIds = new IStructureId[numOfIds];
 

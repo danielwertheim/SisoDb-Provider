@@ -90,7 +90,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.MemberAccessors
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue(item);
 
-            Assert.IsFalse(idViaAccessor.HasValue);
+            Assert.IsTrue(idViaAccessor.IsEmpty);
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.MemberAccessors
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue(item);
 
-            Assert.IsFalse(idViaAccessor.HasValue);
+            Assert.IsTrue(idViaAccessor.IsEmpty);
         }
 
         [Test]
@@ -231,7 +231,7 @@ namespace SisoDb.UnitTests.Structures.Schemas.MemberAccessors
             var idAccessor = new IdAccessor(property);
             var idViaAccessor = idAccessor.GetValue(item);
 
-            Assert.IsFalse(idViaAccessor.HasValue);
+            Assert.IsTrue(idViaAccessor.IsEmpty);
         }
 
         [Test]

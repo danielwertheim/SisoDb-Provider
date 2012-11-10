@@ -15,7 +15,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.ConvertFrom(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(string), id.DataType);
             Assert.AreEqual(StructureIdTypes.String, id.IdType);
@@ -28,7 +28,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.ConvertFrom(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -41,7 +41,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.ConvertFrom(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -54,7 +54,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.ConvertFrom(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -67,7 +67,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.Guid);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -80,7 +80,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.Guid);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(Guid.Parse(value.ToString()), id.Value);
             Assert.AreEqual(typeof(Guid), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -93,7 +93,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.Guid);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -106,7 +106,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.Identity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -119,7 +119,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.Identity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(int.Parse(value.ToString()), id.Value);
             Assert.AreEqual(typeof(int), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -132,7 +132,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.Identity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -145,7 +145,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.BigIdentity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -158,7 +158,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.BigIdentity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(long.Parse(value.ToString()), id.Value);
             Assert.AreEqual(typeof(long), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -171,7 +171,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.BigIdentity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -184,7 +184,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.String);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(string), id.DataType);
             Assert.AreEqual(StructureIdTypes.String, id.IdType);
@@ -197,7 +197,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.String);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(string), id.DataType);
             Assert.AreEqual(StructureIdTypes.String, id.IdType);
@@ -210,7 +210,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value.ToString(), StructureIdTypes.Identity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -223,7 +223,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value.ToString(), StructureIdTypes.Identity);
 
-            Assert.IsFalse(id.HasValue);
+            Assert.IsTrue(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int?), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -236,7 +236,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value.ToString(), StructureIdTypes.BigIdentity);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -249,7 +249,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value.ToString(), StructureIdTypes.BigIdentity);
 
-            Assert.IsFalse(id.HasValue);
+            Assert.IsTrue(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long?), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -262,7 +262,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value.ToString(), StructureIdTypes.Guid);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -275,7 +275,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value.ToString(), StructureIdTypes.Guid);
 
-            Assert.IsFalse(id.HasValue);
+            Assert.IsTrue(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid?), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -288,7 +288,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.String);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(string), id.DataType);
             Assert.AreEqual(StructureIdTypes.String, id.IdType);
@@ -301,7 +301,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value, StructureIdTypes.String);
 
-            Assert.IsFalse(id.HasValue);
+            Assert.IsTrue(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(string), id.DataType);
             Assert.AreEqual(StructureIdTypes.String, id.IdType);
@@ -314,7 +314,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(string), id.DataType);
             Assert.AreEqual(StructureIdTypes.String, id.IdType);
@@ -327,7 +327,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -340,7 +340,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid?), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -353,7 +353,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsFalse(id.HasValue);
+            Assert.IsTrue(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(Guid?), id.DataType);
             Assert.AreEqual(StructureIdTypes.Guid, id.IdType);
@@ -366,7 +366,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -379,7 +379,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int?), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -392,7 +392,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsFalse(id.HasValue);
+            Assert.IsTrue(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(int?), id.DataType);
             Assert.AreEqual(StructureIdTypes.Identity, id.IdType);
@@ -405,7 +405,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -418,7 +418,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsTrue(id.HasValue);
+            Assert.IsFalse(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long?), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);
@@ -431,7 +431,7 @@ namespace SisoDb.UnitTests.Structures
 
             var id = StructureId.Create(value);
 
-            Assert.IsFalse(id.HasValue);
+            Assert.IsTrue(id.IsEmpty);
             Assert.AreEqual(value, id.Value);
             Assert.AreEqual(typeof(long?), id.DataType);
             Assert.AreEqual(StructureIdTypes.BigIdentity, id.IdType);

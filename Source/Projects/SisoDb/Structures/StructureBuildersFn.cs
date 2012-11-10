@@ -40,7 +40,32 @@ namespace SisoDb.Structures
             throw new SisoDbException(ExceptionMessages.StructureBuilders_CreateForInsert.Inject(idType, schema.Name));
         }
 
-        public static IStructureBuilder GetBuilderForInsertsPreservingIds(IStructureBuilders builders, IStructureSchema schema, IDbClient dbClient)
+        public static IStructureBuilder GetBuilderForInsertsPreservingId(IStructureBuilders builders, IStructureSchema schema, IDbClient dbClient)
+        {
+            Ensure.That(builders, "builders").IsNotNull();
+            Ensure.That(schema, "schema").IsNotNull();
+            Ensure.That(dbClient, "dbClient").IsNotNull();
+
+            IStructureIdGenerator idGenerator;
+            var idType = schema.IdAccessor.IdType;
+
+            if (idType.IsGuid())
+                idGenerator = new EmptyStructureIdGenerator();
+            else if (idType.IsIdentity())
+                idGenerator = builders.IdentityStructureIdGeneratorFn(schema, dbClient);
+            else if (idType.IsString())
+                idGenerator = new EmptyStructureIdGenerator();
+            else
+                throw new SisoDbException(ExceptionMessages.StructureBuilders_CreateForInsert.Inject(idType, schema.Name));
+
+            return new StructureBuilderPreservingId
+            {
+                StructureIdGenerator = idGenerator,
+                StructureSerializer = builders.StructureSerializerFn()
+            };
+        }
+
+        public static IStructureBuilder GetBuilderForInsertsAssigningIfMissingId(IStructureBuilders builders, IStructureSchema schema, IDbClient dbClient)
         {
             Ensure.That(builders, "builders").IsNotNull();
             Ensure.That(schema, "schema").IsNotNull();
@@ -58,7 +83,7 @@ namespace SisoDb.Structures
             else
                 throw new SisoDbException(ExceptionMessages.StructureBuilders_CreateForInsert.Inject(idType, schema.Name));
 
-            return new StructureBuilderPreservingId
+            return new StructureBuilderAutoId
             {
                 StructureIdGenerator = idGenerator,
                 StructureSerializer = builders.StructureSerializerFn()

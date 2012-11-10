@@ -4,17 +4,73 @@ using Moq;
 using NUnit.Framework;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
-using SisoDb.UnitTests.Serialization;
 using SisoDb.UnitTests.Structures.Schemas;
 
 namespace SisoDb.UnitTests.Structures.StructureBuilderTests
 {
     [TestFixture]
-    public class StructureBuilderPreservingIdsTests : StructureBuilderBaseTests
+    public class StructureBuilderPreservingIdTests : StructureBuilderBaseTests
     {
         protected override void OnTestInitialize()
         {
             Builder = new StructureBuilderPreservingId();
+        }
+
+        [Test]
+        public void CreateStructure_WhenNoIdIsAssigned_IdIsNotGenerated()
+        {
+            var idGeneratorFake = new Mock<IStructureIdGenerator>();
+            var schema = StructureSchemaTestFactory.CreateRealFrom<GuidItem>();
+            var initialIdValue = Guid.Empty;
+            var item = new GuidItem { StructureId = initialIdValue };
+
+            Builder.StructureIdGenerator = idGeneratorFake.Object;
+            var structure = Builder.CreateStructure(item, schema);
+
+            Assert.AreEqual(initialIdValue, structure.Id.Value);
+            Assert.AreEqual(initialIdValue, item.StructureId);
+            idGeneratorFake.Verify(f => f.Generate(schema), Times.Never());
+            idGeneratorFake.Verify(f => f.Generate(schema, It.IsAny<int>()), Times.Never());
+        }
+
+        [Test]
+        public void CreateStructures_inSerial_WhenNoIdIsAssigned_IdsAreNotGenerated()
+        {
+            var idGeneratorFake = new Mock<IStructureIdGenerator>();
+            var schema = StructureSchemaTestFactory.CreateRealFrom<GuidItem>();
+            var initialIdValue = Guid.Empty;
+            var items = CreateGuidItems(StructureBuilder.LimitForSerialStructureBuilding);
+
+            Builder.StructureIdGenerator = idGeneratorFake.Object;
+            var structures = Builder.CreateStructures(items, schema);
+
+            idGeneratorFake.Verify(f => f.Generate(schema), Times.Never());
+            idGeneratorFake.Verify(f => f.Generate(schema, It.IsAny<int>()), Times.Never());
+            for (var i = 0; i < items.Length; i++)
+            {
+                Assert.AreEqual(initialIdValue, structures[i].Id.Value);
+                Assert.AreEqual(initialIdValue, items[i].StructureId);    
+            }
+        }
+
+        [Test]
+        public void CreateStructures_inParallel_WhenNoIdIsAssigned_IdsAreNotGenerated()
+        {
+            var idGeneratorFake = new Mock<IStructureIdGenerator>();
+            var schema = StructureSchemaTestFactory.CreateRealFrom<GuidItem>();
+            var initialIdValue = Guid.Empty;
+            var items = CreateGuidItems(StructureBuilder.LimitForSerialStructureBuilding + 1);
+
+            Builder.StructureIdGenerator = idGeneratorFake.Object;
+            var structures = Builder.CreateStructures(items, schema);
+
+            idGeneratorFake.Verify(f => f.Generate(schema), Times.Never());
+            idGeneratorFake.Verify(f => f.Generate(schema, It.IsAny<int>()), Times.Never());
+            for (var i = 0; i < items.Length; i++)
+            {
+                Assert.AreEqual(initialIdValue, structures[i].Id.Value);
+                Assert.AreEqual(initialIdValue, items[i].StructureId);
+            }
         }
 
         [Test]
@@ -47,9 +103,9 @@ namespace SisoDb.UnitTests.Structures.StructureBuilderTests
         }
 
         [Test]
-        public void CreateStructures_WhenSpecificIdGeneratorIsPassed_SpecificIdGeneratorIsConsumed()
+        public void CreateStructures_WhenSpecificIdGeneratorIsPassed_SpecificIdGeneratorIsNotConsumed()
         {
-            var items = new[] { new GuidItem { Value = 42}, new GuidItem { Value = 43 } };
+            var items = new[] { new GuidItem { Value = 42 }, new GuidItem { Value = 43 } };
             var schema = StructureSchemaTestFactory.CreateRealFrom<GuidItem>();
             var idGeneratorMock = new Mock<IStructureIdGenerator>();
 

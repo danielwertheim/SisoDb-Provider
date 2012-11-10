@@ -2,7 +2,6 @@ using System;
 using SisoDb.EnsureThat;
 using SisoDb.Serialization;
 using SisoDb.Structures;
-using SisoDb.Structures.IdGenerators;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.Configuration;
 
@@ -18,15 +17,35 @@ namespace SisoDb.Configurations
             Database = database;
         }
 
-        public virtual DbConfiguration PreserveIds()
+        /// <summary>
+        /// If an Id exists it will be left untouched, otherwise a new ID will be generated.
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbConfiguration AutoIds()
         {
-            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) => 
-                StructureBuildersFn.GetBuilderForInsertsPreservingIds(Database.StructureBuilders, schema, dbClient);
+            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) =>
+                StructureBuildersFn.GetBuilderForInsertsAssigningIfMissingId(Database.StructureBuilders, schema, dbClient);
 
             return this;
         }
 
-        public virtual DbConfiguration UseManualStructureIdAssignment()
+        /// <summary>
+        /// GUID and String Ids should have been assigned. Identities will be generated for you.
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbConfiguration PreserveIds()
+        {
+            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) =>
+                StructureBuildersFn.GetBuilderForInsertsPreservingId(Database.StructureBuilders, schema, dbClient);
+
+            return this;
+        }
+
+        /// <summary>
+        /// No Ids will be generated. You are responsible for doing it.
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbConfiguration ManualIds()
         {
             Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) => 
                 StructureBuildersFn.GetBuilderForManualIdAssignment(Database.StructureBuilders, schema, dbClient);

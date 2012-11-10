@@ -19,7 +19,7 @@ namespace SisoDb.Structures
         private readonly StructureIdTypes _idType;
         private readonly object _value;
         private readonly Type _dataType;
-        private readonly bool _hasValue;
+        private readonly bool _isEmpty;
 
         public StructureIdTypes IdType
         {
@@ -36,9 +36,9 @@ namespace SisoDb.Structures
             get { return _dataType; }
         }
 
-        public bool HasValue
+        public bool IsEmpty
         {
-            get { return _hasValue; }
+            get { return _isEmpty; }
         }
 
         public static IStructureId ConvertFrom(object idValue)
@@ -68,32 +68,32 @@ namespace SisoDb.Structures
 
         public static IStructureId Create(Guid value)
         {
-            return new StructureId(value, GuidType, StructureIdTypes.Guid);
+            return new StructureId(value, GuidType, StructureIdTypes.Guid, value == Guid.Empty);
         }
 
         public static IStructureId Create(Guid? value)
         {
-            return new StructureId(value, NullableGuidType, StructureIdTypes.Guid);
+            return new StructureId(value, NullableGuidType, StructureIdTypes.Guid, !value.HasValue || value == Guid.Empty);
         }
 
         public static IStructureId Create(int value)
         {
-            return new StructureId(value, IntType, StructureIdTypes.Identity);
+            return new StructureId(value, IntType, StructureIdTypes.Identity, value < 1);
         }
 
         public static IStructureId Create(int? value)
         {
-            return new StructureId(value, NullableIntType, StructureIdTypes.Identity);
+            return new StructureId(value, NullableIntType, StructureIdTypes.Identity, !value.HasValue || value.Value < 1);
         }
 
         public static IStructureId Create(long value)
         {
-            return new StructureId(value, LongType, StructureIdTypes.BigIdentity);
+            return new StructureId(value, LongType, StructureIdTypes.BigIdentity, value < 1);
         }
 
         public static IStructureId Create(long? value)
         {
-            return new StructureId(value, NullableLongType, StructureIdTypes.BigIdentity);
+            return new StructureId(value, NullableLongType, StructureIdTypes.BigIdentity, !value.HasValue || value.Value < 1);
         }
 
         public static IStructureId Create(object value, StructureIdTypes idType)
@@ -163,15 +163,15 @@ namespace SisoDb.Structures
         private StructureId(string value, Type dataType)
         {
             _value = value;
-            _hasValue = value != null;
+            _isEmpty = string.IsNullOrWhiteSpace(value);
             _dataType = dataType;
             _idType = StructureIdTypes.String;
         }
 
-        private StructureId(ValueType value, Type dataType, StructureIdTypes idType)
+        private StructureId(ValueType value, Type dataType, StructureIdTypes idType, bool isEmpty)
         {
             _value = value;
-            _hasValue = value != null;
+            _isEmpty = isEmpty;
             _dataType = dataType;
             _idType = idType;
         }

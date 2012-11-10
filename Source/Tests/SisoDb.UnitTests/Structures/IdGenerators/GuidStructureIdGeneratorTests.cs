@@ -31,7 +31,7 @@ namespace SisoDb.UnitTests.Structures.IdGenerators
             var numOfIds = 10;
 
             var idsCount = _structureIdGenerator.Generate(Mock.Of<IStructureSchema>(), numOfIds)
-                .Where(id => id.HasValue)
+                .Where(id => !id.IsEmpty)
                 .Select(id => id.Value)
                 .Cast<Guid>()
                 .Count();

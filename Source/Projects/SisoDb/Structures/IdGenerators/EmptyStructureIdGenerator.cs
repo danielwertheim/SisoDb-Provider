@@ -4,12 +4,12 @@ namespace SisoDb.Structures.IdGenerators
 {
     public class EmptyStructureIdGenerator : IStructureIdGenerator
     {
-        public IStructureId Generate(IStructureSchema structureSchema)
+        public virtual IStructureId Generate(IStructureSchema structureSchema)
         {
             return null;
         }
 
-        public IStructureId[] Generate(IStructureSchema structureSchema, int numOfIds)
+        public virtual IStructureId[] Generate(IStructureSchema structureSchema, int numOfIds)
         {
             return null;
         }

@@ -9,6 +9,8 @@ namespace SisoDb.Structures
 {
     public class StructureBuilder : IStructureBuilder
     {
+        public const int LimitForSerialStructureBuilding = 100;
+
         private IStructureIndexesFactory _indexesFactory;
         private IStructureSerializer _structureSerializer;
         private IStructureIdGenerator _structureIdGenerator;
@@ -69,12 +71,17 @@ namespace SisoDb.Structures
                 StructureSerializer.Serialize(item, structureSchema));
         }
 
-		public virtual IStructure[] CreateStructures<T>(T[] items, IStructureSchema structureSchema) where T : class
+        public virtual IStructure[] CreateStructures<T>(T[] items, IStructureSchema structureSchema) where T : class
 		{
-			return items.Length < 100
+            return ShouldCreateStructuresInSerial(items.Length)
 			       	? CreateStructuresInSerial(items, structureSchema)
 			       	: CreateStructuresInParallel(items, structureSchema);
 		}
+
+        protected virtual bool ShouldCreateStructuresInSerial(int numOfItems)
+        {
+            return numOfItems <= LimitForSerialStructureBuilding;
+        }
 
     	protected virtual IStructure[] CreateStructuresInParallel<T>(T[] items, IStructureSchema structureSchema) where T : class
 		{
