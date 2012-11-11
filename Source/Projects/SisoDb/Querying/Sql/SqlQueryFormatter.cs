@@ -15,8 +15,6 @@ namespace SisoDb.Querying.Sql
         private const string MainStructureTablePart = "MainStructureTable";
         private const string WhereAndSortingJoinsPart = "WhereAndSortingJoins";
         private const string WhereCriteriaPart = "WhereCriteria";
-        //TODO: Rem for v16.0.0 final
-        //private const string IncludesJoinsPart = "IncludesJoins";
         private const string OrderByPart = "OrderBy";
         private const string PagingPart = "Paging";
 
@@ -32,8 +30,6 @@ namespace SisoDb.Querying.Sql
                 {OrderByMembersPart, ""},
                 {MainStructureTablePart, ""},
                 {WhereAndSortingJoinsPart, ""},
-                //TODO: Rem for v16.0.0 final
-                //{IncludesJoinsPart, ""},
                 {OrderByPart, ""},
                 {PagingPart, ""},
                 {WhereCriteriaPart, ""},
@@ -56,12 +52,6 @@ namespace SisoDb.Querying.Sql
             set { SetValue(TakePart, value.AppendWith(" ")); }
         }
 
-        //TODO: Rem for v16.0.0 final
-        //public string IncludedJsonMembers
-        //{
-        //    set { SetValue(IncludedJsonMembersPart, value.PrependWith(", ")); }
-        //}
-
         public string OrderByMembers
         {
             set { SetValue(OrderByMembersPart, value.PrependWith(", ")); }
@@ -81,12 +71,6 @@ namespace SisoDb.Querying.Sql
         {
             set { SetValue(WhereCriteriaPart, value.PrependWith(" where ")); }
         }
-
-        //TODO: Rem for v16.0.0 final
-        //public string IncludesJoins
-        //{
-        //    set { SetValue(IncludesJoinsPart, value.PrependWith(" ")); }
-        //}
 
         public string OrderBy
         {

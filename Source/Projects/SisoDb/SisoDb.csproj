@@ -326,16 +326,12 @@
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
     <Compile Include="Structures\StructureBuilders.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IWhereParser.cs" />
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="Serialization\StructureSerializer.cs" />
     <Compile Include="IDbProviderFactory.cs" />
-    <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Sql\SqlExpressionBuilder.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParser.cs" />

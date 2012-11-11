@@ -96,7 +96,6 @@
     <Compile Include="Session\Querying\Exists.cs" />
     <Compile Include="Session\Querying\GetById.cs" />
     <Compile Include="Session\Querying\GetByIds.cs" />
-    <Compile Include="Session\Querying\Includes.cs" />
     <Compile Include="Session\Querying\NamedQueries.cs" />
     <Compile Include="Session\Querying\Query.cs" />
     <Compile Include="Session\Querying\QueryAll.cs" />

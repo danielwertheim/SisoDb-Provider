@@ -85,7 +85,6 @@ namespace SisoDb
         /// Lets you perform a Query defining things like
         /// <see cref="ISisoQueryable{T}.Take"/>
         /// <see cref="ISisoQueryable{T}.Where"/>
-        /// <see cref="ISisoQueryable{T}.Include{TInclude}"/>
         /// <see cref="ISisoQueryable{T}.OrderBy"/>
         /// <see cref="ISisoQueryable{T}.Page"/>
         /// </summary>

@@ -56,8 +56,6 @@ namespace SisoDb.Querying
         protected virtual void EnsureQueryContainsOnlyWhereExpression(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
-            //TODO: Rem for v16.0.0 final
-            //if (!query.HasWhere || (query.HasTakeNumOfStructures || query.HasIncludes || query.HasSortings || query.HasPaging))
             if (!query.HasWhere || (query.HasTakeNumOfStructures || query.HasSortings || query.HasPaging))
                 throw new ArgumentException(ExceptionMessages.DbQueryGenerator_OnlyWhereExpressionsAreAllowed);
         }
@@ -97,14 +95,10 @@ namespace SisoDb.Querying
                 Start = GenerateStartString(query, sqlExpression),
                 End = GenerateEndString(query, sqlExpression),
                 Take = GenerateTakeString(query),
-                //TODO: Rem for v16.0.0 final
-                //IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
                 OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
                 MainStructureTable = query.StructureSchema.GetStructureTableName(),
                 WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
-                //TODO: Rem for v16.0.0 final
-                //IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
                 OrderBy = GenerateOrderByString(query, sqlExpression),
                 Paging = GeneratePagingString(query, sqlExpression)
             };
@@ -229,37 +223,5 @@ namespace SisoDb.Querying
         {
             return sqlExpression.WhereCriteria.CriteriaString;
         }
-
-        //TODO: Rem for v16.0.0 final
-        //protected virtual string GenerateIncludesJoins(IQuery query, ISqlExpression sqlExpression)
-        //{
-        //    var includes = sqlExpression.Includes.ToList();
-        //    if (includes.Count == 0)
-        //        return string.Empty;
-
-        //    var structureTableName = query.StructureSchema.GetStructureTableName();
-        //    var indexesTableNames = query.StructureSchema.GetIndexesTableNames();
-
-        //    const string joinFormat = "left join (select si.[StructureId], cs.[Json] [{1}Json] from [{2}] s inner join [{3}] si on si.[StructureId] = s.[StructureId] and si.[MemberPath] = '{4}' left join [{5}] cs on cs.[StructureId] = si.[Value]) inc{0} on inc{0}.[StructureId] = s.[StructureId]";
-
-        //    return string.Join(" ", includes.Select(include =>
-        //        string.Format(joinFormat,
-        //            include.Index,
-        //            include.ObjectReferencePath,
-        //            structureTableName,
-        //            indexesTableNames.GetNameByType(include.DataTypeCode),
-        //            include.MemberPathReference,
-        //            include.TableName)));
-        //}
-
-        //TODO: Rem for v16.0.0 final
-        //protected virtual string GenerateIncludedJsonMembersString(ISqlExpression sqlExpression)
-        //{
-        //    var includes = sqlExpression.Includes.ToList();
-
-        //    return includes.Count == 0
-        //        ? string.Empty
-        //        : string.Join(", ", includes.Select(inc => string.Format("inc{0}.[{1}Json]", inc.Index, inc.ObjectReferencePath)));
-        //}
     }
 }

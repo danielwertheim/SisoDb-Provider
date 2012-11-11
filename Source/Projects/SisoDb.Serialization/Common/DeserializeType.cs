@@ -219,7 +219,6 @@ namespace SisoDb.Serialization.Common
             FieldInfo fieldInfo = null;
             if (!propertyInfo.CanWrite)
             {
-                //TODO: What string comparison is used in SST?
 				string fieldNameFormat = Env.IsMono ? "<{0}>" : "<{0}>i__Field";
                 var fieldName = string.Format(fieldNameFormat, propertyInfo.Name);
                 var fieldInfos = typeConfig.Type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetField);

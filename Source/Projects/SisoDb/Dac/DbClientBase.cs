@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
@@ -685,70 +684,14 @@ namespace SisoDb.Dac
 
         private IEnumerable<string> YieldJson(IDbCommand cmd)
         {
-            Func<IDataRecord, IDictionary<int, string>, string> read = (dr, af) => dr.GetString(0);
-            IDictionary<int, string> additionalJsonFields = null;
-
             using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
             {
-                if (reader.Read())
-                {
-                    if (reader.FieldCount > 1)
-                    {
-                        additionalJsonFields = GetAdditionalJsonFields(reader);
-                        if (additionalJsonFields.Count > 0)
-                            read = GetMergedJsonStructure;
-                    }
-                    yield return read.Invoke(reader, additionalJsonFields);
-                }
-
                 while (reader.Read())
                 {
-                    yield return read.Invoke(reader, additionalJsonFields);
+                    yield return reader.GetString(0);
                 }
                 reader.Close();
             }
-        }
-
-        private static IDictionary<int, string> GetAdditionalJsonFields(IDataRecord dataRecord)
-        {
-            var indices = new Dictionary<int, string>();
-            for (var i = 1; i < dataRecord.FieldCount; i++)
-            {
-                var name = dataRecord.GetName(i);
-                if (name.Contains(StructureStorageSchema.Fields.Json.Name))
-                    indices.Add(i, name);
-                else
-                    break;
-            }
-            return indices;
-        }
-
-        private static string GetMergedJsonStructure(IDataRecord dataRecord, IDictionary<int, string> additionalJsonFields)
-        {
-            var sb = new StringBuilder();
-            sb.Append(dataRecord.GetString(0));
-            sb = sb.Remove(sb.Length - 1, 1);
-
-            foreach (var childJson in ReadChildJson(dataRecord, additionalJsonFields))
-            {
-                sb.Append(",");
-                sb.Append(childJson);
-            }
-
-            sb.Append("}");
-
-            return sb.ToString();
-        }
-
-        private static IEnumerable<string> ReadChildJson(IDataRecord dataRecord, IEnumerable<KeyValuePair<int, string>> additionalJsonFields)
-        {
-            const string jsonMemberFormat = "\"{0}\":{1}";
-
-            return additionalJsonFields
-                .Where(additionalJsonField => !dataRecord.IsDBNull(additionalJsonField.Key))
-                .Select(additionalJsonField => string.Format(jsonMemberFormat,
-                    additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
-                    dataRecord.GetString(additionalJsonField.Key)));
         }
 
         protected virtual void EnsureValidNames(ModelTableNames names)

@@ -5,33 +5,14 @@ namespace SisoDb.Querying.Lambdas.Parsers
 {
 	public class ExpressionParsers : IExpressionParsers
 	{
-        //TODO: Rem for v16.0.0 final
-        //private IIncludeParser _includeParser;
         private IWhereParser _whereParser;
         private IOrderByParser _orderByParser;
 
 		public ExpressionParsers(IDataTypeConverter dataTypeConverter)
 		{
-            //TODO: Rem for v16.0.0 final
-            //IncludeParser = new IncludeParser(dataTypeConverter);
 			WhereParser = new WhereParser(dataTypeConverter);
 			OrderByParser = new OrderByParser(dataTypeConverter);
 		}
-
-        //TODO: Rem for v16.0.0 final
-        //public IIncludeParser IncludeParser
-        //{
-        //    get
-        //    {
-        //        return _includeParser;
-        //    }
-        //    set
-        //    {
-        //        Ensure.That(value, "IncludeParser").IsNotNull();
-        //        _includeParser = value;
-        //    }
-        //}
-
 	    
 	    public IWhereParser WhereParser
 	    {
@@ -45,7 +26,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
 	            _whereParser = value;
 	        }
 	    }
-
 	    
 	    public IOrderByParser OrderByParser
 	    {

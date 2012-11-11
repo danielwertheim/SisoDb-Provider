@@ -133,7 +133,6 @@
     <Compile Include="Querying\QueryGeneration\SqlCe4QueryGeneratorTests.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Querying\Lambdas\ParsedLambdaTests.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\IncludeParserTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\OrderByParserTests.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNodeTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserEnumerableExtensionsTests.cs" />

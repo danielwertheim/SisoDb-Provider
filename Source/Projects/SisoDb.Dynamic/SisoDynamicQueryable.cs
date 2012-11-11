@@ -151,18 +151,6 @@ namespace SisoDb.Dynamic
             return this;
         }
 
-        //TODO: Rem for v16.0.0 final
-        //public virtual ISisoDynamicQueryable Include(Type includeType, params string[] expressions)
-        //{
-        //    Ensure.That(expressions, "expressions").HasItems();
-            
-        //    QueryBuilder.Include(
-        //        includeType, 
-        //        expressions.Select(e => LambdaBuilder.BuildMember(StructureType, e)).ToArray());
-
-        //    return this;
-        //}
-
         public virtual ISisoDynamicQueryable Where(params string[] expressions)
         {
             Ensure.That(expressions, "expressions").HasItems();

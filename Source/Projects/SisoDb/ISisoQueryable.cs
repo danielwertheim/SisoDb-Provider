@@ -46,8 +46,6 @@ namespace SisoDb
 
 		ISisoQueryable<T> Take(int numOfStructures);
         ISisoQueryable<T> Page(int pageIndex, int pageSize);
-        //TODO: Rem for v16.0.0 final
-        //ISisoQueryable<T> Include<TInclude>(params Expression<Func<T, object>>[] expression) where TInclude : class;
         ISisoQueryable<T> Where(params Expression<Func<T, bool>>[] expression);
         ISisoQueryable<T> OrderBy(params Expression<Func<T, object>>[] expressions);
         ISisoQueryable<T> OrderByDescending(params Expression<Func<T, object>>[] expressions);

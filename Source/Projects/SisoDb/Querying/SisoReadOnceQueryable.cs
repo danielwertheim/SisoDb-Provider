@@ -292,14 +292,6 @@ namespace SisoDb.Querying
             return this;
         }
 
-        //TODO: Rem for v16.0.0 final
-        //public virtual ISisoQueryable<T> Include<TInclude>(params Expression<Func<T, object>>[] expressions) where TInclude : class
-        //{
-        //    QueryBuilder.Include<TInclude>(expressions);
-
-        //    return this;
-        //}
-
         public virtual ISisoQueryable<T> Where(params Expression<Func<T, bool>>[] expressions)
         {
             QueryBuilder.Where(expressions);

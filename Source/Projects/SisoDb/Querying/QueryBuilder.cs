@@ -47,14 +47,6 @@ namespace SisoDb.Querying
 			return this;
 		}
 
-        //TODO: Rem for v16.0.0 final
-        //public virtual IQueryBuilder<T> Include<TInclude>(params Expression<Func<T, object>>[] expressions) where TInclude : class
-        //{
-        //    InnerQueryBuilder.Include(typeof (TInclude), expressions);
-
-        //    return this;
-        //}
-
 		public virtual IQueryBuilder<T> Where(params Expression<Func<T, bool>>[] expressions)
 		{
 		    InnerQueryBuilder.Where(expressions);
@@ -85,8 +77,6 @@ namespace SisoDb.Querying
         protected readonly IExpressionParsers ExpressionParsers;
 
         protected IQuery Query;
-        //TODO: Rem for v16.0.0 final
-        //protected readonly Dictionary<string, List<LambdaExpression>> BufferedIncludes;
         protected readonly List<LambdaExpression> BufferedWheres;
         protected readonly List<OrderByExpression> BufferedSortings;
 
@@ -94,9 +84,7 @@ namespace SisoDb.Querying
         {
             get
             {
-                //TODO: Rem for v16.0.0 final
                 return Query.IsEmpty
-                       //&& BufferedIncludes.Count == 0
                        && BufferedSortings.Count == 0
                        && BufferedWheres.Count == 0;
             }
@@ -114,8 +102,6 @@ namespace SisoDb.Querying
             ExpressionParsers = expressionParsers;
 
             Query = new Query(StructureSchema);
-            //TODO: Rem for v16.0.0 final
-            //BufferedIncludes = new Dictionary<string, List<LambdaExpression>>();
             BufferedWheres = new List<LambdaExpression>();
             BufferedSortings = new List<OrderByExpression>();
         }
@@ -127,10 +113,6 @@ namespace SisoDb.Querying
 
         public virtual IQuery Build()
         {
-            //TODO: Rem for v16.0.0 final
-            //if (BufferedIncludes.Count > 0)
-            //    Query.Includes = ParseIncludeLambdas(BufferedIncludes.ToArray());
-
             if (BufferedWheres.Count > 0)
                 Query.Where = ParseWhereLambdas(BufferedWheres.ToArray());
 
@@ -139,13 +121,6 @@ namespace SisoDb.Querying
 
             return Query;
         }
-
-        //TODO: Rem for v16.0.0 final
-        //protected virtual IList<IParsedLambda> ParseIncludeLambdas(IEnumerable<KeyValuePair<string, List<LambdaExpression>>> includes)
-        //{
-        //    return includes.Select(keyValuePair =>
-        //        ExpressionParsers.IncludeParser.Parse(keyValuePair.Key, keyValuePair.Value.ToArray())).ToList();
-        //}
 
         protected virtual IParsedLambda ParseWhereLambdas(IEnumerable<LambdaExpression> wheres)
         {
@@ -180,21 +155,6 @@ namespace SisoDb.Querying
 
             return this;
         }
-
-        //TODO: Rem for v16.0.0 final
-        //public virtual IQueryBuilder Include(Type includeType, params LambdaExpression[] expressions)
-        //{
-        //    Ensure.That(expressions, "expressions").HasItems();
-
-        //    var key = StructureSchemas.GetSchema(includeType).GetStructureTableName();
-
-        //    if (!BufferedIncludes.ContainsKey(key))
-        //        BufferedIncludes.Add(key, new List<LambdaExpression>(new LambdaExpression[0]));
-
-        //    BufferedIncludes[key].AddRange(expressions);
-
-        //    return this;
-        //}
 
         public virtual IQueryBuilder Where(params LambdaExpression[] expressions)
         {
