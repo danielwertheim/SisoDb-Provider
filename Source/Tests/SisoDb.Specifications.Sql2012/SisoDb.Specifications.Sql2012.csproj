@@ -178,6 +178,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Any.cs">
       <Link>Session\Querying\Any.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\CheckoutById.cs">
+      <Link>Session\Querying\CheckoutById.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\Count.cs">
       <Link>Session\Querying\Count.cs</Link>
     </Compile>

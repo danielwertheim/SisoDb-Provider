@@ -156,6 +156,28 @@ namespace SisoDb
             return QueryEngine.Exists(structureType, id);
         }
 
+        public virtual T CheckoutById<T>(object id) where T : class
+        {
+            return Try(() => OnCheckoutById<T>(id));
+        }
+
+        protected virtual T OnCheckoutById<T>(object id) where T : class
+        {
+            Ensure.That(id, "id").IsNotNull();
+
+            var structureId = StructureId.ConvertFrom(id);
+            var structureSchema = OnUpsertStructureSchema<T>();
+
+            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
+                return Db.Serializer.Deserialize<T>(DbClient.GetJsonByIdWithLock(structureId, structureSchema));
+
+            return Db.CacheProvider.Consume(
+                structureSchema,
+                structureId,
+                sid => Db.Serializer.Deserialize<T>(DbClient.GetJsonByIdWithLock(sid, structureSchema)),
+                CacheConsumeMode);
+        }
+
         public virtual T GetById<T>(object id) where T : class
         {
             return Try(() => OnGetByIdAs<T>(typeof(T), id));

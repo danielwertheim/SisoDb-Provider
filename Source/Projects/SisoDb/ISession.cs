@@ -117,6 +117,16 @@ namespace SisoDb
         bool Exists(Type structureType, object id);
 
         /// <summary>
+        /// Returns the structure or NULL representing the sent <paramref name="id"/>.
+        /// The item returned is fetched with exclusive row locks, hence keep the
+        /// scope of the session as small as possible.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        T CheckoutById<T>(object id) where T : class;
+
+        /// <summary>
         /// Returns one single structure identified
         /// by an id.
         /// </summary>

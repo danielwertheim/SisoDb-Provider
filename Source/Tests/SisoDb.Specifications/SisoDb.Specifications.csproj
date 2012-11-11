@@ -78,6 +78,7 @@
     <Compile Include="Session\Clear.cs" />
     <Compile Include="Session\InsertBigStructures.cs" />
     <Compile Include="Session\Querying\Any.cs" />
+    <Compile Include="Session\Querying\CheckoutById.cs" />
     <Compile Include="Session\Querying\Dynamic\Any.cs" />
     <Compile Include="Session\Querying\Dynamic\Count.cs" />
     <Compile Include="Session\Querying\Dynamic\Exists.cs" />
