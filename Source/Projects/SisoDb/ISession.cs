@@ -44,6 +44,11 @@ namespace SisoDb
         bool HasFailed { get; }
 
         /// <summary>
+        /// Provides some hoos like <see cref="ISessionEvents.OnInserted"/>.
+        /// </summary>
+        ISessionEvents Events { get; }
+
+        /// <summary>
         /// Low level API that executes queries as <see cref="IQuery"/>.
         /// </summary>
         IQueryEngine QueryEngine { get; }
@@ -370,8 +375,7 @@ namespace SisoDb
         /// so If you do have the instace pass that instead using other overload!</remarks>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
-        /// <param name="onBatchInserted"></param>
-        void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class;
+        void InsertManyJson<T>(IEnumerable<string> json) where T : class;
 
         /// <summary>
         /// Inserts multiple Json strcutures using the <paramref name="structureType" /> as
@@ -381,8 +385,7 @@ namespace SisoDb
         /// so If you do have the instace pass that instead using other overload!</remarks>
         /// <param name="structureType"></param>
         /// <param name="json"></param>
-        /// <param name="onBatchInserted"></param>
-        void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null);
+        void InsertManyJson(Type structureType, IEnumerable<string> json);
 
         /// <summary>
         /// Updates the sent structure. If it

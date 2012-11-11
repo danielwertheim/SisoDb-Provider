@@ -216,24 +216,24 @@ namespace SisoDb
             }
         }
 
-        public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
+        public virtual void InsertManyJson<T>(IEnumerable<string> json) where T : class
         {
             Ensure.That(json, "json").IsNotNull();
 
             using (var session = Db.BeginSession())
             {
-                session.InsertManyJson<T>(json, onBatchInserted);
+                session.InsertManyJson<T>(json);
             }
         }
 
-        public virtual void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null)
+        public virtual void InsertManyJson(Type structureType, IEnumerable<string> json)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(json, "json").IsNotNull();
 
             using (var session = Db.BeginSession())
             {
-                session.InsertManyJson(structureType, json, onBatchInserted);
+                session.InsertManyJson(structureType, json);
             }
         }
 

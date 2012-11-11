@@ -21,6 +21,7 @@ namespace SisoDb
         private readonly ISisoDatabase _db;
         private readonly IQueryEngine _queryEngine;
         private readonly IAdvanced _advanced;
+        protected readonly SessionEvents InternalEvents;
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
@@ -33,6 +34,7 @@ namespace SisoDb
         public SessionStatus Status { get; private set; }
         public bool IsAborted { get { return Status.IsAborted(); } }
         public bool HasFailed { get { return Status.IsFailed(); } }
+        public ISessionEvents Events { get { return InternalEvents; } }
         public IQueryEngine QueryEngine { get { return _queryEngine; } }
         public IAdvanced Advanced { get { return _advanced; } }
         
@@ -44,10 +46,11 @@ namespace SisoDb
             _db = db;
             ExecutionContext = new SessionExecutionContext(this);
             Status = SessionStatus.Active;
+            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
+            InternalEvents = new SessionEvents();
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
             SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
-            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
             _queryEngine = new DbQueryEngine(Db, DbClient, QueryGenerator, ExecutionContext);
             _advanced = new DbSessionAdvanced(Db, DbClient, QueryGenerator, SqlExpressionBuilder, ExecutionContext);
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
@@ -394,9 +397,11 @@ namespace SisoDb
 
             var structureSchema = OnUpsertStructureSchema(structureType);
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
-
+            var structure = structureBuilder.CreateStructure(item, structureSchema);
+            
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-            structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(item, structureSchema) });
+            structureInserter.Insert(structureSchema, new[] { structure });
+            InternalEvents.NotifyOnInserted(structureSchema, structure, item);
         }
 
         public virtual ISession InsertAs<T>(object item) where T : class
@@ -423,10 +428,13 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
             var json = Db.Serializer.Serialize(item);
             var realItem = Db.Serializer.Deserialize(json, structureType);
+            
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
+            var structure = structureBuilder.CreateStructure(realItem, structureSchema);
+            
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
-
-            structureInserter.Insert(structureSchema, new[] { structureBuilder.CreateStructure(realItem, structureSchema) });
+            structureInserter.Insert(structureSchema, new[] { structure });
+            InternalEvents.NotifyOnInserted(structureSchema, structure, item);
         }
 
         public virtual string InsertJson<T>(string json) where T : class
@@ -452,6 +460,7 @@ namespace SisoDb
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
+            InternalEvents.NotifyOnInserted(structureSchema, structure, item);
 
             return structure.Data;
         }
@@ -479,21 +488,25 @@ namespace SisoDb
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
-            foreach (var structuresBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
-                structureInserter.Insert(structureSchema, structureBuilder.CreateStructures(structuresBatch, structureSchema));
+            foreach (var itemsBatch in items.Batch(Db.Settings.MaxInsertManyBatchSize))
+            {
+                var structures = structureBuilder.CreateStructures(itemsBatch, structureSchema);
+                structureInserter.Insert(structureSchema, structures);
+                InternalEvents.NotifyOnInserted(structureSchema, structures, itemsBatch);
+            }
         }
 
-        public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
+        public virtual void InsertManyJson<T>(IEnumerable<string> json) where T : class
         {
-            Try(() => OnInsertManyJson(typeof(T), json, onBatchInserted));
+            Try(() => OnInsertManyJson(typeof(T), json));
         }
 
-        public virtual void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null)
+        public virtual void InsertManyJson(Type structureType, IEnumerable<string> json)
         {
-            Try(() => OnInsertManyJson(structureType, json, onBatchInserted));
+            Try(() => OnInsertManyJson(structureType, json));
         }
 
-        protected virtual void OnInsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null)
+        protected virtual void OnInsertManyJson(Type structureType, IEnumerable<string> json)
         {
             Ensure.That(json, "json").IsNotNull();
 
@@ -503,12 +516,11 @@ namespace SisoDb
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
-            foreach (var structuresJsonBatch in Db.Serializer.DeserializeMany(json, structureSchema.Type.Type).Batch(Db.Settings.MaxInsertManyBatchSize))
+            foreach (var itemsBatch in Db.Serializer.DeserializeMany(json, structureSchema.Type.Type).Batch(Db.Settings.MaxInsertManyBatchSize))
             {
-                var structures = structureBuilder.CreateStructures(structuresJsonBatch, structureSchema);
+                var structures = structureBuilder.CreateStructures(itemsBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
-                if (onBatchInserted != null)
-                    onBatchInserted.Invoke(structures.Select(s => s.Data));
+                InternalEvents.NotifyOnInserted(structureSchema, structures, itemsBatch);
             }
         }
 

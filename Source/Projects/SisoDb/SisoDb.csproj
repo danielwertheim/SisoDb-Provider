@@ -134,6 +134,7 @@
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="IDbSettings.cs" />
     <Compile Include="IMigrationInfo.cs" />
+    <Compile Include="ISessionEvents.cs" />
     <Compile Include="ISisoDatabaseMaintenance.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Serialization\DefaultSisoSerializer.cs" />
     <Compile Include="Serialization\EmptyStructureSerializer.cs" />
     <Compile Include="Serialization\IStructureSerializer.cs" />
+    <Compile Include="SessionEvents.cs" />
     <Compile Include="SessionExecutionContext.cs" />
     <Compile Include="Structures\DataTypeCode.cs" />
     <Compile Include="Structures\IdGenerators\EmptyStructureIdGenerator.cs" />
