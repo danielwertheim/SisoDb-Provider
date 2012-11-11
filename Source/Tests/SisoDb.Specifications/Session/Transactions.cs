@@ -8,9 +8,9 @@ using SisoDb.Resources;
 
 namespace SisoDb.Specifications.Session
 {
-#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
     class Transactions
     {
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
         [Subject(typeof(ISession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_commiting_ts : SpecificationBase
         {
