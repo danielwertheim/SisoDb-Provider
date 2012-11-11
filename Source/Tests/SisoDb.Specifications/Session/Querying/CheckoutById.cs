@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Machine.Specifications;
 using SisoDb.Specifications.Model;
 using SisoDb.Testing;
@@ -65,12 +66,14 @@ namespace SisoDb.Specifications.Session.Querying
                 });
             };
 
-            It should_have_timed_out_trying_to_get_the_structure_via_getById = () =>
-            {
-                CaughtException.ShouldNotBeNull();
-                CaughtException.Message.ShouldContain("Timeout");
-            };
-
+#if !SqlCe4Provider
+            It should_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldHaveTimedOut();
+#endif
+#if SqlCe4Provider
+            It should_not_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldBeNull();
+#endif
             private static ISession _firstSession;
             private static IList<QueryGuidItem> _structures;
             private static QueryGuidItem _fetchedStructure;
@@ -109,11 +112,8 @@ namespace SisoDb.Specifications.Session.Querying
                 });
             };
 
-            It should_have_timed_out_trying_to_get_the_structure_via_getById = () =>
-            {
-                CaughtException.ShouldNotBeNull();
-                CaughtException.Message.ShouldContain("Timeout");
-            };
+            It should_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldHaveTimedOut();
 
             private static ISession _firstSession;
             private static IList<QueryGuidItem> _structures;
@@ -178,11 +178,14 @@ namespace SisoDb.Specifications.Session.Querying
                 });
             };
 
-            It should_have_timed_out_trying_to_get_the_structure_via_getById = () =>
-            {
-                CaughtException.ShouldNotBeNull();
-                CaughtException.Message.ShouldContain("Timeout");
-            };
+#if !SqlCe4Provider
+            It should_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldHaveTimedOut();
+#endif
+#if SqlCe4Provider
+            It should_not_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldBeNull();
+#endif
 
             private static ISession _firstSession;
             private static IList<QueryIdentityItem> _structures;
@@ -222,11 +225,8 @@ namespace SisoDb.Specifications.Session.Querying
                 });
             };
 
-            It should_have_timed_out_trying_to_get_the_structure_via_getById = () =>
-            {
-                CaughtException.ShouldNotBeNull();
-                CaughtException.Message.ShouldContain("Timeout");
-            };
+            It should_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldHaveTimedOut();
 
             private static ISession _firstSession;
             private static IList<QueryIdentityItem> _structures;
@@ -291,11 +291,14 @@ namespace SisoDb.Specifications.Session.Querying
                 });
             };
 
-            It should_have_timed_out_trying_to_get_the_structure_via_getById = () =>
-            {
-                CaughtException.ShouldNotBeNull();
-                CaughtException.Message.ShouldContain("Timeout");
-            };
+#if !SqlCe4Provider
+            It should_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldHaveTimedOut();
+#endif
+#if SqlCe4Provider
+            It should_not_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldBeNull();
+#endif
 
             private static ISession _firstSession;
             private static IList<QueryBigIdentityItem> _structures;
@@ -335,15 +338,17 @@ namespace SisoDb.Specifications.Session.Querying
                 });
             };
 
-            It should_have_timed_out_trying_to_get_the_structure_via_getById = () =>
-            {
-                CaughtException.ShouldNotBeNull();
-                CaughtException.Message.ShouldContain("Timeout");
-            };
+            It should_have_timed_out_trying_to_get_the_structure =
+                () => CaughtException.ShouldHaveTimedOut();
 
             private static ISession _firstSession;
             private static IList<QueryBigIdentityItem> _structures;
             private static QueryBigIdentityItem _fetchedStructure;
+        }
+
+        private static void EnsureTimedOut(Exception ex)
+        {
+            (ex.Message.Contains("Timeout") || ex.Message.Contains("Timed out")).ShouldBeTrue();
         }
     }
 }
