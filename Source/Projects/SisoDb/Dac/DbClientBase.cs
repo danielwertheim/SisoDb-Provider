@@ -23,6 +23,7 @@ namespace SisoDb.Dac
 
         public Guid Id { get; private set; }
         public bool IsTransactional { get; private set; }
+        public bool IsAborted { get; protected set; }
         public bool IsFailed { get; protected set; }
         public IAdoDriver Driver { get; private set; }
         public IDbConnection Connection { get; private set; }
@@ -92,7 +93,7 @@ namespace SisoDb.Dac
         {
             if (Transaction == null) return;
 
-            if (IsFailed)
+            if (IsAborted || IsFailed)
             {
                 Transaction.Rollback();
                 InvokeAfterRollbackCallbacks();
@@ -162,6 +163,12 @@ namespace SisoDb.Dac
             {
                 OnCompletedActions.Clear();
             }
+        }
+
+        public virtual void Abort()
+        {
+            if(IsFailed) return;
+            IsAborted = true;
         }
 
         public virtual void MarkAsFailed()

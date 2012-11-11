@@ -142,7 +142,6 @@
     <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Dac\Profiling\IWrappedConnection.cs" />
     <Compile Include="Dac\Profiling\IWrappedTransaction.cs" />
-    <Compile Include="ITransactionalSession.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />

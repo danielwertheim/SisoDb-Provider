@@ -16,6 +16,7 @@ namespace SisoDb.Dac
     {
         Guid Id { get; }
         bool IsTransactional { get; }
+        bool IsAborted { get; }
         bool IsFailed { get; }
         IAdoDriver Driver { get; }
         IDbConnection Connection { get; }
@@ -24,6 +25,7 @@ namespace SisoDb.Dac
         Action AfterCommit { set; }
         Action AfterRollback { set; }
 
+        void Abort();
         void MarkAsFailed();
         IDbBulkCopy GetBulkCopy();
 

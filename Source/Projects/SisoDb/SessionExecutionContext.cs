@@ -13,9 +13,9 @@ namespace SisoDb
     /// </summary>
     public class SessionExecutionContext
     {
-        protected readonly ITransactionalSession Session;
+        protected readonly ISession Session;
 
-        public SessionExecutionContext(ITransactionalSession session)
+        public SessionExecutionContext(ISession session)
         {
             Ensure.That(session, "session").IsNotNull();
 
@@ -24,6 +24,7 @@ namespace SisoDb
 
         public virtual void Try(Action action)
         {
+            if(Session.Status.IsAborted()) return;
             EnsureNotAlreadyFailed();
 
             try
@@ -39,6 +40,7 @@ namespace SisoDb
 
         public virtual T Try<T>(Func<T> action)
         {
+            if (Session.Status.IsAborted()) return default(T);
             EnsureNotAlreadyFailed();
 
             try

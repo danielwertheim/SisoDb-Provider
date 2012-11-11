@@ -32,6 +32,18 @@ namespace SisoDb
         SessionStatus Status { get; }
 
         /// <summary>
+        /// Indicates that the session has been aborted as a result of
+        /// an explicit call to <see cref="Abort"/>.
+        /// </summary>
+        bool IsAborted { get; }
+
+        /// <summary>
+        /// Indicates that the session has failed as a result of
+        /// an exception or call to <see cref="MarkAsFailed"/>.
+        /// </summary>
+        bool HasFailed { get; }
+
+        /// <summary>
         /// Low level API that executes queries as <see cref="IQuery"/>.
         /// </summary>
         IQueryEngine QueryEngine { get; }
@@ -40,6 +52,20 @@ namespace SisoDb
         /// Advances querying options.
         /// </summary>
         IAdvanced Advanced { get; }
+
+        /// <summary>
+        /// Marks the session as aborted. When aborted, and transactions are supported,
+        /// commit will not be performed. Do not use it to fail a session. Then use
+        /// <see cref="MarkAsFailed"/> instead.
+        /// </summary>
+        void Abort();
+
+        /// <summary>
+        /// Marks the session as failed. When failed, and transactions are supported,
+        /// commit will not be performed. Do not use it to abort a session. Then use
+        /// <see cref="Abort"/> instead.
+        /// </summary>
+        void MarkAsFailed();
 
         /// <summary>
         /// Lets you get a hold of the schema associated with a certain structure.

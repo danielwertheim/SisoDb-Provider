@@ -30,7 +30,7 @@ namespace SisoDb
             ExecutionContext = executionContext;
         }
 
-        protected virtual T Try<T>(Func<T> action)
+        protected virtual T Try<T>(Func<T> action) 
         {
             return ExecutionContext.Try(action);
         }

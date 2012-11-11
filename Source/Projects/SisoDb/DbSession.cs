@@ -15,7 +15,7 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {
-    public abstract class DbSession : ITransactionalSession
+    public abstract class DbSession : ISession
     {
         private readonly Guid _id;
         private readonly ISisoDatabase _db;
@@ -31,10 +31,11 @@ namespace SisoDb
         public ISisoDatabase Db { get { return _db; } }
         public IDbClient DbClient { get; private set; }
         public SessionStatus Status { get; private set; }
+        public bool IsAborted { get { return Status.IsAborted(); } }
+        public bool HasFailed { get { return Status.IsFailed(); } }
         public IQueryEngine QueryEngine { get { return _queryEngine; } }
         public IAdvanced Advanced { get { return _advanced; } }
-        public bool Failed { get { return Status.IsFailed(); } }
-
+        
         protected DbSession(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
@@ -59,15 +60,26 @@ namespace SisoDb
             if (Status.IsDisposed())
                 throw new ObjectDisposedException(typeof(DbSession).Name, ExceptionMessages.Session_AllreadyDisposed.Inject(Id, Db.Name));
 
-            Status = DbClient.IsFailed
-                ? SessionStatus.DisposedWithFailure
-                : SessionStatus.Disposed;
+            if (DbClient.IsFailed || Status.IsFailed())
+                Status = SessionStatus.DisposedWithFailure;
+            else if (DbClient.IsAborted || Status.IsAborted())
+                Status = SessionStatus.DisposedAfterAbort;
+            else
+                Status = SessionStatus.Disposed;
 
             if (DbClient != null)
             {
                 DbClient.Dispose();
                 DbClient = null;
             }
+        }
+
+        public virtual void Abort()
+        {
+            if (HasFailed) return;
+            //This method is allowed to not be wrapped in Try, since try makes use of it.
+            Status = SessionStatus.Aborted;
+            DbClient.Abort();
         }
 
         public virtual void MarkAsFailed()
