@@ -564,6 +564,7 @@ namespace SisoDb
 
             var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             bulkInserter.Replace(structureSchema, updatedStructure);
+            InternalEvents.NotifyOnUpdated(structureSchema, updatedStructure, item);
         }
 
         public virtual ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
@@ -617,6 +618,7 @@ namespace SisoDb
 
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 bulkInserter.Replace(structureSchema, updatedStructure);
+                InternalEvents.NotifyOnUpdated(structureSchema, updatedStructure, item);
             });
 
             return this;
@@ -699,9 +701,11 @@ namespace SisoDb
                     DbClient.DeleteByIds(deleteIds, structureSchema);
                     deleteIds.Clear();
 
-                    structureInserter.Insert(structureSchema,
-                                             structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
+                    var items = keepQueue.ToArray();
+                    var structures = structureBuilder.CreateStructures(items, structureSchema);
+                    structureInserter.Insert(structureSchema, structures);
                     keepQueue.Clear();
+                    InternalEvents.NotifyOnUpdated(structureSchema, structures, items);
                 }
 
                 if (keepQueue.Count > 0)
@@ -710,9 +714,11 @@ namespace SisoDb
                     DbClient.DeleteByIds(deleteIds, structureSchema);
                     deleteIds.Clear();
 
-                    structureInserter.Insert(structureSchema,
-                                             structureBuilder.CreateStructures(keepQueue.ToArray(), structureSchema));
+                    var items = keepQueue.ToArray();
+                    var structures = structureBuilder.CreateStructures(items, structureSchema);
+                    structureInserter.Insert(structureSchema, structures);
                     keepQueue.Clear();
+                    InternalEvents.NotifyOnUpdated(structureSchema, structures, items);
                 }
             });
 

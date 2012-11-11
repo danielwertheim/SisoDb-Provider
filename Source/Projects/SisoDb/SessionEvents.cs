@@ -61,5 +61,11 @@ namespace SisoDb
             foreach (var handler in OnUpdatedHandlers)
                 handler.Invoke(schema, structure, item);
         }
+
+        public virtual void NotifyOnUpdated(IStructureSchema schema, IStructure[] structures, object[] items)
+        {
+            for (var i = 0; i < structures.Length; i++)
+                NotifyOnUpdated(schema, structures[i], items[i]);
+        }
     }
 }
