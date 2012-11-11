@@ -222,7 +222,7 @@ namespace SisoDb.Querying.Sql
 
                 var memberIndex = expression.GetExistingOrNewMemberIndexFor(sortingNode.MemberPath);
                 var valueField = IndexStorageSchema.Fields.Value;
-                if (sortingNode.DataTypeCode == DataTypeCode.Bool)
+                if (sortingNode.DataTypeCode == DataTypeCode.Guid || sortingNode.DataTypeCode == DataTypeCode.Bool)
                     valueField = IndexStorageSchema.Fields.StringValue;
 
                 expression.AddSortingMember(new SqlSortingMember(
