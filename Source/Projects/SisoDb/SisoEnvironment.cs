@@ -6,13 +6,10 @@ namespace SisoDb
 {
     public static class SisoEnvironment
     {
-        public static readonly IFormatting Formatting;
-
-        public static readonly IStringConverter StringConverter;
-
-        public static readonly StringComparer StringComparer;
-
-        public static readonly IHashService HashService;
+        public static IFormatting Formatting;
+        public static IStringConverter StringConverter;
+        public static StringComparer StringComparer;
+        public static IHashService HashService;
 
         static SisoEnvironment()
         {
