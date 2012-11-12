@@ -51,6 +51,14 @@
     <Reference Include="Machine.Specifications.TDNetRunner">
       <HintPath>..\..\packages\Machine.Specifications.0.5.9\lib\net40\Machine.Specifications.TDNetRunner.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.9.27.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\ServiceStack.Text.3.9.27\lib\net35\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -111,9 +119,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.JsonNet\SisoDb.JsonNet.csproj">
+      <Project>{1c63dd91-fc7e-40e0-a546-f206f6923be0}</Project>
+      <Name>SisoDb.JsonNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.MiniProfiler\SisoDb.MiniProfiler.csproj">
       <Project>{2024BA8F-33C4-4B1F-8101-73CD3B9CAE70}</Project>
       <Name>SisoDb.MiniProfiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.ServiceStack\SisoDb.ServiceStack.csproj">
+      <Project>{d340bbcb-812e-4e48-abce-5a2e64ae8d63}</Project>
+      <Name>SisoDb.ServiceStack</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2005\SisoDb.Sql2005.csproj">
       <Project>{47bf9f27-5794-48b6-9476-2dfacd3ba806}</Project>
