@@ -9,6 +9,13 @@ namespace SisoDb.SqlServer
 {
     public class SqlServerAdoDriver : IAdoDriver
     {
+        public int CommandTimeout { get; set; }
+
+        public SqlServerAdoDriver()
+        {
+            CommandTimeout = 15;
+        }
+
         public virtual IDbConnection CreateConnection(string connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
@@ -29,6 +36,8 @@ namespace SisoDb.SqlServer
         protected virtual IDbCommand CreateCommand(IDbConnection connection, CommandType commandType, string sql, IDbTransaction transaction = null, IDacParameter[] parameters = null)
         {
             var cmd = connection.CreateCommand();
+            cmd.CommandTimeout = CommandTimeout;
+
             if (transaction != null)
                 cmd.Transaction = transaction;
 
