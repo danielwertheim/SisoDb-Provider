@@ -23,6 +23,8 @@ require 'albacore'
 @env_projectnameDynamic = 'SisoDb.Dynamic'
 @env_projectnameGlimpse = 'SisoDb.Glimpse'
 @env_projectnameMiniProfiler = 'SisoDb.MiniProfiler'
+@env_projectnameJsonNet = 'SisoDb.JsonNet'
+@env_projectnameServiceStack = 'SisoDb.ServiceStack'
 
 @env_buildfolderpath = 'build'
 @env_assversion = "16.0.0"
@@ -41,6 +43,8 @@ buildNameSuffix = "-v#{@env_buildversion}-#{@env_buildconfigname}"
 @env_buildnameDynamic = "#{@env_projectnameDynamic}#{buildNameSuffix}"
 @env_buildnameGlimpse = "#{@env_projectnameGlimpse}#{buildNameSuffix}"
 @env_buildnameMiniProfiler = "#{@env_projectnameMiniProfiler}#{buildNameSuffix}"
+@env_buildnameJsonNet = "#{@env_projectnameJsonNet}#{buildNameSuffix}"
+@env_buildnameServiceStack = "#{@env_projectnameServiceStack}#{buildNameSuffix}"
 #--------------------------------------
 # Reusable vars
 #--------------------------------------
@@ -54,6 +58,8 @@ msMemoryCacheOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameMsMemoryCac
 dynamicOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameDynamic}"
 glimpseOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameGlimpse}"
 miniProfilerOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameMiniProfiler}"
+jsonNetOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameJsonNet}"
+serviceStackOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameServiceStack}"
 sharedAssemblyInfoPath = "#{@env_solutionfolderpath}/SharedAssemblyInfo.cs"
 #--------------------------------------
 # Albacore flow controlling tasks
@@ -62,13 +68,13 @@ task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
 task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 #--------------------------------------
-task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler]
+task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler, :copyJsonNet, :copyServiceStack]
 
 task :testIt => [:unittests]
 
-task :zipIt => [:zipCore, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipAspWebCache, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler]
+task :zipIt => [:zipCore, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipAspWebCache, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler, :zipJsonNet, :zipServiceStack]
 
-task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packAspWebCache, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler]
+task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packAspWebCache, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler, :packJsonNet, :packServiceStack]
 #--------------------------------------
 # Albacore tasks
 #--------------------------------------
@@ -141,6 +147,14 @@ task :copyMiniProfiler do
     copyProject(@env_projectnameMiniProfiler, miniProfilerOutputPath)
 end
 
+task :copyJsonNet do
+    copyProject(@env_projectnameJsonNet, jsonNetOutputPath)
+end
+
+task :copyServiceStack do
+    copyProject(@env_projectnameServiceStack, serviceStackOutputPath)
+end
+
 nunit :unittests do |nunit|
     nunit.command = "nunit-console.exe"
     nunit.options "/framework=v4.0.30319","/xml=#{@env_buildfolderpath}/NUnit-Report-#{@env_solutionname}-UnitTests.xml"
@@ -193,6 +207,14 @@ zip :zipMiniProfiler do |zip|
     zipProject(zip, miniProfilerOutputPath, @env_buildnameMiniProfiler)
 end
 
+zip :zipJsonNet do |zip|
+    zipProject(zip, jsonNetOutputPath, @env_buildnameJsonNet)
+end
+
+zip :zipServiceStack do |zip|
+    zipProject(zip, serviceStackOutputPath, @env_buildnameServiceStack)
+end
+
 def packProject(cmd, projectname, basepath)
     cmd.command = "NuGet.exe"
     cmd.parameters = "pack #{projectname}.nuspec -version #{@env_version} -basepath #{basepath} -outputdirectory #{@env_buildfolderpath}"
@@ -236,4 +258,12 @@ end
 
 exec :packMiniProfiler do |cmd|
     packProject(cmd, @env_projectnameMiniProfiler, miniProfilerOutputPath)
+end
+
+exec :packJsonNet do |cmd|
+    packProject(cmd, @env_jsonNetMiniProfiler, jsonNetOutputPath)
+end
+
+exec :packServiceStack do |cmd|
+    packProject(cmd, @env_projectnameServiceStack, serviceStackOutputPath)
 end
