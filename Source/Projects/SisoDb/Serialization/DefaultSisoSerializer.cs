@@ -29,7 +29,6 @@ namespace SisoDb.Serialization
         protected virtual void OnConfigForDeserialization()
         {
             JsConfig.DateHandler = DefaultDateHandler;
-            JsConfig.TryToParsePrimitiveTypeValues = true;
         }
 
         public virtual string Serialize<T>(T item) where T : class

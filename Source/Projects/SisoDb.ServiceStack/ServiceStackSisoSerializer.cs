@@ -31,7 +31,6 @@ namespace SisoDb.ServiceStack
         protected virtual void OnConfigForDeserialization()
         {
             JsConfig.DateHandler = DefaultDateHandler;
-            JsConfig.TryToParsePrimitiveTypeValues = true;
         }
 
         public virtual string Serialize<T>(T item) where T : class
@@ -40,7 +39,7 @@ namespace SisoDb.ServiceStack
                 return string.Empty;
 
             OnConfigForSerialization<T>();
-            
+
             return JsonSerializer.SerializeToString(item, item.GetType());
         }
 
@@ -82,7 +81,7 @@ namespace SisoDb.ServiceStack
 
         public virtual IEnumerable<T> DeserializeMany<T>(IEnumerable<string> sourceData) where T : class
         {
-            OnConfigForDeserialization();
+            OnConfigForDeserialization<T>();
 
             return sourceData.Select(OnDeserialize<T>);
         }
@@ -98,15 +97,15 @@ namespace SisoDb.ServiceStack
 
         protected virtual T OnDeserialize<T>(string json) where T : class
         {
-            return string.IsNullOrEmpty(json) 
-                ? null 
+            return string.IsNullOrEmpty(json)
+                ? null
                 : JsonSerializer.DeserializeFromString<T>(json);
         }
 
         protected virtual object OnDeserialize(string json, Type structureType)
         {
-            return string.IsNullOrEmpty(json) 
-                ? null 
+            return string.IsNullOrEmpty(json)
+                ? null
                 : JsonSerializer.DeserializeFromString(json, structureType);
         }
     }
