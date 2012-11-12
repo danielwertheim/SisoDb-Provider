@@ -261,7 +261,7 @@ exec :packMiniProfiler do |cmd|
 end
 
 exec :packJsonNet do |cmd|
-    packProject(cmd, @env_jsonNetMiniProfiler, jsonNetOutputPath)
+    packProject(cmd, @env_projectnameJsonNet, jsonNetOutputPath)
 end
 
 exec :packServiceStack do |cmd|
