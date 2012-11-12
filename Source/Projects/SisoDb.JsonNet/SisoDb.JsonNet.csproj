@@ -41,7 +41,9 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GuidConverter.cs" />
     <Compile Include="JsonNetSisoSerializer.cs" />
+    <Compile Include="NullableGuidConverter.cs" />
     <Compile Include="PrivateSetterContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

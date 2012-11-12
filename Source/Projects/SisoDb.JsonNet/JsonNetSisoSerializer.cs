@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using SisoDb.EnsureThat;
 using SisoDb.Serialization;
 
@@ -25,15 +26,18 @@ namespace SisoDb.JsonNet
             {
                 Formatting = Formatting.None,
                 CheckAdditionalContent = false,
-                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                ConstructorHandling = ConstructorHandling.Default,
                 TypeNameHandling = TypeNameHandling.None,
                 DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                DateParseHandling = DateParseHandling.DateTime,
+                DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
-                //ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ContractResolver = new DefaultContractResolver()
             };
             settings.Converters.Add(new StringEnumConverter());
+            settings.Converters.Add(new GuidConverter());
+            settings.Converters.Add(new NullableGuidConverter());
 
             return settings;
         }
@@ -55,7 +59,7 @@ namespace SisoDb.JsonNet
                     yield return string.Empty;
                     continue;
                 }
-                
+
                 yield return JsonConvert.SerializeObject(item);
             }
         }
