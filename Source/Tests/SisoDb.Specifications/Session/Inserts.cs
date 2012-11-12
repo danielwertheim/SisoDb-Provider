@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using SisoDb.DbSchema;
@@ -340,6 +341,73 @@ namespace SisoDb.Specifications.Session
 
             private static Root2 _structure;
             private static IStructureSchema _structureSchema;
+        }
+
+        [Subject(typeof(ISession), "Insert")]
+        public class when_inserting_structure_with_nested_structre_with_initialized_string : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _customer = new Customer { Name = "Volvo" };
+                var employee = new Employee
+                {
+                    Name = "Bart", 
+                    Address =
+                    {
+                        City = "Springfield", 
+                        State = "Illinois", 
+                        Street = "915 Lilac Drive"
+                    }
+                };
+                _customer.Employees.Add(employee);
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_customer);
+
+            It should_have_stored_the_customer = () =>
+            {
+                var stored = TestContext.Database.UseOnceTo().GetById<Customer>(_customer.Id);
+                stored.ShouldNotBeNull();
+                stored.ShouldBeValueEqualTo(_customer);
+            };
+
+            private static Customer _customer;
+
+            public class Customer
+            {
+                public Guid Id { get; set; }
+                public string Name { get; set; }
+                public Address Address { get; set; }
+                public List<Employee> Employees { get; set; }
+
+                public Customer()
+                {
+                    Id = Guid.NewGuid();
+                    Address = new Address();
+                    Employees = new List<Employee>();
+                }
+            }
+
+            public class Employee
+            {
+                public string Name { get; set; }
+                public Address Address { get; set; }
+
+                public Employee()
+                {
+                    Address = new Address();
+                }
+            }
+
+            public class Address
+            {
+                public string Street { get; set; }
+                public string Zip { get; set; }
+                public string City { get; set; }
+                public string State { get; set; }
+            }
         }
 
         private class SingleStringMember

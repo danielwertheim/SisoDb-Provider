@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SisoDb.Annotations;
 
 namespace SisoDb.Structures.Schemas.MemberAccessors
@@ -69,25 +70,30 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
         private IList<object> EvaluateCallstack<T>(T startNode, int startIndex)
         {
             object currentNode = startNode;
+            var lastIndexInCallstack = _callstack.Count - 1;
             for (var c = startIndex; c < _callstack.Count; c++)
             {
                 if (currentNode == null)
                     return new object[] { null };
 
                 var currentProperty = _callstack[c];
-                var isLastProperty = c == (_callstack.Count - 1);
+                var isLastProperty = c == lastIndexInCallstack;
                 if (isLastProperty)
-                    return currentNode is IEnumerable
+                    return ValueIsEnumerable(currentNode)
                         ? ExtractValuesForEnumerableNode((IEnumerable)currentNode, currentProperty)
                         : ExtractValuesForSimpleNode(currentNode, currentProperty);
 
-                if (!(currentNode is IEnumerable))
+                if (!ValueIsEnumerable(currentNode))
                     currentNode = currentProperty.GetValue(currentNode);
                 else
                 {
                     var values = new List<object>();
                     foreach (var node in (IEnumerable)currentNode)
-                        values.AddRange(EvaluateCallstack(currentProperty.GetValue(node), startIndex: c + 1));
+                    {
+                        var subvalues = EvaluateCallstack(currentProperty.GetValue(node), startIndex: c + 1);
+                        if(subvalues != null && subvalues.Count > 0)
+                            values.AddRange(subvalues);
+                    }
                     return values;
                 }
             }
@@ -97,7 +103,7 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
 
         private static IList<object> ExtractValuesForEnumerableNode<T>(T nodes, IStructureProperty property) where T : IEnumerable
         {
-            var values = nodes is ICollection ? new List<object>(((ICollection)nodes).Count) : new List<object>();
+            var values = new List<object>();
 
             foreach (var node in nodes)
             {
@@ -108,13 +114,13 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
                 }
 
                 var nodeValue = property.GetValue(node);
-                if(nodeValue == null)
+                if (nodeValue == null)
                 {
                     values.Add(null);
                     continue;
                 }
 
-                if(nodeValue is IEnumerable && !(nodeValue is string))
+                if (ValueIsEnumerable(nodeValue))
                     values.AddRange(CollectionOfValuesToList((IEnumerable)nodeValue));
                 else
                     values.Add(nodeValue);
@@ -136,13 +142,17 @@ namespace SisoDb.Structures.Schemas.MemberAccessors
             return CollectionOfValuesToList((IEnumerable)currentValue);
         }
 
+        private static bool ValueIsEnumerable(object value)
+        {
+            if (value is string)
+                return false;
+
+            return value is IEnumerable;
+        }
+
         private static IList<object> CollectionOfValuesToList<T>(T elements) where T : IEnumerable
         {
-            var values = elements is ICollection ? new List<object>(((ICollection)elements).Count) : new List<object>();
-            foreach (var element in elements)
-                values.Add(element);
-
-            return values;
+            return elements.Cast<object>().ToList();
         }
 
         public void SetValue<T>(T item, object value) where T : class
