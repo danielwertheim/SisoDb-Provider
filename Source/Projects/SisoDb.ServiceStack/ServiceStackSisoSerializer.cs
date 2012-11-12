@@ -31,7 +31,6 @@ namespace SisoDb.ServiceStack
         protected virtual void OnConfigForDeserialization()
         {
             JsConfig.DateHandler = DefaultDateHandler;
-            //JsConfig.EnableAnonymousFieldSetters = true;
             JsConfig.TryToParsePrimitiveTypeValues = true;
         }
 
