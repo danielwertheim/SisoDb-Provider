@@ -804,6 +804,7 @@ namespace SisoDb
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
 
             DbClient.DeleteById(structureId, structureSchema);
+            InternalEvents.NotifyOnDeleted(structureSchema, structureId);
         }
 
         public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
@@ -832,6 +833,7 @@ namespace SisoDb
             Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
 
             DbClient.DeleteByIds(structureIds, structureSchema);
+            InternalEvents.NotifyOnDeleted(structureSchema, structureIds);
         }
 
         public virtual ISession DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
@@ -848,8 +850,10 @@ namespace SisoDb
                 var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
                 queryBuilder.Where(predicate);
 
-                var sql = QueryGenerator.GenerateQueryReturningStrutureIds(queryBuilder.Build());
+                var query = queryBuilder.Build();
+                var sql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
                 DbClient.DeleteByQuery(sql, structureSchema);
+                InternalEvents.NotifyOnDeleted(structureSchema, query);
             });
 
             return this;

@@ -10,13 +10,15 @@ namespace SisoDb
     {
         protected readonly List<Action<IStructureSchema, IStructure, object>> OnInsertedHandlers;
         protected readonly List<Action<IStructureSchema, IStructure, object>> OnUpdatedHandlers;
+        protected readonly List<Action<IStructureSchema, IStructureId>> OnDeletedHandlers;
+        protected readonly List<Action<IStructureSchema, IQuery>> OnDeletedByQueryHandlers;
 
         public Action<IStructureSchema, IStructure, object> OnInserted 
         { 
             set 
             {
                 Ensure.That(value, "OnInserted").IsNotNull();
-                RegisterNewOnInsertedAction(value);
+                RegisterNewOnInsertedHandler(value);
             }
         }
         public Action<IStructureSchema, IStructure, object> OnUpdated
@@ -24,7 +26,25 @@ namespace SisoDb
             set
             {
                 Ensure.That(value, "OnUpdated").IsNotNull();
-                RegisterNewOnUpdatedAction(value);
+                RegisterNewOnUpdatedHandler(value);
+            }
+        }
+
+        public Action<IStructureSchema, IStructureId> OnDeleted
+        {
+            set
+            {
+                Ensure.That(value, "OnDeleted").IsNotNull();
+                RegisterNewOnDeletedHandler(value);
+            }
+        }
+
+        public Action<IStructureSchema, IQuery> OnDeletedByQuery
+        {
+            set
+            {
+                Ensure.That(value, "OnDeleted").IsNotNull();
+                RegisterNewOnDeletedByQueryHandler(value);
             }
         }
 
@@ -32,16 +52,28 @@ namespace SisoDb
         {
             OnInsertedHandlers = new List<Action<IStructureSchema, IStructure, object>>();
             OnUpdatedHandlers = new List<Action<IStructureSchema, IStructure, object>>();
+            OnDeletedHandlers = new List<Action<IStructureSchema, IStructureId>>();
+            OnDeletedByQueryHandlers = new List<Action<IStructureSchema, IQuery>>();
         }
 
-        protected virtual void RegisterNewOnInsertedAction(Action<IStructureSchema, IStructure, object> handler)
+        protected virtual void RegisterNewOnInsertedHandler(Action<IStructureSchema, IStructure, object> handler)
         {
             OnInsertedHandlers.Add(handler);
         }
 
-        protected virtual void RegisterNewOnUpdatedAction(Action<IStructureSchema, IStructure, object> handler)
+        protected virtual void RegisterNewOnUpdatedHandler(Action<IStructureSchema, IStructure, object> handler)
         {
             OnUpdatedHandlers.Add(handler);
+        }
+
+        protected virtual void RegisterNewOnDeletedHandler(Action<IStructureSchema, IStructureId> handler)
+        {
+            OnDeletedHandlers.Add(handler);
+        }
+
+        protected virtual void RegisterNewOnDeletedByQueryHandler(Action<IStructureSchema, IQuery> handler)
+        {
+            OnDeletedByQueryHandlers.Add(handler);
         }
 
         public virtual void NotifyOnInserted(IStructureSchema schema, IStructure structure, object item)
@@ -66,6 +98,24 @@ namespace SisoDb
         {
             for (var i = 0; i < structures.Length; i++)
                 NotifyOnUpdated(schema, structures[i], items[i]);
+        }
+
+        public virtual void NotifyOnDeleted(IStructureSchema schema, IStructureId id)
+        {
+            foreach (var handler in OnDeletedHandlers)
+                handler.Invoke(schema, id);
+        }
+
+        public virtual void NotifyOnDeleted(IStructureSchema schema, IStructureId[] ids)
+        {
+            foreach (var id in ids)
+                NotifyOnDeleted(schema, id);
+        }
+
+        public virtual void NotifyOnDeleted(IStructureSchema schema, IQuery query)
+        {
+            foreach (var handler in OnDeletedByQueryHandlers)
+                handler.Invoke(schema, query);
         }
     }
 }
