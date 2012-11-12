@@ -104,7 +104,7 @@ namespace SisoDb.UnitTests.Configurations
             var cacheProviderFake = Mock.Of<ICacheProvider>();
             var dbFake = new Mock<ISisoDatabase>();
 
-            dbFake.Object.Configure().UseCacheProvider(() => cacheProviderFake);
+            dbFake.Object.Configure().UseCacheProvider(cacheProviderFake);
 
             dbFake.VerifySet(f => f.CacheProvider = cacheProviderFake, Times.Once());
         }
@@ -128,7 +128,7 @@ namespace SisoDb.UnitTests.Configurations
             var serializerFake = Mock.Of<ISisoSerializer>();
             var dbFake = new Mock<ISisoDatabase>();
 
-            dbFake.Object.Configure().UseSerializer(() => serializerFake);
+            dbFake.Object.Configure().UseSerializer(serializerFake);
 
             dbFake.VerifySet(f => f.Serializer = serializerFake, Times.Once());
         }

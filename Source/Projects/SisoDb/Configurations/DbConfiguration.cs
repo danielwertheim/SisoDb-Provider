@@ -60,16 +60,16 @@ namespace SisoDb.Configurations
             return this;
         }
 
-        public virtual DbConfiguration UseSerializer(Func<ISisoSerializer> fn)
+        public virtual DbConfiguration UseSerializer(ISisoSerializer serializer)
         {
-            Database.Serializer = fn();
+            Database.Serializer = serializer;
 
             return this;
         }
 
-        public virtual DbConfiguration UseCacheProvider(Func<ICacheProvider> fn)
+        public virtual DbConfiguration UseCacheProvider(ICacheProvider cacheProvider)
         {
-            Database.CacheProvider = fn();
+            Database.CacheProvider = cacheProvider;
 
             return this;
         }
