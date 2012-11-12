@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SisoDb
 {
@@ -15,7 +16,6 @@ namespace SisoDb
         /// Lets you perform a Query defining things like
         /// <see cref="ISisoQueryable{T}.Take"/>
         /// <see cref="ISisoQueryable{T}.Where"/>
-        /// <see cref="ISisoQueryable{T}.Include{TInclude}"/>
         /// <see cref="ISisoQueryable{T}.OrderBy"/>
         /// <see cref="ISisoQueryable{T}.Page"/>
         /// </summary>
@@ -211,8 +211,7 @@ namespace SisoDb
         /// so If you do have the instace pass that instead using other overload!</remarks>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
-        /// <param name="onBatchInserted"></param>
-        void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class;
+        void InsertManyJson<T>(IEnumerable<string> json) where T : class;
 
         /// <summary>
         /// Inserts multiple Json strcutures using the <paramref name="structureType"/> as
@@ -222,8 +221,7 @@ namespace SisoDb
         /// so If you do have the instace pass that instead using other overload!</remarks>
         /// <param name="structureType"></param>
         /// <param name="json"></param>
-        /// <param name="onBatchInserted"></param>
-        void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null);
+        void InsertManyJson(Type structureType, IEnumerable<string> json);
 
         /// <summary>
         /// Updates the sent structure. If it
@@ -255,6 +253,15 @@ namespace SisoDb
         /// <param name="modifier"></param>
         /// <param name="proceed">True to continue with update;False to abort</param>
         void Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class;
+
+        /// <summary>
+        /// Traverses every structure in the set and lets you apply changes to each yielded structure.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="modifier"></param>
+        /// <remarks>Does not support Concurrency tokens</remarks>
+        void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class;
 
         /// <summary>
         /// Clears all stored structures of type <typeparamref name="T"/>.
@@ -314,5 +321,14 @@ namespace SisoDb
         /// Structure type, used as a contract defining the scheme.</param>
         /// <param name="ids">Ids used for matching the structures to delete.</param>
         void DeleteByIds(Type structureType, params object[] ids);
+
+        /// <summary>
+        /// Deletes one or more structures matchings the sent
+        /// predicate.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <param name="predicate"></param>
+        void DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class;
 	}
 }

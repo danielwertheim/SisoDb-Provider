@@ -2,74 +2,177 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Sql;
+using SisoDb.Resources;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Dac
 {
-    public abstract class DbClientBase : ITransactionalDbClient
+    public abstract class DbClientBase : IDbClient
     {
         protected readonly IConnectionManager ConnectionManager;
         protected readonly ISqlStatements SqlStatements;
+        protected readonly List<Action<IDbClient>> OnCompletedHandlers = new List<Action<IDbClient>>();
+        protected readonly List<Action<IDbClient>> AfterCommitHandlers = new List<Action<IDbClient>>();
+        protected readonly List<Action<IDbClient>> AfterRollbackHandlers = new List<Action<IDbClient>>();
 
+        public Guid Id { get; private set; }
+        public bool IsTransactional { get; private set; }
+        public bool IsAborted { get; protected set; }
+        public bool IsFailed { get; protected set; }
         public IAdoDriver Driver { get; private set; }
-        public ISisoConnectionInfo ConnectionInfo { get; private set; }
         public IDbConnection Connection { get; private set; }
-
         public IDbTransaction Transaction { get; private set; }
-        public bool Failed { get; protected set; }
+        public Action<IDbClient> OnCompleted
+        {
+            set
+            {
+                Ensure.That(value, "OnComleted").IsNotNull();
+                OnCompletedHandlers.Add(value);
+            }
+        }
+        public Action<IDbClient> AfterCommit
+        {
+            set
+            {
+                Ensure.That(value, "AfterCommit").IsNotNull();
+                AfterCommitHandlers.Add(value);
+            }
+        }
+        public Action<IDbClient> AfterRollback
+        {
+            set
+            {
+                Ensure.That(value, "AfterRollback").IsNotNull();
+                AfterRollbackHandlers.Add(value);
+            }
+        }
 
-        protected DbClientBase(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : this(driver, connection, connectionManager, sqlStatements, false, null) { }
+
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : this(driver, connection, connectionManager, sqlStatements, true, transaction) { }
+
+        private DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, bool isTransactional, IDbTransaction transaction)
         {
             Ensure.That(driver, "driver").IsNotNull();
-            Ensure.That(connectionInfo, "connectionInfo").IsNotNull();
             Ensure.That(connection, "connection").IsNotNull();
             Ensure.That(connectionManager, "connectionManager").IsNotNull();
             Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
+            Id = Guid.NewGuid();
             Driver = driver;
-            ConnectionInfo = connectionInfo;
             ConnectionManager = connectionManager;
             Connection = connection;
             SqlStatements = sqlStatements;
+            IsTransactional = isTransactional || transaction != null;
             Transaction = transaction;
         }
-
+        
         public virtual void Dispose()
         {
+            if(Connection == null) 
+                throw new ObjectDisposedException(typeof(DbClientBase).Name, ExceptionMessages.DbClient_ObjectAllreadyDisposed);
             GC.SuppressFinalize(this);
 
-            Exception ex = null;
-
-            if (Transaction != null)
-            {
-                if (Failed)
-                    Transaction.Rollback();
-                else
-                    Transaction.Commit();
-
-                ex = Disposer.TryDispose(Transaction);
-                Transaction = null;
-            }
-
-            if (Connection != null)
-            {
-                ConnectionManager.ReleaseClientConnection(Connection);
-                Connection = null;
-            }
+            var ex = Try.This(TryEndTransaction, TryEndConnection);
+            
+            InvokeOnCompletedCallbacks();
 
             if (ex != null)
                 throw ex;
         }
 
+        protected virtual void TryEndTransaction()
+        {
+            if (Transaction == null) return;
+
+            if (IsAborted || IsFailed)
+            {
+                Transaction.Rollback();
+                InvokeAfterRollbackCallbacks();
+            }
+            else
+            {
+                Transaction.Commit();
+                InvokeAfterCommitCallbacks();
+            }
+
+            try
+            {
+                Transaction.Dispose();
+            }
+            finally
+            {
+                Transaction = null;
+            }
+        }
+
+        protected virtual void InvokeAfterCommitCallbacks()
+        {
+            try
+            {
+                AfterCommitHandlers.ForEach(a => a.Invoke(this));
+            }
+            catch {}
+            finally
+            {
+                AfterCommitHandlers.Clear();
+            }
+        }
+
+        protected virtual void InvokeAfterRollbackCallbacks()
+        {
+            try
+            {
+                AfterRollbackHandlers.ForEach(a => a.Invoke(this));
+            }
+            catch {}
+            finally
+            {
+                AfterRollbackHandlers.Clear();
+            }
+        }
+
+        protected virtual void TryEndConnection()
+        {
+            try
+            {
+                ConnectionManager.ReleaseClientConnection(Connection);
+            }
+            finally
+            {
+                Connection = null;
+            }
+        }
+
+        protected virtual void InvokeOnCompletedCallbacks()
+        {
+            try
+            {
+                OnCompletedHandlers.ForEach(a => a.Invoke(this));
+            }
+            catch { }
+            finally
+            {
+                OnCompletedHandlers.Clear();
+            }
+        }
+
+        public virtual void Abort()
+        {
+            if(IsFailed) return;
+            IsAborted = true;
+        }
+
         public virtual void MarkAsFailed()
         {
-            Failed = true;
+            IsFailed = true;
         }
 
         public abstract IDbBulkCopy GetBulkCopy();
@@ -130,7 +233,7 @@ namespace SisoDb.Dac
 
             return ExecuteScalar<long>(
                 sql,
-                new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName),
+                new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, entityName),
                 new DacParameter("numOfIds", numOfIds));
         }
 
@@ -139,11 +242,11 @@ namespace SisoDb.Dac
             EnsureValidDbObjectName(oldStructureName);
             EnsureValidDbObjectName(newStructureName);
 
-            var oldStructureTableName = DbSchemas.GenerateStructureTableName(oldStructureName);
-            var newStructureTableName = DbSchemas.GenerateStructureTableName(newStructureName);
+            var oldStructureTableName = DbSchemaInfo.GenerateStructureTableName(oldStructureName);
+            var newStructureTableName = DbSchemaInfo.GenerateStructureTableName(newStructureName);
 
-            var oldUniquesTableName = DbSchemas.GenerateUniquesTableName(oldStructureName);
-            var newUniquesTableName = DbSchemas.GenerateUniquesTableName(newStructureName);
+            var oldUniquesTableName = DbSchemaInfo.GenerateUniquesTableName(oldStructureName);
+            var newUniquesTableName = DbSchemaInfo.GenerateUniquesTableName(newStructureName);
 
             var oldIndexesTableNames = new IndexesTableNames(oldStructureName);
             var newIndexesTableNames = new IndexesTableNames(newStructureName);
@@ -258,7 +361,7 @@ namespace SisoDb.Dac
                 names.UniquesTableName,
                 names.StructureTableName);
 
-            using (var cmd = CreateCommand(sql, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name)))
+            using (var cmd = CreateCommand(sql, new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, structureSchema.Name)))
             {
                 cmd.ExecuteNonQuery();
             }
@@ -381,7 +484,7 @@ namespace SisoDb.Dac
             EnsureValidDbObjectName(name);
 
             var sql = SqlStatements.GetSql("TableExists");
-            var value = ExecuteScalar<int>(sql, new DacParameter(DbSchemas.Parameters.TableNameParamPrefix, name));
+            var value = ExecuteScalar<int>(sql, new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix, name));
 
             return value > 0;
         }
@@ -397,7 +500,7 @@ namespace SisoDb.Dac
         public virtual ModelTableStatuses GetModelTableStatuses(ModelTableNames names)
         {
             var sql = SqlStatements.GetSql("GetModelTableStatuses");
-            var parameters = names.AllTableNames.Select((n, i) => new DacParameter(DbSchemas.Parameters.TableNameParamPrefix + i, n)).ToArray();
+            var parameters = names.AllTableNames.Select((n, i) => new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix + i, n)).ToArray();
             var matchingNames = new HashSet<string>();
             SingleResultSequentialReader(
                 sql,
@@ -581,70 +684,14 @@ namespace SisoDb.Dac
 
         private IEnumerable<string> YieldJson(IDbCommand cmd)
         {
-            Func<IDataRecord, IDictionary<int, string>, string> read = (dr, af) => dr.GetString(0);
-            IDictionary<int, string> additionalJsonFields = null;
-
             using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
             {
-                if (reader.Read())
-                {
-                    if (reader.FieldCount > 1)
-                    {
-                        additionalJsonFields = GetAdditionalJsonFields(reader);
-                        if (additionalJsonFields.Count > 0)
-                            read = GetMergedJsonStructure;
-                    }
-                    yield return read.Invoke(reader, additionalJsonFields);
-                }
-
                 while (reader.Read())
                 {
-                    yield return read.Invoke(reader, additionalJsonFields);
+                    yield return reader.GetString(0);
                 }
                 reader.Close();
             }
-        }
-
-        private static IDictionary<int, string> GetAdditionalJsonFields(IDataRecord dataRecord)
-        {
-            var indices = new Dictionary<int, string>();
-            for (var i = 1; i < dataRecord.FieldCount; i++)
-            {
-                var name = dataRecord.GetName(i);
-                if (name.Contains(StructureStorageSchema.Fields.Json.Name))
-                    indices.Add(i, name);
-                else
-                    break;
-            }
-            return indices;
-        }
-
-        private static string GetMergedJsonStructure(IDataRecord dataRecord, IDictionary<int, string> additionalJsonFields)
-        {
-            var sb = new StringBuilder();
-            sb.Append(dataRecord.GetString(0));
-            sb = sb.Remove(sb.Length - 1, 1);
-
-            foreach (var childJson in ReadChildJson(dataRecord, additionalJsonFields))
-            {
-                sb.Append(",");
-                sb.Append(childJson);
-            }
-
-            sb.Append("}");
-
-            return sb.ToString();
-        }
-
-        private static IEnumerable<string> ReadChildJson(IDataRecord dataRecord, IEnumerable<KeyValuePair<int, string>> additionalJsonFields)
-        {
-            const string jsonMemberFormat = "\"{0}\":{1}";
-
-            return additionalJsonFields
-                .Where(additionalJsonField => !dataRecord.IsDBNull(additionalJsonField.Key))
-                .Select(additionalJsonField => string.Format(jsonMemberFormat,
-                    additionalJsonField.Value.Replace(StructureStorageSchema.Fields.Json.Name, string.Empty),
-                    dataRecord.GetString(additionalJsonField.Key)));
         }
 
         protected virtual void EnsureValidNames(ModelTableNames names)

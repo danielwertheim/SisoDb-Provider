@@ -1,67 +1,41 @@
 using System;
+using SisoDb.Dac;
 using SisoDb.EnsureThat;
-using SisoDb.NCore;
-using SisoDb.PineCone.Serializers;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.IdGenerators;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.Resources;
 using SisoDb.Serialization;
+using SisoDb.Structures.IdGenerators;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures
 {
     public class StructureBuilders : IStructureBuilders
     {
-        protected readonly Func<ISisoDbSerializer> SerializerFn;
-
-        public Func<IStructureIdGenerator> GuidStructureIdGeneratorFn { get; set; }
-        public StructureBuilderFactoryForInserts ForInserts { get; set; }
-        public StructureBuilderFactoryForUpdates ForUpdates { get; set; }
-
-        public StructureBuilders(Func<ISisoDbSerializer> serializerFn)
+        public Func<IStructureSchema, IStructureIdGenerator> GuidStructureIdGeneratorFn { get; set; }
+        public Func<IStructureSchema, IDbClient, IIdentityStructureIdGenerator> IdentityStructureIdGeneratorFn { get; set; }
+        public Func<ISisoSerializer> SerializerFn { get; private set; }
+        public Func<IStructureSerializer> StructureSerializerFn { get; set; }
+        public Func<IStructureSchema, IDbClient, IStructureBuilder> ResolveBuilderForInsertsBy { protected get; set; }
+        public Func<IStructureSchema, IStructureBuilder> ResolveBuilderForUpdatesBy { protected get; set; }
+        
+        public StructureBuilders(
+            Func<ISisoSerializer> serializerFn, 
+            Func<IStructureSchema, IStructureIdGenerator> guidStructureIdGenerator, 
+            Func<IStructureSchema, IDbClient, IIdentityStructureIdGenerator> identityStructureIdGeneratorFn)
         {
             Ensure.That(serializerFn, "serializerFn").IsNotNull();
+            Ensure.That(guidStructureIdGenerator, "guidStructureIdGenerator").IsNotNull();
+            Ensure.That(identityStructureIdGeneratorFn, "identityStructureIdGeneratorFn").IsNotNull();
 
+            GuidStructureIdGeneratorFn = guidStructureIdGenerator;
+            IdentityStructureIdGeneratorFn = identityStructureIdGeneratorFn;
             SerializerFn = serializerFn;
-            GuidStructureIdGeneratorFn = GetDefaultGuidStructureIdGenerator;
-            ForInserts = GetDefaultBuilderForInserts;
-            ForUpdates = GetDefaultBuilderForUpdates;
+            StructureSerializerFn = () => new StructureSerializer(SerializerFn());
+            ResolveBuilderForInsertsBy = GetDefaultBuilderForInserts;
+            ResolveBuilderForUpdatesBy = GetDefaultBuilderForUpdates;
         }
 
-        protected virtual IStructureIdGenerator GetDefaultGuidStructureIdGenerator()
+        protected virtual IStructureBuilder GetDefaultBuilderForInserts(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            return new SequentialGuidStructureIdGenerator();
-        }
-
-        protected virtual IStructureBuilder GetDefaultBuilderForInserts(IStructureSchema structureSchema, IIdentityStructureIdGenerator identityStructureIdGenerator)
-        {
-            Ensure.That(structureSchema, "structureSchema").IsNotNull();
-            Ensure.That(identityStructureIdGenerator, "identityStructureIdGenerator").IsNotNull();
-
-            var idType = structureSchema.IdAccessor.IdType;
-
-            if (idType == StructureIdTypes.Guid)
-                return new StructureBuilder
-                {
-                    StructureIdGenerator = GuidStructureIdGeneratorFn.Invoke(),
-                    StructureSerializer = GetStructureSerializer()
-                };
-
-            if (idType.IsIdentity())
-                return new StructureBuilder
-                {
-                    StructureIdGenerator = identityStructureIdGenerator,
-                    StructureSerializer = GetStructureSerializer()
-                };
-
-            if (idType == StructureIdTypes.String)
-                return new StructureBuilderPreservingId
-                {
-                    StructureIdGenerator = new EmptyStructureIdGenerator(),
-                    StructureSerializer = GetStructureSerializer()
-                };
-
-            throw new SisoDbException(ExceptionMessages.StructureBuilders_CreateForInsert.Inject(idType, structureSchema.Name));
+            return StructureBuildersFn.GetDefaultBuilderForInserts(this, structureSchema, dbClient);
         }
 
         protected virtual IStructureBuilder GetDefaultBuilderForUpdates(IStructureSchema structureSchema)
@@ -69,22 +43,18 @@ namespace SisoDb.Structures
             return new StructureBuilderPreservingId
             {
                 StructureIdGenerator = new EmptyStructureIdGenerator(),
-                StructureSerializer = GetStructureSerializer()
+                StructureSerializer = StructureSerializerFn()
             };
         }
 
-        protected virtual IStructureSerializer GetStructureSerializer()
+        public virtual IStructureBuilder ResolveBuilderForInsert(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            return new StructureSerializer(SerializerFn());
+            return ResolveBuilderForInsertsBy(structureSchema, dbClient);
         }
 
-        public static IStructureBuilder ForPreservingStructureIds(ISisoDbSerializer serializer)
+        public virtual IStructureBuilder ResolveBuilderForUpdate(IStructureSchema structureSchema)
         {
-            return new StructureBuilderPreservingId
-            {
-                StructureIdGenerator = new EmptyStructureIdGenerator(),
-                StructureSerializer = new StructureSerializer(serializer)
-            };
+            return ResolveBuilderForUpdatesBy(structureSchema);
         }
     }
 }

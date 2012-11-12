@@ -36,14 +36,14 @@ namespace SisoDb.SqlServer
 
         public virtual IDbConnection OpenServerConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = OnConnectionCreated(Driver.CreateConnection(connectionInfo.ServerConnectionString.PlainString));
+            var cn = OnConnectionCreated(Driver.CreateConnection(connectionInfo.ServerConnectionString));
             cn.Open();
             return cn;
         }
 
         public virtual IDbConnection OpenClientConnection(ISisoConnectionInfo connectionInfo)
         {
-            var cn = OnConnectionCreated(Driver.CreateConnection(connectionInfo.ClientConnectionString.PlainString));
+            var cn = OnConnectionCreated(Driver.CreateConnection(connectionInfo.ClientConnectionString));
             cn.Open();
             return cn;
         }

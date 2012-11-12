@@ -8,6 +8,12 @@ namespace SisoDb.Testing
 {
     public static class ShouldExtensions
     {
+        public static void ShouldHaveTimedOut(this Exception ex)
+        {
+            ex.ShouldNotBeNull();
+            (ex.Message.ToLower().Contains("timeout") || ex.Message.ToLower().Contains("timed out")).ShouldBeTrue();
+        }
+
         public static void ShouldBeValueEqualTo<T>(this T x, T y)
         {
             AreValueEqual(typeof(T), x, y);

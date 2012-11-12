@@ -23,16 +23,29 @@ namespace SisoDb.Serialization.Json
     {
         public static ITypeSerializer Instance = new JsonTypeSerializer();
 
-        public string TypeAttrInObject { get { return "{\"__type\":"; } }
+        public bool IncludeNullValues
+        {
+            get { return JsConfig.IncludeNullValues; }
+        }
 
-        public static readonly bool[] WhiteSpaceFlags = new bool[(int)' ' + 1];
+        public string TypeAttrInObject
+        {
+            get { return JsConfig.JsonTypeAttrInObject; }
+        }
+
+        internal static string GetTypeAttrInObject(string typeAttr)
+        {
+            return string.Format("{{\"{0}\":", typeAttr);
+        }
+
+        public static readonly bool[] WhiteSpaceFlags = new bool[' ' + 1];
 
         static JsonTypeSerializer()
         {
-            WhiteSpaceFlags[(int)' '] = true;
-            WhiteSpaceFlags[(int)'\t'] = true;
-            WhiteSpaceFlags[(int)'\r'] = true;
-            WhiteSpaceFlags[(int)'\n'] = true;
+            WhiteSpaceFlags[' '] = true;
+            WhiteSpaceFlags['\t'] = true;
+            WhiteSpaceFlags['\r'] = true;
+            WhiteSpaceFlags['\n'] = true;
         }
 
         public WriteObjectDelegate GetWriteFn<T>()
@@ -128,13 +141,17 @@ namespace SisoDb.Serialization.Json
 
         public void WriteTimeSpan(TextWriter writer, object oTimeSpan)
         {
-            writer.Write(DateTimeSerializer.ToXsdTimeSpanString((TimeSpan)oTimeSpan));
+            var stringValue = JsConfig.TimeSpanHandler == JsonTimeSpanHandler.StandardFormat
+                ? oTimeSpan.ToString()
+                : DateTimeSerializer.ToXsdTimeSpanString((TimeSpan)oTimeSpan);
+            WriteRawString(writer, stringValue);
         }
 
         public void WriteNullableTimeSpan(TextWriter writer, object oTimeSpan)
         {
+
             if (oTimeSpan == null) return;
-            writer.Write(DateTimeSerializer.ToXsdTimeSpanString((TimeSpan?)oTimeSpan));
+            WriteTimeSpan(writer, ((TimeSpan?)oTimeSpan).Value);
         }
 
         public void WriteGuid(TextWriter writer, object oValue)
@@ -288,17 +305,19 @@ namespace SisoDb.Serialization.Json
         public string ParseRawString(string value)
         {
             return value;
-            
-            //if (string.IsNullOrEmpty(value)) return value;
-
-            //return value[0] == JsonUtils.QuoteChar && value[value.Length - 1] == JsonUtils.QuoteChar
-            //    ? value.Substring(1, value.Length - 2)
-            //    : value;
         }
 
         public string ParseString(string value)
         {
             return string.IsNullOrEmpty(value) ? value : ParseRawString(value);
+        }
+
+        internal static bool IsEmptyMap(string value)
+        {
+            var i = 1;
+            for (; i < value.Length; i++) { var c = value[i]; if (c >= WhiteSpaceFlags.Length || !WhiteSpaceFlags[c]) break; } //Whitespace inline
+            if (value.Length == i) return true;
+            return value[i++] == JsWriter.MapEndChar;
         }
 
         internal static string ParseString(string json, ref int index)
@@ -307,11 +326,10 @@ namespace SisoDb.Serialization.Json
             if (json[index] != JsonUtils.QuoteChar)
                 throw new Exception("Invalid unquoted string starting with: " + json.SafeSubstring(50));
 
-            char c;
-            var startIndex = ++index;
+        	var startIndex = ++index;
             do
             {
-                c = json[index];
+                char c = json[index];
                 if (c == JsonUtils.QuoteChar) break;
                 if (c != JsonUtils.EscapeChar) continue;
                 c = json[index++];
@@ -356,7 +374,8 @@ namespace SisoDb.Serialization.Json
         {
             if (string.IsNullOrEmpty(json)) return json;
             var jsonLength = json.Length;
-            if (json[index] == JsonUtils.QuoteChar)
+            var firstChar = json[index];
+            if (firstChar == JsonUtils.QuoteChar)
             {
                 index++;
 
@@ -372,13 +391,12 @@ namespace SisoDb.Serialization.Json
             }
 
             var sb = new StringBuilder(jsonLength);
-            char c;
 
-            while (true)
+        	while (true)
             {
                 if (index == jsonLength) break;
 
-                c = json[index++];
+                char c = json[index++];
                 if (c == JsonUtils.QuoteChar) break;
 
                 if (c == JsonUtils.EscapeChar)
@@ -457,20 +475,7 @@ namespace SisoDb.Serialization.Json
                                 (char) (utf32 % 0x0400 + 0xDC00)});
         }
 
-        private static void EatWhitespace(string json, ref int index)
-        {
-            int c;
-            for (; index < json.Length; index++)
-            {
-                c = json[index];
-                if (c >= WhiteSpaceFlags.Length || !WhiteSpaceFlags[c])
-                {
-                    break;
-                }
-            }
-        }
-
-        public string EatTypeValue(string value, ref int i)
+    	public string EatTypeValue(string value, ref int i)
         {
             return EatValue(value, ref i);
         }
@@ -512,12 +517,18 @@ namespace SisoDb.Serialization.Json
             return success;
         }
 
+        public void EatWhitespace(string value, ref int i)
+        {
+            for (; i < value.Length; i++) { var c = value[i]; if (c >= WhiteSpaceFlags.Length || !WhiteSpaceFlags[c]) break; } //Whitespace inline
+        }
+
         public string EatValue(string value, ref int i)
         {
             var valueLength = value.Length;
             if (i == valueLength) return null;
 
             for (; i < value.Length; i++) { var c = value[i]; if (c >= WhiteSpaceFlags.Length || !WhiteSpaceFlags[c]) break; } //Whitespace inline
+            if (i == valueLength) return null;
 
             var tokenStartPos = i;
             var valueChar = value[i];

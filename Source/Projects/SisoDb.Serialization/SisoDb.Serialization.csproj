@@ -62,6 +62,7 @@
     <Compile Include="Common\DeserializeBuiltin.cs" />
     <Compile Include="Common\DeserializeCollection.cs" />
     <Compile Include="Common\DeserializeDictionary.cs" />
+    <Compile Include="Common\DeserializeDynamic.cs" />
     <Compile Include="Common\DeserializeListWithElements.cs" />
     <Compile Include="Common\DeserializeSpecializedCollections.cs" />
     <Compile Include="Common\DeserializeType.cs" />
@@ -81,11 +82,14 @@
     <Compile Include="Common\WriteType.cs" />
     <Compile Include="Controller\CommandProcessor.cs" />
     <Compile Include="Controller\PathInfo.cs" />
+    <Compile Include="CsvAttribute.cs" />
     <Compile Include="CsvConfig.cs" />
     <Compile Include="CsvSerializer.cs" />
     <Compile Include="CsvStreamExtensions.cs" />
     <Compile Include="CsvWriter.cs" />
     <Compile Include="DateTimeExtensions.cs" />
+    <Compile Include="DynamicJson.cs" />
+    <Compile Include="DynamicProxy.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="HashSet.cs" />
     <Compile Include="ITracer.cs" />
@@ -118,7 +122,6 @@
     <Compile Include="Support\AssemblyTypeDefinition.cs" />
     <Compile Include="Support\DoubleConverter.cs" />
     <Compile Include="Support\TypePair.cs" />
-    <Compile Include="SystemTime.cs" />
     <Compile Include="TextExtensions.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="TranslateListWithElements.cs" />
@@ -127,6 +130,9 @@
     <Compile Include="TypeSerializer.Generic.cs" />
     <Compile Include="WebRequestExtensions.cs" />
     <Compile Include="XmlSerializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

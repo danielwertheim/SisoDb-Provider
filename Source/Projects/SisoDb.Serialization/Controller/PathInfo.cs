@@ -57,11 +57,12 @@ namespace SisoDb.Serialization.Controller
 
 		/// <summary>
 		/// Parses the specified path info.
-		/// e.g.
-		///		MusicPage/arg1/0/true?debug&showFlows=3 => PathInfo
-		///			.ActionName = 'MusicPage'
-		///			.Arguments = ['arg1','0','true']
-		///			.Options = { debug:'True', showFlows:'3' }
+		/// e.g.<![CDATA[
+        /// MusicPage/arg1/0/true?debug&showFlows=3 => PathInfo
+        ///			.ActionName = 'MusicPage'
+        ///			.Arguments = ['arg1','0','true']
+        ///			.Options = { debug:'True', showFlows:'3' }
+		/// ]]>
 		/// </summary>
 		/// <param name="pathUri">The path url.</param>
 		/// <returns></returns>

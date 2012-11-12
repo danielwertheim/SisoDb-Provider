@@ -2,18 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Sql;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Dac
 {
+    /// <summary>
+    /// Defines operations that Siso needs to perform on a db-level. For server-level
+    /// operations, see <see cref="IServerClient"/>.
+    /// </summary>
     public interface IDbClient : IDisposable
     {
+        Guid Id { get; }
+        bool IsTransactional { get; }
+        bool IsAborted { get; }
+        bool IsFailed { get; }
         IAdoDriver Driver { get; }
-        ISisoConnectionInfo ConnectionInfo { get; }
         IDbConnection Connection { get; }
+        IDbTransaction Transaction { get; }
+        Action<IDbClient> OnCompleted { set; }
+        Action<IDbClient> AfterCommit { set; }
+        Action<IDbClient> AfterRollback { set; }
 
+        void Abort();
+        void MarkAsFailed();
         IDbBulkCopy GetBulkCopy();
 
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);

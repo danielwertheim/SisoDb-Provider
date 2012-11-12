@@ -18,7 +18,7 @@ namespace SisoDb.Serialization.Support
 		/// exact decimal value.
 		/// </summary>
 		/// <param name="d">The double to convert.</param>
-		/// <returns>A string representation of the double's exact decimal value.</return>
+		/// <returns>A string representation of the doubles exact decimal value.</returns>
 		public static string ToExactString(double d)
 		{
 #if XBOX
@@ -68,7 +68,7 @@ namespace SisoDb.Serialization.Support
 				exponent++;
 			}
 
-			/// Construct a new decimal expansion with the mantissa
+			// Construct a new decimal expansion with the mantissa
 			ArbitraryDecimal ad = new ArbitraryDecimal(mantissa);
 
 			// If the exponent is less than 0, we need to repeatedly
@@ -95,10 +95,12 @@ namespace SisoDb.Serialization.Support
 #endif
 		}
 
-		/// <summary>Private class used for manipulating
+		/// <summary>
+        /// Private class used for manipulating
+		/// </summary>
 		class ArbitraryDecimal
 		{
-			/// <summary>Digits in the decimal expansion, one byte per digit
+			//Digits in the decimal expansion, one byte per digit
 			byte[] digits;
 			/// <summary> 
 			/// How many digits are *after* the decimal point

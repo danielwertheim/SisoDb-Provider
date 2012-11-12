@@ -1,8 +1,8 @@
 ﻿using SisoDb.Dac;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Resources;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {

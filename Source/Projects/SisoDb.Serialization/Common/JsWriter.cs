@@ -41,7 +41,7 @@ namespace SisoDb.Serialization.Common
             {
                 EscapeCharFlags[escapeChar] = true;
             }
-            var loadConfig = JsConfig.IncludeNullValues;
+            var loadConfig = JsConfig.EmitCamelCaseNames; //force load
         }
 
         public static void WriteDynamic(Action callback)
@@ -224,7 +224,7 @@ namespace SisoDb.Serialization.Common
                 return Serializer.WriteDecimal;
 
             if (type.IsEnum || type.UnderlyingSystemType.IsEnum)
-                return type.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0
+                return type.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0 || JsConfig.TreatEnumAsInteger
                     ? (WriteObjectDelegate)Serializer.WriteEnumFlags
                     : Serializer.WriteEnum;
 
@@ -233,15 +233,24 @@ namespace SisoDb.Serialization.Common
 
         internal WriteObjectDelegate GetWriteFn<T>()
         {
-            if (typeof(T) == typeof(string))
-            {
+            if (typeof (T) == typeof (string)) {
                 return Serializer.WriteObjectString;
             }
 
+		    var onSerializingFn = JsConfig<T>.OnSerializingFn;
+            if (onSerializingFn != null) {
+                return (w, x) => GetCoreWriteFn<T>()(w, onSerializingFn((T)x));
+            }
+
+            return GetCoreWriteFn<T>();
+        }
+
+        private WriteObjectDelegate GetCoreWriteFn<T>()
+        {
             if ((typeof(T).IsValueType && !JsConfig.TreatAsRefType(typeof(T))) ||
-                JsConfig<T>.SerializeFn != null)
+                JsConfig<T>.HasSerializeFn)
             {
-                return JsConfig<T>.SerializeFn != null
+                return JsConfig<T>.HasSerializeFn
                     ? JsConfig<T>.WriteFn<TSerializer>
                     : GetValueTypeToStringMethod(typeof(T));
             }
@@ -270,7 +279,8 @@ namespace SisoDb.Serialization.Common
                 return writeFn;
             }
 
-            if (typeof(T).IsGenericType())
+            if (typeof(T).IsGenericType() ||
+                typeof(T).HasInterface(typeof(IDictionary<string, object>))) // is ExpandoObject?
             {
                 if (typeof(T).IsOrHasGenericInterfaceTypeOf(typeof(IList<>)))
                     return WriteLists<T, TSerializer>.Write;
@@ -283,7 +293,9 @@ namespace SisoDb.Serialization.Common
                         mapTypeArgs[0], mapTypeArgs[1]);
 
                     var keyWriteFn = Serializer.GetWriteFn(mapTypeArgs[0]);
-                    var valueWriteFn = Serializer.GetWriteFn(mapTypeArgs[1]);
+                    var valueWriteFn = typeof(T) == typeof(JsonObject)
+                        ? JsonObject.WriteValue
+                        : Serializer.GetWriteFn(mapTypeArgs[1]);
 
                     return (w, x) => writeFn(w, x, keyWriteFn, valueWriteFn);
                 }
@@ -297,22 +309,15 @@ namespace SisoDb.Serialization.Common
                 }
             }
 
-            var isCollection = typeof(T).IsOrHasGenericInterfaceTypeOf(typeof(ICollection));
-            if (isCollection)
+            var isDictionary = typeof(T).IsAssignableFrom(typeof(IDictionary))
+                || typeof(T).HasInterface(typeof(IDictionary));
+            if (isDictionary)
             {
-                var isDictionary = typeof(T).IsAssignableFrom(typeof(IDictionary))
-                    || typeof(T).HasInterface(typeof(IDictionary));
-                if (isDictionary)
-                {
-                    return WriteDictionary<TSerializer>.WriteIDictionary;
-                }
-
-                return WriteListsOfElements<TSerializer>.WriteIEnumerable;
+                return WriteDictionary<TSerializer>.WriteIDictionary;
             }
-
+            
             var isEnumerable = typeof(T).IsAssignableFrom(typeof(IEnumerable))
                 || typeof(T).HasInterface(typeof(IEnumerable));
-
             if (isEnumerable)
             {
                 return WriteListsOfElements<TSerializer>.WriteIEnumerable;
@@ -350,7 +355,7 @@ namespace SisoDb.Serialization.Common
 
         public void WriteType(TextWriter writer, object value)
         {
-            Serializer.WriteRawString(writer, ((Type)value).ToTypeString());
+            Serializer.WriteRawString(writer, JsConfig.TypeWriter((Type)value));
         }
 
     }

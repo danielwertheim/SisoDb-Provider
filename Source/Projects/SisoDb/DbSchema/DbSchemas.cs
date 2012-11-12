@@ -1,110 +1,118 @@
-using System;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using SisoDb.Dac;
-using SisoDb.NCore.Collections;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.EnsureThat;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {
-    public static class DbSchemas
+    public class DbSchemas : IDbSchemas
     {
-        public static class Suffixes
-        {
-            public static readonly string[] AllSuffixes;
-            public const string StructureTableNameSuffix = "Structure";
-            public const string UniquesTableNameSuffix = "Uniques";
-            public static readonly string[] IndexesTableNameSuffixes;
+        protected readonly object Lock = new object();
+        protected readonly ISisoDatabase Db;
+        protected readonly IDbSchemaUpserter DbSchemaUpserter;
+        protected readonly ISet<string> UpsertedSchemas = new HashSet<string>();
+        protected readonly ISet<string> TransientSchemas = new HashSet<string>();
+        protected readonly IDictionary<Guid, ISet<string>> UpsertedSchemasByDbClient = new Dictionary<Guid, ISet<string>>();
 
-            static Suffixes()
-            {
-                IndexesTableNameSuffixes = Enum.GetNames(typeof(IndexesTypes));
-                AllSuffixes = new[] { StructureTableNameSuffix, UniquesTableNameSuffix }.MergeWith(IndexesTableNameSuffixes).ToArray();
-            }
-        }
-
-        public static class SysTables
+        public DbSchemas(ISisoDatabase db, IDbSchemaUpserter dbSchemaUpserter)
         {
-            public const string IdentitiesTable = "SisoDbIdentities";
-        }
-
-        public static class Parameters
-        {
-            public const string DbNameParamPrefix = "@dbName";
-            public const string TableNameParamPrefix = "@tableName";
-            public const string EntityNameParamPrefix = "@entityName";
-            public static readonly string JsonParam;
-            public static readonly string StringValueForValueTypeIndexParamName;
+            Ensure.That(db, "db").IsNotNull();
+            Ensure.That(dbSchemaUpserter, "dbSchemaUpserter").IsNotNull();
             
-            static Parameters()
-            {
-                JsonParam = string.Concat("@", StructureStorageSchema.Fields.Json.Name);
-                StringValueForValueTypeIndexParamName = string.Concat("@", IndexStorageSchema.Fields.StringValue.Name);
-            }
+            Db = db;
+            DbSchemaUpserter = dbSchemaUpserter;
+        }
 
-            public static bool ShouldBeMultivalue(IDacParameter param)
+        public virtual void ClearCache()
+        {
+            lock (Lock)
             {
-                return param is ArrayDacParameter;
-            }
-
-            public static bool ShouldBeDateTime(IDacParameter param)
-            {
-                return param.Value is DateTime;
-            }
-
-            public static bool ShouldBeNonUnicodeString(IDacParameter param)
-            {
-                const StringComparison c = StringComparison.OrdinalIgnoreCase;
-
-                return param.Name.StartsWith(DbNameParamPrefix, c)
-                    || param.Name.StartsWith(TableNameParamPrefix, c)
-                    || param.Name.StartsWith(EntityNameParamPrefix, c)
-                    || param.Name.Equals(StringValueForValueTypeIndexParamName);
-            }
-
-            public static bool ShouldBeUnicodeString(IDacParameter param)
-            {
-                return param.Value is string;
-            }
-
-            public static bool ShouldBeJson(IDacParameter param)
-            {
-                return param.Name.Equals(JsonParam, StringComparison.OrdinalIgnoreCase);
+                UpsertedSchemas.Clear();
+                TransientSchemas.Clear();
             }
         }
 
-        public static string GetStructureTableName(this IStructureSchema structureSchema)
+        public virtual void RemoveFromCache(string structureSchemaName)
         {
-            return GenerateStructureTableName(structureSchema.Name);
+            lock (Lock)
+            {
+                UpsertedSchemas.Remove(structureSchemaName);
+                TransientSchemas.Remove(structureSchemaName);
+            }
         }
 
-        public static string GenerateStructureTableName(string structureName)
+        public virtual void RemoveFromCache(IStructureSchema structureSchema)
         {
-            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.StructureTableNameSuffix);
+            lock (Lock)
+            {
+                UpsertedSchemas.Remove(structureSchema.Name);
+                TransientSchemas.Remove(structureSchema.Name);
+            }
         }
 
-        public static IndexesTableNames GetIndexesTableNames(this IStructureSchema structureSchema)
+        public virtual void Drop(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            return new IndexesTableNames(structureSchema);
+            lock (Lock)
+            {
+                UpsertedSchemas.Remove(structureSchema.Name);
+                TransientSchemas.Remove(structureSchema.Name);
+                dbClient.Drop(structureSchema);
+            }
         }
 
-        public static string GenerateIndexesTableNameFor(string structureName, IndexesTypes type)
+        public virtual void Upsert(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), type.ToString());
+            if (!Db.Settings.AllowsAnyDynamicSchemaChanges())
+                return;
+
+            if (SchemaIsAllreadyUpserted(structureSchema, dbClient)) 
+                return;
+
+            lock (Lock)
+            {
+                RegisterDbClient(dbClient);
+                DbSchemaUpserter.Upsert(structureSchema, dbClient, Db.Settings.AllowDynamicSchemaCreation, Db.Settings.AllowDynamicSchemaUpdates);
+                UpsertedSchemasByDbClient[dbClient.Id].Add(structureSchema.Name);
+                TransientSchemas.Add(structureSchema.Name);
+            }
         }
 
-        public static string GetIndexesTableNameFor(this IStructureSchema structureSchema, IndexesTypes type)
+        private bool SchemaIsAllreadyUpserted(IStructureSchema structureSchema, IDbClient dbClient)
         {
-            return GenerateIndexesTableNameFor(structureSchema.Name, type);
+            if (UpsertedSchemas.Contains(structureSchema.Name) || TransientSchemas.Contains(structureSchema.Name))
+                return true;
+
+            return (UpsertedSchemasByDbClient.ContainsKey(dbClient.Id) && UpsertedSchemasByDbClient[dbClient.Id].Contains(structureSchema.Name));
         }
 
-        public static string GetUniquesTableName(this IStructureSchema structureSchema)
+        protected virtual void RegisterDbClient(IDbClient dbClient)
         {
-            return GenerateUniquesTableName(structureSchema.Name);
+            if (UpsertedSchemasByDbClient.ContainsKey(dbClient.Id))
+                return;
+
+            dbClient.AfterCommit = client => CleanupAfterDbClient(client, s =>
+            {
+                UpsertedSchemas.Add(s);
+                TransientSchemas.Remove(s);
+            });
+            dbClient.OnCompleted = client => CleanupAfterDbClient(client, s => TransientSchemas.Remove(s));
+            UpsertedSchemasByDbClient.Add(dbClient.Id, new HashSet<string>());
         }
 
-        public static string GenerateUniquesTableName(string structureName)
+        protected virtual void CleanupAfterDbClient(IDbClient dbClient, Action<string> schemaCallback)
         {
-            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.UniquesTableNameSuffix);
+            lock (Lock)
+            {
+                if (!UpsertedSchemasByDbClient.ContainsKey(dbClient.Id))
+                    return;
+
+                var schemasForClient = UpsertedSchemasByDbClient[dbClient.Id];
+                foreach (var schema in schemasForClient)
+                    schemaCallback(schema);
+
+                UpsertedSchemasByDbClient.Remove(dbClient.Id);   
+            }
         }
     }
 }

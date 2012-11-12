@@ -4,9 +4,50 @@ using SisoDb.Serialization.Json;
 
 namespace SisoDb.Serialization.Common
 {
+    // Provides a contract for mapping properties to their type accessors
+    internal interface IPropertyNameResolver
+    {
+        TypeAccessor GetTypeAccessorForProperty(string propertyName, Dictionary<string, TypeAccessor> typeAccessorMap);
+    }
+    // The default behavior is that the target model must match property names exactly
+    internal class DefaultPropertyNameResolver : IPropertyNameResolver
+    {
+        public virtual TypeAccessor GetTypeAccessorForProperty(string propertyName, Dictionary<string, TypeAccessor> typeAccessorMap)
+        {
+            TypeAccessor typeAccessor;
+            typeAccessorMap.TryGetValue(propertyName, out typeAccessor);
+            return typeAccessor;
+        }
+    }
+    // The lenient behavior is that properties on the target model can be .NET-cased, while the source JSON can differ
+    internal class LenientPropertyNameResolver : DefaultPropertyNameResolver
+    {
+        
+        public override TypeAccessor GetTypeAccessorForProperty(string propertyName, Dictionary<string, TypeAccessor> typeAccessorMap)
+        {
+            TypeAccessor typeAccessor;
+            
+            // camelCase is already supported by default, so no need to add another transform in the tree
+            return typeAccessorMap.TryGetValue(TransformFromLowercaseUnderscore(propertyName), out typeAccessor)
+                       ? typeAccessor
+                       : base.GetTypeAccessorForProperty(propertyName, typeAccessorMap);
+        }
+
+        private static string TransformFromLowercaseUnderscore(string propertyName)
+        {
+            // "lowercase_underscore" -> LowercaseUnderscore
+            return propertyName.ToTitleCase();
+        }
+
+    }
+
 	internal static class DeserializeTypeRefJson
 	{
-		private static readonly JsonTypeSerializer Serializer = (JsonTypeSerializer)JsonTypeSerializer.Instance;
+	    public static readonly IPropertyNameResolver DefaultPropertyNameResolver = new DefaultPropertyNameResolver();
+        public static readonly IPropertyNameResolver LenientPropertyNameResolver = new LenientPropertyNameResolver();
+        public static IPropertyNameResolver PropertyNameResolver = DefaultPropertyNameResolver;
+
+        private static readonly JsonTypeSerializer Serializer = (JsonTypeSerializer)JsonTypeSerializer.Instance;
 
 		internal static object StringToType(
 		Type type,
@@ -24,7 +65,7 @@ namespace SisoDb.Serialization.Common
 			if (strType[index++] != JsWriter.MapStartChar)
 				throw DeserializeTypeRef.CreateSerializationError(type, strType);
 
-			if (strType == JsWriter.EmptyMap) return ctorFn();
+            if (JsonTypeSerializer.IsEmptyMap(strType)) return ctorFn();
 
 			object instance = null;
 
@@ -38,13 +79,18 @@ namespace SisoDb.Serialization.Common
 				if (strType.Length != index) index++;
 
 				var propertyValueStr = Serializer.EatValue(strType, ref index);
-				var possibleTypeInfo = propertyValueStr != null && propertyValueStr.Length > 1 && propertyValueStr[0] == '_';
+				var possibleTypeInfo = propertyValueStr != null && propertyValueStr.Length > 1;
 
-				if (possibleTypeInfo && propertyName == JsWriter.TypeAttr)
+				//if we already have an instance don't check type info, because then we will have a half deserialized object
+				//we could throw here or just use the existing instance.
+				if (instance == null && possibleTypeInfo && propertyName == JsWriter.TypeAttr)
 				{
-					var typeName = Serializer.ParseString(propertyValueStr);
+					var explicitTypeName = Serializer.ParseString(propertyValueStr);
+                    var explicitType = Type.GetType(explicitTypeName);
+                    if (explicitType != null && !explicitType.IsInterface && !explicitType.IsAbstract) {
+                        instance = explicitType.CreateInstance();
+                    }
 
-					instance = ReflectionExtensions.CreateInstance(typeName);
 					if (instance == null)
 					{
 						Tracer.Instance.WriteWarning("Could not find type: " + propertyValueStr);
@@ -52,8 +98,18 @@ namespace SisoDb.Serialization.Common
 					else
 					{
 						//If __type info doesn't match, ignore it.
-						if (!type.IsInstanceOfType(instance))
-							instance = null;
+						if (!type.IsInstanceOfType(instance)) {
+						    instance = null;
+						} else {
+						    var derivedType = instance.GetType();
+                            if (derivedType != type) {
+						        var derivedTypeConfig = new TypeConfig(derivedType);
+						        var map = DeserializeTypeRef.GetTypeAccessorMap(derivedTypeConfig, Serializer);
+                                if (map != null) {
+                                    typeAccessorMap = map;
+                                }
+                            }
+						}
 					}
 
 					Serializer.EatItemSeperatorOrMapEndChar(strType, ref index);
@@ -62,10 +118,9 @@ namespace SisoDb.Serialization.Common
 
 				if (instance == null) instance = ctorFn();
 
-				TypeAccessor typeAccessor;
-				typeAccessorMap.TryGetValue(propertyName, out typeAccessor);
-
-				var propType = possibleTypeInfo ? TypeAccessor.ExtractType(Serializer, propertyValueStr) : null;
+                var typeAccessor = PropertyNameResolver.GetTypeAccessorForProperty(propertyName, typeAccessorMap);
+                
+				var propType = possibleTypeInfo && propertyValueStr[0] == '_' ? TypeAccessor.ExtractType(Serializer, propertyValueStr) : null;
 				if (propType != null)
 				{
 					try
@@ -91,9 +146,9 @@ namespace SisoDb.Serialization.Common
 
 						continue;
 					}
-					catch
+					catch(Exception e)
 					{
-						if (JsConfig.ThrowOnDeserializationError) throw;
+                        if (JsConfig.ThrowOnDeserializationError) throw DeserializeTypeRef.GetSerializationException(propertyName, propertyValueStr, propType, e);
 						else Tracer.Instance.WriteWarning("WARN: failed to set dynamic property {0} with: {1}", propertyName, propertyValueStr);
 					}
 				}
@@ -105,10 +160,10 @@ namespace SisoDb.Serialization.Common
 						var propertyValue = typeAccessor.GetProperty(propertyValueStr);
 						typeAccessor.SetProperty(instance, propertyValue);
 					}
-					catch
+					catch(Exception e)
 					{
-						if (JsConfig.ThrowOnDeserializationError) throw;
-						else Tracer.Instance.WriteWarning("WARN: failed to set property {0} with: {1}", propertyName, propertyValueStr);
+                        if (JsConfig.ThrowOnDeserializationError) throw DeserializeTypeRef.GetSerializationException(propertyName, propertyValueStr, typeAccessor.PropertyType, e);
+                        else Tracer.Instance.WriteWarning("WARN: failed to set property {0} with: {1}", propertyName, propertyValueStr);
 					}
 				}
 
@@ -126,6 +181,5 @@ namespace SisoDb.Serialization.Common
 
 			return instance;
 		}
-
 	}
 }

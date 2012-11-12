@@ -1,34 +1,18 @@
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying.Lambdas.Parsers
 {
 	public class ExpressionParsers : IExpressionParsers
 	{
-        private IIncludeParser _includeParser;
         private IWhereParser _whereParser;
         private IOrderByParser _orderByParser;
 
 		public ExpressionParsers(IDataTypeConverter dataTypeConverter)
 		{
-			IncludeParser = new IncludeParser(dataTypeConverter);
 			WhereParser = new WhereParser(dataTypeConverter);
 			OrderByParser = new OrderByParser(dataTypeConverter);
 		}
-
-	    public IIncludeParser IncludeParser
-	    {
-	        get
-	        {
-	            return _includeParser;
-	        }
-            set
-            {
-                Ensure.That(value, "IncludeParser").IsNotNull();
-                _includeParser = value;
-            }
-	    }
-
 	    
 	    public IWhereParser WhereParser
 	    {
@@ -42,7 +26,6 @@ namespace SisoDb.Querying.Lambdas.Parsers
 	            _whereParser = value;
 	        }
 	    }
-
 	    
 	    public IOrderByParser OrderByParser
 	    {

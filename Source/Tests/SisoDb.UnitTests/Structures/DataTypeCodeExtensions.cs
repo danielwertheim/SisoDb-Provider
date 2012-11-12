@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using SisoDb.PineCone.Structures;
 using SisoDb.Structures;
 
 namespace SisoDb.UnitTests.Structures

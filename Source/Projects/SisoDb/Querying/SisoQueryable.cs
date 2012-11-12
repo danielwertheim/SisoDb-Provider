@@ -162,14 +162,14 @@ namespace SisoDb.Querying
         {
             Ensure.That(template, "template").IsNotNull();
 
-            return QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template);
+            return QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
         }
 
         public virtual IEnumerable<TResult> ToEnumerableOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class
         {
             Ensure.That(projection, "projection").IsNotNull();
 
-            return QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), projection.ReturnType);
+            return QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build());
         }
 
         public virtual IEnumerable<string> ToEnumerableOfJson()
@@ -217,15 +217,6 @@ namespace SisoDb.Querying
 		{
 			QueryBuilder.Page(pageIndex, pageSize);
 
-			return this;
-		}
-
-		public virtual ISisoQueryable<T> Include<TInclude>(params Expression<Func<T, object>>[] expressions) where TInclude : class
-		{
-            Ensure.That(expressions, "expressions").HasItems();
-
-			QueryBuilder.Include<TInclude>(expressions);
-			
 			return this;
 		}
 

@@ -11,7 +11,6 @@ namespace SisoDb.Querying.Sql
         private readonly List<string> _allMemberPaths = new List<string>(); 
         private readonly List<SqlWhereMember> _whereMembers = new List<SqlWhereMember>();
         private readonly List<SqlSortingMember> _sortingMembers = new List<SqlSortingMember>();
-        private readonly List<SqlInclude> _includes = new List<SqlInclude>(); 
         private SqlWhereCriteria _whereCriteria = SqlWhereCriteria.Empty();
 
         public virtual IEnumerable<SqlWhereMember> WhereMembers
@@ -22,11 +21,6 @@ namespace SisoDb.Querying.Sql
         public virtual IEnumerable<SqlSortingMember> SortingMembers
         {
             get { return _sortingMembers; }
-        }
-
-        public virtual IEnumerable<SqlInclude> Includes
-        {
-            get { return _includes; }
         }
 
         public virtual SqlWhereCriteria WhereCriteria
@@ -41,11 +35,6 @@ namespace SisoDb.Querying.Sql
             return index > -1 
                 ? index 
                 : _allMemberPaths.Count;
-        }
-
-        public virtual int GetNextNewIncludeIndex()
-        {
-            return _includes.Count;
         }
 
         public virtual bool ContainsWhereMemberFor(string memberPath)
@@ -93,13 +82,6 @@ namespace SisoDb.Querying.Sql
             Ensure.That(whereCriteria, "whereCriteria").IsNotNull();
 
             _whereCriteria = whereCriteria;
-        }
-
-        public virtual void AddInclude(SqlInclude include)
-        {
-            Ensure.That(include, "include").IsNotNull();
-
-            _includes.Add(include);
         }
     }
 }

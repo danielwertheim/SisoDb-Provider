@@ -21,11 +21,11 @@
 				},
 				{
 					"Name": "ClientConnectionString",
-					"Value": "data source=.;initial catalog=foo;integrated security=true;"
+					"Value": "Data Source=.;Initial Catalog=foo;Integrated Security=True;MultipleActiveResultSets=True"
 				},
 				{
 					"Name": "ServerConnectionString",
-					"Value": "Data Source=.;Initial Catalog=;Integrated Security=True"
+					"Value": "Data Source=.;Initial Catalog=;Integrated Security=True;MultipleActiveResultSets=True"
 				}
 			]
 		},
@@ -58,11 +58,11 @@
 			"Nodes": 
 			[
 				{
-					"Name": "AllowUpsertsOfSchemas",
+					"Name": "AllowDynamicSchemaCreation",
 					"Value": "True"
 				},
 				{
-					"Name": "SynchronizeSchemaChanges",
+					"Name": "AllowDynamicSchemaUpdates",
 					"Value": "True"
 				},
 				{

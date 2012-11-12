@@ -18,13 +18,6 @@ namespace SisoDb.SqlCe4
         {
             Ensure.That(dbClient, "dbClient").IsNotNull();
 
-            Initialize(dbClient.Connection);
-        }
-
-        public SqlCe4DbBulkCopy(ITransactionalDbClient dbClient)
-        {
-            Ensure.That(dbClient, "dbClient").IsNotNull();
-
             Initialize(dbClient.Connection, dbClient.Transaction);
         }
 

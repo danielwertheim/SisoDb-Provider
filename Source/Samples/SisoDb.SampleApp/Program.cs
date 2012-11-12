@@ -33,8 +33,8 @@ namespace SisoDb.SampleApp
             //db.EnsureNewDatabase();
             
             //Some tweaks
-            //db.Settings.AllowUpsertsOfSchemas = false;
-            //db.Settings.SynchronizeSchemaChanges = false;
+            //db.Settings.AllowDynamicSchemaCreation = false;
+            //db.Settings.AllowDynamicSchemaUpdates = false;
 
             //To get rid of warm up in tests as it first syncs schemas etc
             //db.UpsertStructureSet<Customer>();
@@ -65,7 +65,7 @@ namespace SisoDb.SampleApp
             stopWatch.Start();
             using (var session = database.BeginSession())
             {
-                session.Advanced.UpdateMany<Customer>(
+                session.UpdateMany<Customer>(
                     c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo,
                     customer => { customer.Firstname += "Udated"; });
             }

@@ -3,7 +3,7 @@ using System.Linq;
 using Machine.Specifications;
 using SisoDb.DbSchema;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -17,7 +17,7 @@ namespace SisoDb.Specifications.Database
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.Settings.AllowUpsertsOfSchemas = false;
+                TestContext.Database.Settings.AllowDynamicSchemaCreation = false;
                 TestContext.Database.DropStructureSet<OrgModel.MyClass>();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
             };
@@ -61,7 +61,7 @@ namespace SisoDb.Specifications.Database
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                TestContext.Database.Settings.AllowUpsertsOfSchemas = false;
+                TestContext.Database.Settings.AllowDynamicSchemaCreation = false;
                 TestContext.Database.DropStructureSet<OrgModel.MyClass>();
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<OrgModel.MyClass>();
             };

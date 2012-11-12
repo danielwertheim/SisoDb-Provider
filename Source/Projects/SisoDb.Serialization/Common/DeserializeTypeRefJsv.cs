@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SisoDb.Serialization.Json;
 using SisoDb.Serialization.Jsv;
 
 namespace SisoDb.Serialization.Common
@@ -23,7 +24,7 @@ namespace SisoDb.Serialization.Common
 			if (strType[index++] != JsWriter.MapStartChar)
 				throw DeserializeTypeRef.CreateSerializationError(type, strType);
 
-			if (strType == JsWriter.EmptyMap) return ctorFn();
+            if (JsonTypeSerializer.IsEmptyMap(strType)) return ctorFn();
 
 			object instance = null;
 
@@ -36,21 +37,35 @@ namespace SisoDb.Serialization.Common
 				index++;
 
 				var propertyValueStr = Serializer.EatValue(strType, ref index);
-				var possibleTypeInfo = propertyValueStr != null && propertyValueStr.Length > 1 && propertyValueStr[0] == '_';
+				var possibleTypeInfo = propertyValueStr != null && propertyValueStr.Length > 1;
 
 				if (possibleTypeInfo && propertyName == JsWriter.TypeAttr)
 				{
-					var typeName = Serializer.ParseString(propertyValueStr);
-					instance = ReflectionExtensions.CreateInstance(typeName);
-					if (instance == null)
+					var explicitTypeName = Serializer.ParseString(propertyValueStr);
+                    var explicitType = Type.GetType(explicitTypeName);
+                    if (explicitType != null && !explicitType.IsInterface && !explicitType.IsAbstract) {
+                        instance = explicitType.CreateInstance();
+                    }
+
+                    if (instance == null)
 					{
 						Tracer.Instance.WriteWarning("Could not find type: " + propertyValueStr);
 					}
 					else
 					{
 						//If __type info doesn't match, ignore it.
-						if (!type.IsInstanceOfType(instance))
+						if (!type.IsInstanceOfType(instance)) {
 							instance = null;
+						} else {
+						    var derivedType = instance.GetType();
+                            if (derivedType != type) {
+						        var derivedTypeConfig = new TypeConfig(derivedType);
+						        var map = DeserializeTypeRef.GetTypeAccessorMap(derivedTypeConfig, Serializer);
+                                if (map != null) {
+                                    typeAccessorMap = map;
+                                }
+                            }
+						}
 					}
 
 					//Serializer.EatItemSeperatorOrMapEndChar(strType, ref index);
@@ -64,7 +79,7 @@ namespace SisoDb.Serialization.Common
 				TypeAccessor typeAccessor;
 				typeAccessorMap.TryGetValue(propertyName, out typeAccessor);
 
-				var propType = possibleTypeInfo ? TypeAccessor.ExtractType(Serializer, propertyValueStr) : null;
+				var propType = possibleTypeInfo && propertyValueStr[0] == '_' ? TypeAccessor.ExtractType(Serializer, propertyValueStr) : null;
 				if (propType != null)
 				{
 					try
@@ -81,9 +96,9 @@ namespace SisoDb.Serialization.Common
 
 						continue;
 					}
-					catch
+					catch(Exception e)
 					{
-						if (JsConfig.ThrowOnDeserializationError) throw;
+                        if (JsConfig.ThrowOnDeserializationError) throw DeserializeTypeRef.GetSerializationException(propertyName, propertyValueStr, propType, e);
 						else Tracer.Instance.WriteWarning("WARN: failed to set dynamic property {0} with: {1}", propertyName, propertyValueStr);
 					}
 				}
@@ -95,10 +110,10 @@ namespace SisoDb.Serialization.Common
 						var propertyValue = typeAccessor.GetProperty(propertyValueStr);
 						typeAccessor.SetProperty(instance, propertyValue);
 					}
-					catch
+					catch(Exception e)
 					{
-						if (JsConfig.ThrowOnDeserializationError) throw;
-						else Tracer.Instance.WriteWarning("WARN: failed to set property {0} with: {1}", propertyName, propertyValueStr);
+                        if (JsConfig.ThrowOnDeserializationError) throw DeserializeTypeRef.GetSerializationException(propertyName, propertyValueStr, propType, e);
+                        else Tracer.Instance.WriteWarning("WARN: failed to set property {0} with: {1}", propertyName, propertyValueStr);
 					}
 				}
 

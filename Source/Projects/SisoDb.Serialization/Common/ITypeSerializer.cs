@@ -6,7 +6,8 @@ namespace SisoDb.Serialization.Common
 {
 	internal interface ITypeSerializer
 	{
-		string TypeAttrInObject { get; }
+        bool IncludeNullValues { get; }
+        string TypeAttrInObject { get; }
 
 		WriteObjectDelegate GetWriteFn<T>();
 		WriteObjectDelegate GetWriteFn(Type type);
@@ -56,6 +57,7 @@ namespace SisoDb.Serialization.Common
 		bool EatMapStartChar(string value, ref int i);
 		string EatMapKey(string value, ref int i);
 		bool EatMapKeySeperator(string value, ref int i);
+	    void EatWhitespace(string value, ref int i);
 		string EatValue(string value, ref int i);
 		bool EatItemSeperatorOrMapEndChar(string value, ref int i);
 	}

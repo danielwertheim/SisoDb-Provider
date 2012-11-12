@@ -1,8 +1,8 @@
 using System;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Serialization;
 using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {
@@ -58,9 +58,9 @@ namespace SisoDb
         IStructureSchemas StructureSchemas { get; set; }
 
         /// <summary>
-        /// Manager used to control Db-Schemas.
+        /// Caches and controls state of Db-Schemas.
         /// </summary>
-        IDbSchemaManager SchemaManager { get; }
+        IDbSchemas DbSchemas { get; }
 
         /// <summary>
         /// Structure builders collection used to resolve a Structure builder to use when building structures for insert and updates.
@@ -70,7 +70,7 @@ namespace SisoDb
         /// <summary>
         /// The serializer used to handle Json.
         /// </summary>
-        ISisoDbSerializer Serializer { get; set; }
+        ISisoSerializer Serializer { get; set; }
 
         /// <summary>
         /// Used for maintenance tasks of the database.
@@ -126,20 +126,25 @@ namespace SisoDb
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
-        /// the structure type will be created.
+        /// the structure type <typeparamref name="T"/> will be created.
         /// </summary>
-        /// <remarks>
-        /// This is normally something you do not need to do.
-        /// This is done automatically.</remarks>
         /// <typeparam name="T"></typeparam>
         ISisoDatabase UpsertStructureSet<T>() where T : class;
 
         /// <summary>
         /// Manually upserts a structure set, meaning all tables for
-        /// the structure type will be created.
+        /// the structure type <paramref name="type"/> will be created.
         /// </summary>
         /// <param name="type"></param>
         ISisoDatabase UpsertStructureSet(Type type);
+
+        /// <summary>
+        /// Manually upserts structre sets, meaning all tables for
+        /// sent stucture types <paramref name="types"/> will be created.
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        ISisoDatabase UpsertStructureSet(Type[] types);
 
         /// <summary>
 		/// Creates an <see cref="ISession"/>, used for inserts, updates, deletes and searching.

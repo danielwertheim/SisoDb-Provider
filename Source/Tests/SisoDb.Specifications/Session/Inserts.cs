@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Configuration;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Configuration;
 using SisoDb.Testing;
 using SisoDb.Testing.Steps;
 
@@ -269,46 +270,6 @@ namespace SisoDb.Specifications.Session
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root1>();
-                _structure = new Root1
-                {
-                    RootInt = 10,
-                    RootString = "The Root string",
-                    Nested = new Nested { NestedInt = 20, NestedString = "The Nested string" }
-                };
-            };
-
-            Because of = () => TestContext.Database.UseOnceTo().Insert(_structure);
-
-            It should_not_have_stored_nested_item_as_separate_structure = () =>
-            {
-                TestContext.Database.StructureSchemas.GetRegistrations().Any(r => r.Key == typeof(Nested)).ShouldBeFalse();
-
-                var nestesStructureSchema = TestContext.Database.StructureSchemas.GetSchema<Nested>();
-                TestContext.DbHelper.TableExists(nestesStructureSchema.GetStructureTableName()).ShouldBeFalse();
-                TestContext.DbHelper.TablesExists(nestesStructureSchema.GetIndexesTableNames().All).ShouldBeFalse();
-            };
-
-            It should_not_have_stored_nested_item_in_json = () => 
-                TestContext.Database.should_have_one_structure_with_json_not_containing<Root1, Nested>(r => r.NestedId, r => r.NestedInt, r => r.NestedString);
-
-            It should_not_have_stored_nested_int = () =>
-                TestContext.DbHelper.AnyIndexesTableHasMember<Root1>(_structureSchema, _structure.Id, r => r.Nested.NestedInt).ShouldBeFalse();
-
-            It should_not_have_stored_nested_string = () =>
-                TestContext.DbHelper.AnyIndexesTableHasMember<Root1>(_structureSchema, _structure.Id, r => r.Nested.NestedString).ShouldBeFalse();
-
-            private static Root1 _structure;
-            private static IStructureSchema _structureSchema;
-        }
-
-        [Subject(typeof(ISession), "Insert")]
-        public class when_inserting_structure_with_nested_structre_and_nested_structures_are_allowed : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations.Configure<Root2>(cfg => cfg.AllowNestedStructures());
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root2>();
                 _structure = new Root2
                 {
@@ -343,13 +304,12 @@ namespace SisoDb.Specifications.Session
         }
 
         [Subject(typeof(ISession), "Insert")]
-        public class when_inserting_structure_with_nested_structre_and_nested_structures_are_allowed_and_new_configcollection_has_been_provided : SpecificationBase
+        public class when_inserting_structure_with_nested_structre_and_new_configcollection_has_been_provided : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
                 TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations = new StructureTypeConfigurations();
-                TestContext.Database.StructureSchemas.StructureTypeFactory.Configurations.Configure<Root2>(cfg => cfg.AllowNestedStructures());
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<Root2>();
                 _structure = new Root2
                 {
@@ -381,6 +341,73 @@ namespace SisoDb.Specifications.Session
 
             private static Root2 _structure;
             private static IStructureSchema _structureSchema;
+        }
+
+        [Subject(typeof(ISession), "Insert")]
+        public class when_inserting_structure_with_nested_structre_with_initialized_string : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _customer = new Customer { Name = "Volvo" };
+                var employee = new Employee
+                {
+                    Name = "Bart", 
+                    Address =
+                    {
+                        City = "Springfield", 
+                        State = "Illinois", 
+                        Street = "915 Lilac Drive"
+                    }
+                };
+                _customer.Employees.Add(employee);
+            };
+
+            Because of = () => TestContext.Database.UseOnceTo().Insert(_customer);
+
+            It should_have_stored_the_customer = () =>
+            {
+                var stored = TestContext.Database.UseOnceTo().GetById<Customer>(_customer.Id);
+                stored.ShouldNotBeNull();
+                stored.ShouldBeValueEqualTo(_customer);
+            };
+
+            private static Customer _customer;
+
+            public class Customer
+            {
+                public Guid Id { get; set; }
+                public string Name { get; set; }
+                public Address Address { get; set; }
+                public List<Employee> Employees { get; set; }
+
+                public Customer()
+                {
+                    Id = Guid.NewGuid();
+                    Address = new Address();
+                    Employees = new List<Employee>();
+                }
+            }
+
+            public class Employee
+            {
+                public string Name { get; set; }
+                public Address Address { get; set; }
+
+                public Employee()
+                {
+                    Address = new Address();
+                }
+            }
+
+            public class Address
+            {
+                public string Street { get; set; }
+                public string Zip { get; set; }
+                public string City { get; set; }
+                public string State { get; set; }
+            }
         }
 
         private class SingleStringMember

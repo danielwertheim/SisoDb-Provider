@@ -7,7 +7,7 @@ namespace SisoDb.Specifications.Model
     {
         public override string AsJson()
         {
-            return JsonFormat.Inject("\"" + StructureId.ToString("N") + "\"", SortOrder, IntegerValue, NullableIntegerValue, StringValue);
+            return JsonFormat.Inject("\"" + StructureId.ToString("N") + "\"", SortOrder, IntegerValue, NullableIntegerValue, StringValue, GuidValue.ToString("N"), BoolValue.ToString().ToLower());
         }
     }
 }

@@ -11,13 +11,14 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
+using SisoDb.Serialization.Common;
 using SisoDb.Serialization.Support;
 
 #if WINDOWS_PHONE
@@ -116,7 +117,24 @@ namespace SisoDb.Serialization
 
         public static string EncodeJsv(this string value)
         {
-            return value.ToCsvField();
+			return string.IsNullOrEmpty(value) || !JsWriter.HasAnyEscapeChars(value)
+		       	? value
+		       	: string.Concat
+		       	  	(
+						JsWriter.QuoteString,
+						value.Replace(JsWriter.QuoteString, TypeSerializer.DoubleQuoteString),
+						JsWriter.QuoteString
+		       	  	);
+        }
+
+        public static string DecodeJsv(this string value)
+        {
+			const int startingQuotePos = 1;
+			const int endingQuotePos = 2;
+			return string.IsNullOrEmpty(value) || value[0] != JsWriter.QuoteChar
+			       	? value
+					: value.Substring(startingQuotePos, value.Length - endingQuotePos)
+						.Replace(TypeSerializer.DoubleQuoteString, JsWriter.QuoteString);
         }
 
         public static string UrlEncode(this string text)
@@ -139,7 +157,7 @@ namespace SisoDb.Serialization
                 }
                 else
                 {
-                    sb.Append('%' + charCode.ToString("x"));
+                    sb.Append('%' + charCode.ToString("x2"));
                 }
             }
 
@@ -171,7 +189,12 @@ namespace SisoDb.Serialization
                     bytes.Add((byte)c);
                 }
             }
+#if SILVERLIGHT
+            byte[] byteArray = bytes.ToArray();
+            return Encoding.UTF8.GetString(byteArray, 0, byteArray.Length);
+#else
             return Encoding.UTF8.GetString(bytes.ToArray());
+#endif
         }
 
 #if !XBOX
@@ -393,7 +416,7 @@ namespace SisoDb.Serialization
 
         public static string ToJsv<T>(this T obj)
         {
-            return TypeSerializer.SerializeToString<T>(obj);
+            return TypeSerializer.SerializeToString(obj);
         }
 
         public static T FromJsv<T>(this string jsv)
@@ -401,12 +424,13 @@ namespace SisoDb.Serialization
             return TypeSerializer.DeserializeFromString<T>(jsv);
         }
 
-        public static string ToJson<T>(this T obj)
-        {
-            return JsonSerializer.SerializeToString<T>(obj);
+        public static string ToJson<T>(this T obj) {
+        	return JsConfig.PreferInterfaces
+				? JsonSerializer.SerializeToString(obj, AssemblyUtils.MainInterface<T>())
+				: JsonSerializer.SerializeToString(obj);
         }
 
-        public static T FromJson<T>(this string json)
+    	public static T FromJson<T>(this string json)
         {
             return JsonSerializer.DeserializeFromString<T>(json);
         }
@@ -414,7 +438,7 @@ namespace SisoDb.Serialization
 #if !XBOX && !SILVERLIGHT && !MONOTOUCH
         public static string ToXml<T>(this T obj)
         {
-            return XmlSerializer.SerializeToString<T>(obj);
+            return XmlSerializer.SerializeToString(obj);
         }
 #endif
 
@@ -551,6 +575,49 @@ namespace SisoDb.Serialization
                 return value;
 
             return (char)(firstChar + LowerCaseOffset) + value.Substring(1);
+        }
+
+        private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
+        public static string ToTitleCase(this string value)
+        {
+#if SILVERLIGHT || __MonoCS__
+            string[] words = value.Split('_');
+
+            for (int i = 0; i <= words.Length - 1; i++)
+            {
+                if ((!object.ReferenceEquals(words[i], string.Empty)))
+                {
+                    string firstLetter = words[i].Substring(0, 1);
+                    string rest = words[i].Substring(1);
+                    string result = firstLetter.ToUpper() + rest.ToLower();
+                    words[i] = result;
+                }
+            }
+            return String.Join("", words);
+#else
+            return TextInfo.ToTitleCase(value).Replace("_", string.Empty);
+#endif
+        }
+
+        public static string ToLowercaseUnderscore(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            value = value.ToCamelCase();
+            
+            var sb = new StringBuilder(value.Length);
+            foreach (var t in value)
+            {
+                if (char.IsLower(t))
+                {
+                    sb.Append(t);
+                }
+                else
+                {
+                    sb.Append("_");
+                    sb.Append(char.ToLower(t));
+                }
+            }
+            return sb.ToString();
         }
 
         public static string SafeSubstring(this string value, int length)

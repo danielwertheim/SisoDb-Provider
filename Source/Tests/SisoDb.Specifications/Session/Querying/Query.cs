@@ -1092,7 +1092,7 @@ namespace SisoDb.Specifications.Session.Querying
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
 
-            It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
+            It should_have_fetched_the_second_and_third_but_in_reverse = () =>
             {
                 _fetchedStructures[0].ShouldBeValueEqualTo(_structures[2]);
                 _fetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
@@ -1118,7 +1118,7 @@ namespace SisoDb.Specifications.Session.Querying
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
 
-            It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
+            It should_have_fetched_the_second_and_third_but_in_reverse = () =>
             {
                 _fetchedStructures[0].ShouldEqual(_structures[2].AsJson());
                 _fetchedStructures[1].ShouldEqual(_structures[1].AsJson());
@@ -1144,7 +1144,7 @@ namespace SisoDb.Specifications.Session.Querying
             It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
 
-            It should_have_fetched_the_two_first_inserted_structures_but_in_reverse = () =>
+            It should_have_fetched_the_second_and_third_but_in_reverse = () =>
             {
                 _fetchedStructures[0].Matches(_structures[2]).ShouldBeTrue();
                 _fetchedStructures[1].Matches(_structures[1]).ShouldBeTrue();
@@ -1239,11 +1239,11 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-                                                        .Query<QueryGuidItem>()
-                                                        .Where(i => i.SortOrder < 0)
-                                                        .ToArrayOf(new { IntegerValue = 0, StringValue = "" })
-                                                        .Select(i => new Tuple<int, string>(i.IntegerValue, i.StringValue))
-                                                        .ToList();
+                .Query<QueryGuidItem>()
+                .Where(i => i.SortOrder < 0)
+                .ToArrayOf(new { IntegerValue = 0, StringValue = "" })
+                .Select(i => new Tuple<int, string>(i.IntegerValue, i.StringValue))
+                .ToList();
 
             It should_not_have_fetched_any_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -1294,11 +1294,11 @@ namespace SisoDb.Specifications.Session.Querying
             };
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
-                                                        .Query<QueryGuidItem>()
-                                                        .Where(i => i.SortOrder < 0)
-                                                        .ToListOf(new { IntegerValue = 0, StringValue = "" })
-                                                        .Select(i => new Tuple<int, string>(i.IntegerValue, i.StringValue))
-                                                        .ToList();
+                .Query<QueryGuidItem>()
+                .Where(i => i.SortOrder < 0)
+                .ToListOf(new { IntegerValue = 0, StringValue = "" })
+                .Select(i => new Tuple<int, string>(i.IntegerValue, i.StringValue))
+                .ToList();
 
             It should_not_have_fetched_any_structures =
                 () => _fetchedStructures.Count.ShouldEqual(0);
@@ -1383,6 +1383,62 @@ namespace SisoDb.Specifications.Session.Querying
 
             Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
                 .Query<QueryGuidItem>().OrderBy(i => i.NullableIntegerValue).ToList();
+
+            It should_have_fetched_all_four_structures =
+                () => _fetchedStructures.Count.ShouldEqual(4);
+
+            It should_have_fetched_all_structures_but_sorted_in_reverse = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[3]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+                _fetchedStructures[2].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[3].ShouldBeValueEqualTo(_structures[0]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with Sort")]
+        public class when_sorting_on_guid : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryGuidItem>().OrderBy(i => i.GuidValue).ToList();
+
+            It should_have_fetched_all_four_structures =
+                () => _fetchedStructures.Count.ShouldEqual(4);
+
+            It should_have_fetched_all_structures_but_sorted_in_reverse = () =>
+            {
+                _fetchedStructures[0].ShouldBeValueEqualTo(_structures[3]);
+                _fetchedStructures[1].ShouldBeValueEqualTo(_structures[2]);
+                _fetchedStructures[2].ShouldBeValueEqualTo(_structures[1]);
+                _fetchedStructures[3].ShouldBeValueEqualTo(_structures[0]);
+            };
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with Sort")]
+        public class when_sorting_on_bool : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateFourUnorderedItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<QueryGuidItem>().OrderBy(i => i.BoolValue, i => i.IntegerValue).ToList();
 
             It should_have_fetched_all_four_structures =
                 () => _fetchedStructures.Count.ShouldEqual(4);

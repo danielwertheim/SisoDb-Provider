@@ -4,11 +4,11 @@ using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.Maintenance;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Builders;
 using SisoDb.Serialization;
 using SisoDb.Structures;
 using SisoDb.Caching;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
 
 namespace SisoDb
 {
@@ -17,14 +17,14 @@ namespace SisoDb
         private readonly object _lockObject;
         private readonly ISisoConnectionInfo _connectionInfo;
         private readonly IDbProviderFactory _providerFactory;
-        private readonly IDbSchemaManager _dbSchemaManager;
+        private readonly IDbSchemas _dbSchemas;
         private IDbSettings _settings;
         private IStructureSchemas _structureSchemas;
         private IStructureBuilders _structureBuilders;
-        private ISisoDbSerializer _serializer;
+        private ISisoSerializer _serializer;
 
         protected readonly IServerClient ServerClient;
-        
+
         public object LockObject
         {
             get { return _lockObject; }
@@ -43,7 +43,7 @@ namespace SisoDb
         public IDbSettings Settings
         {
             get { return _settings; }
-            set 
+            set
             {
                 Ensure.That(value, "Settings").IsNotNull();
                 _settings = value;
@@ -57,10 +57,11 @@ namespace SisoDb
             get { return _providerFactory; }
         }
 
-        public IDbSchemaManager SchemaManager
+        public IDbSchemas DbSchemas
         {
-            get { return _dbSchemaManager; }
+            get { return _dbSchemas; }
         }
+
         public bool CachingIsEnabled
         {
             get { return CacheProvider != null; }
@@ -82,12 +83,12 @@ namespace SisoDb
             get { return _structureBuilders; }
             set
             {
-                Ensure.That(value, "StructureBuilderss").IsNotNull();
+                Ensure.That(value, "StructureBuilders").IsNotNull();
                 _structureBuilders = value;
             }
         }
 
-        public ISisoDbSerializer Serializer
+        public ISisoSerializer Serializer
         {
             get { return _serializer; }
             set
@@ -110,11 +111,11 @@ namespace SisoDb
             _providerFactory = dbProviderFactory;
             Settings = ProviderFactory.GetSettings();
             ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
-            StructureBuilders = new StructureBuilders(() => Serializer);
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
-            Serializer = new ServiceStackJsonSerializer(t => StructureSchemas.StructureTypeFactory.Configurations.GetConfiguration(t));
+            Serializer = new DefaultSisoSerializer();
+            StructureBuilders = new StructureBuilders(() => Serializer, schema => ProviderFactory.GetGuidStructureIdGenerator(), (schema, dbClient) => ProviderFactory.GetIdentityStructureIdGenerator(dbClient));
             Maintenance = new SisoDatabaseMaintenance(this);
-            _dbSchemaManager = ProviderFactory.GetDbSchemaManagerFor(this);
+            _dbSchemas = ProviderFactory.GetDbSchemaManagerFor(this);
         }
 
         public virtual ISisoDatabase EnsureNewDatabase()
@@ -164,7 +165,7 @@ namespace SisoDb
         protected virtual void OnClearCache()
         {
             CacheProvider.NotifyOfPurgeAll();
-            SchemaManager.ClearCache();
+            DbSchemas.ClearCache();
         }
 
         public virtual bool Exists()
@@ -177,7 +178,10 @@ namespace SisoDb
 
         public virtual ISisoDatabase DropStructureSet<T>() where T : class
         {
-            DropStructureSet(typeof(T));
+            lock (LockObject)
+            {
+                OnDropStructureSets(new[] { typeof(T) });
+            }
 
             return this;
         }
@@ -186,7 +190,10 @@ namespace SisoDb
         {
             Ensure.That(type, "type").IsNotNull();
 
-            DropStructureSets(new[] { type });
+            lock (LockObject)
+            {
+                OnDropStructureSets(new[] { type });
+            }
 
             return this;
         }
@@ -197,25 +204,33 @@ namespace SisoDb
 
             lock (LockObject)
             {
-                using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
-                {
-                    foreach (var type in types)
-                    {
-                        CacheProvider.NotifyOfPurge(type);
-
-                        var structureSchema = StructureSchemas.GetSchema(type);
-                        SchemaManager.DropStructureSet(structureSchema, dbClient);
-                        StructureSchemas.RemoveSchema(type);
-                    }
-                }
+                OnDropStructureSets(types);
             }
 
             return this;
         }
 
+        protected virtual void OnDropStructureSets(Type[] types)
+        {
+            using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+            {
+                foreach (var type in types)
+                {
+                    CacheProvider.NotifyOfPurge(type);
+
+                    var structureSchema = StructureSchemas.GetSchema(type);
+                    DbSchemas.Drop(structureSchema, dbClient);
+                    StructureSchemas.RemoveSchema(type);
+                }
+            }
+        }
+
         public virtual ISisoDatabase UpsertStructureSet<T>() where T : class
         {
-            UpsertStructureSet(typeof(T));
+            lock (LockObject)
+            {
+                OnUpsertStructureSets(new[] { typeof(T) });
+            }
 
             return this;
         }
@@ -226,29 +241,39 @@ namespace SisoDb
 
             lock (LockObject)
             {
-                IDbClient dbClient = null;
-
-                try
-                {
-                    var structureSchema = StructureSchemas.GetSchema(type);
-                    SchemaManager.UpsertStructureSet(structureSchema, () =>
-                    {
-                        CacheProvider.NotifyOfPurge(type);
-                        dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo);
-                        return dbClient;
-                    });
-                }
-                finally
-                {
-                    if (dbClient != null)
-                    {
-                        dbClient.Dispose();
-                        dbClient = null;
-                    }
-                }
+                OnUpsertStructureSets(new[] { type });
             }
 
             return this;
+        }
+
+        public virtual ISisoDatabase UpsertStructureSet(Type[] types)
+        {
+            Ensure.That(types, "types").IsNotNull();
+
+            lock (LockObject)
+            {
+                OnUpsertStructureSets(types);
+            }
+
+            return this;
+        }
+
+        protected virtual void OnUpsertStructureSets(Type[] types)
+        {
+            if(!Settings.AllowsAnyDynamicSchemaChanges())
+                return;
+
+            using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+            {
+                foreach (var type in types)
+                {
+                    CacheProvider.NotifyOfPurge(type);
+
+                    var structureSchema = StructureSchemas.GetSchema(type);
+                    DbSchemas.Upsert(structureSchema, dbClient);
+                }
+            }
         }
 
         public virtual ISession BeginSession()

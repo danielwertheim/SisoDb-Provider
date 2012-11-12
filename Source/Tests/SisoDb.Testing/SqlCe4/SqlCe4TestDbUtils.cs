@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlServerCe;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
@@ -11,17 +9,9 @@ namespace SisoDb.Testing.SqlCe4
 {
     public class SqlCe4TestDbUtils : SqlServerTestDbUtils
     {
-        public SqlCe4TestDbUtils(IAdoDriver driver, IConnectionString connectionString) 
-            : base(driver, ConvertToConnectionString(connectionString))
+        public SqlCe4TestDbUtils(IAdoDriver driver, string connectionString) 
+            : base(driver,connectionString)
         {
-        }
-
-        private static string ConvertToConnectionString(IConnectionString connectionString)
-        {
-            var cnStringBuilder = new SqlCeConnectionStringBuilder(connectionString.PlainString);
-            cnStringBuilder.Enlist = false;
-
-            return connectionString.ReplacePlain(cnStringBuilder.ConnectionString).PlainString;
         }
 
         public override bool TableExists(string name)
@@ -66,7 +56,7 @@ namespace SisoDb.Testing.SqlCe4
                     if (!tmpNamesToSkip.Contains(name))
                         dbColumns.Add(new DbColumn(name, dr.GetString(1)));
                 },
-                new DacParameter(DbSchemas.Parameters.TableNameParamPrefix, tableName));
+                new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix, tableName));
 
             return dbColumns;
         }

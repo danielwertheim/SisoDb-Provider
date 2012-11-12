@@ -5,9 +5,9 @@ using SisoDb.Caching;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Resources;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Maintenance
 {
@@ -35,9 +35,9 @@ namespace SisoDb.Maintenance
         {
             Ensure.That(migration, "migration").IsNotNull();
 
-            var structuresHasSameType = migration.From.Equals(migration.To);
-            var isMigratingSameStructureSet = structuresHasSameType || string.Equals(migration.From.Name, migration.To.Name, StringComparison.OrdinalIgnoreCase);
-            var fromTypeAndFromTemplateHasSameType = migration.From.Equals(migration.FromTemplate);
+            var structuresHasSameType = migration.From == migration.To;
+            var isMigratingSameStructureSet = structuresHasSameType || string.Equals(migration.From.Name, migration.To.Name, Sys.StringComparision);
+            var fromTypeAndFromTemplateHasSameType = migration.From == migration.FromTemplate;
             IStructureSchema structureSchemaFrom, structureSchemaFromTemplate, structureSchemaTo;
 
             if (structuresHasSameType)
@@ -99,21 +99,15 @@ namespace SisoDb.Maintenance
             var serializer = Db.Serializer;
             var keepQueue = new List<TTo>(maxKeepQueueSize);
             var trashQueue = new List<IStructureId>(maxKeepQueueSize);
-            var structureBuilder = Db.StructureBuilders.ForUpdates(structureSchemaTo);
+            var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchemaTo);
 
-            Func<string, TFromTemplate> fromDeserializer;
-            if (structureSchemaFrom.Type.Type.Equals(structureSchemaFromTemplate.Type.Type))
-                fromDeserializer = serializer.Deserialize<TFromTemplate>;
-            else
-                fromDeserializer = serializer.DeserializeUsingTemplate<TFromTemplate>;
+            Db.DbSchemas.Upsert(structureSchemaTo, dbClientTransactional);
 
             using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
             {
-                Db.SchemaManager.UpsertStructureSet(structureSchemaTo, dbClientNonTransactional);
-
                 foreach (var json in dbClientNonTransactional.GetJsonOrderedByStructureId(structureSchemaFrom))
                 {
-                    var oldItem = fromDeserializer(json);
+                    var oldItem = serializer.Deserialize<TFromTemplate>(json);
                     var oldId = GetOldStructureId(structureSchemaFromTemplate, oldItem);
                     var newItem = serializer.Deserialize<TTo>(json);
 

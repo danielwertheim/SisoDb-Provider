@@ -116,7 +116,7 @@ namespace SisoDb.Dynamic
             if (firstSpaceIndex < 1)
                 throw new ArgumentException(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat);
 
-            var lambdaOperatorIndex = expression.IndexOf("=> ", firstSpaceIndex, StringComparison.OrdinalIgnoreCase);
+            var lambdaOperatorIndex = expression.IndexOf("=> ", firstSpaceIndex, Sys.StringComparision);
             if (lambdaOperatorIndex < 0)
                 throw new ArgumentException(ExceptionMessages.DynamicLambdaBuilder_InvalidExpressionFormat);
         }

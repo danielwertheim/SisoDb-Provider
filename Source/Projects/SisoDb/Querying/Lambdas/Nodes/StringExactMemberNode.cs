@@ -1,7 +1,7 @@
 using System;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures;
 using SisoDb.Resources;
+using SisoDb.Structures;
 
 namespace SisoDb.Querying.Lambdas.Nodes
 {

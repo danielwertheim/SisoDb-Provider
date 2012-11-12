@@ -1,13 +1,13 @@
 ﻿using ApprovalTests;
-using SisoDb.Serialization;
+using Newtonsoft.Json;
 
 namespace SisoDb.UnitTests
 {
     public static class JsonApprovals
     {
-        public static void VerifyAsJson<T>(T item)
+        public static void VerifyAsJson<T>(T item) where T : class 
         {
-            VerifyJson(item.ToJson());
+            VerifyJson(JsonConvert.SerializeObject(item));
         }
 
         public static void VerifyJson(string json)

@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.SqlServer.Server;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures;
+using SisoDb.Structures;
 
 namespace SisoDb.SqlServer
 {

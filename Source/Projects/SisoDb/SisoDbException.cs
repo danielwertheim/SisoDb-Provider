@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace SisoDb
 {
@@ -15,5 +16,9 @@ namespace SisoDb
             : base(message, innerExceptions)
         {
         }
+
+        protected SisoDbException(SerializationInfo info, StreamingContext context)
+            : base(info, context) 
+        { }
     }
 }

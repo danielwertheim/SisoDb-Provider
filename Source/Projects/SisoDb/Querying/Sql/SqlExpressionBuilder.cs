@@ -7,6 +7,7 @@ using SisoDb.NCore.Reflections;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
+using SisoDb.Structures;
 
 namespace SisoDb.Querying.Sql
 {
@@ -32,29 +33,7 @@ namespace SisoDb.Querying.Sql
             if (query.HasSortings)
                 OnProcessSortings(query.Sortings, expression);
 
-            if (query.HasIncludes)
-            {
-                var mergedIncludeLambda = GetMergedIncludeLambda(query);
-                OnProcessIncludes(mergedIncludeLambda, expression);
-            }
-
             return expression;
-        }
-
-        protected virtual IParsedLambda GetMergedIncludeLambda(IQuery query)
-        {
-            if (!query.HasIncludes)
-                return null;
-
-            IParsedLambda mergedIncludes = null;
-            foreach (var include in query.Includes)
-            {
-                mergedIncludes = mergedIncludes == null 
-                    ? include 
-                    : mergedIncludes.MergeAsNew(include);
-            }
-
-            return mergedIncludes;
         }
 
         protected virtual void OnProcessWheres(IParsedLambda lambda, SqlExpression expression)
@@ -98,6 +77,12 @@ namespace SisoDb.Querying.Sql
             if (memberNode is InSetMemberNode)
             {
                 OnProcessWhereInSetMemberNode(builder, (InSetMemberNode)memberNode, memberIndex);
+                return;
+            }
+
+            if (memberNode is NotInSetMemberNode)
+            {
+                OnProcessWhereNotInSetMemberNode(builder, (NotInSetMemberNode)memberNode, memberIndex);
                 return;
             }
 
@@ -163,6 +148,13 @@ namespace SisoDb.Querying.Sql
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.InSet()));
+            builder.AddSetOfValues(new ArrayValueNode(memberNode.DataType, memberNode.DataTypeCode, memberNode.Values));
+        }
+
+        protected virtual void OnProcessWhereNotInSetMemberNode(ISqlWhereCriteriaBuilder builder, NotInSetMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex);
+            builder.AddOp(new OperatorNode(Operator.NotInSet()));
             builder.AddSetOfValues(new ArrayValueNode(memberNode.DataType, memberNode.DataTypeCode, memberNode.Values));
         }
 
@@ -238,12 +230,13 @@ namespace SisoDb.Querying.Sql
 
             foreach (var sortingNode in sortingsLambda.Nodes.OfType<SortingNode>())
             {
-                var valueField = IndexStorageSchema.Fields.Value;
-
                 if(expression.ContainsSortingMemberFor(sortingNode.MemberPath))
                     continue;
 
                 var memberIndex = expression.GetExistingOrNewMemberIndexFor(sortingNode.MemberPath);
+                var valueField = IndexStorageSchema.Fields.Value;
+                if (sortingNode.DataTypeCode == DataTypeCode.Guid || sortingNode.DataTypeCode == DataTypeCode.Bool)
+                    valueField = IndexStorageSchema.Fields.StringValue;
 
                 expression.AddSortingMember(new SqlSortingMember(
                     memberIndex,
@@ -253,27 +246,6 @@ namespace SisoDb.Querying.Sql
                     sortingNode.Direction.ToString(), 
 					sortingNode.DataType,
                     sortingNode.DataTypeCode));
-            }
-        }
-
-        protected virtual void OnProcessIncludes(IParsedLambda includesLambda, SqlExpression expression)
-        {
-            if (includesLambda == null || includesLambda.Nodes.Length == 0)
-                return;
-
-            foreach (var includeNode in includesLambda.Nodes.OfType<IncludeNode>())
-            {
-                var nextNewIncludeIndex = expression.GetNextNewIncludeIndex();
-
-                expression.AddInclude(new SqlInclude(
-                    nextNewIncludeIndex,
-                    includeNode.ReferencedStructureName,
-                    string.Concat("inc", nextNewIncludeIndex),
-                    IndexStorageSchema.Fields.Value.Name,
-                    includeNode.IdReferencePath,
-                    includeNode.ObjectReferencePath,
-					includeNode.DataType,
-                    includeNode.DataTypeCode));
             }
         }
     }

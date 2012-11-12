@@ -122,34 +122,6 @@ namespace SisoDb
 		/// <returns>IEnumerable of <typeparamref name="TResult"/>.</returns>
 		IEnumerable<TResult> QueryAs<T, TResult>(IQuery query) where T : class where TResult : class;
 
-	    /// <summary>
-	    /// Lets you perform a Query by passing an <see cref="IQuery"/>.
-	    /// Returns structures for the defined structure <typeparamref name="T"/>
-	    /// deserialized as <typeparamref name="TResult"/> defined by the template. 
-	    /// </summary>
-	    /// <typeparam name="T">
-	    /// Structure type, used as a contract defining the scheme.</typeparam>
-	    /// <typeparam name="TResult">
-	    /// Determines the type you want your structure deserialized to and returned as.</typeparam>
-	    /// <param name="query"></param>
-	    /// <param name="template"></param>
-	    /// <returns>IEnumerable of <typeparamref name="TResult"/>.</returns>
-	    IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, TResult template) where T : class where TResult : class;
-        
-        /// <summary>
-        /// Lets you perform a Query by passing an <see cref="IQuery"/>.
-        /// Returns structures for the defined structure <typeparamref name="T"/>
-        /// deserialized as <typeparamref name="TResult"/> defined by the template. 
-        /// </summary>
-        /// <typeparam name="T">
-        /// Structure type, used as a contract defining the scheme.</typeparam>
-        /// <typeparam name="TResult">
-        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
-        /// <param name="query"></param>
-        /// <param name="templateType"></param>
-        /// <returns>IEnumerable of <typeparamref name="TResult"/>.</returns>
-        IEnumerable<TResult> QueryAsAnonymous<T, TResult>(IQuery query, Type templateType) where T : class where TResult : class;
-
 		/// <summary>
 		/// Lets you perform a Query by passing an <see cref="IQuery"/>.
 		/// </summary>

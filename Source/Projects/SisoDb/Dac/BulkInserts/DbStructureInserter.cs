@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using SisoDb.DbSchema;
 using SisoDb.NCore.Collections;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Dac.BulkInserts
 {

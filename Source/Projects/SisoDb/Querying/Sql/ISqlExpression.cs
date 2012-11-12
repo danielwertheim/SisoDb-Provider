@@ -6,7 +6,6 @@ namespace SisoDb.Querying.Sql
     {
         IEnumerable<SqlWhereMember> WhereMembers { get; }
         IEnumerable<SqlSortingMember> SortingMembers { get; }
-        IEnumerable<SqlInclude> Includes { get; }
         SqlWhereCriteria WhereCriteria { get; }
     }
 }

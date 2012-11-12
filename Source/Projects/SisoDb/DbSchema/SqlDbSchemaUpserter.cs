@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {
     public class SqlDbSchemaUpserter : IDbSchemaUpserter
     {
-        protected readonly ISisoDatabase Db;
         protected readonly SqlDbStructuresSchemaBuilder StructuresDbSchemaBuilder;
         protected readonly SqlDbIndexesSchemaBuilder IndexesDbSchemaBuilder;
         protected readonly SqlDbUniquesSchemaBuilder UniquesDbSchemaBuilder;
@@ -16,12 +14,10 @@ namespace SisoDb.DbSchema
         protected readonly SqlDbIndexesSchemaSynchronizer IndexesDbSchemaSynchronizer;
         protected readonly SqlDbUniquesSchemaSynchronizer UniquesDbSchemaSynchronizer;
 
-        public SqlDbSchemaUpserter(ISisoDatabase db, ISqlStatements sqlStatements)
+        public SqlDbSchemaUpserter(ISqlStatements sqlStatements)
         {
-            Ensure.That(db, "db").IsNotNull();
             Ensure.That(sqlStatements, "sqlStatements").IsNotNull();
 
-            Db = db;
             StructuresDbSchemaBuilder = new SqlDbStructuresSchemaBuilder(sqlStatements);
             IndexesDbSchemaBuilder = new SqlDbIndexesSchemaBuilder(sqlStatements);
             UniquesDbSchemaBuilder = new SqlDbUniquesSchemaBuilder(sqlStatements);
@@ -30,15 +26,14 @@ namespace SisoDb.DbSchema
             UniquesDbSchemaSynchronizer = new SqlDbUniquesSchemaSynchronizer(sqlStatements);
         }
 
-        public virtual void Upsert(IStructureSchema structureSchema, Func<IDbClient> dbClientFn)
+        public virtual void Upsert(IStructureSchema structureSchema, IDbClient dbClient, bool allowDynamicSchemaCreation, bool allowDynamicSchemaUpdates)
         {
-            if (!Db.Settings.AllowUpsertsOfSchemas)
+            if (!allowDynamicSchemaCreation && !allowDynamicSchemaUpdates)
                 return;
 
-            var dbClient = dbClientFn();
             var modelInfo = dbClient.GetModelTablesInfo(structureSchema);
 
-            if (Db.Settings.SynchronizeSchemaChanges)
+            if (allowDynamicSchemaUpdates)
             {
                 IndexesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient, modelInfo.GetIndexesTableNamesForExisting());
 
@@ -46,11 +41,11 @@ namespace SisoDb.DbSchema
                     UniquesDbSchemaSynchronizer.Synchronize(structureSchema, dbClient);
             }
 
-            if (modelInfo.Statuses.AllExists)
+            if (!allowDynamicSchemaCreation || modelInfo.Statuses.AllExists)
                 return;
 
             foreach (var sql in GenerateSql(structureSchema, modelInfo))
-                dbClient.ExecuteNonQuery(sql, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name));
+                dbClient.ExecuteNonQuery(sql, new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, structureSchema.Name));
         }
 
         protected virtual IEnumerable<string> GenerateSql(IStructureSchema structureSchema, ModelTablesInfo modelInfo)

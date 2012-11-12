@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using SisoDb.Serialization.Support;
@@ -44,6 +45,21 @@ namespace SisoDb.Serialization
 #endif
 
 #if !XBOX
+
+		
+		/// <summary>
+		/// The top-most interface of the given type, if any.
+		/// </summary>
+    	public static Type MainInterface<T>() {
+			var t = typeof(T);
+    		if (t.BaseType == typeof(object)) {
+				// on Windows, this can be just "t.GetInterfaces()" but Mono doesn't return in order.
+				var interfaceType = t.GetInterfaces().FirstOrDefault(i => !t.GetInterfaces().Any(i2 => i2.GetInterfaces().Contains(i)));
+				if (interfaceType != null) return interfaceType;
+			}
+			return t; // not safe to use interface, as it might be a superclass's one.
+		}
+
         /// <summary>
         /// Find type if it exists
         /// </summary>
@@ -106,8 +122,8 @@ private static Assembly LoadAssembly(string assemblyPath)
 #else
         private static Assembly LoadAssembly(string assemblyPath)
         {
-            var sri = Application.GetResourceStream(new Uri(assemblyPath, UriKind.Relative));
-            var myPart = new AssemblyPart();
+            var sri = System.Windows.Application.GetResourceStream(new Uri(assemblyPath, UriKind.Relative));
+            var myPart = new System.Windows.AssemblyPart();
             var assembly = myPart.Load(sri.Stream);
             return assembly;
         }
@@ -140,6 +156,11 @@ private static Assembly LoadAssembly(string assemblyPath)
         public static string ToTypeString(this Type type)
         {
             return versionRegEx.Replace(type.AssemblyQualifiedName, "");
+        }
+
+        public static string WriteType(Type type)
+        {
+            return type.ToTypeString();
         }
     }
 }

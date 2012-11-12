@@ -1,11 +1,13 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
-using SisoDb.PineCone.Structures.IdGenerators;
-using SisoDb.PineCone.Structures.Schemas;
-using SisoDb.PineCone.Structures.Schemas.Builders;
+using SisoDb.Dac;
 using SisoDb.Serialization;
 using SisoDb.Structures;
+using SisoDb.Structures.IdGenerators;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
+using SisoDb.Structures.Schemas.MemberAccessors;
 using SisoDb.UnitTests.TestFactories;
 using System.Linq;
 
@@ -15,57 +17,94 @@ namespace SisoDb.UnitTests.Configurations
     public class DbConfigurationTests : UnitTestBase
     {
         [Test]
-        public void UseManualStructureIdAssignment_Should_make_ForInserts_to_return_builder_with_EmptyStructureIdGenerator()
+        public void PreserveIds_Should_make_ResolveBuilderForInsert_to_return_builder_preservingIds_but_still_resolve_idgenerators()
         {
-            var serializerFake = new Mock<ISisoDbSerializer>();
-            var structureBuilders = new StructureBuilders(() => serializerFake.Object);
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.SetupGet(f => f.IdAccessor).Returns(() =>
+            {
+                var id = new Mock<IIdAccessor>();
+                id.SetupGet(f => f.IdType).Returns(StructureIdTypes.Guid);
+                return id.Object;
+            });
+            var serializerFake = new Mock<ISisoSerializer>();
+            var structureBuilders = new StructureBuilders(
+                () => serializerFake.Object,
+                s => Mock.Of<IStructureIdGenerator>(),
+                (s, d) => Mock.Of<IIdentityStructureIdGenerator>());
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
 
-            dbFake.Object.Configure().UseManualStructureIdAssignment();
-            var builder = structureBuilders.ForInserts(Mock.Of<IStructureSchema>(), Mock.Of<IIdentityStructureIdGenerator>());
+            dbFake.Object.Configure().PreserveIds();
+            var builder = structureBuilders.ResolveBuilderForInsert(schemaFake.Object, Mock.Of<IDbClient>());
+
+            Assert.AreEqual(typeof(StructureBuilderPreservingId), builder.GetType());
+        }
+
+        [Test]
+        public void UseAutoIds_Should_make_ResolveBuilderForInsert_to_return_builder_for_autoIds_but_still_resolve_idgenerators()
+        {
+            var schemaFake = new Mock<IStructureSchema>();
+            schemaFake.SetupGet(f => f.IdAccessor).Returns(() =>
+            {
+                var id = new Mock<IIdAccessor>();
+                id.SetupGet(f => f.IdType).Returns(StructureIdTypes.Guid);
+                return id.Object;
+            });
+            var serializerFake = new Mock<ISisoSerializer>();
+            var structureBuilders = new StructureBuilders(
+                () => serializerFake.Object,
+                s => Mock.Of<IStructureIdGenerator>(),
+                (s, d) => Mock.Of<IIdentityStructureIdGenerator>());
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
+
+            dbFake.Object.Configure().UseAutoIds();
+            var builder = structureBuilders.ResolveBuilderForInsert(schemaFake.Object, Mock.Of<IDbClient>());
+
+            Assert.AreEqual(typeof(StructureBuilderAutoId), builder.GetType());
+        }
+
+        [Test]
+        public void UseManualIds_Should_make_ResolveBuilderForInsert_to_return_builder_with_EmptyStructureIdGenerator()
+        {
+            var serializerFake = new Mock<ISisoSerializer>();
+            var structureBuilders = new StructureBuilders(
+                () => serializerFake.Object, 
+                s => Mock.Of<IStructureIdGenerator>(), 
+                (s, d) => Mock.Of<IIdentityStructureIdGenerator>());
+            var dbFake = new Mock<ISisoDatabase>();
+            dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
+
+            dbFake.Object.Configure().UseManualIds();
+            var builder = structureBuilders.ResolveBuilderForInsert(Mock.Of<IStructureSchema>(), Mock.Of<IDbClient>());
 
             Assert.AreEqual(typeof(EmptyStructureIdGenerator), builder.StructureIdGenerator.GetType());
         }
 
         [Test]
-        public void UseGuidStructureIdGeneratorResolvedBy_Should_make_ForInserts_to_return_builder_with_configured_id_generator()
+        public void UseGuidStructureIdGeneratorResolvedBy_Should_make_ResolveBuilderForInsert_to_return_builder_with_configured_id_generator()
         {
-            var serializerFake = new Mock<ISisoDbSerializer>();
-            var structureBuilders = new StructureBuilders(() => serializerFake.Object);
+            var serializerFake = new Mock<ISisoSerializer>();
+            var structureBuilders = new StructureBuilders(
+                () => serializerFake.Object,
+                s => Mock.Of<IStructureIdGenerator>(),
+                (s, d) => Mock.Of<IIdentityStructureIdGenerator>());
             var dbFake = new Mock<ISisoDatabase>();
             dbFake.SetupGet(f => f.StructureBuilders).Returns(structureBuilders);
 
-            dbFake.Object.Configure().UseGuidStructureIdGeneratorResolvedBy(() => new EmptyStructureIdGenerator());
-            var builder = structureBuilders.ForInserts(StructureSchemaTestFactory.Stub<MyClassWithGuidId>(generateIdAccessor: true), Mock.Of<IIdentityStructureIdGenerator>());
+            dbFake.Object.Configure().UseGuidStructureIdGeneratorResolvedBy(s => new EmptyStructureIdGenerator());
+            var builder = structureBuilders.ResolveBuilderForInsert(StructureSchemaTestFactory.Stub<MyClassWithGuidId>(generateIdAccessor: true), Mock.Of<IDbClient>());
 
             Assert.AreEqual(typeof(EmptyStructureIdGenerator), builder.StructureIdGenerator.GetType());
         }
 
         [Test]
-        public void Serializer_It_should_assign_new_options_on_serializer_assigned_to_db()
-        {
-            var dbFake = new Mock<ISisoDatabase>();
-            var options = new SerializerOptions();
-            var orgDateSerializationMode = options.DateSerializationMode;
-            var serializerFake = new Mock<ISisoDbSerializer>();
-            serializerFake.Setup(f => f.Options).Returns(options);
-            dbFake.Setup(f => f.Serializer).Returns(serializerFake.Object);
-
-            dbFake.Object.Configure().Serializer(o => o.DateSerializationMode = DateSerializationModes.TimestampOffset);
-
-            dbFake.VerifySet(f => f.Serializer = serializerFake.Object, Times.Never());
-            Assert.AreNotEqual(orgDateSerializationMode, options.DateSerializationMode);
-            Assert.AreEqual(DateSerializationModes.TimestampOffset, options.DateSerializationMode);
-        }
-
-        [Test]
-        public void UseCacheProviderResolvedBy_Should_assign_new_cache_provider_on_Db()
+        public void UseCacheProvider_Should_assign_new_cache_provider_on_Db()
         {
             var cacheProviderFake = Mock.Of<ICacheProvider>();
             var dbFake = new Mock<ISisoDatabase>();
 
-            dbFake.Object.Configure().UseCacheProviderResolvedBy(() => cacheProviderFake);
+            dbFake.Object.Configure().UseCacheProvider(cacheProviderFake);
 
             dbFake.VerifySet(f => f.CacheProvider = cacheProviderFake, Times.Once());
         }
@@ -79,17 +118,17 @@ namespace SisoDb.UnitTests.Configurations
 
             dbFake.Object.Configure().ForProduction();
 
-            settingsFake.VerifySet(f => f.AllowUpsertsOfSchemas = false);
-            settingsFake.VerifySet(f => f.SynchronizeSchemaChanges = false);
+            settingsFake.VerifySet(f => f.AllowDynamicSchemaCreation = false);
+            settingsFake.VerifySet(f => f.AllowDynamicSchemaUpdates = false);
         }
 
         [Test]
-        public void UseSerializerResolvedBy_Should_assign_new_serialzer_on_Db()
+        public void UseSerializer_Should_assign_new_serialzer_on_Db()
         {
-            var serializerFake = Mock.Of<ISisoDbSerializer>();
+            var serializerFake = Mock.Of<ISisoSerializer>();
             var dbFake = new Mock<ISisoDatabase>();
 
-            dbFake.Object.Configure().UseSerializerResolvedBy(() => serializerFake);
+            dbFake.Object.Configure().UseSerializer(serializerFake);
 
             dbFake.VerifySet(f => f.Serializer = serializerFake, Times.Once());
         }

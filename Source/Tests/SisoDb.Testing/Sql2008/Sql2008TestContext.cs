@@ -7,7 +7,7 @@ namespace SisoDb.Testing.Sql2008
         public Sql2008TestContext(string connectionStringName)
             : base(connectionStringName.CreateSql2008Db())
         {
-            DbHelper = new Sql2008TestDbUtils(Database.ProviderFactory.GetAdoDriver(), Database.ConnectionInfo.ClientConnectionString.PlainString);
+            DbHelper = new Sql2008TestDbUtils(Database.ProviderFactory.GetAdoDriver(), Database.ConnectionInfo.ClientConnectionString);
         }
     }
 }

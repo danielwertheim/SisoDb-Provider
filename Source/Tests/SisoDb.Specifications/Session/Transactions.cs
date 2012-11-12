@@ -8,9 +8,9 @@ using SisoDb.Resources;
 
 namespace SisoDb.Specifications.Session
 {
-#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
     class Transactions
     {
+#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
         [Subject(typeof(ISession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_commiting_ts : SpecificationBase
         {
@@ -91,15 +91,15 @@ namespace SisoDb.Specifications.Session
                 }
             };
         }
-
-        [Subject(typeof(ITransactionalSession), "Mark as failed")]
+#endif
+        [Subject(typeof(ISession), "Mark as failed")]
         public class when_manually_marking_a_transactional_session_as_failed_after_inserts : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _transactionalSession = (ITransactionalSession)TestContext.Database.BeginSession();
-                _transactionalSession.InsertMany(new[]
+                _session = (ISession)TestContext.Database.BeginSession();
+                _session.InsertMany(new[]
                 {
                     new GuidItem {Value = 1},
                     new GuidItem {Value = 2},
@@ -109,83 +109,174 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
-                _transactionalSession.MarkAsFailed();
-                _transactionalSession.Dispose();
+                _session.MarkAsFailed();
+                _session.Dispose();
             };
 
             It should_not_have_inserted_the_structures = () =>
                 TestContext.Database.should_have_none_items_left<GuidItem>();
 
             It should_have_a_failed_session = () =>
-                _transactionalSession.Failed.ShouldBeTrue();
+                _session.HasFailed.ShouldBeTrue();
 
             It should_have_a_session_with_failed_status = () =>
-                _transactionalSession.Status.IsFailed().ShouldBeTrue();
+                _session.Status.IsFailed().ShouldBeTrue();
 
             Cleanup after = () =>
             {
-                if (_transactionalSession == null)
+                if (_session == null)
                     return;
 
-                if (!_transactionalSession.Status.IsDisposed())
-                    _transactionalSession.Dispose();
+                if (!_session.Status.IsDisposed())
+                    _session.Dispose();
 
-                _transactionalSession = null;
+                _session = null;
             };
 
-            private static ITransactionalSession _transactionalSession;
+            private static ISession _session;
         }
 
-        [Subject(typeof(ITransactionalSession), "Being used")]
+        [Subject(typeof(ISession), "Being used after failed")]
         public class when_transactional_session_allready_has_been_marked_as_failed : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _transactionalSession = (ITransactionalSession)TestContext.Database.BeginSession();
-                _transactionalSession.InsertMany(new[]
+                _session = (ISession)TestContext.Database.BeginSession();
+                _session.InsertMany(new[]
                 {
                     new GuidItem {Value = 1},
                     new GuidItem {Value = 2},
                     new GuidItem {Value = 3}
                 });
-                _transactionalSession.MarkAsFailed();
+                _session.MarkAsFailed();
             };
 
             Because of = () =>
             {
-                CaughtException = Catch.Exception(() => _transactionalSession.Insert(new GuidItem { Value = 42 }));
-                _transactionalSession.Dispose();
+                CaughtException = Catch.Exception(() => _session.Insert(new GuidItem { Value = 42 }));
+                _session.Dispose();
             };
 
             It should_have_thrown_an_exception = () => 
             {
                 CaughtException.ShouldNotBeNull();
-                CaughtException.Message.ShouldEqual(ExceptionMessages.Session_AlreadyFailed.Inject(_transactionalSession.Id, _transactionalSession.Db.Name));
+                CaughtException.Message.ShouldEqual(ExceptionMessages.Session_AlreadyFailed.Inject(_session.Id, _session.Db.Name));
             };
 
             It should_not_have_inserted_the_structures = () =>
                 TestContext.Database.should_have_none_items_left<GuidItem>();
 
             It should_have_a_failed_session = () =>
-                _transactionalSession.Failed.ShouldBeTrue();
+                _session.HasFailed.ShouldBeTrue();
 
             It should_have_a_session_with_failed_status = () =>
-                _transactionalSession.Status.IsFailed().ShouldBeTrue();
+                _session.Status.IsFailed().ShouldBeTrue();
 
             Cleanup after = () =>
             {
-                if (_transactionalSession == null)
+                if (_session == null)
                     return;
 
-                if (!_transactionalSession.Status.IsDisposed())
-                    _transactionalSession.Dispose();
+                if (!_session.Status.IsDisposed())
+                    _session.Dispose();
 
-                _transactionalSession = null;
+                _session = null;
             };
 
-            private static ITransactionalSession _transactionalSession;
+            private static ISession _session;
+        }
+
+        [Subject(typeof(ISession), "Abort")]
+        public class when_manually_marking_a_transactional_session_as_aborted_after_inserts : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _session = (ISession)TestContext.Database.BeginSession();
+                _session.InsertMany(new[]
+                {
+                    new GuidItem {Value = 1},
+                    new GuidItem {Value = 2},
+                    new GuidItem {Value = 3}
+                });
+            };
+
+            Because of = () =>
+            {
+                _session.Abort();
+                _session.Dispose();
+            };
+
+            It should_not_have_inserted_the_structures = () =>
+                TestContext.Database.should_have_none_items_left<GuidItem>();
+
+            It should_have_a_aborted_the_session = () =>
+                _session.IsAborted.ShouldBeTrue();
+
+            It should_have_a_session_with_aborted_status = () =>
+                _session.Status.IsAborted().ShouldBeTrue();
+
+            Cleanup after = () =>
+            {
+                if (_session == null)
+                    return;
+
+                if (!_session.Status.IsDisposed())
+                    _session.Dispose();
+
+                _session = null;
+            };
+
+            private static ISession _session;
+        }
+
+        [Subject(typeof(ISession), "Being used after aborted")]
+        public class when_transactional_session_allready_has_been_aborted : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _session = (ISession)TestContext.Database.BeginSession();
+                _session.InsertMany(new[]
+                {
+                    new GuidItem {Value = 1},
+                    new GuidItem {Value = 2},
+                    new GuidItem {Value = 3}
+                });
+                _session.Abort();
+            };
+
+            Because of = () =>
+            {
+                CaughtException = Catch.Exception(() => _session.Insert(new GuidItem { Value = 42 }));
+                _session.Dispose();
+            };
+
+            It should_not_have_thrown_an_exception = () => 
+                CaughtException.ShouldBeNull();
+
+            It should_not_have_inserted_the_structures = () =>
+                TestContext.Database.should_have_none_items_left<GuidItem>();
+
+            It should_have_an_aborted_session = () =>
+                _session.IsAborted.ShouldBeTrue();
+
+            It should_have_a_session_with_aborted_status = () =>
+                _session.Status.IsAborted().ShouldBeTrue();
+
+            Cleanup after = () =>
+            {
+                if (_session == null)
+                    return;
+
+                if (!_session.Status.IsDisposed())
+                    _session.Dispose();
+
+                _session = null;
+            };
+
+            private static ISession _session;
         }
     }
-#endif
 }

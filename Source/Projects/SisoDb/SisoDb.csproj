@@ -70,7 +70,7 @@
     <Compile Include="Caching\CacheProviderExtensions.cs" />
     <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="Configurations\DbConfiguration.cs" />
-    <Compile Include="ConnectionString.cs" />
+    <Compile Include="Configurations\ConnectionString.cs" />
     <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="DbQueryEngine.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\INamedQueryGenerator.cs" />
@@ -85,14 +86,15 @@
     <Compile Include="DbSchema\ModelTablesInfo.cs" />
     <Compile Include="DbSchema\ModelTableStatuses.cs" />
     <Compile Include="DbSchema\NamedQueryGenerator.cs" />
+    <Compile Include="DbSessionAdvanced.cs" />
     <Compile Include="DbSettings.cs" />
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />
-    <Compile Include="Dac\ITransactionalDbClient.cs" />
     <Compile Include="DbSchema\DbSchemaNamingPolicy.cs" />
-    <Compile Include="DbSchema\DbSchemas.cs" />
+    <Compile Include="DbSchema\DbSchemaInfo.cs" />
     <Compile Include="DbSchema\IndexesTableNames.cs" />
     <Compile Include="DbSchema\IndexesTableStatuses.cs" />
     <Compile Include="DbSchema\IndexesTypes.cs" />
+    <Compile Include="DbSettingsExtensions.cs" />
     <Compile Include="Diagnostics\Appenders\ConnectionInfoDiagnosticsAppender.cs" />
     <Compile Include="Diagnostics\Appenders\DbSettingsDiagnosticsAppender.cs" />
     <Compile Include="Diagnostics\Appenders\SerializerDiagnosticsAppender.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Diagnostics\IDiagnosticsBuilder.cs" />
     <Compile Include="Diagnostics\Appenders\StructureSchemasDiagnosticsAppender.cs" />
     <Compile Include="Diagnostics\Builders\DbDiagnosticsBuilder.cs" />
+    <Compile Include="EnsureThat\CustomMessageExtensions.cs" />
     <Compile Include="EnsureThat\Ensure.cs" />
     <Compile Include="EnsureThat\EnsureBoolExtensions.cs" />
     <Compile Include="EnsureThat\EnsureCollectionExtensions.cs" />
@@ -131,6 +134,7 @@
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="IDbSettings.cs" />
     <Compile Include="IMigrationInfo.cs" />
+    <Compile Include="ISessionEvents.cs" />
     <Compile Include="ISisoDatabaseMaintenance.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
@@ -139,7 +143,6 @@
     <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Dac\Profiling\IWrappedConnection.cs" />
     <Compile Include="Dac\Profiling\IWrappedTransaction.cs" />
-    <Compile Include="ITransactionalSession.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
@@ -165,85 +168,84 @@
     <Compile Include="NCore\StringConverter.cs" />
     <Compile Include="NCore\StringExtensions.cs" />
     <Compile Include="NCore\SysDateTime.cs" />
-    <Compile Include="PineCone\Annotations\UniqueAttribute.cs" />
-    <Compile Include="PineCone\Annotations\UniqueModes.cs" />
-    <Compile Include="PineCone\IPineConizer.cs" />
-    <Compile Include="PineCone\Lists.cs" />
-    <Compile Include="PineCone\PineConeException.cs" />
-    <Compile Include="PineCone\PineConizer.cs" />
-    <Compile Include="PineCone\Resources\ExceptionMessages.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ExceptionMessages.resx</DependentUpon>
-    </Compile>
-    <Compile Include="PineCone\Serializers\EmptyStructureSerializer.cs" />
-    <Compile Include="PineCone\Serializers\IStructureSerializer.cs" />
-    <Compile Include="PineCone\Structures\DataTypeCode.cs" />
-    <Compile Include="PineCone\Structures\IdGenerators\EmptyStructureIdGenerator.cs" />
-    <Compile Include="PineCone\Structures\IdGenerators\GuidStructureIdGenerator.cs" />
-    <Compile Include="PineCone\Structures\IdGenerators\SequentialGuidStructureIdGenerator.cs" />
-    <Compile Include="PineCone\Structures\IStructure.cs" />
-    <Compile Include="PineCone\Structures\IStructureBuilder.cs" />
-    <Compile Include="PineCone\Structures\IStructureId.cs" />
-    <Compile Include="PineCone\Structures\IStructureIdGenerator.cs" />
-    <Compile Include="PineCone\Structures\IStructureIndex.cs" />
-    <Compile Include="PineCone\Structures\IStructureIndexesFactory.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Builders\AutoStructureSchemaBuilder.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Builders\IStructureSchemaBuilder.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfig.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfigurations.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Configuration\IStructureTypeConfigurator.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfig.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfigurations.cs" />
-    <Compile Include="PineCone\Structures\Schemas\Configuration\StructureTypeConfigurator.cs" />
-    <Compile Include="PineCone\Structures\Schemas\DataTypeConverter.cs" />
-    <Compile Include="PineCone\Structures\Schemas\DynamicGetter.cs" />
-    <Compile Include="PineCone\Structures\Schemas\DynamicPropertyFactory.cs" />
-    <Compile Include="PineCone\Structures\Schemas\DynamicSetter.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IDataTypeConverter.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IStructureProperty.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IStructurePropertyFactory.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IStructureSchema.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IStructureSchemas.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IStructureType.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IStructureTypeFactory.cs" />
-    <Compile Include="PineCone\Structures\Schemas\IStructureTypeReflecter.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\ConcurrencyTokenAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IConcurrencyTokenAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IdAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IIndexAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IMemberAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\IndexAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\ITimeStampAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\MemberAccessorBase.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\StructureIdGetters.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\StructureIdSetters.cs" />
-    <Compile Include="PineCone\Structures\Schemas\MemberAccessors\TimeStampAccessor.cs" />
-    <Compile Include="PineCone\Structures\Schemas\PropertyPathBuilder.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureIdPropertyNames.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureProperty.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructurePropertyFactory.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructurePropertyFactoryRules.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructurePropertyInfo.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureSchema.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureSchemas.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureTimeStampPropertyNames.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureType.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureTypeFactory.cs" />
-    <Compile Include="PineCone\Structures\Schemas\StructureTypeReflecter.cs" />
-    <Compile Include="PineCone\Structures\SequentialGuid.cs" />
-    <Compile Include="PineCone\Structures\Structure.cs" />
-    <Compile Include="PineCone\Structures\StructureBuilder.cs" />
-    <Compile Include="PineCone\Structures\StructureBuilderPreservingId.cs" />
-    <Compile Include="PineCone\Structures\StructureId.cs" />
-    <Compile Include="PineCone\Structures\StructureIdInterval.cs" />
-    <Compile Include="PineCone\Structures\StructureIdTypes.cs" />
-    <Compile Include="PineCone\Structures\StructureIndex.cs" />
-    <Compile Include="PineCone\Structures\StructureIndexesFactory.cs" />
-    <Compile Include="PineCone\Structures\StructureIndexType.cs" />
-    <Compile Include="PineCone\Structures\UniqueModesExtensions.cs" />
-    <Compile Include="PineCone\Sys.cs" />
+    <Compile Include="Annotations\UniqueAttribute.cs" />
+    <Compile Include="Annotations\UniqueModes.cs" />
+    <Compile Include="Lists.cs" />
+    <Compile Include="Querying\Lambdas\Nodes\NotInSetMemberNode.cs" />
+    <Compile Include="Querying\Lambdas\Operators\NotInSetOperator.cs" />
+    <Compile Include="Serialization\DefaultSisoSerializer.cs" />
+    <Compile Include="Serialization\EmptyStructureSerializer.cs" />
+    <Compile Include="Serialization\IStructureSerializer.cs" />
+    <Compile Include="SessionEvents.cs" />
+    <Compile Include="SessionExecutionContext.cs" />
+    <Compile Include="Structures\DataTypeCode.cs" />
+    <Compile Include="Structures\IdGenerators\EmptyStructureIdGenerator.cs" />
+    <Compile Include="Structures\IdGenerators\GuidStructureIdGenerator.cs" />
+    <Compile Include="Structures\IdGenerators\SequentialGuidStructureIdGenerator.cs" />
+    <Compile Include="Structures\IStructure.cs" />
+    <Compile Include="Structures\IStructureBuilder.cs" />
+    <Compile Include="Structures\IStructureId.cs" />
+    <Compile Include="Structures\IStructureIdGenerator.cs" />
+    <Compile Include="Structures\IStructureIndex.cs" />
+    <Compile Include="Structures\IStructureIndexesFactory.cs" />
+    <Compile Include="Structures\Schemas\Builders\AutoStructureSchemaBuilder.cs" />
+    <Compile Include="Structures\Schemas\Builders\IStructureSchemaBuilder.cs" />
+    <Compile Include="Structures\Schemas\Configuration\IStructureTypeConfig.cs" />
+    <Compile Include="Structures\Schemas\Configuration\IStructureTypeConfigurations.cs" />
+    <Compile Include="Structures\Schemas\Configuration\IStructureTypeConfigurator.cs" />
+    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfig.cs" />
+    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfigurations.cs" />
+    <Compile Include="Structures\Schemas\Configuration\StructureTypeConfigurator.cs" />
+    <Compile Include="Structures\Schemas\DataTypeConverter.cs" />
+    <Compile Include="Structures\Schemas\DynamicGetter.cs" />
+    <Compile Include="Structures\Schemas\DynamicPropertyFactory.cs" />
+    <Compile Include="Structures\Schemas\DynamicSetter.cs" />
+    <Compile Include="Structures\Schemas\IDataTypeConverter.cs" />
+    <Compile Include="Structures\Schemas\IStructureProperty.cs" />
+    <Compile Include="Structures\Schemas\IStructurePropertyFactory.cs" />
+    <Compile Include="Structures\Schemas\IStructureSchema.cs" />
+    <Compile Include="Structures\Schemas\IStructureSchemas.cs" />
+    <Compile Include="Structures\Schemas\IStructureType.cs" />
+    <Compile Include="Structures\Schemas\IStructureTypeFactory.cs" />
+    <Compile Include="Structures\Schemas\IStructureTypeReflecter.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\ConcurrencyTokenAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IConcurrencyTokenAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IdAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IIdAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IIndexAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IMemberAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\IndexAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\ITimeStampAccessor.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\MemberAccessorBase.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\StructureIdGetters.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\StructureIdSetters.cs" />
+    <Compile Include="Structures\Schemas\MemberAccessors\TimeStampAccessor.cs" />
+    <Compile Include="Structures\Schemas\PropertyPathBuilder.cs" />
+    <Compile Include="Structures\Schemas\StructureIdPropertyNames.cs" />
+    <Compile Include="Structures\Schemas\StructureProperty.cs" />
+    <Compile Include="Structures\Schemas\StructurePropertyFactory.cs" />
+    <Compile Include="Structures\Schemas\StructurePropertyFactoryRules.cs" />
+    <Compile Include="Structures\Schemas\StructurePropertyInfo.cs" />
+    <Compile Include="Structures\Schemas\StructureSchema.cs" />
+    <Compile Include="Structures\Schemas\StructureSchemas.cs" />
+    <Compile Include="Structures\Schemas\StructureTimeStampPropertyNames.cs" />
+    <Compile Include="Structures\Schemas\StructureType.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeFactory.cs" />
+    <Compile Include="Structures\Schemas\StructureTypeReflecter.cs" />
+    <Compile Include="Structures\SequentialGuid.cs" />
+    <Compile Include="Structures\Structure.cs" />
+    <Compile Include="Structures\StructureBuilder.cs" />
+    <Compile Include="Structures\StructureBuilderAutoId.cs" />
+    <Compile Include="Structures\StructureBuilderPreservingId.cs" />
+    <Compile Include="Structures\StructureBuildersFn.cs" />
+    <Compile Include="Structures\StructureId.cs" />
+    <Compile Include="Structures\StructureIdInterval.cs" />
+    <Compile Include="Structures\StructureIdTypes.cs" />
+    <Compile Include="Structures\StructureIndex.cs" />
+    <Compile Include="Structures\StructureIndexesFactory.cs" />
+    <Compile Include="Structures\StructureIndexType.cs" />
+    <Compile Include="Structures\UniqueModesExtensions.cs" />
+    <Compile Include="Sys.cs" />
     <Compile Include="Querying\Lambdas\Nodes\ArrayValueNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\IMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Nodes\InSetMemberNode.cs" />
@@ -270,14 +272,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\DateSerializationModes.cs" />
-    <Compile Include="Serialization\DateSerializationModesExtension.cs" />
-    <Compile Include="Serialization\SerializerOptions.cs" />
     <Compile Include="SessionStatus.cs" />
     <Compile Include="SisoDbConcurrencyException.cs" />
     <Compile Include="Maintenance\MigrationStatuses.cs" />
     <Compile Include="SisoDbNotSupportedException.cs" />
-    <Compile Include="Structures\CheckOutAngGetNextIdentity.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IStructureInserter.cs" />
     <Compile Include="Dac\IDbBulkCopy.cs" />
@@ -316,7 +314,6 @@
     <Compile Include="Querying\Sql\SqlQueryFormatter.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteriaBuilder.cs" />
     <Compile Include="Querying\Sql\DbQuery.cs" />
-    <Compile Include="IConnectionString.cs" />
     <Compile Include="ISisoDbFactory.cs" />
     <Compile Include="Dac\BulkInserts\IndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\SingleResultReaderBase.cs" />
@@ -328,24 +325,17 @@
     <Compile Include="DbSchema\StructureStorageSchema.cs" />
     <Compile Include="DbSchema\UniqueStorageSchema.cs" />
     <Compile Include="Querying\Sql\SqlWhereCriteria.cs" />
-    <Compile Include="Serialization\ServiceStackTypeConfig.cs" />
     <Compile Include="SisoDatabase.cs" />
     <Compile Include="Structures\DbIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IIdentityStructureIdGenerator.cs" />
     <Compile Include="Structures\IStructureBuilders.cs" />
-    <Compile Include="Structures\StructureBuilderFactoryForInserts.cs" />
-    <Compile Include="Structures\StructureBuilderFactoryForUpdates.cs" />
     <Compile Include="Structures\StructureBuilders.cs" />
-    <Compile Include="Querying\Lambdas\Nodes\IncludeNode.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\IIncludeParser.cs" />
-    <Compile Include="Querying\Lambdas\Parsers\IncludeParser.cs" />
     <Compile Include="Querying\Lambdas\Parsers\IWhereParser.cs" />
     <Compile Include="Querying\Lambdas\IParsedLambda.cs" />
     <Compile Include="DbSchema\IDbSchemaUpserter.cs" />
     <Compile Include="Querying\Paging.cs" />
     <Compile Include="Serialization\StructureSerializer.cs" />
     <Compile Include="IDbProviderFactory.cs" />
-    <Compile Include="Querying\Sql\SqlInclude.cs" />
     <Compile Include="Querying\Lambdas\Nodes\SortingNode.cs" />
     <Compile Include="Querying\Sql\SqlExpressionBuilder.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParser.cs" />
@@ -376,24 +366,24 @@
     <Compile Include="INamedQuery.cs" />
     <Compile Include="Dac\IDacParameter.cs" />
     <Compile Include="Querying\NamedQuery.cs" />
-    <Compile Include="DbSchema\IDbSchemaManager.cs" />
+    <Compile Include="DbSchema\IDbSchemas.cs" />
     <Compile Include="Querying\IDbQueryGenerator.cs" />
     <Compile Include="Dac\ISqlStatements.cs" />
     <Compile Include="Dac\SqlStatementsBase.cs" />
     <Compile Include="Querying\Sql\SqlSortingMember.cs" />
-    <Compile Include="Serialization\ISisoDbSerializer.cs" />
+    <Compile Include="Serialization\ISisoSerializer.cs" />
     <Compile Include="SisoDbFormatting.cs" />
-    <Compile Include="DbSchema\DbSchemaManager.cs" />
+    <Compile Include="DbSchema\DbSchemas.cs" />
     <Compile Include="Dac\DacParameter.cs" />
     <Compile Include="Querying\Sql\SqlWhereMember.cs" />
     <Compile Include="ISisoConnectionInfo.cs" />
     <Compile Include="ISisoDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\ServiceStackJsonSerializer.cs" />
     <Compile Include="SisoConnectionInfo.cs" />
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
     <Compile Include="SisoEnvironment.cs" />
+    <Compile Include="Try.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EnsureThat\Resources\ExceptionMessages.resx">
@@ -401,10 +391,6 @@
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="NCore\Resources\ExceptionMessages.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PineCone\Resources\ExceptionMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -425,13 +411,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SisoDb.Serialization\SisoDb.Serialization.csproj">
-      <Project>{5DF24B31-1222-467D-AD80-FD3B97A2671A}</Project>
-      <Name>SisoDb.Serialization</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\SisoDb.Serialization\SisoDb.Serialization.csproj">
+      <Project>{5df24b31-1222-467d-ad80-fd3b97a2671a}</Project>
+      <Name>SisoDb.Serialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

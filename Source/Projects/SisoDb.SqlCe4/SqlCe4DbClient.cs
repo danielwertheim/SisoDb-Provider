@@ -6,9 +6,9 @@ using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Collections;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.SqlServer;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.SqlCe4
 {
@@ -19,10 +19,11 @@ namespace SisoDb.SqlCe4
             get { return 32; }
         }
 
-        public SqlCe4DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements)
-        {
-        }
+        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connection, connectionManager, sqlStatements) { }
+
+        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connection, transaction, connectionManager, sqlStatements) { }
 
         public override IDbBulkCopy GetBulkCopy()
         {
@@ -41,10 +42,10 @@ namespace SisoDb.SqlCe4
         {
             Ensure.That(entityName, "entityName").IsNotNullOrWhiteSpace();
 
-            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName));
+            var nextId = ExecuteScalar<long>(SqlStatements.GetSql("Sys_Identities_GetNext"), new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, entityName));
 
             ExecuteNonQuery(SqlStatements.GetSql("Sys_Identities_Increase"),
-                new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, entityName),
+                new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, entityName),
                 new DacParameter("numOfIds", numOfIds));
 
             return nextId;
@@ -119,7 +120,7 @@ namespace SisoDb.SqlCe4
 
             var sqlDropTableFormat = SqlStatements.GetSql("DropTable");
 
-            using (var cmd = CreateCommand(string.Empty, new DacParameter(DbSchemas.Parameters.EntityNameParamPrefix, structureSchema.Name)))
+            using (var cmd = CreateCommand(string.Empty, new DacParameter(DbSchemaInfo.Parameters.EntityNameParamPrefix, structureSchema.Name)))
             {
                 DropIndexesTables(cmd, modelInfo.Statuses.IndexesTableStatuses, modelInfo.Names.IndexesTableNames);
 

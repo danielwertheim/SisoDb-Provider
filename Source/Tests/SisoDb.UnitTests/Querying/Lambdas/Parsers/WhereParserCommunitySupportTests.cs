@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas.Nodes;
 using SisoDb.Querying.Lambdas.Operators;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.UnitTests.Querying.Lambdas.Parsers
 {

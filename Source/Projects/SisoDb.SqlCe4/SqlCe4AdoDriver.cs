@@ -24,20 +24,20 @@ namespace SisoDb.SqlCe4
         {
             var dbParam = (SqlCeParameter)parameter;
 
-            if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
+            if (DbSchemaInfo.Parameters.ShouldBeDateTime(dacParameter))
             {
                 dbParam.DbType = DbType.DateTime;
                 return dbParam;
             }
 
-            if (DbSchemas.Parameters.ShouldBeJson(dacParameter))
+            if (DbSchemaInfo.Parameters.ShouldBeJson(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.NText;
                 dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
                 return dbParam;
             }
 
-            if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
+            if (DbSchemaInfo.Parameters.ShouldBeUnicodeString(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.NVarChar;
                 var len = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;

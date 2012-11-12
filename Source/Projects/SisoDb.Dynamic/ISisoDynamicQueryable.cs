@@ -32,7 +32,6 @@ namespace SisoDb.Dynamic
 
         ISisoDynamicQueryable Take(int numOfStructures);
         ISisoDynamicQueryable Page(int pageIndex, int pageSize);
-        ISisoDynamicQueryable Include(Type includeType, params string[] expression);
         ISisoDynamicQueryable Where(params string[] expression);
         ISisoDynamicQueryable OrderBy(params string[] expressions);
         ISisoDynamicQueryable OrderByDescending(params string[] expressions);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using SisoDb.EnsureThat;
 using SisoDb.Querying;
 
@@ -215,24 +216,24 @@ namespace SisoDb
             }
         }
 
-        public virtual void InsertManyJson<T>(IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null) where T : class
+        public virtual void InsertManyJson<T>(IEnumerable<string> json) where T : class
         {
             Ensure.That(json, "json").IsNotNull();
 
             using (var session = Db.BeginSession())
             {
-                session.InsertManyJson<T>(json, onBatchInserted);
+                session.InsertManyJson<T>(json);
             }
         }
 
-        public virtual void InsertManyJson(Type structureType, IEnumerable<string> json, Action<IEnumerable<string>> onBatchInserted = null)
+        public virtual void InsertManyJson(Type structureType, IEnumerable<string> json)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(json, "json").IsNotNull();
 
             using (var session = Db.BeginSession())
             {
-                session.InsertManyJson(structureType, json, onBatchInserted);
+                session.InsertManyJson(structureType, json);
             }
         }
 
@@ -265,6 +266,17 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.Update(id, modifier, proceed);
+            }
+        }
+
+        public virtual void UpdateMany<T>(Expression<Func<T, bool>> predicate, Action<T> modifier) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+            Ensure.That(modifier, "modifier").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.UpdateMany(predicate, modifier);
             }
         }
 
@@ -346,6 +358,16 @@ namespace SisoDb
             using (var session = Db.BeginSession())
             {
                 session.DeleteByIds(structureType, ids);
+            }
+        }
+
+        public virtual void DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                session.DeleteByQuery(predicate);
             }
         }
     }

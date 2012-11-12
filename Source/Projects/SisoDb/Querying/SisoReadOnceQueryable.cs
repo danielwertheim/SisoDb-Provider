@@ -193,7 +193,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
-                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template).ToArray();
+                return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToArray();
             }
         }
 
@@ -201,7 +201,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
-                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), projection.ReturnType).ToArray();
+                return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToArray();
             }
         }
 
@@ -258,7 +258,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
-                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), template).ToList();
+                return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
             }
         }
 
@@ -266,7 +266,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
-                return session.QueryEngine.QueryAsAnonymous<T, TResult>(QueryBuilder.Build(), projection.ReturnType).ToList();
+                return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).ToList();
             }
         }
 
@@ -288,13 +288,6 @@ namespace SisoDb.Querying
         public virtual ISisoQueryable<T> Page(int pageIndex, int pageSize)
         {
             QueryBuilder.Page(pageIndex, pageSize);
-
-            return this;
-        }
-
-        public virtual ISisoQueryable<T> Include<TInclude>(params Expression<Func<T, object>>[] expressions) where TInclude : class
-        {
-            QueryBuilder.Include<TInclude>(expressions);
 
             return this;
         }

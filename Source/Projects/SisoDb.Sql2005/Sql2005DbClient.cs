@@ -6,9 +6,9 @@ using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
 using SisoDb.NCore.Collections;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.SqlServer;
+using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Sql2005
 {
@@ -19,8 +19,11 @@ namespace SisoDb.Sql2005
             get { return 32; }
         }
 
-        public Sql2005DbClient(IAdoDriver driver, ISisoConnectionInfo connectionInfo, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements) 
-            : base(driver, connectionInfo, connection, transaction, connectionManager, sqlStatements) {}
+        public Sql2005DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connection, connectionManager, sqlStatements) { }
+
+        public Sql2005DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
+            : base(driver, connection, transaction, connectionManager, sqlStatements) { }
 
         public override void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema)
         {

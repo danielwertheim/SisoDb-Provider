@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Querying.Lambdas.Parsers;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying
 {
@@ -48,13 +47,6 @@ namespace SisoDb.Querying
 			return this;
 		}
 
-		public virtual IQueryBuilder<T> Include<TInclude>(params Expression<Func<T, object>>[] expressions) where TInclude : class
-		{
-		    InnerQueryBuilder.Include(typeof (TInclude), expressions);
-
-			return this;
-		}
-
 		public virtual IQueryBuilder<T> Where(params Expression<Func<T, bool>>[] expressions)
 		{
 		    InnerQueryBuilder.Where(expressions);
@@ -85,7 +77,6 @@ namespace SisoDb.Querying
         protected readonly IExpressionParsers ExpressionParsers;
 
         protected IQuery Query;
-        protected readonly Dictionary<string, List<LambdaExpression>> BufferedIncludes;
         protected readonly List<LambdaExpression> BufferedWheres;
         protected readonly List<OrderByExpression> BufferedSortings;
 
@@ -94,7 +85,6 @@ namespace SisoDb.Querying
             get
             {
                 return Query.IsEmpty
-                       && BufferedIncludes.Count == 0
                        && BufferedSortings.Count == 0
                        && BufferedWheres.Count == 0;
             }
@@ -112,7 +102,6 @@ namespace SisoDb.Querying
             ExpressionParsers = expressionParsers;
 
             Query = new Query(StructureSchema);
-            BufferedIncludes = new Dictionary<string, List<LambdaExpression>>();
             BufferedWheres = new List<LambdaExpression>();
             BufferedSortings = new List<OrderByExpression>();
         }
@@ -124,9 +113,6 @@ namespace SisoDb.Querying
 
         public virtual IQuery Build()
         {
-            if (BufferedIncludes.Count > 0)
-                Query.Includes = ParseIncludeLambdas(BufferedIncludes.ToArray());
-
             if (BufferedWheres.Count > 0)
                 Query.Where = ParseWhereLambdas(BufferedWheres.ToArray());
 
@@ -134,12 +120,6 @@ namespace SisoDb.Querying
                 Query.Sortings = ParseSortingLambdas(BufferedSortings.ToArray());
 
             return Query;
-        }
-
-        protected virtual IList<IParsedLambda> ParseIncludeLambdas(IEnumerable<KeyValuePair<string, List<LambdaExpression>>> includes)
-        {
-            return includes.Select(keyValuePair =>
-                ExpressionParsers.IncludeParser.Parse(keyValuePair.Key, keyValuePair.Value.ToArray())).ToList();
         }
 
         protected virtual IParsedLambda ParseWhereLambdas(IEnumerable<LambdaExpression> wheres)
@@ -172,20 +152,6 @@ namespace SisoDb.Querying
             Ensure.That(pageSize, "pageSize").IsGt(0);
 
             Query.Paging = new Paging(pageIndex, pageSize);
-
-            return this;
-        }
-
-        public virtual IQueryBuilder Include(Type includeType, params LambdaExpression[] expressions)
-        {
-            Ensure.That(expressions, "expressions").HasItems();
-
-            var key = StructureSchemas.GetSchema(includeType).GetStructureTableName();
-
-            if (!BufferedIncludes.ContainsKey(key))
-                BufferedIncludes.Add(key, new List<LambdaExpression>(new LambdaExpression[0]));
-
-            BufferedIncludes[key].AddRange(expressions);
 
             return this;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures;
+using SisoDb.Structures;
 
 namespace SisoDb.MsMemoryCache
 {

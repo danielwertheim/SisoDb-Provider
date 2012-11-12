@@ -9,6 +9,13 @@ namespace SisoDb.SqlServer
 {
     public class SqlServerAdoDriver : IAdoDriver
     {
+        public int CommandTimeout { get; set; }
+
+        public SqlServerAdoDriver()
+        {
+            CommandTimeout = 15;
+        }
+
         public virtual IDbConnection CreateConnection(string connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();
@@ -29,6 +36,8 @@ namespace SisoDb.SqlServer
         protected virtual IDbCommand CreateCommand(IDbConnection connection, CommandType commandType, string sql, IDbTransaction transaction = null, IDacParameter[] parameters = null)
         {
             var cmd = connection.CreateCommand();
+            cmd.CommandTimeout = CommandTimeout;
+
             if (transaction != null)
                 cmd.Transaction = transaction;
 
@@ -64,7 +73,7 @@ namespace SisoDb.SqlServer
             var dbParam = (SqlParameter)parameter;
             var setSize = false;
 
-            if (DbSchemas.Parameters.ShouldBeMultivalue(dacParameter))
+            if (DbSchemaInfo.Parameters.ShouldBeMultivalue(dacParameter))
             {
                 var arrayDacParam = (ArrayDacParameter) dacParameter;
                 return SqlServerTableParams.Create(
@@ -74,18 +83,18 @@ namespace SisoDb.SqlServer
                     (object[])dacParameter.Value);
             }
 
-            if (DbSchemas.Parameters.ShouldBeDateTime(dacParameter))
+            if (DbSchemaInfo.Parameters.ShouldBeDateTime(dacParameter))
             {
                 dbParam.DbType = DbType.DateTime2;
                 return dbParam;
             }
 
-            if (DbSchemas.Parameters.ShouldBeNonUnicodeString(dacParameter))
+            if (DbSchemaInfo.Parameters.ShouldBeNonUnicodeString(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.VarChar;
                 setSize = true;
             }
-            else if (DbSchemas.Parameters.ShouldBeUnicodeString(dacParameter))
+            else if (DbSchemaInfo.Parameters.ShouldBeUnicodeString(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.NVarChar;
                 setSize = true;

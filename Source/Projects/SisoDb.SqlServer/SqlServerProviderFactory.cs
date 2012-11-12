@@ -4,11 +4,12 @@ using System.Threading;
 using SisoDb.Dac;
 using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas.Parsers;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
+using SisoDb.Structures.IdGenerators;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.SqlServer
 {
@@ -59,14 +60,13 @@ namespace SisoDb.SqlServer
             return new SqlServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
         }
 
-        public virtual ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = ConnectionManager.OpenClientConnection(connectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlServerDbClient(
                 GetAdoDriver(),
-                connectionInfo,
                 connection,
                 transaction,
                 ConnectionManager,
@@ -83,16 +83,14 @@ namespace SisoDb.SqlServer
 
             return new SqlServerDbClient(
                 GetAdoDriver(),
-                connectionInfo,
                 connection,
-                null,
                 ConnectionManager,
                 SqlStatements);
 	    }
 
-        public virtual IDbSchemaManager GetDbSchemaManagerFor(ISisoDatabase db)
+        public virtual IDbSchemas GetDbSchemaManagerFor(ISisoDatabase db)
         {
-            return new DbSchemaManager(new SqlDbSchemaUpserter(db, SqlStatements));
+            return new DbSchemas(db, new SqlDbSchemaUpserter(SqlStatements));
         }
 
         public virtual IStructureInserter GetStructureInserter(IDbClient dbClient)
@@ -100,9 +98,14 @@ namespace SisoDb.SqlServer
             return new DbStructureInserter(dbClient);
         }
 
-        public virtual IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(CheckOutAngGetNextIdentity action)
+        public virtual IStructureIdGenerator GetGuidStructureIdGenerator()
+        {
+            return new SequentialGuidStructureIdGenerator();
+        }
+
+        public virtual IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient)
     	{
-    		return new DbIdentityStructureIdGenerator(action);
+            return new DbIdentityStructureIdGenerator(dbClient);
     	}
 
 	    public virtual IQueryBuilder GetQueryBuilder(Type structureType, IStructureSchemas structureSchemas)
@@ -122,7 +125,7 @@ namespace SisoDb.SqlServer
 
         public virtual ISqlWhereCriteriaBuilder GetWhereCriteriaBuilder()
         {
-            return new SqlServerWhereCriteriaBuilder();
+            return new SqlWhereCriteriaBuilder();
         }
 
 	    public abstract IDbQueryGenerator GetDbQueryGenerator();

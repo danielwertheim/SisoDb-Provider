@@ -3,7 +3,7 @@ using System.Linq;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.DbSchema
 {

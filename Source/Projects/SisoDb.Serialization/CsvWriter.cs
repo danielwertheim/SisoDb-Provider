@@ -1,11 +1,78 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using SisoDb.Serialization.Common;
 using SisoDb.Serialization.Reflection;
 
+#if WINDOWS_PHONE
+using ServiceStack.Text.WP;
+#endif
+
 namespace SisoDb.Serialization
 {
+    internal class CsvDictionaryWriter
+    {
+		public static void WriteRow(TextWriter writer, IEnumerable<string> row)
+		{
+			var ranOnce = false;
+			foreach (var field in row)
+			{
+				CsvWriter.WriteItemSeperatorIfRanOnce(writer, ref ranOnce);
+
+				writer.Write(field.ToCsvField());
+			}
+			writer.Write(CsvConfig.RowSeparatorString);
+		}
+
+		public static void Write(TextWriter writer, IEnumerable<Dictionary<string, string>> records)
+		{
+			if (records == null) return; //AOT
+
+		    var allKeys = new System.Collections.Generic.HashSet<string>();
+		    var cachedRecords = new List<IDictionary<string, string>>();
+
+			foreach (var record in records) {
+                foreach (var key in record.Keys) {
+                    if (!allKeys.Contains(key)) {
+                        allKeys.Add(key);
+                    }
+                }
+                cachedRecords.Add(record);
+			}
+
+		    var headers = allKeys.OrderBy(key => key).ToList();
+            if (!CsvConfig<Dictionary<string, string>>.OmitHeaders) {
+                WriteRow(writer, headers);
+            }
+		    foreach (var cachedRecord in cachedRecords) {
+                var fullRecord = new List<string>();
+                foreach (var header in headers) {
+                    fullRecord.Add(cachedRecord.ContainsKey(header)
+                                        ? cachedRecord[header]
+                                        : null);
+                }
+                WriteRow(writer, fullRecord);
+		    }
+		}
+    }
+
+    public static class CsvWriter
+    {
+        public static bool HasAnyEscapeChars(string value)
+        {
+            return CsvConfig.EscapeStrings.Any(value.Contains);
+        }
+
+        internal static void WriteItemSeperatorIfRanOnce(TextWriter writer, ref bool ranOnce)
+        {
+            if (ranOnce)
+                writer.Write(CsvConfig.ItemSeperatorString);
+            else
+                ranOnce = true;
+        }
+    }
+
 	internal class CsvWriter<T>
 	{
 		public const char DelimiterChar = ',';
@@ -32,13 +99,23 @@ namespace SisoDb.Serialization
 			Headers = new List<string>();
 
 			PropertyGetters = new List<Func<T, object>>();
+		    var isDataContract = typeof(T).IsDto();
 			foreach (var propertyInfo in TypeConfig<T>.Properties)
 			{
 				if (!propertyInfo.CanRead || propertyInfo.GetGetMethod() == null) continue;
 				if (!TypeSerializer.CanCreateFromString(propertyInfo.PropertyType)) continue;
 
 				PropertyGetters.Add(propertyInfo.GetValueGetter<T>());
-				Headers.Add(propertyInfo.Name);
+                var propertyName = propertyInfo.Name;
+                if (isDataContract)
+                {
+                    var dcsDataMember = propertyInfo.GetDataMember();
+                    if (dcsDataMember != null && dcsDataMember.Name != null)
+                    {
+                        propertyName = dcsDataMember.Name;
+                    }
+                }
+                Headers.Add(propertyName);
 			}
 		}
 
@@ -121,6 +198,11 @@ namespace SisoDb.Serialization
 		{
 			if (records == null) return; //AOT
 
+            if (typeof (T) == typeof(Dictionary<string, string>)) {
+                CsvDictionaryWriter.Write(writer, (IEnumerable<Dictionary<string, string>>)records);
+                return;
+            }
+
 			if (OptimizedWriter != null)
 			{
 				OptimizedWriter(writer, records);
@@ -132,11 +214,11 @@ namespace SisoDb.Serialization
 				var ranOnce = false;
 				foreach (var header in Headers)
 				{
-					JsWriter.WriteItemSeperatorIfRanOnce(writer, ref ranOnce);
+					CsvWriter.WriteItemSeperatorIfRanOnce(writer, ref ranOnce);
 
 					writer.Write(header);
 				}
-				writer.WriteLine();
+				writer.Write(CsvConfig.RowSeparatorString);
 			}
 
 			if (records == null) return;
@@ -178,11 +260,11 @@ namespace SisoDb.Serialization
 			var ranOnce = false;
 			foreach (var field in row)
 			{
-				JsWriter.WriteItemSeperatorIfRanOnce(writer, ref ranOnce);
+				CsvWriter.WriteItemSeperatorIfRanOnce(writer, ref ranOnce);
 
 				writer.Write(field.ToCsvField());
 			}
-			writer.WriteLine();
+			writer.Write(CsvConfig.RowSeparatorString);
 		}
 
 		public static void Write(TextWriter writer, IEnumerable<List<string>> rows)
@@ -192,11 +274,11 @@ namespace SisoDb.Serialization
 				var ranOnce = false;
 				foreach (var header in Headers)
 				{
-					JsWriter.WriteItemSeperatorIfRanOnce(writer, ref ranOnce);
+					CsvWriter.WriteItemSeperatorIfRanOnce(writer, ref ranOnce);
 
 					writer.Write(header);
 				}
-				writer.WriteLine();
+				writer.Write(CsvConfig.RowSeparatorString);
 			}
 
 			foreach (var row in rows)

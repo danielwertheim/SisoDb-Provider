@@ -57,18 +57,14 @@
     </Compile>
     <Compile Include="SqlServerClient.cs" />
     <Compile Include="SqlServerConnectionManager.cs" />
-    <Compile Include="SqlServerDatabase.cs" />
-    <Compile Include="SqlServerSession.cs" />
     <Compile Include="SqlServerAdoDriver.cs" />
     <Compile Include="SqlServerBulkCopy.cs" />
     <Compile Include="SqlServerProviderFactory.cs" />
-    <Compile Include="SqlServerQueryGenerator.cs" />
     <Compile Include="SqlServerConnectionInfo.cs" />
     <Compile Include="SqlServerDbClient.cs" />
     <Compile Include="SqlServerIdsTableParam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTableParams.cs" />
-    <Compile Include="SqlServerWhereCriteriaBuilder.cs" />
     <Compile Include="Transactions.cs" />
   </ItemGroup>
   <ItemGroup>

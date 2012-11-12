@@ -2,7 +2,7 @@ using SisoDb.Serialization;
 
 namespace SisoDb.Diagnostics.Appenders
 {
-    public class SerializerDiagnosticsAppender : IDiagnosticsAppender<ISisoDbSerializer>
+    public class SerializerDiagnosticsAppender : IDiagnosticsAppender<ISisoSerializer>
     {
         protected readonly DiagnosticsInfo Info;
 
@@ -11,12 +11,10 @@ namespace SisoDb.Diagnostics.Appenders
             Info = info;
         }
 
-        public void Append(ISisoDbSerializer serializer)
+        public void Append(ISisoSerializer serializer)
         {
             Info.AddGroup("Serializer")
-                .AddNode("Type", serializer.GetType().Name)
-                .AddNode("DeserializeManyInParallel", serializer.Options.DeserializeManyInParallel)
-                .AddNode("DateSerializationMode", serializer.Options.DateSerializationMode.ToString());
+                .AddNode("Type", serializer.GetType().Name);
         }
     }
 }

@@ -36,19 +36,19 @@ namespace SisoDb.Querying.Lambdas.Operators
         static Operator()
         {
             OperatorMap = new Dictionary<ExpressionType, Func<Operator>>
-                              {
-                                  {ExpressionType.And, () => new AndOperator()},
-                                  {ExpressionType.AndAlso, () => new AndOperator()},
-                                  {ExpressionType.Or, () => new OrOperator()},
-                                  {ExpressionType.OrElse, () => new OrOperator()},
-                                  {ExpressionType.Equal, () => new EqualOperator()},
-                                  {ExpressionType.Not, () => new NotOperator()},
-                                  {ExpressionType.NotEqual, () => new NotEqualOperator()},
-                                  {ExpressionType.LessThan, () => new LessThanOperator()},
-                                  {ExpressionType.LessThanOrEqual, () => new LessThanOrEqualOperator()},
-                                  {ExpressionType.GreaterThan, () => new GreaterThanOperator()},
-                                  {ExpressionType.GreaterThanOrEqual, () => new GreaterThanOrEqualOperator()},
-                              };
+            {
+                {ExpressionType.And, () => new AndOperator()},
+                {ExpressionType.AndAlso, () => new AndOperator()},
+                {ExpressionType.Or, () => new OrOperator()},
+                {ExpressionType.OrElse, () => new OrOperator()},
+                {ExpressionType.Equal, () => new EqualOperator()},
+                {ExpressionType.Not, () => new NotOperator()},
+                {ExpressionType.NotEqual, () => new NotEqualOperator()},
+                {ExpressionType.LessThan, () => new LessThanOperator()},
+                {ExpressionType.LessThanOrEqual, () => new LessThanOrEqualOperator()},
+                {ExpressionType.GreaterThan, () => new GreaterThanOperator()},
+                {ExpressionType.GreaterThanOrEqual, () => new GreaterThanOrEqualOperator()},
+            };
         }
 
         protected Operator(string value)
@@ -81,6 +81,11 @@ namespace SisoDb.Querying.Lambdas.Operators
                 ExceptionMessages.LambdaOperator_IsOrIsNot_NotSupported.Inject(expressionType));
         }
 
+        public static NotOperator Not()
+        {
+            return new NotOperator();
+        }
+
         public static IsOperator Is()
         {
             return new IsOperator();
@@ -99,6 +104,11 @@ namespace SisoDb.Querying.Lambdas.Operators
         public static InSetOperator InSet()
         {
             return new InSetOperator();
+        }
+
+        public static NotInSetOperator NotInSet()
+        {
+            return new NotInSetOperator();
         }
 
         public override string ToString()

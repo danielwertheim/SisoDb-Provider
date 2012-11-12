@@ -7,11 +7,7 @@ namespace SisoDb.Sql2008
     public class Sql2008ConnectionInfo : SqlServerConnectionInfo
     {
         public Sql2008ConnectionInfo(string connectionStringOrName)
-            : this(ConnectionString.Get(connectionStringOrName))
-        { }
-
-        public Sql2008ConnectionInfo(IConnectionString connectionString)
-            : base(StorageProviders.Sql2008, connectionString)
+            : base(StorageProviders.Sql2008, connectionStringOrName)
         { }
     }
 }

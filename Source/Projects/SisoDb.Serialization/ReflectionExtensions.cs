@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading;
+using SisoDb.Serialization.Marc;
 using SisoDb.Serialization.Support;
 
 #if WINDOWS_PHONE
@@ -24,6 +25,7 @@ using System.Linq.Expressions;
 
 namespace SisoDb.Serialization
 {
+    public delegate EmptyCtorDelegate EmptyCtorFactoryDelegate(Type type);
     public delegate object EmptyCtorDelegate();
 
     public static class ReflectionExtensions
@@ -90,7 +92,8 @@ namespace SisoDb.Serialization
 
         public static bool IsOrHasGenericInterfaceTypeOf(this Type type, Type genericTypeDefinition)
         {
-            return type.GetTypeWithGenericTypeDefinitionOf(genericTypeDefinition) != null;
+            return (type.GetTypeWithGenericTypeDefinitionOf(genericTypeDefinition) != null)
+                || (type == genericTypeDefinition);
         }
 
         public static Type GetTypeWithGenericTypeDefinitionOf(this Type type, Type genericTypeDefinition)
@@ -156,13 +159,13 @@ namespace SisoDb.Serialization
             if (!type.IsValueType) return false;
             var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
             return underlyingType == typeof(byte)
-			   || underlyingType == typeof(sbyte)
-			   || underlyingType == typeof(short)
-			   || underlyingType == typeof(ushort)
-			   || underlyingType == typeof(int)
-			   || underlyingType == typeof(uint)
-			   || underlyingType == typeof(long)
-			   || underlyingType == typeof(ulong);
+               || underlyingType == typeof(sbyte)
+               || underlyingType == typeof(short)
+               || underlyingType == typeof(ushort)
+               || underlyingType == typeof(int)
+               || underlyingType == typeof(uint)
+               || underlyingType == typeof(long)
+               || underlyingType == typeof(ulong);
         }
 
         public static bool IsRealNumberType(this Type type)
@@ -170,8 +173,8 @@ namespace SisoDb.Serialization
             if (!type.IsValueType) return false;
             var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
             return underlyingType == typeof(float)
-			   || underlyingType == typeof(double)
-			   || underlyingType == typeof(decimal);
+               || underlyingType == typeof(double)
+               || underlyingType == typeof(decimal);
         }
 
         public static Type GetTypeWithGenericInterfaceOf(this Type type, Type genericInterfaceType)
@@ -185,8 +188,8 @@ namespace SisoDb.Serialization
 
             var genericType = type.GetGenericType();
             return genericType.GetGenericTypeDefinition() == genericInterfaceType
-					? genericType
-					: null;
+                    ? genericType
+                    : null;
         }
 
         public static bool HasAnyTypeDefinitionsOf(this Type genericType, params Type[] theseGenericTypes)
@@ -287,7 +290,7 @@ namespace SisoDb.Serialization
             EmptyCtorDelegate emptyCtorFn;
             if (TypeNamesMap.TryGetValue(typeName, out emptyCtorFn)) return emptyCtorFn;
 
-            var type = AssemblyUtils.FindType(typeName);
+            var type = JsConfig.TypeFinder.Invoke(typeName);
             if (type == null) return null;
             emptyCtorFn = GetConstructorMethodToCache(type);
 
@@ -316,7 +319,11 @@ namespace SisoDb.Serialization
 #elif WINDOWS_PHONE
                 return Expression.Lambda<EmptyCtorDelegate>(Expression.New(type)).Compile();
 #else
+#if SILVERLIGHT
+                var dm = new System.Reflection.Emit.DynamicMethod("MyCtor", type, Type.EmptyTypes);
+#else
                 var dm = new System.Reflection.Emit.DynamicMethod("MyCtor", type, Type.EmptyTypes, typeof(ReflectionExtensions).Module, true);
+#endif
                 var ilgen = dm.GetILGenerator();
                 ilgen.Emit(System.Reflection.Emit.OpCodes.Nop);
                 ilgen.Emit(System.Reflection.Emit.OpCodes.Newobj, emptyCtor);
@@ -385,8 +392,8 @@ namespace SisoDb.Serialization
 
                     var typeProperties = subType.GetProperties(
                         BindingFlags.FlattenHierarchy
-						| BindingFlags.Public
-						| BindingFlags.Instance);
+                        | BindingFlags.Public
+                        | BindingFlags.Instance);
 
                     var newPropertyInfos = typeProperties
                         .Where(x => !propertyInfos.Contains(x));
@@ -397,8 +404,9 @@ namespace SisoDb.Serialization
                 return propertyInfos.ToArray();
             }
 
-            return type.GetProperties(BindingFlags.FlattenHierarchy
-				| BindingFlags.Public | BindingFlags.Instance);
+            return type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Instance)
+                .Where(t => t.GetIndexParameters().Length == 0) // ignore indexed properties
+                .ToArray();
         }
 
         const string DataContract = "DataContractAttribute";
@@ -410,22 +418,72 @@ namespace SisoDb.Serialization
             var publicProperties = GetPublicProperties(type);
             var publicReadableProperties = publicProperties.Where(x => x.GetGetMethod(false) != null);
 
-            //If it is a 'DataContract' only return 'DataMember' properties.
-            //checking for "DataContract" using strings to avoid dependency on System.Runtime.Serialization
             if (type.IsDto())
             {
-                return publicReadableProperties.Where(attr =>
-                    attr.GetCustomAttributes(false).Any(x => x.GetType().Name == DataMember))
-                    .ToArray();
+                return !Env.IsMono
+                    ? publicReadableProperties.Where(attr => 
+                        attr.IsDefined(typeof(DataMemberAttribute), false)).ToArray()
+                    : publicReadableProperties.Where(attr => 
+                        attr.GetCustomAttributes(false).Any(x => x.GetType().Name == DataMember)).ToArray();
             }
+
             // else return those properties that are not decorated with IgnoreDataMember
             return publicReadableProperties.Where(prop => !prop.GetCustomAttributes(false).Any(attr => attr.GetType().Name == IgnoreDataMember)).ToArray();
         }
 
         public static bool IsDto(this Type type)
         {
-            return type.GetCustomAttributes(true).Any(x => x.GetType().Name == DataContract);
+            return !Env.IsMono
+                ? type.IsDefined(typeof(DataContractAttribute), false)
+                : type.GetCustomAttributes(true).Any(x => x.GetType().Name == DataContract);
         }
+
+        public static bool HasAttr<T>(this Type type) where T : Attribute
+        {
+            return type.GetCustomAttributes(true).Any(x => x.GetType() == typeof(T));
+        }
+
+#if !SILVERLIGHT && !MONOTOUCH 
+        static readonly Dictionary<Type, TypeAccessor> typeAccessorMap 
+            = new Dictionary<Type, TypeAccessor>();
+#endif
+
+        public static DataMemberAttribute GetDataMember(this PropertyInfo pi)
+        {
+            var dataMember = pi.GetCustomAttributes(typeof(DataMemberAttribute), false)
+                .FirstOrDefault() as DataMemberAttribute;
+
+#if !SILVERLIGHT && !MONOTOUCH && !XBOX
+            if (dataMember == null && Env.IsMono)
+                return pi.GetWeakDataMember();
+#endif
+            return dataMember;
+        }
+
+#if !SILVERLIGHT && !MONOTOUCH && !XBOX
+        public static DataMemberAttribute GetWeakDataMember(this PropertyInfo pi)
+        {
+            var dataMemberAttr = pi.GetCustomAttributes(true).FirstOrDefault(x => x.GetType().Name == DataMember);
+            if (dataMemberAttr != null)
+            {
+                var dataMemberType = dataMemberAttr.GetType();
+
+                TypeAccessor dataMemberAccessor;
+                lock (typeAccessorMap)
+                {
+                    if (!typeAccessorMap.TryGetValue(dataMemberType, out dataMemberAccessor))
+                    {
+                        dataMemberAccessor = TypeAccessor.Create(dataMemberAttr.GetType());
+                        typeAccessorMap[dataMemberType] = dataMemberAccessor;
+                    }
+                }
+
+                var propertyName = dataMemberAccessor[dataMemberAttr, "Name"];
+                return new DataMemberAttribute { Name = (string) propertyName};
+            }
+            return null;
+        }
+#endif
 
     }
 

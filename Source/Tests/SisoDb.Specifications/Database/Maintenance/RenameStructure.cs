@@ -1,7 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
+using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Database.Maintenance
@@ -32,10 +32,10 @@ namespace SisoDb.Specifications.Database.Maintenance
                 () => TestContext.DbHelper.TablesExists(_orgStructureSchema.GetIndexesTableNames().All).ShouldBeFalse();
 
             It should_have_new_structure_table =
-                () => TestContext.DbHelper.TableExists(DbSchemas.GenerateStructureTableName(_newStructureName)).ShouldBeTrue();
+                () => TestContext.DbHelper.TableExists(DbSchemaInfo.GenerateStructureTableName(_newStructureName)).ShouldBeTrue();
 
             It should_have_new_uniques_table =
-                () => TestContext.DbHelper.TableExists(DbSchemas.GenerateUniquesTableName(_newStructureName)).ShouldBeTrue();
+                () => TestContext.DbHelper.TableExists(DbSchemaInfo.GenerateUniquesTableName(_newStructureName)).ShouldBeTrue();
 
             It should_have_new_indexes_tables =
                 () => TestContext.DbHelper.TablesExists(new IndexesTableNames(_newStructureName).All).ShouldBeTrue();

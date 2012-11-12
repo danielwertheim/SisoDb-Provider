@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures;
+using SisoDb.Structures;
 
 namespace SisoDb.Dac.BulkInserts
 {

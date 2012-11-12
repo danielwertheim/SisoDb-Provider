@@ -11,6 +11,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -30,8 +31,19 @@ namespace SisoDb.Serialization.Common
 		public static ParseStringDelegate GetParseMethod(Type type)
 		{
 			var mapInterface = type.GetTypeWithGenericInterfaceOf(typeof(IDictionary<,>));
-			if (mapInterface == null)
+			if (mapInterface == null) {
+#if !SILVERLIGHT
+                if (type == typeof(Hashtable))
+                {
+                    return ParseHashtable;
+                }
+#endif
+                if (type == typeof(IDictionary))
+                {
+					return GetParseMethod(typeof(Dictionary<object, object>));
+				}
 				throw new ArgumentException(string.Format("Type {0} is not of type IDictionary<,>", type.FullName));
+			}
 
 			//optimized access for regularly used types
             if (type == typeof(Dictionary<string, string>))
@@ -63,7 +75,7 @@ namespace SisoDb.Serialization.Common
 
             var result = new JsonObject();
 
-            if (value == JsWriter.EmptyMap) return result;
+            if (JsonTypeSerializer.IsEmptyMap(value)) return result;
 
             var valueLength = value.Length;
             while (index < valueLength)
@@ -83,13 +95,14 @@ namespace SisoDb.Serialization.Common
             return result;
         }
 
-        public static Dictionary<string, string> ParseStringDictionary(string value)
+#if !SILVERLIGHT
+        public static Hashtable ParseHashtable(string value)
         {
-            var index = VerifyAndGetStartIndex(value, typeof(Dictionary<string, string>));
+            var index = VerifyAndGetStartIndex(value, typeof(Hashtable));
 
-            var result = new Dictionary<string, string>();
+            var result = new Hashtable();
 
-            if (value == JsWriter.EmptyMap) return result;
+            if (JsonTypeSerializer.IsEmptyMap(value)) return result;
 
             var valueLength = value.Length;
             while (index < valueLength)
@@ -99,6 +112,33 @@ namespace SisoDb.Serialization.Common
                 var elementValue = Serializer.EatValue(value, ref index);
 
                 var mapKey = keyValue;
+                var mapValue = elementValue;
+
+                result[mapKey] = mapValue;
+
+                Serializer.EatItemSeperatorOrMapEndChar(value, ref index);
+            }
+
+            return result;
+        }
+#endif
+
+        public static Dictionary<string, string> ParseStringDictionary(string value)
+        {
+            var index = VerifyAndGetStartIndex(value, typeof(Dictionary<string, string>));
+
+            var result = new Dictionary<string, string>();
+
+            if (JsonTypeSerializer.IsEmptyMap(value)) return result;
+
+            var valueLength = value.Length;
+            while (index < valueLength)
+            {
+                var keyValue = Serializer.EatMapKey(value, ref index);
+                Serializer.EatMapKeySeperator(value, ref index);
+                var elementValue = Serializer.EatValue(value, ref index);
+
+                var mapKey = Serializer.UnescapeString(keyValue);
                 var mapValue = Serializer.UnescapeString(elementValue);
 
                 result[mapKey] = mapValue;
@@ -117,6 +157,8 @@ namespace SisoDb.Serialization.Common
 
 			var tryToParseItemsAsDictionaries =
 				JsConfig.ConvertObjectTypesIntoStringDictionary && typeof(TValue) == typeof(object);
+			var tryToParseItemsAsPrimitiveTypes =
+				JsConfig.TryToParsePrimitiveTypeValues && typeof(TValue) == typeof(object);
 
 			var index = VerifyAndGetStartIndex(value, createMapType);
 
@@ -124,37 +166,47 @@ namespace SisoDb.Serialization.Common
 				? new Dictionary<TKey, TValue>()
 				: (IDictionary<TKey, TValue>)createMapType.CreateInstance();
 
-			if (value == JsWriter.EmptyMap) return to;
+            if (JsonTypeSerializer.IsEmptyMap(value)) return to;
 
 			var valueLength = value.Length;
-			while (index < valueLength)
-			{
+			while (index < valueLength) 
+            {
 				var keyValue = Serializer.EatMapKey(value, ref index);
 				Serializer.EatMapKeySeperator(value, ref index);
-				var elementValue = Serializer.EatValue(value, ref index);
+			    var elementStartIndex = index;
+				var elementValue = Serializer.EatTypeValue(value, ref index);
 
 				var mapKey = (TKey)parseKeyFn(keyValue);
-				var mapValue = (TValue)parseValueFn(elementValue);
 
 				if (tryToParseItemsAsDictionaries)
 				{
-					var mapValueString = mapValue as string;
-					var tryParseValueAsDictionary = JsonUtils.IsJsObject(mapValueString);
-					if (tryParseValueAsDictionary)
+                    Serializer.EatWhitespace(value, ref elementStartIndex);
+					if (elementStartIndex < valueLength && value[elementStartIndex] == JsWriter.MapStartChar)
 					{
-						var tmpMap = ParseDictionary<TKey, TValue>(mapValueString, createMapType, parseKeyFn, parseValueFn);
-						to[mapKey] = (tmpMap != null && tmpMap.Count > 0)
-							? (TValue)tmpMap
-							: to[mapKey] = mapValue;
-					}
-					else
-					{
-						to[mapKey] = mapValue;
-					}
+						var tmpMap = ParseDictionary<TKey, TValue>(elementValue, createMapType, parseKeyFn, parseValueFn);
+                        if (tmpMap != null && tmpMap.Count > 0) {
+                            to[mapKey] = (TValue) tmpMap;
+                        }
+					} 
+                    else if (elementStartIndex < valueLength && value[elementStartIndex] == JsWriter.ListStartChar) 
+                    {
+                        to[mapKey] = (TValue) DeserializeList<List<object>, TSerializer>.Parse(elementValue);
+                    } 
+                    else 
+                    {
+				        to[mapKey] = (TValue) (tryToParseItemsAsPrimitiveTypes && elementStartIndex < valueLength
+				                        ? DeserializeType<TSerializer>.ParsePrimitive(elementValue, value[elementStartIndex])
+				                        : parseValueFn(elementValue));
+                    }
 				}
-				else
-				{
-					to[mapKey] = mapValue;
+                else
+                {
+                    if (tryToParseItemsAsPrimitiveTypes && elementStartIndex < valueLength) {
+                        Serializer.EatWhitespace(value, ref elementStartIndex);
+				        to[mapKey] = (TValue) DeserializeType<TSerializer>.ParsePrimitive(elementValue, value[elementStartIndex]);
+                    } else {
+                        to[mapKey] = (TValue) parseValueFn(elementValue);
+                    }
 				}
 
 				Serializer.EatItemSeperatorOrMapEndChar(value, ref index);

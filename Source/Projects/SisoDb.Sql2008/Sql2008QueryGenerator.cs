@@ -2,12 +2,12 @@ using System.Linq;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
 using SisoDb.NCore;
+using SisoDb.Querying;
 using SisoDb.Querying.Sql;
-using SisoDb.SqlServer;
 
 namespace SisoDb.Sql2008
 {
-    public class Sql2008QueryGenerator : SqlServerQueryGenerator
+    public class Sql2008QueryGenerator : DbQueryGenerator
     {
         public Sql2008QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder) 
             : base(sqlStatements, sqlExpressionBuilder) {}
@@ -19,12 +19,10 @@ namespace SisoDb.Sql2008
                 Start = GenerateStartString(query, sqlExpression),
                 End = GenerateEndString(query, sqlExpression),
                 Take = GenerateTakeString(query),
-                IncludedJsonMembers = GenerateIncludedJsonMembersString(sqlExpression),
                 OrderByMembers = GenerateOrderByMembersString(query, sqlExpression),
                 MainStructureTable = query.StructureSchema.GetStructureTableName(),
                 WhereAndSortingJoins = GenerateWhereAndSortingJoins(query, sqlExpression),
                 WhereCriteria = GenerateWhereCriteriaString(sqlExpression),
-                IncludesJoins = GenerateIncludesJoins(query, sqlExpression),
                 OrderBy = GenerateOrderByString(query, sqlExpression),
                 Paging = GeneratePagingString(query, sqlExpression).PrependWith(", "),
             };

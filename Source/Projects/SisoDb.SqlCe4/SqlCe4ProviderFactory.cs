@@ -2,10 +2,10 @@
 using System.Data;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
 using SisoDb.SqlServer;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb.SqlCe4
 {
@@ -29,14 +29,13 @@ namespace SisoDb.SqlCe4
             return new SqlCe4ServerClient(GetAdoDriver(),(SqlCe4ConnectionInfo)connectionInfo, ConnectionManager, SqlStatements);
         }
 
-        public override ITransactionalDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public override IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
         {
             var connection = ConnectionManager.OpenClientConnection(connectionInfo);
             var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlCe4DbClient(
                 GetAdoDriver(),
-                connectionInfo,
                 connection,
                 transaction,
                 ConnectionManager, 
@@ -53,9 +52,7 @@ namespace SisoDb.SqlCe4
 
             return new SqlCe4DbClient(
                 GetAdoDriver(), 
-                connectionInfo,
                 connection,
-                null,
                 ConnectionManager,
                 SqlStatements);
 	    }

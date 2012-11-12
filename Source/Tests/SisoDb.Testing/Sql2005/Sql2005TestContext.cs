@@ -7,7 +7,7 @@ namespace SisoDb.Testing.Sql2005
         public Sql2005TestContext(string connectionStringName)
             : base(connectionStringName.CreateSql2005Db())
         {
-            DbHelper = new Sql2005TestDbUtils(Database.ProviderFactory.GetAdoDriver(), Database.ConnectionInfo.ClientConnectionString.PlainString);
+            DbHelper = new Sql2005TestDbUtils(Database.ProviderFactory.GetAdoDriver(), Database.ConnectionInfo.ClientConnectionString);
         }
     }
 }

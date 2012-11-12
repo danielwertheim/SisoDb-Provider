@@ -14,8 +14,8 @@ namespace SisoDb.Diagnostics.Appenders
             Info.AddGroup("ConnectionInfo")
                 .AddNode("DbName", connectionInfo.DbName)
                 .AddNode("ProviderType", connectionInfo.ProviderType)
-                .AddNode("ClientConnectionString", connectionInfo.ClientConnectionString.PlainString)
-                .AddNode("ServerConnectionString", connectionInfo.ServerConnectionString.PlainString);
+                .AddNode("ClientConnectionString", connectionInfo.ClientConnectionString)
+                .AddNode("ServerConnectionString", connectionInfo.ServerConnectionString);
         }
     }
 }

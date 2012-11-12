@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using SisoDb.PineCone.Structures.Schemas;
 using SisoDb.Querying;
 using SisoDb.Querying.Lambdas;
+using SisoDb.Structures.Schemas;
 
 namespace SisoDb
 {
@@ -12,13 +12,11 @@ namespace SisoDb
 		Paging Paging { get; set; }
 		IParsedLambda Where { get; set; }
 		IParsedLambda Sortings { get; set; }
-		IList<IParsedLambda> Includes { get; set; }
 
 		bool IsEmpty { get; }
 		bool HasTakeNumOfStructures { get; }
 		bool HasPaging { get; }
 		bool HasWhere { get; }
 		bool HasSortings { get; }
-		bool HasIncludes { get; }
 	}
 }

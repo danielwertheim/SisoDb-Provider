@@ -1,9 +1,9 @@
 using System;
 using SisoDb.EnsureThat;
-using SisoDb.PineCone.Structures;
-using SisoDb.PineCone.Structures.Schemas.Configuration;
 using SisoDb.Serialization;
 using SisoDb.Structures;
+using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Configuration;
 
 namespace SisoDb.Configurations
 {
@@ -17,45 +17,67 @@ namespace SisoDb.Configurations
             Database = database;
         }
 
-        public virtual DbConfiguration UseManualStructureIdAssignment()
+        /// <summary>
+        /// If an Id exists it will be left untouched, otherwise a new ID will be generated.
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbConfiguration UseAutoIds()
         {
-            Database.StructureBuilders.ForInserts = (schema, generator) => StructureBuilders.ForPreservingStructureIds(Database.Serializer);
+            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) =>
+                StructureBuildersFn.GetBuilderForInsertsAssigningIfMissingId(Database.StructureBuilders, schema, dbClient);
 
             return this;
         }
 
-        public virtual DbConfiguration UseGuidStructureIdGeneratorResolvedBy(Func<IStructureIdGenerator> fn)
+        /// <summary>
+        /// GUID and String Ids should have been assigned. Identities will be generated for you.
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbConfiguration PreserveIds()
+        {
+            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) =>
+                StructureBuildersFn.GetBuilderForInsertsPreservingId(Database.StructureBuilders, schema, dbClient);
+
+            return this;
+        }
+
+        /// <summary>
+        /// No Ids will be generated. You are responsible for doing it.
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbConfiguration UseManualIds()
+        {
+            Database.StructureBuilders.ResolveBuilderForInsertsBy = (schema, dbClient) => 
+                StructureBuildersFn.GetBuilderForManualIdAssignment(Database.StructureBuilders, schema, dbClient);
+
+            return this;
+        }
+
+        public virtual DbConfiguration UseGuidStructureIdGeneratorResolvedBy(Func<IStructureSchema, IStructureIdGenerator> fn)
         {
             Database.StructureBuilders.GuidStructureIdGeneratorFn = fn;
 
             return this;
         }
 
-        public virtual DbConfiguration UseSerializerResolvedBy(Func<ISisoDbSerializer> fn)
+        public virtual DbConfiguration UseSerializer(ISisoSerializer serializer)
         {
-            Database.Serializer = fn();
+            Database.Serializer = serializer;
 
             return this;
         }
 
-        public virtual DbConfiguration UseCacheProviderResolvedBy(Func<ICacheProvider> fn)
+        public virtual DbConfiguration UseCacheProvider(ICacheProvider cacheProvider)
         {
-            Database.CacheProvider = fn();
+            Database.CacheProvider = cacheProvider;
 
             return this;
         }
 
         public virtual DbConfiguration ForProduction()
         {
-            Database.Settings.AllowUpsertsOfSchemas = false;
-            Database.Settings.SynchronizeSchemaChanges = false;
-
-            return this;
-        }
-
-        public virtual DbConfiguration Serializer(Action<SerializerOptions> config)
-        {
-            config(Database.Serializer.Options);
+            Database.Settings.AllowDynamicSchemaCreation = false;
+            Database.Settings.AllowDynamicSchemaUpdates = false;
 
             return this;
         }

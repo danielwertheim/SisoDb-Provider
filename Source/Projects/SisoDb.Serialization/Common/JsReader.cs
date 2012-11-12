@@ -11,7 +11,20 @@ namespace SisoDb.Serialization.Common
 
 		public ParseStringDelegate GetParseFn<T>()
 		{
+		    var onDeserializedFn = JsConfig<T>.OnDeserializedFn;
+            if (onDeserializedFn != null) {
+                return value => onDeserializedFn((T)GetCoreParseFn<T>()(value));
+            }
+
+		    return GetCoreParseFn<T>();
+		}
+
+	    private ParseStringDelegate GetCoreParseFn<T>()
+		{
 			var type = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+			if (JsConfig<T>.HasDeserializeFn)
+                return value => JsConfig<T>.ParseFn(Serializer, value);
 
 			if (type.IsEnum)
 			{
@@ -40,9 +53,6 @@ namespace SisoDb.Serialization.Common
 			if (builtInMethod != null)
 				return value => builtInMethod(Serializer.UnescapeSafeString(value));
 
-			if (JsConfig<T>.DeSerializeFn != null)
-                return value => JsConfig<T>.ParseFn(Serializer.UnescapeString(value));
-
 			if (type.IsGenericType())
 			{
 				if (type.IsOrHasGenericInterfaceTypeOf(typeof(IList<>)))
@@ -62,22 +72,23 @@ namespace SisoDb.Serialization.Common
 					return DeserializeEnumerable<T, TSerializer>.Parse;
 			}
 
-			var isCollection = typeof(T).IsOrHasGenericInterfaceTypeOf(typeof(ICollection));
-			if (isCollection)
-			{
-				var isDictionary = typeof(T).IsAssignableFrom(typeof(IDictionary))
-					|| typeof(T).HasInterface(typeof(IDictionary));
-				if (isDictionary)
-				{
-					return DeserializeDictionary<TSerializer>.GetParseMethod(type);
-				}
+#if NET40
+            if (typeof (T).IsAssignableFrom(typeof (System.Dynamic.IDynamicMetaObjectProvider)) ||
+	            typeof (T).HasInterface(typeof (System.Dynamic.IDynamicMetaObjectProvider))) 
+            {
+                return DeserializeDynamic<TSerializer>.Parse;
+            }
+#endif
 
-				return DeserializeEnumerable<T, TSerializer>.Parse;
-			}
+            var isDictionary = typeof(T).IsAssignableFrom(typeof(IDictionary))
+                || typeof(T).HasInterface(typeof(IDictionary));
+            if (isDictionary)
+            {
+                return DeserializeDictionary<TSerializer>.GetParseMethod(type);
+            }
 
 			var isEnumerable = typeof(T).IsAssignableFrom(typeof(IEnumerable))
 				|| typeof(T).HasInterface(typeof(IEnumerable));
-
 			if (isEnumerable)
 			{
 				var parseFn = DeserializeSpecializedCollections<T, TSerializer>.Parse;
