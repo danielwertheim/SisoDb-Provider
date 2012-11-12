@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using SisoDb.EnsureThat;
 using SisoDb.Querying.Lambdas.Nodes;
 

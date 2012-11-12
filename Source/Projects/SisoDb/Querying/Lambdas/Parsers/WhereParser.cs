@@ -375,6 +375,11 @@ namespace SisoDb.Querying.Lambdas.Parsers
                     Nodes.AddNode(CreateNewMemberNode(member).ToInSetNode(e.Arguments[1].Evaluate() as IEnumerable));
                     VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
                     break;
+                case "QxNotIn":
+                    VirtualPrefixMembers.Add(member);
+                    Nodes.AddNode(CreateNewMemberNode(member).ToNotInSetNode(e.Arguments[1].Evaluate() as IEnumerable));
+                    VirtualPrefixMembers.RemoveAt(VirtualPrefixMembers.Count - 1);
+                    break;
                 default:
                     throw new SisoDbNotSupportedException("Enumerable query extension (Qx) method '{0}', is not supported.".Inject(methodName));
             }

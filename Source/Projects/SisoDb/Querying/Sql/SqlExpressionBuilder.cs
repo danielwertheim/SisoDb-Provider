@@ -80,6 +80,12 @@ namespace SisoDb.Querying.Sql
                 return;
             }
 
+            if (memberNode is NotInSetMemberNode)
+            {
+                OnProcessWhereNotInSetMemberNode(builder, (NotInSetMemberNode)memberNode, memberIndex);
+                return;
+            }
+
             if (memberNode is LikeMemberNode)
             {
                 OnProcessWhereLikeMemberNode(builder, (LikeMemberNode)memberNode, memberIndex);
@@ -142,6 +148,13 @@ namespace SisoDb.Querying.Sql
         {
             builder.AddMember(memberNode, memberIndex);
             builder.AddOp(new OperatorNode(Operator.InSet()));
+            builder.AddSetOfValues(new ArrayValueNode(memberNode.DataType, memberNode.DataTypeCode, memberNode.Values));
+        }
+
+        protected virtual void OnProcessWhereNotInSetMemberNode(ISqlWhereCriteriaBuilder builder, NotInSetMemberNode memberNode, int memberIndex)
+        {
+            builder.AddMember(memberNode, memberIndex);
+            builder.AddOp(new OperatorNode(Operator.NotInSet()));
             builder.AddSetOfValues(new ArrayValueNode(memberNode.DataType, memberNode.DataTypeCode, memberNode.Values));
         }
 

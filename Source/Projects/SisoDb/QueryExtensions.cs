@@ -39,6 +39,21 @@ namespace SisoDb
         {
             throw new NotImplementedException();
         }
+
+        public static bool QxNotIn(this IEnumerable<string> m, params string[] s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxNotIn<T>(this IEnumerable<T> m, params T[] s) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxNotIn<T>(this IEnumerable<T?> m, params T?[] s) where T : struct
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static class SingleValueTypeQueryExtensions
@@ -54,6 +69,21 @@ namespace SisoDb
         }
 
         public static bool QxIn<T>(this T? m, params T?[] s) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxNotIn(this string m, params string[] s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxNotIn<T>(this T m, params T[] s) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool QxNotIn<T>(this T? m, params T?[] s) where T : struct
         {
             throw new NotImplementedException();
         }

@@ -511,6 +511,118 @@ namespace SisoDb.Specifications.Session.Querying.SetFunctions
             private static IList<Model> _refetchedStructures;
         }
 
+        [Subject(typeof(ISisoQueryable<>), "!QxIn")]
+        public class when_negated_query_of_integer_array_matches_two_of_four_in_set_of_structures : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new Model { IntValues = new []{ 1, 2 } }, 
+                    new Model { IntValues = new []{ 3, 4 } }, 
+                    new Model { IntValues = new []{ 3, 4 } }, 
+                    new Model { IntValues = new []{ 5, 6 } }, 
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () =>
+            {
+                _refetchedStructures = TestContext.Database.UseOnceTo()
+                    .Query<Model>()
+                    .Where(m => !m.IntValues.QxIn(3, 4)).ToList();
+            };
+
+            It should_have_returned_only_two_structures = () =>
+                _refetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_returned_the_two_matching_structures = () =>
+            {
+                _refetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _refetchedStructures[1].ShouldBeValueEqualTo(_structures[3]);
+            };
+
+            private static IList<Model> _structures;
+            private static IList<Model> _refetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "!QxIn")]
+        public class when_negated_query_of_integer_array_matches_all_in_set_of_structures : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new Model { IntValues = new []{ 1, 2 } }, 
+                    new Model { IntValues = new []{ 3, 4 } }, 
+                    new Model { IntValues = new []{ 3, 4 } }, 
+                    new Model { IntValues = new []{ 5, 6 } }, 
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () =>
+            {
+                _refetchedStructures = TestContext.Database.UseOnceTo()
+                    .Query<Model>()
+                    .Where(m => !m.IntValues.QxIn(0, 7)).ToList();
+            };
+
+            It should_have_returned_all_four_structures = () =>
+                _refetchedStructures.Count.ShouldEqual(4);
+
+            It should_have_returned_matching_structures = () =>
+            {
+                _refetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _refetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
+                _refetchedStructures[2].ShouldBeValueEqualTo(_structures[2]);
+                _refetchedStructures[3].ShouldBeValueEqualTo(_structures[3]);
+            };
+
+            private static IList<Model> _structures;
+            private static IList<Model> _refetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "QxNotIn")]
+        public class when_query_of_integer_array_matches_all_in_set_of_structures : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = new[]
+                {
+                    new Model { IntValues = new []{ 1, 2 } }, 
+                    new Model { IntValues = new []{ 3, 4 } }, 
+                    new Model { IntValues = new []{ 3, 4 } }, 
+                    new Model { IntValues = new []{ 5, 6 } }, 
+                };
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () =>
+            {
+                _refetchedStructures = TestContext.Database.UseOnceTo()
+                    .Query<Model>()
+                    .Where(m => m.IntValues.QxNotIn(0, 7)).ToList();
+            };
+
+            It should_have_returned_all_four_structures = () =>
+                _refetchedStructures.Count.ShouldEqual(4);
+
+            It should_have_returned_matching_structures = () =>
+            {
+                _refetchedStructures[0].ShouldBeValueEqualTo(_structures[0]);
+                _refetchedStructures[1].ShouldBeValueEqualTo(_structures[1]);
+                _refetchedStructures[2].ShouldBeValueEqualTo(_structures[2]);
+                _refetchedStructures[3].ShouldBeValueEqualTo(_structures[3]);
+            };
+
+            private static IList<Model> _structures;
+            private static IList<Model> _refetchedStructures;
+        }
+
         public class Model
         {
             public Guid Id { get; set; }

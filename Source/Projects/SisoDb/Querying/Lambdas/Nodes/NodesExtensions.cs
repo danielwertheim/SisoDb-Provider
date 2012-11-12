@@ -25,6 +25,11 @@ namespace SisoDb.Querying.Lambdas.Nodes
             return new InSetMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, values.Yield().ToArray());
         }
 
+        public static NotInSetMemberNode ToNotInSetNode(this MemberNode memberNode, IEnumerable values)
+        {
+            return new NotInSetMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, values.Yield().ToArray());
+        }
+
         public static LikeMemberNode ToLikeNode(this MemberNode memberNode, string value)
         {
             return new LikeMemberNode(memberNode.Path, memberNode.DataType, memberNode.DataTypeCode, value);
