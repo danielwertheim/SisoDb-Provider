@@ -91,12 +91,12 @@ namespace SisoDb.DbSchema
             if (UpsertedSchemasByDbClient.ContainsKey(dbClient.Id))
                 return;
 
-            dbClient.AfterCommit = () => CleanupAfterDbClient(dbClient, s =>
+            dbClient.AfterCommit = client => CleanupAfterDbClient(client, s =>
             {
                 UpsertedSchemas.Add(s);
                 TransientSchemas.Remove(s);
             });
-            dbClient.OnCompleted = () => CleanupAfterDbClient(dbClient, s => TransientSchemas.Remove(s));
+            dbClient.OnCompleted = client => CleanupAfterDbClient(client, s => TransientSchemas.Remove(s));
             UpsertedSchemasByDbClient.Add(dbClient.Id, new HashSet<string>());
         }
 

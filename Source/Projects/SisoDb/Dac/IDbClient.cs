@@ -21,9 +21,9 @@ namespace SisoDb.Dac
         IAdoDriver Driver { get; }
         IDbConnection Connection { get; }
         IDbTransaction Transaction { get; }
-        Action OnCompleted { set; }
-        Action AfterCommit { set; }
-        Action AfterRollback { set; }
+        Action<IDbClient> OnCompleted { set; }
+        Action<IDbClient> AfterCommit { set; }
+        Action<IDbClient> AfterRollback { set; }
 
         void Abort();
         void MarkAsFailed();

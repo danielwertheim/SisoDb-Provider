@@ -16,9 +16,9 @@ namespace SisoDb.Dac
     {
         protected readonly IConnectionManager ConnectionManager;
         protected readonly ISqlStatements SqlStatements;
-        protected readonly List<Action> OnCompletedActions = new List<Action>();
-        protected readonly List<Action> AfterCommitActions = new List<Action>();
-        protected readonly List<Action> AfterRollbackActions = new List<Action>();
+        protected readonly List<Action<IDbClient>> OnCompletedHandlers = new List<Action<IDbClient>>();
+        protected readonly List<Action<IDbClient>> AfterCommitHandlers = new List<Action<IDbClient>>();
+        protected readonly List<Action<IDbClient>> AfterRollbackHandlers = new List<Action<IDbClient>>();
 
         public Guid Id { get; private set; }
         public bool IsTransactional { get; private set; }
@@ -27,28 +27,28 @@ namespace SisoDb.Dac
         public IAdoDriver Driver { get; private set; }
         public IDbConnection Connection { get; private set; }
         public IDbTransaction Transaction { get; private set; }
-        public Action OnCompleted
+        public Action<IDbClient> OnCompleted
         {
             set
             {
                 Ensure.That(value, "OnComleted").IsNotNull();
-                OnCompletedActions.Add(value);
+                OnCompletedHandlers.Add(value);
             }
         }
-        public Action AfterCommit
+        public Action<IDbClient> AfterCommit
         {
             set
             {
                 Ensure.That(value, "AfterCommit").IsNotNull();
-                AfterCommitActions.Add(value);
+                AfterCommitHandlers.Add(value);
             }
         }
-        public Action AfterRollback
+        public Action<IDbClient> AfterRollback
         {
             set
             {
                 Ensure.That(value, "AfterRollback").IsNotNull();
-                AfterRollbackActions.Add(value);
+                AfterRollbackHandlers.Add(value);
             }
         }
 
@@ -117,12 +117,12 @@ namespace SisoDb.Dac
         {
             try
             {
-                AfterCommitActions.ForEach(a => a.Invoke());
+                AfterCommitHandlers.ForEach(a => a.Invoke(this));
             }
             catch {}
             finally
             {
-                AfterCommitActions.Clear();
+                AfterCommitHandlers.Clear();
             }
         }
 
@@ -130,12 +130,12 @@ namespace SisoDb.Dac
         {
             try
             {
-                AfterRollbackActions.ForEach(a => a.Invoke());
+                AfterRollbackHandlers.ForEach(a => a.Invoke(this));
             }
             catch {}
             finally
             {
-                AfterRollbackActions.Clear();
+                AfterRollbackHandlers.Clear();
             }
         }
 
@@ -155,12 +155,12 @@ namespace SisoDb.Dac
         {
             try
             {
-                OnCompletedActions.ForEach(a => a.Invoke());
+                OnCompletedHandlers.ForEach(a => a.Invoke(this));
             }
             catch { }
             finally
             {
-                OnCompletedActions.Clear();
+                OnCompletedHandlers.Clear();
             }
         }
 
