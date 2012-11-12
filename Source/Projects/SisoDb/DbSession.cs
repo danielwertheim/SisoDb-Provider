@@ -401,7 +401,7 @@ namespace SisoDb
             
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
-            InternalEvents.NotifyOnInserted(structureSchema, structure, item);
+            InternalEvents.NotifyOnInserted(this, structureSchema, structure, item);
         }
 
         public virtual ISession InsertAs<T>(object item) where T : class
@@ -434,7 +434,7 @@ namespace SisoDb
             
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
-            InternalEvents.NotifyOnInserted(structureSchema, structure, item);
+            InternalEvents.NotifyOnInserted(this, structureSchema, structure, item);
         }
 
         public virtual string InsertJson<T>(string json) where T : class
@@ -460,7 +460,7 @@ namespace SisoDb
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
-            InternalEvents.NotifyOnInserted(structureSchema, structure, item);
+            InternalEvents.NotifyOnInserted(this, structureSchema, structure, item);
 
             return structure.Data;
         }
@@ -492,7 +492,7 @@ namespace SisoDb
             {
                 var structures = structureBuilder.CreateStructures(itemsBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
-                InternalEvents.NotifyOnInserted(structureSchema, structures, itemsBatch);
+                InternalEvents.NotifyOnInserted(this, structureSchema, structures, itemsBatch);
             }
         }
 
@@ -520,7 +520,7 @@ namespace SisoDb
             {
                 var structures = structureBuilder.CreateStructures(itemsBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
-                InternalEvents.NotifyOnInserted(structureSchema, structures, itemsBatch);
+                InternalEvents.NotifyOnInserted(this, structureSchema, structures, itemsBatch);
             }
         }
 
@@ -564,7 +564,7 @@ namespace SisoDb
 
             var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             bulkInserter.Replace(structureSchema, updatedStructure);
-            InternalEvents.NotifyOnUpdated(structureSchema, updatedStructure, item);
+            InternalEvents.NotifyOnUpdated(this, structureSchema, updatedStructure, item);
         }
 
         public virtual ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
@@ -618,7 +618,7 @@ namespace SisoDb
 
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 bulkInserter.Replace(structureSchema, updatedStructure);
-                InternalEvents.NotifyOnUpdated(structureSchema, updatedStructure, item);
+                InternalEvents.NotifyOnUpdated(this, structureSchema, updatedStructure, item);
             });
 
             return this;
@@ -705,7 +705,7 @@ namespace SisoDb
                     var structures = structureBuilder.CreateStructures(items, structureSchema);
                     structureInserter.Insert(structureSchema, structures);
                     keepQueue.Clear();
-                    InternalEvents.NotifyOnUpdated(structureSchema, structures, items);
+                    InternalEvents.NotifyOnUpdated(this, structureSchema, structures, items);
                 }
 
                 if (keepQueue.Count > 0)
@@ -718,7 +718,7 @@ namespace SisoDb
                     var structures = structureBuilder.CreateStructures(items, structureSchema);
                     structureInserter.Insert(structureSchema, structures);
                     keepQueue.Clear();
-                    InternalEvents.NotifyOnUpdated(structureSchema, structures, items);
+                    InternalEvents.NotifyOnUpdated(this, structureSchema, structures, items);
                 }
             });
 
@@ -804,7 +804,7 @@ namespace SisoDb
             Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
 
             DbClient.DeleteById(structureId, structureSchema);
-            InternalEvents.NotifyOnDeleted(structureSchema, structureId);
+            InternalEvents.NotifyOnDeleted(this, structureSchema, structureId);
         }
 
         public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
@@ -833,7 +833,7 @@ namespace SisoDb
             Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
 
             DbClient.DeleteByIds(structureIds, structureSchema);
-            InternalEvents.NotifyOnDeleted(structureSchema, structureIds);
+            InternalEvents.NotifyOnDeleted(this, structureSchema, structureIds);
         }
 
         public virtual ISession DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
@@ -853,7 +853,7 @@ namespace SisoDb
                 var query = queryBuilder.Build();
                 var sql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
                 DbClient.DeleteByQuery(sql, structureSchema);
-                InternalEvents.NotifyOnDeleted(structureSchema, query);
+                InternalEvents.NotifyOnDeleted(this, structureSchema, query);
             });
 
             return this;

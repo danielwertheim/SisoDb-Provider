@@ -8,12 +8,12 @@ namespace SisoDb
 {
     public class SessionEvents : ISessionEvents
     {
-        protected readonly List<Action<IStructureSchema, IStructure, object>> OnInsertedHandlers;
-        protected readonly List<Action<IStructureSchema, IStructure, object>> OnUpdatedHandlers;
-        protected readonly List<Action<IStructureSchema, IStructureId>> OnDeletedHandlers;
-        protected readonly List<Action<IStructureSchema, IQuery>> OnDeletedByQueryHandlers;
+        protected readonly List<Action<ISession, IStructureSchema, IStructure, object>> OnInsertedHandlers;
+        protected readonly List<Action<ISession, IStructureSchema, IStructure, object>> OnUpdatedHandlers;
+        protected readonly List<Action<ISession, IStructureSchema, IStructureId>> OnDeletedHandlers;
+        protected readonly List<Action<ISession, IStructureSchema, IQuery>> OnDeletedByQueryHandlers;
 
-        public Action<IStructureSchema, IStructure, object> OnInserted 
+        public Action<ISession, IStructureSchema, IStructure, object> OnInserted 
         { 
             set 
             {
@@ -21,7 +21,7 @@ namespace SisoDb
                 RegisterNewOnInsertedHandler(value);
             }
         }
-        public Action<IStructureSchema, IStructure, object> OnUpdated
+        public Action<ISession, IStructureSchema, IStructure, object> OnUpdated
         {
             set
             {
@@ -30,7 +30,7 @@ namespace SisoDb
             }
         }
 
-        public Action<IStructureSchema, IStructureId> OnDeleted
+        public Action<ISession, IStructureSchema, IStructureId> OnDeleted
         {
             set
             {
@@ -39,7 +39,7 @@ namespace SisoDb
             }
         }
 
-        public Action<IStructureSchema, IQuery> OnDeletedByQuery
+        public Action<ISession, IStructureSchema, IQuery> OnDeletedByQuery
         {
             set
             {
@@ -50,72 +50,72 @@ namespace SisoDb
 
         public SessionEvents()
         {
-            OnInsertedHandlers = new List<Action<IStructureSchema, IStructure, object>>();
-            OnUpdatedHandlers = new List<Action<IStructureSchema, IStructure, object>>();
-            OnDeletedHandlers = new List<Action<IStructureSchema, IStructureId>>();
-            OnDeletedByQueryHandlers = new List<Action<IStructureSchema, IQuery>>();
+            OnInsertedHandlers = new List<Action<ISession, IStructureSchema, IStructure, object>>();
+            OnUpdatedHandlers = new List<Action<ISession, IStructureSchema, IStructure, object>>();
+            OnDeletedHandlers = new List<Action<ISession, IStructureSchema, IStructureId>>();
+            OnDeletedByQueryHandlers = new List<Action<ISession, IStructureSchema, IQuery>>();
         }
 
-        protected virtual void RegisterNewOnInsertedHandler(Action<IStructureSchema, IStructure, object> handler)
+        protected virtual void RegisterNewOnInsertedHandler(Action<ISession, IStructureSchema, IStructure, object> handler)
         {
             OnInsertedHandlers.Add(handler);
         }
 
-        protected virtual void RegisterNewOnUpdatedHandler(Action<IStructureSchema, IStructure, object> handler)
+        protected virtual void RegisterNewOnUpdatedHandler(Action<ISession, IStructureSchema, IStructure, object> handler)
         {
             OnUpdatedHandlers.Add(handler);
         }
 
-        protected virtual void RegisterNewOnDeletedHandler(Action<IStructureSchema, IStructureId> handler)
+        protected virtual void RegisterNewOnDeletedHandler(Action<ISession, IStructureSchema, IStructureId> handler)
         {
             OnDeletedHandlers.Add(handler);
         }
 
-        protected virtual void RegisterNewOnDeletedByQueryHandler(Action<IStructureSchema, IQuery> handler)
+        protected virtual void RegisterNewOnDeletedByQueryHandler(Action<ISession, IStructureSchema, IQuery> handler)
         {
             OnDeletedByQueryHandlers.Add(handler);
         }
 
-        public virtual void NotifyOnInserted(IStructureSchema schema, IStructure structure, object item)
+        public virtual void NotifyOnInserted(ISession session, IStructureSchema schema, IStructure structure, object item)
         {
             foreach (var handler in OnInsertedHandlers)
-                handler.Invoke(schema, structure, item);
+                handler.Invoke(session, schema, structure, item);
         }
 
-        public virtual void NotifyOnInserted(IStructureSchema schema, IStructure[] structures, object[] items)
+        public virtual void NotifyOnInserted(ISession session, IStructureSchema schema, IStructure[] structures, object[] items)
         {
             for (var i = 0; i < structures.Length; i++)
-                NotifyOnInserted(schema, structures[i], items[i]);
+                NotifyOnInserted(session, schema, structures[i], items[i]);
         }
 
-        public virtual void NotifyOnUpdated(IStructureSchema schema, IStructure structure, object item)
+        public virtual void NotifyOnUpdated(ISession session, IStructureSchema schema, IStructure structure, object item)
         {
             foreach (var handler in OnUpdatedHandlers)
-                handler.Invoke(schema, structure, item);
+                handler.Invoke(session, schema, structure, item);
         }
 
-        public virtual void NotifyOnUpdated(IStructureSchema schema, IStructure[] structures, object[] items)
+        public virtual void NotifyOnUpdated(ISession session, IStructureSchema schema, IStructure[] structures, object[] items)
         {
             for (var i = 0; i < structures.Length; i++)
-                NotifyOnUpdated(schema, structures[i], items[i]);
+                NotifyOnUpdated(session, schema, structures[i], items[i]);
         }
 
-        public virtual void NotifyOnDeleted(IStructureSchema schema, IStructureId id)
+        public virtual void NotifyOnDeleted(ISession session, IStructureSchema schema, IStructureId id)
         {
             foreach (var handler in OnDeletedHandlers)
-                handler.Invoke(schema, id);
+                handler.Invoke(session, schema, id);
         }
 
-        public virtual void NotifyOnDeleted(IStructureSchema schema, IStructureId[] ids)
+        public virtual void NotifyOnDeleted(ISession session, IStructureSchema schema, IStructureId[] ids)
         {
             foreach (var id in ids)
-                NotifyOnDeleted(schema, id);
+                NotifyOnDeleted(session, schema, id);
         }
 
-        public virtual void NotifyOnDeleted(IStructureSchema schema, IQuery query)
+        public virtual void NotifyOnDeleted(ISession session, IStructureSchema schema, IQuery query)
         {
             foreach (var handler in OnDeletedByQueryHandlers)
-                handler.Invoke(schema, query);
+                handler.Invoke(session, schema, query);
         }
     }
 }
