@@ -19,7 +19,7 @@ namespace SisoDb.Spatial
         protected internal SqlServerSisoSpatials(ISessionExecutionContext executionContext)
         {
             ExecutionContext = executionContext;
-            SqlStatements = new SpatialSqlStatements();
+            SqlStatements = SpatialSqlStatements.Instance;
         }
 
         public virtual bool PointExistsInPolygonFor<T>(object id, Tuple<double, double> coords, int srid = SpatialReferenceId.Wsg84) where T : class
