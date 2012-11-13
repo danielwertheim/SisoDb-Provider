@@ -83,12 +83,20 @@ namespace SisoDb.SqlServer
                     (object[])dacParameter.Value);
             }
 
+            if(DbSchemaInfo.Parameters.ShouldBeGeography(dacParameter))
+            {
+                dbParam.SqlDbType = SqlDbType.Udt;
+                dbParam.UdtTypeName = "geography";
+                return dbParam;
+            }
+
             if (DbSchemaInfo.Parameters.ShouldBeDateTime(dacParameter))
             {
                 dbParam.DbType = DbType.DateTime2;
                 return dbParam;
             }
 
+            //Order is important. Non Unicoe first, since Unicode is fallback
             if (DbSchemaInfo.Parameters.ShouldBeNonUnicodeString(dacParameter))
             {
                 dbParam.SqlDbType = SqlDbType.VarChar;
@@ -100,11 +108,8 @@ namespace SisoDb.SqlServer
                 setSize = true;
             }
 
-            if(setSize)
-            {
+            if (setSize)
                 dbParam.Size = (dacParameter.Value.ToStringOrNull() ?? string.Empty).Length;
-                return dbParam;
-            }
 
             return dbParam;
         }

@@ -72,6 +72,7 @@
     <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="Configurations\ConnectionString.cs" />
     <Compile Include="Dac\ArrayDacParameter.cs" />
+    <Compile Include="Dac\GeographyDacParameter.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
