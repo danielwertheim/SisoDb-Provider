@@ -5,15 +5,9 @@ using SisoDb.Resources;
 
 namespace SisoDb
 {
-    /// <summary>
-    /// All operations within <see cref="DbSession"/> needs to be
-    /// wrapped in a try, so that exceptions can be catched and
-    /// the session could be marked as failed, so that automatic
-    /// commits or rollbacks can be performed.
-    /// </summary>
-    public class SessionExecutionContext
+    public class SessionExecutionContext : ISessionExecutionContext
     {
-        protected readonly ISession Session;
+        public ISession Session { get; private set; }
 
         public SessionExecutionContext(ISession session)
         {

@@ -136,6 +136,7 @@
     <Compile Include="IDbSettings.cs" />
     <Compile Include="IMigrationInfo.cs" />
     <Compile Include="ISessionEvents.cs" />
+    <Compile Include="ISessionExecutionContext.cs" />
     <Compile Include="ISisoDatabaseMaintenance.cs" />
     <Compile Include="IQueryEngine.cs" />
     <Compile Include="IRawQuery.cs" />
