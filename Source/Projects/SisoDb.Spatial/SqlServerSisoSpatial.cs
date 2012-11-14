@@ -1,4 +1,3 @@
-using System;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.Text;
@@ -10,19 +9,19 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Spatial
 {
-    public class SqlServerSisoSpatials : ISisoSpatials
+    public class SqlServerSisoSpatial : ISisoSpatial
     {
         protected readonly ISessionExecutionContext ExecutionContext;
         protected ISession Session { get { return ExecutionContext.Session; } }
         protected readonly ISqlStatements SqlStatements;
 
-        protected internal SqlServerSisoSpatials(ISessionExecutionContext executionContext)
+        protected internal SqlServerSisoSpatial(ISessionExecutionContext executionContext)
         {
             ExecutionContext = executionContext;
             SqlStatements = SpatialSqlStatements.Instance;
         }
 
-        public virtual bool PointExistsInPolygonFor<T>(object id, Tuple<double, double> coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual bool PointExistsInPolygonFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             return ExecutionContext.Try(() =>
             {
@@ -66,7 +65,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void InsertPolygonTo<T>(object id, Tuple<double, double>[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual void InsertPolygonTo<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -78,7 +77,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void UpdatePolygonIn<T>(object id, Tuple<double, double>[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual void UpdatePolygonIn<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -90,7 +89,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void SetPolygonIn<T>(object id, Tuple<double, double>[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual void SetPolygonIn<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -112,12 +111,12 @@ namespace SisoDb.Spatial
             return new DacParameter("id", id);
         }
 
-        protected virtual GeographyDacParameter CreatePointParam(Tuple<double, double> coords, int srid)
+        protected virtual GeographyDacParameter CreatePointParam(Coordinates coords, int srid)
         {
-            return new GeographyDacParameter("geo", SqlGeography.Point(coords.Item1, coords.Item2, srid));
+            return new GeographyDacParameter("geo", SqlGeography.Point(coords.Latitude, coords.Longitude, srid));
         }
 
-        protected virtual GeographyDacParameter CreatePolygonParam(Tuple<double, double>[] coords, int srid)
+        protected virtual GeographyDacParameter CreatePolygonParam(Coordinates[] coords, int srid)
         {
             var s = BuildPolygonString(coords);
             var polygon = new SqlChars(s.ToCharArray());
@@ -125,16 +124,16 @@ namespace SisoDb.Spatial
             return new GeographyDacParameter("geo", SqlGeography.STPolyFromText(polygon, srid));
         }
 
-        protected virtual string BuildPolygonString(Tuple<double, double>[] coords)
+        protected virtual string BuildPolygonString(Coordinates[] coords)
         {
             var s = new StringBuilder();
             s.Append("POLYGON((");
             for (var i = 0; i < coords.Length; i++)
             {
                 var coord = coords[i];
-                s.Append(coord.Item1.ToString(CultureInfo.InvariantCulture));
+                s.Append(coord.Longitude.ToString(CultureInfo.InvariantCulture));
                 s.Append(" ");
-                s.Append(coord.Item2.ToString(CultureInfo.InvariantCulture));
+                s.Append(coord.Latitude.ToString(CultureInfo.InvariantCulture));
 
                 if (i < coords.Length - 1)
                     s.Append(",");

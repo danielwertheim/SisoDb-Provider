@@ -2,7 +2,7 @@ using System;
 
 namespace SisoDb.Spatial
 {
-    public interface ISisoSpatials 
+    public interface ISisoSpatial 
     {
         /// <summary>
         /// Creates a table for the structure <typeparam name="T"></typeparam> holding spatial data, but only if it does not exist.
@@ -22,7 +22,7 @@ namespace SisoDb.Spatial
         /// <param name="coords"></param>
         /// <param name="srid"></param>
         /// <returns></returns>
-        bool PointExistsInPolygonFor<T>(object id, Tuple<double, double> coords, int srid = SpatialReferenceId.Wsg84) where T : class;
+        bool PointExistsInPolygonFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         /// <summary>
         /// Deletes any geo-records for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
         /// </summary>
@@ -36,7 +36,7 @@ namespace SisoDb.Spatial
         /// <param name="id"></param>
         /// <param name="coords"></param>
         /// <param name="srid"></param>
-        void InsertPolygonTo<T>(object id, Tuple<double, double>[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
+        void InsertPolygonTo<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         /// <summary>
         /// Updates geo as polygon for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
         /// </summary>
@@ -44,7 +44,7 @@ namespace SisoDb.Spatial
         /// <param name="id"></param>
         /// <param name="coords"></param>
         /// <param name="srid"></param>
-        void UpdatePolygonIn<T>(object id, Tuple<double, double>[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
+        void UpdatePolygonIn<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         /// <summary>
         /// Inserts or Updates geo as polygon for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
         /// </summary>
@@ -52,6 +52,6 @@ namespace SisoDb.Spatial
         /// <param name="id"></param>
         /// <param name="coords"></param>
         /// <param name="srid"></param>
-        void SetPolygonIn<T>(object id, Tuple<double, double>[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
+        void SetPolygonIn<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
     }
 }

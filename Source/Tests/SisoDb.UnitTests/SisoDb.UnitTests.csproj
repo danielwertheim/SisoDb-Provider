@@ -237,6 +237,10 @@
       <Project>{d340bbcb-812e-4e48-abce-5a2e64ae8d63}</Project>
       <Name>SisoDb.ServiceStack</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Spatial\SisoDb.Spatial.csproj">
+      <Project>{247A9856-C54B-4B11-8FEB-312FA5E86DFA}</Project>
+      <Name>SisoDb.Spatial</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2005\SisoDb.Sql2005.csproj">
       <Project>{47bf9f27-5794-48b6-9476-2dfacd3ba806}</Project>
       <Name>SisoDb.Sql2005</Name>

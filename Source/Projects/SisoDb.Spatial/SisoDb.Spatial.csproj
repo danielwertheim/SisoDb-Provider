@@ -41,10 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ISisoSpatials.cs" />
+    <Compile Include="Coordinates.cs" />
+    <Compile Include="ISisoSpatial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionExtensions.cs" />
-    <Compile Include="SqlServerSisoSpatials.cs" />
+    <Compile Include="SqlServerSisoSpatial.cs" />
     <Compile Include="SpatialReferenceId.cs" />
     <Compile Include="SpatialSqlStatements.cs" />
   </ItemGroup>
