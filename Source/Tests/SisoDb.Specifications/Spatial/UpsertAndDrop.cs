@@ -1,6 +1,5 @@
 ﻿using Machine.Specifications;
 using SisoDb.Spatial;
-using SisoDb.Spatial.DbSchema;
 using SisoDb.Specifications.Model;
 using SisoDb.Structures.Schemas;
 using SisoDb.Testing;

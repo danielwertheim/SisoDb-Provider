@@ -560,6 +560,8 @@ delete from [{7}] where StructureId = @id;</value>
 	union
 	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Texts'
 	union
+	select 0 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Spatial'
+	union
 	select 1 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
 	union
 	select 2 groupId, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
@@ -585,7 +587,7 @@ order by groupId</value>
     <value>delete from [{0}];</value>
   </data>
   <data name="GetModelTableStatuses" xml:space="preserve">
-    <value>select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
+    <value>select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8, @tableName9);</value>
   </data>
   <data name="DeleteAllExceptIds" xml:space="preserve">
     <value>delete from [{0}] where StructureId not in ({1});</value>

@@ -7,7 +7,6 @@ using Microsoft.SqlServer.Types;
 using SisoDb.Dac;
 using SisoDb.NCore;
 using SisoDb.DbSchema;
-using SisoDb.Spatial.DbSchema;
 using SisoDb.Spatial.Resources;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;

@@ -51,20 +51,22 @@ namespace SisoDb.SqlCe4
             return nextId;
         }
 
-        protected override void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames)
+        protected override void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldSpatialTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames)
         {
             var dropFkContraintSqlFormat = SqlStatements.GetSql("DropFkContraint");
 
+            ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldSpatialTableName, oldStructureTableName));
             ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldUniquesTableName, oldStructureTableName));
             
             foreach (var oldIndexTableName in oldIndexesTableNames.All)
                 ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldIndexTableName, oldStructureTableName));
         }
 
-        protected override void OnAfterRenameOfStructureSet(string newStructureTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames)
+        protected override void OnAfterRenameOfStructureSet(string newStructureTableName, string newSpatialTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames)
         {
             var addFkContraintSqlFormat = SqlStatements.GetSql("AddFkContraintAgainstStructureId");
 
+            ExecuteNonQuery(addFkContraintSqlFormat.Inject(newSpatialTableName, newStructureTableName));
             ExecuteNonQuery(addFkContraintSqlFormat.Inject(newUniquesTableName, newStructureTableName));
 
             foreach (var newIndexTableName in newIndexesTableNames.All)
@@ -82,6 +84,14 @@ namespace SisoDb.SqlCe4
                 new DacParameter("newname", newTableName),
                 new DacParameter("objtype", "OBJECT"));
             ExecuteNonQuery(addPkConstraintSqlFormat.Inject(newTableName));
+        }
+
+        protected override void OnRenameSpatialTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
+        {
+            ExecuteNonQuery("sp_rename @objname=@objname, @newname=@newname, @objtype=@objtype",
+                new DacParameter("objname", oldTableName),
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT"));
         }
 
         protected override void OnRenameUniquesTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
@@ -127,6 +137,12 @@ namespace SisoDb.SqlCe4
                 if (modelInfo.Statuses.UniquesTableExists)
                 {
                     cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetUniquesTableName());
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (modelInfo.Statuses.SpatialTableExists)
+                {
+                    cmd.CommandText = sqlDropTableFormat.Inject(structureSchema.GetStructureTableName());
                     cmd.ExecuteNonQuery();
                 }
 

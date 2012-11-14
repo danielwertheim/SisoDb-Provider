@@ -7,6 +7,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Spatial
 {
+#if Sql2008Provider || Sql2012Provider
     class GeographicalOperations
     {
         [Subject(typeof(ISisoSpatial), "SetPolygonIn")]
@@ -207,4 +208,5 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
     }
+#endif
 }

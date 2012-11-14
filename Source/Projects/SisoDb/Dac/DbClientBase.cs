@@ -245,6 +245,9 @@ namespace SisoDb.Dac
             var oldStructureTableName = DbSchemaInfo.GenerateStructureTableName(oldStructureName);
             var newStructureTableName = DbSchemaInfo.GenerateStructureTableName(newStructureName);
 
+            var oldSpatialTableName = DbSchemaInfo.GenerateSpatialTableName(oldStructureName);
+            var newSpatialTableName = DbSchemaInfo.GenerateSpatialTableName(newStructureName);
+
             var oldUniquesTableName = DbSchemaInfo.GenerateUniquesTableName(oldStructureName);
             var newUniquesTableName = DbSchemaInfo.GenerateUniquesTableName(newStructureName);
 
@@ -254,18 +257,17 @@ namespace SisoDb.Dac
             if (TableExists(newStructureTableName))
                 throw new SisoDbException("There allready seems to exist tables for '{0}' in the database.".Inject(newStructureTableName));
 
-            OnBeforeRenameOfStructureSet(oldStructureTableName, oldUniquesTableName, oldIndexesTableNames);
-
+            OnBeforeRenameOfStructureSet(oldStructureTableName, oldSpatialTableName, oldUniquesTableName, oldIndexesTableNames);
             OnRenameStructureTable(oldStructureTableName, newStructureTableName);
+            OnRenameSpatialTable(oldSpatialTableName, newSpatialTableName, oldStructureTableName, newStructureTableName);
             OnRenameUniquesTable(oldUniquesTableName, newUniquesTableName, oldStructureTableName, newStructureTableName);
             OnRenameIndexesTables(oldIndexesTableNames, newIndexesTableNames, oldStructureTableName, newStructureTableName);
-
-            OnAfterRenameOfStructureSet(newStructureTableName, newUniquesTableName, newIndexesTableNames);
+            OnAfterRenameOfStructureSet(newStructureTableName, newSpatialTableName, newUniquesTableName, newIndexesTableNames);
         }
 
-        protected virtual void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames) { }
+        protected virtual void OnBeforeRenameOfStructureSet(string oldStructureTableName, string oldSpatialTableName, string oldUniquesTableName, IndexesTableNames oldIndexesTableNames) { }
 
-        protected virtual void OnAfterRenameOfStructureSet(string newStructureTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames) { }
+        protected virtual void OnAfterRenameOfStructureSet(string newStructureTableName, string newSpatialTableName, string newUniquesTableName, IndexesTableNames newIndexesTableNames) { }
 
         protected virtual void OnRenameStructureTable(string oldTableName, string newTableName)
         {
@@ -281,6 +283,38 @@ namespace SisoDb.Dac
                     new DacParameter("objname", string.Concat("PK_", oldTableName)), 
                     new DacParameter("newname", string.Concat("PK_", newTableName)), 
                     new DacParameter("objtype", "OBJECT"));
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        protected virtual void OnRenameSpatialTable(string oldTableName, string newTableName, string oldStructureTableName, string newStructureTableName)
+        {
+            using (var cmd = CreateSpCommand("sp_rename",
+                new DacParameter("objname", oldTableName),
+                new DacParameter("newname", newTableName),
+                new DacParameter("objtype", "OBJECT")))
+            {
+                cmd.ExecuteNonQuery();
+
+                cmd.Parameters.Clear();
+                Driver.AddCommandParametersTo(cmd,
+                    new DacParameter("objname", string.Concat("PK_", oldTableName)),
+                    new DacParameter("newname", string.Concat("PK_", newTableName)),
+                    new DacParameter("objtype", "OBJECT"));
+                cmd.ExecuteNonQuery();
+
+                cmd.Parameters.Clear();
+                Driver.AddCommandParametersTo(cmd,
+                    new DacParameter("objname", string.Format("FK_{0}_{1}", oldTableName, oldStructureTableName)),
+                    new DacParameter("newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)),
+                    new DacParameter("objtype", "OBJECT"));
+                cmd.ExecuteNonQuery();
+
+                cmd.Parameters.Clear();
+                Driver.AddCommandParametersTo(cmd,
+                    new DacParameter("objname", string.Format("{0}.SPK_{1}", newTableName, oldTableName)),
+                    new DacParameter("newname", string.Format("SPK_{0}", newTableName)),
+                    new DacParameter("objtype", "INDEX"));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -358,6 +392,7 @@ namespace SisoDb.Dac
                 names.IndexesTableNames.GuidsTableName,
                 names.IndexesTableNames.StringsTableName,
                 names.IndexesTableNames.TextsTableName,
+                names.SpatialTableName,
                 names.UniquesTableName,
                 names.StructureTableName);
 
@@ -509,6 +544,7 @@ namespace SisoDb.Dac
 
             return new ModelTableStatuses(
                 matchingNames.Contains(names.StructureTableName),
+                matchingNames.Contains(names.SpatialTableName),
                 matchingNames.Contains(names.UniquesTableName),
                 new IndexesTableStatuses(
                     matchingNames.Contains(names.IndexesTableNames.IntegersTableName),
