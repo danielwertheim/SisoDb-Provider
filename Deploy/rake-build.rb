@@ -25,6 +25,7 @@ require 'albacore'
 @env_projectnameMiniProfiler = 'SisoDb.MiniProfiler'
 @env_projectnameJsonNet = 'SisoDb.JsonNet'
 @env_projectnameServiceStack = 'SisoDb.ServiceStack'
+@env_projectnameSpatial = 'SisoDb.Spatial'
 
 @env_buildfolderpath = 'build'
 @env_assversion = "16.0.0"
@@ -45,6 +46,7 @@ buildNameSuffix = "-v#{@env_buildversion}-#{@env_buildconfigname}"
 @env_buildnameMiniProfiler = "#{@env_projectnameMiniProfiler}#{buildNameSuffix}"
 @env_buildnameJsonNet = "#{@env_projectnameJsonNet}#{buildNameSuffix}"
 @env_buildnameServiceStack = "#{@env_projectnameServiceStack}#{buildNameSuffix}"
+@env_buildnameSpatial = "#{@env_projectnameSpatial}#{buildNameSuffix}"
 #--------------------------------------
 # Reusable vars
 #--------------------------------------
@@ -60,6 +62,7 @@ glimpseOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameGlimpse}"
 miniProfilerOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameMiniProfiler}"
 jsonNetOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameJsonNet}"
 serviceStackOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameServiceStack}"
+spatialOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSpatial}"
 sharedAssemblyInfoPath = "#{@env_solutionfolderpath}/SharedAssemblyInfo.cs"
 #--------------------------------------
 # Albacore flow controlling tasks
@@ -68,13 +71,13 @@ task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
 task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 #--------------------------------------
-task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler, :copyJsonNet, :copyServiceStack]
+task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler, :copyJsonNet, :copyServiceStack, :copySpatial]
 
 task :testIt => [:unittests]
 
-task :zipIt => [:zipCore, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipAspWebCache, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler, :zipJsonNet, :zipServiceStack]
+task :zipIt => [:zipCore, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipAspWebCache, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler, :zipJsonNet, :zipServiceStack, :zipSpatial]
 
-task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packAspWebCache, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler, :packJsonNet, :packServiceStack]
+task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packAspWebCache, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler, :packJsonNet, :packServiceStack, :packSpatial]
 #--------------------------------------
 # Albacore tasks
 #--------------------------------------
@@ -155,6 +158,10 @@ task :copyServiceStack do
     copyProject(@env_projectnameServiceStack, serviceStackOutputPath)
 end
 
+task :copySpatial do
+    copyProject(@env_projectnameSpatial, spatialOutputPath)
+end
+
 nunit :unittests do |nunit|
     nunit.command = "nunit-console.exe"
     nunit.options "/framework=v4.0.30319","/xml=#{@env_buildfolderpath}/NUnit-Report-#{@env_solutionname}-UnitTests.xml"
@@ -215,6 +222,10 @@ zip :zipServiceStack do |zip|
     zipProject(zip, serviceStackOutputPath, @env_buildnameServiceStack)
 end
 
+zip :zipSpatial do |zip|
+    zipProject(zip, spatialOutputPath, @env_buildnameSpatial)
+end
+
 def packProject(cmd, projectname, basepath)
     cmd.command = "NuGet.exe"
     cmd.parameters = "pack #{projectname}.nuspec -version #{@env_version} -basepath #{basepath} -outputdirectory #{@env_buildfolderpath}"
@@ -266,4 +277,8 @@ end
 
 exec :packServiceStack do |cmd|
     packProject(cmd, @env_projectnameServiceStack, serviceStackOutputPath)
+end
+
+exec :packSpatial do |cmd|
+    packProject(cmd, @env_projectnameSpatial, spatialOutputPath)
 end
