@@ -26,7 +26,7 @@ namespace SisoDb.Spatial
             SqlStatements = SpatialSqlStatements.Instance;
         }
 
-        public virtual void UpsertFor<T>() where T : class
+        public virtual void EnableFor<T>() where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -37,7 +37,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void DropFor<T>() where T : class
+        public virtual void RemoveFor<T>() where T : class
         {
             ExecutionContext.Try(() =>
             {

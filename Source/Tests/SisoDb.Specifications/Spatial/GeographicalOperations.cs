@@ -21,7 +21,7 @@ namespace SisoDb.Specifications.Spatial
                     session.Insert(_item);
 
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialGuidItem>();
+                    s.EnableFor<SpatialGuidItem>();
 
                     _structureSchema = session.GetStructureSchema<SpatialGuidItem>();
                 }
@@ -70,7 +70,7 @@ namespace SisoDb.Specifications.Spatial
                     session.Insert(_item);
 
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialGuidItem>();
+                    s.EnableFor<SpatialGuidItem>();
 
                     _structureSchema = session.GetStructureSchema<SpatialGuidItem>();
                 }
@@ -128,7 +128,7 @@ namespace SisoDb.Specifications.Spatial
                     session.Insert(_item);
 
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialGuidItem>();
+                    s.EnableFor<SpatialGuidItem>();
                     s.SetPolygonIn<SpatialGuidItem>(_item.StructureId, orgCoordinates);
                     _structureSchema = session.GetStructureSchema<SpatialGuidItem>();
                 }
@@ -178,7 +178,7 @@ namespace SisoDb.Specifications.Spatial
                     session.Insert(_item);
 
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialGuidItem>();
+                    s.EnableFor<SpatialGuidItem>();
                     s.SetPolygonIn<SpatialGuidItem>(_item.StructureId, orgCoordinates);
                     _structureSchema = session.GetStructureSchema<SpatialGuidItem>();
                 }

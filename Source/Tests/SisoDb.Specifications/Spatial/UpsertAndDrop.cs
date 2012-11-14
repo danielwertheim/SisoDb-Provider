@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.Spatial
 #if Sql2008Provider || Sql2012Provider
     class UpsertAndDrop
     {
-        [Subject(typeof(ISisoSpatial), "UpsertFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_guid_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -25,7 +25,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialGuidItem>();
+                    s.EnableFor<SpatialGuidItem>();
                 }
             };
 
@@ -35,7 +35,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoSpatial), "UpsertFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_identity_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -50,7 +50,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialIdentityItem>();
+                    s.EnableFor<SpatialIdentityItem>();
                 }
             };
 
@@ -60,7 +60,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoSpatial), "UpsertFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_big_identity_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -75,7 +75,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialBigIdentityItem>();
+                    s.EnableFor<SpatialBigIdentityItem>();
                 }
             };
 
@@ -85,7 +85,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoSpatial), "UpsertFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_string_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -100,7 +100,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialStringItem>();
+                    s.EnableFor<SpatialStringItem>();
                 }
             };
 
@@ -110,7 +110,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoSpatial), "UpsertFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_dropping_without_any_existing : SpecificationBase
         {
             Establish context = () =>
@@ -125,7 +125,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.DropFor<SpatialGuidItem>();
+                    s.RemoveFor<SpatialGuidItem>();
                 }
             };
 
@@ -135,7 +135,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoSpatial), "UpsertFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_dropping_existing : SpecificationBase
         {
             Establish context = () =>
@@ -146,7 +146,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.UpsertFor<SpatialGuidItem>();
+                    s.EnableFor<SpatialGuidItem>();
                 }
             };
 
@@ -155,7 +155,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.DropFor<SpatialGuidItem>();
+                    s.RemoveFor<SpatialGuidItem>();
                 }
             };
 

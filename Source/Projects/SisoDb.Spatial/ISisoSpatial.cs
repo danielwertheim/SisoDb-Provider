@@ -8,12 +8,12 @@ namespace SisoDb.Spatial
         /// Creates a table for the structure <typeparam name="T"></typeparam> holding spatial data, but only if it does not exist.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        void UpsertFor<T>() where T : class;
+        void EnableFor<T>() where T : class;
         /// <summary>
         /// Will drop any existing table for the structure <typeparam name="T"></typeparam>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        void DropFor<T>() where T : class;
+        void RemoveFor<T>() where T : class;
         /// <summary>
         /// Deletes any geo-records for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
         /// </summary>
