@@ -55,7 +55,8 @@ namespace SisoDb.SqlCe4
         {
             var dropFkContraintSqlFormat = SqlStatements.GetSql("DropFkContraint");
 
-            ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldSpatialTableName, oldStructureTableName));
+            if(TableExists(oldSpatialTableName))
+                ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldSpatialTableName, oldStructureTableName));
             ExecuteNonQuery(dropFkContraintSqlFormat.Inject(oldUniquesTableName, oldStructureTableName));
             
             foreach (var oldIndexTableName in oldIndexesTableNames.All)
@@ -66,7 +67,8 @@ namespace SisoDb.SqlCe4
         {
             var addFkContraintSqlFormat = SqlStatements.GetSql("AddFkContraintAgainstStructureId");
 
-            ExecuteNonQuery(addFkContraintSqlFormat.Inject(newSpatialTableName, newStructureTableName));
+            if (TableExists(newSpatialTableName))
+                ExecuteNonQuery(addFkContraintSqlFormat.Inject(newSpatialTableName, newStructureTableName));
             ExecuteNonQuery(addFkContraintSqlFormat.Inject(newUniquesTableName, newStructureTableName));
 
             foreach (var newIndexTableName in newIndexesTableNames.All)

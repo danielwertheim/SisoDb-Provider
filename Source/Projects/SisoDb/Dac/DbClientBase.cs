@@ -259,7 +259,8 @@ namespace SisoDb.Dac
 
             OnBeforeRenameOfStructureSet(oldStructureTableName, oldSpatialTableName, oldUniquesTableName, oldIndexesTableNames);
             OnRenameStructureTable(oldStructureTableName, newStructureTableName);
-            OnRenameSpatialTable(oldSpatialTableName, newSpatialTableName, oldStructureTableName, newStructureTableName);
+            if (TableExists(oldSpatialTableName))
+                OnRenameSpatialTable(oldSpatialTableName, newSpatialTableName, oldStructureTableName, newStructureTableName);
             OnRenameUniquesTable(oldUniquesTableName, newUniquesTableName, oldStructureTableName, newStructureTableName);
             OnRenameIndexesTables(oldIndexesTableNames, newIndexesTableNames, oldStructureTableName, newStructureTableName);
             OnAfterRenameOfStructureSet(newStructureTableName, newSpatialTableName, newUniquesTableName, newIndexesTableNames);

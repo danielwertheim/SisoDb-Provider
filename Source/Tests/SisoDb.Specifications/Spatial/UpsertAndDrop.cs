@@ -1,4 +1,5 @@
 ﻿using Machine.Specifications;
+using SisoDb.DbSchema;
 using SisoDb.Spatial;
 using SisoDb.Specifications.Model;
 using SisoDb.Structures.Schemas;

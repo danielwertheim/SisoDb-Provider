@@ -88,6 +88,7 @@ namespace SisoDb.UnitTests.DbSchema
 
         private static ModelTableStatuses CreateStatuses(
             bool structureTableExists = true,
+            bool spatialTableExists = true,
             bool uniquesTableExists = true,
             bool integersTableExists = true,
             bool fractalsTableExists = true,
@@ -106,7 +107,7 @@ namespace SisoDb.UnitTests.DbSchema
                 stringsTableExists,
                 textsTableExists);
 
-            return new ModelTableStatuses(structureTableExists, uniquesTableExists, indexesStatuses);
+            return new ModelTableStatuses(structureTableExists, spatialTableExists, uniquesTableExists, indexesStatuses);
         }
     }
 }

@@ -13,6 +13,11 @@ namespace SisoDb.SqlCe4
     {
         public const int MaxLenOfStringBeforeEscalating = 4000;
 
+        public SqlCe4AdoDriver()
+        {
+            CommandTimeout = 0;
+        }
+
         public override IDbConnection CreateConnection(string connectionString)
         {
             Ensure.That(connectionString, "connectionString").IsNotNull();

@@ -32,13 +32,14 @@ namespace SisoDb.DbSchema
         private void OnInitialize(string structureName)
         {
             StructureTableName = DbSchemaInfo.GenerateStructureTableName(structureName);
-            StructureTableName = DbSchemaInfo.GenerateSpatialTableName(structureName);
+            SpatialTableName = DbSchemaInfo.GenerateSpatialTableName(structureName);
             UniquesTableName = DbSchemaInfo.GenerateUniquesTableName(structureName);
             IndexesTableNames = new IndexesTableNames(structureName);
 
             AllTableNames = new[]
 	        {
 	            StructureTableName,
+                SpatialTableName,
                 UniquesTableName
 	        }
             .MergeWith(IndexesTableNames.All)
