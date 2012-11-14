@@ -9,7 +9,7 @@ using SisoDb.NCore;
 using SisoDb.NCore.Expressions;
 using SisoDb.Structures.Schemas;
 
-namespace SisoDb.Testing.Steps
+namespace SisoDb.Testing
 {
     public static class Shoulds
     {

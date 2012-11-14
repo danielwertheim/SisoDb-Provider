@@ -5,7 +5,6 @@ using SisoDb.DbSchema;
 using SisoDb.NCore;
 using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
-using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.Database
 {

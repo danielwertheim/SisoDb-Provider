@@ -467,6 +467,7 @@ if object_id(N'{5}', N'U') is not null drop table [{5}];
 if object_id(N'{6}', N'U') is not null drop table [{6}];
 if object_id(N'{7}', N'U') is not null drop table [{7}];
 if object_id(N'{8}', N'U') is not null drop table [{8}];
+if object_id(N'{9}', N'U') is not null drop table [{9}];
 
 if object_id(N'[SisoDbIdentities]', N'U') is not null delete from [SisoDbIdentities] where [EntityName] = @entityName;</value>
   </data>
@@ -648,6 +649,8 @@ select TABLE_NAME from
 	union
 	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Texts'
 	union
+	select 0, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Spatial'
+	union
 	select 1, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Uniques'
 	union
 	select 2, TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME like '%Structure'
@@ -670,7 +673,7 @@ if object_id(N'{6}', N'U') is not null delete from [{6}];</value>
   </data>
   <data name="GetModelTableStatuses" xml:space="preserve">
     <value>set nocount on;
-select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8);</value>
+select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME in(@tableName0, @tableName1, @tableName2, @tableName3, @tableName4, @tableName5, @tableName6, @tableName7, @tableName8, @tableName9);</value>
   </data>
   <data name="DropSp" xml:space="preserve">
     <value>if(select OBJECT_ID('{0}', 'P')) is not null begin drop procedure {0}; end</value>

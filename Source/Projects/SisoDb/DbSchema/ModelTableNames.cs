@@ -11,6 +11,7 @@ namespace SisoDb.DbSchema
     {
         public string[] AllTableNames { get; private set; }
         public string StructureTableName { get; private set; }
+        public string SpatialTableName { get; private set; }
         public string UniquesTableName { get; private set; }
         public IndexesTableNames IndexesTableNames { get; private set; }
 
@@ -31,12 +32,14 @@ namespace SisoDb.DbSchema
         private void OnInitialize(string structureName)
         {
             StructureTableName = DbSchemaInfo.GenerateStructureTableName(structureName);
+            SpatialTableName = DbSchemaInfo.GenerateSpatialTableName(structureName);
             UniquesTableName = DbSchemaInfo.GenerateUniquesTableName(structureName);
             IndexesTableNames = new IndexesTableNames(structureName);
 
             AllTableNames = new[]
 	        {
 	            StructureTableName,
+                SpatialTableName,
                 UniquesTableName
 	        }
             .MergeWith(IndexesTableNames.All)

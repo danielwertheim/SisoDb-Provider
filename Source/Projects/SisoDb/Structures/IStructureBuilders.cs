@@ -28,14 +28,16 @@ namespace SisoDb.Structures
         /// the actual serializer, hence normally nothing you would like to switch.
         /// </summary>
         Func<IStructureSerializer> StructureSerializerFn { get; set; }
+
         /// <summary>
         /// Resolves the <see cref="IStructureBuilder"/> to use for the passed <see cref="IStructureSchema"/>
         /// when inserting new structures.
         /// </summary>
-        Func<IStructureSchema, IDbClient, IStructureBuilder> ResolveBuilderForInsertsBy { set; }
+        Func<IStructureSchema, IDbClient, IStructureBuilder> ResolveBuilderForInsertsBy { get; set; }
+
         /// Resolves the <see cref="IStructureBuilder"/> to use for the passed <see cref="IStructureSchema"/>
         /// when updating existing structures.
-        Func<IStructureSchema, IStructureBuilder> ResolveBuilderForUpdatesBy { set; }
+        Func<IStructureSchema, IStructureBuilder> ResolveBuilderForUpdatesBy { get; set; }
         /// <summary>
         /// Uses <see cref="ResolveBuilderForInsertsBy"/> to create an <see cref="IStructureBuilder"/>
         /// used when inserting new structures.

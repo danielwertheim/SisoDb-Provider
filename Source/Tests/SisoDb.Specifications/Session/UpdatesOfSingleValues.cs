@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using SisoDb.Testing;
-using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.Session
 {

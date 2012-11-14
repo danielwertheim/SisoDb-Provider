@@ -12,25 +12,21 @@ namespace SisoDb
 {
     public class DbQueryEngine : IQueryEngine
     {
-        protected readonly ISisoDatabase Db;
-        protected readonly IDbClient DbClient;
+        protected readonly ISessionExecutionContext ExecutionContext;
+        protected ISisoDatabase Db { get { return ExecutionContext.Session.Db; } }
+        protected IDbClient DbClient { get { return ExecutionContext.Session.DbClient; } }
         protected readonly IDbQueryGenerator QueryGenerator;
-        protected readonly SessionExecutionContext ExecutionContext;
 
-        public DbQueryEngine(ISisoDatabase db, IDbClient dbClient, IDbQueryGenerator queryGenerator, SessionExecutionContext executionContext)
+        public DbQueryEngine(ISessionExecutionContext executionContext, IDbQueryGenerator queryGenerator)
         {
-            Ensure.That(db, "db").IsNotNull();
-            Ensure.That(dbClient, "dbClient").IsNotNull();
             Ensure.That(queryGenerator, "queryGenerator").IsNotNull();
             Ensure.That(executionContext, "executionContext").IsNotNull();
 
-            Db = db;
-            DbClient = dbClient;
-            QueryGenerator = queryGenerator;
             ExecutionContext = executionContext;
+            QueryGenerator = queryGenerator;
         }
 
-        protected virtual T Try<T>(Func<T> action) 
+        protected virtual T Try<T>(Func<T> action)
         {
             return ExecutionContext.Try(action);
         }
@@ -48,7 +44,7 @@ namespace SisoDb
             return structureSchema;
         }
 
-        public virtual bool Any<T>() where T : class 
+        public virtual bool Any<T>() where T : class
         {
             return Try(() => OnAny(typeof(T)));
         }
@@ -144,7 +140,7 @@ namespace SisoDb
             return Try(() => OnExists(structureType, id));
         }
 
-        protected bool OnExists(Type structureType, object id)
+        protected virtual bool OnExists(Type structureType, object id)
         {
             return Try(() =>
             {
@@ -194,7 +190,9 @@ namespace SisoDb
             return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
         }
 
-        public virtual IEnumerable<TResult> QueryAs<T, TResult>(IQuery query) where T : class where TResult : class
+        public virtual IEnumerable<TResult> QueryAs<T, TResult>(IQuery query)
+            where T : class
+            where TResult : class
         {
             return Try(() => OnQueryAs<T, TResult>(query));
         }

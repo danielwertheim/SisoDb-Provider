@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Machine.Specifications;
 using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
-using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.Session
 {

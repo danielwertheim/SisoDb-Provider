@@ -74,6 +74,7 @@
     <Compile Include="Database\EnsureNewDatabase.cs" />
     <Compile Include="Database\InitializeExisting.cs" />
     <Compile Include="Model\QueryNullableItem.cs" />
+    <Compile Include="Model\Spatial.cs" />
     <Compile Include="Session\Caching.cs" />
     <Compile Include="Session\Clear.cs" />
     <Compile Include="Session\InsertBigStructures.cs" />
@@ -127,6 +128,8 @@
     <Compile Include="Model\QueryStringItem.cs" />
     <Compile Include="Model\QueryXItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spatial\GeographicalOperations.cs" />
+    <Compile Include="Spatial\UpsertAndDrop.cs" />
     <Compile Include="TestContextFactory.cs" />
     <Compile Include="Session\Deletes.cs" />
     <Compile Include="Session\InsertsComplete.cs" />
@@ -147,6 +150,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Spatial\SisoDb.Spatial.csproj">
+      <Project>{247A9856-C54B-4B11-8FEB-312FA5E86DFA}</Project>
+      <Name>SisoDb.Spatial</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb\SisoDb.csproj">
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>

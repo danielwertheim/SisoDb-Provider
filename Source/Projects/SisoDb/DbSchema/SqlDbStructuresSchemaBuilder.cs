@@ -19,10 +19,10 @@ namespace SisoDb.DbSchema
 		{
 			var tableName = structureSchema.GetStructureTableName();
 
-			if (structureSchema.IdAccessor.IdType == StructureIdTypes.String)
+			if (structureSchema.IdAccessor.IdType.IsString())
 				return _sqlStatements.GetSql("CreateStructuresString").Inject(tableName);
 
-			if (structureSchema.IdAccessor.IdType == StructureIdTypes.Guid)
+			if (structureSchema.IdAccessor.IdType.IsGuid())
 				return _sqlStatements.GetSql("CreateStructuresGuid").Inject(tableName);
 
 			if (structureSchema.IdAccessor.IdType.IsIdentity())

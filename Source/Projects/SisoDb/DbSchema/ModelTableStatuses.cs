@@ -8,14 +8,16 @@ namespace SisoDb.DbSchema
     {
         public bool AllExists { get; private set; }
         public bool StructureTableExists { get; private set; }
+        public bool SpatialTableExists { get; private set; }
         public bool UniquesTableExists { get; private set; }
         public IndexesTableStatuses IndexesTableStatuses { get; private set; }
 
-        public ModelTableStatuses(bool structureTableExists, bool uniquesTableExists, IndexesTableStatuses indexesTableStatuses)
+        public ModelTableStatuses(bool structureTableExists, bool spatialTableExists, bool uniquesTableExists, IndexesTableStatuses indexesTableStatuses)
         {
             Ensure.That(indexesTableStatuses, "indexesTableStatuses").IsNotNull();
 
             StructureTableExists = structureTableExists;
+            SpatialTableExists = spatialTableExists;
             UniquesTableExists = uniquesTableExists;
             IndexesTableStatuses = indexesTableStatuses;
 

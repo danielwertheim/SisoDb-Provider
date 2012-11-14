@@ -1,6 +1,5 @@
 ﻿using Machine.Specifications;
 using SisoDb.Testing;
-using SisoDb.Testing.Steps;
 using SisoDb.Testing.TestModel;
 
 namespace SisoDb.Specifications.Session

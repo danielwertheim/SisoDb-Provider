@@ -12,6 +12,7 @@ namespace SisoDb.DbSchema
         {
             public static readonly string[] AllSuffixes;
             public const string StructureTableNameSuffix = "Structure";
+            public const string SpatialTableNameSuffix = "Spatial";
             public const string UniquesTableNameSuffix = "Uniques";
             public static readonly string[] IndexesTableNameSuffixes;
 
@@ -46,6 +47,11 @@ namespace SisoDb.DbSchema
                 return param is ArrayDacParameter;
             }
 
+            public static bool ShouldBeGeography(IDacParameter param)
+            {
+                return param is GeographyDacParameter;
+            }
+
             public static bool ShouldBeDateTime(IDacParameter param)
             {
                 return param.Value is DateTime;
@@ -78,6 +84,16 @@ namespace SisoDb.DbSchema
         public static string GenerateStructureTableName(string structureName)
         {
             return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.StructureTableNameSuffix);
+        }
+
+        public static string GetSpatialTableName(this IStructureSchema structureSchema)
+        {
+            return GenerateSpatialTableName(structureSchema.Name);
+        }
+
+        public static string GenerateSpatialTableName(string structureName)
+        {
+            return string.Concat(DbSchemaNamingPolicy.GenerateFor(structureName), Suffixes.SpatialTableNameSuffix);
         }
 
         public static IndexesTableNames GetIndexesTableNames(this IStructureSchema structureSchema)

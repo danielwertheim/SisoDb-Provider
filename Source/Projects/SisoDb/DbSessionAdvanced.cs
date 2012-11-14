@@ -12,25 +12,21 @@ namespace SisoDb
 {
     public class DbSessionAdvanced: IAdvanced
     {
-        protected readonly ISisoDatabase Db;
-        protected readonly IDbClient DbClient;
+        protected readonly ISessionExecutionContext ExecutionContext;
+        protected ISisoDatabase Db { get { return ExecutionContext.Session.Db; } }
+        protected IDbClient DbClient { get { return ExecutionContext.Session.DbClient; } }
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
-        protected readonly SessionExecutionContext ExecutionContext;
-
-        public DbSessionAdvanced(ISisoDatabase db, IDbClient dbClient, IDbQueryGenerator queryGenerator, ISqlExpressionBuilder sqlExpressionBuilder, SessionExecutionContext executionContext)
+        
+        public DbSessionAdvanced(ISessionExecutionContext executionContext, IDbQueryGenerator queryGenerator, ISqlExpressionBuilder sqlExpressionBuilder)
         {
-            Ensure.That(db, "db").IsNotNull();
-            Ensure.That(dbClient, "dbClient").IsNotNull();
             Ensure.That(queryGenerator, "queryGenerator").IsNotNull();
             Ensure.That(sqlExpressionBuilder, "sqlExpressionBuilder").IsNotNull();
             Ensure.That(executionContext, "executionContext").IsNotNull();
 
-            Db = db;
-            DbClient = dbClient;
+            ExecutionContext = executionContext;
             QueryGenerator = queryGenerator;
             SqlExpressionBuilder = sqlExpressionBuilder;
-            ExecutionContext = executionContext;
         }
 
         protected virtual void Try(Action action)

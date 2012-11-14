@@ -17,6 +17,13 @@ namespace SisoDb
         Guid Id { get; }
 
         /// <summary>
+        /// If you want to extend the <see cref="ISession"/> you should
+        /// wrap your code withing <see cref="ISessionExecutionContext.Try"/>
+        /// so that exceptions will set the session in failed state.
+        /// </summary>
+        ISessionExecutionContext ExecutionContext { get; }
+
+        /// <summary>
         /// The database that this session is executed against.
         /// </summary>
         ISisoDatabase Db { get; }

@@ -5,7 +5,6 @@ using Machine.Specifications;
 using SisoDb.Annotations;
 using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
-using SisoDb.Testing.Steps;
 using SisoDb.DbSchema;
 
 namespace SisoDb.Specifications.Session

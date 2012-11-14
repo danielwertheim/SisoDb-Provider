@@ -37,22 +37,29 @@ namespace SisoDb.UnitTests.DbSchema
         {
             var names = new ModelTableNames("MyStructure");
 
-            Assert.AreEqual(9, names.AllTableNames.Length);
+            Assert.AreEqual(10, names.AllTableNames.Length);
             Assert.AreEqual(names.StructureTableName, names.AllTableNames[0]);
-            Assert.AreEqual(names.UniquesTableName, names.AllTableNames[1]);
-            Assert.AreEqual(names.IndexesTableNames.IntegersTableName, names.AllTableNames[2]);
-            Assert.AreEqual(names.IndexesTableNames.FractalsTableName, names.AllTableNames[3]);
-            Assert.AreEqual(names.IndexesTableNames.BooleansTableName, names.AllTableNames[4]);
-            Assert.AreEqual(names.IndexesTableNames.DatesTableName, names.AllTableNames[5]);
-            Assert.AreEqual(names.IndexesTableNames.GuidsTableName, names.AllTableNames[6]);
-            Assert.AreEqual(names.IndexesTableNames.StringsTableName, names.AllTableNames[7]);
-            Assert.AreEqual(names.IndexesTableNames.TextsTableName, names.AllTableNames[8]);
+            Assert.AreEqual(names.SpatialTableName, names.AllTableNames[1]);
+            Assert.AreEqual(names.UniquesTableName, names.AllTableNames[2]);
+            Assert.AreEqual(names.IndexesTableNames.IntegersTableName, names.AllTableNames[3]);
+            Assert.AreEqual(names.IndexesTableNames.FractalsTableName, names.AllTableNames[4]);
+            Assert.AreEqual(names.IndexesTableNames.BooleansTableName, names.AllTableNames[5]);
+            Assert.AreEqual(names.IndexesTableNames.DatesTableName, names.AllTableNames[6]);
+            Assert.AreEqual(names.IndexesTableNames.GuidsTableName, names.AllTableNames[7]);
+            Assert.AreEqual(names.IndexesTableNames.StringsTableName, names.AllTableNames[8]);
+            Assert.AreEqual(names.IndexesTableNames.TextsTableName, names.AllTableNames[9]);
         }
 
         [Test]
         public void StructureTableName_WhenStructureIsNamed_MyStructure_it_ShouldBe_MyStructureStructure()
         {
             Assert.AreEqual("MyStructureStructure", new ModelTableNames("MyStructure").StructureTableName);
+        }
+
+        [Test]
+        public void SpatialTableName_WhenStructureIsNamed_MyStructure_it_ShouldBe_MyStructureSpatial()
+        {
+            Assert.AreEqual("MyStructureSpatial", new ModelTableNames("MyStructure").SpatialTableName);
         }
 
         [Test]

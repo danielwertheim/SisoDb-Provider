@@ -25,10 +25,10 @@ namespace SisoDb
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
-        protected readonly SessionExecutionContext ExecutionContext;
         protected CacheConsumeModes CacheConsumeMode;
 
         public Guid Id { get { return _id; } }
+        public ISessionExecutionContext ExecutionContext { get; private set; }
         public ISisoDatabase Db { get { return _db; } }
         public IDbClient DbClient { get; private set; }
         public SessionStatus Status { get; private set; }
@@ -44,15 +44,15 @@ namespace SisoDb
 
             _id = Guid.NewGuid();
             _db = db;
+            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
             ExecutionContext = new SessionExecutionContext(this);
             Status = SessionStatus.Active;
-            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
             InternalEvents = new SessionEvents();
             SqlStatements = Db.ProviderFactory.GetSqlStatements();
             QueryGenerator = Db.ProviderFactory.GetDbQueryGenerator();
             SqlExpressionBuilder = Db.ProviderFactory.GetSqlExpressionBuilder();
-            _queryEngine = new DbQueryEngine(Db, DbClient, QueryGenerator, ExecutionContext);
-            _advanced = new DbSessionAdvanced(Db, DbClient, QueryGenerator, SqlExpressionBuilder, ExecutionContext);
+            _queryEngine = new DbQueryEngine(ExecutionContext, QueryGenerator);
+            _advanced = new DbSessionAdvanced(ExecutionContext, QueryGenerator, SqlExpressionBuilder);
             CacheConsumeMode = CacheConsumeModes.UpdateCacheWithDbResult;
         }
 
