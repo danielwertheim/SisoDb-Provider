@@ -13,8 +13,8 @@ namespace SisoDb.Structures
         public Func<IStructureSchema, IDbClient, IIdentityStructureIdGenerator> IdentityStructureIdGeneratorFn { get; set; }
         public Func<ISisoSerializer> SerializerFn { get; private set; }
         public Func<IStructureSerializer> StructureSerializerFn { get; set; }
-        public Func<IStructureSchema, IDbClient, IStructureBuilder> ResolveBuilderForInsertsBy { protected get; set; }
-        public Func<IStructureSchema, IStructureBuilder> ResolveBuilderForUpdatesBy { protected get; set; }
+        public Func<IStructureSchema, IDbClient, IStructureBuilder> ResolveBuilderForInsertsBy { get; set; }
+        public Func<IStructureSchema, IStructureBuilder> ResolveBuilderForUpdatesBy { get; set; }
         
         public StructureBuilders(
             Func<ISisoSerializer> serializerFn, 
