@@ -6,7 +6,6 @@ using SisoDb.DbSchema;
 using SisoDb.Structures.Schemas;
 using SisoDb.Structures.Schemas.Configuration;
 using SisoDb.Testing;
-using SisoDb.Testing.Steps;
 
 namespace SisoDb.Specifications.Session
 {

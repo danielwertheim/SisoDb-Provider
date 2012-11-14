@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SisoDb.Testing.TestModel;
 
-namespace SisoDb.Testing.Steps
+namespace SisoDb.Testing
 {
     public static class Establishments
     {

@@ -3,7 +3,6 @@ using Machine.Specifications;
 using SisoDb.NCore;
 using SisoDb.Testing;
 using SisoDb.Testing.TestModel;
-using SisoDb.Testing.Steps;
 using SisoDb.Resources;
 
 namespace SisoDb.Specifications.Session

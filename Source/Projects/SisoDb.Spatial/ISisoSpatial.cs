@@ -15,15 +15,6 @@ namespace SisoDb.Spatial
         /// <typeparam name="T"></typeparam>
         void DropFor<T>() where T : class;
         /// <summary>
-        /// Returns bool indicating if a stored Polygon identified by <paramref name="id"/> in structure <typeparam name="T"></typeparam> contains a Point or not.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="id"></param>
-        /// <param name="coords"></param>
-        /// <param name="srid"></param>
-        /// <returns></returns>
-        bool PointExistsInPolygonFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
-        /// <summary>
         /// Deletes any geo-records for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -53,5 +44,16 @@ namespace SisoDb.Spatial
         /// <param name="coords"></param>
         /// <param name="srid"></param>
         void SetPolygonIn<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
+
+        Coordinates[] GetCoordinatesIn<T>(object id) where T : class;
+        /// <summary>
+        /// Returns bool indicating if a stored Polygon identified by <paramref name="id"/> in structure <typeparam name="T"></typeparam> contains a Point or not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="coords"></param>
+        /// <param name="srid"></param>
+        /// <returns></returns>
+        bool PointExistsInPolygonFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
     }
 }

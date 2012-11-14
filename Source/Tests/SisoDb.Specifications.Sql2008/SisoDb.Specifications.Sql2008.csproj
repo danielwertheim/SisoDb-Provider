@@ -135,6 +135,9 @@
     <Compile Include="..\SisoDb.Specifications\Model\QueryXItem.cs">
       <Link>Model\QueryXItem.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Model\Spatial.cs">
+      <Link>Model\Spatial.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Caching.cs">
       <Link>Session\Caching.cs</Link>
     </Compile>
@@ -282,6 +285,12 @@
     <Compile Include="..\SisoDb.Specifications\Session\UpdatesOfSingleValues.cs">
       <Link>Session\UpdatesOfSingleValues.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Spatial\GeographicalOperations.cs">
+      <Link>Spatial\GeographicalOperations.cs</Link>
+    </Compile>
+    <Compile Include="..\SisoDb.Specifications\Spatial\UpsertAndDrop.cs">
+      <Link>Spatial\UpsertAndDrop.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\TestContextFactory.cs">
       <Link>TestContextFactory.cs</Link>
     </Compile>
@@ -300,6 +309,10 @@
     <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
       <Project>{52453C59-B957-46F0-8E44-F1203215758A}</Project>
       <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Projects\SisoDb.Spatial\SisoDb.Spatial.csproj">
+      <Project>{247a9856-c54b-4b11-8feb-312fa5e86dfa}</Project>
+      <Name>SisoDb.Spatial</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2008\SisoDb.Sql2008.csproj">
       <Project>{661D181A-AAE8-45AE-ABE8-379947DDF686}</Project>
