@@ -138,7 +138,7 @@ insert into [{0}] ([StructureId], [Geo]) values (@id, @geo);</value>
   </data>
   <data name="PointExistsInPolygon" xml:space="preserve">
     <value>set nocount on;
-select geo.STContains(@point) from [{0}] where [StructureId] = @id;</value>
+select geo.STContains(@geo) from [{0}] where [StructureId] = @id;</value>
   </data>
   <data name="SetGeo" xml:space="preserve">
     <value>set nocount on;

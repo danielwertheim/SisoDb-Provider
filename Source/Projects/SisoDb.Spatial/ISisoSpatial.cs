@@ -54,6 +54,6 @@ namespace SisoDb.Spatial
         /// <param name="coords"></param>
         /// <param name="srid"></param>
         /// <returns></returns>
-        bool PointExistsInPolygonFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
+        bool PolygonContainsPointFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
     }
 }

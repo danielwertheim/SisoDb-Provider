@@ -87,6 +87,7 @@
     <Compile Include="DbSchema\ModelTablesInfo.cs" />
     <Compile Include="DbSchema\ModelTableStatuses.cs" />
     <Compile Include="DbSchema\NamedQueryGenerator.cs" />
+    <Compile Include="DbSchema\SpatialStorageSchema.cs" />
     <Compile Include="DbSessionAdvanced.cs" />
     <Compile Include="DbSettings.cs" />
     <Compile Include="DbSchema\DbObjectNameValidator.cs" />

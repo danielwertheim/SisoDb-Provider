@@ -137,7 +137,7 @@ namespace SisoDb.Spatial
             return points;
         }
 
-        public virtual bool PointExistsInPolygonFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual bool PolygonContainsPointFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             return ExecutionContext.Try(() =>
             {
