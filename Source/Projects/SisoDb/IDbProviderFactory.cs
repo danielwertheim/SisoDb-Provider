@@ -20,6 +20,7 @@ namespace SisoDb
         IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo);
         IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
         IDbSchemas GetDbSchemaManagerFor(ISisoDatabase db);
+	    IDbSchemaUpserter GetDbSchemaUpserter();
         IStructureInserter GetStructureInserter(IDbClient dbClient);
         IStructureIdGenerator GetGuidStructureIdGenerator();
         IIdentityStructureIdGenerator GetIdentityStructureIdGenerator(IDbClient dbClient);
