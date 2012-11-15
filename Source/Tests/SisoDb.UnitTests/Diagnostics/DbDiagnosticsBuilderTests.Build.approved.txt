@@ -38,15 +38,7 @@
 			[
 				{
 					"Name": "Type",
-					"Value": "ServiceStackJsonSerializer"
-				},
-				{
-					"Name": "DeserializeManyInParallel",
-					"Value": "True"
-				},
-				{
-					"Name": "DateSerializationMode",
-					"Value": "Iso8601"
+					"Value": "ServiceStackSisoSerializer"
 				}
 			]
 		},

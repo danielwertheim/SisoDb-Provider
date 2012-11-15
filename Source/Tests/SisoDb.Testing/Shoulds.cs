@@ -20,6 +20,11 @@ namespace SisoDb.Testing
             db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(0);
         }
 
+        public static void should_have_been_deleted_from_spatial_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
+        {
+            db.RowCount(structureSchema.GetSpatialTableName(), "{0} = '{1}'".Inject(SpatialStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(0);
+        }
+
         public static void should_not_have_been_deleted_from_structures_table(this ITestDbUtils db, IStructureSchema structureSchema, object structureId)
         {
             db.RowCount(structureSchema.GetStructureTableName(), "{0} = '{1}'".Inject(StructureStorageSchema.Fields.Id.Name, structureId)).ShouldEqual(1);
