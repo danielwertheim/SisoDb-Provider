@@ -22,8 +22,12 @@ namespace SisoDb.Specifications.Model
 
     public static class SpatialDataFactory
     {
+        public static readonly Coordinates Circle1 = new Coordinates { Latitude = 47.653, Longitude = -122.358 };
+        public static readonly Coordinates Point1 = new Coordinates { Latitude = 47.653, Longitude = -122.358 };
+        public static readonly Coordinates Point2 = new Coordinates { Latitude = 47.649, Longitude = -122.348 };
         public static readonly Coordinates PointWithinDefaultPolygon = new Coordinates { Latitude = 47.657, Longitude = -122.357 };
-
+        public static readonly Coordinates PointOutsideDefaultPolygon = new Coordinates { Latitude = 47.657, Longitude = -122.4 };
+        
         public static Coordinates[] DefaultPolygon()
         {
             return new[]

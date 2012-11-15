@@ -1,5 +1,6 @@
 ﻿using ApprovalTests;
 using Newtonsoft.Json;
+using SisoDb.Serialization;
 
 namespace SisoDb.UnitTests
 {

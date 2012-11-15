@@ -44,15 +44,7 @@
 					],
 					[
 						"Type",
-						"ServiceStackJsonSerializer"
-					],
-					[
-						"DeserializeManyInParallel",
-						"True"
-					],
-					[
-						"DateSerializationMode",
-						"Iso8601"
+						"ServiceStackSisoSerializer"
 					]
 				]
 			],

@@ -13,13 +13,15 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Spatial
 {
-    public class SqlServerSisoSpatial : ISisoSpatial
+    public class SqlServerSisoGeographical : ISisoGeographical
     {
+        private const string GeoParamName = "geo";
+
         protected readonly ISessionExecutionContext ExecutionContext;
         protected ISession Session { get { return ExecutionContext.Session; } }
         protected readonly ISqlStatements SqlStatements;
 
-        protected internal SqlServerSisoSpatial(ISessionExecutionContext executionContext)
+        protected internal SqlServerSisoGeographical(ISessionExecutionContext executionContext)
         {
             ExecutionContext = executionContext;
             SqlStatements = SpatialSqlStatements.Instance;
@@ -46,7 +48,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void DeleteGeoIn<T>(object id) where T : class
+        public virtual void DeleteGeoFor<T>(object id) where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -57,7 +59,79 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void InsertPolygonTo<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual void InsertPoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        {
+            ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                var geoParam = CreatePointParam(coords, srid);
+                var sql = SqlStatements.GetSql("InsertGeo").Inject(schema.GetSpatialTableName());
+                Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
+            });
+        }
+
+        public virtual void UpdatePoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        {
+            ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                var geoParam = CreatePointParam(coords, srid);
+                var sql = SqlStatements.GetSql("UpdateGeo").Inject(schema.GetSpatialTableName());
+                Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
+            });
+        }
+
+        public virtual void SetPoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        {
+            ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                var geoParam = CreatePointParam(coords, srid);
+                var sql = SqlStatements.GetSql("SetGeo").Inject(schema.GetSpatialTableName());
+                Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
+            });
+        }
+
+        public virtual void InsertCircle<T>(object id, Coordinates center, double radiusInMetres, int srid = SpatialReferenceId.Wsg84) where T : class
+        {
+            ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                var geoParam = CreateCirlceParam(center, radiusInMetres, srid);
+                var sql = SqlStatements.GetSql("InsertGeo").Inject(schema.GetSpatialTableName());
+                Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
+            });
+        }
+
+        public virtual void UpdateCircle<T>(object id, Coordinates center, double radiusInMetres, int srid = SpatialReferenceId.Wsg84) where T : class
+        {
+            ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                var geoParam = CreateCirlceParam(center, radiusInMetres, srid);
+                var sql = SqlStatements.GetSql("UpdateGeo").Inject(schema.GetSpatialTableName());
+                Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
+            });
+        }
+
+        public virtual void SetCircle<T>(object id, Coordinates center, double radiusInMetres, int srid = SpatialReferenceId.Wsg84) where T : class
+        {
+            ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                var geoParam = CreateCirlceParam(center, radiusInMetres, srid);
+                var sql = SqlStatements.GetSql("SetGeo").Inject(schema.GetSpatialTableName());
+                Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
+            });
+        }
+
+        public virtual void InsertPolygon<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -69,7 +143,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void UpdatePolygonIn<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual void UpdatePolygon<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -81,7 +155,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        public virtual void SetPolygonIn<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual void SetPolygon<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             ExecutionContext.Try(() =>
             {
@@ -137,16 +211,35 @@ namespace SisoDb.Spatial
             return points;
         }
 
-        public virtual bool PolygonContainsPointFor<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
+        public virtual bool ContainsPoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class
         {
             return ExecutionContext.Try(() =>
             {
                 var schema = Session.GetStructureSchema<T>();
                 var sidParam = CreateStructureIdParam<T>(id);
                 var geoParam = CreatePointParam(coords, srid);
-                var sql = SqlStatements.GetSql("PointExistsInPolygon").Inject(schema.GetSpatialTableName());
 
-                return Session.DbClient.ExecuteScalar<int>(sql, sidParam, geoParam) > 0;
+                var sql = (Session.Db.ConnectionInfo.ProviderType == StorageProviders.Sql2008) 
+                    ? SqlStatements.GetSql("ContainsPoint2008").Inject(schema.GetSpatialTableName())
+                    : SqlStatements.GetSql("ContainsPoint").Inject(schema.GetSpatialTableName());
+
+                return Session.DbClient.ExecuteScalar<int>(sql, sidParam, geoParam) == 1;
+            });
+        }
+
+        public virtual bool ContainsPointAfterExpand<T>(object id, Coordinates coords, double expandWithMetres, int srid = SpatialReferenceId.Wsg84) where T : class
+        {
+            return ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                var geoParam = CreatePointParam(coords, srid);
+                var bufferParam = CreateBufferParam(expandWithMetres);
+                var sql = (Session.Db.ConnectionInfo.ProviderType == StorageProviders.Sql2008)
+                    ? SqlStatements.GetSql("ContainsPointWithBuffer2008").Inject(schema.GetSpatialTableName())
+                    : SqlStatements.GetSql("ContainsPointWithBuffer").Inject(schema.GetSpatialTableName());
+
+                return Session.DbClient.ExecuteScalar<int>(sql, sidParam, geoParam, bufferParam) == 1;
             });
         }
 
@@ -167,14 +260,24 @@ namespace SisoDb.Spatial
             throw new SisoDbException(ExceptionMessages.IdTypeNotSupported.Inject(structureSchema.IdAccessor.IdType));
         }
 
-        protected virtual DacParameter CreateStructureIdParam<T>(object id) where T : class
+        protected virtual IDacParameter CreateStructureIdParam<T>(object id) where T : class
         {
             return new DacParameter("id", id);
         }
 
+        protected virtual IDacParameter CreateBufferParam(double metres)
+        {
+            return new DacParameter("buffer", metres);
+        }
+
         protected virtual GeographyDacParameter CreatePointParam(Coordinates coords, int srid)
         {
-            return new GeographyDacParameter("geo", SqlGeography.Point(coords.Latitude, coords.Longitude, srid));
+            return new GeographyDacParameter(GeoParamName, SqlGeography.Point(coords.Latitude, coords.Longitude, srid));
+        }
+
+        protected virtual GeographyDacParameter CreateCirlceParam(Coordinates coords, double radiusInMetres, int srid)
+        {
+            return new GeographyDacParameter(GeoParamName, SqlGeography.Point(coords.Latitude, coords.Longitude, srid).STBuffer(radiusInMetres));
         }
 
         protected virtual GeographyDacParameter CreatePolygonParam(Coordinates[] coords, int srid)
@@ -182,7 +285,7 @@ namespace SisoDb.Spatial
             var s = BuildPolygonString(coords);
             var polygon = new SqlChars(s.ToCharArray());
 
-            return new GeographyDacParameter("geo", SqlGeography.STPolyFromText(polygon, srid));
+            return new GeographyDacParameter(GeoParamName, SqlGeography.STPolyFromText(polygon, srid));
         }
 
         protected virtual string BuildPolygonString(Coordinates[] coords)

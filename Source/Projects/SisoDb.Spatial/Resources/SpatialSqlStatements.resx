@@ -117,6 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ContainsPoint" xml:space="preserve">
+    <value>set nocount on;
+select geo.STContains(@geo) from [{0}] where [StructureId] = @id;</value>
+  </data>
+  <data name="ContainsPoint2008" xml:space="preserve">
+    <value>set nocount on;
+select case when (@geo.STIntersects(geo) = 1 and @geo.STDifference(geo).STIsEmpty() = 1) then 1 else 0 end from [{0}] where [StructureId] = @id;</value>
+  </data>
+  <data name="ContainsPointWithBuffer" xml:space="preserve">
+    <value>set nocount on;
+select geo.STBuffer(@buffer).STContains(@geo) from [{0}] where [StructureId] = @id;</value>
+  </data>
+  <data name="ContainsPointWithBuffer2008" xml:space="preserve">
+    <value>set nocount on;
+select case when (@geo.STIntersects(r.geoExtended) = 1 and @geo.STDifference(r.geoExtended).STIsEmpty() = 1) then 1 else 0 end from
+(select geo.STBuffer(@buffer) as geoExtended from [{0}] where [StructureId] = @id) as r</value>
+  </data>
   <data name="DeleteGeo" xml:space="preserve">
     <value>set nocount on;
 delete from [{0}] where [StructureId] = @id;</value>
@@ -135,10 +152,6 @@ select [Geo] from [{0}] where [StructureId] = @id;</value>
   <data name="InsertGeo" xml:space="preserve">
     <value>set nocount on;
 insert into [{0}] ([StructureId], [Geo]) values (@id, @geo);</value>
-  </data>
-  <data name="PointExistsInPolygon" xml:space="preserve">
-    <value>set nocount on;
-select geo.STContains(@geo) from [{0}] where [StructureId] = @id;</value>
   </data>
   <data name="SetGeo" xml:space="preserve">
     <value>set nocount on;

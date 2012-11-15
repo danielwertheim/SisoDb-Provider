@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.Spatial
 #if Sql2008Provider || Sql2012Provider
     class GeographicalOperations
     {
-        [Subject(typeof(ISisoSpatial), "SetPolygonIn")]
+        [Subject(typeof(ISisoGeographical), "SetPolygon")]
         public class when_setting_polygon_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -32,7 +32,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.SetPolygonIn<SpatialGuidItem>(_item.StructureId, _coordinates);
+                    s.SetPolygon<SpatialGuidItem>(_item.StructureId, _coordinates);
                 }
             };
 
@@ -49,7 +49,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _coordinates;
         }
 
-        [Subject(typeof(ISisoSpatial), "InsertPolygonTo")]
+        [Subject(typeof(ISisoGeographical), "InsertPolygon")]
         public class when_inserting_polygon_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -71,7 +71,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.InsertPolygonTo<SpatialGuidItem>(_item.StructureId, _coordinates);
+                    s.InsertPolygon<SpatialGuidItem>(_item.StructureId, _coordinates);
                 }
             };
 
@@ -88,7 +88,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _coordinates;
         }
 
-        [Subject(typeof(ISisoSpatial), "DeleteGeoIn")]
+        [Subject(typeof(ISisoGeographical), "DeleteGeoFor")]
         public class when_deleting_existing_polygon : SpecificationBase
         {
             Establish context = () =>
@@ -101,7 +101,7 @@ namespace SisoDb.Specifications.Spatial
 
                     var s = session.Spatials();
                     s.EnableFor<SpatialGuidItem>();
-                    s.InsertPolygonTo<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
+                    s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
 
                     _structureSchema = session.GetStructureSchema<SpatialGuidItem>();
                 }
@@ -112,7 +112,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.DeleteGeoIn<SpatialGuidItem>(_item.StructureId);
+                    s.DeleteGeoFor<SpatialGuidItem>(_item.StructureId);
                 }
             };
 
@@ -132,7 +132,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoSpatial), "DeleteGeoIn")]
+        [Subject(typeof(ISisoGeographical), "DeleteGeoFor")]
         public class when_deleting_non_existing_polygon : SpecificationBase
         {
             Establish context = () =>
@@ -154,7 +154,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.DeleteGeoIn<SpatialGuidItem>(_item.StructureId);
+                    s.DeleteGeoFor<SpatialGuidItem>(_item.StructureId);
                 }
             };
 
@@ -174,7 +174,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoSpatial), "SetPolygonIn")]
+        [Subject(typeof(ISisoGeographical), "SetPolygon")]
         public class when_setting_polygon_and_one_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -189,7 +189,7 @@ namespace SisoDb.Specifications.Spatial
 
                     var s = session.Spatials();
                     s.EnableFor<SpatialGuidItem>();
-                    s.SetPolygonIn<SpatialGuidItem>(_item.StructureId, orgCoordinates);
+                    s.SetPolygon<SpatialGuidItem>(_item.StructureId, orgCoordinates);
                 }
             };
 
@@ -198,7 +198,7 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.SetPolygonIn<SpatialGuidItem>(_item.StructureId, _newCoordinates);
+                    s.SetPolygon<SpatialGuidItem>(_item.StructureId, _newCoordinates);
                 }
             };
 
@@ -215,7 +215,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _newCoordinates;
         }
 
-        [Subject(typeof(ISisoSpatial), "UpdatePolygonIn")]
+        [Subject(typeof(ISisoGeographical), "UpdatePolygon")]
         public class when_updating_an_existing_polygon : SpecificationBase
         {
             Establish context = () =>
@@ -230,7 +230,7 @@ namespace SisoDb.Specifications.Spatial
 
                     var s = session.Spatials();
                     s.EnableFor<SpatialGuidItem>();
-                    s.SetPolygonIn<SpatialGuidItem>(_item.StructureId, orgCoordinates);
+                    s.SetPolygon<SpatialGuidItem>(_item.StructureId, orgCoordinates);
                 }
             };
 
@@ -239,11 +239,11 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    s.UpdatePolygonIn<SpatialGuidItem>(_item.StructureId, _newCoordinates);
+                    s.UpdatePolygon<SpatialGuidItem>(_item.StructureId, _newCoordinates);
                 }
             };
 
-            It should_have_inserted_one_record_with_the_polygon = () =>
+            It should_have_stored_a_new_polygon = () =>
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
@@ -256,51 +256,13 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _newCoordinates;
         }
 
-        [Subject(typeof(ISisoSpatial), "PolygonContainsPointFor")]
-        public class when_checking_all_points_of_polygon_for_existance : SpecificationBase
-        {
-            Establish context = () =>
-            {
-                TestContext = TestContextFactory.Create();
-                _coordinates = SpatialDataFactory.DefaultPolygon();
-                _exists = new bool[_coordinates.Length];
-                using (var session = TestContext.Database.BeginSession())
-                {
-                    _item = new SpatialGuidItem();
-                    session.Insert(_item);
-
-                    var s = session.Spatials();
-                    s.EnableFor<SpatialGuidItem>();
-                    s.InsertPolygonTo<SpatialGuidItem>(_item.StructureId, _coordinates);
-                }
-            };
-
-            Because of = () =>
-            {
-                using (var session = TestContext.Database.BeginSession())
-                {
-                    var s = session.Spatials();
-                    for (var i = 0; i < _coordinates.Length; i++)
-                        _exists[i] = s.PolygonContainsPointFor<SpatialGuidItem>(_item.StructureId, _coordinates[i]);
-                }
-            };
-
-            It should_have_responded_false_for_all_points_of_the_polygon = 
-                () => _exists.All(e => e).ShouldBeFalse();
-
-            private static SpatialGuidItem _item;
-            private static Coordinates[] _coordinates;
-            private static bool[] _exists;
-        }
-
-        [Subject(typeof(ISisoSpatial), "PolygonContainsPointFor")]
+        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
         public class when_checking_if_polygon_contains_point_that_is_within_bounds : SpecificationBase
         {
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
-                _coordinates = SpatialDataFactory.DefaultPolygon();
-                _exists = false;
+                _contains = false;
                 using (var session = TestContext.Database.BeginSession())
                 {
                     _item = new SpatialGuidItem();
@@ -308,7 +270,7 @@ namespace SisoDb.Specifications.Spatial
 
                     var s = session.Spatials();
                     s.EnableFor<SpatialGuidItem>();
-                    s.InsertPolygonTo<SpatialGuidItem>(_item.StructureId, _coordinates);
+                    s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
                 }
             };
 
@@ -317,16 +279,529 @@ namespace SisoDb.Specifications.Spatial
                 using (var session = TestContext.Database.BeginSession())
                 {
                     var s = session.Spatials();
-                    _exists = s.PolygonContainsPointFor<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.PointWithinDefaultPolygon);
+                    _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.PointWithinDefaultPolygon);
                 }
             };
 
-            It should_be_true =
-                () => _exists.ShouldBeTrue();
+            It should_be_contained =
+                () => _contains.ShouldBeTrue();
 
             private static SpatialGuidItem _item;
-            private static Coordinates[] _coordinates;
-            private static bool _exists;
+            private static bool _contains;
+        }
+
+        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
+        public class when_checking_if_polygon_contains_point_that_is_outside_bounds : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _contains = false;
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.PointOutsideDefaultPolygon);
+                }
+            };
+
+            It should_not_be_contained =
+                () => _contains.ShouldBeFalse();
+
+            private static SpatialGuidItem _item;
+            private static bool _contains;
+        }
+
+        [Subject(typeof(ISisoGeographical), "ContainsPointAfterExpand")]
+        public class when_checking_if_a_expanded_polygon_contains_point_that_normally_is_outside_bounds : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _contains = false;
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    _contains = s.ContainsPointAfterExpand<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.PointOutsideDefaultPolygon, 4000d);
+                }
+            };
+
+            It should_be_contained_after_expanding =
+                () => _contains.ShouldBeTrue();
+
+            private static SpatialGuidItem _item;
+            private static bool _contains;
+        }
+
+        [Subject(typeof(ISisoGeographical), "SetPoint")]
+        public class when_setting_point_and_none_exists_before : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                }
+                _coordinates = SpatialDataFactory.PointWithinDefaultPolygon;
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.SetPoint<SpatialGuidItem>(_item.StructureId, _coordinates);
+                }
+            };
+
+            It should_have_inserted_one_record_with_the_point = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_coordinates);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+            private static Coordinates _coordinates;
+        }
+
+        [Subject(typeof(ISisoGeographical), "InsertPoint")]
+        public class when_inserting_point_and_none_exists_before : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                }
+                _coordinates = SpatialDataFactory.PointWithinDefaultPolygon;
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.InsertPoint<SpatialGuidItem>(_item.StructureId, _coordinates);
+                }
+            };
+
+            It should_have_inserted_one_record_with_the_polygon = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_coordinates);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+            private static Coordinates _coordinates;
+        }
+
+        [Subject(typeof(ISisoGeographical), "SetPoint")]
+        public class when_setting_point_and_one_exists_before : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.SetPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Point1);
+                }
+                _newCoordinates = SpatialDataFactory.Point2;
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.SetPoint<SpatialGuidItem>(_item.StructureId, _newCoordinates);
+                }
+            };
+
+            It should_have_inserted_one_record_with_the_polygon = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_newCoordinates);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+            private static Coordinates _newCoordinates;
+        }
+
+        [Subject(typeof(ISisoGeographical), "UpdatePoint")]
+        public class when_updating_an_existing_point : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.SetPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Point1);
+                }
+                _newCoordinates = SpatialDataFactory.Point2;
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.UpdatePoint<SpatialGuidItem>(_item.StructureId, _newCoordinates);
+                }
+            };
+
+            It should_have_stored_a_new_point = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_newCoordinates);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+            private static Coordinates _newCoordinates;
+        }
+
+        [Subject(typeof(ISisoGeographical), "SetCircle")]
+        public class when_setting_circle_and_none_exists_before : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                }
+                _coordinates = SpatialDataFactory.Circle1;
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.SetCircle<SpatialGuidItem>(_item.StructureId, _coordinates, 10d);
+                }
+            };
+
+            It should_have_inserted_one_record_as_polygon_with_points_forming_circle = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
+                    c.Length.ShouldEqual(129);
+                    c[0].Latitude.ShouldEqual(47.653063500926457d);
+                    c[0].Longitude.ShouldEqual(-122.35790573151685d);
+                    c[60].Latitude.ShouldEqual(47.652950145234975d);
+                    c[60].Longitude.ShouldEqual(-122.35811079200715d);
+                    c[128].Latitude.ShouldEqual(47.653063500926457d);
+                    c[128].Longitude.ShouldEqual(-122.35790573151685d);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+            private static Coordinates _coordinates;
+        }
+
+        [Subject(typeof(ISisoGeographical), "InsertCircle")]
+        public class when_inserting_circle_and_none_exists_before : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                }
+                _coordinates = SpatialDataFactory.Circle1;
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.InsertCircle<SpatialGuidItem>(_item.StructureId, _coordinates, 10d);
+                }
+            };
+
+            It should_have_inserted_one_record_as_polygon_with_points_forming_circle = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
+                    c.Length.ShouldEqual(129);
+                    c[0].Latitude.ShouldEqual(47.653063500926457d);
+                    c[0].Longitude.ShouldEqual(-122.35790573151685d);
+                    c[60].Latitude.ShouldEqual(47.652950145234975d);
+                    c[60].Longitude.ShouldEqual(-122.35811079200715d);
+                    c[128].Latitude.ShouldEqual(47.653063500926457d);
+                    c[128].Longitude.ShouldEqual(-122.35790573151685d);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+            private static Coordinates _coordinates;
+        }
+
+        [Subject(typeof(ISisoGeographical), "SetCircle")]
+        public class when_setting_circle_and_one_exists_before : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.SetCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 10d);
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.SetCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
+                }
+            };
+
+            It should_have_inserted_one_record_as_polygon_with_points_forming_circle = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
+                    c.Length.ShouldEqual(129);
+                    c[0].Latitude.ShouldEqual(47.653031750472969d);
+                    c[0].Longitude.ShouldEqual(-122.35795286578694d);
+                    c[60].Latitude.ShouldEqual(47.652975072630916d);
+                    c[60].Longitude.ShouldEqual(-122.35805539602994d);
+                    c[128].Latitude.ShouldEqual(47.653031750472969d);
+                    c[128].Longitude.ShouldEqual(-122.35795286578694d);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+        }
+
+        [Subject(typeof(ISisoGeographical), "UpdateCircle")]
+        public class when_updating_an_existing_circle : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.SetCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.UpdateCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 10d);
+                }
+            };
+
+            It should_have_stored_a_new_circle = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
+                    c.Length.ShouldEqual(129);
+                    c[0].Latitude.ShouldEqual(47.653063500926457d);
+                    c[0].Longitude.ShouldEqual(-122.35790573151685d);
+                    c[60].Latitude.ShouldEqual(47.652950145234975d);
+                    c[60].Longitude.ShouldEqual(-122.35811079200715d);
+                    c[128].Latitude.ShouldEqual(47.653063500926457d);
+                    c[128].Longitude.ShouldEqual(-122.35790573151685d);
+                }
+            };
+
+            private static SpatialGuidItem _item;
+        }
+
+        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
+        public class when_checking_if_circle_contains_point_that_is_within_bounds : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _contains = false;
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.InsertCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1);
+                }
+            };
+
+            It should_be_contained =
+                () => _contains.ShouldBeTrue();
+
+            private static SpatialGuidItem _item;
+            private static bool _contains;
+        }
+
+        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
+        public class when_checking_if_circle_contains_point_that_is_outside_bounds : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _contains = false;
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.InsertCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, new Coordinates{Latitude = SpatialDataFactory.Circle1.Latitude + 0.05});
+                }
+            };
+
+            It should_not_be_contained =
+                () => _contains.ShouldBeFalse();
+
+            private static SpatialGuidItem _item;
+            private static bool _contains;
+        }
+
+        [Subject(typeof(ISisoGeographical), "ContainsPointAfterExpand")]
+        public class when_checking_if_a_expanded_circle_contains_point_that_normally_is_outside_bounds : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _contains = false;
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                    s.InsertCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    _contains = s.ContainsPointAfterExpand<SpatialGuidItem>(_item.StructureId, new Coordinates
+                    {
+                        Latitude = SpatialDataFactory.Circle1.Latitude + 0.05, 
+                        Longitude = SpatialDataFactory.Circle1.Longitude
+                    }, 5600d);
+                }
+            };
+
+            It should_be_contained =
+                () => _contains.ShouldBeTrue();
+
+            private static SpatialGuidItem _item;
+            private static bool _contains;
         }
     }
 #endif
