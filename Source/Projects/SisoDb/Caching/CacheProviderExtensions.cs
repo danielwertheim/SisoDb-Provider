@@ -57,6 +57,14 @@ namespace SisoDb.Caching
             cacheProvider[structureSchema.Type.Type].Remove(structureIds);
         }
 
+        public static bool Any(this ICacheProvider cacheProvider, IStructureSchema structureSchema, Func<IStructureSchema, bool> nonCacheQuery)
+        {
+            if (!cacheProvider.IsEnabledFor(structureSchema))
+                return nonCacheQuery.Invoke(structureSchema);
+
+            return cacheProvider[structureSchema.Type.Type].Count() > 0 || nonCacheQuery.Invoke(structureSchema);
+        }
+
         public static bool Exists(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, bool> nonCacheQuery)
         {
             if (!cacheProvider.IsEnabledFor(structureSchema))

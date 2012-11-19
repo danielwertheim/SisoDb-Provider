@@ -81,7 +81,11 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (!query.HasWhere)
-                return DbClient.Any(structureSchema);
+            {
+                return Db.CacheProvider.Any(
+                    structureSchema,
+                    s => DbClient.Any(s));
+            }
 
             var whereSql = QueryGenerator.GenerateQueryReturningCountOfStrutureIds(query);
             return DbClient.Any(structureSchema, whereSql);
@@ -149,9 +153,6 @@ namespace SisoDb
 
                 var structureId = StructureId.ConvertFrom(id);
                 var structureSchema = OnUpsertStructureSchema(structureType);
-
-                if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                    return DbClient.Exists(structureSchema, structureId);
 
                 return Db.CacheProvider.Exists(
                     structureSchema,
