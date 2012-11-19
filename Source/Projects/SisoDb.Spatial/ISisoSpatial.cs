@@ -1,6 +1,6 @@
 namespace SisoDb.Spatial
 {
-    public interface ISisoGeographical 
+    public interface ISisoSpatial 
     {
         /// <summary>
         /// Creates a table for the structure <typeparam name="T"></typeparam> holding spatial data, but only if it does not exist.

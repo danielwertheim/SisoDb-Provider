@@ -13,7 +13,7 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Spatial
 {
-    public class SqlServerSisoGeographical : ISisoGeographical
+    public class SqlServerSisoSpatial : ISisoSpatial
     {
         private const string GeoParamName = "geo";
 
@@ -21,7 +21,7 @@ namespace SisoDb.Spatial
         protected ISession Session { get { return ExecutionContext.Session; } }
         protected readonly ISqlStatements SqlStatements;
 
-        protected internal SqlServerSisoGeographical(ISessionExecutionContext executionContext)
+        protected internal SqlServerSisoSpatial(ISessionExecutionContext executionContext)
         {
             ExecutionContext = executionContext;
             SqlStatements = SpatialSqlStatements.Instance;
