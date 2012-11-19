@@ -25,8 +25,7 @@ namespace SisoDb
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
-        protected CacheConsumeModes CacheConsumeMode;
-
+        
         public Guid Id { get { return _id; } }
         public ISessionExecutionContext ExecutionContext { get; private set; }
         public ISisoDatabase Db { get { return _db; } }
@@ -37,6 +36,7 @@ namespace SisoDb
         public ISessionEvents Events { get { return InternalEvents; } }
         public IQueryEngine QueryEngine { get { return _queryEngine; } }
         public IAdvanced Advanced { get { return _advanced; } }
+        public CacheConsumeModes CacheConsumeMode { get; protected set; }
         
         protected DbSession(ISisoDatabase db)
         {

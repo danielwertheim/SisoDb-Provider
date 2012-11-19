@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using SisoDb.Caching;
 using SisoDb.Dac;
 using SisoDb.Structures.Schemas;
 
@@ -64,6 +65,12 @@ namespace SisoDb
         /// Advances querying options.
         /// </summary>
         IAdvanced Advanced { get; }
+
+        /// <summary>
+        /// Indicates how the session will interact with an optional
+        /// cache.
+        /// </summary>
+        CacheConsumeModes CacheConsumeMode { get; }
 
         /// <summary>
         /// Marks the session as aborted. When aborted, and transactions are supported,
