@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using SisoDb.NCore.Collections;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
@@ -57,13 +58,21 @@ namespace SisoDb.Caching
             if (!cacheProvider.IsEnabledFor(structureSchema))
                 return nonCacheQuery.Invoke(structureId);
 
-            var cache = cacheProvider[structureSchema.Type.Type];
-            return cache.Exists(structureId) || nonCacheQuery.Invoke(structureId);
+            return cacheProvider[structureSchema.Type.Type].Exists(structureId) || nonCacheQuery.Invoke(structureId);
         }
 
-        internal static T Put<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, T structure, CacheConsumeModes consumeMode) where T : class
+        internal static T Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, Expression<Func<T, bool>> predicate,  Func<Expression<Func<T, bool>>, T> nonCacheQuery, CacheConsumeModes consumeMode) where T : class
         {
-            if (!cacheProvider.IsEnabledFor(structureSchema) || consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult || structure == null)
+            if (!cacheProvider.IsEnabledFor(structureSchema))
+                return nonCacheQuery.Invoke(predicate);
+
+            var cache = cacheProvider[structureSchema.Type.Type];
+            var structure = cache.Query(predicate).SingleOrDefault();
+            if (structure != null)
+                return structure;
+
+            structure = nonCacheQuery.Invoke(predicate);
+            if (structure == null || consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult)
                 return structure;
 
             return cacheProvider[structureSchema.Type.Type].Put(structureSchema.IdAccessor.GetValue(structure), structure);

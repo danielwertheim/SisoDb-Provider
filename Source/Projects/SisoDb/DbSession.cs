@@ -205,22 +205,21 @@ namespace SisoDb
             Ensure.That(predicate, "predicate").IsNotNull();
 
             var structureSchema = OnUpsertStructureSchema(structureType);
-            var queryBuilder = Db.ProviderFactory.GetQueryBuilder<TOut>(Db.StructureSchemas);
-            queryBuilder.Where(predicate);
 
-            var query = queryBuilder.Build();
-            var sqlQuery = QueryGenerator.GenerateQuery(query);
-            var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray()).SingleOrDefault();
-            if (string.IsNullOrEmpty(sourceData))
-                return null;
-
-            var structure = Db.Serializer.Deserialize<TOut>(sourceData); 
-            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return structure;
-            
-            return Db.CacheProvider.Put(
+            return Db.CacheProvider.Consume(
                 structureSchema,
-                structure,
+                predicate,
+                e =>
+                {
+                    var queryBuilder = Db.ProviderFactory.GetQueryBuilder<TOut>(Db.StructureSchemas);
+                    queryBuilder.Where(predicate);
+                    var query = queryBuilder.Build();
+
+                    var sqlQuery = QueryGenerator.GenerateQuery(query);
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray()).SingleOrDefault();
+
+                    return Db.Serializer.Deserialize<TOut>(sourceData);
+                },
                 CacheConsumeMode);
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Caching;
 using Machine.Specifications;
 using SisoDb.MsMemoryCache;
@@ -9,7 +11,7 @@ namespace SisoDb.Specifications.Session
 {
     class Caching
     {
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, Exists")]
         public class when_caching_is_enabled_and_item_exists_in_cache : SpecificationBase
         {
             Establish context = () =>
@@ -36,13 +38,13 @@ namespace SisoDb.Specifications.Session
 
             It should_exist =
                 () => _itemExists.ShouldBeTrue();
-            
+
             private static MemoryCache _cacheContainer;
             private static IAmCached _originalStructure;
             private static bool _itemExists;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, Exists")]
         public class when_caching_is_enabled_and_item_does_not_exists_in_cache : SpecificationBase
         {
             Establish context = () =>
@@ -71,7 +73,7 @@ namespace SisoDb.Specifications.Session
             private static bool _itemExists;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, GetById")]
         public class when_caching_is_enabled_and_nothing_is_stored_and_getbyid_is_called : SpecificationBase
         {
             Establish context = () =>
@@ -98,7 +100,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached _resultingStructure;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, GetByIds")]
         public class when_caching_is_enabled_and_nothing_is_stored_and_getbyids_is_called : SpecificationBase
         {
             Establish context = () =>
@@ -125,7 +127,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, GetById")]
         public class when_caching_is_enabled_and_contains_two_items_and_getbyid_is_called : SpecificationBase
         {
             Establish context = () =>
@@ -164,7 +166,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached _resultingStructure;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, GetByIds")]
         public class when_caching_is_enabled_and_contains_two_items_and_getbyids_is_called : SpecificationBase
         {
             Establish context = () =>
@@ -187,7 +189,7 @@ namespace SisoDb.Specifications.Session
             It should_have_returned_two_items =
                 () => _resultingStructures.Length.ShouldEqual(2);
 
-            It should_have_returned_two_non_null_items = 
+            It should_have_returned_two_non_null_items =
                 () => _resultingStructures.Count(s => s != null).ShouldEqual(2);
 
             It should_have_exactly_one_item_in_cache =
@@ -206,7 +208,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, DeleteById")]
         public class when_caching_is_enabled_and_one_of_two_is_deleted_and_getbyids_is_called_in_different_session : SpecificationBase
         {
             Establish context = () =>
@@ -249,7 +251,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, DeleteById")]
         public class when_caching_is_enabled_and_one_of_two_is_deleted_and_getbyids_is_called_in_same_session : SpecificationBase
         {
             Establish context = () =>
@@ -266,10 +268,10 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
-                using(var session = TestContext.Database.BeginSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
                     session.DeleteById<IAmCached>(_originalStructures[0].Id);
-                    _resultingStructures = session.GetByIds<IAmCached>(_originalStructures[0].Id, _originalStructures[1].Id).ToArray();   
+                    _resultingStructures = session.GetByIds<IAmCached>(_originalStructures[0].Id, _originalStructures[1].Id).ToArray();
                 }
             };
 
@@ -287,7 +289,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, DeleteById")]
         public class when_caching_is_enabled_and_one_of_two_is_deleted_and_getbyids_is_called_before_and_after_in_same_session : SpecificationBase
         {
             Establish context = () =>
@@ -334,7 +336,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, Update")]
         public class when_caching_is_enabled_and_one_of_two_is_updated_and_getbyids_is_called_in_different_session : SpecificationBase
         {
             Establish context = () =>
@@ -378,7 +380,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, Update")]
         public class when_caching_is_enabled_and_one_of_two_is_updated_and_getbyids_is_called_before_and_after_in_same_session : SpecificationBase
         {
             Establish context = () =>
@@ -397,11 +399,11 @@ namespace SisoDb.Specifications.Session
             {
                 _originalStructures[0].Value = 142;
 
-                using(var session = TestContext.Database.BeginSession())
+                using (var session = TestContext.Database.BeginSession())
                 {
-                    _resultingStructures = session.GetByIds<IAmCached>(_originalStructures[0].Id, _originalStructures[1].Id).ToArray();   
+                    _resultingStructures = session.GetByIds<IAmCached>(_originalStructures[0].Id, _originalStructures[1].Id).ToArray();
                     session.Update(_originalStructures[0]);
-                    _resultingStructures = session.GetByIds<IAmCached>(_originalStructures[0].Id, _originalStructures[1].Id).OrderBy(s => s.Id).ToArray();   
+                    _resultingStructures = session.GetByIds<IAmCached>(_originalStructures[0].Id, _originalStructures[1].Id).OrderBy(s => s.Id).ToArray();
                 }
             };
 
@@ -427,7 +429,7 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
-        [Subject(typeof(ISession), "MsMemoryCache")]
+        [Subject(typeof(ISession), "MsMemoryCache, Insert")]
         public class when_caching_is_enabled_and_two_original_items_exists_and_one_extra_is_inserted_and_getbyids_is_called_before_and_after_in_same_session : SpecificationBase
         {
             Establish context = () =>
@@ -444,7 +446,7 @@ namespace SisoDb.Specifications.Session
 
             Because of = () =>
             {
-                _originalStructures = new IAmCached[]{_originalStructures[0], _originalStructures[1], new IAmCached{Value = 3}};
+                _originalStructures = new IAmCached[] { _originalStructures[0], _originalStructures[1], new IAmCached { Value = 3 } };
                 using (var session = TestContext.Database.BeginSession())
                 {
                     _resultingStructures = session.GetByIds<IAmCached>(_originalStructures[0].Id, _originalStructures[1].Id).ToArray();
@@ -475,11 +477,108 @@ namespace SisoDb.Specifications.Session
             private static IAmCached[] _resultingStructures;
         }
 
+        [Subject(typeof(ISession), "MsMemoryCache, GetByQuery")]
+        public class when_msmemcache_is_enabled_and_query_is_executed : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _cacheContainer = new MemoryCache(typeof(IAmCached).Name);
+                TestContext.Database.CacheProvider = new MsMemCacheProvider(t => _cacheContainer);
+                TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
+
+                _originalStructures = new[] { new IAmCached { Value = 1 }, new IAmCached { Value = 2 } };
+                TestContext.Database.UseOnceTo().InsertMany(_originalStructures);
+            };
+
+            Because of = 
+                () => _resultingStructure = TestContext.Database.UseOnceTo().GetByQuery<IAmCached>(i => i.Value == _originalStructures[1].Value);
+
+            It should_have_exactly_one_item_in_cache =
+                () => _cacheContainer.GetCount().ShouldEqual(1);
+
+            It should_have_fetched_one_struture =
+                () => _resultingStructure.ShouldNotBeNull();
+
+            It should_fetch_the_second_structure =
+                () => _resultingStructure.ShouldBeValueEqualTo(_originalStructures[1]);
+
+            private static MemoryCache _cacheContainer;
+            private static IAmCached[] _originalStructures;
+            private static IAmCached _resultingStructure;
+        }
+
+        [Subject(typeof(ISession), "MsMemoryCache, GetByQuery")]
+        public class when_msmemcache_is_enabled_and_query_is_executed_twice : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+
+                _cacheContainer = new MemoryCache(typeof(IAmCached).Name);
+                TestContext.Database.CacheProvider = new TestableMsMemCacheProvider(t => _cacheContainer);
+                TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
+
+                _originalStructures = new[] { new IAmCached { Value = 1 }, new IAmCached { Value = 2 } };
+                TestContext.Database.UseOnceTo().InsertMany(_originalStructures);
+                TestContext.Database.UseOnceTo().GetByQuery<IAmCached>(i => i.Value == _originalStructures[1].Value);
+            };
+
+            Because of = () =>
+            {
+                _resultingStructure = TestContext.Database.UseOnceTo().GetByQuery<IAmCached>(i => i.Value == _originalStructures[1].Value);
+            };
+
+            It should_have_been_called_twice = 
+                () => ((TestableMsMemCache)TestContext.Database.CacheProvider[typeof (IAmCached)]).QueryCount.ShouldEqual(2);
+
+            It should_have_exactly_one_item_in_cache =
+                () => _cacheContainer.GetCount().ShouldEqual(1);
+
+            It should_have_fetched_one_struture =
+                () => _resultingStructure.ShouldNotBeNull();
+
+            It should_fetch_the_second_structure =
+                () => _resultingStructure.ShouldBeValueEqualTo(_originalStructures[1]);
+
+            private static MemoryCache _cacheContainer;
+            private static IAmCached[] _originalStructures;
+            private static IAmCached _resultingStructure;
+        }
+
         private class IAmCached
         {
             public Guid Id { get; set; }
 
             public int Value { get; set; }
+        }
+
+        private class TestableMsMemCacheProvider : MsMemCacheProvider
+        {
+            public TestableMsMemCacheProvider(Func<Type, MemoryCache> memoryCacheFn)
+                : base(memoryCacheFn)
+            {
+            }
+
+            protected override ICache OnCreate(Type structureType)
+            {
+                return new TestableMsMemCache(MemoryCacheFn.Invoke(structureType), MemCacheConfigFn.Invoke(structureType));
+            }
+        }
+
+        private class TestableMsMemCache : MsMemCache
+        {
+            public int QueryCount { get; private set; }
+
+            public TestableMsMemCache(MemoryCache memoryCache, MsMemCacheConfig cacheConfig)
+                : base(memoryCache, cacheConfig) { }
+
+            public override IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate)
+            {
+                QueryCount++;
+                return base.Query<T>(predicate);
+            }
         }
     }
 }
