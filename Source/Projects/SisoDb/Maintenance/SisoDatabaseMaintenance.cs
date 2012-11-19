@@ -113,13 +113,13 @@ namespace SisoDb.Maintenance
 
         protected virtual void OnClearCache()
         {
-            _db.CacheProvider.NotifyOfPurgeAll();
+            _db.CacheProvider.ClearAll();
             _db.DbSchemas.ClearCache();
         }
 
         protected virtual void OnClearCache(IStructureSchema structureSchema)
         {
-            _db.CacheProvider.NotifyOfPurge(structureSchema);
+            _db.CacheProvider.ClearByType(structureSchema);
             _db.DbSchemas.RemoveFromCache(structureSchema);
         }
     }

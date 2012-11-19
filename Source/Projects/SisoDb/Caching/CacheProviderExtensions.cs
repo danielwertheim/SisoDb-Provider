@@ -19,24 +19,24 @@ namespace SisoDb.Caching
             return (cacheProvider != null && cacheProvider.Handles(structureType));
         }
 
-        internal static void NotifyOfPurge(this ICacheProvider cacheProvider, IStructureSchema structureSchema)
+        internal static void ClearByType(this ICacheProvider cacheProvider, IStructureSchema structureSchema)
         {
-            NotifyOfPurge(cacheProvider, structureSchema.Type.Type);
+            ClearByType(cacheProvider, structureSchema.Type.Type);
         }
 
-        internal static void NotifyOfPurge(this ICacheProvider cacheProvider, Type structureType)
+        internal static void ClearByType(this ICacheProvider cacheProvider, Type structureType)
         {
             if (cacheProvider.IsEnabledFor(structureType))
                 cacheProvider[structureType].Clear();
         }
 
-        internal static void NotifyOfPurgeAll(this ICacheProvider cacheProvider)
+        internal static void ClearAll(this ICacheProvider cacheProvider)
         {
             if(cacheProvider != null)
                 cacheProvider.Clear();
         }
 
-        internal static void NotifyDeleting(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId)
+        internal static void Remove(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId)
         {
             if (!cacheProvider.IsEnabledFor(structureSchema))
                 return;
@@ -44,7 +44,7 @@ namespace SisoDb.Caching
             cacheProvider[structureSchema.Type.Type].Remove(structureId);
         }
 
-        internal static void NotifyDeleting(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IEnumerable<IStructureId> structureIds)
+        internal static void Remove(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IEnumerable<IStructureId> structureIds)
         {
             if (!cacheProvider.IsEnabledFor(structureSchema))
                 return;

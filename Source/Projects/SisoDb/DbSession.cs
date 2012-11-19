@@ -587,7 +587,7 @@ namespace SisoDb
                 OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item, implType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
+            Db.CacheProvider.Remove(structureSchema, structureId);
             DbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchema);
@@ -641,7 +641,7 @@ namespace SisoDb
                     OnEnsureConcurrencyTokenIsValid(structureSchema, structureId, item, typeof(TImpl));
 
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-                Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
+                Db.CacheProvider.Remove(structureSchema, structureId);
                 DbClient.DeleteIndexesAndUniquesById(structureId, structureSchema);
 
                 var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchema);
@@ -728,7 +728,7 @@ namespace SisoDb
                     if (keepQueue.Count < Db.Settings.MaxUpdateManyBatchSize)
                         continue;
 
-                    Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
+                    Db.CacheProvider.Remove(structureSchema, deleteIds);
                     DbClient.DeleteByIds(deleteIds, structureSchema);
                     deleteIds.Clear();
 
@@ -741,7 +741,7 @@ namespace SisoDb
 
                 if (keepQueue.Count > 0)
                 {
-                    Db.CacheProvider.NotifyDeleting(structureSchema, deleteIds);
+                    Db.CacheProvider.Remove(structureSchema, deleteIds);
                     DbClient.DeleteByIds(deleteIds, structureSchema);
                     deleteIds.Clear();
 
@@ -777,7 +777,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.NotifyOfPurge(structureType);
+            Db.CacheProvider.ClearByType(structureType);
 
             DbClient.DeleteAll(structureSchema);
         }
@@ -805,7 +805,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.NotifyOfPurge(structureType);
+            Db.CacheProvider.ClearByType(structureType);
 
             DbClient.DeleteAllExceptIds(structureIds, structureSchema);
         }
@@ -832,7 +832,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.NotifyDeleting(structureSchema, structureId);
+            Db.CacheProvider.Remove(structureSchema, structureId);
 
             DbClient.DeleteById(structureId, structureSchema);
             InternalEvents.NotifyOnDeleted(this, structureSchema, structureId);
@@ -861,7 +861,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.NotifyDeleting(structureSchema, structureIds);
+            Db.CacheProvider.Remove(structureSchema, structureIds);
 
             DbClient.DeleteByIds(structureIds, structureSchema);
             InternalEvents.NotifyOnDeleted(this, structureSchema, structureIds);
@@ -876,7 +876,7 @@ namespace SisoDb
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
 
                 var structureSchema = OnUpsertStructureSchema<T>();
-                Db.CacheProvider.NotifyOfPurge(structureSchema);
+                Db.CacheProvider.ClearByType(structureSchema);
 
                 var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
                 queryBuilder.Where(predicate);
