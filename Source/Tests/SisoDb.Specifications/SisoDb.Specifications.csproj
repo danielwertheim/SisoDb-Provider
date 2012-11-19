@@ -84,6 +84,7 @@
     <Compile Include="Session\Querying\Dynamic\Count.cs" />
     <Compile Include="Session\Querying\Dynamic\Exists.cs" />
     <Compile Include="Session\Querying\Dynamic\Query.cs" />
+    <Compile Include="Session\Querying\GetByQuery.cs" />
     <Compile Include="Session\Querying\SetFunctions\QxIn.cs" />
     <Compile Include="Session\Querying\Projection.cs" />
     <Compile Include="Session\Querying\StringFunctions\Contains.cs" />

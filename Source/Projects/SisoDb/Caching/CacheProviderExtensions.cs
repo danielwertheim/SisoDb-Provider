@@ -61,6 +61,14 @@ namespace SisoDb.Caching
             return cache.Exists(structureId) || nonCacheQuery.Invoke(structureId);
         }
 
+        internal static T Put<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, T structure, CacheConsumeModes consumeMode) where T : class
+        {
+            if (!cacheProvider.IsEnabledFor(structureSchema) || consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult || structure == null)
+                return structure;
+
+            return cacheProvider[structureSchema.Type.Type].Put(structureSchema.IdAccessor.GetValue(structure), structure);
+        }
+
         internal static T Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId, Func<IStructureId, T> nonCacheQuery, CacheConsumeModes consumeMode) where T : class
         {
             if (!cacheProvider.IsEnabledFor(structureSchema))

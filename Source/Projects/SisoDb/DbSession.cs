@@ -193,6 +193,37 @@ namespace SisoDb
                 CacheConsumeMode);
         }
 
+        public virtual T GetByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return Try(() => OnGetByQueryAs(typeof(T), predicate));
+        }
+
+        protected virtual TOut OnGetByQueryAs<TOut>(Type structureType, Expression<Func<TOut, bool>> predicate)
+            where TOut : class
+        {
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(predicate, "predicate").IsNotNull();
+
+            var structureSchema = OnUpsertStructureSchema(structureType);
+            var queryBuilder = Db.ProviderFactory.GetQueryBuilder<TOut>(Db.StructureSchemas);
+            queryBuilder.Where(predicate);
+
+            var query = queryBuilder.Build();
+            var sqlQuery = QueryGenerator.GenerateQuery(query);
+            var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray()).SingleOrDefault();
+            if (string.IsNullOrEmpty(sourceData))
+                return null;
+
+            var structure = Db.Serializer.Deserialize<TOut>(sourceData); 
+            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
+                return structure;
+            
+            return Db.CacheProvider.Put(
+                structureSchema,
+                structure,
+                CacheConsumeMode);
+        }
+
         public virtual T GetById<T>(object id) where T : class
         {
             return Try(() => OnGetByIdAs<T>(typeof(T), id));

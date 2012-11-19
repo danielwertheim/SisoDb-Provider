@@ -26,6 +26,16 @@ namespace SisoDb
                 () => Db.BeginSession());
         }
 
+        public virtual T GetByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetByQuery<T>(predicate);
+            }
+        }
+
         public virtual T GetById<T>(object id) where T : class
 		{
 			Ensure.That(id, "id").IsNotNull();
