@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
@@ -47,6 +48,14 @@ namespace SisoDb
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
 	    IEnumerable<T> GetAll<T>() where T : class;
+
+        /// <summary>
+        /// Queries the cache.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate) where T : class;
 
         /// <summary>
 		/// Returns either null or the structure matching the

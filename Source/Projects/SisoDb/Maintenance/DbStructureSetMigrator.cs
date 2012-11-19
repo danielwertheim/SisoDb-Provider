@@ -63,12 +63,12 @@ namespace SisoDb.Maintenance
 
             Action onCleanup;
             if (structuresHasSameType)
-                onCleanup = () => Db.CacheProvider.NotifyOfPurge(structureSchemaFrom);
+                onCleanup = () => Db.CacheProvider.ClearByType(structureSchemaFrom);
             else
                 onCleanup = () =>
                 {
-                    Db.CacheProvider.NotifyOfPurge(structureSchemaFrom);
-                    Db.CacheProvider.NotifyOfPurge(structureSchemaTo);
+                    Db.CacheProvider.ClearByType(structureSchemaFrom);
+                    Db.CacheProvider.ClearByType(structureSchemaTo);
                 };
 
             OnMigrate(onMigration, onCleanup);

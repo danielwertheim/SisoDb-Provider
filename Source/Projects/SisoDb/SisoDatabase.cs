@@ -164,7 +164,7 @@ namespace SisoDb
 
         protected virtual void OnClearCache()
         {
-            CacheProvider.NotifyOfPurgeAll();
+            CacheProvider.ClearAll();
             DbSchemas.ClearCache();
         }
 
@@ -216,7 +216,7 @@ namespace SisoDb
             {
                 foreach (var type in types)
                 {
-                    CacheProvider.NotifyOfPurge(type);
+                    CacheProvider.ClearByType(type);
 
                     var structureSchema = StructureSchemas.GetSchema(type);
                     DbSchemas.Drop(structureSchema, dbClient);
@@ -268,7 +268,7 @@ namespace SisoDb
             {
                 foreach (var type in types)
                 {
-                    CacheProvider.NotifyOfPurge(type);
+                    CacheProvider.ClearByType(type);
 
                     var structureSchema = StructureSchemas.GetSchema(type);
                     DbSchemas.Upsert(structureSchema, dbClient);

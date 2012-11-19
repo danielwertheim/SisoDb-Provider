@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Caching;
 using SisoDb.EnsureThat;
 using SisoDb.Structures;
@@ -39,12 +40,12 @@ namespace SisoDb.MsMemoryCache
             }
 		}
 
-	    public bool Any()
+        public virtual bool Any()
 	    {
 	        return Count() > 0;
 	    }
 
-	    public long Count()
+        public virtual long Count()
 	    {
 	        return InternalCache.GetCount();
 	    }
@@ -54,9 +55,16 @@ namespace SisoDb.MsMemoryCache
 	        return Any() && InternalCache.Get(GenerateCacheKey(id)) != null;
 	    }
 
-	    public IEnumerable<T> GetAll<T>() where T : class
+	    public virtual IEnumerable<T> GetAll<T>() where T : class
 	    {
 	        return InternalCache.Select(kv => kv.Value as T);
+	    }
+
+	    public virtual IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate) where T : class
+	    {
+	        var e = predicate.Compile();
+
+	        return InternalCache.Where(kv => e(kv.Value as T)).Select(kv => kv.Value as T);
 	    }
 
 	    public virtual T GetById<T>(IStructureId id) where T : class

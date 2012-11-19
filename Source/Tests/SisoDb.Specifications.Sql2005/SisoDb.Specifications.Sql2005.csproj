@@ -208,6 +208,9 @@
     <Compile Include="..\SisoDb.Specifications\Session\Querying\GetByIds.cs">
       <Link>Session\Querying\GetByIds.cs</Link>
     </Compile>
+    <Compile Include="..\SisoDb.Specifications\Session\Querying\GetByQuery.cs">
+      <Link>Session\Querying\GetByQuery.cs</Link>
+    </Compile>
     <Compile Include="..\SisoDb.Specifications\Session\Querying\NamedQueries.cs">
       <Link>Session\Querying\NamedQueries.cs</Link>
     </Compile>

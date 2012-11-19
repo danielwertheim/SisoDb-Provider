@@ -14,6 +14,8 @@ namespace SisoDb.Testing
         {
 			if (Database != null)
 			{
+                if(Database.CacheProvider != null)
+                    Database.CacheProvider.Clear();
 				Database.Maintenance.Reset();
                 Database.ProviderFactory.ConnectionManager.ReleaseAllConnections();
 				Database = null;

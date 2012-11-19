@@ -102,7 +102,7 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <returns></returns>
-        /// <remarks>The query is defered and is executed when you start yield the result.</remarks>
+        /// <remarks>Does not consume any <see cref="ICacheProvider"/>.</remarks>
         ISisoQueryable<T> Query<T>() where T : class;
 
         /// <summary>
@@ -162,6 +162,15 @@ namespace SisoDb
         /// <param name="id"></param>
         /// <returns></returns>
         T CheckoutById<T>(object id) where T : class;
+
+        /// <summary>
+        /// Used to find one single instance or NULL or <typeparamref name="T"/>. The benefits over <see cref="Query{T}"/>,
+        /// is that <see cref="GetByQuery{T}"/> consumes any present <see cref="ICacheProvider"/>, which <see cref="Query{T}"/> does not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        T GetByQuery<T>(Expression<Func<T, bool>> predicate) where T : class;
 
         /// <summary>
         /// Returns one single structure identified
