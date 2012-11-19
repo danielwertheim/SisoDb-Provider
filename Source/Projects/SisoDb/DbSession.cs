@@ -183,9 +183,6 @@ namespace SisoDb
             var structureId = StructureId.ConvertFrom(id);
             var structureSchema = OnUpsertStructureSchema<T>();
 
-            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.Deserialize<T>(DbClient.GetJsonByIdWithLock(structureId, structureSchema));
-
             return Db.CacheProvider.Consume(
                 structureSchema,
                 structureId,
@@ -241,9 +238,6 @@ namespace SisoDb
             var structureId = StructureId.ConvertFrom(id);
             var structureSchema = OnUpsertStructureSchema(structureType);
 
-            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.Deserialize(DbClient.GetJsonById(structureId, structureSchema), structureType);
-
             return Db.CacheProvider.Consume(
                 structureSchema,
                 structureId,
@@ -272,9 +266,6 @@ namespace SisoDb
             var structureId = StructureId.ConvertFrom(id);
             var structureSchema = OnUpsertStructureSchema(structureType);
 
-            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.Deserialize<TOut>(DbClient.GetJsonById(structureId, structureSchema));
-
             return Db.CacheProvider.Consume(
                 structureSchema,
                 structureId,
@@ -298,9 +289,6 @@ namespace SisoDb
 
             var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
             var structureSchema = OnUpsertStructureSchema(structureType);
-
-            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.DeserializeMany(DbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray(), structureType).ToArray();
 
             return Db.CacheProvider.Consume(
                 structureSchema,
@@ -330,9 +318,6 @@ namespace SisoDb
 
             var structureIds = ids.Yield().Select(StructureId.ConvertFrom).ToArray();
             var structureSchema = OnUpsertStructureSchema(structureType);
-
-            if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                return Db.Serializer.DeserializeMany<TOut>(DbClient.GetJsonByIds(structureIds, structureSchema).Where(s => s != null).ToArray());
 
             return Db.CacheProvider.Consume(
                 structureSchema,
