@@ -153,7 +153,10 @@
     <Compile Include="NCore\Collections\EnumerableExtensions.cs" />
     <Compile Include="NCore\Cryptography\Crc32Algorithm.cs" />
     <Compile Include="NCore\Cryptography\Crc32HashService.cs" />
+    <Compile Include="NCore\Cryptography\HashServiceBase.cs" />
     <Compile Include="NCore\Cryptography\IHashService.cs" />
+    <Compile Include="NCore\Cryptography\Md5HashService.cs" />
+    <Compile Include="NCore\Cryptography\Sha1HashService.cs" />
     <Compile Include="NCore\DefaultFormatting.cs" />
     <Compile Include="NCore\Disposer.cs" />
     <Compile Include="NCore\Expressions\ExpressionExtensions.cs" />
@@ -171,6 +174,7 @@
     <Compile Include="NCore\StringConverter.cs" />
     <Compile Include="NCore\StringExtensions.cs" />
     <Compile Include="NCore\SysDateTime.cs" />
+    <Compile Include="NCore\Try.cs" />
     <Compile Include="Annotations\UniqueAttribute.cs" />
     <Compile Include="Annotations\UniqueModes.cs" />
     <Compile Include="Lists.cs" />
@@ -386,7 +390,6 @@
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
     <Compile Include="SisoEnvironment.cs" />
-    <Compile Include="Try.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EnsureThat\Resources\ExceptionMessages.resx">
