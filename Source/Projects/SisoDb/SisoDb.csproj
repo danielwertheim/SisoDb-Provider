@@ -79,6 +79,7 @@
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="Dac\UniquesHashService.cs" />
     <Compile Include="DbQueryEngine.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />
