@@ -1,5 +1,7 @@
 ﻿using ApprovalTests.Reporters;
 using NUnit.Framework;
+using SisoDb.NCore;
+using SisoDb.Testing;
 
 namespace SisoDb.UnitTests
 {
@@ -30,6 +32,7 @@ namespace SisoDb.UnitTests
         [SetUp]
         public void TestInitializer()
         {
+            SysDateTime.NowFn = () => TestConstants.FixedDateTime;
             OnTestInitialize();
         }
 
@@ -41,6 +44,7 @@ namespace SisoDb.UnitTests
         public void TestFinalizer()
         {
             OnTestFinalize();
+            SysDateTime.NowFn = () => TestConstants.FixedDateTime;   
         }
 
         protected virtual void OnTestFinalize()

@@ -265,6 +265,10 @@
       <Project>{B0DBD485-B46D-4566-A755-4BF445FD6375}</Project>
       <Name>SisoDb</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SisoDb.Testing\SisoDb.Testing.csproj">
+      <Project>{2C9376C7-514B-4D15-AA63-15AFE8149D40}</Project>
+      <Name>SisoDb.Testing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
