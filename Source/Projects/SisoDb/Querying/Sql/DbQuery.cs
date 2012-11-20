@@ -1,56 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
 
 namespace SisoDb.Querying.Sql
 {
-    public interface IDbQuery 
-    {
-        string Sql { get; }
-        IList<IDacParameter> Parameters { get; }
-        bool IsEmpty { get; }
-    }
-
     [Serializable]
     public class DbQuery : IDbQuery
     {
         private readonly string _sql;
-        private readonly ReadOnlyCollection<IDacParameter> _parameters;
+        private readonly IDacParameter[] _parameters;
         private readonly bool _isEmpty;
+        private readonly bool _isCacheable;
 
-        public virtual string Sql 
+        public string Sql 
         {
             get { return _sql; }
         }
 
-        public virtual IList<IDacParameter> Parameters
+        public IDacParameter[] Parameters
         {
             get { return _parameters; }
         }
 
-        public virtual bool IsEmpty
+        public bool IsCacheable
+        {
+            get { return _isCacheable; }
+        }
+
+        public bool IsEmpty
         {
             get { return _isEmpty; }
         }
 
-        public DbQuery(string sql, IDacParameter[] parameters)
+        public DbQuery(string sql, IDacParameter[] parameters, bool isCacheable)
         {
             Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
             Ensure.That(parameters, "parameters").IsNotNull();
 
             _isEmpty = false;
             _sql = sql;
-            _parameters = new ReadOnlyCollection<IDacParameter>(parameters.Distinct().ToList());
+            _parameters = parameters.Distinct().ToArray();
+            _isCacheable = isCacheable;
         }
 
         protected DbQuery()
         {
             _isEmpty = true;
             _sql = string.Empty;
-            _parameters = new ReadOnlyCollection<IDacParameter>(new List<IDacParameter>());
+            _parameters = new IDacParameter[0];
         }
 
         public static IDbQuery Empty()

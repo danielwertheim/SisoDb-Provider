@@ -10,8 +10,8 @@ namespace SisoDb.Querying
 	{
 	    protected readonly IQueryEngine QueryEngine;
 		protected readonly IQueryBuilder<T> QueryBuilder;
-
-        public SisoQueryable(IQueryBuilder<T> queryBuilder, IQueryEngine queryEngine)
+	    
+	    public SisoQueryable(IQueryBuilder<T> queryBuilder, IQueryEngine queryEngine)
 		{
             Ensure.That(queryBuilder, "queryBuilder").IsNotNull();
             Ensure.That(queryEngine, "queryEngine").IsNotNull();
@@ -20,7 +20,14 @@ namespace SisoDb.Querying
             QueryEngine = queryEngine;
 		}
 
-        public virtual bool Any()
+	    public virtual ISisoQueryable<T> Cacheable()
+	    {
+	        QueryBuilder.MakeCacheable();
+	        
+            return this;
+	    }
+
+	    public virtual bool Any()
         {
             return QueryBuilder.IsEmpty 
                 ? QueryEngine.Any<T>()

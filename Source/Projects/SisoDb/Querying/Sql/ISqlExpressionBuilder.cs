@@ -4,7 +4,7 @@ namespace SisoDb.Querying.Sql
 {
     /// <summary>
     /// Converts <see cref="IParsedLambda"/> representing 
-    /// Wheres, Sortings and Includes, to an <see cref="ISqlExpression"/>.
+    /// Wheres, Sortings, Paging etc. to an <see cref="ISqlExpression"/>.
     /// </summary>
     public interface ISqlExpressionBuilder
     {

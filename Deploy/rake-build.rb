@@ -18,7 +18,6 @@ require 'albacore'
 @env_projectnameSql2008 = 'SisoDb.Sql2008'
 @env_projectnameSql2012 = 'SisoDb.Sql2012'
 @env_projectnameSqlCe4 = 'SisoDb.SqlCe4'
-@env_projectnameAspWebCache = 'SisoDb.AspWebCache'
 @env_projectnameMsMemoryCache = 'SisoDb.MsMemoryCache'
 @env_projectnameDynamic = 'SisoDb.Dynamic'
 @env_projectnameGlimpse = 'SisoDb.Glimpse'
@@ -39,7 +38,6 @@ buildNameSuffix = "-v#{@env_buildversion}-#{@env_buildconfigname}"
 @env_buildnameSql2008 = "#{@env_projectnameSql2008}#{buildNameSuffix}"
 @env_buildnameSql2012 = "#{@env_projectnameSql2012}#{buildNameSuffix}"
 @env_buildnameSqlCe4 = "#{@env_projectnameSqlCe4}#{buildNameSuffix}"
-@env_buildnameAspWebCache = "#{@env_projectnameAspWebCache}#{buildNameSuffix}"
 @env_buildnameMsMemoryCache = "#{@env_projectnameMsMemoryCache}#{buildNameSuffix}"
 @env_buildnameDynamic = "#{@env_projectnameDynamic}#{buildNameSuffix}"
 @env_buildnameGlimpse = "#{@env_projectnameGlimpse}#{buildNameSuffix}"
@@ -55,7 +53,6 @@ sql2005OutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSql2005}"
 sql2008OutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSql2008}"
 sql2012OutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSql2012}"
 sqlCe4OutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSqlCe4}"
-aspWebCacheOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameAspWebCache}"
 msMemoryCacheOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameMsMemoryCache}"
 dynamicOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameDynamic}"
 glimpseOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameGlimpse}"
@@ -71,13 +68,13 @@ task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
 task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 #--------------------------------------
-task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyAspWebCache, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler, :copyJsonNet, :copyServiceStack, :copySpatial]
+task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler, :copyJsonNet, :copyServiceStack, :copySpatial]
 
 task :testIt => [:unittests]
 
-task :zipIt => [:zipCore, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipAspWebCache, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler, :zipJsonNet, :zipServiceStack, :zipSpatial]
+task :zipIt => [:zipCore, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler, :zipJsonNet, :zipServiceStack, :zipSpatial]
 
-task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packAspWebCache, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler, :packJsonNet, :packServiceStack, :packSpatial]
+task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler, :packJsonNet, :packServiceStack, :packSpatial]
 #--------------------------------------
 # Albacore tasks
 #--------------------------------------
@@ -128,10 +125,6 @@ end
 
 task :copySqlCe4 do
     copyProject(@env_projectnameSqlCe4, sqlCe4OutputPath)
-end
-
-task :copyAspWebCache do
-    copyProject(@env_projectnameAspWebCache, aspWebCacheOutputPath)
 end
 
 task :copyMsMemoryCache do
@@ -194,10 +187,6 @@ zip :zipSqlCe4 do |zip|
     zipProject(zip, sqlCe4OutputPath, @env_buildnameSqlCe4)
 end
 
-zip :zipAspWebCache do |zip|
-    zipProject(zip, aspWebCacheOutputPath, @env_buildnameAspWebCache)
-end
-
 zip :zipMsMemoryCache do |zip|
     zipProject(zip, msMemoryCacheOutputPath, @env_buildnameMsMemoryCache)
 end
@@ -249,10 +238,6 @@ end
 
 exec :packSqlCe4 do |cmd|
     packProject(cmd, @env_projectnameSqlCe4, sqlCe4OutputPath)
-end
-
-exec :packAspWebCache do |cmd|
-    packProject(cmd, @env_projectnameAspWebCache, aspWebCacheOutputPath)
 end
 
 exec :packMsMemoryCache do |cmd|

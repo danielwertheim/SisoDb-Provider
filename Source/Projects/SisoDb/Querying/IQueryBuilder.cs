@@ -8,6 +8,7 @@ namespace SisoDb.Querying
         bool IsEmpty { get; }
         void Clear();
         IQuery Build();
+        IQueryBuilder MakeCacheable();
         IQueryBuilder Take(int numOfStructures);
         IQueryBuilder Page(int pageIndex, int pageSize);
         IQueryBuilder Where(params LambdaExpression[] expressions);
@@ -20,7 +21,8 @@ namespace SisoDb.Querying
 	    bool IsEmpty { get; }
 		void Clear();
 		IQuery Build();
-		IQueryBuilder<T> Take(int numOfStructures);
+        IQueryBuilder<T> MakeCacheable();
+        IQueryBuilder<T> Take(int numOfStructures);
 		IQueryBuilder<T> Page(int pageIndex, int pageSize);
 		IQueryBuilder<T> Where(params Expression<Func<T, bool>>[] expressions);
 		IQueryBuilder<T> OrderBy(params Expression<Func<T, object>>[] expressions);

@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.Caching;
 using SisoDb.EnsureThat;
-using SisoDb.Structures;
 
 namespace SisoDb.MsMemoryCache
 {
@@ -12,17 +11,12 @@ namespace SisoDb.MsMemoryCache
         public Type StructureType { get; private set; }
         public DateTimeOffset AbsoluteExpiration { get; private set; }
         public TimeSpan SlidingExpiration { get; private set; }
-        public string CacheEntryKeyPrefix { get; private set; }
-        public Func<IStructureId, string> CacheEntryKeyGenerator { get; private set; }
-
+        
         private MsMemCacheConfig(Type structureType, DateTimeOffset absoluteExpiration, TimeSpan slidingExpiration)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
 
             StructureType = structureType;
-            CacheEntryKeyPrefix = string.Concat(structureType.Name, ":");
-            CacheEntryKeyGenerator = id => string.Concat(CacheEntryKeyPrefix, id.Value.ToString());
-
             AbsoluteExpiration = absoluteExpiration;
             SlidingExpiration = slidingExpiration;
         }

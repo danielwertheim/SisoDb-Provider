@@ -11,16 +11,17 @@ namespace SisoDb.MsMemoryCache
 	[Serializable]
 	public class MsMemCache : ICache
 	{
-	    protected readonly MemoryCache InternalCache;
+	    protected MemoryCache InternalStructureCache;
+        protected MemoryCache InternalQueryCache;
 	    protected readonly MsMemCacheConfig CacheConfig;
 
-        public MsMemCache(MemoryCache memoryCache, MsMemCacheConfig cacheConfig)
+        public MsMemCache(MsMemCacheConfig cacheConfig)
 		{
-            Ensure.That(memoryCache, "memoryCache").IsNotNull();
             Ensure.That(cacheConfig, "cacheConfig").IsNotNull();
 
-            InternalCache = memoryCache;
-	        CacheConfig = cacheConfig;
+            CacheConfig = cacheConfig;
+            InternalStructureCache = CreateStructureCache();
+            InternalQueryCache = CreateQueryCache();
 		}
 
 		public virtual Type StructureType
@@ -28,16 +29,23 @@ namespace SisoDb.MsMemoryCache
 			get { return CacheConfig.StructureType; }
 		}
 
+        protected MemoryCache CreateStructureCache()
+        {
+            return new MemoryCache(string.Concat("SisoDb", CacheConfig.StructureType.Name));
+        }
+
+        protected MemoryCache CreateQueryCache()
+        {
+            return new MemoryCache(string.Concat("SisoDb", CacheConfig.StructureType.Name, ":", "Queries"));
+        }
+
 		public virtual void Clear()
 		{
-            //TODO: http://msdn.microsoft.com/en-us/library/system.runtime.caching.memorycache.getenumerator.aspx
-            //Would be better to InternalCache.Dispose() and create new
-		    var cacheEnumerator = ((IEnumerable<KeyValuePair<string, object>>) InternalCache).GetEnumerator();
-            while (cacheEnumerator.MoveNext())
-            {
-                if (cacheEnumerator.Current.Key.StartsWith(CacheConfig.CacheEntryKeyPrefix))
-                    InternalCache.Remove(cacheEnumerator.Current.Key);
-            }
+            InternalStructureCache.Dispose();
+		    InternalStructureCache = CreateStructureCache();
+
+            InternalQueryCache.Dispose();
+		    InternalQueryCache = CreateQueryCache();
 		}
 
         public virtual bool Any()
@@ -47,29 +55,34 @@ namespace SisoDb.MsMemoryCache
 
         public virtual long Count()
 	    {
-	        return InternalCache.GetCount();
+	        return InternalStructureCache.GetCount();
+	    }
+
+	    public virtual bool HasQuery(string queryChecksum)
+	    {
+	        return InternalQueryCache.Contains(queryChecksum);
 	    }
 
 	    public virtual bool Exists(IStructureId id)
 	    {
-	        return Any() && InternalCache.Get(GenerateCacheKey(id)) != null;
+	        return Any() && InternalStructureCache.Get(GenerateCacheKey(id)) != null;
 	    }
 
 	    public virtual IEnumerable<T> GetAll<T>() where T : class
 	    {
-	        return InternalCache.Select(kv => kv.Value as T);
+	        return InternalStructureCache.Select(kv => kv.Value as T);
 	    }
 
 	    public virtual IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate) where T : class
 	    {
 	        var e = predicate.Compile();
 
-	        return InternalCache.Where(kv => e(kv.Value as T)).Select(kv => kv.Value as T);
+	        return InternalStructureCache.Where(kv => e(kv.Value as T)).Select(kv => kv.Value as T);
 	    }
 
 	    public virtual T GetById<T>(IStructureId id) where T : class
 	    {
-	        return InternalCache.Get(GenerateCacheKey(id)) as T;
+	        return InternalStructureCache.Get(GenerateCacheKey(id)) as T;
 		}
 
 		public virtual IDictionary<IStructureId, T> GetByIds<T>(IStructureId[] ids) where T : class
@@ -86,9 +99,18 @@ namespace SisoDb.MsMemoryCache
 			return result;
 		}
 
-		public virtual T Put<T>(IStructureId id, T structure) where T : class
+	    public virtual IEnumerable<T> GetByQuery<T>(string queryChecksum) where T : class
+	    {
+	        var ids = InternalQueryCache.Get(queryChecksum) as List<IStructureId>;
+	        if (ids == null) yield break;
+
+	        foreach (var id in ids)
+	            yield return GetById<T>(id);
+	    }
+
+	    public virtual T Put<T>(IStructureId id, T structure) where T : class
 		{
-            InternalCache.Set(GenerateCacheKey(id), structure, CreateCacheItemPolicy());
+            InternalStructureCache.Set(GenerateCacheKey(id), structure, CreateCacheItemPolicy());
 
 			return structure;
 		}
@@ -98,9 +120,24 @@ namespace SisoDb.MsMemoryCache
 		    return items.Select(kv => Put(kv.Key, kv.Value));
 		}
 
+	    public virtual IEnumerable<T> Put<T>(string queryChecksum, IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
+	    {
+	        var ids = new List<IStructureId>();
+
+	        foreach (var kv in items)
+	        {
+	            Put(kv.Key, kv.Value);
+                ids.Add(kv.Key);
+	            
+                yield return kv.Value;
+	        }
+
+            InternalQueryCache.Set(queryChecksum, ids, CreateCacheItemPolicy());
+	    }
+
 	    public virtual void Remove(IStructureId id)
 		{
-            InternalCache.Remove(GenerateCacheKey(id));
+            InternalStructureCache.Remove(GenerateCacheKey(id));
 		}
 
 		public virtual void Remove(IEnumerable<IStructureId> ids)
@@ -111,7 +148,7 @@ namespace SisoDb.MsMemoryCache
 
         protected virtual string GenerateCacheKey(IStructureId id)
         {
-            return CacheConfig.CacheEntryKeyGenerator.Invoke(id);
+            return id.Value.ToString();
         }
 
         protected virtual CacheItemPolicy CreateCacheItemPolicy()

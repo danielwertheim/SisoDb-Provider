@@ -62,7 +62,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
                 "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
-            Assert.AreEqual(0, sqlQuery.Parameters.Count);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
                 "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
-            Assert.AreEqual(0, sqlQuery.Parameters.Count);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
                 "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
-            Assert.AreEqual(0, sqlQuery.Parameters.Count);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
                 "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
-            Assert.AreEqual(0, sqlQuery.Parameters.Count);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
                 "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where not (mem0.[Value] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
-            Assert.AreEqual(0, sqlQuery.Parameters.Count);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]

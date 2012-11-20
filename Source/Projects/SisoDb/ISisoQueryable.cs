@@ -6,12 +6,14 @@ namespace SisoDb
 {
 	public interface ISisoQueryable<T> where T : class
 	{
-        bool Any();
+	    ISisoQueryable<T> Cacheable(); 
+
+	    bool Any();
         bool Any(Expression<Func<T, bool>> expression);
         int Count();
         int Count(Expression<Func<T, bool>> expression);
         bool Exists(object id);
-
+        
         T First();
         TResult FirstAs<TResult>() where TResult : class;
         string FirstAsJson();

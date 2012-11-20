@@ -123,9 +123,9 @@ namespace SisoDb
 
             OnUpsertStructureSchema<TContract>();
 
-            var sourceData = DbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray());
+            var sourceData = DbClient.YieldJsonBySp(query.Name, query.Parameters);
 
-            return Db.Serializer.DeserializeMany<TOut>(sourceData.ToArray());
+            return Db.Serializer.DeserializeMany<TOut>(sourceData);
         }
 
         public virtual IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
@@ -155,7 +155,7 @@ namespace SisoDb
 
             OnUpsertStructureSchema<T>();
 
-            return DbClient.YieldJsonBySp(query.Name, query.Parameters.ToArray()).ToArray();
+            return DbClient.YieldJsonBySp(query.Name, query.Parameters);
         }
 
         public virtual IEnumerable<T> RawQuery<T>(IRawQuery query) where T : class
@@ -176,8 +176,8 @@ namespace SisoDb
 
             OnUpsertStructureSchema<TContract>();
 
-            var sourceData = DbClient.YieldJson(query.QueryString, query.Parameters.ToArray());
-            return Db.Serializer.DeserializeMany<TOut>(sourceData.ToArray());
+            var sourceData = DbClient.YieldJson(query.QueryString, query.Parameters);
+            return Db.Serializer.DeserializeMany<TOut>(sourceData);
         }
 
         public virtual IEnumerable<string> RawQueryAsJson<T>(IRawQuery query) where T : class
@@ -188,7 +188,7 @@ namespace SisoDb
 
                 OnUpsertStructureSchema<T>();
 
-                return DbClient.YieldJson(query.QueryString, query.Parameters.ToArray()).ToArray();
+                return DbClient.YieldJson(query.QueryString, query.Parameters);
             });
         }
     }

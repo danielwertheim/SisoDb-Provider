@@ -58,34 +58,6 @@ namespace SisoDb.UnitTests.Querying
 		}
 
 		[Test]
-		public void HasIncludes_WhenNullIncludes_ReturnsFalse()
-		{
-			var cmd = new Query(StructureSchemaTestFactory.Stub()) { Includes = null };
-
-			Assert.IsFalse(cmd.HasIncludes);
-		}
-
-		[Test]
-		public void HasIncludes_WhenEmptyIncludes_ReturnsFalse()
-		{
-			var cmd = new Query(StructureSchemaTestFactory.Stub());
-			cmd.Includes.Clear();
-
-			Assert.IsFalse(cmd.HasIncludes);
-		}
-
-		[Test]
-		public void HasIncludes_WhenIncludesExists_ReturnsTrue()
-		{
-			var cmd = new Query(StructureSchemaTestFactory.Stub())
-			{
-				Includes = new List<IParsedLambda> { new Mock<IParsedLambda>().Object }
-			};
-
-			Assert.IsTrue(cmd.HasIncludes);
-		}
-
-		[Test]
 		public void HasSortings_WhenNullSortingsExists_ReturnsFalse()
 		{
 			var cmd = new Query(StructureSchemaTestFactory.Stub()) { Sortings = null };
@@ -116,7 +88,7 @@ namespace SisoDb.UnitTests.Querying
 		}
 
 		[Test]
-		public void IsEmpty_WhenNoWhereSortingOrIncludes_ReturnsTrue()
+		public void IsEmpty_WhenNoWhereSortingOrPaging_ReturnsTrue()
 		{
 			var query = new Query(StructureSchemaTestFactory.Stub());
 
@@ -145,17 +117,6 @@ namespace SisoDb.UnitTests.Querying
 			Assert.IsFalse(query.IsEmpty);
 		}
 
-		[Test]
-		public void IsEmpty_WhenIncludesButNothingElse_ReturnsFalse()
-		{
-			var includesFake = new Mock<IParsedLambda>();
-			includesFake.Setup(f => f.Nodes).Returns(GetFakeNodes(1));
-
-			var query = new Query(StructureSchemaTestFactory.Stub()) { Includes = new []{ includesFake.Object } };
-
-			Assert.IsFalse(query.IsEmpty);
-		}
-		
 		private static INode[] GetFakeNodes(int count)
 		{
 			var list = new List<INode>();

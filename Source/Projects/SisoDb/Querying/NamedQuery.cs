@@ -14,9 +14,9 @@ namespace SisoDb.Querying
 
         public string Name { get; private set; }
 
-        public IEnumerable<IDacParameter> Parameters
+        public IDacParameter[] Parameters
         {
-            get { return new ReadOnlyCollection<IDacParameter>(_parameters.Values.ToList()); }
+            get { return _parameters.Values.ToArray(); }
         }
 
         public NamedQuery(string name)
