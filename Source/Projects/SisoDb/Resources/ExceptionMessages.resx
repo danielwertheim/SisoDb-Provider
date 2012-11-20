@@ -364,4 +364,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DbClient_ObjectAllreadyDisposed" xml:space="preserve">
     <value>The DbClient instance has allready been disposed.</value>
   </data>
+  <data name="DbQueryChecksumGenerator_UnsupportedDacParam" xml:space="preserve">
+    <value>Params that currently are allowed in cached queries, are: Simple params and Arrays. Geography params is not supported.</value>
+  </data>
 </root>

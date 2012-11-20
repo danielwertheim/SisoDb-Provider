@@ -50,6 +50,11 @@ namespace SisoDb.MsMemoryCache
 	        return InternalCache.GetCount();
 	    }
 
+	    public virtual bool HasQuery(string queryChecksum)
+	    {
+	        throw new NotImplementedException();
+	    }
+
 	    public virtual bool Exists(IStructureId id)
 	    {
 	        return Any() && InternalCache.Get(GenerateCacheKey(id)) != null;
@@ -86,7 +91,12 @@ namespace SisoDb.MsMemoryCache
 			return result;
 		}
 
-		public virtual T Put<T>(IStructureId id, T structure) where T : class
+	    public virtual IEnumerable<T> GetByQuery<T>(string queryChecksum) where T : class
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public virtual T Put<T>(IStructureId id, T structure) where T : class
 		{
             InternalCache.Set(GenerateCacheKey(id), structure, CreateCacheItemPolicy());
 
@@ -97,6 +107,11 @@ namespace SisoDb.MsMemoryCache
 		{
 		    return items.Select(kv => Put(kv.Key, kv.Value));
 		}
+
+	    public virtual IEnumerable<T> Put<T>(string queryChecksum, IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
+	    {
+	        throw new NotImplementedException();
+	    }
 
 	    public virtual void Remove(IStructureId id)
 		{

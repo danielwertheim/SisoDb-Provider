@@ -21,6 +21,13 @@ namespace SisoDb.Querying
             SessionFactory = sessionFactory;
 		}
 
+        public virtual ISisoQueryable<T> Cacheable()
+        {
+            QueryBuilder.MakeCacheable();
+
+            return this;
+        }
+
         public virtual bool Any()
         {
             using (var session = SessionFactory.Invoke())

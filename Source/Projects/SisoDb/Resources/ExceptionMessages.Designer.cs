@@ -205,6 +205,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Params that currently are allowed in cached queries, are: Simple params and Arrays. Geography params is not supported..
+        /// </summary>
+        public static string DbQueryChecksumGenerator_UnsupportedDacParam {
+            get {
+                return ResourceManager.GetString("DbQueryChecksumGenerator_UnsupportedDacParam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The query should only return StructureIds which alows onle WHERE expressions. Take, Paging and Sorting etc is not allowed..
         /// </summary>
         public static string DbQueryGenerator_OnlyWhereExpressionsAreAllowed {

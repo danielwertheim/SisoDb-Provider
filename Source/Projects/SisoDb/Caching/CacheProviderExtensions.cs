@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.NCore.Collections;
+using SisoDb.Querying.Sql;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
 
@@ -115,13 +116,12 @@ namespace SisoDb.Caching
             var cache = cacheProvider[structureSchema.Type.Type];
             var cachedResult = cache.GetByIds<T>(structureIds);
 
-            var cacheWasEmpty = cachedResult.Any() == false;
-            if (cacheWasEmpty)
+            if (!cachedResult.Any())
             {
                 if (consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult)
                     return nonCacheQuery.Invoke(structureIds);
 
-                return cache.Put(nonCacheQuery.Invoke(structureIds).ToDictionary(s => structureSchema.IdAccessor.GetValue(s)));
+                return cache.Put(nonCacheQuery.Invoke(structureIds).Select(s => new KeyValuePair<IStructureId, T>(structureSchema.IdAccessor.GetValue(s), s)));
             }
 
             var allWasCached = cachedResult.Count == structureIds.Length;
@@ -135,7 +135,23 @@ namespace SisoDb.Caching
             if (consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult)
                 return cachedResult.Values.MergeWith(nonCacheQuery.Invoke(deltaIds));
 
-            return cachedResult.Values.MergeWith(cache.Put(nonCacheQuery.Invoke(deltaIds).ToDictionary(s => structureSchema.IdAccessor.GetValue(s))));
+            return cachedResult.Values.MergeWith(cache.Put(nonCacheQuery.Invoke(deltaIds).Select(s => new KeyValuePair<IStructureId, T>(structureSchema.IdAccessor.GetValue(s), s))));
+        }
+        
+        public static IEnumerable<T> Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IDbQuery query, Func<IDbQuery, IEnumerable<T>> nonCacheQuery, CacheConsumeModes consumeMode) where T : class
+        {
+            if (!cacheProvider.IsEnabledFor(structureSchema))
+                return nonCacheQuery.Invoke(query);
+
+            var queryChecksum = new DbQueryChecksumGenerator().Generate(query);
+            var cache = cacheProvider[structureSchema.Type.Type];
+            if (cache.HasQuery(queryChecksum))
+                return cache.GetByQuery<T>(queryChecksum);
+
+            if (consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult)
+                return nonCacheQuery.Invoke(query);
+
+            return cache.Put(queryChecksum, nonCacheQuery.Invoke(query).Select(s => new KeyValuePair<IStructureId, T>(structureSchema.IdAccessor.GetValue(s), s)));
         }
     }
 }

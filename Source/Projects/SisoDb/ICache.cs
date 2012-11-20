@@ -35,6 +35,13 @@ namespace SisoDb
 	    long Count();
 
         /// <summary>
+        /// Returns bool indicating if the cache has a cached result of the query.
+        /// </summary>
+        /// <param name="queryChecksum"></param>
+        /// <returns></returns>
+        bool HasQuery(string queryChecksum);
+
+        /// <summary>
         /// Returns bool indicating if there is a structure for
         /// the passed structure id in the cache.
         /// </summary>
@@ -74,6 +81,14 @@ namespace SisoDb
 		/// <returns></returns>
 		IDictionary<IStructureId, T> GetByIds<T>(IStructureId[] ids) where T : class;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryChecksum"></param>
+        /// <returns></returns>
+        IEnumerable<T> GetByQuery<T>(string queryChecksum) where T : class;
+
 		/// <summary>
 		/// Called when an insert or update is performed against the <see cref="ISisoDatabase"/>.
 		/// Should be used to update the cache.
@@ -94,6 +109,15 @@ namespace SisoDb
 		/// <returns></returns>
 		/// <remarks>Note! The structures being sent in should be returned by the cache.</remarks>
 		IEnumerable<T> Put<T>(IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class;
+
+        /// <summary>
+        /// Caches items for a certain query.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryChecksum"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        IEnumerable<T> Put<T>(string queryChecksum, IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class;
 
 		/// <summary>
 		/// Called when a structure is being deleted from the <see cref="ISisoDatabase"/>.

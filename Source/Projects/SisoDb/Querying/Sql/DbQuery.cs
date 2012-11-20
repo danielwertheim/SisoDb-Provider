@@ -7,18 +7,11 @@ using SisoDb.EnsureThat;
 
 namespace SisoDb.Querying.Sql
 {
-    public interface IDbQuery 
-    {
-        string Sql { get; }
-        IList<IDacParameter> Parameters { get; }
-        bool IsEmpty { get; }
-    }
-
     [Serializable]
     public class DbQuery : IDbQuery
     {
         private readonly string _sql;
-        private readonly ReadOnlyCollection<IDacParameter> _parameters;
+        private readonly IDacParameter[] _parameters;
         private readonly bool _isEmpty;
 
         public virtual string Sql 
@@ -26,7 +19,7 @@ namespace SisoDb.Querying.Sql
             get { return _sql; }
         }
 
-        public virtual IList<IDacParameter> Parameters
+        public virtual IDacParameter[] Parameters
         {
             get { return _parameters; }
         }
@@ -43,14 +36,14 @@ namespace SisoDb.Querying.Sql
 
             _isEmpty = false;
             _sql = sql;
-            _parameters = new ReadOnlyCollection<IDacParameter>(parameters.Distinct().ToList());
+            _parameters = parameters.Distinct().ToArray();
         }
 
         protected DbQuery()
         {
             _isEmpty = true;
             _sql = string.Empty;
-            _parameters = new ReadOnlyCollection<IDacParameter>(new List<IDacParameter>());
+            _parameters = new IDacParameter[0];
         }
 
         public static IDbQuery Empty()

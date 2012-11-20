@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SisoDb.EnsureThat;
 using SisoDb.Querying.Lambdas;
 using SisoDb.Structures.Schemas;
@@ -10,23 +9,17 @@ namespace SisoDb.Querying
 	public class Query : IQuery
 	{
 		public IStructureSchema StructureSchema { get; private set; }
-
-		public int? TakeNumOfStructures { get; set; }
-
-		public Paging Paging { get; set; }
-
-		public IParsedLambda Where { get; set; }
-
-		public IParsedLambda Sortings { get; set; }
-
-		public IList<IParsedLambda> Includes { get; set; }
+        public int? TakeNumOfStructures { get; set; }
+        public Paging Paging { get; set; }
+        public IParsedLambda Where { get; set; }
+        public IParsedLambda Sortings { get; set; }
+        public bool IsCacheable { get; set; }
 
 		public bool IsEmpty
 		{
 			get
 			{
-				return HasIncludes == false 
-					&& HasPaging == false 
+				return HasPaging == false 
 					&& HasSortings == false 
 					&& HasTakeNumOfStructures == false
 					&& HasWhere == false;
@@ -53,18 +46,12 @@ namespace SisoDb.Querying
 			get { return Sortings != null && Sortings.Nodes.Length > 0; }
 		}
 
-		public bool HasIncludes
-		{
-			get { return Includes != null && Includes.Count > 0; }
-		}
-
 		public Query(IStructureSchema structureSchema)
 		{
 			Ensure.That(structureSchema, "structureSchema").IsNotNull();
 
 			StructureSchema = structureSchema;
-
-			Includes = new List<IParsedLambda>();
+		    IsCacheable = false;
 		}
 	}
 }

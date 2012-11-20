@@ -178,17 +178,20 @@ namespace SisoDb
 
             var structureSchema = OnUpsertStructureSchema(structureType);
 
-            IEnumerable<string> sourceData;
-
             if (query.IsEmpty)
-                sourceData = DbClient.GetJsonOrderedByStructureId(structureSchema);
-            else
-            {
-                var sqlQuery = QueryGenerator.GenerateQuery(query);
-                sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-            }
+                return Db.Serializer.DeserializeMany(DbClient.GetJsonOrderedByStructureId(structureSchema).ToArray(), structureType);
 
-            return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
+            var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+            return Db.CacheProvider.Consume(
+                structureSchema, 
+                sqlQuery, 
+                q =>
+                {
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
+                    return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
+                }, 
+                ExecutionContext.Session.CacheConsumeMode);
         }
 
         public virtual IEnumerable<TResult> QueryAs<T, TResult>(IQuery query)
@@ -206,17 +209,20 @@ namespace SisoDb
 
             var structureSchema = OnUpsertStructureSchema<T>();
 
-            IEnumerable<string> sourceData;
-
             if (query.IsEmpty)
-                sourceData = DbClient.GetJsonOrderedByStructureId(structureSchema);
-            else
-            {
-                var sqlQuery = QueryGenerator.GenerateQuery(query);
-                sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-            }
+                return Db.Serializer.DeserializeMany<TResult>(DbClient.GetJsonOrderedByStructureId(structureSchema).ToArray());
 
-            return Db.Serializer.DeserializeMany<TResult>(sourceData.ToArray());
+            var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+            return Db.CacheProvider.Consume(
+                structureSchema,
+                sqlQuery,
+                q =>
+                {
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
+                    return Db.Serializer.DeserializeMany<TResult>(sourceData.ToArray());
+                },
+                ExecutionContext.Session.CacheConsumeMode);
         }
 
         public virtual IEnumerable<string> QueryAsJson<T>(IQuery query) where T : class

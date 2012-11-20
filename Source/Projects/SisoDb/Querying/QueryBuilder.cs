@@ -13,7 +13,7 @@ namespace SisoDb.Querying
 	{
 	    protected readonly IQueryBuilder InnerQueryBuilder;
 
-        public virtual bool IsEmpty
+	    public virtual bool IsEmpty
 	    {
             get { return InnerQueryBuilder.IsEmpty; }
 	    }
@@ -32,6 +32,13 @@ namespace SisoDb.Querying
 		{
 		    return InnerQueryBuilder.Build();
 		}
+
+        public virtual IQueryBuilder<T> MakeCacheable()
+        {
+            InnerQueryBuilder.MakeCacheable();
+
+            return this;
+        }
 
 		public virtual IQueryBuilder<T> Take(int numOfStructures)
 		{
@@ -79,14 +86,15 @@ namespace SisoDb.Querying
         protected IQuery Query;
         protected readonly List<LambdaExpression> BufferedWheres;
         protected readonly List<OrderByExpression> BufferedSortings;
+        protected bool IsCacheable;
 
         public virtual bool IsEmpty
         {
             get
             {
                 return Query.IsEmpty
-                       && BufferedSortings.Count == 0
-                       && BufferedWheres.Count == 0;
+                    && BufferedSortings.Count == 0
+                    && BufferedWheres.Count == 0;
             }
         }
 
@@ -104,6 +112,7 @@ namespace SisoDb.Querying
             Query = new Query(StructureSchema);
             BufferedWheres = new List<LambdaExpression>();
             BufferedSortings = new List<OrderByExpression>();
+            IsCacheable = false;
         }
 
         public virtual void Clear()
@@ -119,7 +128,15 @@ namespace SisoDb.Querying
             if (BufferedSortings.Count > 0)
                 Query.Sortings = ParseSortingLambdas(BufferedSortings.ToArray());
 
+            Query.IsCacheable = IsCacheable;
+
             return Query;
+        }
+
+        public virtual IQueryBuilder MakeCacheable()
+        {
+            IsCacheable = true;
+            return this;
         }
 
         protected virtual IParsedLambda ParseWhereLambdas(IEnumerable<LambdaExpression> wheres)
