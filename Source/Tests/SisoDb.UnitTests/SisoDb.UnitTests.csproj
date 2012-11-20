@@ -210,10 +210,6 @@
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Projects\SisoDb.AspWebCache\SisoDb.AspWebCache.csproj">
-      <Project>{07A22CB7-158A-4587-A40F-ADE3D72CC567}</Project>
-      <Name>SisoDb.AspWebCache</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
       <Project>{9202564D-92FD-448F-851D-3DD3D1AA3137}</Project>
       <Name>SisoDb.Dynamic</Name>

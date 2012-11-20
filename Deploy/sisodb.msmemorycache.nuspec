@@ -9,7 +9,7 @@
 		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
 		<summary>Cache provider over the MS Memory Cache for SisoDb, the document-oriented db provider for SQL-Server.</summary>
 		<description>
-			A Cache provider over the MS Memory Cache for SisoDb.
+			A Cache provider over the MS Memory Cache for SisoDb. Can be used both in ASP.Net as well as standalone.
 			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
 		</description>
 		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
