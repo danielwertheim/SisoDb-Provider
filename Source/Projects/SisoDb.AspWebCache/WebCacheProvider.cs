@@ -15,10 +15,10 @@ namespace SisoDb.AspWebCache
 
         public WebCacheProvider(Func<Cache> httpCacheFn = null, Func<Type, WebCacheConfig> webCacheConfigFn = null)
         {
-            if(httpCacheFn == null && (HttpContext.Current == null || HttpContext.Current.Cache == null))
-                throw new SisoDbException("Can not resolve HttpContext.Current.Cache. Please specify httpCacheFn so that Siso knows how to get hold of it.");
+            if (httpCacheFn == null && HttpRuntime.Cache == null && (HttpContext.Current == null || HttpContext.Current.Cache == null))
+                throw new SisoDbException("Can not resolve neither HttpRuntime.Cache nor HttpContext.Current.Cache. Please specify httpCacheFn so that Siso knows how to get hold of it.");
 
-            _httpCacheFn = httpCacheFn ?? (() => HttpContext.Current.Cache);
+            _httpCacheFn = httpCacheFn ?? (() => HttpRuntime.Cache ?? HttpContext.Current.Cache);
             _webCacheConfigFn = webCacheConfigFn ?? WebCacheConfig.CreateSliding;
         }
 
