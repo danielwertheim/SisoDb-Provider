@@ -140,7 +140,7 @@ namespace SisoDb.Caching
         
         public static IEnumerable<T> Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IDbQuery query, Func<IDbQuery, IEnumerable<T>> nonCacheQuery, CacheConsumeModes consumeMode) where T : class
         {
-            if (!cacheProvider.IsEnabledFor(structureSchema))
+            if (!query.IsCacheable || !cacheProvider.IsEnabledFor(structureSchema))
                 return nonCacheQuery.Invoke(query);
 
             var queryChecksum = new DbQueryChecksumGenerator().Generate(query);
@@ -151,7 +151,9 @@ namespace SisoDb.Caching
             if (consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult)
                 return nonCacheQuery.Invoke(query);
 
-            return cache.Put(queryChecksum, nonCacheQuery.Invoke(query).Select(s => new KeyValuePair<IStructureId, T>(structureSchema.IdAccessor.GetValue(s), s)));
+            return cache.Put(
+                queryChecksum, 
+                nonCacheQuery.Invoke(query).Select(s => new KeyValuePair<IStructureId, T>(structureSchema.IdAccessor.GetValue(s), s)));
         }
     }
 }

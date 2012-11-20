@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
@@ -14,9 +13,9 @@ namespace SisoDb.Querying
 
 		public string QueryString { get; private set; }
 
-		public IEnumerable<IDacParameter> Parameters
+		public IDacParameter[] Parameters
 		{
-			get { return new ReadOnlyCollection<IDacParameter>(_parameters.Values.ToList()); }
+			get { return _parameters.Values.ToArray(); }
 		}
 
 		public RawQuery(string queryString)

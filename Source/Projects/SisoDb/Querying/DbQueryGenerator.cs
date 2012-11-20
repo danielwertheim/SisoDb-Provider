@@ -36,7 +36,7 @@ namespace SisoDb.Querying
             var formatter = CreateSqlQueryFormatter(query, sqlExpression);
             var parameters = GenerateParameters(query, sqlExpression);
 
-            return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters);
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable);
         }
 
         public virtual IDbQuery GenerateQueryReturningStrutureIds(IQuery query)
@@ -71,7 +71,7 @@ namespace SisoDb.Querying
             };
             var parameters = GenerateParameters(query, sqlExpression);
 
-            return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), parameters);
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningStructureIds")), parameters, query.IsCacheable);
         }
 
         protected virtual IDbQuery CreateSqlQueryReturningCountOfStructureIds(IQuery query)
@@ -85,7 +85,7 @@ namespace SisoDb.Querying
             };
             var parameters = GenerateParameters(query, sqlExpression);
 
-            return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningCountOfStructureIds")), parameters);
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryReturningCountOfStructureIds")), parameters, query.IsCacheable);
         }
 
         protected virtual SqlQueryFormatter CreateSqlQueryFormatter(IQuery query, ISqlExpression sqlExpression)

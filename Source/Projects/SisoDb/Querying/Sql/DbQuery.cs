@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
@@ -13,23 +11,29 @@ namespace SisoDb.Querying.Sql
         private readonly string _sql;
         private readonly IDacParameter[] _parameters;
         private readonly bool _isEmpty;
+        private readonly bool _isCacheable;
 
-        public virtual string Sql 
+        public string Sql 
         {
             get { return _sql; }
         }
 
-        public virtual IDacParameter[] Parameters
+        public IDacParameter[] Parameters
         {
             get { return _parameters; }
         }
 
-        public virtual bool IsEmpty
+        public bool IsCacheable
+        {
+            get { return _isCacheable; }
+        }
+
+        public bool IsEmpty
         {
             get { return _isEmpty; }
         }
 
-        public DbQuery(string sql, IDacParameter[] parameters)
+        public DbQuery(string sql, IDacParameter[] parameters, bool isCacheable)
         {
             Ensure.That(sql, "sql").IsNotNullOrWhiteSpace();
             Ensure.That(parameters, "parameters").IsNotNull();
@@ -37,6 +41,7 @@ namespace SisoDb.Querying.Sql
             _isEmpty = false;
             _sql = sql;
             _parameters = parameters.Distinct().ToArray();
+            _isCacheable = isCacheable;
         }
 
         protected DbQuery()

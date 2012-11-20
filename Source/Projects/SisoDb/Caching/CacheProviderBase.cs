@@ -26,7 +26,7 @@ namespace SisoDb.Caching
             }
         }
 
-        public virtual bool AutoEnable { get; set; }
+        public bool AutoEnable { get; set; }
 
         public virtual void Clear()
         {

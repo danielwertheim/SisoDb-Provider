@@ -18,7 +18,7 @@ namespace SisoDb
 		Type StructureType { get; }
 
 		/// <summary>
-		/// Clears all cache for the structure set.
+		/// Clears the cache.
 		/// </summary>
 		void Clear();
 
@@ -29,7 +29,7 @@ namespace SisoDb
 	    bool Any();
 
         /// <summary>
-        /// Returns number indicationg how many items the cache holds.
+        /// Returns number indicating how many items the cache holds.
         /// </summary>
         /// <returns></returns>
 	    long Count();
@@ -50,7 +50,7 @@ namespace SisoDb
 	    bool Exists(IStructureId id);
 
         /// <summary>
-        /// Returns all items contained in the cache.
+        /// Yields all items contained in the cache.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -82,7 +82,7 @@ namespace SisoDb
 		IDictionary<IStructureId, T> GetByIds<T>(IStructureId[] ids) where T : class;
 
         /// <summary>
-        /// 
+        /// Returns items associated with a previously cached query result.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="queryChecksum"></param>

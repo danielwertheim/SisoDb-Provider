@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using SisoDb.Caching;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
@@ -179,7 +178,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (query.IsEmpty)
-                return Db.Serializer.DeserializeMany(DbClient.GetJsonOrderedByStructureId(structureSchema).ToArray(), structureType);
+                return Db.Serializer.DeserializeMany(DbClient.GetJsonOrderedByStructureId(structureSchema), structureType);
 
             var sqlQuery = QueryGenerator.GenerateQuery(query);
 
@@ -188,8 +187,8 @@ namespace SisoDb
                 sqlQuery, 
                 q =>
                 {
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-                    return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    return Db.Serializer.DeserializeMany(sourceData, structureType);
                 }, 
                 ExecutionContext.Session.CacheConsumeMode);
         }
@@ -210,7 +209,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema<T>();
 
             if (query.IsEmpty)
-                return Db.Serializer.DeserializeMany<TResult>(DbClient.GetJsonOrderedByStructureId(structureSchema).ToArray());
+                return Db.Serializer.DeserializeMany<TResult>(DbClient.GetJsonOrderedByStructureId(structureSchema));
 
             var sqlQuery = QueryGenerator.GenerateQuery(query);
 
@@ -219,8 +218,8 @@ namespace SisoDb
                 sqlQuery,
                 q =>
                 {
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-                    return Db.Serializer.DeserializeMany<TResult>(sourceData.ToArray());
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    return Db.Serializer.DeserializeMany<TResult>(sourceData);
                 },
                 ExecutionContext.Session.CacheConsumeMode);
         }
@@ -242,11 +241,11 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structuretype);
 
             if (query.IsEmpty)
-                return DbClient.GetJsonOrderedByStructureId(structureSchema).ToArray();
+                return DbClient.GetJsonOrderedByStructureId(structureSchema);
 
             var sqlQuery = QueryGenerator.GenerateQuery(query);
 
-            return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray()).ToArray();
+            return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
         }
     }
 }
