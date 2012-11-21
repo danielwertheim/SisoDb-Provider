@@ -94,7 +94,7 @@ namespace SisoDb.MsMemoryCache
         public virtual IEnumerable<KeyValuePair<IStructureId, T>> GetByIds<T>(IStructureId[] ids) where T : class
         {
             var i = 0;
-            return InternalStructureCache.GetValues(ids.Select(GenerateCacheKey)).Select(kv => new KeyValuePair<IStructureId, T>(ids[i++], kv.Value as T));
+            return GetStructureCacheEntriesByIds(ids).Select(kv => new KeyValuePair<IStructureId, T>(ids[i++], kv.Value as T));
         }
 
         public virtual IEnumerable<T> GetByQuery<T>(string queryChecksum) where T : class
@@ -102,7 +102,12 @@ namespace SisoDb.MsMemoryCache
             var ids = InternalQueryCache.Get(queryChecksum) as ISet<IStructureId>;
             if (ids == null) return Enumerable.Empty<T>();
 
-            return InternalStructureCache.GetValues(ids.Select(GenerateCacheKey)).Select(kv => kv.Value as T);
+            return GetStructureCacheEntriesByIds(ids).Select(kv => kv.Value as T);
+        }
+
+        protected virtual IEnumerable<KeyValuePair<string, object>> GetStructureCacheEntriesByIds(IEnumerable<IStructureId> ids)
+        {
+            return InternalStructureCache.GetValues(ids.Select(GenerateCacheKey)) ?? Enumerable.Empty<KeyValuePair<string, object>>();
         }
 
         public virtual T Put<T>(IStructureId id, T structure) where T : class

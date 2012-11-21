@@ -18,9 +18,9 @@ namespace SisoDb.Specifications.Session
                 TestContext = TestContextFactory.Create();
                 TestContext.Database.CacheProvider = new MsMemCacheProvider();
                 TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
-                
-                _cache = TestContext.Database.CacheProvider[typeof (IAmCached)];
-                
+
+                _cache = TestContext.Database.CacheProvider[typeof(IAmCached)];
+
                 TestContext.Database.UseOnceTo().Insert(_originalStructure = new IAmCached { Value = 1 });
                 TestContext.Database.UseOnceTo().GetById<IAmCached>(_originalStructure.Id); //Touch in other session to get it in cache
             };
@@ -298,7 +298,7 @@ namespace SisoDb.Specifications.Session
                 TestContext = TestContextFactory.Create();
                 TestContext.Database.CacheProvider = new MsMemCacheProvider();
                 TestContext.Database.CacheProvider.EnableFor(typeof(IAmCached));
-                
+
                 _cache = TestContext.Database.CacheProvider[typeof(IAmCached)];
 
                 _originalStructures = new[] { new IAmCached { Value = 1 }, new IAmCached { Value = 2 } };
@@ -315,22 +315,21 @@ namespace SisoDb.Specifications.Session
                 }
             };
 
-            It should_have_returned_one_item =
-                () => _resultingStructures.Length.ShouldEqual(1);
+            It should_have_returned_two_items_since_it_pulls_one_in_from_db =
+                () => _resultingStructures.Length.ShouldEqual(2);
 
-            It should_have_returned_one_non_null_item =
-                () => _resultingStructures.FirstOrDefault().ShouldNotBeNull();
+            It should_have_returned_correct_items =
+                () => _originalStructures.ShouldBeValueEqualTo(_resultingStructures);
 
             It should_have_exactly_one_item_in_cache =
                 () => _cache.Count().ShouldEqual(1);
 
-            It should_have_correct_item_left_in_cache =
-                () =>
-                {
-                    var cachedStructure = _cache.GetAll<IAmCached>().First();
-                    cachedStructure.ShouldBeValueEqualTo(_resultingStructures[0]);
-                    cachedStructure.ShouldBeValueEqualTo(_originalStructures[1]);
-                };
+            It should_have_correct_item_left_in_cache = () =>
+            {
+                var cachedStructure = _cache.GetAll<IAmCached>().First();
+                cachedStructure.ShouldBeValueEqualTo(_resultingStructures[0]);
+                cachedStructure.ShouldBeValueEqualTo(_originalStructures[1]);
+            };
 
             private static ICache _cache;
             private static IAmCached[] _originalStructures;
@@ -493,7 +492,7 @@ namespace SisoDb.Specifications.Session
                 TestContext.Database.UseOnceTo().InsertMany(_originalStructures);
             };
 
-            Because of = 
+            Because of =
                 () => _resultingStructure = TestContext.Database.UseOnceTo().GetByQuery<IAmCached>(i => i.Value == _originalStructures[1].Value);
 
             It should_have_exactly_one_item_in_cache =
@@ -531,8 +530,8 @@ namespace SisoDb.Specifications.Session
                 _resultingStructure = TestContext.Database.UseOnceTo().GetByQuery<IAmCached>(i => i.Value == _originalStructures[1].Value);
             };
 
-            It should_have_been_called_twice = 
-                () => ((TestableMsMemCache)TestContext.Database.CacheProvider[typeof (IAmCached)]).QueryCount.ShouldEqual(2);
+            It should_have_been_called_twice =
+                () => ((TestableMsMemCache)TestContext.Database.CacheProvider[typeof(IAmCached)]).QueryCount.ShouldEqual(2);
 
             It should_have_exactly_one_item_in_cache =
                 () => _cache.Count().ShouldEqual(1);
