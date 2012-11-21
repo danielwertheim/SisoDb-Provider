@@ -42,6 +42,14 @@ namespace SisoDb.Caching
                 cacheProvider[structureType].Clear();
         }
 
+        public static void CleanQueriesFor(this ICacheProvider cacheProvider, IStructureSchema structureSchema)
+        {
+            if (!cacheProvider.IsEnabledFor(structureSchema))
+                return;
+
+            cacheProvider[structureSchema.Type.Type].ClearQueries();
+        }
+
         public static void Remove(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IStructureId structureId)
         {
             if (!cacheProvider.IsEnabledFor(structureSchema))

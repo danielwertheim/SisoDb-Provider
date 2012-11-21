@@ -48,6 +48,12 @@ namespace SisoDb.MsMemoryCache
 		    InternalQueryCache = CreateQueryCache();
 		}
 
+        public virtual void ClearQueries()
+        {
+            InternalQueryCache.Dispose();
+            InternalQueryCache = CreateQueryCache();
+        }
+
         public virtual bool Any()
 	    {
 	        return Count() > 0;
@@ -131,16 +137,27 @@ namespace SisoDb.MsMemoryCache
 
 	    public virtual void Remove(IStructureId id)
 		{
+            RemoveQueriesHaving(id);
             InternalStructureCache.Remove(GenerateCacheKey(id));
 		}
 
 		public virtual void Remove(IEnumerable<IStructureId> ids)
 		{
-			foreach (var structureId in ids)
+		    var idsTmp = ids.ToArray();
+
+            RemoveQueriesHaving(idsTmp);
+            foreach (var structureId in idsTmp)
 				Remove(structureId);
 		}
 
-        protected virtual string GenerateCacheKey(IStructureId id)
+	    protected virtual void RemoveQueriesHaving(params IStructureId[] structureIds)
+	    {
+	        var keys = InternalQueryCache.Where(kv => ((IList<IStructureId>) kv.Value).Any(structureIds.Contains)).Select(kv => kv.Key).ToArray();
+	        foreach (var key in keys)
+	            InternalQueryCache.Remove(key);
+	    }
+
+	    protected virtual string GenerateCacheKey(IStructureId id)
         {
             return id.Value.ToString();
         }

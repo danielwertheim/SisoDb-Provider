@@ -18,9 +18,14 @@ namespace SisoDb
 		Type StructureType { get; }
 
 		/// <summary>
-		/// Clears the cache.
+		/// Clears the cache. Both structures and queries.
 		/// </summary>
 		void Clear();
+
+        /// <summary>
+        /// Will clear the cached queries, not structures.
+        /// </summary>
+        void ClearQueries();
 
         /// <summary>
         /// Returns bool indicating if the Cache is empty or not.
