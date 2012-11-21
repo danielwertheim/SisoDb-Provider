@@ -9,13 +9,13 @@ using SisoDb.Structures;
 namespace SisoDb.UnitTests.Querying
 {
     [TestFixture]
-    public class DbQueryChecksumTests : UnitTestBase
+    public class DefaultDbQueryChecksumGeneratorTests : UnitTestBase
     {
-        private DbQueryChecksumGenerator _checksumGenerator;
+        private IDbQueryChecksumGenerator _checksumGenerator;
 
         protected override void OnFixtureInitialize()
         {
-            _checksumGenerator = new DbQueryChecksumGenerator();
+            _checksumGenerator = new DefaultDbQueryChecksumGenerator();
         }
 
         [Test]

@@ -119,7 +119,7 @@
     <Compile Include="Providers\Connections\Sql2008ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\Sql2012ConnectionInfoTests.cs" />
     <Compile Include="Providers\Connections\SqlCe4ConnectionInfoTests.cs" />
-    <Compile Include="Querying\DbQueryChecksumTests.cs" />
+    <Compile Include="Querying\DefaultDbQueryChecksumGeneratorTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserCommunitySupportTests.cs" />
     <Compile Include="Querying\Lambdas\Parsers\WhereParserStringQueryTests.cs" />
     <Compile Include="Querying\QueryGeneration\Sql2005QueryGeneratorStringFunctionTests.cs" />

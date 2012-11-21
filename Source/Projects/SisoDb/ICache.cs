@@ -79,7 +79,7 @@ namespace SisoDb
 		/// <typeparam name="T"></typeparam>
 		/// <param name="ids"></param>
 		/// <returns></returns>
-		IDictionary<IStructureId, T> GetByIds<T>(IStructureId[] ids) where T : class;
+        IEnumerable<KeyValuePair<IStructureId, T>> GetByIds<T>(IStructureId[] ids) where T : class;
 
         /// <summary>
         /// Returns items associated with a previously cached query result.

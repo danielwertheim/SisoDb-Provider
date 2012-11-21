@@ -85,18 +85,9 @@ namespace SisoDb.MsMemoryCache
 	        return InternalStructureCache.Get(GenerateCacheKey(id)) as T;
 		}
 
-		public virtual IDictionary<IStructureId, T> GetByIds<T>(IStructureId[] ids) where T : class
+		public virtual IEnumerable<KeyValuePair<IStructureId, T>> GetByIds<T>(IStructureId[] ids) where T : class
 		{
-			var result = new Dictionary<IStructureId, T>(ids.Length);
-
-			foreach (var id in ids)
-			{
-				var structure = GetById<T>(id);
-				if (structure != null)
-					result.Add(id, structure);
-			}
-
-			return result;
+		    return from id in ids let structure = GetById<T>(id) where structure != null select new KeyValuePair<IStructureId, T>(id, structure);
 		}
 
 	    public virtual IEnumerable<T> GetByQuery<T>(string queryChecksum) where T : class
@@ -110,7 +101,8 @@ namespace SisoDb.MsMemoryCache
 
 	    public virtual T Put<T>(IStructureId id, T structure) where T : class
 		{
-            InternalStructureCache.Set(GenerateCacheKey(id), structure, CreateCacheItemPolicy());
+            if(structure != null)
+                InternalStructureCache.Set(GenerateCacheKey(id), structure, CreateCacheItemPolicy());
 
 			return structure;
 		}
@@ -122,6 +114,8 @@ namespace SisoDb.MsMemoryCache
 
 	    public virtual IEnumerable<T> Put<T>(string queryChecksum, IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
 	    {
+            Ensure.That(queryChecksum, "queryChecksum").IsNotNullOrWhiteSpace();
+
 	        var ids = new List<IStructureId>();
 
 	        foreach (var kv in items)

@@ -114,7 +114,7 @@ namespace SisoDb.Caching
                 return nonCacheQuery.Invoke(structureIds);
 
             var cache = cacheProvider[structureSchema.Type.Type];
-            var cachedResult = cache.GetByIds<T>(structureIds);
+            var cachedResult = cache.GetByIds<T>(structureIds).ToDictionary(kv => kv.Key, kv => kv.Value); //Ok to turn it to in-mem rep and not yield. GetByIds, should not be enormous resultset.
 
             if (!cachedResult.Any())
             {
@@ -140,15 +140,15 @@ namespace SisoDb.Caching
         
         public static IEnumerable<T> Consume<T>(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IDbQuery query, Func<IDbQuery, IEnumerable<T>> nonCacheQuery, CacheConsumeModes consumeMode) where T : class
         {
-            if (!query.IsCacheable || !cacheProvider.IsEnabledFor(structureSchema))
+            if (!cacheProvider.IsEnabledFor(structureSchema))
                 return nonCacheQuery.Invoke(query);
 
-            var queryChecksum = new DbQueryChecksumGenerator().Generate(query);
+            var queryChecksum = DbQueryChecksumGenerator.Instance.Generate(query);
             var cache = cacheProvider[structureSchema.Type.Type];
             if (cache.HasQuery(queryChecksum))
                 return cache.GetByQuery<T>(queryChecksum);
 
-            if (consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult)
+            if (!query.IsCacheable || consumeMode == CacheConsumeModes.DoNotUpdateCacheWithDbResult)
                 return nonCacheQuery.Invoke(query);
 
             return cache.Put(

@@ -183,7 +183,9 @@
     <Compile Include="Querying\Lambdas\Nodes\NotInSetMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Operators\NotInSetOperator.cs" />
     <Compile Include="Querying\Sql\DbQueryChecksumGenerator.cs" />
+    <Compile Include="Querying\Sql\DefaultDbQueryChecksumGenerator.cs" />
     <Compile Include="Querying\Sql\IDbQuery.cs" />
+    <Compile Include="Querying\Sql\IDbQueryChecksumGenerator.cs" />
     <Compile Include="Serialization\DefaultSisoSerializer.cs" />
     <Compile Include="Serialization\EmptyStructureSerializer.cs" />
     <Compile Include="Serialization\IStructureSerializer.cs" />
