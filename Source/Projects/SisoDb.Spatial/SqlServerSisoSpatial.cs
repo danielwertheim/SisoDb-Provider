@@ -167,13 +167,46 @@ namespace SisoDb.Spatial
             });
         }
 
+        public virtual void MakeValid<T>(object id, int srid = SpatialReferenceId.Wsg84) where T : class 
+        {
+            ExecutionContext.Try(() =>
+            {
+                var schema = Session.GetStructureSchema<T>();
+                var sidParam = CreateStructureIdParam<T>(id);
+                if(Session.Db.ConnectionInfo.ProviderType == StorageProviders.Sql2008)
+                    OnMakeGeoValid2008(schema, sidParam);
+                else
+                    OnMakeGeoValid(schema, sidParam);
+            });
+        }
+
+        protected virtual void OnMakeGeoValid2008(IStructureSchema schema, IDacParameter sidParam)
+        {
+            var sql = SqlStatements.GetSql("GetGeo").Inject(schema.GetSpatialTableName());
+            var geo = GetGeograpy(sql, sidParam);
+            if(geo.STIsValid())
+                return;
+
+            geo = geo.MakeValid();
+            
+            var geoParam = new GeographyDacParameter(GeoParamName, geo);
+            sql = SqlStatements.GetSql("UpdateGeo").Inject(schema.GetSpatialTableName());
+            Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
+        }
+
+        protected virtual void OnMakeGeoValid(IStructureSchema schema, IDacParameter sidParam)
+        {
+            var sql = SqlStatements.GetSql("MakeGeoValid").Inject(schema.GetSpatialTableName());
+            Session.DbClient.ExecuteNonQuery(sql, sidParam);
+        }
+
         public virtual Coordinates[] GetCoordinatesIn<T>(object id) where T : class
         {
             return ExecutionContext.Try(() =>
             {
                 var schema = Session.GetStructureSchema<T>();
                 var sidParam = CreateStructureIdParam<T>(id);
-                var sql = SqlStatements.GetSql("GetCoordinatesIn").Inject(schema.GetSpatialTableName());
+                var sql = SqlStatements.GetSql("GetGeo").Inject(schema.GetSpatialTableName());
                 
                 return ExtractPoints(GetGeograpy(sql, sidParam)).Select(p => new Coordinates
                 {

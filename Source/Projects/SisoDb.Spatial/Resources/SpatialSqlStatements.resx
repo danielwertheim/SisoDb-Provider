@@ -145,13 +145,17 @@ begin
 	drop table [{0}];
 end</value>
   </data>
-  <data name="GetCoordinatesIn" xml:space="preserve">
+  <data name="GetGeo" xml:space="preserve">
     <value>set nocount on;
 select [Geo] from [{0}] where [StructureId] = @id;</value>
   </data>
   <data name="InsertGeo" xml:space="preserve">
     <value>set nocount on;
 insert into [{0}] ([StructureId], [Geo]) values (@id, @geo);</value>
+  </data>
+  <data name="MakeGeoValid" xml:space="preserve">
+    <value>set nocount on;
+update [{0}] set [Geo] = [Geo].MakeValid() where [StructureId] = @id and [Geo].STIsValid() = 0;</value>
   </data>
   <data name="SetGeo" xml:space="preserve">
     <value>set nocount on;

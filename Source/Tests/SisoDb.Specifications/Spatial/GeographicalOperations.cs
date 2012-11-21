@@ -803,6 +803,48 @@ namespace SisoDb.Specifications.Spatial
             private static SpatialGuidItem _item;
             private static bool _contains;
         }
+
+        [Subject(typeof(ISisoSpatial), "MakeValid")]
+        public class when_inserted_polygon : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                }
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.MakeValid<SpatialGuidItem>(_item.StructureId);
+                }
+            };
+
+            It should_still_have_the_polygon = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(SpatialDataFactory.DefaultPolygon());
+                }
+            };
+
+            private static SpatialGuidItem _item;
+        }
     }
 #endif
 }
