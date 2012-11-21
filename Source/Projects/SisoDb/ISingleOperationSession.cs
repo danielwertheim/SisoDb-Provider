@@ -134,7 +134,7 @@ namespace SisoDb
         /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
         /// <param name="ids">Ids used for matching the structures to return.</param>
         /// <returns>IEnumerable Json representation of <paramref name="structureType"/>.</returns>
-        IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids);
+        string[] GetByIdsAsJson(Type structureType, params object[] ids);
 
         /// <summary>
         /// Inserts a single structure using the <typeparamref name="T"/> as

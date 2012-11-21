@@ -131,14 +131,14 @@ namespace SisoDb
     		}
     	}
 
-        public virtual IEnumerable<string> GetByIdsAsJson(Type structureType, params object[] ids)
+        public virtual string[] GetByIdsAsJson(Type structureType, params object[] ids)
         {
             Ensure.That(structureType, "structureType").IsNotNull();
             Ensure.That(ids, "ids").HasItems();
 
             using (var session = Db.BeginSession())
             {
-                return session.GetByIdsAsJson(structureType, ids);
+                return session.GetByIdsAsJson(structureType, ids).ToArray();
             }
         }
 
