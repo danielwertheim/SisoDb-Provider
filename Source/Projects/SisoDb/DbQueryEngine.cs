@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using SisoDb.Caching;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
@@ -81,7 +80,11 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             if (!query.HasWhere)
-                return DbClient.Any(structureSchema);
+            {
+                return Db.CacheProvider.Any(
+                    structureSchema,
+                    s => DbClient.Any(s));
+            }
 
             var whereSql = QueryGenerator.GenerateQueryReturningCountOfStrutureIds(query);
             return DbClient.Any(structureSchema, whereSql);
@@ -150,9 +153,6 @@ namespace SisoDb
                 var structureId = StructureId.ConvertFrom(id);
                 var structureSchema = OnUpsertStructureSchema(structureType);
 
-                if (!Db.CacheProvider.IsEnabledFor(structureSchema))
-                    return DbClient.Exists(structureSchema, structureId);
-
                 return Db.CacheProvider.Exists(
                     structureSchema,
                     structureId,
@@ -177,17 +177,20 @@ namespace SisoDb
 
             var structureSchema = OnUpsertStructureSchema(structureType);
 
-            IEnumerable<string> sourceData;
-
             if (query.IsEmpty)
-                sourceData = DbClient.GetJsonOrderedByStructureId(structureSchema);
-            else
-            {
-                var sqlQuery = QueryGenerator.GenerateQuery(query);
-                sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-            }
+                return Db.Serializer.DeserializeMany(DbClient.GetJsonOrderedByStructureId(structureSchema), structureType);
 
-            return Db.Serializer.DeserializeMany(sourceData.ToArray(), structureType);
+            var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+            return Db.CacheProvider.Consume(
+                structureSchema, 
+                sqlQuery, 
+                q =>
+                {
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    return Db.Serializer.DeserializeMany(sourceData, structureType);
+                }, 
+                ExecutionContext.Session.CacheConsumeMode);
         }
 
         public virtual IEnumerable<TResult> QueryAs<T, TResult>(IQuery query)
@@ -205,17 +208,20 @@ namespace SisoDb
 
             var structureSchema = OnUpsertStructureSchema<T>();
 
-            IEnumerable<string> sourceData;
-
             if (query.IsEmpty)
-                sourceData = DbClient.GetJsonOrderedByStructureId(structureSchema);
-            else
-            {
-                var sqlQuery = QueryGenerator.GenerateQuery(query);
-                sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray());
-            }
+                return Db.Serializer.DeserializeMany<TResult>(DbClient.GetJsonOrderedByStructureId(structureSchema));
 
-            return Db.Serializer.DeserializeMany<TResult>(sourceData.ToArray());
+            var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+            return Db.CacheProvider.Consume(
+                structureSchema,
+                sqlQuery,
+                q =>
+                {
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    return Db.Serializer.DeserializeMany<TResult>(sourceData);
+                },
+                ExecutionContext.Session.CacheConsumeMode);
         }
 
         public virtual IEnumerable<string> QueryAsJson<T>(IQuery query) where T : class
@@ -235,11 +241,11 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structuretype);
 
             if (query.IsEmpty)
-                return DbClient.GetJsonOrderedByStructureId(structureSchema).ToArray();
+                return DbClient.GetJsonOrderedByStructureId(structureSchema);
 
             var sqlQuery = QueryGenerator.GenerateQuery(query);
 
-            return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters.ToArray()).ToArray();
+            return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
         }
     }
 }

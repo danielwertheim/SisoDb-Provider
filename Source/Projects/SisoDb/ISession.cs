@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using SisoDb.Caching;
 using SisoDb.Dac;
 using SisoDb.Structures.Schemas;
 
@@ -66,6 +67,12 @@ namespace SisoDb
         IAdvanced Advanced { get; }
 
         /// <summary>
+        /// Indicates how the session will interact with an optional
+        /// cache.
+        /// </summary>
+        CacheConsumeModes CacheConsumeMode { get; }
+
+        /// <summary>
         /// Marks the session as aborted. When aborted, and transactions are supported,
         /// commit will not be performed. Do not use it to fail a session. Then use
         /// <see cref="MarkAsFailed"/> instead.
@@ -102,7 +109,7 @@ namespace SisoDb
         /// </summary>
         /// <typeparam name="T">Structure type, used as a contract defining the scheme.</typeparam>
         /// <returns></returns>
-        /// <remarks>The query is defered and is executed when you start yield the result.</remarks>
+        /// <remarks>Does not consume any <see cref="ICacheProvider"/>.</remarks>
         ISisoQueryable<T> Query<T>() where T : class;
 
         /// <summary>
@@ -162,6 +169,15 @@ namespace SisoDb
         /// <param name="id"></param>
         /// <returns></returns>
         T CheckoutById<T>(object id) where T : class;
+
+        /// <summary>
+        /// Used to find one single instance or NULL or <typeparamref name="T"/>. The benefits over <see cref="Query{T}"/>,
+        /// is that <see cref="GetByQuery{T}"/> consumes any present <see cref="ICacheProvider"/>, which <see cref="Query{T}"/> does not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        T GetByQuery<T>(Expression<Func<T, bool>> predicate) where T : class;
 
         /// <summary>
         /// Returns one single structure identified
@@ -249,7 +265,7 @@ namespace SisoDb
         /// <param name="structureType"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        object[] GetByIds(Type structureType, params object[] ids);
+        IEnumerable<object> GetByIds(Type structureType, params object[] ids);
 
         /// <summary>
         /// Returns all structures for the defined structure <typeparamref name="TContract"/>

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SisoDb
+namespace SisoDb.NCore
 {
-    public static class Try //TODO: Move to NCore
+    public static class Try
     {
         public static AggregateException This(params Action[] actions)
         {
@@ -22,8 +22,8 @@ namespace SisoDb
                 }
             }
 
-            return exceptions.Any() 
-                ? new AggregateException(exceptions) 
+            return exceptions.Any()
+                ? new AggregateException(exceptions)
                 : null;
         }
     }

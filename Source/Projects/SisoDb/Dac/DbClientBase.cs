@@ -492,7 +492,7 @@ namespace SisoDb.Dac
                 structureSchema.GetStructureTableName(),
                 query.Sql);
 
-            ExecuteNonQuery(sql, query.Parameters.ToArray());
+            ExecuteNonQuery(sql, query.Parameters);
         }
 
         public virtual void DeleteIndexesAndUniquesById(IStructureId structureId, IStructureSchema structureSchema)
@@ -571,7 +571,7 @@ namespace SisoDb.Dac
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
             Ensure.That(query, "query").IsNotNull();
 
-            return ExecuteScalar<int>(query.Sql, query.Parameters.ToArray());
+            return ExecuteScalar<int>(query.Sql, query.Parameters);
         }
 
         public virtual bool Any(IStructureSchema structureSchema)
@@ -702,7 +702,7 @@ namespace SisoDb.Dac
                                 ? new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, DBNull.Value)
                                 : new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, uniqueStructureIndex.StructureId.Value);
             parameters[2] = new DacParameter(UniqueStorageSchema.Fields.UqMemberPath.Name, uniqueStructureIndex.Path);
-            parameters[3] = new DacParameter(UniqueStorageSchema.Fields.UqValue.Name, SisoEnvironment.HashService.GenerateHash(SisoEnvironment.StringConverter.AsString(uniqueStructureIndex.Value)));
+            parameters[3] = new DacParameter(UniqueStorageSchema.Fields.UqValue.Name, UniquesChecksumGenerator.Instance.Generate(uniqueStructureIndex));
 
             ExecuteNonQuery(sql, parameters);
         }

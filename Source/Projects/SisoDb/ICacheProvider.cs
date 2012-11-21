@@ -24,7 +24,8 @@ namespace SisoDb
 		bool AutoEnable { get; set; }
 
 		/// <summary>
-		/// Clears the cache.
+		/// Clears all <see cref="ICache"/> instances associated with
+		/// this provider.
 		/// </summary>
 		void Clear();
 

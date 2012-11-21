@@ -48,7 +48,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Coordinates.cs" />
-    <Compile Include="ISisoGeographical.cs" />
+    <Compile Include="ISisoSpatial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -56,7 +56,7 @@
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="SessionExtensions.cs" />
-    <Compile Include="SqlServerSisoGeographical.cs" />
+    <Compile Include="SqlServerSisoSpatial.cs" />
     <Compile Include="SpatialReferenceId.cs" />
     <Compile Include="SpatialSqlStatements.cs" />
   </ItemGroup>

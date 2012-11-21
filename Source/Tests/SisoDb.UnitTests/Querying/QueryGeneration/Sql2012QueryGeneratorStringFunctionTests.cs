@@ -224,7 +224,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
                 "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where ((mem0.[Value] = @p0) and (cast(mem0.[Value] as varbinary(300)) = cast(@p0 as varbinary(300)))) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
                 sqlQuery.Sql);
 
-            Assert.AreEqual(1, sqlQuery.Parameters.Count);
+            Assert.AreEqual(1, sqlQuery.Parameters.Length);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual("Foo", sqlQuery.Parameters[0].Value);
         }

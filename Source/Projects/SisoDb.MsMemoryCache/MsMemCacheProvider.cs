@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Caching;
 using SisoDb.Caching;
 
 namespace SisoDb.MsMemoryCache
@@ -9,18 +8,16 @@ namespace SisoDb.MsMemoryCache
     /// </summary>
     public class MsMemCacheProvider : CacheProviderBase
     {
-        private readonly Func<Type, MemoryCache> _memoryCacheFn;
-        private readonly Func<Type, MsMemCacheConfig> _memCacheConfigFn;
+        protected readonly Func<Type, MsMemCacheConfig> MemCacheConfigFn;
 
-        public MsMemCacheProvider(Func<Type, MemoryCache> memoryCacheFn = null, Func<Type, MsMemCacheConfig> memCacheConfigFn = null)
+        public MsMemCacheProvider(Func<Type, MsMemCacheConfig> memCacheConfigFn = null)
         {
-            _memoryCacheFn = memoryCacheFn ?? (t => new MemoryCache(t.Name));
-            _memCacheConfigFn = memCacheConfigFn ?? MsMemCacheConfig.CreateSliding;
+            MemCacheConfigFn = memCacheConfigFn ?? MsMemCacheConfig.CreateSliding;
         }
 
         protected override ICache OnCreate(Type structureType)
         {
-            return new MsMemCache(_memoryCacheFn.Invoke(structureType), _memCacheConfigFn.Invoke(structureType));
+            return new MsMemCache(MemCacheConfigFn.Invoke(structureType));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.Spatial
 #if Sql2008Provider || Sql2012Provider
     class UpsertAndDrop
     {
-        [Subject(typeof(ISisoGeographical), "EnableFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_guid_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -35,7 +35,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoGeographical), "EnableFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_identity_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -60,7 +60,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoGeographical), "EnableFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_big_identity_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -85,7 +85,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoGeographical), "EnableFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_upserting_string_item_for_the_first_time : SpecificationBase
         {
             Establish context = () =>
@@ -110,7 +110,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoGeographical), "EnableFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_dropping_without_any_existing : SpecificationBase
         {
             Establish context = () =>
@@ -135,7 +135,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoGeographical), "EnableFor")]
+        [Subject(typeof(ISisoSpatial), "EnableFor")]
         public class when_dropping_existing : SpecificationBase
         {
             Establish context = () =>

@@ -1,26 +1,12 @@
-﻿using System.Text;
-
-namespace SisoDb.NCore.Cryptography
+﻿namespace SisoDb.NCore.Cryptography
 {
-    public class Crc32HashService : IHashService
+    public class Crc32HashService : HashServiceBase
     {
         private readonly Crc32Algorithm _hasher = new Crc32Algorithm();
-        private readonly Encoding _encoding = Encoding.UTF8;
 
-        public int GetHashLength()
+        public override string GenerateHash(string value)
         {
-            return 8;
-        }
-
-        public string GenerateHash(string value)
-        {
-            var hash = _hasher.ComputeHash(_encoding.GetBytes(value));
-            var result = new StringBuilder();
-
-            foreach (var b in hash)
-                result.Append(b.ToString("x2").ToLower());
-
-            return result.ToString();
+            return HashBytesToString(_hasher.ComputeHash(Encoding.GetBytes(value)));
         }
     }
 }

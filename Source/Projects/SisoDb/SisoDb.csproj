@@ -74,11 +74,14 @@
     <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\GeographyDacParameter.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
+    <Compile Include="Dac\IDefaultUniquesChecksumGenerator.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
+    <Compile Include="Dac\UniquesChecksumGenerator.cs" />
+    <Compile Include="Dac\DefaultUniquesChecksumGenerator.cs" />
     <Compile Include="DbQueryEngine.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />
@@ -143,17 +146,22 @@
     <Compile Include="IRawQuery.cs" />
     <Compile Include="ISingleOperationSession.cs" />
     <Compile Include="IConnectionManager.cs" />
-    <Compile Include="BackgroundIndexing.cs" />
     <Compile Include="Dac\Profiling\IWrappedConnection.cs" />
     <Compile Include="Dac\Profiling\IWrappedTransaction.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
+    <Compile Include="Annotations\UniqueAttribute.cs" />
+    <Compile Include="Annotations\UniqueModes.cs" />
+    <Compile Include="Lists.cs" />
     <Compile Include="NCore\Collections\DictionaryExtensions.cs" />
     <Compile Include="NCore\Collections\EnumerableExtensions.cs" />
     <Compile Include="NCore\Cryptography\Crc32Algorithm.cs" />
     <Compile Include="NCore\Cryptography\Crc32HashService.cs" />
+    <Compile Include="NCore\Cryptography\HashServiceBase.cs" />
     <Compile Include="NCore\Cryptography\IHashService.cs" />
+    <Compile Include="NCore\Cryptography\Md5HashService.cs" />
+    <Compile Include="NCore\Cryptography\Sha1HashService.cs" />
     <Compile Include="NCore\DefaultFormatting.cs" />
     <Compile Include="NCore\Disposer.cs" />
     <Compile Include="NCore\Expressions\ExpressionExtensions.cs" />
@@ -171,11 +179,13 @@
     <Compile Include="NCore\StringConverter.cs" />
     <Compile Include="NCore\StringExtensions.cs" />
     <Compile Include="NCore\SysDateTime.cs" />
-    <Compile Include="Annotations\UniqueAttribute.cs" />
-    <Compile Include="Annotations\UniqueModes.cs" />
-    <Compile Include="Lists.cs" />
+    <Compile Include="NCore\Try.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NotInSetMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Operators\NotInSetOperator.cs" />
+    <Compile Include="Querying\Sql\DbQueryChecksumGenerator.cs" />
+    <Compile Include="Querying\Sql\DefaultDbQueryChecksumGenerator.cs" />
+    <Compile Include="Querying\Sql\IDbQuery.cs" />
+    <Compile Include="Querying\Sql\IDbQueryChecksumGenerator.cs" />
     <Compile Include="Serialization\DefaultSisoSerializer.cs" />
     <Compile Include="Serialization\EmptyStructureSerializer.cs" />
     <Compile Include="Serialization\IStructureSerializer.cs" />
@@ -386,7 +396,6 @@
     <Compile Include="SisoDbException.cs" />
     <Compile Include="StorageProviders.cs" />
     <Compile Include="SisoEnvironment.cs" />
-    <Compile Include="Try.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EnsureThat\Resources\ExceptionMessages.resx">

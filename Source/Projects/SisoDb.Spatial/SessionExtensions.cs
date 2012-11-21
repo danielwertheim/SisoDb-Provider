@@ -2,9 +2,9 @@
 {
     public static class SessionExtensions
     {
-        public static ISisoGeographical Spatials(this ISession session)
+        public static ISisoSpatial Spatials(this ISession session)
         {
-            return new SqlServerSisoGeographical(session.ExecutionContext);
+            return new SqlServerSisoSpatial(session.ExecutionContext);
         }
     }
 }

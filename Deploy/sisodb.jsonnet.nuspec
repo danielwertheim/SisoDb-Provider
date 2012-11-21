@@ -21,7 +21,7 @@
 		<tags>sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,poco,blob,nosql,serialization,jsonnet</tags>
 		<dependencies>
 			<dependency id="SisoDb" version="[$version$]" />
-			<dependency id="Newtonsoft.Json" version="4.5.10" />
+			<dependency id="Newtonsoft.Json" version="4.5.11" />
 		</dependencies>
 	</metadata>
 	<files>

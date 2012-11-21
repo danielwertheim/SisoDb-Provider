@@ -32,7 +32,7 @@ namespace SisoDb.Dac.BulkInserts
                 return Enumerator.Current.Path;
 
             if (ordinal == UniqueStorageSchema.Fields.UqValue.Ordinal)
-                return SisoEnvironment.HashService.GenerateHash(SisoEnvironment.StringConverter.AsString(Enumerator.Current.Value));
+                return UniquesChecksumGenerator.Instance.Generate(Enumerator.Current);
 
             throw new NotSupportedException();
         }

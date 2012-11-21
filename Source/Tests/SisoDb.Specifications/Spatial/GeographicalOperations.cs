@@ -10,7 +10,7 @@ namespace SisoDb.Specifications.Spatial
 #if Sql2008Provider || Sql2012Provider
     class GeographicalOperations
     {
-        [Subject(typeof(ISisoGeographical), "SetPolygon")]
+        [Subject(typeof(ISisoSpatial), "SetPolygon")]
         public class when_setting_polygon_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -49,7 +49,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _coordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "InsertPolygon")]
+        [Subject(typeof(ISisoSpatial), "InsertPolygon")]
         public class when_inserting_polygon_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -88,7 +88,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _coordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "DeleteGeoFor")]
+        [Subject(typeof(ISisoSpatial), "DeleteGeoFor")]
         public class when_deleting_existing_polygon : SpecificationBase
         {
             Establish context = () =>
@@ -132,7 +132,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoGeographical), "DeleteGeoFor")]
+        [Subject(typeof(ISisoSpatial), "DeleteGeoFor")]
         public class when_deleting_non_existing_polygon : SpecificationBase
         {
             Establish context = () =>
@@ -174,7 +174,7 @@ namespace SisoDb.Specifications.Spatial
             private static IStructureSchema _structureSchema;
         }
 
-        [Subject(typeof(ISisoGeographical), "SetPolygon")]
+        [Subject(typeof(ISisoSpatial), "SetPolygon")]
         public class when_setting_polygon_and_one_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -215,7 +215,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _newCoordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "UpdatePolygon")]
+        [Subject(typeof(ISisoSpatial), "UpdatePolygon")]
         public class when_updating_an_existing_polygon : SpecificationBase
         {
             Establish context = () =>
@@ -256,7 +256,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates[] _newCoordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
+        [Subject(typeof(ISisoSpatial), "ContainsPoint")]
         public class when_checking_if_polygon_contains_point_that_is_within_bounds : SpecificationBase
         {
             Establish context = () =>
@@ -290,7 +290,7 @@ namespace SisoDb.Specifications.Spatial
             private static bool _contains;
         }
 
-        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
+        [Subject(typeof(ISisoSpatial), "ContainsPoint")]
         public class when_checking_if_polygon_contains_point_that_is_outside_bounds : SpecificationBase
         {
             Establish context = () =>
@@ -324,7 +324,7 @@ namespace SisoDb.Specifications.Spatial
             private static bool _contains;
         }
 
-        [Subject(typeof(ISisoGeographical), "ContainsPointAfterExpand")]
+        [Subject(typeof(ISisoSpatial), "ContainsPointAfterExpand")]
         public class when_checking_if_a_expanded_polygon_contains_point_that_normally_is_outside_bounds : SpecificationBase
         {
             Establish context = () =>
@@ -358,7 +358,7 @@ namespace SisoDb.Specifications.Spatial
             private static bool _contains;
         }
 
-        [Subject(typeof(ISisoGeographical), "SetPoint")]
+        [Subject(typeof(ISisoSpatial), "SetPoint")]
         public class when_setting_point_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -397,7 +397,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates _coordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "InsertPoint")]
+        [Subject(typeof(ISisoSpatial), "InsertPoint")]
         public class when_inserting_point_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -436,7 +436,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates _coordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "SetPoint")]
+        [Subject(typeof(ISisoSpatial), "SetPoint")]
         public class when_setting_point_and_one_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -476,7 +476,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates _newCoordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "UpdatePoint")]
+        [Subject(typeof(ISisoSpatial), "UpdatePoint")]
         public class when_updating_an_existing_point : SpecificationBase
         {
             Establish context = () =>
@@ -516,7 +516,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates _newCoordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "SetCircle")]
+        [Subject(typeof(ISisoSpatial), "SetCircle")]
         public class when_setting_circle_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -562,7 +562,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates _coordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "InsertCircle")]
+        [Subject(typeof(ISisoSpatial), "InsertCircle")]
         public class when_inserting_circle_and_none_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -608,7 +608,7 @@ namespace SisoDb.Specifications.Spatial
             private static Coordinates _coordinates;
         }
 
-        [Subject(typeof(ISisoGeographical), "SetCircle")]
+        [Subject(typeof(ISisoSpatial), "SetCircle")]
         public class when_setting_circle_and_one_exists_before : SpecificationBase
         {
             Establish context = () =>
@@ -653,7 +653,7 @@ namespace SisoDb.Specifications.Spatial
             private static SpatialGuidItem _item;
         }
 
-        [Subject(typeof(ISisoGeographical), "UpdateCircle")]
+        [Subject(typeof(ISisoSpatial), "UpdateCircle")]
         public class when_updating_an_existing_circle : SpecificationBase
         {
             Establish context = () =>
@@ -698,7 +698,7 @@ namespace SisoDb.Specifications.Spatial
             private static SpatialGuidItem _item;
         }
 
-        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
+        [Subject(typeof(ISisoSpatial), "ContainsPoint")]
         public class when_checking_if_circle_contains_point_that_is_within_bounds : SpecificationBase
         {
             Establish context = () =>
@@ -732,7 +732,7 @@ namespace SisoDb.Specifications.Spatial
             private static bool _contains;
         }
 
-        [Subject(typeof(ISisoGeographical), "ContainsPoint")]
+        [Subject(typeof(ISisoSpatial), "ContainsPoint")]
         public class when_checking_if_circle_contains_point_that_is_outside_bounds : SpecificationBase
         {
             Establish context = () =>
@@ -766,7 +766,7 @@ namespace SisoDb.Specifications.Spatial
             private static bool _contains;
         }
 
-        [Subject(typeof(ISisoGeographical), "ContainsPointAfterExpand")]
+        [Subject(typeof(ISisoSpatial), "ContainsPointAfterExpand")]
         public class when_checking_if_a_expanded_circle_contains_point_that_normally_is_outside_bounds : SpecificationBase
         {
             Establish context = () =>
@@ -802,6 +802,48 @@ namespace SisoDb.Specifications.Spatial
 
             private static SpatialGuidItem _item;
             private static bool _contains;
+        }
+
+        [Subject(typeof(ISisoSpatial), "MakeValid")]
+        public class when_inserted_polygon : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatials();
+                    s.EnableFor<SpatialGuidItem>();
+                }
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
+                }
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.MakeValid<SpatialGuidItem>(_item.StructureId);
+                }
+            };
+
+            It should_still_have_the_polygon = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatials();
+                    s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(SpatialDataFactory.DefaultPolygon());
+                }
+            };
+
+            private static SpatialGuidItem _item;
         }
     }
 #endif

@@ -364,4 +364,10 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DbClient_ObjectAllreadyDisposed" xml:space="preserve">
     <value>The DbClient instance has allready been disposed.</value>
   </data>
+  <data name="DbQueryChecksumGenerator_UnsupportedDacParam" xml:space="preserve">
+    <value>Params that currently are allowed in cached queries, are: Simple params and Arrays. Geography params is not supported.</value>
+  </data>
+  <data name="DefaultUniquesChecksumGenerator_UnsupportedDataType" xml:space="preserve">
+    <value>You have marked a member '{0}' as unique. That member is being classified as Text. Text's are for large contents. Use a member that gets classified as string instead.</value>
+  </data>
 </root>
