@@ -315,11 +315,11 @@ namespace SisoDb.Specifications.Session
                 }
             };
 
-            It should_have_returned_two_items_since_it_pulls_one_in_from_db =
-                () => _resultingStructures.Length.ShouldEqual(2);
+            It should_have_returned_one_item =
+                () => _resultingStructures.Length.ShouldEqual(1);
 
-            It should_have_returned_correct_items =
-                () => _originalStructures.ShouldBeValueEqualTo(_resultingStructures);
+            It should_have_returned_correct_items = 
+                () => _resultingStructures[0].ShouldBeValueEqualTo(_originalStructures[1]);
 
             It should_have_exactly_one_item_in_cache =
                 () => _cache.Count().ShouldEqual(1);
