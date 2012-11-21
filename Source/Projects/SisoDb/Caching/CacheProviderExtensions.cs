@@ -58,7 +58,7 @@ namespace SisoDb.Caching
             cacheProvider[structureSchema.Type.Type].Remove(structureId);
         }
 
-        public static void Remove(this ICacheProvider cacheProvider, IStructureSchema structureSchema, IEnumerable<IStructureId> structureIds)
+        public static void Remove(this ICacheProvider cacheProvider, IStructureSchema structureSchema, ISet<IStructureId> structureIds)
         {
             if (!cacheProvider.IsEnabledFor(structureSchema))
                 return;

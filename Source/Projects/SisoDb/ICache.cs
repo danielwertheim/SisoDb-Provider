@@ -136,6 +136,6 @@ namespace SisoDb
 		/// Should be used to update the cache.
 		/// </summary>
 		/// <param name="ids"></param>
-		void Remove(IEnumerable<IStructureId> ids);
+		void Remove(ISet<IStructureId> ids);
 	}
 }

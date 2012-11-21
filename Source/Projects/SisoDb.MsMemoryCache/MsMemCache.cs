@@ -8,26 +8,26 @@ using SisoDb.Structures;
 
 namespace SisoDb.MsMemoryCache
 {
-	[Serializable]
-	public class MsMemCache : ICache
-	{
-	    protected MemoryCache InternalStructureCache;
+    [Serializable]
+    public class MsMemCache : ICache
+    {
+        protected MemoryCache InternalStructureCache;
         protected MemoryCache InternalQueryCache;
-	    protected readonly MsMemCacheConfig CacheConfig;
+        protected readonly MsMemCacheConfig CacheConfig;
 
         public MsMemCache(MsMemCacheConfig cacheConfig)
-		{
+        {
             Ensure.That(cacheConfig, "cacheConfig").IsNotNull();
 
             CacheConfig = cacheConfig;
             InternalStructureCache = CreateStructureCache();
             InternalQueryCache = CreateQueryCache();
-		}
+        }
 
-		public virtual Type StructureType
-		{
-			get { return CacheConfig.StructureType; }
-		}
+        public virtual Type StructureType
+        {
+            get { return CacheConfig.StructureType; }
+        }
 
         protected MemoryCache CreateStructureCache()
         {
@@ -39,14 +39,14 @@ namespace SisoDb.MsMemoryCache
             return new MemoryCache(string.Concat("SisoDb", CacheConfig.StructureType.Name, ":", "Queries"));
         }
 
-		public virtual void Clear()
-		{
+        public virtual void Clear()
+        {
             InternalStructureCache.Dispose();
-		    InternalStructureCache = CreateStructureCache();
+            InternalStructureCache = CreateStructureCache();
 
             InternalQueryCache.Dispose();
-		    InternalQueryCache = CreateQueryCache();
-		}
+            InternalQueryCache = CreateQueryCache();
+        }
 
         public virtual void ClearQueries()
         {
@@ -55,109 +55,114 @@ namespace SisoDb.MsMemoryCache
         }
 
         public virtual bool Any()
-	    {
-	        return Count() > 0;
-	    }
+        {
+            return Count() > 0;
+        }
 
         public virtual long Count()
-	    {
-	        return InternalStructureCache.GetCount();
-	    }
+        {
+            return InternalStructureCache.GetCount();
+        }
 
-	    public virtual bool HasQuery(string queryChecksum)
-	    {
-	        return InternalQueryCache.Contains(queryChecksum);
-	    }
+        public virtual bool HasQuery(string queryChecksum)
+        {
+            return InternalQueryCache.Contains(queryChecksum);
+        }
 
-	    public virtual bool Exists(IStructureId id)
-	    {
-	        return Any() && InternalStructureCache.Get(GenerateCacheKey(id)) != null;
-	    }
+        public virtual bool Exists(IStructureId id)
+        {
+            return InternalStructureCache.Contains(GenerateCacheKey(id));
+        }
 
-	    public virtual IEnumerable<T> GetAll<T>() where T : class
-	    {
-	        return InternalStructureCache.Select(kv => kv.Value as T);
-	    }
+        public virtual IEnumerable<T> GetAll<T>() where T : class
+        {
+            return InternalStructureCache.Select(kv => kv.Value as T);
+        }
 
-	    public virtual IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate) where T : class
-	    {
-	        var e = predicate.Compile();
+        public virtual IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            var e = predicate.Compile();
 
-	        return InternalStructureCache.Where(kv => e(kv.Value as T)).Select(kv => kv.Value as T);
-	    }
+            return InternalStructureCache.Select(kv => kv.Value as T).Where(e);
+        }
 
-	    public virtual T GetById<T>(IStructureId id) where T : class
-	    {
-	        return InternalStructureCache.Get(GenerateCacheKey(id)) as T;
-		}
+        public virtual T GetById<T>(IStructureId id) where T : class
+        {
+            return InternalStructureCache.Get(GenerateCacheKey(id)) as T;
+        }
 
-		public virtual IEnumerable<KeyValuePair<IStructureId, T>> GetByIds<T>(IStructureId[] ids) where T : class
-		{
-		    return from id in ids let structure = GetById<T>(id) where structure != null select new KeyValuePair<IStructureId, T>(id, structure);
-		}
+        public virtual IEnumerable<KeyValuePair<IStructureId, T>> GetByIds<T>(IStructureId[] ids) where T : class
+        {
+            var i = 0;
+            return InternalStructureCache.GetValues(ids.Select(GenerateCacheKey)).Select(kv => new KeyValuePair<IStructureId, T>(ids[i++], kv.Value as T));
+        }
 
-	    public virtual IEnumerable<T> GetByQuery<T>(string queryChecksum) where T : class
-	    {
-	        var ids = InternalQueryCache.Get(queryChecksum) as List<IStructureId>;
-	        if (ids == null) yield break;
+        public virtual IEnumerable<T> GetByQuery<T>(string queryChecksum) where T : class
+        {
+            var ids = InternalQueryCache.Get(queryChecksum) as ISet<IStructureId>;
+            if (ids == null) return Enumerable.Empty<T>();
 
-	        foreach (var id in ids)
-	            yield return GetById<T>(id);
-	    }
+            return InternalStructureCache.GetValues(ids.Select(GenerateCacheKey)).Select(kv => kv.Value as T);
+        }
 
-	    public virtual T Put<T>(IStructureId id, T structure) where T : class
-		{
-            if(structure != null)
+        public virtual T Put<T>(IStructureId id, T structure) where T : class
+        {
+            if (structure != null)
                 InternalStructureCache.Set(GenerateCacheKey(id), structure, CreateCacheItemPolicy());
 
-			return structure;
-		}
+            return structure;
+        }
 
-		public virtual IEnumerable<T> Put<T>(IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
-		{
-		    return items.Select(kv => Put(kv.Key, kv.Value));
-		}
+        public virtual IEnumerable<T> Put<T>(IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
+        {
+            return items.Select(kv => Put(kv.Key, kv.Value));
+        }
 
-	    public virtual IEnumerable<T> Put<T>(string queryChecksum, IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
-	    {
+        public virtual IEnumerable<T> Put<T>(string queryChecksum, IEnumerable<KeyValuePair<IStructureId, T>> items) where T : class
+        {
             Ensure.That(queryChecksum, "queryChecksum").IsNotNullOrWhiteSpace();
 
-	        var ids = new List<IStructureId>();
+            var ids = new HashSet<IStructureId>();
 
-	        foreach (var kv in items)
-	        {
-	            Put(kv.Key, kv.Value);
+            foreach (var kv in items)
+            {
+                Put(kv.Key, kv.Value);
                 ids.Add(kv.Key);
-	            
+
                 yield return kv.Value;
-	        }
+            }
 
             InternalQueryCache.Set(queryChecksum, ids, CreateCacheItemPolicy());
-	    }
+        }
 
-	    public virtual void Remove(IStructureId id)
-		{
+        public virtual void Remove(IStructureId id)
+        {
             RemoveQueriesHaving(id);
             InternalStructureCache.Remove(GenerateCacheKey(id));
-		}
+        }
 
-		public virtual void Remove(IEnumerable<IStructureId> ids)
-		{
-		    var idsTmp = ids.ToArray();
+        public virtual void Remove(ISet<IStructureId> ids)
+        {
+            RemoveQueriesHaving(ids);
+            foreach (var structureId in ids)
+                Remove(structureId);
+        }
 
-            RemoveQueriesHaving(idsTmp);
-            foreach (var structureId in idsTmp)
-				Remove(structureId);
-		}
+        protected virtual void RemoveQueriesHaving(IStructureId structureId)
+        {
+            var keys = InternalQueryCache.Where(kv => ((ISet<IStructureId>)kv.Value).Contains(structureId)).Select(kv => kv.Key).ToArray();
+            foreach (var key in keys)
+                InternalQueryCache.Remove(key);
+        }
 
-	    protected virtual void RemoveQueriesHaving(params IStructureId[] structureIds)
-	    {
-	        var keys = InternalQueryCache.Where(kv => ((IList<IStructureId>) kv.Value).Any(structureIds.Contains)).Select(kv => kv.Key).ToArray();
-	        foreach (var key in keys)
-	            InternalQueryCache.Remove(key);
-	    }
+        protected virtual void RemoveQueriesHaving(ISet<IStructureId> structureIds)
+        {
+            var keys = InternalQueryCache.Where(kv => ((ISet<IStructureId>)kv.Value).Any(structureIds.Contains)).Select(kv => kv.Key).ToArray();
+            foreach (var key in keys)
+                InternalQueryCache.Remove(key);
+        }
 
-	    protected virtual string GenerateCacheKey(IStructureId id)
+        protected virtual string GenerateCacheKey(IStructureId id)
         {
             return id.Value.ToString();
         }
@@ -170,5 +175,5 @@ namespace SisoDb.MsMemoryCache
                 SlidingExpiration = CacheConfig.SlidingExpiration
             };
         }
-	}
+    }
 }

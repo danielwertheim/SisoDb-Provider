@@ -80,6 +80,10 @@
     <Compile Include="Model\ShoppingIndexes.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.MsMemoryCache\SisoDb.MsMemoryCache.csproj">
+      <Project>{52453c59-b957-46f0-8e44-f1203215758a}</Project>
+      <Name>SisoDb.MsMemoryCache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Sql2005\SisoDb.Sql2005.csproj">
       <Project>{47bf9f27-5794-48b6-9476-2dfacd3ba806}</Project>
       <Name>SisoDb.Sql2005</Name>

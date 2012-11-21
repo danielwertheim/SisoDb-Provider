@@ -265,7 +265,7 @@ namespace SisoDb
         /// <param name="structureType"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        object[] GetByIds(Type structureType, params object[] ids);
+        IEnumerable<object> GetByIds(Type structureType, params object[] ids);
 
         /// <summary>
         /// Returns all structures for the defined structure <typeparamref name="TContract"/>

@@ -278,9 +278,9 @@ namespace SisoDb
             return Try(() => OnGetByIdsAs<T>(typeof(T), ids));
         }
 
-        public virtual object[] GetByIds(Type structureType, params object[] ids)
+        public virtual IEnumerable<object> GetByIds(Type structureType, params object[] ids)
         {
-            return Try(() => OnGetByIds(structureType, ids).ToArray());
+            return Try(() => OnGetByIds(structureType, ids));
         }
 
         protected virtual IEnumerable<object> OnGetByIds(Type structureType, params object[] ids)
@@ -694,7 +694,7 @@ namespace SisoDb
                 CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
                 Db.CacheProvider.CleanQueriesFor(structureSchema);
 
-                var deleteIds = new List<IStructureId>(Db.Settings.MaxUpdateManyBatchSize);
+                var deleteIds = new HashSet<IStructureId>();
                 var keepQueue = new List<T>(Db.Settings.MaxUpdateManyBatchSize);
                 var structureBuilder = Db.StructureBuilders.ResolveBuilderForUpdate(structureSchema);
                 var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
@@ -852,7 +852,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
 
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-            Db.CacheProvider.Remove(structureSchema, structureIds);
+            Db.CacheProvider.Remove(structureSchema, new HashSet<IStructureId>(structureIds));
 
             DbClient.DeleteByIds(structureIds, structureSchema);
             InternalEvents.NotifyOnDeleted(this, structureSchema, structureIds);
