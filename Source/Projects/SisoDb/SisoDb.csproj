@@ -74,12 +74,14 @@
     <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\GeographyDacParameter.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
+    <Compile Include="Dac\IDefaultUniquesChecksumGenerator.cs" />
     <Compile Include="Dac\Profiling\AdoNetProfilingExtensions.cs" />
     <Compile Include="Dac\BulkInserts\DbStructureInserter.cs" />
     <Compile Include="Dac\BulkInserts\StringIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\TextIndexesReader.cs" />
     <Compile Include="Dac\BulkInserts\ValueTypeIndexesReader.cs" />
-    <Compile Include="Dac\UniquesHashService.cs" />
+    <Compile Include="Dac\UniquesChecksumGenerator.cs" />
+    <Compile Include="Dac\DefaultUniquesChecksumGenerator.cs" />
     <Compile Include="DbQueryEngine.cs" />
     <Compile Include="DbSchema\DbDataTypeTranslator.cs" />
     <Compile Include="DbSchema\IDbDataTypeTranslator.cs" />

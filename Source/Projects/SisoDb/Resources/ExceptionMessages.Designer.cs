@@ -232,6 +232,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have marked a member &apos;{0}&apos; as unique. That member is being classified as Text. Text&apos;s are for large contents. Use a member that gets classified as string instead..
+        /// </summary>
+        public static string DefaultUniquesChecksumGenerator_UnsupportedDataType {
+            get {
+                return ResourceManager.GetString("DefaultUniquesChecksumGenerator_UnsupportedDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not generate lambda expression from sent string.\r\nCompiler info: {0}..
         /// </summary>
         public static string DynamicLambdaBuilder_Build_Error {
