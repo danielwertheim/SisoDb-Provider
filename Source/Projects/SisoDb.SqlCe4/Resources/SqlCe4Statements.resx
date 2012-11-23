@@ -351,7 +351,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   <data name="CreateStructuresGuid" xml:space="preserve">
     <value>create table [{0}] (
 [RowId] [bigint] identity not null,
-[StructureId] [uniqueidentifier] not null rowguidcol constraint [PK_{0}] primary key nonclustered,
+[StructureId] [uniqueidentifier] not null constraint [PK_{0}] primary key nonclustered,
 [Json] [ntext] not null);</value>
   </data>
   <data name="CreateStructuresIdentity" xml:space="preserve">
