@@ -3,26 +3,26 @@ namespace SisoDb.Spatial
     public interface ISisoSpatial
     {
         /// <summary>
-        /// Creates a table for the structure <typeparam name="T"></typeparam> holding spatial data, but only if it does not exist.
+        /// Creates a table for the structure <typeparamref name="T"></typeparamref> holding spatial data, but only if it does not exist.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         void EnableFor<T>() where T : class;
 
         /// <summary>
-        /// Will drop any existing table for the structure <typeparam name="T"></typeparam>.
+        /// Will drop any existing table for the structure <typeparamref name="T"></typeparamref>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         void RemoveFor<T>() where T : class;
         
         /// <summary>
-        /// Deletes any geo-records for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Deletes any geo-records for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
         void DeleteGeoFor<T>(object id) where T : class;
         
         /// <summary>
-        /// Inserts geo as point for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Inserts geo as point for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -31,7 +31,7 @@ namespace SisoDb.Spatial
         void InsertPoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Updates geo as point for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Updates geo as point for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -40,7 +40,7 @@ namespace SisoDb.Spatial
         void UpdatePoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Inserts or Updates geo as point for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Inserts or Updates geo as point for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -49,7 +49,7 @@ namespace SisoDb.Spatial
         void SetPoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Inserts geo as circle for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Inserts geo as circle for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -59,7 +59,7 @@ namespace SisoDb.Spatial
         void InsertCircle<T>(object id, Coordinates center, double radiusInMetres, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Updates geo as circle for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Updates geo as circle for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -69,7 +69,7 @@ namespace SisoDb.Spatial
         void UpdateCircle<T>(object id, Coordinates center, double radiusInMetres, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Inserts or Updates geo as circle for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Inserts or Updates geo as circle for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -79,7 +79,7 @@ namespace SisoDb.Spatial
         void SetCircle<T>(object id, Coordinates center, double radiusInMetres, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Inserts geo as polygon for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Inserts geo as polygon for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -88,7 +88,7 @@ namespace SisoDb.Spatial
         void InsertPolygon<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Updates geo as polygon for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Updates geo as polygon for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -97,7 +97,7 @@ namespace SisoDb.Spatial
         void UpdatePolygon<T>(object id, Coordinates[] coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Inserts or Updates geo as polygon for structure <typeparam name="T"></typeparam> identified by <paramref name="id"/>.
+        /// Inserts or Updates geo as polygon for structure <typeparamref name="T"></typeparamref> identified by <paramref name="id"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -110,6 +110,7 @@ namespace SisoDb.Spatial
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
+        /// <param name="srid"></param>
         void MakeValid<T>(object id, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
@@ -121,7 +122,7 @@ namespace SisoDb.Spatial
         Coordinates[] GetCoordinatesIn<T>(object id) where T : class;
         
         /// <summary>
-        /// Returns bool indicating if a stored geo object identified by <paramref name="id"/> in structure <typeparam name="T"></typeparam> contains sent Point or not.
+        /// Returns bool indicating if a stored geo object identified by <paramref name="id"/> in structure <typeparamref name="T"></typeparamref> contains sent Point or not.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -131,7 +132,7 @@ namespace SisoDb.Spatial
         bool ContainsPoint<T>(object id, Coordinates coords, int srid = SpatialReferenceId.Wsg84) where T : class;
         
         /// <summary>
-        /// Returns bool indicating if a stored geo object, expanded with <paramref name="expandWithMetres"/>, identified by <paramref name="id"/> in structure <typeparam name="T"></typeparam> contains sent Point or not.
+        /// Returns bool indicating if a stored geo object, expanded with <paramref name="expandWithMetres"/>, identified by <paramref name="id"/> in structure <typeparamref name="T"></typeparamref> contains sent Point or not.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
