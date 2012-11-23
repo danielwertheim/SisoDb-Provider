@@ -256,7 +256,7 @@ namespace SisoDb.Spatial
                     ? SqlStatements.GetSql("ContainsPoint2008").Inject(schema.GetSpatialTableName())
                     : SqlStatements.GetSql("ContainsPoint").Inject(schema.GetSpatialTableName());
 
-                return Session.DbClient.ExecuteScalar<int>(sql, sidParam, geoParam) == 1;
+                return Session.DbClient.ExecuteScalar<bool>(sql, sidParam, geoParam);
             });
         }
 
@@ -272,7 +272,7 @@ namespace SisoDb.Spatial
                     ? SqlStatements.GetSql("ContainsPointWithBuffer2008").Inject(schema.GetSpatialTableName())
                     : SqlStatements.GetSql("ContainsPointWithBuffer").Inject(schema.GetSpatialTableName());
 
-                return Session.DbClient.ExecuteScalar<int>(sql, sidParam, geoParam, bufferParam) == 1;
+                return Session.DbClient.ExecuteScalar<bool>(sql, sidParam, geoParam, bufferParam);
             });
         }
 

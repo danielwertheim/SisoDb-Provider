@@ -281,6 +281,22 @@ namespace SisoDb
             return CreateSession();
         }
 
+        public virtual void WithSession(Action<ISession> consumer)
+        {
+            using (var session = BeginSession())
+            {
+                consumer(session);
+            }
+        }
+
+        public virtual T WithSession<T>(Func<ISession, T> consumer)
+        {
+            using (var session = BeginSession())
+            {
+                return consumer(session);
+            }
+        }
+
         protected abstract DbSession CreateSession();
 
         [DebuggerStepThrough]
