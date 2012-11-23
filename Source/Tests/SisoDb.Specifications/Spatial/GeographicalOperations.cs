@@ -21,7 +21,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
                 _coordinates = SpatialDataFactory.DefaultPolygon();
@@ -31,7 +31,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.SetPolygon<SpatialGuidItem>(_item.StructureId, _coordinates);
                 }
             };
@@ -40,7 +40,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(_coordinates);
                 }
             };
@@ -60,7 +60,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
                 _coordinates = SpatialDataFactory.DefaultPolygon();
@@ -70,7 +70,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.InsertPolygon<SpatialGuidItem>(_item.StructureId, _coordinates);
                 }
             };
@@ -79,7 +79,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(_coordinates);
                 }
             };
@@ -99,7 +99,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
 
@@ -111,7 +111,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.DeleteGeoFor<SpatialGuidItem>(_item.StructureId);
                 }
             };
@@ -123,7 +123,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(new Coordinates[0]);
                 }
             };
@@ -143,7 +143,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     _structureSchema = session.GetStructureSchema<SpatialGuidItem>();
                 }
@@ -153,7 +153,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.DeleteGeoFor<SpatialGuidItem>(_item.StructureId);
                 }
             };
@@ -165,7 +165,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(new Coordinates[0]);
                 }
             };
@@ -187,7 +187,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.SetPolygon<SpatialGuidItem>(_item.StructureId, orgCoordinates);
                 }
@@ -197,7 +197,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.SetPolygon<SpatialGuidItem>(_item.StructureId, _newCoordinates);
                 }
             };
@@ -206,7 +206,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(_newCoordinates);
                 }
             };
@@ -228,7 +228,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.SetPolygon<SpatialGuidItem>(_item.StructureId, orgCoordinates);
                 }
@@ -238,7 +238,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.UpdatePolygon<SpatialGuidItem>(_item.StructureId, _newCoordinates);
                 }
             };
@@ -247,7 +247,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(_newCoordinates);
                 }
             };
@@ -268,7 +268,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
                 }
@@ -278,7 +278,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.PointWithinDefaultPolygon);
                 }
             };
@@ -302,7 +302,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
                 }
@@ -312,7 +312,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.PointOutsideDefaultPolygon);
                 }
             };
@@ -336,7 +336,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
                 }
@@ -346,7 +346,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     _contains = s.ContainsPointAfterExpand<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.PointOutsideDefaultPolygon, 4000d);
                 }
             };
@@ -369,7 +369,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
                 _coordinates = SpatialDataFactory.PointWithinDefaultPolygon;
@@ -379,7 +379,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.SetPoint<SpatialGuidItem>(_item.StructureId, _coordinates);
                 }
             };
@@ -388,7 +388,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_coordinates);
                 }
             };
@@ -408,7 +408,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
                 _coordinates = SpatialDataFactory.PointWithinDefaultPolygon;
@@ -418,7 +418,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.InsertPoint<SpatialGuidItem>(_item.StructureId, _coordinates);
                 }
             };
@@ -427,7 +427,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_coordinates);
                 }
             };
@@ -447,7 +447,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.SetPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Point1);
                 }
@@ -458,7 +458,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.SetPoint<SpatialGuidItem>(_item.StructureId, _newCoordinates);
                 }
             };
@@ -467,7 +467,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_newCoordinates);
                 }
             };
@@ -487,7 +487,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.SetPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Point1);
                 }
@@ -498,7 +498,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.UpdatePoint<SpatialGuidItem>(_item.StructureId, _newCoordinates);
                 }
             };
@@ -507,7 +507,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).Single().ShouldBeValueEqualTo(_newCoordinates);
                 }
             };
@@ -527,7 +527,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
                 _coordinates = SpatialDataFactory.Circle1;
@@ -537,7 +537,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.SetCircle<SpatialGuidItem>(_item.StructureId, _coordinates, 10d);
                 }
             };
@@ -546,7 +546,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
                     c.Length.ShouldEqual(129);
                     c[0].Latitude.ShouldEqual(47.653063500926457d);
@@ -573,7 +573,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
                 _coordinates = SpatialDataFactory.Circle1;
@@ -583,7 +583,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.InsertCircle<SpatialGuidItem>(_item.StructureId, _coordinates, 10d);
                 }
             };
@@ -592,7 +592,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
                     c.Length.ShouldEqual(129);
                     c[0].Latitude.ShouldEqual(47.653063500926457d);
@@ -619,7 +619,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.SetCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 10d);
                 }
@@ -629,7 +629,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.SetCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
                 }
             };
@@ -638,7 +638,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
                     c.Length.ShouldEqual(129);
                     c[0].Latitude.ShouldEqual(47.653031750472969d);
@@ -664,7 +664,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.SetCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
                 }
@@ -674,7 +674,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.UpdateCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 10d);
                 }
             };
@@ -683,7 +683,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     var c = s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId);
                     c.Length.ShouldEqual(129);
                     c[0].Latitude.ShouldEqual(47.653063500926457d);
@@ -710,7 +710,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.InsertCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
                 }
@@ -720,7 +720,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1);
                 }
             };
@@ -744,7 +744,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.InsertCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
                 }
@@ -754,7 +754,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     _contains = s.ContainsPoint<SpatialGuidItem>(_item.StructureId, new Coordinates{Latitude = SpatialDataFactory.Circle1.Latitude + 0.05});
                 }
             };
@@ -778,7 +778,7 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                     s.InsertCircle<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.Circle1, 5d);
                 }
@@ -788,7 +788,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     _contains = s.ContainsPointAfterExpand<SpatialGuidItem>(_item.StructureId, new Coordinates
                     {
                         Latitude = SpatialDataFactory.Circle1.Latitude + 0.05, 
@@ -815,12 +815,12 @@ namespace SisoDb.Specifications.Spatial
                     _item = new SpatialGuidItem();
                     session.Insert(_item);
 
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.DefaultPolygon());
                 }
             };
@@ -829,7 +829,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.MakeValid<SpatialGuidItem>(_item.StructureId);
                 }
             };
@@ -838,7 +838,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(SpatialDataFactory.DefaultPolygon());
                 }
             };

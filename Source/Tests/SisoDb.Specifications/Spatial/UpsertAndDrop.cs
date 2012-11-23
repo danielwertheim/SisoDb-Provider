@@ -24,7 +24,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
             };
@@ -49,7 +49,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialIdentityItem>();
                 }
             };
@@ -74,7 +74,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialBigIdentityItem>();
                 }
             };
@@ -99,7 +99,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialStringItem>();
                 }
             };
@@ -124,7 +124,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.RemoveFor<SpatialGuidItem>();
                 }
             };
@@ -145,7 +145,7 @@ namespace SisoDb.Specifications.Spatial
                 _structureSchema = TestContext.Database.StructureSchemas.GetSchema<SpatialGuidItem>();
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.EnableFor<SpatialGuidItem>();
                 }
             };
@@ -154,7 +154,7 @@ namespace SisoDb.Specifications.Spatial
             {
                 using (var session = TestContext.Database.BeginSession())
                 {
-                    var s = session.Spatials();
+                    var s = session.Spatial();
                     s.RemoveFor<SpatialGuidItem>();
                 }
             };
