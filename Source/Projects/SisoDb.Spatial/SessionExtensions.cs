@@ -2,7 +2,7 @@
 {
     public static class SessionExtensions
     {
-        public static ISisoSpatial Spatials(this ISession session)
+        public static ISisoSpatial Spatial(this ISession session)
         {
             return new SqlServerSisoSpatial(session.ExecutionContext);
         }
