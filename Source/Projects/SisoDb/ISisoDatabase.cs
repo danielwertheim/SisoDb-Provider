@@ -154,6 +154,21 @@ namespace SisoDb
         ISession BeginSession();
 
         /// <summary>
+        /// Opens a new Session using <see cref="BeginSession"/> and passes that to your consuming closure.
+        /// </summary>
+        /// <param name="consumer"></param>
+        void WithSession(Action<ISession> consumer);
+        
+        /// <summary>
+        /// Opens a new Session using <see cref="BeginSession"/> and passes that to your consuming closure that
+        /// returns <typeparamref name="T"></typeparamref>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="consumer"></param>
+        /// <returns></returns>
+        T WithSession<T>(Func<ISession, T> consumer);
+
+        /// <summary>
         /// Use when you want to execute a single search operation against the <see cref="ISisoDatabase"/>
 		/// via an <see cref="ISession"/>.
         /// </summary>
