@@ -57,7 +57,7 @@ namespace SisoDb.Structures.Schemas
             if (interfaceNamedIdProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(interfaceNamedIdProp);
 
-            var idProp = properties.SingleOrDefault(p => p.Name.Equals(StructureIdPropertyNames.Indicator));
+            var idProp = GetIdNamedStructureIdProperty(structureType, properties);
             if (idProp != null)
                 return PropertyFactory.CreateRootPropertyFrom(idProp);
 
@@ -84,6 +84,11 @@ namespace SisoDb.Structures.Schemas
             var propertyName = StructureIdPropertyNames.GetInterfaceTypeNamePropertyNameFor(structureType);
 
             return properties.SingleOrDefault(p => p.Name.Equals(propertyName));
+        }
+
+        protected virtual PropertyInfo GetIdNamedStructureIdProperty(Type structureType, IEnumerable<PropertyInfo> properties)
+        {
+            return properties.SingleOrDefault(p => p.Name.Equals(StructureIdPropertyNames.Indicator));
         }
 
         public virtual IStructureProperty GetTimeStampProperty(Type structureType)
