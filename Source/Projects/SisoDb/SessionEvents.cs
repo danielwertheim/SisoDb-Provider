@@ -8,10 +8,22 @@ namespace SisoDb
 {
     public class SessionEvents : ISessionEvents
     {
+        protected readonly List<Action<ISession>> OnCommittedHandlers;
+        protected readonly List<Action<ISession>> OnRolledbackHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IStructure, object>> OnInsertedHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IStructure, object>> OnUpdatedHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IStructureId>> OnDeletedHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IQuery>> OnDeletedByQueryHandlers;
+
+        public Action<ISession> OnCommit
+        {
+            set; private get;
+        }
+        
+        public Action<ISession> OnRollback
+        {
+            set; private get;
+        }
 
         public Action<ISession, IStructureSchema, IStructure, object> OnInserted 
         { 
@@ -50,10 +62,22 @@ namespace SisoDb
 
         public SessionEvents()
         {
+            OnCommittedHandlers = new List<Action<ISession>>();
+            OnRolledbackHandlers = new List<Action<ISession>>();
             OnInsertedHandlers = new List<Action<ISession, IStructureSchema, IStructure, object>>();
             OnUpdatedHandlers = new List<Action<ISession, IStructureSchema, IStructure, object>>();
             OnDeletedHandlers = new List<Action<ISession, IStructureSchema, IStructureId>>();
             OnDeletedByQueryHandlers = new List<Action<ISession, IStructureSchema, IQuery>>();
+        }
+
+        protected virtual void RegisterNewOnCommittedHandler(Action<ISession> handler)
+        {
+            OnCommittedHandlers.Add(handler);
+        }
+
+        protected virtual void RegisterNewOnRolledbackHandler(Action<ISession> handler)
+        {
+            OnRolledbackHandlers.Add(handler);
         }
 
         protected virtual void RegisterNewOnInsertedHandler(Action<ISession, IStructureSchema, IStructure, object> handler)
@@ -76,43 +100,55 @@ namespace SisoDb
             OnDeletedByQueryHandlers.Add(handler);
         }
 
-        public virtual void NotifyOnInserted(ISession session, IStructureSchema schema, IStructure structure, object item)
+        public virtual void NotifyCommitted(ISession session)
+        {
+            foreach (var handler in OnCommittedHandlers)
+                handler.Invoke(session);
+        }
+
+        public virtual void NotifyRolledback(ISession session)
+        {
+            foreach (var handler in OnRolledbackHandlers)
+                handler.Invoke(session);
+        }
+
+        public virtual void NotifyInserted(ISession session, IStructureSchema schema, IStructure structure, object item)
         {
             foreach (var handler in OnInsertedHandlers)
                 handler.Invoke(session, schema, structure, item);
         }
 
-        public virtual void NotifyOnInserted(ISession session, IStructureSchema schema, IStructure[] structures, object[] items)
+        public virtual void NotifyInserted(ISession session, IStructureSchema schema, IStructure[] structures, object[] items)
         {
             for (var i = 0; i < structures.Length; i++)
-                NotifyOnInserted(session, schema, structures[i], items[i]);
+                NotifyInserted(session, schema, structures[i], items[i]);
         }
 
-        public virtual void NotifyOnUpdated(ISession session, IStructureSchema schema, IStructure structure, object item)
+        public virtual void NotifyUpdated(ISession session, IStructureSchema schema, IStructure structure, object item)
         {
             foreach (var handler in OnUpdatedHandlers)
                 handler.Invoke(session, schema, structure, item);
         }
 
-        public virtual void NotifyOnUpdated(ISession session, IStructureSchema schema, IStructure[] structures, object[] items)
+        public virtual void NotifyUpdated(ISession session, IStructureSchema schema, IStructure[] structures, object[] items)
         {
             for (var i = 0; i < structures.Length; i++)
-                NotifyOnUpdated(session, schema, structures[i], items[i]);
+                NotifyUpdated(session, schema, structures[i], items[i]);
         }
 
-        public virtual void NotifyOnDeleted(ISession session, IStructureSchema schema, IStructureId id)
+        public virtual void NotifyDeleted(ISession session, IStructureSchema schema, IStructureId id)
         {
             foreach (var handler in OnDeletedHandlers)
                 handler.Invoke(session, schema, id);
         }
 
-        public virtual void NotifyOnDeleted(ISession session, IStructureSchema schema, IStructureId[] ids)
+        public virtual void NotifyDeleted(ISession session, IStructureSchema schema, IStructureId[] ids)
         {
             foreach (var id in ids)
-                NotifyOnDeleted(session, schema, id);
+                NotifyDeleted(session, schema, id);
         }
 
-        public virtual void NotifyOnDeleted(ISession session, IStructureSchema schema, IQuery query)
+        public virtual void NotifyDeleted(ISession session, IStructureSchema schema, IQuery query)
         {
             foreach (var handler in OnDeletedByQueryHandlers)
                 handler.Invoke(session, schema, query);
