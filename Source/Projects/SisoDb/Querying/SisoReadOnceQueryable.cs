@@ -88,6 +88,7 @@ namespace SisoDb.Querying
 		{
 			using (var session = SessionFactory.Invoke())
 			{
+                OnBeforeFirst();
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).First();
 			}
 		}
@@ -96,6 +97,7 @@ namespace SisoDb.Querying
 		{
 			using (var session = SessionFactory.Invoke())
 			{
+                OnBeforeFirst();
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).First();
 			}
 		}
@@ -104,6 +106,7 @@ namespace SisoDb.Querying
 		{
 			using (var session = SessionFactory.Invoke())
 			{
+                OnBeforeFirst();
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).First();
 			}
 		}
@@ -112,6 +115,7 @@ namespace SisoDb.Querying
 		{
 			using (var session = SessionFactory.Invoke())
 			{
+                OnBeforeFirst();
 				return session.QueryEngine.Query<T>(QueryBuilder.Build()).FirstOrDefault();
 			}
 		}
@@ -120,6 +124,7 @@ namespace SisoDb.Querying
 		{
 			using (var session = SessionFactory.Invoke())
 			{
+                OnBeforeFirst();
 				return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).FirstOrDefault();
 			}
 		}
@@ -128,14 +133,21 @@ namespace SisoDb.Querying
 		{
 			using (var session = SessionFactory.Invoke())
 			{
+			    OnBeforeFirst();
 				return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).FirstOrDefault();
 			}
 		}
+
+        protected virtual void OnBeforeFirst()
+        {
+            QueryBuilder.First();
+        }
 
         public virtual T Single()
         {
             using (var session = SessionFactory.Invoke())
             {
+                OnBeforeSingle();
                 return session.QueryEngine.Query<T>(QueryBuilder.Build()).Single();
             }
         }
@@ -144,6 +156,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
+                OnBeforeSingle();
                 return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).Single();
             }
         }
@@ -152,6 +165,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
+                OnBeforeSingle();
                 return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).Single();
             }
         }
@@ -160,6 +174,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
+                OnBeforeSingle();
                 return session.QueryEngine.Query<T>(QueryBuilder.Build()).SingleOrDefault();
             }
         }
@@ -168,6 +183,7 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
+                OnBeforeSingle();
                 return session.QueryEngine.QueryAs<T, TResult>(QueryBuilder.Build()).SingleOrDefault();
             }
         }
@@ -176,8 +192,14 @@ namespace SisoDb.Querying
         {
             using (var session = SessionFactory.Invoke())
             {
+                OnBeforeSingle();
                 return session.QueryEngine.QueryAsJson<T>(QueryBuilder.Build()).SingleOrDefault();
             }
+        }
+
+        protected virtual void OnBeforeSingle()
+        {
+            QueryBuilder.Single();
         }
 
 		public virtual T[] ToArray()

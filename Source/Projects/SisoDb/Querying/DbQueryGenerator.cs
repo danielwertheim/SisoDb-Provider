@@ -36,7 +36,9 @@ namespace SisoDb.Querying
             var formatter = CreateSqlQueryFormatter(query, sqlExpression);
             var parameters = GenerateParameters(query, sqlExpression);
 
-            return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable);
+            return query.HasDependencies() 
+                ? new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable)
+                : new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutDependencies")), parameters, query.IsCacheable);
         }
 
         public virtual IDbQuery GenerateQueryReturningStrutureIds(IQuery query)

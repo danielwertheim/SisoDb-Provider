@@ -13,6 +13,26 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         protected readonly IDataTypeConverter DataTypeConverter = new DataTypeConverter();
 		protected abstract IDbQueryGenerator GetQueryGenerator();
 
+        public abstract void GenerateQuery_WithFirst_GeneratesCorrectQuery();
+
+        protected IDbQuery On_GenerateQuery_WithFirst_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.First());
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
+        public abstract void GenerateQuery_WithSingle_GeneratesCorrectQuery();
+
+        protected IDbQuery On_GenerateQuery_WithSingle_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Single());
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
 		public abstract void GenerateQuery_WithWhere_GeneratesCorrectQuery();
 
         protected IDbQuery On_GenerateQuery_WithWhere_GeneratesCorrectQuery()

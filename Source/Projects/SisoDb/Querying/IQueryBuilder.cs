@@ -8,6 +8,8 @@ namespace SisoDb.Querying
         bool IsEmpty { get; }
         void Clear();
         IQuery Build();
+        IQueryBuilder First();
+        IQueryBuilder Single();
         IQueryBuilder MakeCacheable();
         IQueryBuilder Take(int numOfStructures);
         IQueryBuilder Page(int pageIndex, int pageSize);
@@ -21,6 +23,8 @@ namespace SisoDb.Querying
 	    bool IsEmpty { get; }
 		void Clear();
 		IQuery Build();
+	    IQueryBuilder<T> First();
+        IQueryBuilder<T> Single();
         IQueryBuilder<T> MakeCacheable();
         IQueryBuilder<T> Take(int numOfStructures);
 		IQueryBuilder<T> Page(int pageIndex, int pageSize);

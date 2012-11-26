@@ -2,7 +2,6 @@ using NUnit.Framework;
 using SisoDb.Querying.Sql;
 using SisoDb.Sql2012;
 using SisoDb.Querying;
-using SisoDb.SqlServer;
 
 namespace SisoDb.UnitTests.Querying.QueryGeneration
 {
@@ -12,6 +11,26 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         protected override IDbQueryGenerator GetQueryGenerator()
         {
             return new Sql2012QueryGenerator(new Sql2012Statements(), new SqlExpressionBuilder(() => new SqlWhereCriteriaBuilder()));
+        }
+
+        [Test]
+        public override void GenerateQuery_WithFirst_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithFirst_GeneratesCorrectQuery();
+
+            Assert.AreEqual(
+                "select top (1) s.[Json] from [MyClassStructure] s;",
+                sqlQuery.Sql);
+        }
+
+        [Test]
+        public override void GenerateQuery_WithSingle_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithSingle_GeneratesCorrectQuery();
+
+            Assert.AreEqual(
+                "select top (2) s.[Json] from [MyClassStructure] s;",
+                sqlQuery.Sql);
         }
 
         [Test]
@@ -184,7 +203,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithTake_GeneratesCorrectQuery();
 
             Assert.AreEqual(
-                "select top (11) s.[Json] from (select s.[StructureId] from [MyClassStructure] s group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
+                "select top (11) s.[Json] from [MyClassStructure] s;",
                 sqlQuery.Sql);
         }
 

@@ -639,4 +639,9 @@ delete from [{0}];</value>
 select count(distinct s.[StructureId]) from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]
 [%End%]</value>
   </data>
+  <data name="QueryWithoutDependencies" xml:space="preserve">
+    <value>[%Start%]
+select [%Take%]s.[Json] from [[%MainStructureTable%]] s[%Paging%]
+[%End%];</value>
+  </data>
 </root>

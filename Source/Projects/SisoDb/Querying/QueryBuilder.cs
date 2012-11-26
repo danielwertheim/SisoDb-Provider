@@ -33,7 +33,21 @@ namespace SisoDb.Querying
 		    return InnerQueryBuilder.Build();
 		}
 
-        public virtual IQueryBuilder<T> MakeCacheable()
+	    public virtual IQueryBuilder<T> First()
+	    {
+	        InnerQueryBuilder.First();
+	        
+            return this;
+	    }
+
+	    public virtual IQueryBuilder<T> Single()
+	    {
+	        InnerQueryBuilder.Single();
+
+	        return this;
+	    }
+
+	    public virtual IQueryBuilder<T> MakeCacheable()
         {
             InnerQueryBuilder.MakeCacheable();
 
@@ -131,6 +145,18 @@ namespace SisoDb.Querying
             Query.IsCacheable = IsCacheable;
 
             return Query;
+        }
+
+        public virtual IQueryBuilder First()
+        {
+            Query.TakeNumOfStructures = 1;
+            return this;
+        }
+
+        public virtual IQueryBuilder Single()
+        {
+            Query.TakeNumOfStructures = 2;
+            return this;
         }
 
         public virtual IQueryBuilder MakeCacheable()

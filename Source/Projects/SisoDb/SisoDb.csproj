@@ -182,6 +182,7 @@
     <Compile Include="NCore\Try.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NotInSetMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Operators\NotInSetOperator.cs" />
+    <Compile Include="Querying\QueryExtensions.cs" />
     <Compile Include="Querying\Sql\DbQueryChecksumGenerator.cs" />
     <Compile Include="Querying\Sql\DefaultDbQueryChecksumGenerator.cs" />
     <Compile Include="Querying\Sql\IDbQuery.cs" />

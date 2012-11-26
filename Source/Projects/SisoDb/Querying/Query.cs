@@ -5,7 +5,7 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Querying
 {
-	[Serializable]
+    [Serializable]
 	public class Query : IQuery
 	{
 		public IStructureSchema StructureSchema { get; private set; }
