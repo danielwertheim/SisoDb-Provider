@@ -25,7 +25,7 @@ namespace SisoDb.Querying
 
         public virtual IDbQuery GenerateQuery(IQuery query)
         {
-            Ensure.That(query, "query").IsNotNull();
+            EnsureValidQuery(query);
 
             return CreateSqlQuery(query);
         }
@@ -53,6 +53,11 @@ namespace SisoDb.Querying
             EnsureQueryContainsOnlyWhereExpression(query);
 
             return CreateSqlQueryReturningCountOfStructureIds(query);
+        }
+
+        protected virtual void EnsureValidQuery(IQuery query)
+        {
+            Ensure.That(query, "query").IsNotNull();
         }
 
         protected virtual void EnsureQueryContainsOnlyWhereExpression(IQuery query)

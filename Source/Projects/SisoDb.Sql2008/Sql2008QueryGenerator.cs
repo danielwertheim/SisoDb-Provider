@@ -4,6 +4,7 @@ using SisoDb.DbSchema;
 using SisoDb.NCore;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
+using SisoDb.Resources;
 
 namespace SisoDb.Sql2008
 {
@@ -11,6 +12,14 @@ namespace SisoDb.Sql2008
     {
         public Sql2008QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder) 
             : base(sqlStatements, sqlExpressionBuilder) {}
+
+        protected override void EnsureValidQuery(IQuery query)
+        {
+            base.EnsureValidQuery(query);
+
+            if (query.HasPaging && !query.HasSortings)
+                throw new SisoDbException(ExceptionMessages.PagingMissesOrderBy);
+        }
 
         protected override SqlQueryFormatter CreateSqlQueryFormatter(IQuery query, ISqlExpression sqlExpression)
         {

@@ -14,6 +14,20 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         }
 
         [Test]
+        public override void GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery();
+
+            Assert.AreEqual(
+                "select s.[Json] from [MyClassStructure] s offset @offsetRows rows fetch next @takeRows rows only",
+                sqlQuery.Sql);
+            Assert.AreEqual("@offsetRows", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual(20, sqlQuery.Parameters[0].Value);
+            Assert.AreEqual("@takeRows", sqlQuery.Parameters[1].Name);
+            Assert.AreEqual(10, sqlQuery.Parameters[1].Value);
+        }
+
+        [Test]
         public override void GenerateQuery_WithFirst_GeneratesCorrectQuery()
         {
             var sqlQuery = On_GenerateQuery_WithFirst_GeneratesCorrectQuery();

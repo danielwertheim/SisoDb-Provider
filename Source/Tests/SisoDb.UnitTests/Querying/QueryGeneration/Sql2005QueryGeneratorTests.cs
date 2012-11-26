@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using SisoDb.Querying.Sql;
-using SisoDb.Sql2008;
+using SisoDb.Resources;
+using SisoDb.Sql2005;
 using SisoDb.Querying;
 
 namespace SisoDb.UnitTests.Querying.QueryGeneration
@@ -10,7 +11,36 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
     {
         protected override IDbQueryGenerator GetQueryGenerator()
         {
-            return new Sql2008QueryGenerator(new Sql2008Statements(), new SqlExpressionBuilder(() => new SqlWhereCriteriaBuilder()));
+            return new Sql2005QueryGenerator(new Sql2005Statements(), new SqlExpressionBuilder(() => new SqlWhereCriteriaBuilder()));
+        }
+
+        protected override IDbQuery On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Take(2).Page(2, 10).OrderBy(i => i.Int1));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
+        [Test]
+        public override void GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
+        {
+            var ex = Assert.Throws<SisoDbException>(() => base.On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery());
+            Assert.AreEqual(ExceptionMessages.PagingMissesOrderBy, ex.Message);
+        }
+
+        [Test]
+        public void GenerateQuery_WithTake2AndPage2WithSize10AndSorting_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery();
+
+            Assert.AreEqual(
+                "select s.[Json] from (select s.[StructureId] , row_number() over (order by min(mem0.[Value]) Asc) RowNum from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] where rs.RowNum between @pagingFrom and @pagingTo;",
+                sqlQuery.Sql);
+            Assert.AreEqual("@pagingFrom", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual(21, sqlQuery.Parameters[0].Value);
+            Assert.AreEqual("@pagingTo", sqlQuery.Parameters[1].Name);
+            Assert.AreEqual(30, sqlQuery.Parameters[1].Value);
         }
 
         [Test]

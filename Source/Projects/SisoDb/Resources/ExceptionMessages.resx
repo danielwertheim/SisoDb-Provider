@@ -370,4 +370,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DefaultUniquesChecksumGenerator_UnsupportedDataType" xml:space="preserve">
     <value>You have marked a member '{0}' as unique. That member is being classified as Text. Text's are for large contents. Use a member that gets classified as string instead.</value>
   </data>
+  <data name="PagingMissesOrderBy" xml:space="preserve">
+    <value>SQL2005 and SQL2008 needs an order by when using paging.</value>
+  </data>
 </root>

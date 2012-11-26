@@ -413,6 +413,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SQL2005 and SQL2008 needs an order by when using paging..
+        /// </summary>
+        public static string PagingMissesOrderBy {
+            get {
+                return ResourceManager.GetString("PagingMissesOrderBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cant apply Unique on a member that is not of a simple type e.g. (int, string, bool) etc..
         /// </summary>
         public static string Property_Ctor_UniqueOnNonSimpleType {
