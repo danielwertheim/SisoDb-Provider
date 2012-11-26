@@ -133,7 +133,7 @@ namespace SisoDb.Querying
             var offsetRows = (query.Paging.PageIndex * query.Paging.PageSize);
             var takeRows = query.Paging.PageSize;
 
-            return new[]
+            return new IDacParameter[]
             {
                 new DacParameter("offsetRows", offsetRows),
                 new DacParameter("takeRows", takeRows)
