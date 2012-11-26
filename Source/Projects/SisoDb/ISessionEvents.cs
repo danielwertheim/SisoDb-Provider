@@ -7,14 +7,14 @@ namespace SisoDb
     public interface ISessionEvents
     {
         /// <summary>
-        /// Called when a session is committed.
+        /// Called when a session is disposed and committed.
         /// </summary>
-        Action<ISession> OnCommit { set; }
+        Action<ISisoDatabase, Guid> OnCommit { set; }
 
         /// <summary>
-        /// Called when a session is rolled back due to an failure.
+        /// Called when a session is rolled back and disposed due to an failure.
         /// </summary>
-        Action<ISession> OnRollback { set; }
+        Action<ISisoDatabase, Guid> OnRollback { set; }
 
         /// <summary>
         /// Called when an item has been inserted.

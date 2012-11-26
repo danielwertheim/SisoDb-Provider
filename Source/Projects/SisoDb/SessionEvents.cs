@@ -8,21 +8,29 @@ namespace SisoDb
 {
     public class SessionEvents : ISessionEvents
     {
-        protected readonly List<Action<ISession>> OnCommittedHandlers;
-        protected readonly List<Action<ISession>> OnRolledbackHandlers;
+        protected readonly List<Action<ISisoDatabase, Guid>> OnCommittedHandlers;
+        protected readonly List<Action<ISisoDatabase, Guid>> OnRolledbackHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IStructure, object>> OnInsertedHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IStructure, object>> OnUpdatedHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IStructureId>> OnDeletedHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IQuery>> OnDeletedByQueryHandlers;
 
-        public Action<ISession> OnCommit
+        public Action<ISisoDatabase, Guid> OnCommit
         {
-            set; private get;
+            set
+            {
+                Ensure.That(value, "OnCommit").IsNotNull();
+                RegisterNewOnCommittedHandler(value);
+            }
         }
-        
-        public Action<ISession> OnRollback
+
+        public Action<ISisoDatabase, Guid> OnRollback
         {
-            set; private get;
+            set
+            {
+                Ensure.That(value, "OnRollback").IsNotNull();
+                RegisterNewOnRolledbackHandler(value);
+            }
         }
 
         public Action<ISession, IStructureSchema, IStructure, object> OnInserted 
@@ -55,27 +63,27 @@ namespace SisoDb
         {
             set
             {
-                Ensure.That(value, "OnDeleted").IsNotNull();
+                Ensure.That(value, "OnDeletedByQuery").IsNotNull();
                 RegisterNewOnDeletedByQueryHandler(value);
             }
         }
 
         public SessionEvents()
         {
-            OnCommittedHandlers = new List<Action<ISession>>();
-            OnRolledbackHandlers = new List<Action<ISession>>();
+            OnCommittedHandlers = new List<Action<ISisoDatabase, Guid>>();
+            OnRolledbackHandlers = new List<Action<ISisoDatabase, Guid>>();
             OnInsertedHandlers = new List<Action<ISession, IStructureSchema, IStructure, object>>();
             OnUpdatedHandlers = new List<Action<ISession, IStructureSchema, IStructure, object>>();
             OnDeletedHandlers = new List<Action<ISession, IStructureSchema, IStructureId>>();
             OnDeletedByQueryHandlers = new List<Action<ISession, IStructureSchema, IQuery>>();
         }
 
-        protected virtual void RegisterNewOnCommittedHandler(Action<ISession> handler)
+        protected virtual void RegisterNewOnCommittedHandler(Action<ISisoDatabase, Guid> handler)
         {
             OnCommittedHandlers.Add(handler);
         }
 
-        protected virtual void RegisterNewOnRolledbackHandler(Action<ISession> handler)
+        protected virtual void RegisterNewOnRolledbackHandler(Action<ISisoDatabase, Guid> handler)
         {
             OnRolledbackHandlers.Add(handler);
         }
@@ -100,16 +108,16 @@ namespace SisoDb
             OnDeletedByQueryHandlers.Add(handler);
         }
 
-        public virtual void NotifyCommitted(ISession session)
+        public virtual void NotifyCommitted(ISisoDatabase db, Guid sessionId)
         {
             foreach (var handler in OnCommittedHandlers)
-                handler.Invoke(session);
+                handler.Invoke(db, sessionId);
         }
 
-        public virtual void NotifyRolledback(ISession session)
+        public virtual void NotifyRolledback(ISisoDatabase db, Guid sessionId)
         {
             foreach (var handler in OnRolledbackHandlers)
-                handler.Invoke(session);
+                handler.Invoke(db, sessionId);
         }
 
         public virtual void NotifyInserted(ISession session, IStructureSchema schema, IStructure structure, object item)

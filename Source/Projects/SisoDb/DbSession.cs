@@ -77,9 +77,9 @@ namespace SisoDb
             }
 
             if(Status.IsAborted() || Status.IsFailed())
-                InternalEvents.NotifyRolledback(this);
+                InternalEvents.NotifyRolledback(Db, Id);
             else
-                InternalEvents.NotifyCommitted(this);
+                InternalEvents.NotifyCommitted(Db, Id);
         }
 
         public virtual void Abort()
