@@ -189,7 +189,7 @@ namespace SisoDb.Querying
             var sortings = sqlExpression.SortingMembers.Select(
                 sorting => (sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name)
                             ? string.Format("mem{0} {1}", sorting.Index, sorting.Direction)
-                            : string.Format("s.[{0}] {1}", IndexStorageSchema.Fields.StructureId.Name, sorting.Direction)).ToArray();
+                            : string.Format("s.[{0}] {1}", StructureStorageSchema.Fields.Id.Name, sorting.Direction)).ToArray();
 
             return sortings.Length == 0
                 ? string.Empty
