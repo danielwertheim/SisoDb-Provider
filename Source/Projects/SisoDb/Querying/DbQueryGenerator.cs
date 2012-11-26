@@ -58,6 +58,8 @@ namespace SisoDb.Querying
         protected virtual void EnsureValidQuery(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
+            if (query.HasPaging && !query.HasSortings)
+                throw new SisoDbException(ExceptionMessages.PagingMissesOrderBy);
         }
 
         protected virtual void EnsureQueryContainsOnlyWhereExpression(IQuery query)

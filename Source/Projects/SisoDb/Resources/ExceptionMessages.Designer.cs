@@ -413,7 +413,7 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SQL2005 and SQL2008 needs an order by when using paging..
+        ///   Looks up a localized string similar to You need to provide an OrderBy construct when using Paging..
         /// </summary>
         public static string PagingMissesOrderBy {
             get {
