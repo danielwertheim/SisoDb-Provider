@@ -65,7 +65,7 @@ namespace SisoDb.Sql2005
             var s = string.Join(", ", sqlExpression.SortingMembers.Select(
 				sorting => sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name 
 					? string.Format("min(mem{0}.[{1}]) {2}", sorting.Index, sorting.IndexStorageColumnName, sorting.Direction)
-					: string.Format("s.[{0}] {1}", IndexStorageSchema.Fields.StructureId.Name, sorting.Direction)));
+					: string.Format("s.[{0}] {1}", StructureStorageSchema.Fields.Id.Name, sorting.Direction)));
             
             return string.Format("row_number() over (order by {0}) RowNum", s);
         }
