@@ -147,6 +147,7 @@
     <Compile Include="Serialization\JsonNetSisoSerializerTests.cs" />
     <Compile Include="Serialization\ServiceStackSisoSerializerTests.cs" />
     <Compile Include="Serialization\SisoSerializerTests.cs" />
+    <Compile Include="SqlApprovals.cs" />
     <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGeneratorTests.cs" />
