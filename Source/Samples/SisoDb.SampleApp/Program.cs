@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SisoDb.Dac;
+using SisoDb.MsMemoryCache;
 using SisoDb.Querying;
 using SisoDb.SampleApp.Model;
 using SisoDb.Sql2005;
@@ -31,6 +32,8 @@ namespace SisoDb.SampleApp
             //********************************************
 
             //db.EnsureNewDatabase();
+            //db.CacheProvider = new MsMemCacheProvider();
+            //db.CacheProvider.EnableFor(typeof(Customer));
             
             //Some tweaks
             //db.Settings.AllowDynamicSchemaCreation = false;
@@ -39,7 +42,7 @@ namespace SisoDb.SampleApp
             //To get rid of warm up in tests as it first syncs schemas etc
             //db.UpsertStructureSet<Customer>();
 
-            //InsertCustomers(1, 10000, db);
+            //InsertCustomers(1, 1000000, db);
 
             //ProfilingInserts(db, 1000, 5);
             //ProfilingQueries(() => FirstOrDefault(db, 500, 550));
@@ -152,9 +155,10 @@ namespace SisoDb.SampleApp
 
         private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
+            var d = new DateTime(2012,1,1);
             using (var session = database.BeginSession())
             {
-                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
+                return session.Query<Customer>().OrderBy(c => c.Lastname).Where(c => c.Score > 10 && c.IsActive && c.CustomerSince > d && c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
             }
         }
 
@@ -195,9 +199,10 @@ namespace SisoDb.SampleApp
         
         private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
+            var d = new DateTime(2012, 1, 1);
             using (var session = database.BeginSession())
             {
-                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
+                return session.Query<Customer>().OrderBy(c => c.Lastname).Where(c => c.Score > 10 && c.IsActive && c.CustomerSince > d && c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
             }
         }
 
