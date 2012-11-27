@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SisoDb.Querying.Sql;
+using SisoDb.Resources;
 using SisoDb.Sql2012;
 using SisoDb.Querying;
 
@@ -13,14 +14,27 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             return new Sql2012QueryGenerator(new Sql2012Statements(), new SqlExpressionBuilder(() => new SqlWhereCriteriaBuilder()));
         }
 
+        protected override IDbQuery On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Take(2).Page(2, 10).OrderBy(i => i.Int1));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
         [Test]
         public override void GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
         {
+            var ex = Assert.Throws<SisoDbException>(() => base.On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery());
+            Assert.AreEqual(ExceptionMessages.PagingMissesOrderBy, ex.Message);
+        }
+
+        [Test]
+        public void GenerateQuery_WithTake2AndPage2WithSize10AndSorting_GeneratesCorrectQuery()
+        {
             var sqlQuery = On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from [MyClassStructure] s offset @offsetRows rows fetch next @takeRows rows only;",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@offsetRows", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(20, sqlQuery.Parameters[0].Value);
             Assert.AreEqual("@takeRows", sqlQuery.Parameters[1].Name);
@@ -32,9 +46,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithFirst_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select top (1) s.[Json] from [MyClassStructure] s;",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
         }
 
         [Test]
@@ -42,9 +54,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithSingle_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select top (2) s.[Json] from [MyClassStructure] s;",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
         }
 
         [Test]
@@ -52,10 +62,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhere_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
         }
@@ -65,10 +72,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereHavingImplicitBool_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassBooleans] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Bool1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(true, sqlQuery.Parameters[0].Value);
         }
@@ -78,10 +82,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereHavingExplicitBool_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassBooleans] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Bool1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(true, sqlQuery.Parameters[0].Value);
         }
@@ -91,10 +92,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntIsNull_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
@@ -103,10 +101,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntIsNotNull_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
@@ -115,10 +110,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntHasValue_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
@@ -127,10 +119,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereUsingNullableIntHasValueFalse_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] is null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
@@ -139,10 +128,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereUsingNegationOfNullableIntHasValue_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where not (mem0.[Value] is not null) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
@@ -151,10 +137,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereContainingNullableIntComparedAgainstValue_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
         }
@@ -164,10 +147,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithWhereContainingNullableIntValueComparedAgainstValue_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
         }
@@ -177,9 +157,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithChainedWheres_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where ((mem0.[Value] >= @p0) and (mem0.[Value] <= @p1)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(40, sqlQuery.Parameters[0].Value);
@@ -216,9 +194,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithTake_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select top (11) s.[Json] from [MyClassStructure] s;",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
         }
 
         [Test]
@@ -288,10 +264,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithEnum_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'MyEnum1' where ((mem0.[Value] = @p0) or (mem0.[Value] = @p1)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual("Value1", sqlQuery.Parameters[0].Value);
             Assert.AreEqual("@p1", sqlQuery.Parameters[1].Name);
@@ -303,10 +276,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_With_StringQxStartsWith_or_IntEquals_or_ListOfStringsQxAny_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' left join [MyClassIntegers] mem1 on mem1.[StructureId] = s.[StructureId] and mem1.[MemberPath] = 'Int1' left join [MyClassStrings] mem2 on mem2.[StructureId] = s.[StructureId] and mem2.[MemberPath] = 'ListOfStrings' where (((mem0.[Value] like @p0) or (mem1.[Value] = @p1)) or (mem2.[Value] = @p2)) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
-
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual("Foo%", sqlQuery.Parameters[0].Value);
             Assert.AreEqual("@p1", sqlQuery.Parameters[1].Name);

@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
+using SisoDb.Resources;
 using SisoDb.SqlCe4;
 
 namespace SisoDb.UnitTests.Querying.QueryGeneration
@@ -13,14 +14,27 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             return new SqlCe4QueryGenerator(new SqlCe4Statements(), new SqlExpressionBuilder(() => new SqlCe4WhereCriteriaBuilder()));
         }
 
+        protected override IDbQuery On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Take(2).Page(2, 10).OrderBy(i => i.Int1));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
         [Test]
         public override void GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
         {
+            var ex = Assert.Throws<SisoDbException>(() => base.On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery());
+            Assert.AreEqual(ExceptionMessages.PagingMissesOrderBy, ex.Message);
+        }
+
+        [Test]
+        public void GenerateQuery_WithTake2AndPage2WithSize10AndSorting_GeneratesCorrectQuery()
+        {
             var sqlQuery = On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from [MyClassStructure] s offset @offsetRows rows fetch next @takeRows rows only",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
             Assert.AreEqual("@offsetRows", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(20, sqlQuery.Parameters[0].Value);
             Assert.AreEqual("@takeRows", sqlQuery.Parameters[1].Name);
@@ -32,9 +46,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithFirst_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select top (1) s.[Json] from [MyClassStructure] s",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
         }
 
         [Test]
@@ -42,9 +54,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithSingle_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select top (2) s.[Json] from [MyClassStructure] s",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
         }
 
         [Test]
@@ -216,9 +226,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithTake_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select top (11) s.[Json] from [MyClassStructure] s",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
         }
 
         [Test]

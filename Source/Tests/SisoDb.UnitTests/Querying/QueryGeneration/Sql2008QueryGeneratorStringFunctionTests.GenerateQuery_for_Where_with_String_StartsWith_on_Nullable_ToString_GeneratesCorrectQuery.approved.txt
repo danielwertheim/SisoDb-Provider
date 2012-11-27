@@ -1,0 +1,1 @@
+select distinct (s.[StructureId]), s.[Json] from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'NullableInt1' where (mem0.[StringValue] like @p0);

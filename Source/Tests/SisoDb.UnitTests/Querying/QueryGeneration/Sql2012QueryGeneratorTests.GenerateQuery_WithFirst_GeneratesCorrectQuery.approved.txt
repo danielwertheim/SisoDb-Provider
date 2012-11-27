@@ -1,0 +1,1 @@
+select distinct top (1) (s.[StructureId]), s.[Json] from [MyClassStructure] s;
