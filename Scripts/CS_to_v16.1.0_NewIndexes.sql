@@ -1,8 +1,11 @@
 /************************************************/
 -- 2012-11-27, v1
--- No warranties. Use at own risk
+-- NOTE! No warranties. Use at own risk
 -- ENSURE YOU HAVE A BACKUP OF YOUR DB
--- Used to generate SQL for applying new v16.1.0 indices to Indexes-tables
+-- Desc: Used to generate SQL for applying new v16.1.0 indices to Indexes-tables.
+-- Might not be applicable to your db. It expects Indexes-tables for Strings and Texts
+-- to have index: "IX_[entity]Strings_Q", "IX_[entity]Texts_Q" which will be dropped
+-- and re-created. It will also add new index: "IX_[entity]Strings_SID", "IX_[entity]Texts_SID"
 /************************************************/
 --use [your_db_here]
 go

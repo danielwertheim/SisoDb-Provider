@@ -1,8 +1,10 @@
 /************************************************/
 -- 2012-11-27, v1
--- No warranties. Use at own risk
+-- NOTE! No warranties. Use at own risk
 -- ENSURE YOU HAVE A BACKUP OF YOUR DB
--- Used to drop rowguidcol from structure tables. This is a change introduced in v16.0.0
+-- Desc: Used to drop rowguidcol from structure tables. This is a change introduced in v16.0.0
+-- Might not be applicable to your db. It expects Structure tables for entities with GUID id
+-- to have column [StructureId]:uniqueidentifier, rowguidcol which it will remove rowguidcol for
 /************************************************/
 --use [your_db_here]
 go
