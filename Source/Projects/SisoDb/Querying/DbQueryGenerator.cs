@@ -36,9 +36,13 @@ namespace SisoDb.Querying
             var formatter = CreateSqlQueryFormatter(query, sqlExpression);
             var parameters = GenerateParameters(query, sqlExpression);
 
-            return query.HasDependencies() 
-                ? new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable)
-                : new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutDependencies")), parameters, query.IsCacheable);
+            if (query.IsEmpty)
+                return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutDependencies")), parameters, query.IsCacheable);
+
+            if(!query.HasSortings && !query.HasPaging)
+                return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutPagingAndSorting")), parameters, query.IsCacheable);
+
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable);
         }
 
         public virtual IDbQuery GenerateQueryReturningStrutureIds(IQuery query)

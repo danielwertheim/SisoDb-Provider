@@ -605,4 +605,9 @@ select count(1) from [[%MainStructureTable%]] s2 where s2.StructureId in((select
 select [%Take%]s.[Json] from [[%MainStructureTable%]] s[%Paging%]
 [%End%]</value>
   </data>
+  <data name="QueryWithoutPagingAndSorting" xml:space="preserve">
+    <value>[%Start%]
+select distinct [%Take%](s.[StructureId]), s.[Json] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%][%Paging%]
+[%End%];</value>
+  </data>
 </root>
