@@ -8,5 +8,17 @@ namespace SisoDb.SqlCe4
     {
         public SqlCe4QueryGenerator(ISqlStatements sqlStatements, ISqlExpressionBuilder sqlExpressionBuilder)
             : base(sqlStatements, sqlExpressionBuilder) { }
+
+        protected override IDbQuery CreateSqlQuery(IQuery query)
+        {
+            var sqlExpression = SqlExpressionBuilder.Process(query);
+            var formatter = CreateSqlQueryFormatter(query, sqlExpression);
+            var parameters = GenerateParameters(query, sqlExpression);
+
+            if (query.IsEmpty)
+                return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutDependencies")), parameters, query.IsCacheable);
+
+            return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable);
+        }
     }
 }
