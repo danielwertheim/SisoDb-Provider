@@ -688,18 +688,12 @@ delete from [{0}];</value>
   </data>
   <data name="QueryReturningCountOfStructureIds" xml:space="preserve">
     <value>set nocount on;
-[%Start%]
-select count(distinct s.[StructureId]) from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]
-[%End%]</value>
+[%Start%]select count(distinct s.[StructureId]) from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%][%End%]</value>
   </data>
   <data name="QueryWithoutDependencies" xml:space="preserve">
-    <value>[%Start%]
-select [%Take%]s.[Json] from [[%MainStructureTable%]] s[%Paging%]
-[%End%];</value>
+    <value>[%Start%]select [%Take%]s.[Json] from [[%MainStructureTable%]] s[%Paging%][%End%];</value>
   </data>
   <data name="QueryWithoutPagingAndSorting" xml:space="preserve">
-    <value>[%Start%]
-select distinct [%Take%](s.[StructureId]), s.[Json] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%][%Paging%]
-[%End%];</value>
+    <value>[%Start%]select distinct [%Take%](s.[StructureId]), s.[Json] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%][%End%];</value>
   </data>
 </root>

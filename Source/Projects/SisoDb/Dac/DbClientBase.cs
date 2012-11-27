@@ -733,9 +733,10 @@ namespace SisoDb.Dac
         {
             using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
             {
+                var i = reader.FieldCount - 1;
                 while (reader.Read())
                 {
-                    yield return reader.GetString(0);
+                    yield return reader.GetString(i);
                 }
                 reader.Close();
             }
