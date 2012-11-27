@@ -368,6 +368,16 @@ namespace SisoDb.Dac
                         new DacParameter("objtype", "OBJECT"));
                     cmd.ExecuteNonQuery();
 
+                    if (oldIndexesTableNames.HasSidIndex(oldTableName))
+                    {
+                        cmd.Parameters.Clear();
+                        Driver.AddCommandParametersTo(cmd,
+                            new DacParameter("objname", string.Format("{0}.IX_{1}_SID", newTableName, oldTableName)),
+                            new DacParameter("newname", string.Format("IX_{0}_SID", newTableName)),
+                            new DacParameter("objtype", "INDEX"));
+                        cmd.ExecuteNonQuery();   
+                    }
+
                     cmd.Parameters.Clear();
                     Driver.AddCommandParametersTo(cmd,
                         new DacParameter("objname", string.Format("{0}.IX_{1}_Q", newTableName, oldTableName)),
