@@ -235,7 +235,14 @@ namespace SisoDb.Querying
             return ToEnumerableOfJson().ToList();
         }
 
-        public virtual ISisoQueryable<T> Take(int numOfStructures)
+	    public virtual ISisoQueryable<T> Skip(int numOfStructures)
+	    {
+	        QueryBuilder.Skip(numOfStructures);
+
+	        return this;
+	    }
+
+	    public virtual ISisoQueryable<T> Take(int numOfStructures)
 		{
 			QueryBuilder.Take(numOfStructures);
 			

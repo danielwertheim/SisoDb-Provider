@@ -1,1 +1,1 @@
-select distinct top (2) (s.[StructureId]), s.[Json] from [MyClassStructure] s;
+select top (2) s.[Json] from [MyClassStructure] s;

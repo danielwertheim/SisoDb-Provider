@@ -307,6 +307,13 @@ namespace SisoDb.Querying
 			}
 		}
 
+        public virtual ISisoQueryable<T> Skip(int numOfStructures)
+        {
+            QueryBuilder.Skip(numOfStructures);
+
+            return this;
+        }
+
         public virtual ISisoQueryable<T> Take(int numOfStructures)
         {
             QueryBuilder.Take(numOfStructures);

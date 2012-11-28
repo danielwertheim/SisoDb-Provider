@@ -9,6 +9,7 @@ namespace SisoDb.Querying
 	public class Query : IQuery
 	{
 		public IStructureSchema StructureSchema { get; private set; }
+        public int? SkipNumOfStructures { get; set; }
         public int? TakeNumOfStructures { get; set; }
         public Paging Paging { get; set; }
         public IParsedLambda Where { get; set; }
@@ -21,10 +22,16 @@ namespace SisoDb.Querying
 			{
 				return HasPaging == false 
 					&& HasSortings == false 
+                    && HasSkipNumOfStructures == false
 					&& HasTakeNumOfStructures == false
 					&& HasWhere == false;
 			}
 		}
+
+        public bool HasSkipNumOfStructures
+        {
+            get { return SkipNumOfStructures.HasValue && SkipNumOfStructures > 0; }
+        }
 
 		public bool HasTakeNumOfStructures
 		{

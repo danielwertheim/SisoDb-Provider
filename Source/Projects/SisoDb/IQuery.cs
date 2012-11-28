@@ -7,13 +7,15 @@ namespace SisoDb
 	public interface IQuery
 	{
 		IStructureSchema StructureSchema { get; }
-		int? TakeNumOfStructures { get; set; }
+        int? SkipNumOfStructures { get; set; }
+        int? TakeNumOfStructures { get; set; }
 		Paging Paging { get; set; }
 		IParsedLambda Where { get; set; }
 		IParsedLambda Sortings { get; set; }
         bool IsCacheable { get; set; }
 
 		bool IsEmpty { get; }
+        bool HasSkipNumOfStructures { get; }
         bool HasTakeNumOfStructures { get; }
 		bool HasPaging { get; }
 		bool HasWhere { get; }

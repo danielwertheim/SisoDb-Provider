@@ -14,6 +14,17 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             return new Sql2012QueryGenerator(new Sql2012Statements(), new SqlExpressionBuilder(() => new SqlWhereCriteriaBuilder()));
         }
 
+        [Test]
+        public override void GenerateQuery_WithSkip13AndSort_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithSkip13AndSort_GeneratesCorrectQuery();
+
+            SqlApprovals.Verify(sqlQuery.Sql);
+            Assert.AreEqual(1, sqlQuery.Parameters.Length);
+            Assert.AreEqual("@skipRows", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual(13, sqlQuery.Parameters[0].Value);
+        }
+
         protected override IDbQuery On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
         {
             var queryCommand = BuildQuery<MyClass>(q => q.Take(2).Page(2, 10).OrderBy(i => i.Int1));
@@ -35,7 +46,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery();
 
             SqlApprovals.Verify(sqlQuery.Sql);
-            Assert.AreEqual("@offsetRows", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual("@skipRows", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(20, sqlQuery.Parameters[0].Value);
             Assert.AreEqual("@takeRows", sqlQuery.Parameters[1].Name);
             Assert.AreEqual(10, sqlQuery.Parameters[1].Value);
@@ -47,6 +58,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithFirst_GeneratesCorrectQuery();
 
             SqlApprovals.Verify(sqlQuery.Sql);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]
@@ -55,6 +67,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
             var sqlQuery = On_GenerateQuery_WithSingle_GeneratesCorrectQuery();
 
             SqlApprovals.Verify(sqlQuery.Sql);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]
@@ -225,14 +238,12 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId], min(mem0.[Value]) mem0 from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc offset @offsetRows rows fetch next @takeRows rows only;",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
 
-            Assert.AreEqual("@offsetRows", sqlQuery.Parameters[1].Name);
+            Assert.AreEqual("@skipRows", sqlQuery.Parameters[1].Name);
             Assert.AreEqual(0, sqlQuery.Parameters[1].Value);
 
             Assert.AreEqual("@takeRows", sqlQuery.Parameters[2].Name);

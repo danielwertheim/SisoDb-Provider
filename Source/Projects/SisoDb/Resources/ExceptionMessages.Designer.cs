@@ -214,7 +214,16 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The query should only return StructureIds which alows onle WHERE expressions. Take, Paging and Sorting etc is not allowed..
+        ///   Looks up a localized string similar to The query needs a Where-clause..
+        /// </summary>
+        public static string DbQueryGenerator_MissingWhere {
+            get {
+                return ResourceManager.GetString("DbQueryGenerator_MissingWhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The query only alows WHERE expressions. Take, Paging and Sorting etc is not allowed..
         /// </summary>
         public static string DbQueryGenerator_OnlyWhereExpressionsAreAllowed {
             get {

@@ -287,7 +287,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
     <value>Member node: '{0}'; Exact match of strings is only supported for String members and NOT Text members.</value>
   </data>
   <data name="DbQueryGenerator_OnlyWhereExpressionsAreAllowed" xml:space="preserve">
-    <value>The query should only return StructureIds which alows onle WHERE expressions. Take, Paging and Sorting etc is not allowed.</value>
+    <value>The query only alows WHERE expressions. Take, Paging and Sorting etc is not allowed.</value>
   </data>
   <data name="ConnectionInfo_CouldNotFormatDbConnectionString" xml:space="preserve">
     <value>Could not parse sent connection string. If connection string name is passed. Ensure it has match in config-file. Inspect inner exception for more details.</value>
@@ -372,5 +372,8 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   </data>
   <data name="PagingMissesOrderBy" xml:space="preserve">
     <value>You need to provide an OrderBy construct when using Paging.</value>
+  </data>
+  <data name="DbQueryGenerator_MissingWhere" xml:space="preserve">
+    <value>The query needs a Where-clause.</value>
   </data>
 </root>

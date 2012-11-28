@@ -88,7 +88,7 @@ namespace SisoDb.UnitTests.Querying
 		}
 
 		[Test]
-		public void IsEmpty_WhenNoWhereSortingOrPaging_ReturnsTrue()
+		public void IsEmpty_WhenEmpty_ReturnsTrue()
 		{
 			var query = new Query(StructureSchemaTestFactory.Stub());
 
@@ -116,6 +116,30 @@ namespace SisoDb.UnitTests.Querying
 
 			Assert.IsFalse(query.IsEmpty);
 		}
+
+        [Test]
+        public void IsEmpty_WhenPagingButNothingElse_ReturnsFalse()
+        {
+            var query = new Query(StructureSchemaTestFactory.Stub()) { Paging = new Paging(0, 1) };
+
+            Assert.IsFalse(query.IsEmpty);
+        }
+
+        [Test]
+        public void IsEmpty_WhenTakeButNothingElse_ReturnsFalse()
+        {
+            var query = new Query(StructureSchemaTestFactory.Stub()) { TakeNumOfStructures = 1 };
+
+            Assert.IsFalse(query.IsEmpty);
+        }
+
+        [Test]
+        public void IsEmpty_WhenSkipButNothingElse_ReturnsFalse()
+        {
+            var query = new Query(StructureSchemaTestFactory.Stub()) { SkipNumOfStructures = 1 };
+
+            Assert.IsFalse(query.IsEmpty);
+        }
 
 		private static INode[] GetFakeNodes(int count)
 		{

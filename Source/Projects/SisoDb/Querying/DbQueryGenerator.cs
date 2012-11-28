@@ -36,10 +36,10 @@ namespace SisoDb.Querying
             var formatter = CreateSqlQueryFormatter(query, sqlExpression);
             var parameters = GenerateParameters(query, sqlExpression);
 
-            if (query.IsEmpty)
+            if (query.HasNoDependencies())
                 return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutDependencies")), parameters, query.IsCacheable);
 
-            if(!query.HasSortings && !query.HasPaging)
+            if (!query.HasSortings && !query.HasPaging && !query.HasSkipNumOfStructures)
                 return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutPagingAndSorting")), parameters, query.IsCacheable);
 
             return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable);
@@ -62,14 +62,17 @@ namespace SisoDb.Querying
         protected virtual void EnsureValidQuery(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
-            if (query.HasPaging && !query.HasSortings)
+            if ((query.HasPaging || query.HasSkipNumOfStructures) && !query.HasSortings)
                 throw new SisoDbException(ExceptionMessages.PagingMissesOrderBy);
         }
 
         protected virtual void EnsureQueryContainsOnlyWhereExpression(IQuery query)
         {
             Ensure.That(query, "query").IsNotNull();
-            if (!query.HasWhere || (query.HasTakeNumOfStructures || query.HasSortings || query.HasPaging))
+            if (!query.HasWhere)
+                throw new ArgumentException(ExceptionMessages.DbQueryGenerator_MissingWhere);
+
+            if (query.HasSkipNumOfStructures || query.HasTakeNumOfStructures || query.HasSortings || query.HasPaging)
                 throw new ArgumentException(ExceptionMessages.DbQueryGenerator_OnlyWhereExpressionsAreAllowed);
         }
 
@@ -119,36 +122,21 @@ namespace SisoDb.Querying
 
         protected virtual IDacParameter[] GenerateParameters(IQuery query, ISqlExpression sqlExpression)
         {
-            if(!query.HasWhere && !query.HasPaging)
+            if (!query.HasWhere && !query.HasPaging && !query.HasSkipNumOfStructures)
                 return new IDacParameter[0];
 
             var whereParams = sqlExpression.WhereCriteria.Parameters;
-            var pagingParams = GeneratePagingParameters(query, sqlExpression);
+            var pagingParams = GenerateRsSizeLimitingParameters(query, sqlExpression);
 
             var allParams = new List<IDacParameter>(whereParams.Length + pagingParams.Length);
-            
-            if(whereParams.Any())
+
+            if (whereParams.Any())
                 allParams.AddRange(whereParams);
-            
-            if(pagingParams.Any())
+
+            if (pagingParams.Any())
                 allParams.AddRange(pagingParams);
-            
+
             return allParams.ToArray();
-        }
-
-        protected virtual IDacParameter[] GeneratePagingParameters(IQuery query, ISqlExpression sqlExpression)
-        {
-            if (!query.HasPaging)
-                return new IDacParameter[0];
-
-            var offsetRows = (query.Paging.PageIndex * query.Paging.PageSize);
-            var takeRows = query.Paging.PageSize;
-
-            return new IDacParameter[]
-            {
-                new DacParameter("offsetRows", offsetRows),
-                new DacParameter("takeRows", takeRows)
-            };
         }
 
         protected virtual string GenerateStartString(IQuery query, ISqlExpression sqlExpression)
@@ -163,17 +151,56 @@ namespace SisoDb.Querying
 
         protected virtual string GenerateTakeString(IQuery query)
         {
-            if (!query.HasTakeNumOfStructures || query.HasPaging)
+            if (!query.HasTakeNumOfStructures)
+                return string.Empty;
+
+            if (query.HasPaging || query.HasSkipNumOfStructures)
                 return string.Empty;
 
             return string.Format("top ({0})", query.TakeNumOfStructures);
         }
 
+        protected virtual IDacParameter[] GenerateRsSizeLimitingParameters(IQuery query, ISqlExpression sqlExpression)
+        {
+            if (!query.HasPaging && !query.HasSkipNumOfStructures)
+                return new IDacParameter[0];
+
+            return query.HasPaging
+                ? GenerateRsSizeLimitingParametersForPaging(query, sqlExpression)
+                : GenerateRsSizeLimitingParametersForSkipAndTake(query, sqlExpression);
+        }
+
+        protected virtual IDacParameter[] GenerateRsSizeLimitingParametersForPaging(IQuery query, ISqlExpression sqlExpression)
+        {
+            return new IDacParameter[] 
+            {
+                new DacParameter("skipRows", (query.Paging.PageIndex * query.Paging.PageSize)),
+                new DacParameter("takeRows", query.Paging.PageSize)
+            };
+        }
+
+        protected virtual IDacParameter[] GenerateRsSizeLimitingParametersForSkipAndTake(IQuery query, ISqlExpression sqlExpression)
+        {
+            var ps = new List<IDacParameter>(2);
+
+            if (query.SkipNumOfStructures.HasValue)
+                ps.Add(new DacParameter("skipRows", query.SkipNumOfStructures.Value));
+
+            if (query.TakeNumOfStructures.HasValue)
+                ps.Add(new DacParameter("takeRows", query.TakeNumOfStructures.Value));
+
+            return ps.ToArray();
+        }
+
         protected virtual string GeneratePagingString(IQuery query, ISqlExpression sqlExpression)
         {
-            return query.HasPaging
-                ? "offset @offsetRows rows fetch next @takeRows rows only"
-                : string.Empty;
+            if (!query.HasPaging && !query.HasSkipNumOfStructures)
+                return string.Empty;
+
+            if (query.HasPaging || (query.HasSkipNumOfStructures && query.HasTakeNumOfStructures))
+                return "offset @skipRows rows fetch next @takeRows rows only";
+
+            return "offset @skipRows rows";
         }
 
         protected virtual string GenerateOrderByMembersString(IQuery queryCommand, ISqlExpression sqlExpression)

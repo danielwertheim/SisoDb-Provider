@@ -23,10 +23,23 @@ namespace SisoDb.Querying
             InnerQueryBuilder = new QueryBuilder(typeof(T), structureSchemas, expressionParsers);
 		}
 
-		public virtual void Clear()
+        public virtual IQueryBuilder<T> Clear()
 		{
 			InnerQueryBuilder.Clear();
+            return this;
 		}
+
+        public virtual IQueryBuilder<T> ClearSortings()
+        {
+            InnerQueryBuilder.ClearSortings();
+            return this;
+        }
+
+        public virtual IQueryBuilder<T> ClearWheres()
+        {
+            InnerQueryBuilder.ClearWheres();
+            return this;
+        }
 
 		public virtual IQuery Build()
 		{
@@ -54,7 +67,14 @@ namespace SisoDb.Querying
             return this;
         }
 
-		public virtual IQueryBuilder<T> Take(int numOfStructures)
+	    public virtual IQueryBuilder<T> Skip(int numOfStructures)
+	    {
+	        InnerQueryBuilder.Skip(numOfStructures);
+
+	        return this;
+	    }
+
+	    public virtual IQueryBuilder<T> Take(int numOfStructures)
 		{
 		    InnerQueryBuilder.Take(numOfStructures);
 
@@ -129,9 +149,22 @@ namespace SisoDb.Querying
             IsCacheable = false;
         }
 
-        public virtual void Clear()
+        public virtual IQueryBuilder Clear()
         {
             Query = new Query(StructureSchema);
+            return this;
+        }
+
+        public virtual IQueryBuilder ClearSortings()
+        {
+            BufferedSortings.Clear();
+            return this;
+        }
+
+        public virtual IQueryBuilder ClearWheres()
+        {
+            BufferedWheres.Clear();
+            return this;
         }
 
         public virtual IQuery Build()
@@ -178,6 +211,15 @@ namespace SisoDb.Querying
         protected virtual IParsedLambda ParseSortingLambdas(OrderByExpression[] sortings)
         {
             return ExpressionParsers.OrderByParser.Parse(sortings);
+        }
+
+        public virtual IQueryBuilder Skip(int numOfStructures)
+        {
+            Ensure.That(numOfStructures, "numOfStructures").IsGt(0);
+
+            Query.SkipNumOfStructures = numOfStructures;
+
+            return this;
         }
 
         public virtual IQueryBuilder Take(int numOfStructures)

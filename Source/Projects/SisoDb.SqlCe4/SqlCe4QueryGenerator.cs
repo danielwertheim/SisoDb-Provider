@@ -15,7 +15,7 @@ namespace SisoDb.SqlCe4
             var formatter = CreateSqlQueryFormatter(query, sqlExpression);
             var parameters = GenerateParameters(query, sqlExpression);
 
-            if (query.IsEmpty)
+            if (query.HasNoDependencies())
                 return new DbQuery(formatter.Format(SqlStatements.GetSql("QueryWithoutDependencies")), parameters, query.IsCacheable);
 
             return new DbQuery(formatter.Format(SqlStatements.GetSql("Query")), parameters, query.IsCacheable);

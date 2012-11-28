@@ -13,6 +13,16 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         protected readonly IDataTypeConverter DataTypeConverter = new DataTypeConverter();
 		protected abstract IDbQueryGenerator GetQueryGenerator();
 
+        public abstract void GenerateQuery_WithSkip13AndSort_GeneratesCorrectQuery();
+
+        protected virtual IDbQuery On_GenerateQuery_WithSkip13AndSort_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Skip(13).OrderBy(i => i.Int1));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
         public abstract void GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery();
 
         protected virtual IDbQuery On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
