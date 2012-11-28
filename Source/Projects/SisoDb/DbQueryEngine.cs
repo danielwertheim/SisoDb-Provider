@@ -200,6 +200,35 @@ namespace SisoDb
             return Try(() => OnQueryAs<T, TResult>(query));
         }
 
+        public virtual IEnumerable<object> QueryAs(IQuery query, Type structureType, Type resultType)
+        {
+            return Try(() => OnQueryAs(query, structureType, resultType));
+        }
+
+        protected virtual IEnumerable<object> OnQueryAs(IQuery query, Type structureType, Type resultType)
+        {
+            Ensure.That(query, "query").IsNotNull();
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(resultType, "resultType").IsNotNull();
+
+            var structureSchema = OnUpsertStructureSchema(structureType);
+
+            if (query.IsEmpty)
+                return Db.Serializer.DeserializeMany(DbClient.GetJsonOrderedByStructureId(structureSchema), resultType);
+
+            var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+            return Db.CacheProvider.Consume(
+                structureSchema,
+                sqlQuery,
+                q =>
+                {
+                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    return Db.Serializer.DeserializeMany(sourceData, resultType);
+                },
+                ExecutionContext.Session.CacheConsumeMode);
+        }
+
         protected virtual IEnumerable<TResult> OnQueryAs<T, TResult>(IQuery query)
             where T : class
             where TResult : class
