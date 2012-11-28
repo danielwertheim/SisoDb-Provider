@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Serialization", "Pro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Spatial", "Projects\SisoDb.Spatial\SisoDb.Spatial.csproj", "{247A9856-C54B-4B11-8FEB-312FA5E86DFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisoDb.Azure", "Projects\SisoDb.Azure\SisoDb.Azure.csproj", "{22BD2738-6F4A-427F-A9EA-C03989AADB51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -164,6 +166,10 @@ Global
 		{247A9856-C54B-4B11-8FEB-312FA5E86DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{247A9856-C54B-4B11-8FEB-312FA5E86DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{247A9856-C54B-4B11-8FEB-312FA5E86DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22BD2738-6F4A-427F-A9EA-C03989AADB51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22BD2738-6F4A-427F-A9EA-C03989AADB51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22BD2738-6F4A-427F-A9EA-C03989AADB51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22BD2738-6F4A-427F-A9EA-C03989AADB51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
