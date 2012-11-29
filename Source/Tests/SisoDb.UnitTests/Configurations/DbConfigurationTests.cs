@@ -26,7 +26,7 @@ namespace SisoDb.UnitTests.Configurations
                 id.SetupGet(f => f.IdType).Returns(StructureIdTypes.Guid);
                 return id.Object;
             });
-            var serializerFake = new Mock<ISisoSerializer>();
+            var serializerFake = new Mock<IStructureSerializer>();
             var structureBuilders = new StructureBuilders(
                 () => serializerFake.Object,
                 s => Mock.Of<IStructureIdGenerator>(),
@@ -50,7 +50,7 @@ namespace SisoDb.UnitTests.Configurations
                 id.SetupGet(f => f.IdType).Returns(StructureIdTypes.Guid);
                 return id.Object;
             });
-            var serializerFake = new Mock<ISisoSerializer>();
+            var serializerFake = new Mock<IStructureSerializer>();
             var structureBuilders = new StructureBuilders(
                 () => serializerFake.Object,
                 s => Mock.Of<IStructureIdGenerator>(),
@@ -67,7 +67,7 @@ namespace SisoDb.UnitTests.Configurations
         [Test]
         public void UseManualIds_Should_make_ResolveBuilderForInsert_to_return_builder_with_EmptyStructureIdGenerator()
         {
-            var serializerFake = new Mock<ISisoSerializer>();
+            var serializerFake = new Mock<IStructureSerializer>();
             var structureBuilders = new StructureBuilders(
                 () => serializerFake.Object, 
                 s => Mock.Of<IStructureIdGenerator>(), 
@@ -84,7 +84,7 @@ namespace SisoDb.UnitTests.Configurations
         [Test]
         public void UseGuidStructureIdGeneratorResolvedBy_Should_make_ResolveBuilderForInsert_to_return_builder_with_configured_id_generator()
         {
-            var serializerFake = new Mock<ISisoSerializer>();
+            var serializerFake = new Mock<IStructureSerializer>();
             var structureBuilders = new StructureBuilders(
                 () => serializerFake.Object,
                 s => Mock.Of<IStructureIdGenerator>(),

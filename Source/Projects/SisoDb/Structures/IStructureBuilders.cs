@@ -13,19 +13,15 @@ namespace SisoDb.Structures
         /// for generating GUIDs. Defaults to <see cref="SequentialGuidStructureIdGenerator"/>.
         /// </summary>
         Func<IStructureSchema, IStructureIdGenerator> GuidStructureIdGeneratorFn { get; set; }
+
         /// <summary>
         /// Resolves the <see cref="IIdentityStructureIdGenerator"/> responsible
         /// for generating identities. Defaults to <see cref="DbIdentityStructureIdGenerator"/>.
         /// </summary>
         Func<IStructureSchema, IDbClient, IIdentityStructureIdGenerator> IdentityStructureIdGeneratorFn { get; set; }
-        /// <summary>
-        /// Resolves the serializer to use. Maps to <see cref="ISisoDatabase.Serializer"/>.
-        /// </summary>
-        Func<ISisoSerializer> SerializerFn { get; }
+
         /// <summary>
         /// Resolves the <see cref="IStructureSerializer"/> responsible for serializing a structure.
-        /// Defaults to <see cref="StructureSerializer"/>. Will use <see cref="SerializerFn"/> to get
-        /// the actual serializer, hence normally nothing you would like to switch.
         /// </summary>
         Func<IStructureSerializer> StructureSerializerFn { get; set; }
 
