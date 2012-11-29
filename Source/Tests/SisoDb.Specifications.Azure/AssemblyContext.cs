@@ -13,8 +13,8 @@ namespace SisoDb.Specifications.Azure
 
 			_isInitialized = true;
 
-            var ctx = TestContextFactory.Create();
-            ctx.Database.InitializeExisting();
+            //var ctx = TestContextFactory.Create();
+            //ctx.Database.InitializeExisting();
 		}
 
 		public void OnAssemblyComplete()
