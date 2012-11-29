@@ -22,9 +22,7 @@ namespace SisoDb.Structures
 
         public static Guid New()
         {
-            var sequentialGuid = NewGuid();
-
-            return ConvertToSqlCompatible(sequentialGuid);
+            return ConvertToSqlCompatible(NewGuid());
         }
 
         private static Guid NewGuid()
@@ -39,11 +37,11 @@ namespace SisoDb.Structures
                     // all ok
                     break;
                 case (int)RpcUuidCodes.RPC_S_UUID_LOCAL_ONLY:
-                    throw new Exception(@"SequentialGuid:NewGuid failed - UuidCreateSequential returned RPC_S_UUID_LOCAL_ONLY");
+                    throw new SisoDbException(@"SequentialGuid:NewGuid failed - UuidCreateSequential returned RPC_S_UUID_LOCAL_ONLY");
                 case (int)RpcUuidCodes.RPC_S_UUID_NO_ADDRESS:
-                    throw new Exception(@"SequentialGuid:NewGuid failed - UuidCreateSequential returned RPC_S_UUID_NO_ADDRESS");
+                    throw new SisoDbException(@"SequentialGuid:NewGuid failed - UuidCreateSequential returned RPC_S_UUID_NO_ADDRESS");
                 default:
-                    throw new Exception(String.Format(@"SequentialGuid:NewGuid failed - UuidCreateSequential returned {0}", resultCode));
+                    throw new SisoDbException(String.Format(@"SequentialGuid:NewGuid failed - UuidCreateSequential returned {0}", resultCode));
             }
 
             return sequentialGuid;
