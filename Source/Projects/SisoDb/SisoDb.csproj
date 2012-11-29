@@ -177,6 +177,7 @@
     <Compile Include="Querying\Sql\IDbQuery.cs" />
     <Compile Include="Querying\Sql\IDbQueryChecksumGenerator.cs" />
     <Compile Include="Serialization\DefaultSisoSerializer.cs" />
+    <Compile Include="Serialization\SisoSerializerProxy.cs" />
     <Compile Include="Serialization\EmptyStructureSerializer.cs" />
     <Compile Include="Serialization\IStructureSerializer.cs" />
     <Compile Include="SessionEvents.cs" />
