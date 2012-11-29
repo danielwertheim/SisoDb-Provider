@@ -1,5 +1,6 @@
 ﻿using SisoDb.Querying;
 using SisoDb.SqlServer;
+using SisoDb.Structures.IdGenerators;
 
 namespace SisoDb.Azure
 {
@@ -12,5 +13,10 @@ namespace SisoDb.Azure
 	    {
 	        return new SqlAzureQueryGenerator(SqlStatements, GetSqlExpressionBuilder());
 	    }
+
+        public override Structures.IStructureIdGenerator GetGuidStructureIdGenerator()
+        {
+            return new CombGuidStructureIdGenerator();
+        }
     }
 }

@@ -2,6 +2,11 @@ using SisoDb.Structures.Schemas;
 
 namespace SisoDb.Structures.IdGenerators
 {
+    /// <summary>
+    /// Uses native UuidCreateSequential in rpcrt4.dll, which does not
+    /// work in WindowsXP and Azure. Use <see cref="CombGuidStructureIdGenerator"/> or
+    /// <see cref="GuidStructureIdGenerator"/> instead.
+    /// </summary>
     public class SequentialGuidStructureIdGenerator : IStructureIdGenerator
     {
         public virtual IStructureId Generate(IStructureSchema structureSchema)
