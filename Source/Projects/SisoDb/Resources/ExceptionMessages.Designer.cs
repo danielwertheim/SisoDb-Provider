@@ -205,6 +205,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Db-operations is not supported by Azure..
+        /// </summary>
+        public static string DbOp_NotSupportedByAzure {
+            get {
+                return ResourceManager.GetString("DbOp_NotSupportedByAzure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Params that currently are allowed in cached queries, are: Simple params and Arrays. Geography params is not supported..
         /// </summary>
         public static string DbQueryChecksumGenerator_UnsupportedDacParam {

@@ -7,7 +7,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Spatial
 {
-#if Sql2008Provider || Sql2012Provider
+#if SqlAzureProvider || Sql2008Provider || Sql2012Provider
     class UpsertAndDrop
     {
         [Subject(typeof(ISisoSpatial), "EnableFor")]

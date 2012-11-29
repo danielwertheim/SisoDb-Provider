@@ -8,7 +8,7 @@ using SisoDb.Testing;
 
 namespace SisoDb.Specifications.Session.Querying
 {
-#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if SqlAzureProvider || Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
     class NamedQueries
     {
         [Subject(typeof(ISession), "Named Query")]
@@ -17,6 +17,7 @@ namespace SisoDb.Specifications.Session.Querying
             Establish context = () =>
             {
                 TestContext = TestContextFactory.Create();
+                TestContext.DbHelper.DropProcedure(ProcedureName);
                 TestContext.DbHelper.CreateProcedure(@"create procedure [" + ProcedureName + "] as begin select '{}' as Json where 1=2; end");
             };
 
