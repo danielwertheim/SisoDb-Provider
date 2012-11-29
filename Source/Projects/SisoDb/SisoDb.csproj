@@ -182,6 +182,7 @@
     <Compile Include="SessionEvents.cs" />
     <Compile Include="SessionExecutionContext.cs" />
     <Compile Include="Structures\DataTypeCode.cs" />
+    <Compile Include="Structures\IdGenerators\CombGuidStructureIdGenerator.cs" />
     <Compile Include="Structures\IdGenerators\EmptyStructureIdGenerator.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGenerator.cs" />
     <Compile Include="Structures\IdGenerators\SequentialGuidStructureIdGenerator.cs" />
