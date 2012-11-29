@@ -15,20 +15,20 @@ namespace SisoDb
         protected readonly List<Action<ISession, IStructureSchema, IStructureId>> OnDeletedHandlers;
         protected readonly List<Action<ISession, IStructureSchema, IQuery>> OnDeletedByQueryHandlers;
 
-        public Action<ISisoDatabase, Guid> OnCommit
+        public Action<ISisoDatabase, Guid> OnCommitted
         {
             set
             {
-                Ensure.That(value, "OnCommit").IsNotNull();
+                Ensure.That(value, "OnCommitted").IsNotNull();
                 RegisterNewOnCommittedHandler(value);
             }
         }
 
-        public Action<ISisoDatabase, Guid> OnRollback
+        public Action<ISisoDatabase, Guid> OnRolledback
         {
             set
             {
-                Ensure.That(value, "OnRollback").IsNotNull();
+                Ensure.That(value, "OnRolledback").IsNotNull();
                 RegisterNewOnRolledbackHandler(value);
             }
         }

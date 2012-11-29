@@ -9,12 +9,12 @@ namespace SisoDb
         /// <summary>
         /// Called when a session is disposed and committed.
         /// </summary>
-        Action<ISisoDatabase, Guid> OnCommit { set; }
+        Action<ISisoDatabase, Guid> OnCommitted { set; }
 
         /// <summary>
         /// Called when a session is rolled back and disposed due to an failure.
         /// </summary>
-        Action<ISisoDatabase, Guid> OnRollback { set; }
+        Action<ISisoDatabase, Guid> OnRolledback { set; }
 
         /// <summary>
         /// Called when an item has been inserted.
