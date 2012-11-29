@@ -213,6 +213,10 @@
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.Azure\SisoDb.Azure.csproj">
+      <Project>{22bd2738-6f4a-427f-a9ea-c03989aadb51}</Project>
+      <Name>SisoDb.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
       <Project>{9202564D-92FD-448F-851D-3DD3D1AA3137}</Project>
       <Name>SisoDb.Dynamic</Name>

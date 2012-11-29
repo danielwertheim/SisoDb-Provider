@@ -2,7 +2,7 @@ namespace SisoDb.Azure
 {
     public static class SisoDbAzureExtensions
     {
-        public static ISisoDatabase CreateSqlAzureDb(this string connectionStringOrName)
+        public static ISisoDatabase CreateAzureDb(this string connectionStringOrName)
         {
             var cnInfo = new SqlAzureConnectionInfo(connectionStringOrName);
             var factory = new SqlAzureDbFactory();

@@ -6,6 +6,8 @@ namespace SisoDb.Testing
     {
         public static readonly DateTime FixedDateTime = new DateTime(2012, 1, 2, 3, 4, 5, 6);
 
+        public const string ConnectionStringNameForAzure = "SisoDb.Azure";
+
 		public const string ConnectionStringNameForSql2005 = "SisoDb.Sql2005";
 
         public const string ConnectionStringNameForSql2005Temp = "SisoDb.Sql2005.Temp";

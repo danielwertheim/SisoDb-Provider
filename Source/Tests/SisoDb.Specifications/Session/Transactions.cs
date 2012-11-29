@@ -9,7 +9,7 @@ namespace SisoDb.Specifications.Session
 {
     class Transactions
     {
-#if Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if SqlAzureProvider || Sql2005Provider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
         [Subject(typeof(ISession), "Transaction scopes")]
         public class when_nesting_multiple_unit_of_works_in_ts_wihtout_commiting_ts : SpecificationBase
         {

@@ -74,13 +74,15 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Azure\AzureTestContext.cs" />
+    <Compile Include="Azure\AzureTestDbUtils.cs" />
     <Compile Include="Sql2005\Sql2005TestContext.cs" />
     <Compile Include="Sql2005\Sql2005TestDbUtils.cs" />
     <Compile Include="SqlServerTestDbUtils.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestContext.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestDbUtils.cs" />
     <Compile Include="Sql2012\Sql2012TestDbUtils.cs" />
-    <Compile Include="Sql2012\Sql2008TestContext.cs" />
+    <Compile Include="Sql2012\Sql2012TestContext.cs" />
     <Compile Include="DbColumn.cs" />
     <Compile Include="ITestContext.cs" />
     <Compile Include="ITestDbUtils.cs" />
@@ -119,6 +121,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.Azure\SisoDb.Azure.csproj">
+      <Project>{22bd2738-6f4a-427f-a9ea-c03989aadb51}</Project>
+      <Name>SisoDb.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.JsonNet\SisoDb.JsonNet.csproj">
       <Project>{1c63dd91-fc7e-40e0-a546-f206f6923be0}</Project>
       <Name>SisoDb.JsonNet</Name>

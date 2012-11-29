@@ -106,7 +106,7 @@ namespace SisoDb.Specifications.Session
             private static IStructureSchema _structureSchema;
             private static SingleDateTimeMember _structure;
         }
-#if Sql2008Provider || Sql2012Provider || SqlProfilerProvider
+#if SqlAzureProvider || Sql2008Provider || Sql2012Provider || SqlProfilerProvider
         [Subject(typeof(ISession), "Insert")]
         public class when_inserting_item_with_single_datetime_member_having_min_value : SpecificationBase
         {

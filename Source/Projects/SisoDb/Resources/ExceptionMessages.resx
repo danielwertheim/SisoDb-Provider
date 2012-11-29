@@ -376,4 +376,7 @@ Specific supported method exists as extensionmethods and are prefixed with 'Qx'.
   <data name="DbQueryGenerator_MissingWhere" xml:space="preserve">
     <value>The query needs a Where-clause.</value>
   </data>
+  <data name="DbOp_NotSupportedByAzure" xml:space="preserve">
+    <value>Db-operations is not supported by Azure.</value>
+  </data>
 </root>
