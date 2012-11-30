@@ -6,9 +6,7 @@ namespace SisoDb.Serialization
 {
     /// <summary>
     /// Extend this class and hook it in on your <see cref="ISisoDatabase"/>.
-    /// It alows you to intercept serialized values going into the db,
-    /// as well as values about to be deserialized.
-    /// Could be used to implement compression.
+    /// It alows you to intercept serialized and deserialized values.
     /// </summary>
     public abstract class SisoSerializerProxy : ISisoSerializer 
     {
