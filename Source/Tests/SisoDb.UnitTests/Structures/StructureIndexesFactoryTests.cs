@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using SisoDb.Structures;
 using SisoDb.UnitTests.Structures.Schemas;
+using SisoDb.UnitTests.TestFactories;
 
 namespace SisoDb.UnitTests.Structures
 {

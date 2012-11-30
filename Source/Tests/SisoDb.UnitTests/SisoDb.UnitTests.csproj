@@ -194,7 +194,6 @@
     <Compile Include="Structures\StructureIndexTests.cs" />
     <Compile Include="Structures\StructureIndexTypeTests.cs" />
     <Compile Include="Structures\Schemas\StructureSchemaExtensionsTests.cs" />
-    <Compile Include="Structures\Schemas\StructureSchemaTestFactory.cs" />
     <Compile Include="Structures\StructureTests.cs" />
     <Compile Include="Structures\UniqueModesExtensions.cs" />
     <Compile Include="Stub.cs" />

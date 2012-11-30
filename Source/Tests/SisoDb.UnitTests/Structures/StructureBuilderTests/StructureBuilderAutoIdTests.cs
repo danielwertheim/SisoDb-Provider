@@ -7,6 +7,7 @@ using SisoDb.Structures;
 using SisoDb.Structures.IdGenerators;
 using SisoDb.Structures.Schemas;
 using SisoDb.UnitTests.Structures.Schemas;
+using SisoDb.UnitTests.TestFactories;
 
 namespace SisoDb.UnitTests.Structures.StructureBuilderTests
 {
