@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.Querying.Sql;
 using SisoDb.Structures;
@@ -27,8 +28,7 @@ namespace SisoDb.Dac
 
         void Abort();
         void MarkAsFailed();
-        IDbBulkCopy GetBulkCopy();
-
+        
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
         void ExecuteNonQuery(string[] sqls, params IDacParameter[] parameters);
         T ExecuteScalar<T>(string sql, params IDacParameter[] parameters);
@@ -67,6 +67,10 @@ namespace SisoDb.Dac
 		
 		IEnumerable<string> YieldJson(string sql, params IDacParameter[] parameters);
     	IEnumerable<string> YieldJsonBySp(string sql, params IDacParameter[] parameters);
+
+        void BulkInsertStructures(IStructureSchema structureSchema, IStructure[] structures);
+        void BulkInsertIndexes(IndexesReader reader);
+        void BulkInsertUniques(IStructureSchema structureSchema, IStructureIndex[] uniques);
 
         void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema);
         void SingleInsertOfValueTypeIndex(IStructureIndex structureIndex, string valueTypeIndexesTableName);

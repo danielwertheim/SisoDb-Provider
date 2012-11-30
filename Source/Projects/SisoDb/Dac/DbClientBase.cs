@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
@@ -73,7 +74,9 @@ namespace SisoDb.Dac
             IsTransactional = isTransactional || transaction != null;
             Transaction = transaction;
         }
-        
+
+        protected abstract IDbBulkCopy GetBulkCopy();
+
         public virtual void Dispose()
         {
             if(Connection == null) 
@@ -174,8 +177,6 @@ namespace SisoDb.Dac
         {
             IsFailed = true;
         }
-
-        public abstract IDbBulkCopy GetBulkCopy();
 
         public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
@@ -649,6 +650,82 @@ namespace SisoDb.Dac
                 foreach (var json in YieldJson(cmd))
                     yield return json;
             }
+        }
+
+        public virtual void BulkInsertStructures(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            if (!structures.Any())
+                return;
+
+            using (var structuresReader = new StructuresReader(new StructureStorageSchema(structureSchema, structureSchema.GetStructureTableName()), structures))
+            {
+                using (var bulkInserter = GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = structuresReader.StorageSchema.Name;
+                    bulkInserter.BatchSize = structures.Length;
+
+                    var fields = structuresReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
+                    foreach (var field in fields)
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+
+                    bulkInserter.Write(structuresReader);
+                }
+            }
+        }
+
+        public virtual void BulkInsertIndexes(IndexesReader reader)
+        {
+            var isValueTypeIndexesReader = reader is ValueTypeIndexesReader;
+            var fieldsToSkip = GetStorageSchemaFieldsToSkip(isValueTypeIndexesReader);
+
+            using (reader)
+            {
+                if (reader.RecordsAffected < 1)
+                    return;
+
+                using (var bulkInserter = GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = reader.StorageSchema.Name;
+                    bulkInserter.BatchSize = reader.RecordsAffected;
+
+                    var fields = reader.StorageSchema.GetFieldsOrderedByIndex().Except(fieldsToSkip).ToArray();
+                    foreach (var field in fields)
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+
+                    bulkInserter.Write(reader);
+                }
+            }
+        }
+
+        public virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructureIndex[] uniques)
+        {
+            if (!uniques.Any())
+                return;
+
+            using (var uniquesReader = new UniquesReader(new UniqueStorageSchema(structureSchema, structureSchema.GetUniquesTableName()), uniques))
+            {
+                using (var bulkInserter = GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = uniquesReader.StorageSchema.Name;
+                    bulkInserter.BatchSize = uniques.Length;
+
+                    var fields = uniquesReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
+                    foreach (var field in fields)
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+
+                    bulkInserter.Write(uniquesReader);
+                }
+            }
+        }
+
+        protected virtual ISet<SchemaField> GetStorageSchemaFieldsToSkip(bool isValueTypeIndexesReader)
+        {
+            var fieldsToSkip = new HashSet<SchemaField> { IndexStorageSchema.Fields.RowId };
+
+            if (!isValueTypeIndexesReader)
+                fieldsToSkip.Add(IndexStorageSchema.Fields.StringValue);
+
+            return fieldsToSkip;
         }
 
         public virtual void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema)

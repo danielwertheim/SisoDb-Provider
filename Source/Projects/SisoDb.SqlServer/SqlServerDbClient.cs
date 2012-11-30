@@ -27,7 +27,7 @@ namespace SisoDb.SqlServer
         {
         }
 
-        public override IDbBulkCopy GetBulkCopy()
+        protected override IDbBulkCopy GetBulkCopy()
         {
             return new SqlServerBulkCopy(this);
         }
