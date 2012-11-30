@@ -53,13 +53,13 @@ namespace SisoDb.Dac
             }
         }
 
-        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : this(driver, connection, connectionManager, sqlStatements, false, null) { }
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : this(driver, connection, connectionManager, sqlStatements, false, null, pipe) { }
 
-        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : this(driver, connection, connectionManager, sqlStatements, true, transaction) { }
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : this(driver, connection, connectionManager, sqlStatements, true, transaction, pipe) { }
 
-        private DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, bool isTransactional, IDbTransaction transaction)
+        private DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, bool isTransactional, IDbTransaction transaction, IDbPipe pipe)
         {
             Ensure.That(driver, "driver").IsNotNull();
             Ensure.That(connection, "connection").IsNotNull();
@@ -211,7 +211,7 @@ namespace SisoDb.Dac
             }
         }
 
-        public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
+        public virtual void Read(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
             {
@@ -549,7 +549,7 @@ namespace SisoDb.Dac
             var sql = SqlStatements.GetSql("GetModelTableStatuses");
             var parameters = names.AllTableNames.Select((n, i) => new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix + i, n)).ToArray();
             var matchingNames = new HashSet<string>();
-            SingleResultSequentialReader(
+            Read(
                 sql,
                 dr => matchingNames.Add(dr.GetString(0)),
                 parameters);

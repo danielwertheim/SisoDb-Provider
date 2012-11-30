@@ -11,14 +11,14 @@ namespace SisoDb.Sql2005
         public Sql2005ProviderFactory() 
             : base(StorageProviders.Sql2005, new Sql2005Statements()) { }
 
-        public override IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+        public override IServerClient GetServerClient(ISisoDatabase db)
         {
-            return new Sql2005ServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
+            return new Sql2005ServerClient(GetAdoDriver(), db.ConnectionInfo, ConnectionManager, SqlStatements);
         }
 
-        public override IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public override IDbClient GetTransactionalDbClient(ISisoDatabase db)
         {
-            var connection = ConnectionManager.OpenClientConnection(connectionInfo);
+            var connection = ConnectionManager.OpenClientConnection(db.ConnectionInfo);
             var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new Sql2005DbClient(
@@ -26,23 +26,25 @@ namespace SisoDb.Sql2005
                 connection,
                 transaction,
                 ConnectionManager,
-                SqlStatements);
+                SqlStatements,
+                db.Pipe);
         }
 
-        public override IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public override IDbClient GetNonTransactionalDbClient(ISisoDatabase db)
         {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
-                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientConnection(connectionInfo));
+                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientConnection(db.ConnectionInfo));
             else
-                connection = ConnectionManager.OpenClientConnection(connectionInfo);
+                connection = ConnectionManager.OpenClientConnection(db.ConnectionInfo);
 
             return new Sql2005DbClient(
                 GetAdoDriver(),
                 connection,
                 null,
                 ConnectionManager,
-                SqlStatements);
+                SqlStatements,
+                db.Pipe);
         }
 
         public override IAdoDriver GetAdoDriver()

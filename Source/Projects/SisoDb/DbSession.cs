@@ -44,7 +44,7 @@ namespace SisoDb
 
             _id = Guid.NewGuid();
             _db = db;
-            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
+            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db);
             ExecutionContext = new SessionExecutionContext(this);
             Status = SessionStatus.Active;
             InternalEvents = new SessionEvents();

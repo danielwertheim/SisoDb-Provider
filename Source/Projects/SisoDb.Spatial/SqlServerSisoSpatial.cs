@@ -220,7 +220,7 @@ namespace SisoDb.Spatial
         {
             //I know, ugly. Thank Microsoft for that: http://msdn.microsoft.com/en-us/library/ms143179.aspx
             SqlGeography geo = null;
-            Session.DbClient.SingleResultSequentialReader(sql, dr =>
+            Session.DbClient.Read(sql, dr =>
             {
                 var d = (SqlDataReader)dr;
                 geo = SqlGeography.Deserialize(d.GetSqlBytes(0));

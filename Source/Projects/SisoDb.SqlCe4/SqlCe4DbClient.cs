@@ -19,11 +19,11 @@ namespace SisoDb.SqlCe4
             get { return 32; }
         }
 
-        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, connectionManager, sqlStatements) { }
+        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, connectionManager, sqlStatements, pipe) { }
 
-        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, transaction, connectionManager, sqlStatements) { }
+        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, transaction, connectionManager, sqlStatements, pipe) { }
 
         protected override IDbBulkCopy GetBulkCopy()
         {

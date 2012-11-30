@@ -137,6 +137,7 @@
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="Dac\Profiling\IWrappedConnection.cs" />
     <Compile Include="Dac\Profiling\IWrappedTransaction.cs" />
+    <Compile Include="IDbPipe.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />

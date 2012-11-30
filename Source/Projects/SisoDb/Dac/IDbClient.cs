@@ -32,7 +32,7 @@ namespace SisoDb.Dac
         void ExecuteNonQuery(string sql, params IDacParameter[] parameters);
         void ExecuteNonQuery(string[] sqls, params IDacParameter[] parameters);
         T ExecuteScalar<T>(string sql, params IDacParameter[] parameters);
-        void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
+        void Read(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters);
         
         long CheckOutAndGetNextIdentity(string entityName, int numOfIds);
         void RenameStructureSet(string oldStructureName, string newStructureName);

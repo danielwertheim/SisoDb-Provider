@@ -29,8 +29,8 @@ namespace SisoDb.UnitTests.Providers.Caching
 			DbProviderFactoryFake = new Mock<IDbProviderFactory>();
 		    DbProviderFactoryFake.Setup(f => f.GetSettings()).Returns(DbSettings.CreateDefault);
 			DbProviderFactoryFake.Setup(f => f.GetDbSchemaManagerFor(It.IsAny<ISisoDatabase>())).Returns(DbSchemaManagerFake.Object);
-			DbProviderFactoryFake.Setup(f => f.GetServerClient(ConnectionInfoFake.Object)).Returns(ServerClientFake.Object);
-			DbProviderFactoryFake.Setup(f => f.GetTransactionalDbClient(ConnectionInfoFake.Object)).Returns(DbClientFake.Object);
+            DbProviderFactoryFake.Setup(f => f.GetServerClient(It.IsAny<ISisoDatabase>())).Returns(ServerClientFake.Object);
+            DbProviderFactoryFake.Setup(f => f.GetTransactionalDbClient(It.IsAny<ISisoDatabase>())).Returns(DbClientFake.Object);
 			FooCacheFake = new Mock<ICache>();
 			FooCacheFake.Setup(f => f.StructureType).Returns(typeof (Foo));
 			BarCacheFake = new Mock<ICache>();

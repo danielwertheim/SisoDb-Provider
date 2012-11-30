@@ -16,9 +16,9 @@ namespace SisoDb
 	    IAdoDriver GetAdoDriver();
         IDbSettings GetSettings();
         ISqlStatements GetSqlStatements();
-        IServerClient GetServerClient(ISisoConnectionInfo connectionInfo);
-        IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo);
-        IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo);
+        IServerClient GetServerClient(ISisoDatabase db);
+        IDbClient GetTransactionalDbClient(ISisoDatabase db);
+        IDbClient GetNonTransactionalDbClient(ISisoDatabase db);
         IDbSchemas GetDbSchemaManagerFor(ISisoDatabase db);
 	    IDbSchemaUpserter GetDbSchemaUpserter();
         IStructureInserter GetStructureInserter(IDbClient dbClient);

@@ -62,6 +62,8 @@ namespace SisoDb
             get { return _dbSchemas; }
         }
 
+        public IDbPipe Pipe { get; set; }
+
         public bool CachingIsEnabled
         {
             get { return CacheProvider != null; }
@@ -110,7 +112,7 @@ namespace SisoDb
             _connectionInfo = connectionInfo;
             _providerFactory = dbProviderFactory;
             Settings = ProviderFactory.GetSettings();
-            ServerClient = ProviderFactory.GetServerClient(ConnectionInfo);
+            ServerClient = ProviderFactory.GetServerClient(this);
             StructureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
             Serializer = new DefaultSisoSerializer();
             StructureBuilders = new StructureBuilders(
@@ -215,7 +217,7 @@ namespace SisoDb
 
         protected virtual void OnDropStructureSets(Type[] types)
         {
-            using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+            using (var dbClient = ProviderFactory.GetTransactionalDbClient(this))
             {
                 foreach (var type in types)
                 {
@@ -267,7 +269,7 @@ namespace SisoDb
             if(!Settings.AllowsAnyDynamicSchemaChanges())
                 return;
 
-            using (var dbClient = ProviderFactory.GetTransactionalDbClient(_connectionInfo))
+            using (var dbClient = ProviderFactory.GetTransactionalDbClient(this))
             {
                 foreach (var type in types)
                 {

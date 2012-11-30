@@ -55,37 +55,41 @@ namespace SisoDb.SqlServer
 			return SqlStatements;
 		}
 
-		public virtual IServerClient GetServerClient(ISisoConnectionInfo connectionInfo)
+        public virtual IServerClient GetServerClient(ISisoDatabase db)
         {
-            return new SqlServerClient(GetAdoDriver(), connectionInfo, ConnectionManager, SqlStatements);
+            return new SqlServerClient(GetAdoDriver(), db.ConnectionInfo, ConnectionManager, SqlStatements);
         }
 
-        public virtual IDbClient GetTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual IDbClient GetTransactionalDbClient(ISisoDatabase db)
         {
-            var connection = ConnectionManager.OpenClientConnection(connectionInfo);
-            var transaction = Transactions.ActiveTransactionExists ? null : connection.BeginTransaction(IsolationLevel.ReadCommitted);
+            var connection = ConnectionManager.OpenClientConnection(db.ConnectionInfo);
+            var transaction = Transactions.ActiveTransactionExists 
+                ? null 
+                : connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             return new SqlServerDbClient(
                 GetAdoDriver(),
                 connection,
                 transaction,
                 ConnectionManager,
-                SqlStatements);
+                SqlStatements,
+                db.Pipe);
         }
 
-        public virtual IDbClient GetNonTransactionalDbClient(ISisoConnectionInfo connectionInfo)
+        public virtual IDbClient GetNonTransactionalDbClient(ISisoDatabase db)
 	    {
             IDbConnection connection = null;
             if (Transactions.ActiveTransactionExists)
-                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientConnection(connectionInfo));
+                Transactions.SuppressOngoingTransactionWhile(() => connection = ConnectionManager.OpenClientConnection(db.ConnectionInfo));
             else
-                connection = ConnectionManager.OpenClientConnection(connectionInfo);
+                connection = ConnectionManager.OpenClientConnection(db.ConnectionInfo);
 
             return new SqlServerDbClient(
                 GetAdoDriver(),
                 connection,
                 ConnectionManager,
-                SqlStatements);
+                SqlStatements,
+                db.Pipe);
 	    }
 
         public virtual IDbSchemas GetDbSchemaManagerFor(ISisoDatabase db)
