@@ -53,6 +53,10 @@
       <HintPath>..\..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\libs\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
@@ -138,6 +142,8 @@
     <Compile Include="Serialization\JsonNetSisoSerializerTests.cs" />
     <Compile Include="Serialization\ServiceStackSisoSerializerTests.cs" />
     <Compile Include="Serialization\SisoSerializerTests.cs" />
+    <Compile Include="Spatial\CoordinatesTestFactory.cs" />
+    <Compile Include="Spatial\GeographyFactoryTests.cs" />
     <Compile Include="SqlApprovals.cs" />
     <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
@@ -266,6 +272,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Diagnostics\DbDiagnosticsBuilderTests.Build.approved.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

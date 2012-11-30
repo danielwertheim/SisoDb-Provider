@@ -183,7 +183,7 @@ namespace SisoDb.Spatial
         protected virtual void OnMakeGeoValid2008(IStructureSchema schema, IDacParameter sidParam)
         {
             var sql = SqlStatements.GetSql("GetGeo").Inject(schema.GetSpatialTableName());
-            var geo = GetGeograpy(sql, sidParam);
+            var geo = ReadGeograpy(sql, sidParam);
             if(geo.STIsValid())
                 return;
 
@@ -208,7 +208,7 @@ namespace SisoDb.Spatial
                 var sidParam = CreateStructureIdParam<T>(id);
                 var sql = SqlStatements.GetSql("GetGeo").Inject(schema.GetSpatialTableName());
                 
-                return ExtractPoints(GetGeograpy(sql, sidParam)).Select(p => new Coordinates
+                return ExtractPoints(ReadGeograpy(sql, sidParam)).Select(p => new Coordinates
                 {
                     Latitude = p.Lat.Value,
                     Longitude = p.Long.Value
@@ -216,7 +216,7 @@ namespace SisoDb.Spatial
             });
         }
 
-        protected virtual SqlGeography GetGeograpy(string sql, params IDacParameter[] parameters)
+        protected virtual SqlGeography ReadGeograpy(string sql, params IDacParameter[] parameters)
         {
             //I know, ugly. Thank Microsoft for that: http://msdn.microsoft.com/en-us/library/ms143179.aspx
             SqlGeography geo = null;
@@ -315,29 +315,7 @@ namespace SisoDb.Spatial
 
         protected virtual GeographyDacParameter CreatePolygonParam(Coordinates[] coords, int srid)
         {
-            var s = BuildPolygonString(coords);
-            var polygon = new SqlChars(s.ToCharArray());
-
-            return new GeographyDacParameter(GeoParamName, SqlGeography.STPolyFromText(polygon, srid));
-        }
-
-        protected virtual string BuildPolygonString(Coordinates[] coords)
-        {
-            var s = new StringBuilder();
-            s.Append("POLYGON((");
-            for (var i = 0; i < coords.Length; i++)
-            {
-                var coord = coords[i];
-                s.Append(coord.Longitude.ToString(CultureInfo.InvariantCulture));
-                s.Append(" ");
-                s.Append(coord.Latitude.ToString(CultureInfo.InvariantCulture));
-
-                if (i < coords.Length - 1)
-                    s.Append(",");
-            }
-            s.Append("))");
-
-            return s.ToString();
+            return new GeographyDacParameter(GeoParamName, GeographyFactory.CreatePolygon(coords, srid));
         }
     }
 }
