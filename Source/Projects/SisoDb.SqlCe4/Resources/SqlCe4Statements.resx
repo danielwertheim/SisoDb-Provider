@@ -490,7 +490,7 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
 [%End%]</value>
   </data>
   <data name="RowCount" xml:space="preserve">
-    <value>select count(1) from [{0}];</value>
+    <value>select count([RowId]) from [{0}];</value>
   </data>
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
     <value>insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
