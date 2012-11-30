@@ -14,7 +14,7 @@ namespace SisoDb.SqlServer
     {
         protected virtual int MaxBatchedIdsSize
         {
-            get { return 100; }
+            get { return 200; }
         }
 
         public SqlServerDbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
