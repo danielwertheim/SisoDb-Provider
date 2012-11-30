@@ -78,14 +78,8 @@ namespace SisoDb.Sql2005
                     var paramsString = string.Join(",", batchedIds.Select(p => p.Name));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
 
-                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                    {
-                        while (reader.Read())
-                        {
-                            yield return reader.GetString(0);
-                        }
-                        reader.Close();
-                    }
+                    foreach (var data in YieldJson(structureSchema, cmd))
+                        yield return data;
                 }
             }
         }

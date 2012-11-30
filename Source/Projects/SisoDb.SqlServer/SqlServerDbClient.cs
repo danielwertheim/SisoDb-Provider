@@ -79,14 +79,8 @@ namespace SisoDb.SqlServer
 					cmd.Parameters.Clear();
                     cmd.Parameters.Add(SqlServerIdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
 
-					using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-					{
-						while (reader.Read())
-						{
-							yield return reader.GetString(0);
-						}
-						reader.Close();
-					}
+				    foreach (var data in YieldJson(structureSchema, cmd))
+				        yield return data;
 				}
             }
         }

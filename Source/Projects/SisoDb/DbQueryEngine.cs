@@ -187,7 +187,7 @@ namespace SisoDb
                 sqlQuery, 
                 q =>
                 {
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    var sourceData = DbClient.YieldJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
                     return Db.Serializer.DeserializeMany(sourceData, structureType);
                 }, 
                 ExecutionContext.Session.CacheConsumeMode);
@@ -223,7 +223,7 @@ namespace SisoDb
                 sqlQuery,
                 q =>
                 {
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    var sourceData = DbClient.YieldJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
                     return Db.Serializer.DeserializeMany(sourceData, resultType);
                 },
                 ExecutionContext.Session.CacheConsumeMode);
@@ -247,7 +247,7 @@ namespace SisoDb
                 sqlQuery,
                 q =>
                 {
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    var sourceData = DbClient.YieldJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
                     return Db.Serializer.DeserializeMany<TResult>(sourceData);
                 },
                 ExecutionContext.Session.CacheConsumeMode);
@@ -274,7 +274,7 @@ namespace SisoDb
 
             var sqlQuery = QueryGenerator.GenerateQuery(query);
 
-            return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+            return DbClient.YieldJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
         }
     }
 }

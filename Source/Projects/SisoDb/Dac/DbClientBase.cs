@@ -615,7 +615,9 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
+            return HasPipe 
+                ? Pipe.Reading(structureSchema, ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value)))
+                : ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
 
         public virtual string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema)
@@ -624,7 +626,9 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetJsonByIdWithLock").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
+            return HasPipe 
+                ? Pipe.Reading(structureSchema, ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value)))
+                : ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
 
         public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
@@ -633,26 +637,43 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
 
-            return YieldJson(sql);
+            return YieldJson(structureSchema, sql);
         }
 
         public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public virtual IEnumerable<string> YieldJson(string sql, params IDacParameter[] parameters)
+        public virtual IEnumerable<string> YieldJson(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
             {
-                foreach (var json in YieldJson(cmd))
-                    yield return json;
+                return YieldJson(structureSchema, cmd);
             }
         }
 
-        public virtual IEnumerable<string> YieldJsonBySp(string sql, params IDacParameter[] parameters)
+        public virtual IEnumerable<string> YieldJsonBySp(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateSpCommand(sql, parameters))
             {
-                foreach (var json in YieldJson(cmd))
-                    yield return json;
+                return YieldJson(structureSchema, cmd);
+            }
+        }
+
+        protected virtual IEnumerable<string> YieldJson(IStructureSchema structureSchema, IDbCommand cmd)
+        {
+            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+            {
+                var i = reader.FieldCount - 1;
+                if (HasPipe)
+                {
+                    while (reader.Read())
+                        yield return Pipe.Reading(structureSchema, reader.GetString(i));
+                }
+                else
+                {
+                    while (reader.Read())
+                        yield return reader.GetString(i);
+                }
+                reader.Close();
             }
         }
 
@@ -820,19 +841,6 @@ namespace SisoDb.Dac
             ExecuteNonQuery(sql,
                 new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data),
                 new DacParameter(StructureStorageSchema.Fields.Id.Name, structure.Id.Value));
-        }
-
-        private IEnumerable<string> YieldJson(IDbCommand cmd)
-        {
-            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-            {
-                var i = reader.FieldCount - 1;
-                while (reader.Read())
-                {
-                    yield return reader.GetString(i);
-                }
-                reader.Close();
-            }
         }
 
         protected virtual void EnsureValidNames(ModelTableNames names)
