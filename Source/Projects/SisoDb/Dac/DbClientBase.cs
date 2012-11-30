@@ -17,6 +17,7 @@ namespace SisoDb.Dac
     {
         protected readonly IConnectionManager ConnectionManager;
         protected readonly ISqlStatements SqlStatements;
+        protected readonly IDbPipe Pipe;
         protected readonly List<Action<IDbClient>> OnCompletedHandlers = new List<Action<IDbClient>>();
         protected readonly List<Action<IDbClient>> AfterCommitHandlers = new List<Action<IDbClient>>();
         protected readonly List<Action<IDbClient>> AfterRollbackHandlers = new List<Action<IDbClient>>();
@@ -28,6 +29,8 @@ namespace SisoDb.Dac
         public IAdoDriver Driver { get; private set; }
         public IDbConnection Connection { get; private set; }
         public IDbTransaction Transaction { get; private set; }
+        protected bool HasPipe { get { return Pipe != null; } }
+
         public Action<IDbClient> OnCompleted
         {
             set
@@ -73,6 +76,7 @@ namespace SisoDb.Dac
             SqlStatements = sqlStatements;
             IsTransactional = isTransactional || transaction != null;
             Transaction = transaction;
+            Pipe = pipe;
         }
 
         protected abstract IDbBulkCopy GetBulkCopy();
@@ -657,6 +661,12 @@ namespace SisoDb.Dac
             if (!structures.Any())
                 return;
 
+            if (HasPipe)
+            {
+                foreach (var structure in structures)
+                    structure.Data = Pipe.Writing(structureSchema, structure.Data);
+            }
+
             using (var structuresReader = new StructuresReader(new StructureStorageSchema(structureSchema, structureSchema.GetStructureTableName()), structures))
             {
                 using (var bulkInserter = GetBulkCopy())
@@ -676,7 +686,7 @@ namespace SisoDb.Dac
         public virtual void BulkInsertIndexes(IndexesReader reader)
         {
             var isValueTypeIndexesReader = reader is ValueTypeIndexesReader;
-            var fieldsToSkip = GetStorageSchemaFieldsToSkip(isValueTypeIndexesReader);
+            var fieldsToSkip = GetIndexStorageSchemaFieldsToSkip(isValueTypeIndexesReader);
 
             using (reader)
             {
@@ -695,6 +705,16 @@ namespace SisoDb.Dac
                     bulkInserter.Write(reader);
                 }
             }
+        }
+
+        protected virtual ISet<SchemaField> GetIndexStorageSchemaFieldsToSkip(bool isValueTypeIndexesReader)
+        {
+            var fieldsToSkip = new HashSet<SchemaField> { IndexStorageSchema.Fields.RowId };
+
+            if (!isValueTypeIndexesReader)
+                fieldsToSkip.Add(IndexStorageSchema.Fields.StringValue);
+
+            return fieldsToSkip;
         }
 
         public virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructureIndex[] uniques)
@@ -718,18 +738,11 @@ namespace SisoDb.Dac
             }
         }
 
-        protected virtual ISet<SchemaField> GetStorageSchemaFieldsToSkip(bool isValueTypeIndexesReader)
-        {
-            var fieldsToSkip = new HashSet<SchemaField> { IndexStorageSchema.Fields.RowId };
-
-            if (!isValueTypeIndexesReader)
-                fieldsToSkip.Add(IndexStorageSchema.Fields.StringValue);
-
-            return fieldsToSkip;
-        }
-
         public virtual void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema)
         {
+            if (HasPipe)
+                structure.Data = Pipe.Writing(structureSchema, structure.Data);
+
             var sql = SqlStatements.GetSql("SingleInsertStructure").Inject(
                 structureSchema.GetStructureTableName(),
                 StructureStorageSchema.Fields.Id.Name,
@@ -796,6 +809,9 @@ namespace SisoDb.Dac
 
         public virtual void SingleUpdateOfStructure(IStructure structure, IStructureSchema structureSchema)
         {
+            if (HasPipe)
+                structure.Data = Pipe.Writing(structureSchema, structure.Data);
+
             var sql = SqlStatements.GetSql("SingleUpdateOfStructure").Inject(
                 structureSchema.GetStructureTableName(),
                 StructureStorageSchema.Fields.Json.Name,
