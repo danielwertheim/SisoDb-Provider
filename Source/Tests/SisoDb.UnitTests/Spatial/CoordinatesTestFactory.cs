@@ -123,5 +123,19 @@ namespace SisoDb.UnitTests.Spatial
             coordinates.Add(new Coordinates { Longitude = 14.413786888122559, Latitude = 35.91277231730788 });
             return coordinates.ToArray();
         }
+
+        public static Coordinates[] TreasureIsland_drawn_lower_right_counter_clockwise()
+        {
+            var coordinates = new List<Coordinates>();
+            coordinates.Add(new Coordinates { Longitude = -122.36464691162108, Latitude = 37.81841435493003 });
+            coordinates.Add(new Coordinates { Longitude = -122.37185668945311, Latitude = 37.81556658920296 });
+            coordinates.Add(new Coordinates { Longitude = -122.3792381286621, Latitude = 37.82682140323421 });
+            coordinates.Add(new Coordinates { Longitude = -122.37769317626952, Latitude = 37.83075340355129 });
+            coordinates.Add(new Coordinates { Longitude = -122.37340164184569, Latitude = 37.83224479713633 });
+            coordinates.Add(new Coordinates { Longitude = -122.36876678466795, Latitude = 37.831160150246035 });
+            coordinates.Add(new Coordinates { Longitude = -122.36258697509764, Latitude = 37.82180440898241 });
+            coordinates.Add(new Coordinates { Longitude = -122.36464691162108, Latitude = 37.81841435493003 });
+            return coordinates.ToArray();
+        }
     }
 }

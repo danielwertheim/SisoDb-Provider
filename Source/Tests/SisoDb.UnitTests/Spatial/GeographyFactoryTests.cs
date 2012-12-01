@@ -58,9 +58,17 @@ namespace SisoDb.UnitTests.Spatial
         }
 
         [Test]
-        public virtual void When_Start_that_is_wrong_from_the_beginning()
+        public virtual void When_Star_that_is_wrong_from_the_beginning()
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.StartThatDoesNotRenderWithoutFix(), SpatialReferenceId.Wsg84);
+
+            Approvals.Verify(g);
+        }
+
+        [Test]
+        public virtual void When_drawn_lower_right_counter_clockwise()
+        {
+            var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.TreasureIsland_drawn_lower_right_counter_clockwise(), SpatialReferenceId.Wsg84);
 
             Approvals.Verify(g);
         }
