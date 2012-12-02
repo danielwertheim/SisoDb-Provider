@@ -30,15 +30,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Signed|AnyCPU'">
-    <OutputPath>bin\Signed\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Machine.Specifications, Version=0.5.9.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -57,7 +48,7 @@
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.9.28.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.9.28\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.9.29\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,13 +65,15 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Azure\AzureTestContext.cs" />
+    <Compile Include="Azure\AzureTestDbUtils.cs" />
     <Compile Include="Sql2005\Sql2005TestContext.cs" />
     <Compile Include="Sql2005\Sql2005TestDbUtils.cs" />
     <Compile Include="SqlServerTestDbUtils.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestContext.cs" />
     <Compile Include="SqlProfiler\SqlProfilerTestDbUtils.cs" />
     <Compile Include="Sql2012\Sql2012TestDbUtils.cs" />
-    <Compile Include="Sql2012\Sql2008TestContext.cs" />
+    <Compile Include="Sql2012\Sql2012TestContext.cs" />
     <Compile Include="DbColumn.cs" />
     <Compile Include="ITestContext.cs" />
     <Compile Include="ITestDbUtils.cs" />
@@ -119,6 +112,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.Azure\SisoDb.Azure.csproj">
+      <Project>{22bd2738-6f4a-427f-a9ea-c03989aadb51}</Project>
+      <Name>SisoDb.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.JsonNet\SisoDb.JsonNet.csproj">
       <Project>{1c63dd91-fc7e-40e0-a546-f206f6923be0}</Project>
       <Name>SisoDb.JsonNet</Name>

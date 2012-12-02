@@ -44,7 +44,7 @@ namespace SisoDb
 
             _id = Guid.NewGuid();
             _db = db;
-            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo);
+            DbClient = Db.ProviderFactory.GetTransactionalDbClient(Db);
             ExecutionContext = new SessionExecutionContext(this);
             Status = SessionStatus.Active;
             InternalEvents = new SessionEvents();
@@ -75,6 +75,11 @@ namespace SisoDb
                 DbClient.Dispose();
                 DbClient = null;
             }
+
+            if(Status.IsAborted() || Status.IsFailed())
+                InternalEvents.NotifyRolledback(Db, Id);
+            else
+                InternalEvents.NotifyCommitted(Db, Id);
         }
 
         public virtual void Abort()
@@ -213,7 +218,7 @@ namespace SisoDb
                     var query = queryBuilder.Build();
 
                     var sqlQuery = QueryGenerator.GenerateQuery(query);
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters).SingleOrDefault();
+                    var sourceData = DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters).SingleOrDefault();
 
                     return Db.Serializer.Deserialize<TOut>(sourceData);
                 },
@@ -417,7 +422,7 @@ namespace SisoDb
             
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
-            InternalEvents.NotifyOnInserted(this, structureSchema, structure, item);
+            InternalEvents.NotifyInserted(this, structureSchema, structure, item);
         }
 
         public virtual ISession InsertAs<T>(object item) where T : class
@@ -451,7 +456,7 @@ namespace SisoDb
             
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
-            InternalEvents.NotifyOnInserted(this, structureSchema, structure, item);
+            InternalEvents.NotifyInserted(this, structureSchema, structure, item);
         }
 
         public virtual string InsertJson<T>(string json) where T : class
@@ -478,7 +483,7 @@ namespace SisoDb
 
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
-            InternalEvents.NotifyOnInserted(this, structureSchema, structure, item);
+            InternalEvents.NotifyInserted(this, structureSchema, structure, item);
 
             return structure.Data;
         }
@@ -511,7 +516,7 @@ namespace SisoDb
             {
                 var structures = structureBuilder.CreateStructures(itemsBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
-                InternalEvents.NotifyOnInserted(this, structureSchema, structures, itemsBatch);
+                InternalEvents.NotifyInserted(this, structureSchema, structures, itemsBatch);
             }
         }
 
@@ -540,7 +545,7 @@ namespace SisoDb
             {
                 var structures = structureBuilder.CreateStructures(itemsBatch, structureSchema);
                 structureInserter.Insert(structureSchema, structures);
-                InternalEvents.NotifyOnInserted(this, structureSchema, structures, itemsBatch);
+                InternalEvents.NotifyInserted(this, structureSchema, structures, itemsBatch);
             }
         }
 
@@ -585,7 +590,7 @@ namespace SisoDb
 
             var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             bulkInserter.Replace(structureSchema, updatedStructure);
-            InternalEvents.NotifyOnUpdated(this, structureSchema, updatedStructure, item);
+            InternalEvents.NotifyUpdated(this, structureSchema, updatedStructure, item);
         }
 
         public virtual ISession Update<T>(object id, Action<T> modifier, Func<T, bool> proceed = null) where T : class
@@ -640,7 +645,7 @@ namespace SisoDb
 
                 var bulkInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
                 bulkInserter.Replace(structureSchema, updatedStructure);
-                InternalEvents.NotifyOnUpdated(this, structureSchema, updatedStructure, item);
+                InternalEvents.NotifyUpdated(this, structureSchema, updatedStructure, item);
             });
 
             return this;
@@ -703,7 +708,7 @@ namespace SisoDb
                 var sqlQuery = QueryGenerator.GenerateQuery(query);
 
                 foreach (var structure in Db.Serializer.DeserializeMany<T>(
-                    DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters)))
+                    DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters)))
                 {
                     var structureIdBefore = structureSchema.IdAccessor.GetValue(structure);
                     modifier.Invoke(structure);
@@ -727,7 +732,7 @@ namespace SisoDb
                     var structures = structureBuilder.CreateStructures(items, structureSchema);
                     structureInserter.Insert(structureSchema, structures);
                     keepQueue.Clear();
-                    InternalEvents.NotifyOnUpdated(this, structureSchema, structures, items);
+                    InternalEvents.NotifyUpdated(this, structureSchema, structures, items);
                 }
 
                 if (keepQueue.Count > 0)
@@ -740,7 +745,7 @@ namespace SisoDb
                     var structures = structureBuilder.CreateStructures(items, structureSchema);
                     structureInserter.Insert(structureSchema, structures);
                     keepQueue.Clear();
-                    InternalEvents.NotifyOnUpdated(this, structureSchema, structures, items);
+                    InternalEvents.NotifyUpdated(this, structureSchema, structures, items);
                 }
             });
 
@@ -826,7 +831,7 @@ namespace SisoDb
             Db.CacheProvider.Remove(structureSchema, structureId);
 
             DbClient.DeleteById(structureId, structureSchema);
-            InternalEvents.NotifyOnDeleted(this, structureSchema, structureId);
+            InternalEvents.NotifyDeleted(this, structureSchema, structureId);
         }
 
         public virtual ISession DeleteByIds<T>(params object[] ids) where T : class
@@ -855,7 +860,7 @@ namespace SisoDb
             Db.CacheProvider.Remove(structureSchema, new HashSet<IStructureId>(structureIds));
 
             DbClient.DeleteByIds(structureIds, structureSchema);
-            InternalEvents.NotifyOnDeleted(this, structureSchema, structureIds);
+            InternalEvents.NotifyDeleted(this, structureSchema, structureIds);
         }
 
         public virtual ISession DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
@@ -875,7 +880,7 @@ namespace SisoDb
                 var query = queryBuilder.Build();
                 var sql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
                 DbClient.DeleteByQuery(sql, structureSchema);
-                InternalEvents.NotifyOnDeleted(this, structureSchema, query);
+                InternalEvents.NotifyDeleted(this, structureSchema, query);
             });
 
             return this;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SisoDb.Dac;
+using SisoDb.MsMemoryCache;
 using SisoDb.Querying;
 using SisoDb.SampleApp.Model;
 using SisoDb.Sql2005;
@@ -31,6 +32,8 @@ namespace SisoDb.SampleApp
             //********************************************
 
             //db.EnsureNewDatabase();
+            //db.CacheProvider = new MsMemCacheProvider();
+            //db.CacheProvider.EnableFor(typeof(Customer));
             
             //Some tweaks
             //db.Settings.AllowDynamicSchemaCreation = false;
@@ -39,9 +42,9 @@ namespace SisoDb.SampleApp
             //To get rid of warm up in tests as it first syncs schemas etc
             //db.UpsertStructureSet<Customer>();
 
-            //InsertCustomers(1, 10000, db);
+            //InsertCustomers(1, 100000, db);
 
-            //ProfilingInserts(db, 1000, 5);
+            //ProfilingInserts(db, 10000, 5);
             //ProfilingQueries(() => FirstOrDefault(db, 500, 550));
             //ProfilingQueries(() => SingleOrDefault(db, 500, 550));
             //ProfilingQueries(() => GetAllCustomers(db));
@@ -152,31 +155,34 @@ namespace SisoDb.SampleApp
 
         private static int GetCustomersViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
+            var d = new DateTime(2012,1,1);
             using (var session = database.BeginSession())
             {
-                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
+                return session.Query<Customer>().OrderBy(c => c.Lastname).Where(c => c.Score > 10 && c.IsActive && c.CustomerSince > d && c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerable().Count();
             }
         }
 
         private static void UpsertSp(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
+            var d = new DateTime(2012, 1, 1);
             using (var session = database.BeginSession())
             {
-                session.Advanced.UpsertNamedQuery<Customer>("CustomersViaSP", qb => qb.Where(c =>
-                    c.CustomerNo >= customerNoFrom
-                    && c.CustomerNo <= customerNoTo
-                    && c.DeliveryAddress.Street == "The delivery street #544"));
+                session.Advanced.UpsertNamedQuery<Customer>("CustomersViaSP", qb => qb.OrderBy(c => c.Lastname).Where(c => c.Score > 10 && c.IsActive && c.CustomerSince > d && c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544"));
             }
         }
 
         private static int GetCustomersViaSpRaw(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
+            var d = new DateTime(2012, 1, 1);
             using (var session = database.BeginSession())
             {
                 var q = new NamedQuery("CustomersViaSP");
-                q.Add(new DacParameter("p0", customerNoFrom));
-                q.Add(new DacParameter("p1", customerNoTo));
-                q.Add(new DacParameter("p2", "The delivery street #544"));
+                q.Add(new DacParameter("p0", 10));
+                q.Add(new DacParameter("p1", true));
+                q.Add(new DacParameter("p2", d));
+                q.Add(new DacParameter("p3", customerNoFrom));
+                q.Add(new DacParameter("p4", customerNoTo));
+                q.Add(new DacParameter("p5", "The delivery street #544"));
 
                 return session.Advanced.NamedQuery<Customer>(q).ToArray().Length;
             }
@@ -184,10 +190,14 @@ namespace SisoDb.SampleApp
         
         private static int GetCustomersViaSpExp(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
+            var d = new DateTime(2012, 1, 1);
             using (var session = database.BeginSession())
             {
                 return session.Advanced.NamedQuery<Customer>("CustomersViaSP", c =>
-                    c.CustomerNo >= customerNoFrom
+                    c.Score > 10 
+                    && c.IsActive
+                    && c.CustomerSince > d
+                    && c.CustomerNo >= customerNoFrom
                     && c.CustomerNo <= customerNoTo
                     && c.DeliveryAddress.Street == "The delivery street #544").ToArray().Length;
             }
@@ -195,9 +205,10 @@ namespace SisoDb.SampleApp
         
         private static int GetCustomersAsJsonViaIndexesTable(ISisoDatabase database, int customerNoFrom, int customerNoTo)
         {
+            var d = new DateTime(2012, 1, 1);
             using (var session = database.BeginSession())
             {
-                return session.Query<Customer>().Where(c => c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
+                return session.Query<Customer>().OrderBy(c => c.Lastname).Where(c => c.Score > 10 && c.IsActive && c.CustomerSince > d && c.CustomerNo >= customerNoFrom && c.CustomerNo <= customerNoTo && c.DeliveryAddress.Street == "The delivery street #544").ToEnumerableOfJson().Count();
             }
         }
 

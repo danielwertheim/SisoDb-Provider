@@ -22,7 +22,7 @@ namespace SisoDb.Maintenance
             {
                 OnClearCache();
 
-                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
+                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db))
                 {
                     dbClient.Reset();
                 }
@@ -38,7 +38,7 @@ namespace SisoDb.Maintenance
             {
                 _db.DbSchemas.RemoveFromCache(@from);
 
-                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
+                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db))
                 {
                     dbClient.RenameStructureSet(@from, to);
                 }
@@ -54,7 +54,7 @@ namespace SisoDb.Maintenance
         {
             lock (_db.LockObject)
             {
-                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db.ConnectionInfo))
+                using (var dbClient = _db.ProviderFactory.GetTransactionalDbClient(_db))
                 {
                     var structureSchema = _db.StructureSchemas.GetSchema<TContract>();
                     _db.DbSchemas.Upsert(structureSchema, dbClient);

@@ -86,60 +86,13 @@ namespace SisoDb.Dac.BulkInserts
             if (structures.Length == 1)
                 MainDbClient.SingleInsertStructure(structures[0], structureSchema);
             else
-                BulkInsertStructures(structureSchema, structures);
-        }
-
-        protected virtual void BulkInsertStructures(IStructureSchema structureSchema, IStructure[] structures)
-        {
-            if (!structures.Any())
-                return;
-
-            var structureStorageSchema = new StructureStorageSchema(structureSchema, structureSchema.GetStructureTableName());
-
-            using (var structuresReader = new StructuresReader(structureStorageSchema, structures))
-            {
-                using (var bulkInserter = MainDbClient.GetBulkCopy())
-                {
-                    bulkInserter.DestinationTableName = structuresReader.StorageSchema.Name;
-                    bulkInserter.BatchSize = structures.Length;
-
-                    var fields = structuresReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
-                    foreach (var field in fields)
-                        bulkInserter.AddColumnMapping(field.Name, field.Name);
-
-                    bulkInserter.Write(structuresReader);
-                }
-            }
+                MainDbClient.BulkInsertStructures(structureSchema, structures);
         }
 
         protected virtual void InsertIndexes(IndexInsertAction[] groupedIndexInsertActions)
         {
             foreach (var groupedIndexInsertAction in groupedIndexInsertActions.Where(i => i.Action != null))
                 groupedIndexInsertAction.Action.Invoke(groupedIndexInsertAction.Data, MainDbClient);
-        }
-
-        protected virtual void BulkInsertIndexes(IndexesReader indexesReader)
-        {
-            var isValueTypeIndexesReader = indexesReader is ValueTypeIndexesReader;
-            var fieldsToSkip = GetStorageSchemaFieldsToSkip(isValueTypeIndexesReader);
-
-            using (indexesReader)
-            {
-                if (indexesReader.RecordsAffected < 1)
-                    return;
-
-                using (var bulkInserter = MainDbClient.GetBulkCopy())
-                {
-                    bulkInserter.DestinationTableName = indexesReader.StorageSchema.Name;
-                    bulkInserter.BatchSize = indexesReader.RecordsAffected;
-
-                    var fields = indexesReader.StorageSchema.GetFieldsOrderedByIndex().Except(fieldsToSkip).ToArray();
-                    foreach (var field in fields)
-                        bulkInserter.AddColumnMapping(field.Name, field.Name);
-
-                    bulkInserter.Write(indexesReader);
-                }
-            }
         }
 
         protected virtual ISet<SchemaField> GetStorageSchemaFieldsToSkip(bool isValueTypeIndexesReader)
@@ -164,30 +117,7 @@ namespace SisoDb.Dac.BulkInserts
             if (uniques.Length == 1)
                 MainDbClient.SingleInsertOfUniqueIndex(uniques[0], structureSchema);
             else
-                BulkInsertUniques(structureSchema, uniques);
-        }
-
-        protected virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructureIndex[] uniques)
-        {
-            if (!uniques.Any())
-                return;
-
-            var uniquesStorageSchema = new UniqueStorageSchema(structureSchema, structureSchema.GetUniquesTableName());
-
-            using (var uniquesReader = new UniquesReader(uniquesStorageSchema, uniques))
-            {
-                using (var bulkInserter = MainDbClient.GetBulkCopy())
-                {
-                    bulkInserter.DestinationTableName = uniquesReader.StorageSchema.Name;
-                    bulkInserter.BatchSize = uniques.Length;
-
-                    var fields = uniquesReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
-                    foreach (var field in fields)
-                        bulkInserter.AddColumnMapping(field.Name, field.Name);
-
-                    bulkInserter.Write(uniquesReader);
-                }
-            }
+                MainDbClient.BulkInsertUniques(structureSchema, uniques);
         }
 
         protected virtual IndexInsertAction[] CreateGroupedIndexInsertActions(IStructureSchema structureSchema, IStructure[] structures)
@@ -222,49 +152,49 @@ namespace SisoDb.Dac.BulkInserts
             {
                 case DataTypeCode.IntegerNumber:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.IntegersTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.IntegersTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.IntegersTableName);
                     break;
                 case DataTypeCode.FractalNumber:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.FractalsTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.FractalsTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.FractalsTableName);
                     break;
                 case DataTypeCode.Bool:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.BooleansTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.BooleansTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.BooleansTableName);
                     break;
                 case DataTypeCode.DateTime:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.DatesTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.DatesTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.DatesTableName);
                     break;
                 case DataTypeCode.Guid:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.GuidsTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new ValueTypeIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.GuidsTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfValueTypeIndex(data[0], indexesTableNames.GuidsTableName);
                     break;
                 case DataTypeCode.String:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.StringsTableName);
                     break;
                 case DataTypeCode.Enum:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new StringIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.StringsTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.StringsTableName);
                     break;
                 case DataTypeCode.Text:
                     if (container.Data.Length > 1)
-                        container.Action = (data, dbClient) => BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data));
+                        container.Action = (data, dbClient) => dbClient.BulkInsertIndexes(new TextIndexesReader(new IndexStorageSchema(structureSchema, indexesTableNames.TextsTableName), data));
                     if (container.Data.Length == 1)
                         container.Action = (data, dbClient) => dbClient.SingleInsertOfStringTypeIndex(data[0], indexesTableNames.TextsTableName);
                     break;

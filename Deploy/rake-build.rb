@@ -14,6 +14,7 @@ require 'albacore'
 @env_solutionfolderpath = "../Source"
 
 @env_projectnameCore = 'SisoDb'
+@env_projectnameAzure = 'SisoDb.Azure'
 @env_projectnameSql2005 = 'SisoDb.Sql2005'
 @env_projectnameSql2008 = 'SisoDb.Sql2008'
 @env_projectnameSql2012 = 'SisoDb.Sql2012'
@@ -27,13 +28,14 @@ require 'albacore'
 @env_projectnameSpatial = 'SisoDb.Spatial'
 
 @env_buildfolderpath = 'build'
-@env_assversion = "16.0.0"
+@env_assversion = "16.1.0"
 @env_version = "#{@env_assversion}"
 @env_buildversion = @env_version + (ENV['env_buildnumber'].to_s.empty? ? "" : ".#{ENV['env_buildnumber'].to_s}")
 @env_buildconfigname = ENV['env_buildconfigname'].to_s.empty? ? "Release" : ENV['env_buildconfigname'].to_s
 
 buildNameSuffix = "-v#{@env_buildversion}-#{@env_buildconfigname}"
 @env_buildnameCore = "#{@env_projectnameCore}#{buildNameSuffix}"
+@env_buildnameAzure = "#{@env_projectnameAzure}#{buildNameSuffix}"
 @env_buildnameSql2005 = "#{@env_projectnameSql2005}#{buildNameSuffix}"
 @env_buildnameSql2008 = "#{@env_projectnameSql2008}#{buildNameSuffix}"
 @env_buildnameSql2012 = "#{@env_projectnameSql2012}#{buildNameSuffix}"
@@ -49,6 +51,7 @@ buildNameSuffix = "-v#{@env_buildversion}-#{@env_buildconfigname}"
 # Reusable vars
 #--------------------------------------
 coreOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameCore}"
+azureOutputPath = "#{@env_buildfolderpath}/#{@env_projectnameAzure}"
 sql2005OutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSql2005}"
 sql2008OutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSql2008}"
 sql2012OutputPath = "#{@env_buildfolderpath}/#{@env_projectnameSql2012}"
@@ -68,13 +71,13 @@ task :ci => [:installNuGets, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 
 task :local => [:installNuGets, :cleanIt, :versionIt, :buildIt, :copyIt, :testIt, :zipIt, :packIt]
 #--------------------------------------
-task :copyIt => [:copyCore, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler, :copyJsonNet, :copyServiceStack, :copySpatial]
+task :copyIt => [:copyCore, :copyAzure, :copySql2005, :copySql2008, :copySql2012, :copySqlCe4, :copyMsMemoryCache, :copyDynamic, :copyGlimpse, :copyMiniProfiler, :copyJsonNet, :copyServiceStack, :copySpatial]
 
 task :testIt => [:unittests]
 
-task :zipIt => [:zipCore, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler, :zipJsonNet, :zipServiceStack, :zipSpatial]
+task :zipIt => [:zipCore, :zipAzure, :zipSql2005, :zipSql2008, :zipSql2012, :zipSqlCe4, :zipMsMemoryCache, :zipDynamic, :zipGlimpse, :zipMiniProfiler, :zipJsonNet, :zipServiceStack, :zipSpatial]
 
-task :packIt => [:packCore, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler, :packJsonNet, :packServiceStack, :packSpatial]
+task :packIt => [:packCore, :packAzure, :packSql2005, :packSql2008, :packSql2012, :packSqlCe4, :packMsMemoryCache, :packDynamic, :packGlimpse, :packMiniProfiler, :packJsonNet, :packServiceStack, :packSpatial]
 #--------------------------------------
 # Albacore tasks
 #--------------------------------------
@@ -109,6 +112,10 @@ end
 
 task :copyCore do
     copyProject(@env_projectnameCore, coreOutputPath)
+end
+
+task :copyAzure do
+    copyProject(@env_projectnameAzure, azureOutputPath)
 end
 
 task :copySql2005 do
@@ -171,6 +178,10 @@ zip :zipCore do |zip|
     zipProject(zip, coreOutputPath, @env_buildnameCore)
 end
 
+zip :zipAzure do |zip|
+    zipProject(zip, azureOutputPath, @env_buildnameAzure)
+end
+
 zip :zipSql2005 do |zip|
     zipProject(zip, sql2005OutputPath, @env_buildnameSql2005)
 end
@@ -222,6 +233,10 @@ end
 
 exec :packCore do |cmd|
     packProject(cmd, @env_projectnameCore, coreOutputPath)
+end
+
+exec :packAzure do |cmd|
+    packProject(cmd, @env_projectnameAzure, azureOutputPath)
 end
 
 exec :packSql2005 do |cmd|

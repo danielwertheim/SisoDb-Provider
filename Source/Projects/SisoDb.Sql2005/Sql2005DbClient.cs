@@ -19,11 +19,11 @@ namespace SisoDb.Sql2005
             get { return 32; }
         }
 
-        public Sql2005DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, connectionManager, sqlStatements) { }
+        public Sql2005DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, connectionManager, sqlStatements, pipe) { }
 
-        public Sql2005DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, transaction, connectionManager, sqlStatements) { }
+        public Sql2005DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, transaction, connectionManager, sqlStatements, pipe) { }
 
         public override void DeleteAllExceptIds(IEnumerable<IStructureId> structureIds, IStructureSchema structureSchema)
         {
@@ -78,14 +78,8 @@ namespace SisoDb.Sql2005
                     var paramsString = string.Join(",", batchedIds.Select(p => p.Name));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
 
-                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                    {
-                        while (reader.Read())
-                        {
-                            yield return reader.GetString(0);
-                        }
-                        reader.Close();
-                    }
+                    foreach (var data in YieldJson(structureSchema, cmd))
+                        yield return data;
                 }
             }
         }

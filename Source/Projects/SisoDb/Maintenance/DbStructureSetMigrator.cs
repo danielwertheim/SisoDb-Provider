@@ -76,7 +76,7 @@ namespace SisoDb.Maintenance
 
         protected virtual void OnMigrate(Func<IDbClient, bool> migrate, Action cleanup)
         {
-            using (var dbClient = Db.ProviderFactory.GetTransactionalDbClient(Db.ConnectionInfo))
+            using (var dbClient = Db.ProviderFactory.GetTransactionalDbClient(Db))
             {
                 try
                 {
@@ -103,7 +103,7 @@ namespace SisoDb.Maintenance
 
             Db.DbSchemas.Upsert(structureSchemaTo, dbClientTransactional);
 
-            using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db.ConnectionInfo))
+            using (var dbClientNonTransactional = Db.ProviderFactory.GetNonTransactionalDbClient(Db))
             {
                 foreach (var json in dbClientNonTransactional.GetJsonOrderedByStructureId(structureSchemaFrom))
                 {

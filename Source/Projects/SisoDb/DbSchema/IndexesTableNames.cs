@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SisoDb.EnsureThat;
 using SisoDb.Structures;
 using SisoDb.Structures.Schemas;
@@ -12,6 +13,8 @@ namespace SisoDb.DbSchema
         {
             get { return All[i]; }
         }
+
+        protected ISet<string> TableNamesThatHasSid;
 
         public string[] All { get; private set; }
         public string IntegersTableName { get; private set; }
@@ -56,9 +59,16 @@ namespace SisoDb.DbSchema
 	            StringsTableName,
 	            TextsTableName
 	        };
+
+            TableNamesThatHasSid = new HashSet<string>(new[] { StringsTableName, TextsTableName });
         }
 
-        public string GetNameByType(DataTypeCode dataTypeCode)
+        public virtual bool HasSidIndex(string indexTablename)
+        {
+            return TableNamesThatHasSid.Contains(indexTablename);
+        }
+
+        public virtual string GetNameByType(DataTypeCode dataTypeCode)
         {
             switch (dataTypeCode)
             {

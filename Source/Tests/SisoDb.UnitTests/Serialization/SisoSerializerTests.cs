@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using NUnit.Framework;
 using SisoDb.Serialization;
 
@@ -10,59 +9,26 @@ namespace SisoDb.UnitTests.Serialization
         protected ISisoSerializer Serializer;
 
         [Test]
-        public void Serialize_WhenNullEntity_ReturnsEmptyString()
+        public abstract void Serialize_WhenReferencingOtherStructure_ReferencedStructureIsRepresentedInJson();
+
+        [Test]
+        public abstract void Serialize_WhenPrivateSetterExists_IsSerialized();
+
+        [Test]
+        public abstract void Deserialize_WhenPrivateSettersExists_IsDeserialized();
+
+        [Test]
+        public abstract void Serialize_WhenItemIsYButSerializedAsX_AllYMembersAreSerialized();
+
+        [Test]
+        public abstract void Serialize_WhenOnlyPrivateGetterAndStructureIdExists_ReturnsCorrectJson();
+
+        [Test]
+        public virtual void Serialize_WhenNullEntity_ReturnsEmptyString()
         {
             var json = Serializer.Serialize<JsonEntity>(null);
 
             Assert.AreEqual(string.Empty, json);
-        }
-
-        [Test]
-        public void Serialize_WhenOnlyPrivateGetterAndStructureIdExists_ReturnsJsonWithStructureId()
-        {
-            var entity = new JsonEntityWithPrivateGetter { Name = "Daniel" };
-
-            var json = Serializer.Serialize(entity);
-
-            Assert.AreEqual("{\"StructureId\":0}", json);
-        }
-
-        [Test]
-        public void Serialize_WhenPrivateSetterExists_IsSerialized()
-        {
-            var entity = new JsonEntity();
-            entity.SetName("Daniel");
-            entity.SetAge(32);
-
-            var json = Serializer.Serialize(entity);
-
-            Assert.AreEqual("{\"StructureId\":0,\"Name\":\"Daniel\",\"Age\":32}", json);
-        }
-
-        [Test]
-        public void Serialize_WhenItemIsYButSerializedAsX_AllYMembersAreSerialized()
-        {
-            var y = new JsonEntityY { Int1 = 42, String1 = "The String1", Data = new MemoryStream(BitConverter.GetBytes(333)).ToArray() };
-
-            var json = Serializer.Serialize<JsonEntityX>(y);
-
-			Assert.AreEqual("{\"Data\":\"TQEAAA==\",\"StructureId\":0,\"String1\":\"The String1\",\"Int1\":42}", json);
-        }
-
-        [Test]
-        public void Serialize_WhenReferencingOtherStructure_ReferencedStructureIsRepresentedInJson()
-        {
-            var structure = new Structure
-            {
-                ReferencedStructureId = 999,
-                ReferencedStructure = {OtherStructureString = "To be included"},
-                Item = {String1 = "To be included"}
-            };
-
-            var json = Serializer.Serialize(structure);
-
-            const string expectedJson = "{\"StructureId\":0,\"ReferencedStructureId\":999,\"ReferencedStructure\":{\"StructureId\":999,\"OtherStructureString\":\"To be included\"},\"Item\":{\"String1\":\"To be included\",\"Int1\":0}}";
-            Assert.AreEqual(expectedJson, json);
         }
 
         protected class JsonEntity
@@ -71,12 +37,12 @@ namespace SisoDb.UnitTests.Serialization
             public string Name { get; private set; }
             public int Age { get; private set; }
 
-            public void SetName(string name)
+            public virtual void SetName(string name)
             {
                 Name = name;
             }
 
-            public void SetAge(int age)
+            public virtual void SetAge(int age)
             {
                 Age = age;
             }

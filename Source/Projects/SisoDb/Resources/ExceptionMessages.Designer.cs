@@ -205,6 +205,15 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Db-operations is not supported by Azure..
+        /// </summary>
+        public static string DbOp_NotSupportedByAzure {
+            get {
+                return ResourceManager.GetString("DbOp_NotSupportedByAzure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Params that currently are allowed in cached queries, are: Simple params and Arrays. Geography params is not supported..
         /// </summary>
         public static string DbQueryChecksumGenerator_UnsupportedDacParam {
@@ -214,7 +223,16 @@ namespace SisoDb.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The query should only return StructureIds which alows onle WHERE expressions. Take, Paging and Sorting etc is not allowed..
+        ///   Looks up a localized string similar to The query needs a Where-clause..
+        /// </summary>
+        public static string DbQueryGenerator_MissingWhere {
+            get {
+                return ResourceManager.GetString("DbQueryGenerator_MissingWhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The query only alows WHERE expressions. Take, Paging and Sorting etc is not allowed..
         /// </summary>
         public static string DbQueryGenerator_OnlyWhereExpressionsAreAllowed {
             get {
@@ -409,6 +427,15 @@ namespace SisoDb.Resources {
         public static string OrderByParser_UnsupportedMethodForSortingDirection {
             get {
                 return ResourceManager.GetString("OrderByParser_UnsupportedMethodForSortingDirection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You need to provide an OrderBy construct when using Paging..
+        /// </summary>
+        public static string PagingMissesOrderBy {
+            get {
+                return ResourceManager.GetString("PagingMissesOrderBy", resourceCulture);
             }
         }
         

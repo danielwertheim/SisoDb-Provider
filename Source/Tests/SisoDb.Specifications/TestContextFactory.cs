@@ -1,5 +1,6 @@
 using System;
 using SisoDb.Testing;
+using SisoDb.Testing.Azure;
 using SisoDb.Testing.Sql2005;
 using SisoDb.Testing.Sql2008;
 using SisoDb.Testing.Sql2012;
@@ -12,6 +13,9 @@ namespace SisoDb.Specifications
     {
         public static ITestContext Create()
         {
+#if SqlAzureProvider
+            return new AzureTestContext(TestConstants.ConnectionStringNameForAzure);
+#endif
 #if Sql2005Provider
             return new Sql2005TestContext(TestConstants.ConnectionStringNameForSql2005);
 #endif
@@ -27,11 +31,14 @@ namespace SisoDb.Specifications
 #if SqlProfilerProvider
             return new SqlProfilerTestContext(TestConstants.ConnectionStringNameForSqlProfiler);
 #endif
-			throw new NotSupportedException("No provider has been specified for the test context.");
+            throw new NotSupportedException("No provider has been specified for the test context.");
         }
 
         public static ITestContext CreateTemp()
         {
+#if SqlAzureProvider
+            throw new NotImplementedException();
+#endif
 #if Sql2005Provider
             return new Sql2005TestContext(TestConstants.ConnectionStringNameForSql2005Temp);
 #endif

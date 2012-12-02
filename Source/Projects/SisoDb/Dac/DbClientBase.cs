@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using SisoDb.Dac.BulkInserts;
 using SisoDb.DbSchema;
 using SisoDb.EnsureThat;
 using SisoDb.NCore;
@@ -16,6 +17,7 @@ namespace SisoDb.Dac
     {
         protected readonly IConnectionManager ConnectionManager;
         protected readonly ISqlStatements SqlStatements;
+        protected readonly IDbPipe Pipe;
         protected readonly List<Action<IDbClient>> OnCompletedHandlers = new List<Action<IDbClient>>();
         protected readonly List<Action<IDbClient>> AfterCommitHandlers = new List<Action<IDbClient>>();
         protected readonly List<Action<IDbClient>> AfterRollbackHandlers = new List<Action<IDbClient>>();
@@ -27,6 +29,8 @@ namespace SisoDb.Dac
         public IAdoDriver Driver { get; private set; }
         public IDbConnection Connection { get; private set; }
         public IDbTransaction Transaction { get; private set; }
+        protected bool HasPipe { get { return Pipe != null; } }
+
         public Action<IDbClient> OnCompleted
         {
             set
@@ -52,13 +56,13 @@ namespace SisoDb.Dac
             }
         }
 
-        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : this(driver, connection, connectionManager, sqlStatements, false, null) { }
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : this(driver, connection, connectionManager, sqlStatements, false, null, pipe) { }
 
-        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : this(driver, connection, connectionManager, sqlStatements, true, transaction) { }
+        protected DbClientBase(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : this(driver, connection, connectionManager, sqlStatements, true, transaction, pipe) { }
 
-        private DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, bool isTransactional, IDbTransaction transaction)
+        private DbClientBase(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, bool isTransactional, IDbTransaction transaction, IDbPipe pipe)
         {
             Ensure.That(driver, "driver").IsNotNull();
             Ensure.That(connection, "connection").IsNotNull();
@@ -72,8 +76,11 @@ namespace SisoDb.Dac
             SqlStatements = sqlStatements;
             IsTransactional = isTransactional || transaction != null;
             Transaction = transaction;
+            Pipe = pipe;
         }
-        
+
+        protected abstract IDbBulkCopy GetBulkCopy();
+
         public virtual void Dispose()
         {
             if(Connection == null) 
@@ -175,8 +182,6 @@ namespace SisoDb.Dac
             IsFailed = true;
         }
 
-        public abstract IDbBulkCopy GetBulkCopy();
-
         public virtual void ExecuteNonQuery(string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
@@ -210,7 +215,7 @@ namespace SisoDb.Dac
             }
         }
 
-        public virtual void SingleResultSequentialReader(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
+        public virtual void Read(string sql, Action<IDataRecord> callback, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
             {
@@ -367,6 +372,16 @@ namespace SisoDb.Dac
                         new DacParameter("newname", string.Format("FK_{0}_{1}", newTableName, newStructureTableName)),
                         new DacParameter("objtype", "OBJECT"));
                     cmd.ExecuteNonQuery();
+
+                    if (oldIndexesTableNames.HasSidIndex(oldTableName))
+                    {
+                        cmd.Parameters.Clear();
+                        Driver.AddCommandParametersTo(cmd,
+                            new DacParameter("objname", string.Format("{0}.IX_{1}_SID", newTableName, oldTableName)),
+                            new DacParameter("newname", string.Format("IX_{0}_SID", newTableName)),
+                            new DacParameter("objtype", "INDEX"));
+                        cmd.ExecuteNonQuery();   
+                    }
 
                     cmd.Parameters.Clear();
                     Driver.AddCommandParametersTo(cmd,
@@ -538,7 +553,7 @@ namespace SisoDb.Dac
             var sql = SqlStatements.GetSql("GetModelTableStatuses");
             var parameters = names.AllTableNames.Select((n, i) => new DacParameter(DbSchemaInfo.Parameters.TableNameParamPrefix + i, n)).ToArray();
             var matchingNames = new HashSet<string>();
-            SingleResultSequentialReader(
+            Read(
                 sql,
                 dr => matchingNames.Add(dr.GetString(0)),
                 parameters);
@@ -600,7 +615,9 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetJsonById").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
+            return HasPipe 
+                ? Pipe.Reading(structureSchema, ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value)))
+                : ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
 
         public virtual string GetJsonByIdWithLock(IStructureId structureId, IStructureSchema structureSchema)
@@ -609,7 +626,9 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetJsonByIdWithLock").Inject(structureSchema.GetStructureTableName());
 
-            return ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
+            return HasPipe 
+                ? Pipe.Reading(structureSchema, ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value)))
+                : ExecuteScalar<string>(sql, new DacParameter("id", structureId.Value));
         }
 
         public virtual IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema)
@@ -618,31 +637,135 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
 
-            return YieldJson(sql);
+            return ReadJson(structureSchema, sql);
         }
 
         public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public virtual IEnumerable<string> YieldJson(string sql, params IDacParameter[] parameters)
+        public virtual IEnumerable<string> ReadJson(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
             {
-                foreach (var json in YieldJson(cmd))
+                foreach (var json in YieldJson(structureSchema, cmd))
                     yield return json;
             }
         }
 
-        public virtual IEnumerable<string> YieldJsonBySp(string sql, params IDacParameter[] parameters)
+        public virtual IEnumerable<string> ReadJsonBySp(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateSpCommand(sql, parameters))
             {
-                foreach (var json in YieldJson(cmd))
+                foreach (var json in YieldJson(structureSchema, cmd))
                     yield return json;
+            }
+        }
+
+        protected virtual IEnumerable<string> YieldJson(IStructureSchema structureSchema, IDbCommand cmd)
+        {
+            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+            {
+                var i = reader.FieldCount - 1;
+                if (HasPipe)
+                {
+                    while (reader.Read())
+                        yield return Pipe.Reading(structureSchema, reader.GetString(i));
+                }
+                else
+                {
+                    while (reader.Read())
+                        yield return reader.GetString(i);
+                }
+                reader.Close();
+            }
+        }
+
+        public virtual void BulkInsertStructures(IStructureSchema structureSchema, IStructure[] structures)
+        {
+            if (!structures.Any())
+                return;
+
+            if (HasPipe)
+            {
+                foreach (var structure in structures)
+                    structure.Data = Pipe.Writing(structureSchema, structure.Data);
+            }
+
+            using (var structuresReader = new StructuresReader(new StructureStorageSchema(structureSchema, structureSchema.GetStructureTableName()), structures))
+            {
+                using (var bulkInserter = GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = structuresReader.StorageSchema.Name;
+                    bulkInserter.BatchSize = structures.Length;
+
+                    var fields = structuresReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
+                    foreach (var field in fields)
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+
+                    bulkInserter.Write(structuresReader);
+                }
+            }
+        }
+
+        public virtual void BulkInsertIndexes(IndexesReader reader)
+        {
+            var isValueTypeIndexesReader = reader is ValueTypeIndexesReader;
+            var fieldsToSkip = GetIndexStorageSchemaFieldsToSkip(isValueTypeIndexesReader);
+
+            using (reader)
+            {
+                if (reader.RecordsAffected < 1)
+                    return;
+
+                using (var bulkInserter = GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = reader.StorageSchema.Name;
+                    bulkInserter.BatchSize = reader.RecordsAffected;
+
+                    var fields = reader.StorageSchema.GetFieldsOrderedByIndex().Except(fieldsToSkip).ToArray();
+                    foreach (var field in fields)
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+
+                    bulkInserter.Write(reader);
+                }
+            }
+        }
+
+        protected virtual ISet<SchemaField> GetIndexStorageSchemaFieldsToSkip(bool isValueTypeIndexesReader)
+        {
+            var fieldsToSkip = new HashSet<SchemaField> { IndexStorageSchema.Fields.RowId };
+
+            if (!isValueTypeIndexesReader)
+                fieldsToSkip.Add(IndexStorageSchema.Fields.StringValue);
+
+            return fieldsToSkip;
+        }
+
+        public virtual void BulkInsertUniques(IStructureSchema structureSchema, IStructureIndex[] uniques)
+        {
+            if (!uniques.Any())
+                return;
+
+            using (var uniquesReader = new UniquesReader(new UniqueStorageSchema(structureSchema, structureSchema.GetUniquesTableName()), uniques))
+            {
+                using (var bulkInserter = GetBulkCopy())
+                {
+                    bulkInserter.DestinationTableName = uniquesReader.StorageSchema.Name;
+                    bulkInserter.BatchSize = uniques.Length;
+
+                    var fields = uniquesReader.StorageSchema.GetFieldsOrderedByIndex().Where(f => !f.Equals(StructureStorageSchema.Fields.RowId)).ToArray();
+                    foreach (var field in fields)
+                        bulkInserter.AddColumnMapping(field.Name, field.Name);
+
+                    bulkInserter.Write(uniquesReader);
+                }
             }
         }
 
         public virtual void SingleInsertStructure(IStructure structure, IStructureSchema structureSchema)
         {
+            if (HasPipe)
+                structure.Data = Pipe.Writing(structureSchema, structure.Data);
+
             var sql = SqlStatements.GetSql("SingleInsertStructure").Inject(
                 structureSchema.GetStructureTableName(),
                 StructureStorageSchema.Fields.Id.Name,
@@ -696,7 +819,7 @@ namespace SisoDb.Dac
                 UniqueStorageSchema.Fields.UqMemberPath.Name,
                 UniqueStorageSchema.Fields.UqValue.Name);
 
-            var parameters = new DacParameter[4];
+            var parameters = new IDacParameter[4];
             parameters[0] = new DacParameter(UniqueStorageSchema.Fields.StructureId.Name, uniqueStructureIndex.StructureId.Value);
             parameters[1] = (uniqueStructureIndex.IndexType == StructureIndexType.UniquePerType)
                                 ? new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, DBNull.Value)
@@ -709,6 +832,9 @@ namespace SisoDb.Dac
 
         public virtual void SingleUpdateOfStructure(IStructure structure, IStructureSchema structureSchema)
         {
+            if (HasPipe)
+                structure.Data = Pipe.Writing(structureSchema, structure.Data);
+
             var sql = SqlStatements.GetSql("SingleUpdateOfStructure").Inject(
                 structureSchema.GetStructureTableName(),
                 StructureStorageSchema.Fields.Json.Name,
@@ -717,18 +843,6 @@ namespace SisoDb.Dac
             ExecuteNonQuery(sql,
                 new DacParameter(StructureStorageSchema.Fields.Json.Name, structure.Data),
                 new DacParameter(StructureStorageSchema.Fields.Id.Name, structure.Id.Value));
-        }
-
-        private IEnumerable<string> YieldJson(IDbCommand cmd)
-        {
-            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-            {
-                while (reader.Read())
-                {
-                    yield return reader.GetString(0);
-                }
-                reader.Close();
-            }
         }
 
         protected virtual void EnsureValidNames(ModelTableNames names)

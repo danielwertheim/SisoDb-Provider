@@ -110,17 +110,30 @@ namespace SisoDb
         IEnumerable<object> Query(IQuery query, Type structureType);
 
 		/// <summary>
-		/// Lets you perform a Query by passing an <see cref="IQuery"/>.
-		/// Returns structures for the defined structure <typeparamref name="T"/>
-		/// deserialized as <typeparamref name="TResult"/>. 
-		/// </summary>
-		/// <typeparam name="T">
-		/// Structure type, used as a contract defining the scheme.</typeparam>
-		/// <typeparam name="TResult">
-		/// Determines the type you want your structure deserialized to and returned as.</typeparam>
-		/// <param name="query"></param>
-		/// <returns>IEnumerable of <typeparamref name="TResult"/>.</returns>
-		IEnumerable<TResult> QueryAs<T, TResult>(IQuery query) where T : class where TResult : class;
+        /// Lets you perform a Query by passing an <see cref="IQuery"/>.
+        /// Returns structures for the defined structure <typeparamref name="T"/>
+        /// deserialized as <typeparamref name="TResult"/>. 
+        /// </summary>
+        /// <typeparam name="T">
+        /// Structure type, used as a contract defining the scheme.</typeparam>
+        /// <typeparam name="TResult">
+        /// Determines the type you want your structure deserialized to and returned as.</typeparam>
+        /// <param name="query"></param>
+        /// <returns>IEnumerable of <typeparamref name="TResult"/>.</returns>
+        IEnumerable<TResult> QueryAs<T, TResult>(IQuery query)
+            where T : class
+            where TResult : class;
+
+	    /// <summary>
+	    /// Lets you perform a Query by passing an <see cref="IQuery"/>.
+	    /// Returns structures for the defined structure <paramref name="structureType"/>
+	    /// deserialized as <paramref name="resultType"/>. 
+	    /// </summary>
+	    /// <param name="query"></param>
+	    /// <param name="structureType">Structure type, used as a contract defining the scheme.</param>
+        /// <param name="resultType">Determines the type you want your structure deserialized to and returned as.</param>
+	    /// <returns></returns>
+	    IEnumerable<object> QueryAs(IQuery query, Type structureType, Type resultType);
 
 		/// <summary>
 		/// Lets you perform a Query by passing an <see cref="IQuery"/>.

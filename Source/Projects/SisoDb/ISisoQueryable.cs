@@ -46,6 +46,7 @@ namespace SisoDb
         IList<TResult> ToListOf<TResult>(Expression<Func<T, TResult>> projection) where TResult : class;
         IList<string> ToListOfJson();
 
+        ISisoQueryable<T> Skip(int numOfStructures);
 		ISisoQueryable<T> Take(int numOfStructures);
         ISisoQueryable<T> Page(int pageIndex, int pageSize);
         ISisoQueryable<T> Where(params Expression<Func<T, bool>>[] expression);

@@ -63,6 +63,11 @@ namespace SisoDb
         IDbSchemas DbSchemas { get; }
 
         /// <summary>
+        /// A pipe that intercepts data going into and out of the db.
+        /// </summary>
+        IDbPipe Pipe { get;  set; }
+
+        /// <summary>
         /// Structure builders collection used to resolve a Structure builder to use when building structures for insert and updates.
         /// </summary>
         IStructureBuilders StructureBuilders { get; set; }

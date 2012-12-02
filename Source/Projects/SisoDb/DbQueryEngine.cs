@@ -187,7 +187,7 @@ namespace SisoDb
                 sqlQuery, 
                 q =>
                 {
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    var sourceData = DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
                     return Db.Serializer.DeserializeMany(sourceData, structureType);
                 }, 
                 ExecutionContext.Session.CacheConsumeMode);
@@ -198,6 +198,35 @@ namespace SisoDb
             where TResult : class
         {
             return Try(() => OnQueryAs<T, TResult>(query));
+        }
+
+        public virtual IEnumerable<object> QueryAs(IQuery query, Type structureType, Type resultType)
+        {
+            return Try(() => OnQueryAs(query, structureType, resultType));
+        }
+
+        protected virtual IEnumerable<object> OnQueryAs(IQuery query, Type structureType, Type resultType)
+        {
+            Ensure.That(query, "query").IsNotNull();
+            Ensure.That(structureType, "structureType").IsNotNull();
+            Ensure.That(resultType, "resultType").IsNotNull();
+
+            var structureSchema = OnUpsertStructureSchema(structureType);
+
+            if (query.IsEmpty)
+                return Db.Serializer.DeserializeMany(DbClient.GetJsonOrderedByStructureId(structureSchema), resultType);
+
+            var sqlQuery = QueryGenerator.GenerateQuery(query);
+
+            return Db.CacheProvider.Consume(
+                structureSchema,
+                sqlQuery,
+                q =>
+                {
+                    var sourceData = DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
+                    return Db.Serializer.DeserializeMany(sourceData, resultType);
+                },
+                ExecutionContext.Session.CacheConsumeMode);
         }
 
         protected virtual IEnumerable<TResult> OnQueryAs<T, TResult>(IQuery query)
@@ -218,7 +247,7 @@ namespace SisoDb
                 sqlQuery,
                 q =>
                 {
-                    var sourceData = DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+                    var sourceData = DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
                     return Db.Serializer.DeserializeMany<TResult>(sourceData);
                 },
                 ExecutionContext.Session.CacheConsumeMode);
@@ -245,7 +274,7 @@ namespace SisoDb
 
             var sqlQuery = QueryGenerator.GenerateQuery(query);
 
-            return DbClient.YieldJson(sqlQuery.Sql, sqlQuery.Parameters);
+            return DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters);
         }
     }
 }

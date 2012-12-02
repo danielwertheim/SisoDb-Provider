@@ -481,7 +481,7 @@ alter table [{0}] add constraint [FK_{0}_{1}] foreign key (StructureId) referenc
   </data>
   <data name="Query" xml:space="preserve">
     <value>[%Start%]
-select [%Take%]s.[Json][%IncludedJsonMembers%] from (select s.[StructureId][%OrderByMembers%] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%] group by s.[StructureId]) rs inner join [[%MainStructureTable%]] s on s.[StructureId] = rs.[StructureId][%OrderBy%][%Paging%]
+select [%Take%]s.[Json] from (select s.[StructureId][%OrderByMembers%] from [[%MainStructureTable%]] s[%WhereAndSortingJoins%][%WhereCriteria%] group by s.[StructureId]) rs inner join [[%MainStructureTable%]] s on s.[StructureId] = rs.[StructureId][%OrderBy%][%Paging%]
 [%End%];</value>
   </data>
   <data name="QueryReturningStructureIds" xml:space="preserve">
@@ -490,7 +490,7 @@ select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortin
 [%End%]</value>
   </data>
   <data name="RowCount" xml:space="preserve">
-    <value>select count(1) from [{0}];</value>
+    <value>select count([RowId]) from [{0}];</value>
   </data>
   <data name="SingleInsertOfStringTypeIndex" xml:space="preserve">
     <value>insert into [{0}] ([{1}], [{2}], [{3}]) values (@{1}, @{2}, @{3});</value>
@@ -599,5 +599,8 @@ order by groupId</value>
     <value>[%Start%]
 select count(1) from [[%MainStructureTable%]] s2 where s2.StructureId in((select distinct s.[StructureId] from [[%MainStructureTable%]] s [%WhereAndSortingJoins%][%WhereCriteria%]))
 [%End%]</value>
+  </data>
+  <data name="QueryWithoutDependencies" xml:space="preserve">
+    <value>[%Start%]select [%Take%]s.[Json] from [[%MainStructureTable%]] s[%End%];</value>
   </data>
 </root>

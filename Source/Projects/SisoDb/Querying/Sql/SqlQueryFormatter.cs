@@ -10,7 +10,6 @@ namespace SisoDb.Querying.Sql
         private const string EndPart = "End";
 
         private const string TakePart = "Take";
-        private const string IncludedJsonMembersPart = "IncludedJsonMembers";
         private const string OrderByMembersPart = "OrderByMembers";
         private const string MainStructureTablePart = "MainStructureTable";
         private const string WhereAndSortingJoinsPart = "WhereAndSortingJoins";
@@ -26,7 +25,6 @@ namespace SisoDb.Querying.Sql
             {
                 {StartPart, ""},
                 {TakePart, ""},
-                {IncludedJsonMembersPart, ""},
                 {OrderByMembersPart, ""},
                 {MainStructureTablePart, ""},
                 {WhereAndSortingJoinsPart, ""},

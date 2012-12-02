@@ -13,6 +13,8 @@ namespace SisoDb.SampleApp.Model
 
         public string Lastname { get; set; }
 
+        public decimal Score { get; set; }
+
         public ShoppingIndexes ShoppingIndex { get; set; }
 
         public DateTime CustomerSince { get; set; }
@@ -21,11 +23,15 @@ namespace SisoDb.SampleApp.Model
 
         public Address DeliveryAddress { get; set; }
 
+        public bool IsActive { get; set; }
+
         public Customer()
         {
             ShoppingIndex = ShoppingIndexes.Level0;
             BillingAddress = new Address();
             DeliveryAddress = new Address();
+            IsActive = true;
+            Score = 55.33m;
         }
     }
 }

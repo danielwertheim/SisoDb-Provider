@@ -1154,6 +1154,134 @@ namespace SisoDb.Specifications.Session.Querying
             private static IList<QueryItemInfo> _fetchedStructures;
         }
 
+        [Subject(typeof(ISisoQueryable<>), "Query with Skip and Sort")]
+        public class when_query_skips_5_of_ten : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>()
+                .OrderBy(i => i.SortOrder)
+                .Skip(5).ToList();
+
+            It should_have_fetched_five_structures =
+                () => _fetchedStructures.Count.ShouldEqual(5);
+
+            It should_have_fetched_the_five_last_structures =
+                () => _fetchedStructures.ShouldBeValueEqualTo(_structures.Skip(5).ToArray());
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with Skip, Take and Sort")]
+        public class when_query_skips_5_of_ten_and_takes_2 : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo().Query<QueryGuidItem>()
+                .OrderBy(i => i.SortOrder)
+                .Skip(5).Take(2).ToList();
+
+            It should_have_fetched_two_structures =
+                () => _fetchedStructures.Count.ShouldEqual(2);
+
+            It should_have_fetched_the_sixth_and_seventh_structures =
+                () => _fetchedStructures.ShouldBeValueEqualTo(new []{_structures[5], _structures[6]});
+
+            private static IList<QueryGuidItem> _structures;
+            private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with First")]
+        public class when_first_of_ten : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = () 
+                => _fetchedStructure = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().First();
+
+            It should_have_fetched_the_first_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[0]);
+
+            private static IList<QueryGuidItem> _structures;
+            private static QueryGuidItem _fetchedStructure;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with First")]
+        public class when_first_or_default_of_ten : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = ()
+                => _fetchedStructure = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().FirstOrDefault();
+
+            It should_have_fetched_the_first_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[0]);
+
+            private static IList<QueryGuidItem> _structures;
+            private static QueryGuidItem _fetchedStructure;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with First and Sort")]
+        public class when_first_and_reverse_sort_of_ten : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = ()
+                => _fetchedStructure = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().OrderByDescending(s => s.SortOrder).First();
+
+            It should_have_fetched_the_last_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[9]);
+
+            private static IList<QueryGuidItem> _structures;
+            private static QueryGuidItem _fetchedStructure;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with First and Sort")]
+        public class when_first_or_default_and_reverse_sort_of_ten : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                _structures = QueryGuidItem.CreateTenItems<QueryGuidItem>();
+                TestContext.Database.UseOnceTo().InsertMany(_structures);
+            };
+
+            Because of = ()
+                => _fetchedStructure = TestContext.Database.UseOnceTo().Query<QueryGuidItem>().OrderByDescending(s => s.SortOrder).FirstOrDefault();
+
+            It should_have_fetched_the_last_structure =
+                () => _fetchedStructure.ShouldBeValueEqualTo(_structures[9]);
+
+            private static IList<QueryGuidItem> _structures;
+            private static QueryGuidItem _fetchedStructure;
+        }
+
         [Subject(typeof(ISisoQueryable<>), "Query with Sort and Page")]
         public class when_query_skips_first_and_last_and_then_creates_pages_of_size_7_and_asks_for_the_last_page : SpecificationBase
         {

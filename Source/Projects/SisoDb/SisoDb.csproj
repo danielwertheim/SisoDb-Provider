@@ -42,17 +42,6 @@
     <DocumentationFile>bin\Release\SisoDb.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Signed|AnyCPU'">
-    <OutputPath>bin\Signed\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Signed\SisoDb.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <NoWarn>1591</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -148,6 +137,7 @@
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="Dac\Profiling\IWrappedConnection.cs" />
     <Compile Include="Dac\Profiling\IWrappedTransaction.cs" />
+    <Compile Include="IDbPipe.cs" />
     <Compile Include="Maintenance\SisoDatabaseMaintenance.cs" />
     <Compile Include="Migrate.cs" />
     <Compile Include="Migration.cs" />
@@ -182,16 +172,19 @@
     <Compile Include="NCore\Try.cs" />
     <Compile Include="Querying\Lambdas\Nodes\NotInSetMemberNode.cs" />
     <Compile Include="Querying\Lambdas\Operators\NotInSetOperator.cs" />
+    <Compile Include="Querying\QueryExtensions.cs" />
     <Compile Include="Querying\Sql\DbQueryChecksumGenerator.cs" />
     <Compile Include="Querying\Sql\DefaultDbQueryChecksumGenerator.cs" />
     <Compile Include="Querying\Sql\IDbQuery.cs" />
     <Compile Include="Querying\Sql\IDbQueryChecksumGenerator.cs" />
     <Compile Include="Serialization\DefaultSisoSerializer.cs" />
+    <Compile Include="Serialization\SisoSerializerProxy.cs" />
     <Compile Include="Serialization\EmptyStructureSerializer.cs" />
     <Compile Include="Serialization\IStructureSerializer.cs" />
     <Compile Include="SessionEvents.cs" />
     <Compile Include="SessionExecutionContext.cs" />
     <Compile Include="Structures\DataTypeCode.cs" />
+    <Compile Include="Structures\IdGenerators\CombGuidStructureIdGenerator.cs" />
     <Compile Include="Structures\IdGenerators\EmptyStructureIdGenerator.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGenerator.cs" />
     <Compile Include="Structures\IdGenerators\SequentialGuidStructureIdGenerator.cs" />

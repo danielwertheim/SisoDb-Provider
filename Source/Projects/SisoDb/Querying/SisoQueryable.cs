@@ -69,64 +69,86 @@ namespace SisoDb.Querying
 	    }
 
 	    public virtual T First()
-		{
+	    {
+            OnBeforeFirst();
 			return ToEnumerable().First();
 		}
 
 		public virtual TResult FirstAs<TResult>() where TResult : class
 		{
+            OnBeforeFirst();
 			return ToEnumerableOf<TResult>().First();
 		}
 
 		public virtual string FirstAsJson()
 		{
+            OnBeforeFirst();
 			return ToEnumerableOfJson().First();
 		}
 
 		public virtual T FirstOrDefault()
 		{
+            OnBeforeFirst();
 			return ToEnumerable().FirstOrDefault();
 		}
 
 		public virtual TResult FirstOrDefaultAs<TResult>() where TResult : class
 		{
+            OnBeforeFirst();
 			return ToEnumerableOf<TResult>().FirstOrDefault();
 		}
 
 		public virtual string FirstOrDefaultAsJson()
 		{
+            OnBeforeFirst();
 			return ToEnumerableOfJson().FirstOrDefault();
 		}
 
+        protected virtual void OnBeforeFirst()
+        {
+            QueryBuilder.First();
+        }
+
 		public virtual T Single()
 		{
+            OnBeforeSingle();
 			return ToEnumerable().Single();
 		}
 
 		public virtual TResult SingleAs<TResult>() where TResult : class
 		{
+            OnBeforeSingle();
 			return ToEnumerableOf<TResult>().Single();
 		}
 
 		public virtual string SingleAsJson()
 		{
+            OnBeforeSingle();
 			return ToEnumerableOfJson().Single();
 		}
 
 		public virtual T SingleOrDefault()
 		{
+            OnBeforeSingle();
 			return ToEnumerable().SingleOrDefault();
 		}
 
 		public virtual TResult SingleOrDefaultAs<TResult>() where TResult : class 
 		{
+            OnBeforeSingle();
 			return ToEnumerableOf<TResult>().SingleOrDefault();
 		}
 
 		public virtual string SingleOrDefaultAsJson()
 		{
+            OnBeforeSingle();
 			return ToEnumerableOfJson().SingleOrDefault();
 		}
+
+        protected virtual void OnBeforeSingle()
+        {
+            QueryBuilder.Single();
+        }
 
         public virtual T[] ToArray()
         {
@@ -213,7 +235,14 @@ namespace SisoDb.Querying
             return ToEnumerableOfJson().ToList();
         }
 
-        public virtual ISisoQueryable<T> Take(int numOfStructures)
+	    public virtual ISisoQueryable<T> Skip(int numOfStructures)
+	    {
+	        QueryBuilder.Skip(numOfStructures);
+
+	        return this;
+	    }
+
+	    public virtual ISisoQueryable<T> Take(int numOfStructures)
 		{
 			QueryBuilder.Take(numOfStructures);
 			

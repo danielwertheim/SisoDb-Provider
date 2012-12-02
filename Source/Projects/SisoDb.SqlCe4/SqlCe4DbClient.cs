@@ -19,13 +19,13 @@ namespace SisoDb.SqlCe4
             get { return 32; }
         }
 
-        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, connectionManager, sqlStatements) { }
+        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, connectionManager, sqlStatements, pipe) { }
 
-        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, transaction, connectionManager, sqlStatements) { }
+        public SqlCe4DbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, transaction, connectionManager, sqlStatements, pipe) { }
 
-        public override IDbBulkCopy GetBulkCopy()
+        protected override IDbBulkCopy GetBulkCopy()
         {
             return new SqlCe4DbBulkCopy(this);
         }
@@ -281,14 +281,8 @@ namespace SisoDb.SqlCe4
                     var paramsString = string.Join(",", batchedIds.Select(p => p.Name));
                     cmd.CommandText = sqlFormat.Inject(paramsString);
 
-                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-                    {
-                        while (reader.Read())
-                        {
-                            yield return reader.GetString(0);
-                        }
-                        reader.Close();
-                    }
+                    foreach (var data in YieldJson(structureSchema, cmd))
+                        yield return data;
                 }
             }
         }

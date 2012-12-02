@@ -2,13 +2,31 @@
 using System.Linq;
 using Moq;
 using SisoDb.Structures.Schemas;
+using SisoDb.Structures.Schemas.Builders;
 using SisoDb.Structures.Schemas.MemberAccessors;
 
 namespace SisoDb.UnitTests.TestFactories
 {
     internal static class StructureSchemaTestFactory
     {
+        private static readonly IStructureTypeFactory StructureTypeFactory = new StructureTypeFactory();
+        private static readonly IStructureSchemaBuilder StructureSchemaBuilder = new AutoStructureSchemaBuilder();
         private static readonly DataTypeConverter DataTypeConverter = new DataTypeConverter();
+
+        internal static IStructureSchema CreateRealFrom<T>() where T : class
+        {
+            return StructureSchemaBuilder.CreateSchema(StructureTypeFactory.CreateFor<T>());
+        }
+
+        internal static IStructureSchema CreateRealFrom(Type type)
+        {
+            return StructureSchemaBuilder.CreateSchema(StructureTypeFactory.CreateFor(type));
+        }
+
+        internal static IStructureSchema CreateRealFrom(IStructureType structureType)
+        {
+            return StructureSchemaBuilder.CreateSchema(structureType);
+        }
 
         internal static IStructureSchema Stub(string name = "Temp")
         {

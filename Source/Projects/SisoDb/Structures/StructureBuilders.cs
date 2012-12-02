@@ -11,24 +11,22 @@ namespace SisoDb.Structures
     {
         public Func<IStructureSchema, IStructureIdGenerator> GuidStructureIdGeneratorFn { get; set; }
         public Func<IStructureSchema, IDbClient, IIdentityStructureIdGenerator> IdentityStructureIdGeneratorFn { get; set; }
-        public Func<ISisoSerializer> SerializerFn { get; private set; }
         public Func<IStructureSerializer> StructureSerializerFn { get; set; }
         public Func<IStructureSchema, IDbClient, IStructureBuilder> ResolveBuilderForInsertsBy { get; set; }
         public Func<IStructureSchema, IStructureBuilder> ResolveBuilderForUpdatesBy { get; set; }
         
         public StructureBuilders(
-            Func<ISisoSerializer> serializerFn, 
+            Func<IStructureSerializer> structureSerializerFn, 
             Func<IStructureSchema, IStructureIdGenerator> guidStructureIdGenerator, 
             Func<IStructureSchema, IDbClient, IIdentityStructureIdGenerator> identityStructureIdGeneratorFn)
         {
-            Ensure.That(serializerFn, "serializerFn").IsNotNull();
+            Ensure.That(structureSerializerFn, "structureSerializerFn").IsNotNull();
             Ensure.That(guidStructureIdGenerator, "guidStructureIdGenerator").IsNotNull();
             Ensure.That(identityStructureIdGeneratorFn, "identityStructureIdGeneratorFn").IsNotNull();
 
             GuidStructureIdGeneratorFn = guidStructureIdGenerator;
             IdentityStructureIdGeneratorFn = identityStructureIdGeneratorFn;
-            SerializerFn = serializerFn;
-            StructureSerializerFn = () => new StructureSerializer(SerializerFn());
+            StructureSerializerFn = structureSerializerFn;
             ResolveBuilderForInsertsBy = GetDefaultBuilderForInserts;
             ResolveBuilderForUpdatesBy = GetDefaultBuilderForUpdates;
         }

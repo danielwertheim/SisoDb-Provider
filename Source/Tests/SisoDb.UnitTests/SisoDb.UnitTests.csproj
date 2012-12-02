@@ -40,15 +40,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Signed|AnyCPU'">
-    <OutputPath>bin\Signed\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ApprovalTests, Version=1.21.4657.21485, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -62,6 +53,10 @@
       <HintPath>..\..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\libs\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
@@ -75,7 +70,7 @@
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.9.28.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.9.28\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.9.29\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -147,7 +142,11 @@
     <Compile Include="Serialization\JsonNetSisoSerializerTests.cs" />
     <Compile Include="Serialization\ServiceStackSisoSerializerTests.cs" />
     <Compile Include="Serialization\SisoSerializerTests.cs" />
+    <Compile Include="Spatial\CoordinatesTestFactory.cs" />
+    <Compile Include="Spatial\GeographyFactoryTests.cs" />
+    <Compile Include="SqlApprovals.cs" />
     <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
+    <Compile Include="StringApprovals.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGeneratorTests.cs" />
     <Compile Include="Structures\IdGenerators\SequentialGuidStructureIdGeneratorTests.cs" />
@@ -202,7 +201,6 @@
     <Compile Include="Structures\StructureIndexTests.cs" />
     <Compile Include="Structures\StructureIndexTypeTests.cs" />
     <Compile Include="Structures\Schemas\StructureSchemaExtensionsTests.cs" />
-    <Compile Include="Structures\Schemas\StructureSchemaTestFactory.cs" />
     <Compile Include="Structures\StructureTests.cs" />
     <Compile Include="Structures\UniqueModesExtensions.cs" />
     <Compile Include="Stub.cs" />
@@ -212,6 +210,10 @@
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Projects\SisoDb.Azure\SisoDb.Azure.csproj">
+      <Project>{22bd2738-6f4a-427f-a9ea-c03989aadb51}</Project>
+      <Name>SisoDb.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Projects\SisoDb.Dynamic\SisoDb.Dynamic.csproj">
       <Project>{9202564D-92FD-448F-851D-3DD3D1AA3137}</Project>
       <Name>SisoDb.Dynamic</Name>
@@ -271,6 +273,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Diagnostics\DbDiagnosticsBuilderTests.Build.approved.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

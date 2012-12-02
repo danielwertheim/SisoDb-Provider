@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using SisoDb.Dac;
 using SisoDb.DbSchema;
@@ -28,53 +29,74 @@ namespace SisoDb.Sql2005
             };
         }
 
-        protected override IDacParameter[] GeneratePagingParameters(IQuery query, ISqlExpression sqlExpression)
+        protected override string GenerateOrderByMembersString(IQuery query, ISqlExpression sqlExpression)
         {
-            if (!query.HasPaging)
-                return new IDacParameter[0];
-
-            var takeFromRowNum = (query.Paging.PageIndex * query.Paging.PageSize) + 1;
-            var takeToRowNum = (takeFromRowNum + query.Paging.PageSize) - 1;
-
-            return new IDacParameter[]
-            {
-                new DacParameter("pagingFrom", takeFromRowNum),
-                new DacParameter("pagingTo", takeToRowNum)
-            };
-        }
-
-		protected override string GenerateOrderByMembersString(IQuery query, ISqlExpression sqlExpression)
-        {
-			return query.HasPaging
+            return query.HasPaging || query.HasSkipNumOfStructures
                 ? string.Empty
 				: base.GenerateOrderByMembersString(query, sqlExpression);
         }
 
 		protected override string GenerateOrderByString(IQuery query, ISqlExpression sqlExpression)
         {
-			return query.HasPaging
+			return query.HasPaging || query.HasSkipNumOfStructures
                 ? string.Empty
 				: base.GenerateOrderByString(query, sqlExpression);
         }
 
+        protected override IDacParameter[] GenerateRsSizeLimitingParametersForPaging(IQuery query, ISqlExpression sqlExpression)
+        {
+            var skipRows = (query.Paging.PageIndex * query.Paging.PageSize);
+            var takeRows = (skipRows + query.Paging.PageSize);
+
+            return new IDacParameter[] 
+            {
+                new DacParameter("skipRows", skipRows),
+                new DacParameter("takeRows", takeRows)
+            };
+        }
+
+        protected override IDacParameter[] GenerateRsSizeLimitingParametersForSkipAndTake(IQuery query, ISqlExpression sqlExpression)
+        {
+            var skipRows = 0;
+            var ps = new List<IDacParameter>(2);
+
+            if (query.SkipNumOfStructures.HasValue)
+            {
+                skipRows = query.SkipNumOfStructures.Value;
+                ps.Add(new DacParameter("skipRows", skipRows));
+            }
+
+            if (query.TakeNumOfStructures.HasValue)
+            {
+                var takeRows = skipRows + query.TakeNumOfStructures.Value;
+                ps.Add(new DacParameter("takeRows", takeRows));
+            }
+
+            return ps.ToArray();
+        }
+
 		protected override string GeneratePagingString(IQuery query, ISqlExpression sqlExpression)
         {
-			if (!query.HasPaging)
+			if (!query.HasPaging && !query.HasSkipNumOfStructures)
                 return string.Empty;
 
             var s = string.Join(", ", sqlExpression.SortingMembers.Select(
 				sorting => sorting.MemberPath != IndexStorageSchema.Fields.StructureId.Name 
 					? string.Format("min(mem{0}.[{1}]) {2}", sorting.Index, sorting.IndexStorageColumnName, sorting.Direction)
-					: string.Format("s.[{0}] {1}", IndexStorageSchema.Fields.StructureId.Name, sorting.Direction)));
+					: string.Format("s.[{0}] {1}", StructureStorageSchema.Fields.Id.Name, sorting.Direction)));
             
             return string.Format("row_number() over (order by {0}) RowNum", s);
         }
 
-		protected override string GenerateEndString(IQuery query, ISqlExpression sqlExpression)
+        protected override string GenerateEndString(IQuery query, ISqlExpression sqlExpression)
         {
-			return query.HasPaging
-                ? "where rs.RowNum between @pagingFrom and @pagingTo"
-                : string.Empty;
+            if (!query.HasPaging && !query.HasSkipNumOfStructures)
+                return string.Empty;
+
+            if (query.HasPaging || (query.HasSkipNumOfStructures && query.HasTakeNumOfStructures))
+                return "where rs.RowNum > @skipRows and rs.RowNum <= @takeRows";
+
+            return "where rs.RowNum > @skipRows";
         }
     }
 }

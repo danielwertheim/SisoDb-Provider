@@ -51,7 +51,7 @@ namespace SisoDb.DbSchema
         {
             var dbColumns = new List<string>();
 
-            dbClient.SingleResultSequentialReader(
+            dbClient.Read(
                 _sqlStatements.GetSql("IndexesSchemaSynchronizer_GetKeyNames").Inject(
                     IndexStorageSchema.Fields.MemberPath.Name,
                     indexesTableName),

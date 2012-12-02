@@ -1,0 +1,1 @@
+select distinct (s.[StructureId]), s.[Json] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where (lower(mem0.[Value]) = @p0);

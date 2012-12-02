@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using SisoDb.Dac;
 using SisoDb.EnsureThat;
@@ -121,11 +120,9 @@ namespace SisoDb
         {
             Ensure.That(query, "query").IsNotNull();
 
-            OnUpsertStructureSchema<TContract>();
+            var structureSchema = OnUpsertStructureSchema<TContract>();
 
-            var sourceData = DbClient.YieldJsonBySp(query.Name, query.Parameters);
-
-            return Db.Serializer.DeserializeMany<TOut>(sourceData);
+            return Db.Serializer.DeserializeMany<TOut>(DbClient.ReadJsonBySp(structureSchema, query.Name, query.Parameters));
         }
 
         public virtual IEnumerable<string> NamedQueryAsJson<T>(INamedQuery query) where T : class
@@ -153,9 +150,9 @@ namespace SisoDb
         {
             Ensure.That(query, "query").IsNotNull();
 
-            OnUpsertStructureSchema<T>();
+            var structureSchema = OnUpsertStructureSchema<T>();
 
-            return DbClient.YieldJsonBySp(query.Name, query.Parameters);
+            return DbClient.ReadJsonBySp(structureSchema, query.Name, query.Parameters);
         }
 
         public virtual IEnumerable<T> RawQuery<T>(IRawQuery query) where T : class
@@ -174,10 +171,9 @@ namespace SisoDb
         {
             Ensure.That(query, "query").IsNotNull();
 
-            OnUpsertStructureSchema<TContract>();
+            var structureSchema = OnUpsertStructureSchema<TContract>();
 
-            var sourceData = DbClient.YieldJson(query.QueryString, query.Parameters);
-            return Db.Serializer.DeserializeMany<TOut>(sourceData);
+            return Db.Serializer.DeserializeMany<TOut>(DbClient.ReadJson(structureSchema, query.QueryString, query.Parameters));
         }
 
         public virtual IEnumerable<string> RawQueryAsJson<T>(IRawQuery query) where T : class
@@ -186,9 +182,9 @@ namespace SisoDb
             {
                 Ensure.That(query, "query").IsNotNull();
 
-                OnUpsertStructureSchema<T>();
+                var structureSchema = OnUpsertStructureSchema<T>();
 
-                return DbClient.YieldJson(query.QueryString, query.Parameters);
+                return DbClient.ReadJson(structureSchema, query.QueryString, query.Parameters);
             });
         }
     }

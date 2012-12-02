@@ -23,24 +23,58 @@ namespace SisoDb.Querying
             InnerQueryBuilder = new QueryBuilder(typeof(T), structureSchemas, expressionParsers);
 		}
 
-		public virtual void Clear()
+        public virtual IQueryBuilder<T> Clear()
 		{
 			InnerQueryBuilder.Clear();
+            return this;
 		}
+
+        public virtual IQueryBuilder<T> ClearSortings()
+        {
+            InnerQueryBuilder.ClearSortings();
+            return this;
+        }
+
+        public virtual IQueryBuilder<T> ClearWheres()
+        {
+            InnerQueryBuilder.ClearWheres();
+            return this;
+        }
 
 		public virtual IQuery Build()
 		{
 		    return InnerQueryBuilder.Build();
 		}
 
-        public virtual IQueryBuilder<T> MakeCacheable()
+	    public virtual IQueryBuilder<T> First()
+	    {
+	        InnerQueryBuilder.First();
+	        
+            return this;
+	    }
+
+	    public virtual IQueryBuilder<T> Single()
+	    {
+	        InnerQueryBuilder.Single();
+
+	        return this;
+	    }
+
+	    public virtual IQueryBuilder<T> MakeCacheable()
         {
             InnerQueryBuilder.MakeCacheable();
 
             return this;
         }
 
-		public virtual IQueryBuilder<T> Take(int numOfStructures)
+	    public virtual IQueryBuilder<T> Skip(int numOfStructures)
+	    {
+	        InnerQueryBuilder.Skip(numOfStructures);
+
+	        return this;
+	    }
+
+	    public virtual IQueryBuilder<T> Take(int numOfStructures)
 		{
 		    InnerQueryBuilder.Take(numOfStructures);
 
@@ -115,9 +149,22 @@ namespace SisoDb.Querying
             IsCacheable = false;
         }
 
-        public virtual void Clear()
+        public virtual IQueryBuilder Clear()
         {
             Query = new Query(StructureSchema);
+            return this;
+        }
+
+        public virtual IQueryBuilder ClearSortings()
+        {
+            BufferedSortings.Clear();
+            return this;
+        }
+
+        public virtual IQueryBuilder ClearWheres()
+        {
+            BufferedWheres.Clear();
+            return this;
         }
 
         public virtual IQuery Build()
@@ -131,6 +178,18 @@ namespace SisoDb.Querying
             Query.IsCacheable = IsCacheable;
 
             return Query;
+        }
+
+        public virtual IQueryBuilder First()
+        {
+            Query.TakeNumOfStructures = 1;
+            return this;
+        }
+
+        public virtual IQueryBuilder Single()
+        {
+            Query.TakeNumOfStructures = 2;
+            return this;
         }
 
         public virtual IQueryBuilder MakeCacheable()
@@ -152,6 +211,15 @@ namespace SisoDb.Querying
         protected virtual IParsedLambda ParseSortingLambdas(OrderByExpression[] sortings)
         {
             return ExpressionParsers.OrderByParser.Parse(sortings);
+        }
+
+        public virtual IQueryBuilder Skip(int numOfStructures)
+        {
+            Ensure.That(numOfStructures, "numOfStructures").IsGt(0);
+
+            Query.SkipNumOfStructures = numOfStructures;
+
+            return this;
         }
 
         public virtual IQueryBuilder Take(int numOfStructures)

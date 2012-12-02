@@ -14,20 +14,20 @@ namespace SisoDb.SqlServer
     {
         protected virtual int MaxBatchedIdsSize
         {
-            get { return 100; }
+            get { return 200; }
         }
 
-        public SqlServerDbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, connectionManager, sqlStatements)
+        public SqlServerDbClient(IAdoDriver driver, IDbConnection connection, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, connectionManager, sqlStatements, pipe)
         {
         }
 
-        public SqlServerDbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements)
-            : base(driver, connection, transaction, connectionManager, sqlStatements)
+        public SqlServerDbClient(IAdoDriver driver, IDbConnection connection, IDbTransaction transaction, IConnectionManager connectionManager, ISqlStatements sqlStatements, IDbPipe pipe)
+            : base(driver, connection, transaction, connectionManager, sqlStatements, pipe)
         {
         }
 
-        public override IDbBulkCopy GetBulkCopy()
+        protected override IDbBulkCopy GetBulkCopy()
         {
             return new SqlServerBulkCopy(this);
         }
@@ -79,14 +79,8 @@ namespace SisoDb.SqlServer
 					cmd.Parameters.Clear();
                     cmd.Parameters.Add(SqlServerIdsTableParam.CreateIdsTableParam(structureSchema.IdAccessor.IdType, idBatch));
 
-					using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
-					{
-						while (reader.Read())
-						{
-							yield return reader.GetString(0);
-						}
-						reader.Close();
-					}
+				    foreach (var data in YieldJson(structureSchema, cmd))
+				        yield return data;
 				}
             }
         }

@@ -47,7 +47,7 @@ namespace SisoDb.DbSchema
         {
             var dbColumns = new List<string>();
 
-            dbClient.SingleResultSequentialReader(
+            dbClient.Read(
                 _sqlStatements.GetSql("UniquesSchemaSynchronizer_GetKeyNames").Inject(
                     UniqueStorageSchema.Fields.UqMemberPath.Name,
                     structureSchema.GetUniquesTableName()),

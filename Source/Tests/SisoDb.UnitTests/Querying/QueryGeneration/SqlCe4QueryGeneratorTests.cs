@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using SisoDb.Querying;
 using SisoDb.Querying.Sql;
+using SisoDb.Resources;
 using SisoDb.SqlCe4;
 
 namespace SisoDb.UnitTests.Querying.QueryGeneration
@@ -11,6 +12,62 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         protected override IDbQueryGenerator GetQueryGenerator()
         {
             return new SqlCe4QueryGenerator(new SqlCe4Statements(), new SqlExpressionBuilder(() => new SqlCe4WhereCriteriaBuilder()));
+        }
+
+        protected override IDbQuery On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
+        {
+            var queryCommand = BuildQuery<MyClass>(q => q.Take(2).Page(2, 10).OrderBy(i => i.Int1));
+            var generator = GetQueryGenerator();
+
+            return generator.GenerateQuery(queryCommand);
+        }
+
+        [Test]
+        public override void GenerateQuery_WithSkip13AndSort_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithSkip13AndSort_GeneratesCorrectQuery();
+
+            SqlApprovals.Verify(sqlQuery.Sql);
+            Assert.AreEqual(1, sqlQuery.Parameters.Length);
+            Assert.AreEqual("@skipRows", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual(13, sqlQuery.Parameters[0].Value);
+        }
+
+        [Test]
+        public override void GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery()
+        {
+            var ex = Assert.Throws<SisoDbException>(() => base.On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery());
+            Assert.AreEqual(ExceptionMessages.PagingMissesOrderBy, ex.Message);
+        }
+
+        [Test]
+        public void GenerateQuery_WithTake2AndPage2WithSize10AndSorting_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithTake2AndPage2WithSize10_GeneratesCorrectQuery();
+
+            SqlApprovals.Verify(sqlQuery.Sql);
+            Assert.AreEqual("@skipRows", sqlQuery.Parameters[0].Name);
+            Assert.AreEqual(20, sqlQuery.Parameters[0].Value);
+            Assert.AreEqual("@takeRows", sqlQuery.Parameters[1].Name);
+            Assert.AreEqual(10, sqlQuery.Parameters[1].Value);
+        }
+
+        [Test]
+        public override void GenerateQuery_WithFirst_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithFirst_GeneratesCorrectQuery();
+
+            SqlApprovals.Verify(sqlQuery.Sql);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
+        }
+
+        [Test]
+        public override void GenerateQuery_WithSingle_GeneratesCorrectQuery()
+        {
+            var sqlQuery = On_GenerateQuery_WithSingle_GeneratesCorrectQuery();
+
+            SqlApprovals.Verify(sqlQuery.Sql);
+            Assert.AreEqual(0, sqlQuery.Parameters.Length);
         }
 
         [Test]
@@ -182,9 +239,7 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithTake_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select top (11) s.[Json] from (select s.[StructureId] from [MyClassStructure] s group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId];",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
         }
 
         [Test]
@@ -215,14 +270,12 @@ namespace SisoDb.UnitTests.Querying.QueryGeneration
         {
             var sqlQuery = On_GenerateQuery_WithPagingAndWhereAndSorting_GeneratesCorrectQuery();
 
-            Assert.AreEqual(
-                "select s.[Json] from (select s.[StructureId], min(mem0.[Value]) mem0 from [MyClassStructure] s left join [MyClassIntegers] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'Int1' where (mem0.[Value] = @p0) group by s.[StructureId]) rs inner join [MyClassStructure] s on s.[StructureId] = rs.[StructureId] order by mem0 Asc offset @offsetRows rows fetch next @takeRows rows only;",
-                sqlQuery.Sql);
+            SqlApprovals.Verify(sqlQuery.Sql);
 
             Assert.AreEqual("@p0", sqlQuery.Parameters[0].Name);
             Assert.AreEqual(42, sqlQuery.Parameters[0].Value);
 
-            Assert.AreEqual("@offsetRows", sqlQuery.Parameters[1].Name);
+            Assert.AreEqual("@skipRows", sqlQuery.Parameters[1].Name);
             Assert.AreEqual(0, sqlQuery.Parameters[1].Value);
 
             Assert.AreEqual("@takeRows", sqlQuery.Parameters[2].Name);

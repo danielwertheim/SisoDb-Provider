@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>SisoDb.Azure</id>    
+		<title>SisoDb.Azure - Simple Structure Oriented Db</title>
+		<version>$version$</version>
+		<authors>danielwertheim</authors>
+		<copyright>Daniel Wertheim</copyright>
+		<releaseNotes>http://www.sisodb.com/wiki/release-notes</releaseNotes>
+		<summary>SisoDb is the document-oriented provider over SQL-Server. This package is for SQL-Server 2012.</summary>
+		<description>
+			SisoDb is a schemaless document-oriented provider for SQL-Server. Using JSON and key-value storage, it lets you persist object graphs without specifying any mappings or extending any base classes interfaces etc. It lets you perform queries against SQL-server, using lambda expressions. It syncs schemachanges on the fly and can assist you to handle more complex model updates. Basically, it is a simple data access tool.
+			This package is for SQL Azure.
+		</description>
+		<iconUrl>http://sisodb.com/logos/sisodb-logo-100x100.png</iconUrl>
+		<projectUrl>http://www.sisodb.com</projectUrl>
+		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<tags>sisodb,document-database,db,structure,key-value,json,poco,blob,sql,sqlserver,sql-server,sql2005,sql2008,sql2012,sqlazure,azure,sqlce,sqlce4,nosql</tags>
+		<dependencies>
+			<dependency id="SisoDb" version="[$version$]" />
+		</dependencies>
+	</metadata>
+	<files>
+	  <file src="**\SisoDb.Azure.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.Azure.xml" target="lib\net40\" />
+      <file src="**\SisoDb.SqlServer.dll" target="lib\net40\" />
+	  <file src="**\SisoDb.SqlServer.xml" target="lib\net40\" />
+	</files>
+</package>

@@ -16,7 +16,7 @@
 		<projectUrl>http://www.sisodb.com</projectUrl>
 		<licenseUrl>https://github.com/danielwertheim/SisoDb-Provider/blob/master/Source/License-SisoDb.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<tags>sisodb,document-database,db,document,structure,key-value,json,sql,sqlserver,sql-server,sql2008,mssql2008,sql2012,mssql2012,sqlce,sqlce4,poco,blob,nosql</tags>
+		<tags>sisodb,document-database,db,structure,key-value,json,poco,blob,sql,sqlserver,sql-server,sql2005,sql2008,sql2012,sqlazure,azure,sqlce,sqlce4,nosql</tags>
 		<dependencies>
 			<dependency id="SisoDb" version="[$version$]" />
 		</dependencies>
