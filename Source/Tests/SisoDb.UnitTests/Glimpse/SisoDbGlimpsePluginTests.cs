@@ -16,7 +16,6 @@ namespace SisoDb.UnitTests.Glimpse
         [Test]
         public void GetData()
         {
-            var structureTypeFactory = new StructureTypeFactory();
             var structureSchemas = new StructureSchemas(new StructureTypeFactory(), new AutoStructureSchemaBuilder());
             structureSchemas.GetSchema<MyDummy>();
             var dbFake = new Mock<ISisoDatabase>();
