@@ -218,7 +218,7 @@ namespace SisoDb
                     var query = queryBuilder.Build();
 
                     var sqlQuery = QueryGenerator.GenerateQuery(query);
-                    var sourceData = DbClient.YieldJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters).SingleOrDefault();
+                    var sourceData = DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters).SingleOrDefault();
 
                     return Db.Serializer.Deserialize<TOut>(sourceData);
                 },
@@ -708,7 +708,7 @@ namespace SisoDb
                 var sqlQuery = QueryGenerator.GenerateQuery(query);
 
                 foreach (var structure in Db.Serializer.DeserializeMany<T>(
-                    DbClient.YieldJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters)))
+                    DbClient.ReadJson(structureSchema, sqlQuery.Sql, sqlQuery.Parameters)))
                 {
                     var structureIdBefore = structureSchema.IdAccessor.GetValue(structure);
                     modifier.Invoke(structure);

@@ -637,24 +637,26 @@ namespace SisoDb.Dac
 
             var sql = SqlStatements.GetSql("GetAllJson").Inject(structureSchema.GetStructureTableName());
 
-            return YieldJson(structureSchema, sql);
+            return ReadJson(structureSchema, sql);
         }
 
         public abstract IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
 
-        public virtual IEnumerable<string> YieldJson(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
+        public virtual IEnumerable<string> ReadJson(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateCommand(sql, parameters))
             {
-                return YieldJson(structureSchema, cmd);
+                foreach (var json in YieldJson(structureSchema, cmd))
+                    yield return json;
             }
         }
 
-        public virtual IEnumerable<string> YieldJsonBySp(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
+        public virtual IEnumerable<string> ReadJsonBySp(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters)
         {
             using (var cmd = CreateSpCommand(sql, parameters))
             {
-                return YieldJson(structureSchema, cmd);
+                foreach (var json in YieldJson(structureSchema, cmd))
+                    yield return json;
             }
         }
 
@@ -817,7 +819,7 @@ namespace SisoDb.Dac
                 UniqueStorageSchema.Fields.UqMemberPath.Name,
                 UniqueStorageSchema.Fields.UqValue.Name);
 
-            var parameters = new DacParameter[4];
+            var parameters = new IDacParameter[4];
             parameters[0] = new DacParameter(UniqueStorageSchema.Fields.StructureId.Name, uniqueStructureIndex.StructureId.Value);
             parameters[1] = (uniqueStructureIndex.IndexType == StructureIndexType.UniquePerType)
                                 ? new DacParameter(UniqueStorageSchema.Fields.UqStructureId.Name, DBNull.Value)
