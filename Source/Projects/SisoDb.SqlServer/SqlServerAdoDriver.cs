@@ -96,6 +96,12 @@ namespace SisoDb.SqlServer
                 return dbParam;
             }
 
+            if (DbSchemaInfo.Parameters.ShouldBeIntegerNumber(dacParameter))
+            {
+                dbParam.DbType = DbType.Int64;
+                return dbParam;
+            }
+
             //Order is important. Non Unicoe first, since Unicode is fallback
             if (DbSchemaInfo.Parameters.ShouldBeNonUnicodeString(dacParameter))
             {

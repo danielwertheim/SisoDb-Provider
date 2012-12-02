@@ -57,6 +57,11 @@ namespace SisoDb.DbSchema
                 return param.Value is DateTime;
             }
 
+            public static bool ShouldBeIntegerNumber(IDacParameter param)
+            {
+                return param.Value is int || param.Value is long  || param.Value is short || param.Value is byte;
+            }
+
             public static bool ShouldBeNonUnicodeString(IDacParameter param)
             {
                 return param.Name.StartsWith(DbNameParamPrefix, Sys.StringComparision)
