@@ -14,7 +14,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.CorrectOrderAndClosed(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.CorrectOrderNotClosed(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.WrongOrderAndClosed(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.WrongOrderNotClosed(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.WrongSouthToNorthAndManyWestAndBackClosed(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.Castle(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.StartThatDoesNotRenderWithoutFix(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace SisoDb.UnitTests.Spatial
         {
             var g = GeographyFactory.CreatePolygon(CoordinatesTestFactory.TreasureIsland_drawn_lower_right_counter_clockwise(), SpatialReferenceId.Wsg84);
 
-            Approvals.Verify(g);
+            StringApprovals.Verify(g);
         }
     }
 }

@@ -146,6 +146,7 @@
     <Compile Include="Spatial\GeographyFactoryTests.cs" />
     <Compile Include="SqlApprovals.cs" />
     <Compile Include="SqlServer\SqlServerTableParamsTests.cs" />
+    <Compile Include="StringApprovals.cs" />
     <Compile Include="Structures\DataTypeCodeExtensions.cs" />
     <Compile Include="Structures\IdGenerators\GuidStructureIdGeneratorTests.cs" />
     <Compile Include="Structures\IdGenerators\SequentialGuidStructureIdGeneratorTests.cs" />
