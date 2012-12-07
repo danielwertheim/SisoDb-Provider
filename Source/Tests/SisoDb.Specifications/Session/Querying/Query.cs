@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
+using SisoDb.Annotations;
 using SisoDb.Dynamic;
 using SisoDb.NCore;
 using SisoDb.Specifications.Model;
@@ -1604,7 +1605,7 @@ namespace SisoDb.Specifications.Session.Querying
             };
         
 
-        It should_have_fetched_two_structures =
+            It should_have_fetched_two_structures =
                 () => _fetchedStructures.Count.ShouldEqual(2);
 
             It should_have_fetched_the_two_middle_structures = () =>
@@ -1615,6 +1616,60 @@ namespace SisoDb.Specifications.Session.Querying
 
             private static IList<QueryGuidItem> _structures;
             private static IList<QueryGuidItem> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with unique")]
+        public class when_simple_query_on_single_prop_name_marked_as_unique : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.UseOnceTo().InsertMany(new []{new User{Name = "user"}, new User{Name = "nils"}});
+            };
+
+            Because of = () => _fetchedStructures = TestContext.Database.UseOnceTo()
+                .Query<User>().Where(x => x.Name == "user").ToList();
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_the_correct_user = 
+                () => _fetchedStructures.Single().Name.ShouldEqual("user");
+
+            private static IList<User> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with unique")]
+        public class when_simple_query_on_single_prop_name_marked_as_unique_using_session : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.UseOnceTo().InsertMany(new[] { new User { Name = "user" }, new User { Name = "nils" } });
+            };
+
+        Because of = () =>
+        {
+            using (var session = TestContext.Database.BeginSession())
+            {
+                _fetchedStructures = session.Query<User>().Where(x => x.Name == "user").ToList();    
+            }
+        };
+
+            It should_have_fetched_one_structure =
+                () => _fetchedStructures.Count.ShouldEqual(1);
+
+            It should_have_the_correct_user =
+                () => _fetchedStructures.Single().Name.ShouldEqual("user");
+
+            private static IList<User> _fetchedStructures;
+        }
+
+        private class User
+        {
+            public Guid Id { get; set; }
+            [Unique(UniqueModes.PerType)]
+            public string Name { get; set; }
         }
     }
 }
