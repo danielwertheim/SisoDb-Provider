@@ -1648,13 +1648,13 @@ namespace SisoDb.Specifications.Session.Querying
                 TestContext.Database.UseOnceTo().InsertMany(new[] { new User { Name = "user" }, new User { Name = "nils" } });
             };
 
-        Because of = () =>
-        {
-            using (var session = TestContext.Database.BeginSession())
+            Because of = () =>
             {
-                _fetchedStructures = session.Query<User>().Where(x => x.Name == "user").ToList();    
-            }
-        };
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructures = session.Query<User>().Where(x => x.Name == "user").ToList();    
+                }
+            };
 
             It should_have_fetched_one_structure =
                 () => _fetchedStructures.Count.ShouldEqual(1);
@@ -1663,6 +1663,29 @@ namespace SisoDb.Specifications.Session.Querying
                 () => _fetchedStructures.Single().Name.ShouldEqual("user");
 
             private static IList<User> _fetchedStructures;
+        }
+
+        [Subject(typeof(ISisoQueryable<>), "Query with unique")]
+        public class when_simple_query_on_single_prop_name_marked_as_unique_using_single_or_default_on_session : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                TestContext.Database.UseOnceTo().InsertMany(new[] { new User { Name = "user" }, new User { Name = "nils" } });
+            };
+
+            Because of = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _fetchedStructure = session.Query<User>().Where(x => x.Name == "user").SingleOrDefault();
+                }
+            };
+
+            It should_have_fetched_the_correct_user =
+                () => _fetchedStructure.Name.ShouldEqual("user");
+
+            private static User _fetchedStructure;
         }
 
         private class User
