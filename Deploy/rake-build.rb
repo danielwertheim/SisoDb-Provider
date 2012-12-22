@@ -95,7 +95,7 @@ end
 assemblyinfo :versionIt do |asm|
     asm.input_file = sharedAssemblyInfoPath
     asm.output_file = sharedAssemblyInfoPath
-    asm.version = @env_assversion
+    asm.version = "#{@env_assversion}.*"
     asm.file_version = @env_buildversion
 end
 
