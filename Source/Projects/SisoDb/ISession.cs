@@ -171,6 +171,27 @@ namespace SisoDb
         T CheckoutById<T>(object id) where T : class;
 
         /// <summary>
+        /// Returns the StructureIds for <typeparamref name="T"/> as <typeparamref name="TId"/> withoout
+        /// having to deserialize the structure. Hence this is more effective then getting the structure
+        /// and then extracting the id.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TId"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        IEnumerable<TId> GetIds<T, TId>(Expression<Func<T, bool>> predicate) where T : class;
+
+        /// <summary>
+        /// Returns the StructureIds for <typeparamref name="T"/> as <see cref="object"/> withoout
+        /// having to deserialize the structure. Hence this is more effective then getting the structure
+        /// and then extracting the id.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        IEnumerable<object> GetIds<T>(Expression<Func<T, bool>> predicate) where T : class;
+
+        /// <summary>
         /// Used to find one single instance or NULL or <typeparamref name="T"/>. The benefits over <see cref="Query{T}"/>,
         /// is that <see cref="GetByQuery{T}"/> consumes any present <see cref="ICacheProvider"/>, which <see cref="Query{T}"/> does not.
         /// </summary>

@@ -25,7 +25,7 @@ namespace SisoDb
         protected readonly IDbQueryGenerator QueryGenerator;
         protected readonly ISqlExpressionBuilder SqlExpressionBuilder;
         protected readonly ISqlStatements SqlStatements;
-        
+
         public Guid Id { get { return _id; } }
         public ISessionExecutionContext ExecutionContext { get; private set; }
         public ISisoDatabase Db { get { return _db; } }
@@ -37,7 +37,7 @@ namespace SisoDb
         public IQueryEngine QueryEngine { get { return _queryEngine; } }
         public IAdvanced Advanced { get { return _advanced; } }
         public CacheConsumeModes CacheConsumeMode { get; protected set; }
-        
+
         protected DbSession(ISisoDatabase db)
         {
             Ensure.That(db, "db").IsNotNull();
@@ -76,7 +76,7 @@ namespace SisoDb
                 DbClient = null;
             }
 
-            if(Status.IsAborted() || Status.IsFailed())
+            if (Status.IsAborted() || Status.IsFailed())
                 InternalEvents.NotifyRolledback(Db, Id);
             else
                 InternalEvents.NotifyCommitted(Db, Id);
@@ -193,6 +193,30 @@ namespace SisoDb
                 structureId,
                 sid => Db.Serializer.Deserialize<T>(DbClient.GetJsonByIdWithLock(sid, structureSchema)),
                 CacheConsumeMode);
+        }
+
+        public virtual IEnumerable<TId> GetIds<T, TId>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return Try(() => OnGetIds<T, TId>(predicate));
+        }
+
+        public virtual IEnumerable<object> GetIds<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return Try(() => OnGetIds<T, object>(predicate));
+        }
+
+        protected virtual IEnumerable<TId> OnGetIds<T, TId>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+            var structureSchema = OnUpsertStructureSchema<T>();
+
+            var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
+            queryBuilder.Where(predicate);
+
+            var query = queryBuilder.Build();
+            var sql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
+
+            return DbClient.GetStructureIds<TId>(structureSchema, sql);
         }
 
         public virtual T GetByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
@@ -419,7 +443,7 @@ namespace SisoDb
 
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structure = structureBuilder.CreateStructure(item, structureSchema);
-            
+
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
             InternalEvents.NotifyInserted(this, structureSchema, structure, item);
@@ -450,10 +474,10 @@ namespace SisoDb
 
             var json = Db.Serializer.Serialize(item);
             var realItem = Db.Serializer.Deserialize(json, structureType);
-            
+
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structure = structureBuilder.CreateStructure(realItem, structureSchema);
-            
+
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
             structureInserter.Insert(structureSchema, new[] { structure });
             InternalEvents.NotifyInserted(this, structureSchema, structure, item);
@@ -508,7 +532,7 @@ namespace SisoDb
             var structureSchema = OnUpsertStructureSchema(structureType);
             CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
             Db.CacheProvider.CleanQueriesFor(structureSchema);
-            
+
             var structureBuilder = Db.StructureBuilders.ResolveBuilderForInsert(structureSchema, DbClient);
             var structureInserter = Db.ProviderFactory.GetStructureInserter(DbClient);
 
@@ -865,25 +889,27 @@ namespace SisoDb
 
         public virtual ISession DeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
         {
-            Try(() =>
-            {
-                Ensure.That(predicate, "predicate").IsNotNull();
-
-                CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
-
-                var structureSchema = OnUpsertStructureSchema<T>();
-                Db.CacheProvider.ClearByType(structureSchema);
-
-                var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
-                queryBuilder.Where(predicate);
-
-                var query = queryBuilder.Build();
-                var sql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
-                DbClient.DeleteByQuery(sql, structureSchema);
-                InternalEvents.NotifyDeleted(this, structureSchema, query);
-            });
+            Try(() => OnDeleteByQuery(predicate));
 
             return this;
+        }
+
+        protected virtual void OnDeleteByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+
+            CacheConsumeMode = CacheConsumeModes.DoNotUpdateCacheWithDbResult;
+
+            var structureSchema = OnUpsertStructureSchema<T>();
+            Db.CacheProvider.ClearByType(structureSchema);
+
+            var queryBuilder = Db.ProviderFactory.GetQueryBuilder<T>(Db.StructureSchemas);
+            queryBuilder.Where(predicate);
+
+            var query = queryBuilder.Build();
+            var sql = QueryGenerator.GenerateQueryReturningStrutureIds(query);
+            DbClient.DeleteByQuery(sql, structureSchema);
+            InternalEvents.NotifyDeleted(this, structureSchema, query);
         }
     }
 }

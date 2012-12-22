@@ -26,13 +26,33 @@ namespace SisoDb
                 () => Db.BeginSession());
         }
 
+        public virtual TId[] GetIds<T, TId>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetIds<T, TId>(predicate).ToArray();
+            }
+        }
+
+        public virtual object[] GetIds<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            Ensure.That(predicate, "predicate").IsNotNull();
+
+            using (var session = Db.BeginSession())
+            {
+                return session.GetIds(predicate).ToArray();
+            }
+        }
+
         public virtual T GetByQuery<T>(Expression<Func<T, bool>> predicate) where T : class
         {
             Ensure.That(predicate, "predicate").IsNotNull();
 
             using (var session = Db.BeginSession())
             {
-                return session.GetByQuery<T>(predicate);
+                return session.GetByQuery(predicate);
             }
         }
 

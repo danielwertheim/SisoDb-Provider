@@ -572,6 +572,34 @@ namespace SisoDb.Dac
                     matchingNames.Contains(names.IndexesTableNames.TextsTableName)));
         }
 
+        public virtual IEnumerable<TId> GetStructureIds<TId>(IStructureSchema structureSchema, IDbQuery query)
+        {
+            Ensure.That(structureSchema, "structureSchema").IsNotNull();
+            Ensure.That(query, "query").IsNotNull();
+
+            Func<IDataRecord, object> read = dr => dr.GetGuid(0);
+            if (structureSchema.IdAccessor.IdType.IsString())
+                read = dr => dr.GetString(0);
+            else switch (structureSchema.IdAccessor.IdType)
+            {
+                case StructureIdTypes.Identity:
+                    read = dr => (int)dr.GetInt64(0);
+                    break;
+                case StructureIdTypes.BigIdentity:
+                    read = dr => dr.GetInt64(0);
+                    break;
+            }
+
+            using (var cmd = CreateCommand(query.Sql, query.Parameters))
+            {
+                using (var reader = cmd.SingleResultSequentialReader())
+                {
+                    while(reader.Read())
+                        yield return (TId)read(reader);
+                }
+            }
+        }
+
         public virtual int RowCount(IStructureSchema structureSchema)
         {
             Ensure.That(structureSchema, "structureSchema").IsNotNull();
@@ -662,7 +690,7 @@ namespace SisoDb.Dac
 
         protected virtual IEnumerable<string> YieldJson(IStructureSchema structureSchema, IDbCommand cmd)
         {
-            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult | CommandBehavior.SequentialAccess))
+            using (var reader = cmd.SingleResultSequentialReader())
             {
                 var i = reader.FieldCount - 1;
                 if (HasPipe)

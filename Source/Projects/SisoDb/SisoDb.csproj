@@ -60,6 +60,7 @@
     <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="Configurations\DbConfiguration.cs" />
     <Compile Include="Configurations\ConnectionString.cs" />
+    <Compile Include="Dac\AdoExtensions.cs" />
     <Compile Include="Dac\ArrayDacParameter.cs" />
     <Compile Include="Dac\GeographyDacParameter.cs" />
     <Compile Include="Dac\IAdoDriver.cs" />
