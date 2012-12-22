@@ -22,9 +22,9 @@
 		</frameworkAssemblies>
 	</metadata>
 	<files>
-	  <file src="*\SisoDb.dll" target="lib\net40\" />
-	  <file src="*\SisoDb.xml" target="lib\net40\" />
-	  <file src="*\SisoDb.Serialization.dll" target="lib\net40\" />
-	  <file src="*\SisoDb.Serialization.xml" target="lib\net40\" />
+	  <file src="SisoDb.dll" target="lib\net40\" />
+	  <file src="SisoDb.xml" target="lib\net40\" />
+	  <file src="SisoDb.Serialization.dll" target="lib\net40\" />
+	  <file src="SisoDb.Serialization.xml" target="lib\net40\" />
 	</files>
 </package>

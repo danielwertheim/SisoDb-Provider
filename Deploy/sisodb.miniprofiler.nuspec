@@ -23,7 +23,7 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="*\SisoDb.MiniProfiler.dll" target="lib\net40\" />
-	  <file src="*\SisoDb.MiniProfiler.xml" target="lib\net40\" />
+	  <file src="SisoDb.MiniProfiler.dll" target="lib\net40\" />
+	  <file src="SisoDb.MiniProfiler.xml" target="lib\net40\" />
 	</files>
 </package>
