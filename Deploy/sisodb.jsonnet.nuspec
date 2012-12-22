@@ -25,7 +25,7 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="**\SisoDb.JsonNet.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.JsonNet.xml" target="lib\net40\" />
+	  <file src="SisoDb.JsonNet.dll" target="lib\net40\" />
+	  <file src="SisoDb.JsonNet.xml" target="lib\net40\" />
 	</files>
 </package>

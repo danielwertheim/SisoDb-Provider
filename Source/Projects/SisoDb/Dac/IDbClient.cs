@@ -64,7 +64,8 @@ namespace SisoDb.Dac
 
     	IEnumerable<string> GetJsonOrderedByStructureId(IStructureSchema structureSchema);
 		IEnumerable<string> GetJsonByIds(IEnumerable<IStructureId> ids, IStructureSchema structureSchema);
-		
+        IEnumerable<TId> GetStructureIds<TId>(IStructureSchema structureSchema, IDbQuery query);
+
 		IEnumerable<string> ReadJson(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters);
     	IEnumerable<string> ReadJsonBySp(IStructureSchema structureSchema, string sql, params IDacParameter[] parameters);
 

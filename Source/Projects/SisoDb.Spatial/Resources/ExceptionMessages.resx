@@ -120,4 +120,7 @@
   <data name="IdTypeNotSupported" xml:space="preserve">
     <value>Can not generate spatial table for Id-type: '{0}'.</value>
   </data>
+  <data name="NotAValidPolygon" xml:space="preserve">
+    <value>Sent coordinates does not represent a valid polygon. Info: {0}</value>
+  </data>
 </root>

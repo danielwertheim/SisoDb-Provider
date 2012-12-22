@@ -25,7 +25,7 @@
 		</frameworkAssemblies>
 	</metadata>
 	<files>
-	  <file src="**\SisoDb.MsMemoryCache.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.MsMemoryCache.xml" target="lib\net40\" />
+	  <file src="SisoDb.MsMemoryCache.dll" target="lib\net40\" />
+	  <file src="SisoDb.MsMemoryCache.xml" target="lib\net40\" />
 	</files>
 </package>

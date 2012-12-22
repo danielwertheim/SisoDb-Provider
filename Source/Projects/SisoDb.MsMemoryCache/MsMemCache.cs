@@ -31,12 +31,12 @@ namespace SisoDb.MsMemoryCache
 
         protected MemoryCache CreateStructureCache()
         {
-            return new MemoryCache(string.Concat("SisoDb", CacheConfig.StructureType.Name));
+            return new MemoryCache(string.Concat("SisoDb", CacheConfig.StructureType.Name, Guid.NewGuid()));
         }
 
         protected MemoryCache CreateQueryCache()
         {
-            return new MemoryCache(string.Concat("SisoDb", CacheConfig.StructureType.Name, ":", "Queries"));
+            return new MemoryCache(string.Concat("SisoDb", CacheConfig.StructureType.Name, ":Queries", Guid.NewGuid()));
         }
 
         public virtual void Clear()

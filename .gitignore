@@ -1,4 +1,4 @@
-#v0.10
+#v0.12
 # Dev stuff
 [Aa]pp_[Dd]ata/
 [Bb]uild/
@@ -8,12 +8,17 @@
 [D]ebug/
 [Tt]est[Rr]esult/
 [Tt]emp/
-[Pp]ackages/
+[Ss]ource/[Pp]ackages/
+![Ss]ource/[Pp]ackages/repositories.config
 *.cache
 *~
 *.swp
 *.sdf
 *.orig
+
+#tools#
+[Tt]ools/
+nuget.exe
 
 #resharper#
 _ReSharper.*

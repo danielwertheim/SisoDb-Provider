@@ -22,9 +22,9 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="**\SisoDb.Sql2012.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.Sql2012.xml" target="lib\net40\" />
-      <file src="**\SisoDb.SqlServer.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.SqlServer.xml" target="lib\net40\" />
+	  <file src="SisoDb.Sql2012.dll" target="lib\net40\" />
+	  <file src="SisoDb.Sql2012.xml" target="lib\net40\" />
+      <file src="SisoDb.SqlServer.dll" target="lib\net40\" />
+	  <file src="SisoDb.SqlServer.xml" target="lib\net40\" />
 	</files>
 </package>

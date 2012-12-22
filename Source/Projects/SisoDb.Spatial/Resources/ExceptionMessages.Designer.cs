@@ -68,5 +68,14 @@ namespace SisoDb.Spatial.Resources {
                 return ResourceManager.GetString("IdTypeNotSupported", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sent coordinates does not represent a valid polygon. Info: {0}.
+        /// </summary>
+        public static string NotAValidPolygon {
+            get {
+                return ResourceManager.GetString("NotAValidPolygon", resourceCulture);
+            }
+        }
     }
 }

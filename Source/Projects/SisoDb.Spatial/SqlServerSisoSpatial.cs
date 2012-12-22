@@ -1,3 +1,4 @@
+using System;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Globalization;
@@ -135,9 +136,9 @@ namespace SisoDb.Spatial
         {
             ExecutionContext.Try(() =>
             {
+                var geoParam = CreatePolygonParam(coords, srid);
                 var schema = Session.GetStructureSchema<T>();
                 var sidParam = CreateStructureIdParam<T>(id);
-                var geoParam = CreatePolygonParam(coords, srid);
                 var sql = SqlStatements.GetSql("InsertGeo").Inject(schema.GetSpatialTableName());
                 Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
             });
@@ -147,9 +148,9 @@ namespace SisoDb.Spatial
         {
             ExecutionContext.Try(() =>
             {
+                var geoParam = CreatePolygonParam(coords, srid);
                 var schema = Session.GetStructureSchema<T>();
                 var sidParam = CreateStructureIdParam<T>(id);
-                var geoParam = CreatePolygonParam(coords, srid);
                 var sql = SqlStatements.GetSql("UpdateGeo").Inject(schema.GetSpatialTableName());
                 Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
             });
@@ -159,9 +160,9 @@ namespace SisoDb.Spatial
         {
             ExecutionContext.Try(() =>
             {
+                var geoParam = CreatePolygonParam(coords, srid);
                 var schema = Session.GetStructureSchema<T>();
                 var sidParam = CreateStructureIdParam<T>(id);
-                var geoParam = CreatePolygonParam(coords, srid);
                 var sql = SqlStatements.GetSql("SetGeo").Inject(schema.GetSpatialTableName());
                 Session.DbClient.ExecuteNonQuery(sql, sidParam, geoParam);
             });

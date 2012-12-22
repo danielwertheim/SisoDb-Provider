@@ -1,10 +1,14 @@
 ﻿using System.Linq;
 using Microsoft.SqlServer.Types;
+using SisoDb.NCore;
+using SisoDb.Spatial.Resources;
 
 namespace SisoDb.Spatial
 {
     public static class GeographyFactory
     {
+        private static readonly string PolygonTypeName = OpenGisGeometryType.Polygon.ToString();
+
         public static SqlGeography CreatePolygon(Coordinates[] coordinates, int srid)
         {
             var list = coordinates.Distinct().ToList();
@@ -21,9 +25,15 @@ namespace SisoDb.Spatial
             b.EndFigure();
             b.EndGeography();
 
-            return b.ConstructedGeography.EnvelopeAngle() > 90 
-                ? b.ConstructedGeography.ReorientObject() 
-                : b.ConstructedGeography;
+            //Fix left-hand rule. We always want left-hand.
+            var g = b.ConstructedGeography;
+            if (!g.STIsValid())
+                throw new SisoDbException(ExceptionMessages.NotAValidPolygon.Inject(g.IsValidDetailed()));
+
+            if (g.EnvelopeAngle() > 90)
+                g = g.ReorientObject(); 
+
+            return g;
         }
     }
 }

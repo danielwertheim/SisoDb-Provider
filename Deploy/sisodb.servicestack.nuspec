@@ -25,7 +25,7 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="**\SisoDb.ServiceStack.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.ServiceStack.xml" target="lib\net40\" />
+	  <file src="SisoDb.ServiceStack.dll" target="lib\net40\" />
+	  <file src="SisoDb.ServiceStack.xml" target="lib\net40\" />
 	</files>
 </package>

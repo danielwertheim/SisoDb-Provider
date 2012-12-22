@@ -28,7 +28,7 @@ require 'albacore'
 @env_projectnameSpatial = 'SisoDb.Spatial'
 
 @env_buildfolderpath = 'build'
-@env_assversion = "16.1.0"
+@env_assversion = "16.2.0"
 @env_version = "#{@env_assversion}"
 @env_buildversion = @env_version + (ENV['env_buildnumber'].to_s.empty? ? "" : ".#{ENV['env_buildnumber'].to_s}")
 @env_buildconfigname = ENV['env_buildconfigname'].to_s.empty? ? "Release" : ENV['env_buildconfigname'].to_s
@@ -95,7 +95,7 @@ end
 assemblyinfo :versionIt do |asm|
     asm.input_file = sharedAssemblyInfoPath
     asm.output_file = sharedAssemblyInfoPath
-    asm.version = @env_assversion
+    asm.version = "#{@env_assversion}.*"
     asm.file_version = @env_buildversion
 end
 

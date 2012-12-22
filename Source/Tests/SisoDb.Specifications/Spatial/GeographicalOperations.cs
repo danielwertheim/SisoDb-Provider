@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Machine.Specifications;
+using SisoDb.NCore;
 using SisoDb.Spatial;
+using SisoDb.Spatial.Resources;
 using SisoDb.Specifications.Model;
 using SisoDb.Structures.Schemas;
 using SisoDb.Testing;
@@ -805,7 +807,7 @@ namespace SisoDb.Specifications.Spatial
         }
 
         [Subject(typeof(ISisoSpatial), "MakeValid")]
-        public class when_inserted_polygon : SpecificationBase
+        public class when_makevalid_on_correctly_inserted_polygon : SpecificationBase
         {
             Establish context = () =>
             {
@@ -840,6 +842,53 @@ namespace SisoDb.Specifications.Spatial
                 {
                     var s = session.Spatial();
                     s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeValueEqualTo(SpatialDataFactory.DefaultPolygon());
+                }
+            };
+
+            private static SpatialGuidItem _item;
+        }
+
+        [Subject(typeof(ISisoSpatial), "InsertPolygon")]
+        public class when_trying_to_insert_invalid_polygon : SpecificationBase
+        {
+            Establish context = () =>
+            {
+                TestContext = TestContextFactory.Create();
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    _item = new SpatialGuidItem();
+                    session.Insert(_item);
+
+                    var s = session.Spatial();
+                    s.EnableFor<SpatialGuidItem>();
+                }
+            };
+
+            Because of = () =>
+            {
+                CaughtException = Catch.Exception(() =>
+                {
+                    using (var session = TestContext.Database.BeginSession())
+                    {
+                        var s = session.Spatial();
+                        s.InsertPolygon<SpatialGuidItem>(_item.StructureId, SpatialDataFactory.InvalidPolygonCauseOfMultiPolygon());
+                    }
+                });
+            };
+
+            It should_have_caused_an_exception = () =>
+            {
+                CaughtException.ShouldNotBeNull();
+                CaughtException.ShouldBeOfType<SisoDbException>();
+                CaughtException.Message.ShouldStartWith(ExceptionMessages.NotAValidPolygon.Inject("24409: Not valid because some portion of polygon ring (1) lies in the interior of a polygon."));
+            };
+
+            It should_not_have_inserted_the_polygon = () =>
+            {
+                using (var session = TestContext.Database.BeginSession())
+                {
+                    var s = session.Spatial();
+                    s.GetCoordinatesIn<SpatialGuidItem>(_item.StructureId).ShouldBeEmpty();
                 }
             };
 

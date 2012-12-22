@@ -22,8 +22,8 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="**\SisoDb.Dynamic.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.Dynamic.xml" target="lib\net40\" />
-	  <file src="**\Mono.CSharp.dll" target="lib\net40\" />
+	  <file src="SisoDb.Dynamic.dll" target="lib\net40\" />
+	  <file src="SisoDb.Dynamic.xml" target="lib\net40\" />
+	  <file src="Mono.CSharp.dll" target="lib\net40\" />
 	</files>
 </package>

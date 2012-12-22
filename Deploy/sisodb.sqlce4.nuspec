@@ -23,9 +23,9 @@
 		</dependencies>
 	</metadata>
 	<files>
-	  <file src="**\SisoDb.SqlCe4.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.SqlCe4.xml" target="lib\net40\" />
-      <file src="**\SisoDb.SqlServer.dll" target="lib\net40\" />
-	  <file src="**\SisoDb.SqlServer.xml" target="lib\net40\" />
+	  <file src="SisoDb.SqlCe4.dll" target="lib\net40\" />
+	  <file src="SisoDb.SqlCe4.xml" target="lib\net40\" />
+      <file src="SisoDb.SqlServer.dll" target="lib\net40\" />
+	  <file src="SisoDb.SqlServer.xml" target="lib\net40\" />
 	</files>
 </package>
