@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using Glimpse.Core.Extensibility;
 using Moq;
 using NUnit.Framework;
 using SisoDb.Glimpse;
@@ -27,7 +28,7 @@ namespace SisoDb.UnitTests.Glimpse
             SisoDbGlimpsePlugin.ResolveDatabasesUsing = () => new[] { dbFake.Object };
             
             var plugin = new SisoDbGlimpsePlugin();
-            var data = plugin.GetData(Mock.Of<HttpContextBase>());
+            var data = plugin.GetData(Mock.Of<ITabContext>());
 
             JsonApprovals.VerifyAsJson(data);
         }
