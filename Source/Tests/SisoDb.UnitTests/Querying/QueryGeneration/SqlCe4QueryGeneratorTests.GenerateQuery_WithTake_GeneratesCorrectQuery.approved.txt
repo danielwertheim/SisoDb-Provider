@@ -1,1 +1,1 @@
-select top (11) s.[Json] from [MyClassStructure] s;
+﻿select top (11) s.[Json] from [MyClassStructure] s;
