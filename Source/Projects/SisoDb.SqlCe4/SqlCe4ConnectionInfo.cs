@@ -61,7 +61,7 @@ namespace SisoDb.SqlCe4
             {
                 filePath = filePath.Substring(dataDirectorySwitch.Length);
                 if (HttpContext.Current != null)
-                    filePath = Path.Combine(HttpContext.Current.Server.MapPath("App_Data"), filePath);
+                    filePath = Path.Combine(HttpContext.Current.Server.MapPath("~/App_Data"), filePath);
             }
 
             return filePath;
