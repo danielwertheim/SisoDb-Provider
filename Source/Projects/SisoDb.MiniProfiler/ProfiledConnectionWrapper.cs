@@ -14,12 +14,12 @@ namespace SisoDb.MiniProfiler
 
         public IDbConnection GetInnerConnection()
         {
-            return _conn;
+            return _connection;
         }
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
-            return new ProfiledTransactionWrapper(_conn.BeginTransaction(isolationLevel), this);
+            return new ProfiledTransactionWrapper(_connection.BeginTransaction(isolationLevel), this);
         }
     }
 }
