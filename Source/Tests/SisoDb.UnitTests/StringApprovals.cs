@@ -1,4 +1,6 @@
-﻿namespace SisoDb.UnitTests
+﻿using ApprovalTests;
+
+namespace SisoDb.UnitTests
 {
     public static class StringApprovals
     {

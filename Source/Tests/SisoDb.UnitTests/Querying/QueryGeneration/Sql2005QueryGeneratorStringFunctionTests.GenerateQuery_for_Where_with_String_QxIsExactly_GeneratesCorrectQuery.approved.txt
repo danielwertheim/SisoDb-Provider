@@ -1,1 +1,1 @@
-select distinct (s.[StructureId]), s.[Json] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where ((mem0.[Value] = @p0) and (cast(mem0.[Value] as varbinary(300)) = cast(@p0 as varbinary(300))));
+﻿select distinct (s.[StructureId]), s.[Json] from [MyClassStructure] s left join [MyClassStrings] mem0 on mem0.[StructureId] = s.[StructureId] and mem0.[MemberPath] = 'String1' where ((mem0.[Value] = @p0) and (cast(mem0.[Value] as varbinary(300)) = cast(@p0 as varbinary(300))));

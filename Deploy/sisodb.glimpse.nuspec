@@ -19,7 +19,7 @@
 		<tags>glimpse, diagnostics, sisodb,document-database,db,structure,key-value,json,poco,blob,sql,sqlserver,sql-server,sql2005,sql2008,sql2012,sqlazure,azure,sqlce,sqlce4,nosql</tags>
 		<dependencies>
 		    <dependency id="SisoDb" version="[$version$]" />
-			<dependency id="Glimpse" version="0.87" />
+			<dependency id="Glimpse" version="1.0.1" />
 		</dependencies>
 	</metadata>
 	<files>

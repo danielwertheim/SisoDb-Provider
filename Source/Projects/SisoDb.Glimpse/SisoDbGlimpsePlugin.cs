@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Glimpse.Core.Extensibility;
 using SisoDb.Diagnostics;
 using SisoDb.Diagnostics.Builders;
 
 namespace SisoDb.Glimpse
 {
-    [GlimpsePlugin]
-    public class SisoDbGlimpsePlugin : IGlimpsePlugin
+    public class SisoDbGlimpsePlugin : TabBase
     {
-        public string Name
+        public override string Name
         {
             get { return "SisoDb"; }
         }
@@ -22,7 +20,7 @@ namespace SisoDb.Glimpse
 
         public virtual void SetupInit() { }
 
-        public virtual object GetData(HttpContextBase context)
+        public override object GetData(ITabContext context)
         {
             var data = new List<object[]>();
 

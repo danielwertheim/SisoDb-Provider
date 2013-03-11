@@ -1,4 +1,4 @@
-{
+﻿{
 	"Name": "Db: 'UnitTestDb'",
 	"HasGroups": true,
 	"HasNodes": false,
